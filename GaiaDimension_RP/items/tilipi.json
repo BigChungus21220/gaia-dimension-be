@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:tilipi",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "tilipi",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

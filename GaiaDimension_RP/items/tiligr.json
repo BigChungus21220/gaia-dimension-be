@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:tiligr",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "tiligr",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

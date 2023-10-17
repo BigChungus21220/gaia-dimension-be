@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:white_opal",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "white_opal",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

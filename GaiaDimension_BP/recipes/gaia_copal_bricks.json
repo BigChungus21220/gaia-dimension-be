@@ -1,0 +1,20 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "copal_bricks_b5a50213"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "AA ",
+      "AA "
+    ],
+    "key": {},
+    "result": {
+      "item": "gaia:copal_bricks",
+      "count": 4
+    }
+  }
+}

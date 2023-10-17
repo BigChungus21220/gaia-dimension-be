@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:labradorite_powder",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "labradorite_powder",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

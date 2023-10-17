@@ -1,0 +1,65 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaia:gaia_portal",
+			"properties": {
+				"gaia:x_oriented": [false, true]
+			}
+    },
+    "components": {
+      "minecraft:loot": "loot_tables/blocks/empty.json",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 99999
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 1
+      },
+      "minecraft:selection_box": {
+        "origin": [-8, 0, -2],
+        "size": [16, 16, 4]
+      },
+      "minecraft:collision_box": false,
+      "minecraft:geometry": "geometry.portal",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "gaia_portal",
+          "render_method": "blend"
+        }
+      },
+      "minecraft:light_emission": 10,
+      "minecraft:queued_ticking": {
+        "looping": true,
+        "interval_range": [20, 20],
+        "on_tick": {
+          "event": "gaia:particle",
+          "target": "self"
+        }
+      },
+      "minecraft:map_color": "#ffffff"
+    },
+    "events": {
+      "gaia:particle": {
+        "run_command": {
+          "command": [
+            "particle gaia:portal_particle ~ ~ ~"
+          ]
+        }
+      }
+    },
+    "permutations": [
+			{
+				"condition": "query.block_property('gaia:x_oriented')",
+				"components": {
+          "minecraft:transformation": {"rotation": [0, 90, 0]}
+				}
+			},
+      {
+				"condition": "!query.block_property('gaia:x_oriented')",
+				"components": {
+          "minecraft:transformation": {"rotation": [0, 0, 0]}
+				}
+			}
+    ]
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "format_version": "1.19.20",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaia:singed_crystal_growth",
+      "menu_category": {
+        "category": "none"
+      },
+      "properties": {
+        "block:rotation": [0, 1, 2, 3]
+      }
+    },
+    "components": {
+      "minecraft:loot": "loot_tables/blocks/gaia/singed_crystal_growth.json",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 0
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 0
+      },
+      "minecraft:on_placed": {
+        "event": "update_rotation"
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "singed_crystal_growth",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+					"ambient_occlusion": false
+        }
+      },
+      "minecraft:geometry": "geometry.offset_cross_plant",
+      "minecraft:placement_filter": {
+        "conditions": [
+          {
+            "block_filter": [
+              "gaia:orange_glitter_grass",
+              "gaia:blue_glitter_grass",
+              "gaia:green_glitter_grass",
+              "gaia:charred_grass",
+              "gaia:pale_green_glitter_grass",
+              "gaia:purple_glitter_grass",
+              "gaia:orange_glitter_grass",
+              "gaia:soft_grass",
+              "gaia:murky_grass",
+              "gaia:corrupt_grass",
+              "gaia:pink_glitter_grass",
+              "gaia:peach_glitter_grass",
+              "gaia:orange_glitter_grass",
+              "gaia:light_soil",
+              "gaia:heavy_soil",
+              "gaia:cinder",
+              "gaia:corrupt_soil",
+              "gaia:boggy_soil",
+              "gaia:light_soil"
+            ],
+            "allowed_faces": ["up"]
+          }
+        ]
+      },
+      "minecraft:selection_box": {
+        "origin": [-6.5, 0, -5],
+        "size": [6, 10, 6]
+      },
+      "minecraft:collision_box": false
+    },
+    "events": {
+      "update_rotation": {
+        "set_block_property": {
+          "block:rotation": "math.random_integer(0, 3)"
+        }
+      }
+    },
+    "permutations": [
+      {
+        "condition": "query.block_property('block:rotation') == 0",
+        "components": {
+          "minecraft:rotation": [0, 0, 0]
+        }
+      },
+      {
+        "condition": "query.block_property('block:rotation') == 1",
+        "components": {
+          "minecraft:rotation": [0, -180, 0]
+        }
+      },
+      {
+        "condition": "query.block_property('block:rotation') == 2",
+        "components": {
+          "minecraft:rotation": [0, 90, 0]
+        }
+      },
+      {
+        "condition": "query.block_property('block:rotation') == 3",
+        "components": {
+          "minecraft:rotation": [0, -90, 0]
+        }
+      }
+    ]
+  }
+}

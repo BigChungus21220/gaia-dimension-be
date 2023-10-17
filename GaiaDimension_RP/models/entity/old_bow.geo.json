@@ -1,0 +1,85 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.old_bow_standby",
+        "texture_width": 16,
+        "texture_height": 16
+      },
+      "bones": [
+        {
+          "name": "rightItem",
+          "texture_meshes": [
+            {
+              "local_pivot": [ 6, 0, 6 ],
+              "position": [ 2, 1, -2 ],
+              "rotation": [ 0, -135, 90 ],
+              "texture": "old_bow_standby"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.old_bow_pull_0",
+        "texture_width": 16,
+        "texture_height": 16
+      },
+      "bones": [
+        {
+          "name": "rightItem",
+          "texture_meshes": [
+            {
+              "local_pivot": [ 6, 0, 6 ],
+              "position": [ 2, 1, -1 ],
+              "rotation": [ 0, -135, 90 ],
+              "texture": "old_bow_pull_0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.old_bow_pull_1",
+        "texture_width": 16,
+        "texture_height": 16
+      },
+      "bones": [
+        {
+          "name": "rightItem",
+          "texture_meshes": [
+            {
+              "local_pivot": [ 6, 0, 6 ],
+              "position": [ 2.01, 1, -1 ],
+              "rotation": [ 0, -135, 90 ],
+              "texture": "old_bow_pull_1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.old_bow_pull_2",
+        "texture_width": 16,
+        "texture_height": 16
+      },
+      "bones": [
+        {
+          "name": "rightItem",
+          "texture_meshes": [
+            {
+              "local_pivot": [ 6, 0, 6 ],
+              "position": [ 2.01, 1, -1 ],
+              "rotation": [ 0, -135, 90 ],
+              "texture": "old_bow_pull_2"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

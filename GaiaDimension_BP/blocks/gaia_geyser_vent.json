@@ -1,0 +1,38 @@
+{
+  "format_version": "1.19.20",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaia:geyser_vent",
+      "menu_category": {
+        "category": "nature",
+        "group": "itemGroup.name.geyser_vent"
+      }
+    },
+    "components": {
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 1
+      },
+      "minecraft:queued_ticking": {
+        "looping": true,
+        "interval_range": [300, 500],
+        "on_tick": {
+          "event": "gaia:erupt",
+          "target": "self"
+        }
+      },
+      "minecraft:map_color": "#81f53d"
+    },
+    "events": {
+      "gaia:erupt": {
+        "run_command": {
+          "command": [
+            "scriptevent gaia:geyser.erupt"
+          ]
+        }
+      }
+    }
+  }
+}

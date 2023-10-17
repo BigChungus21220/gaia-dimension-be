@@ -1,0 +1,20 @@
+{
+	"format_version": "1.16.100",
+	"minecraft:item": {
+		"description": {
+			"identifier": "gaia:corrupted_gaia_eye_item",
+			"category": "nature"
+		},
+		"components": {
+			"minecraft:icon": {
+				"texture":  "corrupted_gaia_eye"
+			},
+			"minecraft:creative_category": {
+				"parent": "itemGroup.name.flower"
+			},
+			"minecraft:block_placer": {
+				"block": "gaia:corrupted_gaia_eye"
+			}
+		}
+	}
+}

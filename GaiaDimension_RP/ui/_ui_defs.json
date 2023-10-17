@@ -1,0 +1,7 @@
+{
+  // Alphabetical order please :)
+  "ui_defs": [
+    "ui/gaia_furnace.json",
+    "ui/ui_gaia_common.json"
+  ]
+}

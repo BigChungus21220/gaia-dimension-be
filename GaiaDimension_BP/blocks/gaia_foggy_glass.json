@@ -1,0 +1,30 @@
+{
+	"format_version": "1.20.10",
+	"minecraft:block": {
+		"description": {
+			"identifier": "gaia:foggy_glass",
+			"menu_category": {
+				"category": "nature",
+				"group": "itemGroup.name.glass"
+			}
+		},
+		"components": {
+			"tag:glass": {},
+			"minecraft:loot": "loot_tables/blocks/empty.json",
+			"minecraft:destructible_by_mining": {
+				"seconds_to_destroy": 1
+			},
+			"minecraft:unit_cube": {},
+			"minecraft:destructible_by_explosion": {
+				"explosion_resistance": 1
+			},
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "foggy_glass",
+          "render_method": "blend",
+			"minecraft:map_color": "#ffffff"
+		}
+	}
+}
+  }
+}

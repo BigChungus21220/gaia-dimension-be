@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:scaynyx_ingot",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "scaynyx_ingot",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

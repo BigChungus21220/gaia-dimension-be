@@ -1,0 +1,76 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.growth_sapper",
+				"texture_width": 64,
+				"texture_height": 32,
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "head",
+					"pivot": [0, 9, -6],
+					"cubes": [
+						{"origin": [-2.5, 6.5, -11], "size": [5, 5, 5], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "nozzle",
+					"parent": "head",
+					"pivot": [0, 8, -11],
+					"rotation": [15.65, 0, 0],
+					"cubes": [
+						{"origin": [-0.5, 7, -16], "size": [1, 1, 5], "uv": [41, 16]}
+					]
+				},
+				{
+					"name": "leftArm",
+					"pivot": [1.4, 6, -5.5],
+					"cubes": [
+						{"origin": [1.4, 0, -5.5], "size": [2, 6, 2], "uv": [0, 10]}
+					]
+				},
+				{
+					"name": "rightArm",
+					"pivot": [-1.4, 6, -5.5],
+					"cubes": [
+						{"origin": [-3.4, 0, -5.5], "size": [2, 6, 2], "uv": [50, 0]}
+					]
+				},
+				{
+					"name": "rightLeg",
+					"pivot": [-1.4, 6, 3],
+					"cubes": [
+						{"origin": [-3.4, 0, 3], "size": [2, 6, 2], "uv": [46, 8]}
+					]
+				},
+				{
+					"name": "leftLeg",
+					"pivot": [1.4, 6, 3],
+					"cubes": [
+						{"origin": [1.4, 0, 3], "size": [2, 6, 2], "uv": [34, 0]}
+					]
+				},
+				{
+					"name": "leg3",
+					"pivot": [1.4, 6, 3.5]
+				},
+				{
+					"name": "leg6",
+					"pivot": [-1.4, 6, 3.5]
+				},
+				{
+					"name": "body",
+					"pivot": [0, 6, -6],
+					"cubes": [
+						{"origin": [-3.5, 6, -6], "size": [7, 9, 12], "uv": [8, 0]}
+					]
+				}
+			]
+		}
+	]
+}

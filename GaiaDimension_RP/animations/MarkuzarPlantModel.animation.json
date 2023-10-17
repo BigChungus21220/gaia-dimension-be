@@ -1,0 +1,19 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.markuzar_plant.idle": {
+			"loop": true,
+			"bones": {
+				"stalkLow": {
+					"rotation": ["Math.cos(query.life_time * 70) * 2", 0, 0]
+				},
+				"stalkMid": {
+					"rotation": ["Math.cos(query.life_time * 70-20) * 2", 0, 0]
+				},
+				"stalkHigh": {
+					"rotation": ["Math.cos(query.life_time * 70-40) * 2", 0, 0]
+				}
+			}
+		}
+	}
+}

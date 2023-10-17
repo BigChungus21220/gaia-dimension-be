@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:sugar_crystals",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "sugar_crystals",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+	"format_version": "1.20.10",
+	"minecraft:block": {
+		"description": {
+			"identifier": "gaia:blue_agate_planks",
+			"menu_category": {
+				"category": "construction",
+				"group": "itemGroup.name.planks"
+			}
+		},
+		"components": {
+			"tag:wood": {},
+			"tag:is_axeable": {},
+			"minecraft:loot": "loot_tables/blocks/blue_agate_planks.json",
+			"minecraft:destructible_by_mining": {
+				"seconds_to_destroy": 1
+      },
+			"minecraft:unit_cube": {},
+			"minecraft:destructible_by_explosion": {
+				"explosion_resistance": 1
+			},
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "blue_agate_planks",
+          "render_method": "opaque",
+			"minecraft:map_color": "#ffffff"
+		}
+	}
+}
+  }}

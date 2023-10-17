@@ -1,0 +1,20 @@
+{
+	"format_version": "1.16.100",
+	"minecraft:item": {
+		"description": {
+			"identifier": "gaia:red_crystal_growth_item",
+			"category": "nature"
+		},
+		"components": {
+			"minecraft:icon": {
+				"texture":  "red_crystal_growth"
+			},
+			"minecraft:creative_category": {
+				"parent": "itemGroup.name.flower"
+			},
+			"minecraft:block_placer": {
+				"block": "gaia:red_crystal_growth"
+			}
+		}
+	}
+}

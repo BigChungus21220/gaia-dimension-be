@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:cinnabar",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "cinnabar",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

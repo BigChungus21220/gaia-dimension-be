@@ -1,0 +1,28 @@
+{
+  "format_version": "1.8.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "gaia:cavern_tick",
+      "materials": {
+        "default": "iron_golem"
+      },
+      "textures": {
+        "default": "textures/entity/cavern_tick"
+      },
+      "geometry": {
+        "default": "geometry.cavern_tick"
+      },
+      "animations": {
+        "move": "animation.silverfish.move"
+      },
+      "animation_controllers": [
+        { "move": "controller.animation.silverfish.move" }
+      ],
+      "render_controllers": [ "controller.render.iron_golem" ],
+      "spawn_egg": {
+        "texture": "spawn_gaia",
+        "texture_index": 0
+      }
+    }
+  }
+}

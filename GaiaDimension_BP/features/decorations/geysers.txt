@@ -1,0 +1,17 @@
+1. place 4-5 small pools at random points at a radius of 6 blocks from the center 
+rand = random(0,2pi)
+x = cos(rand)*6
+y = -3
+z = sin(rand)*6
+
+2. place 1-2 med pools at radius of 4 blocks
+rand = random(0,2pi)
+x = cos(rand)*4
+y = -2
+z = sin(rand)*4
+
+3. place 1 large pool
+rand = random(0,2pi)
+x = 0
+y = -1
+z = 0

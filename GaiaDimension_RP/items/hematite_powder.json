@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:hematite_powder",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "hematite_powder",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

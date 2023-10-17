@@ -1,0 +1,102 @@
+## Gaia:
+item.gaia:cloudy_shard.name=Облачный Oсколок
+item.gaia:crystal_shard.name=Кристалл Осколок
+item.gaia:crystallized_lapis_lazuli.name=Кристаллизованный Лазурит
+item.gaia:crystallized_redstone.name=Кристаллизованный Красный Камень
+item.gaia:mock_malachite.name=Mock Malachite
+item.gaia:scaynyx_ingot.name=Слиток Скайнекса
+item.gaia:shiny_bone.name=Сияющая Кость 
+item.gaia:sturdy_pebble.name=Крепкий Камешек
+item.gaia:sweet_muckball.name=Сладкий Шарик Дрян
+item.gaia:twined_thread.name=Обвитая Нить
+item.gaia:agate_fabric.name=Ткань из Агата
+item.gaia:agate_stick.name=Палка из Агата
+item.gaia:fine_dust.name=Мелкий Песок
+item.gaia:fine_thread.name=Тонкая Нить
+item.gaia:goldstone.name=Голдстоун
+item.gaia:goldstone_dust.name=Голдстоун Песок
+item.gaia:goldstone_residue.name=Голдстоун Осадок
+item.gaia:pink_essence.name=Розовая Эссенция
+item.gaia:pink_goo.name=Розовая Слизь
+item.gaia:sugar_cluster.name=Сахарное Cкопление
+item.gaia:sugar_crystals.name=Сахарные Кристаллы 
+
+## Gems:
+item.gaia:benitoite.name=Бенитоит
+item.gaia:carnelian.name=Сердолик
+item.gaia:chalcedony.name=Халцедон
+item.gaia:diopside.name=Диопсид
+item.gaia:euclase.name=Эвклаз
+item.gaia:ixiolite.name=Иксиолит
+item.gaia:leucite.name=Лейцит
+item.gaia:proustite.name=Прустит
+item.gaia:sugilite.name=Сугилит
+
+## Dusts:
+item.gaia:tektite.name=Тектит
+item.gaia:black_residue.name=Чёрный Осадок
+item.gaia:hot_dust.name=Горячий Песок
+item.gaia:aura_cluster.name=Скопление Ауры
+item.gaia:aura_residue.name=Осадок Ауры
+item.gaia:bismuth_crystal.name=Висмутовый Кристалл
+item.gaia:bismuth_residue.name=Висмутовый Осадок
+item.gaia:cinnabar.name=Киноварь
+item.gaia:cinnabar_powder.name=Киноварь Порошок
+item.gaia:hematite.name=Гематит
+item.gaia:hematite_powder.name=Гематит Порошок
+item.gaia:labradorite.name=Лабрадор
+item.gaia:labradorite_powder.name=Лабрадор Порошок
+item.gaia:moonstone.name=Лунный Камень
+item.gaia:moonstone_powder.name=Лунный Камень Порошок
+item.gaia:pyrite.name=Пирит
+item.gaia:pyrite_powder.name=Пирит Порошок
+
+## Geodes:
+item.gaia:blue_geode.name=Жеода
+item.gaia:green_geode.name=Жеода
+item.gaia:pink_geode.name=Жеода
+item.gaia:purple_geode.name=Жеода
+item.gaia:blue_geode_slice.name=Изысканный Ломтик Синей Жеода
+item.gaia:green_geode_slice.name=Вульгарный Ломтик Зелёной Жеода
+item.gaia:pink_geode_slice.name=Сладкий Ломтик Розовой Жеода
+item.gaia:purple_geode_slice.name=Кислый Ломтик Фиолетовой Жеода
+item.gaia:agate_cup.name=Наконечник из Агата
+item.gaia:blue_geode_tea.name=Изысканный Чай из Синей Жеода
+item.gaia:green_geode_ale.name=Вульгарное Пиво из Зелёной Жеода
+item.gaia:pink_geode_juice.name=Сладкий Сок из Розовой Жеода
+item.gaia:purple_geode_soda.name=Кислая Сода из Фиолетовой Жеода
+item.gaia:pearly_geode_elixir.name=Ароматный Эликсир из Жеода
+
+## Opals:
+item.gaia:blue_opal.name=Синий Опал
+item.gaia:blue_opal_powder.name=Синий Опал Порошок
+item.gaia:green_opal.name=Зелёный Опал
+item.gaia:green_opal_powder.name=Зелёный Опал Порошок
+item.gaia:red_opal.name=Красный Опал
+item.gaia:red_opal_powder.name=Красный Опал Порошок
+item.gaia:white_opal.name=Белый Опал
+item.gaia:white_opal_powder.name=Белый Опал Песок
+
+## Tilis:
+item.gaia:tilibl.name=Тилибл
+item.gaia:tiligr.name=Тилигр
+item.gaia:tilimy.name=Тилими
+item.gaia:tiliol.name=Тилиол
+item.gaia:tiliou.name=Тилиоу
+item.gaia:tilipi.name=Тилипи
+item.gaia:tilipu.name=Тилипу
+item.gaia:plagued_tiliey.name=Чумное Тилиеу
+
+## Consumes:
+item.gaia:small_tentacle.name=Маленькое Щупальце
+item.gaia:small_calamari.name=Маленькое Кальмар
+item.gaia:large_tentacle.name=Большое Щупальце
+item.gaia:large_calamari.name=Большое Кальмар
+item.gaia:luggeroth_chop.name=Отбивная из Люджерота
+item.gaia:cooked_luggeroth_chop.name=Приготовленная Отбивная из Люджерота
+item.gaia:lurmorus_meat.name=Мясо Люрморуса
+item.gaia:lurmorus_steak.name=Стейк Люрморуса
+item.gaia:markuzar_mint.name=Мята Маркузара
+
+tile.gaia:pyrite_torch.name=Pyrite Torch
+item.gaia:pyrite_torch_item=Pyrite Torch

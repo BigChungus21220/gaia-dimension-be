@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:crystallized_lapis_lazuli",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "crystallized_lapis_lazuli",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

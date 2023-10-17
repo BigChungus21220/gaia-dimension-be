@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:blue_opal_powder",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "blue_opal_powder",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

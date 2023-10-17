@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:sweet_muckball",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "sweet_muckball",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaia:frail_glitter_block",
+      "menu_category": {
+        "category": "nature",
+        "group": "itemGroup.name.glitter_blocks"
+      }
+    },
+    "components": {
+      "minecraft:loot": "loot_tables/blocks/gaia/frail_glitter_block.json",
+      "minecraft:map_color": "#636566",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "frail_glitter_block",
+          "render_method": "blend"
+        }
+      },
+      "minecraft:light_dampening": 2,
+      "minecraft:light_emission": 5,
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 1
+      }
+    }
+  }
+}

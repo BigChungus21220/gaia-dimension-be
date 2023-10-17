@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:fine_dust",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "fine_dust",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

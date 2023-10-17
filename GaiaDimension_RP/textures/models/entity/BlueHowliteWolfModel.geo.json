@@ -1,0 +1,185 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.blue_howlite_wolf",
+				"texture_width": 128,
+				"texture_height": 64,
+				"visible_bounds_width": 5,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "chestMane",
+					"pivot": [6, 24, -13],
+					"cubes": [
+						{"origin": [-6, 16, -13], "size": [12, 8, 10], "uv": [6, 46]}
+					]
+				},
+				{
+					"name": "leg1",
+					"pivot": [-3, 17.7, 7.5],
+					"rotation": [-41.74, 0, 0],
+					"cubes": [
+						{"origin": [-5, 10.7, 7.5], "size": [2, 7, 4], "uv": [116, 38]}
+					]
+				},
+				{
+					"name": "backLowerLeg2",
+					"parent": "leg1",
+					"pivot": [-2.9, 11.2, 9.8],
+					"rotation": [60.74, 0, 0],
+					"cubes": [
+						{"origin": [-4.9, 0.2, 9.8], "size": [2, 11, 2], "uv": [108, 36]}
+					]
+				},
+				{
+					"name": "backPaw2",
+					"parent": "backLowerLeg2",
+					"pivot": [-1.9, 1.7, 8.3],
+					"rotation": [-18.82169, 0, 0],
+					"cubes": [
+						{"origin": [-5.9, -0.3, 8.3], "size": [4, 2, 4], "uv": [50, 58]}
+					]
+				},
+				{
+					"name": "leg0",
+					"pivot": [5.2, 17.7, 7.5],
+					"rotation": [-41.74, 0, 0],
+					"cubes": [
+						{"origin": [3.2, 10.7, 7.5], "size": [2, 7, 4], "uv": [116, 27]}
+					]
+				},
+				{
+					"name": "backLowerLeg1",
+					"parent": "leg0",
+					"pivot": [5.1, 11.2, 9.8],
+					"rotation": [60.74, 0, 0],
+					"cubes": [
+						{"origin": [3.1, 0.2, 9.8], "size": [2, 11, 2], "uv": [100, 36]}
+					]
+				},
+				{
+					"name": "backPaw1",
+					"parent": "backLowerLeg1",
+					"pivot": [6.1, 1.7, 8.3],
+					"rotation": [-18.82169, 0, 0],
+					"cubes": [
+						{"origin": [2.1, -0.3, 8.3], "size": [4, 2, 4], "uv": [50, 52]}
+					]
+				},
+				{
+					"name": "fvgdh",
+					"pivot": [4, 23.3, -3.1],
+					"rotation": [-15.65, 0, 0],
+					"cubes": [
+						{"origin": [-4, 17.3, -3.1], "size": [8, 6, 15], "uv": [0, 25]}
+					]
+				},
+				{
+					"name": "neck",
+					"pivot": [3.5, 31.8, -11],
+					"cubes": [
+						{"origin": [-3.5, 21.8, -11], "size": [7, 10, 6], "uv": [74, 33]}
+					]
+				},
+				{
+					"name": "head",
+					"pivot": [0, 30, -9],
+					"cubes": [
+						{"origin": [-2.5, 30, -12], "size": [5, 6, 6], "uv": [14, 9]}
+					]
+				},
+				{
+					"name": "nose",
+					"parent": "head",
+					"pivot": [0, 30, -9],
+					"rotation": [10.1, 0, 0],
+					"cubes": [
+						{"origin": [-1.5, 30.5, -15], "size": [3, 3, 4], "uv": [0, 9]}
+					]
+				},
+				{
+					"name": "ear1",
+					"parent": "head",
+					"pivot": [0, 30, -9],
+					"cubes": [
+						{"origin": [1.5, 33, -9], "size": [2, 7, 1], "uv": [0, 56]}
+					]
+				},
+				{
+					"name": "ear2",
+					"parent": "head",
+					"pivot": [0, 30, -9],
+					"cubes": [
+						{"origin": [-3.5, 33, -9], "size": [2, 7, 1], "uv": [122, 56]}
+					]
+				},
+				{
+					"name": "tail1",
+					"pivot": [2, 19.3, 11.3],
+					"rotation": [-41.45, 0, 0],
+					"cubes": [
+						{"origin": [-2, 16.3, 11.3], "size": [4, 3, 12], "uv": [48, 0]}
+					]
+				},
+				{
+					"name": "tail2",
+					"pivot": [2, 11.7, 16.7],
+					"rotation": [35, 0, 0],
+					"cubes": [
+						{"origin": [-2, 8.7, 16.7], "size": [4, 3, 12], "uv": [48, 15]}
+					]
+				},
+				{
+					"name": "arm0",
+					"pivot": [8, 22, -11],
+					"cubes": [
+						{"origin": [5, 12, -11], "size": [3, 10, 5], "uv": [66, 49]}
+					]
+				},
+				{
+					"name": "frontLowerLeg1",
+					"parent": "arm0",
+					"pivot": [7.9, 12.7, -9.2],
+					"cubes": [
+						{"origin": [4.9, 2.7, -9.2], "size": [3, 10, 3], "uv": [98, 51]}
+					]
+				},
+				{
+					"name": "frontPaw1",
+					"parent": "frontLowerLeg1",
+					"pivot": [9.4, 3, -12],
+					"cubes": [
+						{"origin": [3.4, 0, -12], "size": [6, 3, 6], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "arm1",
+					"pivot": [-5, 22, -11],
+					"cubes": [
+						{"origin": [-8, 12, -11], "size": [3, 10, 5], "uv": [82, 49]}
+					]
+				},
+				{
+					"name": "frontLowerLeg2",
+					"parent": "arm1",
+					"pivot": [-4.9, 12.7, -9.2],
+					"cubes": [
+						{"origin": [-7.9, 2.7, -9.2], "size": [3, 10, 3], "uv": [110, 51]}
+					]
+				},
+				{
+					"name": "frontPaw2",
+					"parent": "frontLowerLeg2",
+					"pivot": [-3.4, 3, -12],
+					"cubes": [
+						{"origin": [-9.4, 0, -12], "size": [6, 3, 6], "uv": [24, 0]}
+					]
+				}
+			]
+		}
+	]
+}

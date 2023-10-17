@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:sturdy_pebble",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "sturdy_pebble",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

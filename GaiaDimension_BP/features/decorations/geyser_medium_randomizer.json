@@ -1,0 +1,13 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:weighted_random_feature": {
+		"description": {
+			"identifier": "gaia:decorations/geyser_medium_randomizer"
+		},
+		"features": [
+			[ "gaia:decorations/geyser_medium_0", 1 ],
+			[ "gaia:decorations/geyser_medium_1", 1 ],
+			[ "gaia:decorations/geyser_medium_2", 1 ]
+		]
+	}
+}

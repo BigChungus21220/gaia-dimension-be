@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:leucite",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "leucite",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

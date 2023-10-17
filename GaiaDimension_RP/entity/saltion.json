@@ -1,0 +1,30 @@
+{
+  "format_version": "1.8.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "gaia:saltion",
+      "materials": {
+        "default": "iron_golem"
+      },
+      "textures": {
+        "default": "textures/entity/saltion"
+      },
+      "geometry": {
+        "default": "geometry.saltion"
+      },
+      "animations": {
+        "default_leg_pose": "animation.spider.nodefault_leg_pose",
+        "look_at_target": "animation.spider.look_at_target",
+        "walk": "animation.spider.walk"
+      },
+      "animation_controllers": [
+        { "move": "controller.animation.spider.move" }
+      ],
+      "render_controllers": [ "controller.render.iron_golem" ],
+      "spawn_egg": {
+        "texture": "spawn_gaia",
+        "texture_index": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:goldstone_dust",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "goldstone_dust",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

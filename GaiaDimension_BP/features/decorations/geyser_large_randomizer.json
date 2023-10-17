@@ -1,0 +1,13 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:weighted_random_feature": {
+		"description": {
+			"identifier": "gaia:decorations/geyser_large_randomizer"
+		},
+		"features": [
+			[ "gaia:decorations/geyser_large_0", 1 ],
+			[ "gaia:decorations/geyser_large_1", 1 ],
+			[ "gaia:decorations/geyser_large_2", 1 ]
+		]
+	}
+}

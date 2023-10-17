@@ -1,0 +1,28 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:fog_settings": {
+    "description": {
+      "identifier": "gaia:fog_gaia"
+    },
+    "distance": {
+      "air": {
+        "fog_start": 0.92,
+        "fog_end": 120.0,
+        "fog_color": "#FFCEC9",
+        "render_distance_type": "fixed"
+      },
+      "water": {
+        "fog_start": 0.0,
+        "fog_end": 15.0,
+        "fog_color": "#2A706D",
+        "render_distance_type": "fixed"
+      },
+      "weather": {
+        "fog_start": 10.0,
+        "fog_end": 96.0,
+        "fog_color": "#FFCEC9",
+        "render_distance_type": "fixed"
+      }
+    }
+  }
+}

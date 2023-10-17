@@ -1,0 +1,100 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.shalurker",
+				"texture_width": 64,
+				"texture_height": 32,
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "head",
+					"pivot": [0, 24, -1.5],
+					"cubes": [
+						{"origin": [-3, 24, -8], "size": [6, 6, 6], "uv": [20, 9]}
+					]
+				},
+				{
+					"name": "spike1",
+					"parent": "head",
+					"pivot": [1.5, 30, -6],
+					"rotation": [-20, 0, 0],
+					"cubes": [
+						{"origin": [1, 30, -6], "size": [1, 3, 1], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "spike2",
+					"parent": "head",
+					"pivot": [-1.5, 30, -6],
+					"rotation": [-20, 0, 0],
+					"cubes": [
+						{"origin": [-2, 30, -6], "size": [1, 3, 1], "uv": [15, 0]}
+					]
+				},
+				{
+					"name": "leftLeg",
+					"pivot": [2.5, 15.5, 3],
+					"rotation": [-35, 0, 0],
+					"cubes": [
+						{"origin": [1.5, 9.5, 3], "size": [2, 6, 3], "uv": [20, 0]}
+					]
+				},
+				{
+					"name": "legRL",
+					"parent": "leftLeg",
+					"pivot": [2.4, 10.5, 3.1],
+					"rotation": [35, 0, 0],
+					"cubes": [
+						{"origin": [1.4, -0.5, 3.1], "size": [2, 11, 2], "uv": [54, 10]}
+					]
+				},
+				{
+					"name": "armR",
+					"pivot": [2, 23, -2],
+					"rotation": [-15, 0, 0],
+					"cubes": [
+						{"origin": [2, 13, -3], "size": [2, 10, 2], "uv": [40, 0]}
+					]
+				},
+				{
+					"name": "body",
+					"pivot": [0, 24, -6],
+					"rotation": [35, 0, 0],
+					"cubes": [
+						{"origin": [-2.5, 9, -6], "size": [5, 15, 5], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "rightLeg",
+					"pivot": [-2.5, 15.5, 3],
+					"rotation": [-35, 0, 0],
+					"cubes": [
+						{"origin": [-3.5, 9.5, 3], "size": [2, 6, 3], "uv": [30, 0]}
+					]
+				},
+				{
+					"name": "legLL",
+					"parent": "rightLeg",
+					"pivot": [-2.4, 10.5, 3.1],
+					"rotation": [35, 0, 0],
+					"cubes": [
+						{"origin": [-3.4, -0.5, 3.1], "size": [2, 11, 2], "uv": [44, 12]}
+					]
+				},
+				{
+					"name": "armL",
+					"pivot": [-2, 23, -2],
+					"rotation": [-15, 0, 0],
+					"cubes": [
+						{"origin": [-4, 13, -2], "size": [2, 10, 2], "uv": [48, 0]}
+					]
+				}
+			]
+		}
+	]
+}

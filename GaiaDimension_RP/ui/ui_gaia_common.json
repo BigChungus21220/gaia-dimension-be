@@ -1,0 +1,107 @@
+{
+    "namespace": "gaiafurnace_common",
+    "cell": {
+        "type": "image",
+        "texture": "textures/ui/gaiafurnace_slot",
+        "layer": 1
+    },
+    "grid_item_for_hotbar@common.container_item": {
+        "$item_collection_name": "hotbar_items",
+        "$background_images": "gaiafurnace_common.cell"
+    },
+    "grid_item_for_inventory@common.container_item": {
+        "$item_collection_name": "inventory_items",
+        "$background_images": "gaiafurnace_common.cell"
+    },
+    "inventory_panel": {
+    "type": "panel",
+    "size": [ 88, 83 ],
+    "anchor_from": "bottom_middle",
+    "anchor_to": "bottom_middle",
+    "controls": [
+      {
+        "inventory_grid": {
+          "type": "grid",
+          "size": [ 162, 54 ],
+          "anchor_from": "bottom_middle",
+          "anchor_to": "bottom_middle",
+          "offset": [ 0, -26 ],
+          "grid_dimensions": [ 9, 3 ],
+          "grid_item_template": "gaiafurnace_common.grid_item_for_inventory",
+          "collection_name": "inventory_items"
+        }
+      }
+    ]
+  },
+    "inventory_panel_bottom_half": {
+        "type": "panel",
+        "size": [ "100%", "50%" ],
+        "anchor_from": "left_middle",
+        "anchor_to": "top_left",
+        "controls": [
+          { "inventory_panel@inventory_panel": {} }
+        ]
+      },    
+    "inventory_panel_bottom_half_with_label@inventory_panel_bottom_half": {
+        "anchor_from": "bottom_left",
+        "anchor_to": "bottom_left",
+        "size": [ "100%", 93 ],
+        "controls": [
+          { "inventory_panel@inventory_panel": {} },
+          {
+            "inventory_label@common.section_heading_label": {
+              "anchor_from": "top_left",
+              "anchor_to": "top_left",
+              "offset": [ 7, 3 ],
+              "layer": 2,
+              "color": [1, 1, 1],
+              "text": "container.inventory"
+            }
+          }
+        ]
+      },
+      "container_slot_give@common.container_slot_button_prototype": {
+        "button_mappings": [
+          {
+            "from_button_id": "button.menu_select",
+            "to_button_id": "button.container_auto_place",
+            "mapping_type": "pressed"
+          },
+          {
+            "from_button_id": "button.menu_ok",
+            "to_button_id": "button.container_auto_place",
+            "mapping_type": "pressed"
+          },
+          {
+            "from_button_id": "button.menu_secondary_select",
+            "to_button_id": "button.container_auto_place",
+            "mapping_type": "pressed"
+          },
+          {
+            "from_button_id": "button.controller_select",
+            "to_button_id": "button.container_auto_place",
+            "mapping_type": "pressed"
+          },
+          {
+            "from_button_id": "button.menu_auto_place",
+            "to_button_id": "button.container_auto_place",
+            "mapping_type": "pressed"
+          },
+          {
+            "from_button_id": "button.controller_secondary_select",
+            "to_button_id": "button.container_auto_place",
+            "mapping_type": "pressed"
+          },
+          {
+            "from_button_id": "button.menu_inventory_drop",
+            "to_button_id": "button.container_auto_place",
+            "mapping_type": "pressed"
+          },
+          {
+            "from_button_id": "button.menu_inventory_drop_all",
+            "to_button_id": "button.container_auto_place",
+            "mapping_type": "pressed"
+          }
+        ]
+      }
+}

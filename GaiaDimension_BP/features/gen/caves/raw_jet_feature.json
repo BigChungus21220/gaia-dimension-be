@@ -1,0 +1,15 @@
+{
+	"format_version": "1.17.0",
+	"minecraft:ore_feature": {
+		"description": {
+			"identifier": "gaia:gen/caves/raw_jet_feature"
+		},
+		"count": 15,
+		"replace_rules": [
+			{
+				"places_block": "gaia:raw_jet",
+				"may_replace": ["gaia:gaia_stone"]
+			}
+		]
+	}
+}

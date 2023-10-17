@@ -1,0 +1,27 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaia:crusted_malachite_bricks",
+      "category": "Nature"
+    },
+    "components": {
+      "minecraft:loot": "loot_tables/blocks/gaia/crusted_malachite_bricks.json",
+      "minecraft:destroy_time": 2.0,
+      "minecraft:friction": 0.7,
+      "minecraft:map_color": "#FFFFFF",
+      "minecraft:explosion_resistance": 7.0,
+      "minecraft:block_light_absorption": 0.0,
+      "minecraft:block_light_emission": 1.0,
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "gaia:crusted_malachite_bricks",
+          "render_method": "blend"
+        }
+      },
+      "minecraft:creative_category": {
+        "category": "nature"
+      }
+    }
+  }
+}

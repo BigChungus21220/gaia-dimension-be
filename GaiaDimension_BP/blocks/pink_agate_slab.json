@@ -1,0 +1,97 @@
+{
+	"format_version": "1.16.100",
+	"minecraft:block": {
+		"description": {
+			"identifier": "gaia:pink_agate_slab",
+			"properties": {
+				"wiki:state": [0, 1, 2]
+			}
+		},
+		"components": {
+			"minecraft:map_color": "#22874c",
+			"minecraft:destructible_by_mining": {
+			  "seconds_to_destroy": 3
+			},
+			"minecraft:destructible_by_explosion": {
+			  "explosion_resistance": 2
+			},
+			"minecraft:geometry": "geometry.bottom_slab",
+			"minecraft:light_dampening": 0,
+			"minecraft:material_instances": {
+				"*": {
+					"texture": "pink_agate_planks",
+					"render_method": "opaque"
+				}
+			},
+			"minecraft:on_player_placing": {
+				"event": "wiki:update_facing_direction"
+			}
+		},
+		"events": {
+			"wiki:update_facing_direction": {
+				"set_block_property": {
+					"wiki:state": "query.target_x_rotation <= 0"
+				}
+			},
+			"wiki:full_slab": {
+				"set_block_property": {
+					"wiki:state": 2
+				},
+				"decrement_stack": {},
+				"run_command": {
+					"command": "playsound hit.wood @a ~ ~ ~"
+				}
+			}
+		},
+		"permutations": [
+			//Down Slab
+			{
+				"condition": "query.block_property('wiki:state') == 0",
+				"components": {
+					"minecraft:geometry": "geometry.bottom_slab",
+					"minecraft:collision_box": {
+						"origin": [ -8, 0, -8 ],
+						"size": [ 16, 8, 16 ] 
+					},
+					"minecraft:selection_box": {
+						"origin": [ -8, 0, -8 ],
+						"size": [ 16, 8, 16 ]
+					},
+					"minecraft:on_interact": {
+						"event": "wiki:full_slab",
+						"target": "self",
+						"condition": "q.block_face == 1.0 && q.is_item_name_any('slot.weapon.mainhand','gaia:pink_agate_slab')"
+					}
+				}
+			},
+			//Top Slab
+			{
+				"condition": "query.block_property('wiki:state') == 1",
+				"components": {
+					"minecraft:geometry": "geometry.top_slab",
+					"minecraft:collision_box": {
+						"origin": [ -8, 8, -8 ],
+						"size": [ 16, 8, 16 ] 
+					},
+					"minecraft:selection_box": {
+						"origin": [ -8, 8, -8 ],
+						"size": [ 16, 8, 16 ]
+					},
+					"minecraft:on_interact": {
+						"event": "wiki:full_slab",
+						"target": "self",
+						"condition": "q.block_face == 0.0 && q.is_item_name_any('slot.weapon.mainhand','gaia:pink_agate_slab')"
+					}
+				}
+			},
+			//Full Slab
+			{
+				"condition": "query.block_property('wiki:state') == 2",
+				"components": {
+					"minecraft:loot": "loot_tables/blocks/gaia/double_pink_agate_slab.json",
+					"minecraft:unit_cube": {}
+				}
+			}
+		]
+	}
+}

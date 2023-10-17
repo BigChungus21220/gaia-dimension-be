@@ -1,0 +1,19 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaia:keystone_block"
+    },
+    "components": {
+      "minecraft:loot": "loot_tables/blocks/empty.json",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 13
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 999999
+      },
+      "minecraft:map_color": "#ffffff",
+      "minecraft:unit_cube": {}
+    }
+  }
+}

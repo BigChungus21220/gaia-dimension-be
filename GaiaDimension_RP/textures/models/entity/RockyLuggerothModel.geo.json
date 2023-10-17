@@ -1,0 +1,75 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.rocky_luggeroth",
+				"texture_width": 128,
+				"texture_height": 64,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "head",
+					"pivot": [0, 5.2, -8],
+					"cubes": [
+						{"origin": [-2.5, 3.2, -13], "size": [5, 4, 5], "uv": [32, 0]}
+					]
+				},
+				{
+					"name": "leg3",
+					"pivot": [2.5, 6, -6],
+					"cubes": [
+						{"origin": [2.5, 0, -6], "size": [3, 6, 3], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "leg1",
+					"pivot": [2.5, 6, 6],
+					"cubes": [
+						{"origin": [2.5, 0, 6], "size": [3, 6, 3], "uv": [64, 0]}
+					]
+				},
+				{
+					"name": "leg2",
+					"pivot": [-2.5, 6, -6],
+					"cubes": [
+						{"origin": [-5.5, 0, -6], "size": [3, 6, 3], "uv": [52, 0]}
+					]
+				},
+				{
+					"name": "leg0",
+					"pivot": [-2.5, 6, 6],
+					"cubes": [
+						{"origin": [-5.5, 0, 6], "size": [3, 6, 3], "uv": [76, 0]}
+					]
+				},
+				{
+					"name": "body",
+					"pivot": [0, 8, -3],
+					"cubes": [
+						{"origin": [-4, 5, -8], "size": [8, 3, 16], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "shell",
+					"parent": "body",
+					"pivot": [0, 8, 0],
+					"cubes": [
+						{"origin": [-5, 8, -10], "size": [10, 18, 20], "uv": [46, 9]}
+					]
+				},
+				{
+					"name": "ridge",
+					"parent": "shell",
+					"pivot": [0, 8, 0],
+					"cubes": [
+						{"origin": [-6, 7, -11], "size": [12, 1, 22], "uv": [0, 41]}
+					]
+				}
+			]
+		}
+	]
+}

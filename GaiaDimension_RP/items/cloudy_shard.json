@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:cloudy_shard",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "cloudy_shard",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

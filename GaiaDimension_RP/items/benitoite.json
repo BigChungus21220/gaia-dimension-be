@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:benitoite",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "benitoite",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

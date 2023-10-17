@@ -1,0 +1,14 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:large_tentacle",
+      "category": "Equipment"
+    },
+    "components": {
+      "minecraft:icon": "large_tentacle",
+      "minecraft:use_animation": "eat",
+      "minecraft:render_offsets": "apple"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:conditional_list": {
+		"description": {
+			"identifier": "gaia:decorations/spike_blocks"
+		},
+		"conditional_features": [
+            {
+				"places_feature": "gaia:gen/gaia_blocks/impure_rock",
+				"condition": "t.block_randomizer = math.random(0,1); return t.block_randomizer > 0.5;"
+			},
+			{
+				"places_feature": "gaia:gen/gaia_blocks/gaia_stone",
+				"condition": "1"
+			}
+		],
+		"early_out_scheme": "placement_success"
+	}
+}

@@ -1,0 +1,14 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:weighted_random_feature": {
+		"description": {
+			"identifier": "gaia:ground_cover/murgni_randomizer"
+		},
+		"features": [
+			[ "gaia:ground_cover/murgni_0", 1 ],
+			[ "gaia:ground_cover/murgni_1", 1 ],
+			[ "gaia:ground_cover/murgni_2", 1 ],
+			[ "gaia:ground_cover/murgni_3", 1 ]
+		]
+	}
+}

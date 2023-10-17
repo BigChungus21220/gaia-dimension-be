@@ -1,0 +1,27 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "agate_pickaxe_burning"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "AAA",
+      " B ",
+      " B "
+    ],
+    "key": {
+      "A": {
+        "item": "gaia:burning_planks"
+      },
+      "B": {
+        "item": "gaia:agate_stick"
+      }
+    },
+    "result": {
+      "item": "gaia:agate_pickaxe"
+    }
+  }
+}

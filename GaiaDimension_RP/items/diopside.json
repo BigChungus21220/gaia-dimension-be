@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:diopside",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "diopside",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

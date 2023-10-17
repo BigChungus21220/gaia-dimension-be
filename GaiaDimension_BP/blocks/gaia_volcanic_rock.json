@@ -1,0 +1,21 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaia:volcanic_rock",
+      "menu_category": {
+        "category": "nature",
+        "group":   "itemGroup.name.stone"
+      }
+    },
+    "components": {
+      "minecraft:map_color": "#595959",
+      "minecraft:destructible_by_mining": {
+				"seconds_to_destroy": 2
+			},
+      "minecraft:destructible_by_explosion": {
+				"explosion_resistance": 3
+			}
+    }
+  }
+}

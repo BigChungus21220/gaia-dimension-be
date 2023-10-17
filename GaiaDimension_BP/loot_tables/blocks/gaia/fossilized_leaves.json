@@ -1,0 +1,23 @@
+{
+	"pools": [
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "item",
+					"name": "gaia:agate_stick",
+					"weight": 2
+				},
+				{
+					"type": "item",
+					"name": "gaia:fossilized_sapling_item",
+					"weight": 3
+				},
+				{
+					"type": "empty",
+					"weight": 10
+				}
+			]
+		}
+	]
+}

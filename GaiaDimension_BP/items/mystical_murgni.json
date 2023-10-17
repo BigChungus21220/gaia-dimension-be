@@ -1,0 +1,20 @@
+{
+	"format_version": "1.16.100",
+	"minecraft:item": {
+		"description": {
+			"identifier": "gaia:mystical_murgni_item",
+			"category": "nature"
+		},
+		"components": {
+			"minecraft:icon": {
+				"texture":  "mystical_murgni"
+			},
+			"minecraft:creative_category": {
+				"parent": "itemGroup.name.flower"
+			},
+			"minecraft:block_placer": {
+				"block": "gaia:mystical_murgni"
+			}
+		}
+	}
+}

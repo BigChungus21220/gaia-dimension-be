@@ -1,0 +1,13 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:aggregate_feature": {
+		"description": {
+			"identifier": "gaia:decorations/geyser_layers"
+		},
+		"features": [
+			"gaia:decorations/geyser_small_placer",
+			"gaia:decorations/geyser_medium_placer",
+			"gaia:decorations/geyser_large_placer"
+		]
+	}
+}

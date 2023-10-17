@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:tilibl",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "tilibl",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

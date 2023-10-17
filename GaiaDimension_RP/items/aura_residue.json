@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:aura_residue",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "aura_residue",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

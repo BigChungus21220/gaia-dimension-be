@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:shiny_bone",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "shiny_bone",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

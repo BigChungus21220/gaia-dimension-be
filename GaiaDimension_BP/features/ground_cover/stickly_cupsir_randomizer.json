@@ -1,0 +1,14 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:weighted_random_feature": {
+		"description": {
+			"identifier": "gaia:ground_cover/stickly_cupsir_randomizer"
+		},
+		"features": [
+			[ "gaia:ground_cover/stickly_cupsir_0", 1 ],
+			[ "gaia:ground_cover/stickly_cupsir_1", 1 ],
+			[ "gaia:ground_cover/stickly_cupsir_2", 1 ],
+			[ "gaia:ground_cover/stickly_cupsir_3", 1 ]
+		]
+	}
+}

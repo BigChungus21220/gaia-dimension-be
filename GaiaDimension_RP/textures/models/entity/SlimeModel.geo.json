@@ -1,0 +1,45 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.slime_model",
+				"texture_width": 64,
+				"texture_height": 32,
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 1.5,
+				"visible_bounds_offset": [0, 0.25, 0]
+			},
+			"bones": [
+				{
+					"name": "field_78200_a",
+					"pivot": [0, 24, 0],
+					"cubes": [
+						{"origin": [-3, 1, -3], "size": [6, 6, 6], "uv": [0, 16]}
+					]
+				},
+				{
+					"name": "field_78197_d",
+					"pivot": [0, 24, 0],
+					"cubes": [
+						{"origin": [-1, 2, -3.5], "size": [1, 1, 1], "uv": [32, 8]}
+					]
+				},
+				{
+					"name": "field_78199_c",
+					"pivot": [0, 24, 0],
+					"cubes": [
+						{"origin": [-3.25, 4, -3.5], "size": [2, 2, 2], "uv": [32, 4]}
+					]
+				},
+				{
+					"name": "field_78198_b",
+					"pivot": [0, 24, 0],
+					"cubes": [
+						{"origin": [1.25, 4, -3.5], "size": [2, 2, 2], "uv": [32, 0]}
+					]
+				}
+			]
+		}
+	]
+}

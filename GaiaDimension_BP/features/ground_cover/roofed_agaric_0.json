@@ -1,0 +1,14 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:structure_template_feature": {
+	  "description": {
+		"identifier": "gaia:ground_cover/roofed_agaric_0"
+	  },
+	  "structure_name": "mystructure:roofed_agaric_0",
+	  "adjustment_radius": 8,
+	  "constraints": {
+		"unburied": {},
+		"grounded": {}
+	  }
+	}
+  }

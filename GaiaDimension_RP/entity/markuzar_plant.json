@@ -1,0 +1,40 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "gaia:markuzar_plant",
+      "textures": {
+        "default": "textures/entity/markuzar_plant"
+      },
+      "materials": {
+        "default": "ravager"
+      },
+      "geometry": {
+        "default": "geometry.markuzar_plant"
+      },
+      "render_controllers": [
+        "controller.render.ravager"
+      ],
+      "spawn_egg": {
+        "texture": "spawn_gaia",
+        "texture_index": 0
+      },
+      "animations": {
+        "move": "animation.markuzar_plant.idle"
+      },
+      "scripts": {
+        "pre_animation": [
+          "variable.roar_length = 1.0;", // in seconds
+          "variable.bite_anim_duration = 0.75f;", // in seconds
+          "variable.bite_neck_length = 0.5;"
+        ],
+        "animate": [
+          "move"
+        ]
+      },
+      "particle_effects": {
+        "stun_particles": "minecraft:stunned_emitter"
+      }
+    }
+  }
+}

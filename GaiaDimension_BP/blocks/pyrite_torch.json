@@ -1,0 +1,282 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaia:pyrite_torch",
+            "traits": {
+                "minecraft:placement_position": {
+                    "enabled_states": [
+                        "minecraft:block_face"
+                    ]
+                }
+            },
+            "properties": {
+                "gaia:rotation": {
+                    "values": {
+                        "min": 0,
+                        "max": 15
+                    }
+                }
+            }
+        },
+        "components": {
+            "minecraft:queued_ticking": {
+                "looping": true,
+                "interval_range": [
+                    0,
+                    200
+                ],
+                "on_tick": {
+                    "event": "gaia:particle"
+                }
+            },
+            "minecraft:light_dampening": 0,
+            "minecraft:light_emission": 14,
+            "minecraft:loot": "loot_tables/blocks/pyrite_torch.json",
+            "minecraft:collision_box": false,
+            "minecraft:selection_box": {
+                "origin": [
+                    -2,
+                    0,
+                    -2
+                ],
+                "size": [
+                    4,
+                    10,
+                    4
+                ]
+            },
+            "minecraft:geometry": {
+                "identifier": "geometry.pyrite_torch",
+                "bone_visibility": {
+                    "ground": "q.block_property('minecraft:block_face') == 'up' && !Math.mod(q.block_property('gaia:rotation'), 4)",
+                    "wall": "q.block_property('minecraft:block_face') != 'up'"
+                }
+            },
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "pyrite_torch",
+                    "render_method": "alpha_test",
+                    "ambient_occlusion": false,
+                    "face_dimming": false
+                }
+            },
+            "minecraft:placement_filter": {
+                "conditions": [
+                    {
+                        "allowed_faces": [
+                            "up",
+                            "side"
+                        ],
+                        "block_filter": [
+                            {
+                                "tags": "q.any_tag('stone','grass','wood')"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "minecraft:on_player_placing": {
+                "event": "gaia:set_rotation"
+            }
+        },
+        "permutations": [
+            {
+                "condition": "q.block_property('gaia:rotation') >= 4 || q.block_property('minecraft:block_face') == 'north' ",
+                "components": {
+                    "minecraft:placement_filter": {
+                        "conditions": [
+                            {
+                                "allowed_faces": [
+                                    "north"
+                                ],
+                                "block_filter": [
+                                    {
+                                        "tags": "q.any_tag('stone','grass','wood')"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            0,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_property('gaia:rotation') >= 4 || q.block_property('minecraft:block_face') == 'east'",
+                "components": {
+                    "minecraft:placement_filter": {
+                        "conditions": [
+                            {
+                                "allowed_faces": [
+                                    "east"
+                                ],
+                                "block_filter": [
+                                    {
+                                        "tags": "q.any_tag('stone','grass','wood')"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            -90,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_property('gaia:rotation') >= 8 || q.block_property('minecraft:block_face') == 'south'",
+                "components": {
+                    "minecraft:placement_filter": {
+                        "conditions": [
+                            {
+                                "allowed_faces": [
+                                    "south"
+                                ],
+                                "block_filter": [
+                                    {
+                                        "tags": "q.any_tag('stone','grass','wood')"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            180,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_property('gaia:rotation') >= 12 || q.block_property('minecraft:block_face') == 'west'",
+                "components": {
+                    "minecraft:placement_filter": {
+                        "conditions": [
+                            {
+                                "allowed_faces": [
+                                    "west"
+                                ],
+                                "block_filter": [
+                                    {
+                                        "tags": "q.any_tag('stone','grass','wood')"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            90,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_property('minecraft:block_face') != 'up'",
+                "components": {
+                    "minecraft:selection_box": {
+                        "origin": [
+                            -3,
+                            3,
+                            3
+                        ],
+                        "size": [
+                            6,
+                            10,
+                            5
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_property('minecraft:block_face') == 'up' && !Math.mod(q.block_property('gaia:rotation'), 4)",
+                "components": {
+                    "minecraft:placement_filter": {
+                        "conditions": [
+                            {
+                                "allowed_faces": [
+                                    "up"
+                                ],
+                                "block_filter": [
+                                    {
+                                        "tags": "q.any_tag('stone','grass','wood')"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "events": {
+            "gaia:set_rotation": {
+                "set_block_property": {
+                    "gaia:rotation": "q.block_face == 1 ? { t.positive_head_rot = q.head_y_rotation(0) + 360 * (q.head_y_rotation(0) != Math.abs(q.head_y_rotation(0))); };"
+                }
+            },
+            "gaia:particle": {
+                "sequence": [
+                    {
+                        "condition": "q.block_property('minecraft:block_face') == 'north'",
+                        "run_command": {
+                            "command": [
+                                "particle minecraft:basic_flame_particle ~~0.4~0.3",
+                                "particle minecraft:basic_smoke_particle ~~0.4~0.3"
+                            ]
+                        }
+                    },
+                    {
+                        "condition": "q.block_property('minecraft:block_face') == 'south'",
+                        "run_command": {
+                            "command": [
+                                "particle minecraft:basic_flame_particle ~~0.4~-0.3",
+                                "particle minecraft:basic_smoke_particle ~~0.4~-0.3"
+                            ]
+                        }
+                    },
+                    {
+                        "condition": "q.block_property('minecraft:block_face') == 'east'",
+                        "run_command": {
+                            "command": [
+                                "particle minecraft:basic_flame_particle ~-0.3~0.4~",
+                                "particle minecraft:basic_smoke_particle ~-0.3~0.4~"
+                            ]
+                        }
+                    },
+                    {
+                        "condition": "q.block_property('minecraft:block_face') == 'west'",
+                        "run_command": {
+                            "command": [
+                                "particle minecraft:basic_flame_particle ~0.3~0.4~",
+                                "particle minecraft:basic_smoke_particle ~0.3~0.4~"
+                            ]
+                        }
+                    },
+                    {
+                        "condition": "q.block_property('minecraft:block_face') == 'up' && !Math.mod(q.block_property('gaia:rotation'), 4)",
+                        "run_command": {
+                            "command": [
+                                "particle minecraft:basic_flame_particle ~~0.2~",
+                                "particle minecraft:basic_smoke_particle ~~0.2~"
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

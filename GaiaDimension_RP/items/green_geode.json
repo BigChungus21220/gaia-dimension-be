@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:green_geode",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "geode",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

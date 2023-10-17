@@ -1,0 +1,12 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:aggregate_feature": {
+		"description": {
+			"identifier": "flakey:gen/void/private/chunk_erase"
+		},
+		"features": [
+			"flakey:gen/void/private/stone_scatter",
+			"flakey:gen/void/private/air_scatter"
+		]
+	}
+}

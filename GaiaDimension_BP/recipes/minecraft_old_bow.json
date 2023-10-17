@@ -1,0 +1,40 @@
+{
+  "format_version": "1.18.0",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "old_bow:minecraft:old_bow"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "abc",
+      "def",
+      "ghi"
+    ],
+    "key": {
+      "b": {
+        "item": "gaia:agate_stick"
+      },
+      "c": {
+        "item": "minecraft:string"
+      },
+      "d": {
+        "item": "agate_stick"
+      },
+      "f": {
+        "item": "minecraft:string"
+      },
+      "h": {
+        "item": "gaia:agate_stick"
+      },
+      "i": {
+        "item": "minecraft:string"
+      }
+    },
+    "result": {
+      "item": "gaia:old_bow",
+      "count": "1"
+    }
+  }
+}

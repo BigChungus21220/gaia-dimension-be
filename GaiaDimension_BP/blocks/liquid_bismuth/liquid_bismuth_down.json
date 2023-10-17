@@ -1,0 +1,225 @@
+//--------------template by Provedule, download on https://www.provedule.com/---------
+{
+  "format_version": "1.20.10",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaia:liquid_bismuth_down",
+      "properties": {
+        "gaia:x": [ 0, 1 ],
+        "gaia:nx": [ 0, 1 ],
+        "gaia:z": [ 0, 1 ],
+        "gaia:nz": [ 0, 1 ],
+        "gaia:top": [ 0, 1 ],
+        "gaia:bottom": [ 0, 1 ]
+      }
+    },
+    "components": {
+      "minecraft:queued_ticking": {
+        "looping": true,
+        "interval_range": [ 0.2, 0.2 ],
+        "on_tick": {
+          "event": "gaia:flow"
+        }
+      },
+      "minecraft:loot": "loot_tables/blocks/null.json",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "liquid_bismuth_flowing",
+          "render_method": "blend"
+        }
+      },
+      "tag:template": {},
+      "tag:template_full": {},
+      "tag:template_down": {},
+      "tag:fluid": {},
+      "minecraft:geometry": {
+        "identifier": "geometry.fluid",
+        "bone_visibility": {
+          "x": "query.block_property('gaia:x') == 0",
+          "nx": "query.block_property('gaia:nx') == 0",
+          "z": "query.block_property('gaia:z') == 0",
+          "nz": "query.block_property('gaia:nz') == 0",
+          "top": "query.block_property('gaia:top') == 0",
+          "bottom": "query.block_property('gaia:bottom') == 0"
+        }
+      },
+      "minecraft:light_dampening": 0.0,
+      "minecraft:selection_box": false,
+      "minecraft:destructible_by_mining": false,
+      "minecraft:collision_box": false,
+      "minecraft:destructible_by_explosion": false,
+      "minecraft:flammable": false
+    },
+    "events": {
+      "gaia:flow": {
+        "sequence": [
+          {
+            "trigger": {
+              "event": "gaia:check_side",
+              "target": "self"
+            }
+          },
+          {
+            "condition": "query.block_neighbor_has_any_tag(0, 1, 0, 'template')",
+            "run_command": {
+              "target": "self",
+              "command": [ "execute unless block ~ ~-1 ~ air unless block ~ ~-1 ~ gaia:liquid_bismuth unless block ~ ~-1 ~ gaia:liquid_bismuth1 unless block ~ ~-1 ~ gaia:liquid_bismuth2 unless block ~ ~-1 ~ gaia:liquid_bismuth3 unless block ~ ~-1 ~ gaia:liquid_bismuth_down run setblock ~ ~ ~ gaia:liquid_bismuth_down" ]
+            }
+          },
+
+          {
+            "condition": "query.block_neighbor_has_any_tag(0, 1, 0, 'template')",
+            "run_command": {
+              "target": "self",
+              "command": [ "execute if block ~ ~-1 ~ air run setblock ~ ~-1 ~ gaia:liquid_bismuth_down" ]
+            }
+          },
+          {
+            "condition": "query.block_neighbor_has_any_tag(0, 1, 0, 'template')",
+            "run_command": {
+              "target": "self",
+              "command": [ "execute if block ~ ~-1 ~ gaia:liquid_bismuth1 run setblock ~ ~-1 ~ gaia:liquid_bismuth_down" ]
+            }
+          },
+          {
+            "condition": "query.block_neighbor_has_any_tag(0, 1, 0, 'template')",
+            "run_command": {
+              "target": "self",
+              "command": [ "execute if block ~ ~-1 ~ gaia:liquid_bismuth2 run setblock ~ ~-1 ~ gaia:liquid_bismuth_down" ]
+            }
+          },
+          {
+            "condition": "query.block_neighbor_has_any_tag(0, 1, 0, 'template')",
+            "run_command": {
+              "target": "self",
+              "command": [ "execute if block ~ ~-1 ~ gaia:liquid_bismuth3 run setblock ~ ~-1 ~ gaia:liquid_bismuth_down" ]
+            }
+          },
+
+          {
+            "condition": "query.block_neighbor_has_any_tag(0, 1, 0, 'template')",
+            "run_command": {
+              "target": "self",
+              "command": [ "execute unless block ~ ~-1 ~ air unless block ~ ~-1 ~ gaia:liquid_bismuth_down unless block ~ ~-1 ~ gaia:liquid_bismuth1 unless block ~ ~-1 ~ gaia:liquid_bismuth2 unless block ~ ~-1 ~ gaia:liquid_bismuth3 if block ~1 ~ ~ air run setblock ~1 ~ ~ gaia:liquid_bismuth1" ]
+            }
+          },
+          {
+            "condition": "query.block_neighbor_has_any_tag(0, 1, 0, 'template')",
+            "run_command": {
+              "target": "self",
+              "command": [ "execute unless block ~ ~-1 ~ air unless block ~ ~-1 ~ gaia:liquid_bismuth_down unless block ~ ~-1 ~ gaia:liquid_bismuth1 unless block ~ ~-1 ~ gaia:liquid_bismuth2 unless block ~ ~-1 ~ gaia:liquid_bismuth3 if block ~ ~ ~1 air run setblock ~ ~ ~1 gaia:liquid_bismuth1" ]
+            }
+          },
+          {
+            "condition": "query.block_neighbor_has_any_tag(0, 1, 0, 'template')",
+            "run_command": {
+              "target": "self",
+              "command": [ "execute unless block ~ ~-1 ~ air unless block ~ ~-1 ~ gaia:liquid_bismuth_down unless block ~ ~-1 ~ gaia:liquid_bismuth1 unless block ~ ~-1 ~ gaia:liquid_bismuth2 unless block ~ ~-1 ~ gaia:liquid_bismuth3 if block ~-1 ~ ~ air run setblock ~-1 ~ ~ gaia:liquid_bismuth1" ]
+            }
+          },
+          {
+            "condition": "query.block_neighbor_has_any_tag(0, 1, 0, 'template')",
+            "run_command": {
+              "target": "self",
+              "command": [ "execute unless block ~ ~-1 ~ air unless block ~ ~-1 ~ gaia:liquid_bismuth_down unless block ~ ~-1 ~ gaia:liquid_bismuth1 unless block ~ ~-1 ~ gaia:liquid_bismuth2 unless block ~ ~-1 ~ gaia:liquid_bismuth3 if block ~ ~ ~-1 air run setblock ~ ~ ~-1 gaia:liquid_bismuth1" ]
+            }
+          },
+
+          {
+            "condition": "!query.block_neighbor_has_any_tag(0, 1, 0, 'template')",
+            "run_command": {
+              "target": "self",
+              "command": [ "setblock ~ ~ ~ air" ]
+            }
+          }
+        ]
+      },
+
+      "gaia:check_side": {
+        "sequence": [
+          {
+            "condition": "query.block_neighbor_has_any_tag(0, 0, -1, 'template_full')",
+            "set_block_property": {
+              "gaia:nz": 1
+            }
+          },
+          {
+            "condition": "query.block_neighbor_has_any_tag(0, 0, 1, 'template_full')",
+            "set_block_property": {
+              "gaia:z": 1
+            }
+          },
+          {
+            "condition": "query.block_neighbor_has_any_tag(1, 0, 0, 'template_full')",
+            "set_block_property": {
+              "gaia:x": 1
+            }
+          },
+          {
+            "condition": "query.block_neighbor_has_any_tag(-1, 0, 0, 'template_full')",
+            "set_block_property": {
+              "gaia:nx": 1
+            }
+          },
+          {
+            "condition": "query.block_neighbor_has_any_tag(0, 1, 0, 'template_full')",
+            "set_block_property": {
+              "gaia:top": 1
+            }
+          },
+          {
+            "condition": "query.block_neighbor_has_any_tag(0, -1, 0, 'template_full')",
+            "set_block_property": {
+              "gaia:bottom": 1
+            }
+          },
+
+          {
+            "condition": "!query.block_neighbor_has_any_tag(0, 0, -1, 'template_full')",
+            "set_block_property": {
+              "gaia:nz": 0
+            }
+          },
+          {
+            "condition": "!query.block_neighbor_has_any_tag(0, 0, 1, 'template_full')",
+            "set_block_property": {
+              "gaia:z": 0
+            }
+          },
+          {
+            "condition": "!query.block_neighbor_has_any_tag(1, 0, 0, 'template_full')",
+            "set_block_property": {
+              "gaia:x": 0
+            }
+          },
+          {
+            "condition": "!query.block_neighbor_has_any_tag(-1, 0, 0, 'template_full')",
+            "set_block_property": {
+              "gaia:nx": 0
+            }
+          },
+          {
+            "condition": "!query.block_neighbor_has_any_tag(0, 1, 0, 'template_full')",
+            "set_block_property": {
+              "gaia:top": 0
+            }
+          },
+          {
+            "condition": "!query.block_neighbor_has_any_tag(0, -1, 0, 'template_full')",
+            "set_block_property": {
+              "gaia:bottom": 0
+            }
+          },
+
+          {
+            "condition": "query.block_neighbor_has_any_tag(0, 1, 0, 'template')",
+            "run_command": {
+              "target": "self",
+              "command": [ "execute unless block ~ ~-1 ~ air unless block ~ ~-1 ~ gaia:liquid_bismuth unless block ~ ~-1 ~ gaia:liquid_bismuth1 unless block ~ ~-1 ~ gaia:liquid_bismuth2 unless block ~ ~-1 ~ gaia:liquid_bismuth3 unless block ~ ~-1 ~ gaia:liquid_bismuth_down run setblock ~ ~ ~ gaia:liquid_bismuth_down" ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

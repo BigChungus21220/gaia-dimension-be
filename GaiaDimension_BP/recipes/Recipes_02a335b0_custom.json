@@ -1,0 +1,19 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_furnace": {
+    "tags": [
+      "furnace"
+    ],
+    "output": {
+      "item": "gaia:pink_essence",
+      "data": 0
+    },
+    "input": {
+      "item": "gaia:gaia_stone",
+      "data": 0
+    },
+    "description": {
+      "identifier": "recipes_f94e89bf"
+    }
+  }
+}

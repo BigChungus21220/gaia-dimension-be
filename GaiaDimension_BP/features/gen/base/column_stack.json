@@ -1,0 +1,19 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:scatter_feature": {
+		"description": {
+			"identifier": "gaia:gen/base/column_stack"
+		},
+		"places_feature": "gaia:gen/base/block_picker",
+		"iterations": "v.noise1 = q.noise(0.01*v.originx + 2354.0, 0.01*v.originz + 3798.0); v.noise2 = q.noise(0.005*v.originx - 1279.0 + v.noise1, 0.005*v.originz - 1279.0 + v.noise1); v.dist = math.abs(t.d1 - t.d2);v.k = t.biome == 'static_wasteland' ? math.lerp(240,160,v.dist) : 240;v.n = 50;t.height = t.heightmap*40 + 63 + v.noise2*6.0*t.heightmap;v.h = math.max(math.min(0.5 + (t.height - v.k)/(2*v.n),1),0);t.height = t.height*(1-v.h) + v.k*v.h - v.n*v.h*(1-v.h);t.layer = 63 > math.floor(t.height) ? math.floor(t.height) - 63 : 0;(t.biome == 'salt_dunes') ? {t.height = t.height + math.lerp(0, v.noise1*16, math.clamp(v.dist*t.heightmap*30.0, 0, 1));};return math.max(t.height,63) + 1;",
+		"x": 0,
+		"z": "t.layer = t.layer + 1; return 0;",
+		"y": {
+			"distribution": "fixed_grid",
+			"extent": [
+				0,
+				"math.max(t.height,63)"
+			]
+		}
+	}
+}

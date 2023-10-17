@@ -1,0 +1,14 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:lurmorus_meat",
+      "category": "Equipment"
+    },
+    "components": {
+      "minecraft:icon": "lurmorus_meat",
+      "minecraft:use_animation": "eat",
+      "minecraft:render_offsets": "apple"
+    }
+  }
+}

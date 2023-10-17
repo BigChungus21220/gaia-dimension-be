@@ -1,0 +1,31 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaia:pillar1",
+      "category": "Nature"
+    },
+    "components": {
+      "minecraft:loot": "loot_tables/blocks/gaia/malachite_pillar.json",
+      "minecraft:destroy_time": 3.0,
+      "minecraft:friction": 0.7,
+      "minecraft:map_color": "#FFFFFF",
+      "minecraft:explosion_resistance": 7.0,
+      "minecraft:block_light_absorption": 0.0,
+      "minecraft:block_light_emission": 1.0,
+      "minecraft:on_player_destroyed": {
+        "event": "remove:block",
+        "target": "self"
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "gaia:pillar1",
+          "render_method": "opaque"
+        }
+      },
+      "minecraft:creative_category": {
+        "category": "nature"
+      }
+    }
+  }
+}

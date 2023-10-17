@@ -1,0 +1,17 @@
+{
+	"format_version": "1.13.0",
+
+	"minecraft:single_block_feature": {
+		"description": {
+			"identifier": "gaia:gen/blocks/bedrock"
+		},
+
+		"places_block": "minecraft:bedrock",
+
+		"enforce_placement_rules": false,
+		"enforce_survivability_rules": false,
+		"may_replace": ["gaia:gaia_stone",
+	                    "minecraft:air"]
+	}
+
+}

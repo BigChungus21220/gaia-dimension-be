@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:tektite",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "tektite",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

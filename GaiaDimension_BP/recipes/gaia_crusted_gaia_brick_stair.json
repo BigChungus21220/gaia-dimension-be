@@ -1,0 +1,21 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "crusted_gaia_brick_stair_96d535b7"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "A  ",
+      "AA ",
+      "AAA"
+    ],
+    "key": {},
+    "result": {
+      "item": "gaia:crusted_gaia_brick_stair",
+      "count": 8
+    }
+  }
+}

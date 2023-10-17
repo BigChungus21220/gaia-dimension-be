@@ -1,0 +1,25 @@
+{
+	"format_version": "1.20.10",
+	"minecraft:block": {
+		"description": {
+			"identifier": "gaia:pink_sludge_block",
+			"menu_category": {
+				"category": "nature",
+				"group": "itemGroup.name.soil"
+			}
+		},
+		"components": {
+			"tag:is_shovelable": {},
+			"tag:dirt": {},
+			"minecraft:loot": "loot_tables/blocks/pink_sludge_block.json",
+			"minecraft:destructible_by_mining": {
+				"seconds_to_destroy": 0.5
+			},
+			"minecraft:unit_cube": {},
+			"minecraft:destructible_by_explosion": {
+				"explosion_resistance": 1
+			},
+			"minecraft:map_color": "#ffffff"
+		}
+	}
+}

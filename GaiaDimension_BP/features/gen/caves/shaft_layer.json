@@ -1,0 +1,13 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:scatter_feature": {
+		"description": {
+			"identifier": "gaia:gen/caves/shaft_layer"
+		},
+		"places_feature": "gaia:gen/caves/shaft_rows",
+		"iterations": "v.z = 0; return 11;",
+		"x": 0,
+		"y": 0,
+		"z": "v.z = v.z + 1; return v.z;"
+	}
+}

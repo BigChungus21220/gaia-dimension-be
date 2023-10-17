@@ -1,0 +1,27 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "agate_sword_blue"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "A",
+      "A",
+      "B"
+    ],
+    "key": {
+      "A": {
+        "item": "gaia:blue_agate_planks"
+      },
+      "B": {
+        "item": "gaia:agate_stick"
+      }
+    },
+    "result": {
+      "item": "gaia:agate_sword"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaia:salt_rock",
+      "menu_category": {
+        "category": "nature",
+        "group":   "itemGroup.name.salt_rock"
+      }
+    },
+    "components": {
+      "minecraft:map_color": "#fff5de",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 2
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 2
+      }
+    }
+  }
+}

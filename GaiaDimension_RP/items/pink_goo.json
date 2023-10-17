@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:pink_goo",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "pink_goo",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

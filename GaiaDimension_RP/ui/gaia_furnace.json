@@ -1,0 +1,111 @@
+{
+    "namespace": "gaia_furnace",
+    "furnace_label": {
+        "type": "label",
+        "offset": [ 0, -3 ],
+        "anchor_from": "top_middle",
+        "anchor_to": "top_middle",
+        "text": "Gaia Furnace",
+        "color": [1, 1, 1],
+        "layer": 2
+    },
+    "input_grid_panel":{
+        "type": "panel"
+    },
+    "cell_image": {
+        "type": "image",
+        "texture": "textures/ui/invisible",
+        "layer": 1
+    },
+    "furnace_grid": {
+        "type": "stack_panel",
+        "$index": 0,
+        "$collection_name": "collection",
+        "collection_name": "$collection_name",
+        "$slot_size":[18, 18],
+        "controls": [
+            {
+                "left_top@chest.chest_grid_item": {
+                "ignored": false,
+                "$cell_image_size": "$slot_size",
+                "size": "$slot_size",
+                "collection_index": "$index"
+                }
+            }
+        ]
+    },
+    "furnace_screen_slots":{
+        "type": "panel",
+        "size": [56, 56],
+        "anchor_from": "top_middle",
+        "anchor_to": "top_middle",
+        "controls": [
+            {
+                "material_input@gaia_furnace.furnace_grid":{
+                    "$collection_name": "container_items",
+                    "$index": 0,
+                    "offset": [-10.2, -22],
+                    "$background_images": "gaia_furnace.cell_image"
+                }
+            },
+            {
+                "fuel_input@gaia_furnace.furnace_grid":{
+                    "$collection_name": "container_items",
+                    "$index": 1,
+                    "offset": [-10.2, 14],
+                    "$background_images": "gaia_furnace.cell_image"
+                }
+            },
+            {
+                "fuel_input@gaia_furnace.furnace_grid":{
+                    "$collection_name": "container_items",
+                    "$index": 2,
+                    "offset": [45.5, -4.4],
+                    "$slot_size": [26, 26],
+                    "$background_images": "gaia_furnace.cell_image"
+                }
+            },
+            //interface
+            {
+                "fuel_display@gaia_furnace.furnace_grid":{
+                    "$collection_name": "container_items",
+                    "$index": 3,
+                    "offset": [-0.6, -4.4],
+                    "$slot_size": [0, 0] ,
+                    "$item_renderer_size": [16, 16],
+                    "$item_renderer_offset": [0.6, 0],
+                    "$background_images": "gaia_furnace.cell_image",
+                    "$button_ref": "gaiafurnace_common.container_slot_give"
+                }
+            },
+            {
+                "fuel_display@gaia_furnace.furnace_grid":{
+                    "$collection_name": "container_items",
+                    "$index": 4,
+                    "offset": [25.5, -8.4],
+                    "$slot_size": [0, 0] ,
+                    "$item_renderer_size": [24, 17],
+                    "$item_renderer_offset": [0, 0],
+                    "$background_images": "gaia_furnace.cell_image"
+                }
+            }
+        ]
+    },
+    "gaia_furnace_panel_top_half":{
+        "type": "panel",
+        "size": [ "100%", "50% - 12px" ],
+        "offset": [ 0, 12 ],
+        "anchor_to": "top_left",
+        "anchor_from": "top_left",
+        "controls": [
+          { 
+            "chest_label@gaia_furnace.furnace_label": {} 
+          },
+          {
+            "grid@gaia_furnace.furnace_screen_slots": {
+              "offset": [ 5, 10 ]
+            }
+          }
+        ]
+    }
+}

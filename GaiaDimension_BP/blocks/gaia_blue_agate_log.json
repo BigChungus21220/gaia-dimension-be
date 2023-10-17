@@ -1,0 +1,101 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaia:blue_agate_log",
+      "menu_category": {
+        "category": "nature",
+        "group": "itemGroup.name.log"
+      },
+      "properties": {
+        "gaia:rotation": [0, 1, 2]
+      }
+    },
+    "components": {
+      "minecraft:map_color": "#636566",
+      "minecraft:on_player_placing": {
+        "event": "gaia:rotate"
+      },
+      "minecraft:material_instances": {
+				"*": {
+					"texture": "blue_agate_log_side",
+					"render_method": "opaque"
+				},
+				"up": {
+					"texture": "blue_agate_log_end",
+					"render_method": "opaque"
+				},
+        "down": {
+					"texture": "blue_agate_log_end",
+					"render_method": "opaque"
+				}
+			},
+      "minecraft:unit_cube": {},
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 2
+      },
+      "tag:gaia:blue_agate_log": {},
+      "minecraft:on_interact": {
+        "condition": "query.equipped_item_any_tag('slot.weapon.mainhand', 'minecraft:is_axe')",
+        "event": "gaia:strip_0"
+      }
+    },
+    "events": {
+      "gaia:rotate": {
+        "set_block_property": {
+          "gaia:rotation": "Math.floor(query.block_face / 2)"
+        }
+      },
+      "gaia:strip_0": {
+        "run_command": {
+          "command": "setblock ~ ~ ~ gaia:stripped_blue_agate_log [\"gaia:rotation\" : 0]"
+        }
+      },
+      "gaia:strip_1": {
+        "run_command": {
+          "command": "setblock ~ ~ ~ gaia:stripped_blue_agate_log [\"gaia:rotation\" : 1]"
+        }
+      },
+      "gaia:strip_2": {
+        "run_command": {
+          "command": "setblock ~ ~ ~ gaia:stripped_blue_agate_log [\"gaia:rotation\" : 2]"
+        }
+      }
+    },
+    "permutations": [
+      {
+        "condition": "query.block_property('gaia:rotation') == 0",
+        "components": {
+          "minecraft:transformation": { "rotation": [0, 0, 0] },
+          "minecraft:on_interact": {
+            "condition": "query.equipped_item_any_tag('slot.weapon.mainhand', 'minecraft:is_axe')",
+            "event": "gaia:strip_0"
+          }
+        }
+      },
+      {
+        "condition": "query.block_property('gaia:rotation') == 1",
+        "components": {
+          "minecraft:transformation": { "rotation": [90, 0, 0] },
+          "minecraft:on_interact": {
+            "condition": "query.equipped_item_any_tag('slot.weapon.mainhand', 'minecraft:is_axe')",
+            "event": "gaia:strip_1"
+          }
+        }
+      },
+      {
+        "condition": "query.block_property('gaia:rotation') == 2",
+        "components": {
+          "minecraft:transformation": { "rotation": [0, 0, 90] },
+          "minecraft:on_interact": {
+            "condition": "query.equipped_item_any_tag('slot.weapon.mainhand', 'minecraft:is_axe')",
+            "event": "gaia:strip_2"
+          }
+        }
+      }
+    ]
+  }
+}

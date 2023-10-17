@@ -1,0 +1,13 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:euclase",
+      "category": "Items"
+    },
+    "components": {
+      "minecraft:icon": "euclase",
+      "minecraft:render_offsets": "miscellaneous"
+    }
+  }
+}

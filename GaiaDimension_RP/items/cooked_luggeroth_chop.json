@@ -1,0 +1,14 @@
+{
+  "format_version": "1.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:cooked_luggeroth_chop",
+      "category": "Equipment"
+    },
+    "components": {
+      "minecraft:icon": "cooked_luggeroth_chop",
+      "minecraft:use_animation": "eat",
+      "minecraft:render_offsets": "apple"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "sugilite_sword"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "A",
+      "A",
+      "B"
+    ],
+    "key": {
+      "A": {
+        "item": "gaia:sugilite"
+      },
+      "B": {
+        "item": "gaia:agate_stick"
+      }
+    },
+    "result": {
+      "item": "gaia:sugilite_sword"
+    }
+  }
+}

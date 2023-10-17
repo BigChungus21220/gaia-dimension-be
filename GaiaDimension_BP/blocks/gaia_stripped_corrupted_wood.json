@@ -1,0 +1,61 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaia:stripped_corrupted_wood",
+      "menu_category": {
+        "category": "nature",
+        "group": "itemGroup.name.wood"
+      },
+      "properties": {
+        "gaia:rotation": [0, 1, 2]
+      }
+    },
+    "components": {
+      "minecraft:map_color": "#636566",
+      "minecraft:on_player_placing": {
+        "event": "gaia:rotate"
+      },
+      "minecraft:material_instances": {
+				"*": {
+					"texture": "stripped_corrupted_log_side",
+					"render_method": "opaque"
+				}
+			},
+      "minecraft:unit_cube": {},
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 2
+      }
+    },
+    "events": {
+      "gaia:rotate": {
+        "set_block_property": {
+          "gaia:rotation": "Math.floor(query.block_face / 2)"
+        }
+      }
+    },
+    "permutations": [
+      {
+        "condition": "query.block_property('gaia:rotation') == 0",
+        "components": {
+          "minecraft:transformation": { "rotation": [0, 0, 0] }
+        }
+      },
+      {
+        "condition": "query.block_property('gaia:rotation') == 1",
+        "components": {
+          "minecraft:transformation": { "rotation": [90, 0, 0] }
+        }
+      },
+      {
+        "condition": "query.block_property('gaia:rotation') == 2",
+        "components": {
+          "minecraft:transformation": { "rotation": [0, 0, 90] }
+        }
+      }
+    ]
+  }
+}

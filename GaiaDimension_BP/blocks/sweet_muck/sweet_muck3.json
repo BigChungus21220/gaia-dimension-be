@@ -1,0 +1,77 @@
+//--------------template by Provedule, download on https://www.provedule.com/---------
+{
+  "format_version": "1.20.10",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaia:sweet_muck3"
+    },
+    "components": {
+      "minecraft:queued_ticking": {
+        "looping": true,
+        "interval_range": [ 0.2, 0.2 ],
+        "on_tick": {
+          "event": "gaia:flow"
+        }
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "sweet_muck_still",
+          "render_method": "blend"
+        }
+      },
+      "minecraft:loot": "loot_tables/blocks/null.json",
+      "tag:template3": {},
+      "tag:template": {},
+      "tag:fluid": {},
+      "minecraft:geometry": "geometry.fluid3",
+      "minecraft:light_dampening": 0.0,
+      "minecraft:selection_box": false,
+      "minecraft:destructible_by_mining": false,
+      "minecraft:collision_box": false,
+      "minecraft:destructible_by_explosion": false,
+      "minecraft:flammable": false
+    },
+    "events": {
+      "gaia:flow": {
+        "sequence": [
+          {
+            "condition": "query.block_neighbor_has_any_tag(1, 0, 0, 'template2') || query.block_neighbor_has_any_tag(0, 0, 1, 'template2') || query.block_neighbor_has_any_tag(-1, 0, 0, 'template2') || query.block_neighbor_has_any_tag(0, 0, -1, 'template2')",
+            "run_command": {
+              "target": "self",
+              "command": [ "execute if block ~ ~-1 ~ air run setblock ~ ~-1 ~ gaia:sweet_muck_down" ]
+            }
+          },
+          {
+            "condition": "query.block_neighbor_has_any_tag(1, 0, 0, 'template2') || query.block_neighbor_has_any_tag(0, 0, 1, 'template2') || query.block_neighbor_has_any_tag(-1, 0, 0, 'template2') || query.block_neighbor_has_any_tag(0, 0, -1, 'template2')",
+            "run_command": {
+              "target": "self",
+              "command": [ "execute if block ~ ~-1 ~ gaia:sweet_muck1 run setblock ~ ~-1 ~ gaia:sweet_muck_down" ]
+            }
+          },
+          {
+            "condition": "query.block_neighbor_has_any_tag(1, 0, 0, 'template2') || query.block_neighbor_has_any_tag(0, 0, 1, 'template2') || query.block_neighbor_has_any_tag(-1, 0, 0, 'template2') || query.block_neighbor_has_any_tag(0, 0, -1, 'template2')",
+            "run_command": {
+              "target": "self",
+              "command": [ "execute if block ~ ~-1 ~ gaia:sweet_muck2 run setblock ~ ~-1 ~ gaia:sweet_muck_down" ]
+            }
+          },
+          {
+            "condition": "query.block_neighbor_has_any_tag(1, 0, 0, 'template2') || query.block_neighbor_has_any_tag(0, 0, 1, 'template2') || query.block_neighbor_has_any_tag(-1, 0, 0, 'template2') || query.block_neighbor_has_any_tag(0, 0, -1, 'template2')",
+            "run_command": {
+              "target": "self",
+              "command": [ "execute if block ~ ~-1 ~ gaia:sweet_muck3 run setblock ~ ~-1 ~ gaia:sweet_muck_down" ]
+            }
+          },
+
+          {
+            "condition": "!query.block_neighbor_has_any_tag(1, 0, 0, 'template2') && !query.block_neighbor_has_any_tag(0, 0, 1, 'template2') && !query.block_neighbor_has_any_tag(-1, 0, 0, 'template2') && !query.block_neighbor_has_any_tag(0, 0, -1, 'template2')",
+            "run_command": {
+              "target": "self",
+              "command": [ "setblock ~ ~ ~ air" ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}
