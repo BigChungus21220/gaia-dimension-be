@@ -1,0 +1,22 @@
+{
+	"$schema": "https://raw.githubusercontent.com/Bedrock-OSS/regolith-schemas/main/config/v1.1.json",
+	"author": "Remember M9",
+	"name": "Gaia Addon",
+	"packs": {
+		"behaviorPack": "./GaiaDimension_BP",
+		"resourcePack": "./GaiaDimension_RP"
+	},
+	"regolith": {
+		"dataPath": "./data/regolith",
+		"filterDefinitions": {},
+		"profiles": {
+			"default": {
+				"export": {
+					"readOnly": false,
+					"target": "development"
+				},
+				"filters": []
+			}
+		}
+	}
+}
