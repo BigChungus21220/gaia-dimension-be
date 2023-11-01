@@ -1,12 +1,10 @@
-import { world, system, Vector, Entity, Dimension, Block } from "@minecraft/server"
+import { world, system, Vector, Entity, Dimension, Block, World } from "@minecraft/server"
 import {log, inGaiaDimension, delay } from './utils.js'
-import { placePortal} from 'portal_utils.js'
+import { placePortal,decode} from './portal_utils.js'
 const overworld = world.getDimension("overworld")
 const nether = world.getDimension("nether")
 const the_end = world.getDimension("the_end")
 const dimensions = [overworld, nether, the_end]
-
-
 Entity.prototype.isInPortal = function ()
 {
     try {
@@ -45,11 +43,11 @@ function findGround(location,dimension){
 
 async function tpToGaia(entity){
     log(entity.typeId + " sent to Gaia Dimension")
-    entity.teleport(new Vector(150000, 32000, 150000), {dimension: the_end})
+    entity.teleport(new Vector(decode('cfffcccdff'), decode('qkuk'), decode('cfffcccdff')), {dimension: the_end})
     await delay(1);
-    let topBlock = getTopBlock(new Vector(150000, 256, 150000), the_end) //warning: any entities other than players will not spawn correctly on the other side
+    let topBlock = getTopBlock(new Vector(decode('cfffcccdff'), decode('qq'), decode('cfffcccdff')), the_end) //warning: any entities other than players will not spawn correctly on the other side
     entity.teleport(topBlock, {dimension: the_end})
-    placePortal(new Vector(150000, 70, 150000), the_end, true)
+    placePortal(new Vector(decode('cfffcccdff'), decode('kh'), decode('cfffcccdff')), the_end, true)
 }
 
 async function backToSpawn(entity){

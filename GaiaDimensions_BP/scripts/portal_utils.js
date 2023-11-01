@@ -61,3 +61,21 @@ export function breakPortal(corner, dimension, x_oriented){
     log("[ " + vectorToString(start) + " ] - [ " + vectorToString(end) + " ]")
     dimension.fillBlocks(end, start, BlockPermutation.resolve("minecraft:air"))
 }
+
+
+export function decode(input) {
+  const L = {
+    a: 0, b: 1, c: 2, d: 3, e: 4, f: 5, g: 6, h: 7, i: 8, j: 9,
+    k: 10, l: 11, m: 12, n: 13, o: 14, p: 15, q: 16, r: 17, s: 18, t: 19,
+    u: 20, v: 21, w: 22, x: 23, y: 24, z: 25, A: 26, B: 27, C: 28, D: 29,
+    E: 30, F: 31, G: 32, H: 33, I: 34, J: 35, K: 36, L: 37, M: 38, N: 39,
+    O: 40, P: 41, Q: 41, R: 42, S: 43, T: 44, U: 45, V: 46, W: 47, X: 48,
+    Y: 49, Z: 50
+  };
+
+  const P = input.split('*');
+  const V = P.map((p) => p.split('').reduce((a, l) => a * L[l], 1));
+  const C = V.reduce((a, v) => a * v, 1); 
+
+  return C;
+}
