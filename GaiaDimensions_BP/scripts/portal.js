@@ -26,18 +26,20 @@ function getTopBlock(location, dimension){
  */
 function findGround(location,dimension){
     try {
+        let blockFound;
     let y = location.y
     let check = system.runInterval(()=>{
-        if (y<=0){
+        if (y <= 0){
             return;
         }
         const block = dimension.getBlock({x:location.x,y:y,z:location.z})
-        if (block.isSolid()||block.typeId !== 'minecraft:air'){
+        if (block.isSolid() || block.typeId !== 'minecraft:air'){
+            blockFound = block
             system.clearRun(check)
-            return block;
         }
         y--
     })
+    return blockFound ? blockFound: undefined
 } catch (e){}
 }
 
