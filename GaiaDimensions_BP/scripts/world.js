@@ -3,5 +3,5 @@ import './fog.js';
 import './clearMobs.js';
 import './portal.js';
 import './light_portal.js';
-import {furnacesLoad} from "api/furnaceAPI.js";
+import {furnacesLoad} from "./api/furnaceAPI.js";
 furnacesLoad()

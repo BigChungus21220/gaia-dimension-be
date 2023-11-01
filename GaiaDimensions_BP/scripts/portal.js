@@ -1,5 +1,5 @@
 import { world, system, Vector, Entity, Dimension, Block } from "@minecraft/server"
-import { getBiome, log, inGaiaDimension, delay } from './utils.js'
+import {log, inGaiaDimension, delay } from './utils.js'
 import { placePortal} from 'portal_utils.js'
 const overworld = world.getDimension("overworld")
 const nether = world.getDimension("nether")
