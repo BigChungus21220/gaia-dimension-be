@@ -44,7 +44,7 @@ world.afterEvents.itemUseOn.subscribe((event) => {
     }
 })
 
-world.afterEvents.blockBreak.subscribe((event) => {
+world.afterEvents.playerBreakBlock.subscribe((event) => {
     if (event.block.typeId == "gaia:gaia_portal"){
         let block = event.block;
         let position = block.location
