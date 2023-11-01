@@ -1,6 +1,6 @@
 import { world, Vector} from "@minecraft/server"
-import { directionToVector, log } from 'utils.js'
-import { isUnlitPortal, isLitPortal, placePortal, breakPortal } from 'portal_utils.js'
+import { directionToVector, log } from './utils.js'
+import { isUnlitPortal, isLitPortal, placePortal, breakPortal } from './portal_utils.js'
 
 function checklight(block){
     let position = block.location

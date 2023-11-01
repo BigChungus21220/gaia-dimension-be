@@ -1,5 +1,5 @@
 import { Vector, BlockPermutation } from "@minecraft/server"
-import { log, vectorToString } from 'utils.js'
+import { log, vectorToString } from './utils.js'
 
 export function isUnlitPortal(corner, dimension, x_oriented){
     let isValid = true

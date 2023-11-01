@@ -1,26 +1,44 @@
-import { world, system, Vector } from "@minecraft/server"
-import { getBiome, log, inGaiaDimension, delay } from 'utils.js'
+import { world, system, Vector, Entity, Dimension, Block } from "@minecraft/server"
+import {log, inGaiaDimension, delay } from './utils.js'
 import { placePortal} from 'portal_utils.js'
-
 const overworld = world.getDimension("overworld")
 const nether = world.getDimension("nether")
 const the_end = world.getDimension("the_end")
 const dimensions = [overworld, nether, the_end]
 
-function isInPortal(entity){
-    if (entity === undefined){
-        return false
-    }
-    let isPortal = false
+
+Entity.prototype.isInPortal = function ()
+{
     try {
-        isPortal = entity.dimension.getBlock(entity.location).typeId == "gaia:gaia_portal"
-    } catch (e) {}
-    return isPortal
-}
+	return this.dimension.getBlock(this.location).typeId === "gaia:gaia_portal";
+    } catch (e){}
+};
 
 function getTopBlock(location, dimension){
     let loc = new Vector(Math.floor(location.x), 310, Math.floor(location.z))
     return Vector.add(dimension.getBlockFromRay(loc, new Vector(0,-1,0)).block.location, new Vector(0,1,0))
+}
+
+/**
+ * @param {Vector} location
+ * @param {Dimension} dimension
+ * @returns {Block|undefined}
+ */
+function findGround(location,dimension){
+    try {
+    let y = location.y
+    let check = system.runInterval(()=>{
+        if (y<=0){
+            return;
+        }
+        const block = dimension.getBlock({x:location.x,y:y,z:location.z})
+        if (block.isSolid()||block.typeId !== 'minecraft:air'){
+            system.clearRun(check)
+            return block;
+        }
+        y--
+    })
+} catch (e){}
 }
 
 async function tpToGaia(entity){
@@ -33,8 +51,8 @@ async function tpToGaia(entity){
 }
 
 async function backToSpawn(entity){
-    if (entity.typeid == "minecraft:player"){
-        let spawn = entity.getSpawnPoint()
+    if (entity.typeId == "minecraft:player"){
+        let spawn = findGround({x:entity.getSpawnPoint().x,y:entity.getSpawnPoint().y,z:entity.getSpawnPoint().z},entity.getSpawnPoint().dimension)
         entity.teleport(spawn.location, {dimension: spawn.dimension})
         await delay(1);
         entity.teleport(getTopBlock(spawn.location, spawn.dimension), {dimension: spawn.dimension})
@@ -51,21 +69,11 @@ system.runInterval(() => {
         let entities = dimension.getEntities()
         for (let entity of entities){
             let lastInPortal = entity.hasTag("inPortal");
-            let inPortal = isInPortal(entity) || (dimension.getBlock(new Vector(entity.location.x, 0, entity.location.z)) === undefined && lastInPortal);
+            let inPortal = entity.isInPortal() || (dimension.getBlock(new Vector(entity.location.x, 0, entity.location.z)) === undefined && lastInPortal);
             if (inPortal && !lastInPortal){
-                if (inGaiaDimension(entity)){
-                    backToSpawn(entity)
-                    //log("to spawn")
-                } else {
-                    tpToGaia(entity)
-                    //log("to gaia")
-                }
+                inGaiaDimension(entity) ? backToSpawn(entity) : tpToGaia(entity)
             }
-            if (inPortal){
-                entity.addTag("inPortal")
-            } else {
-                entity.removeTag("inPortal")
-            }
+            inPortal ? entity.addTag('inPortal') : entity.removeTag('inPortal')
         }
     }
 }, 8)
