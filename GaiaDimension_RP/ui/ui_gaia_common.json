@@ -60,6 +60,24 @@
           }
         ]
       },
+      "inventory_panel_bottom_half_with_label_var@inventory_panel_bottom_half": {
+        "anchor_from": "bottom_left",
+        "anchor_to": "bottom_left",
+        "size": [ "100%", 93 ],
+        "controls": [
+          { "inventory_panel@common.inventory_panel": {} },
+          {
+            "inventory_label@common.section_heading_label": {
+              "anchor_from": "top_left",
+              "anchor_to": "top_left",
+              "offset": [ 7, 3 ],
+              "layer": 2,
+              "color": "$color",
+              "text": "container.inventory"
+            }
+          }
+        ]
+      },
       "container_slot_give@common.container_slot_button_prototype": {
         "button_mappings": [
           {

@@ -2,11 +2,18 @@
   "namespace": "gaia_restructurer",
   "restructurer_icon": {
     "type": "stack_panel",
-    "collection_name": "collection",
+    "size": [18, 18],
+    "anchor_from": "top_left",
+    "anchor_to": "top_left",
+    "collection_name": "$collection_name",
     "$texture_path_0|default": "textures/ui/misc/missing_texture",
     "$texture_path_1|default": "textures/ui/misc/missing_texture",
     "$texture_path_2|default": "textures/ui/misc/missing_texture",
     "$texture_path_3|default": "textures/ui/misc/missing_texture",
+    "$texture_path_4|default": "textures/ui/misc/missing_texture",
+    "$texture_path_5|default": "textures/ui/misc/missing_texture",
+    "$texture_path_6|default": "textures/ui/misc/missing_texture",
+    "$texture_path_7|default": "textures/ui/misc/missing_texture",
     "controls": [
       {
         "stage_0_container": {
@@ -21,11 +28,11 @@
                   {
                     "binding_name": "#inventory_stack_count",
                     "binding_type": "collection",
-                    "binding_collection_name": "container_items"
+                    "binding_collection_name": "$collection_name"
                   },
                   {
                     "binding_type": "view",
-                    "source_property_name": "(#inventory_stack_count = 0)",
+                    "source_property_name": "(#inventory_stack_count = '2')",
                     "target_property_name": "#visible"
                   }
                 ]
@@ -39,11 +46,11 @@
                   {
                     "binding_name": "#inventory_stack_count",
                     "binding_type": "collection",
-                    "binding_collection_name": "container_items"
+                    "binding_collection_name": "$collection_name"
                   },
                   {
                     "binding_type": "view",
-                    "source_property_name": "(#inventory_stack_count = 1)",
+                    "source_property_name": "(#inventory_stack_count = '3')",
                     "target_property_name": "#visible"
                   }
                 ]
@@ -57,11 +64,11 @@
                   {
                     "binding_name": "#inventory_stack_count",
                     "binding_type": "collection",
-                    "binding_collection_name": "container_items"
+                    "binding_collection_name": "$collection_name"
                   },
                   {
                     "binding_type": "view",
-                    "source_property_name": "(#inventory_stack_count = 2)",
+                    "source_property_name": "(#inventory_stack_count = '4')",
                     "target_property_name": "#visible"
                   }
                 ]
@@ -75,11 +82,83 @@
                   {
                     "binding_name": "#inventory_stack_count",
                     "binding_type": "collection",
-                    "binding_collection_name": "container_items"
+                    "binding_collection_name": "$collection_name"
                   },
                   {
                     "binding_type": "view",
-                    "source_property_name": "(#inventory_stack_count = 3)",
+                    "source_property_name": "(#inventory_stack_count = '5')",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "stage_4": {
+                "type": "image",
+                "texture": "$texture_path_4",
+                "bindings": [
+                  {
+                    "binding_name": "#inventory_stack_count",
+                    "binding_type": "collection",
+                    "binding_collection_name": "$collection_name"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(#inventory_stack_count = '6')",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "stage_5": {
+                "type": "image",
+                "texture": "$texture_path_5",
+                "bindings": [
+                  {
+                    "binding_name": "#inventory_stack_count",
+                    "binding_type": "collection",
+                    "binding_collection_name": "$collection_name"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(#inventory_stack_count = '7')",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "stage_6": {
+                "type": "image",
+                "texture": "$texture_path_6",
+                "bindings": [
+                  {
+                    "binding_name": "#inventory_stack_count",
+                    "binding_type": "collection",
+                    "binding_collection_name": "$collection_name"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(#inventory_stack_count = '8')",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "stage_7": {
+                "type": "image",
+                "texture": "$texture_path_7",
+                "bindings": [
+                  {
+                    "binding_name": "#inventory_stack_count",
+                    "binding_type": "collection",
+                    "binding_collection_name": "$collection_name"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(#inventory_stack_count = '9')",
                     "target_property_name": "#visible"
                   }
                 ]
@@ -95,7 +174,7 @@
     "offset": [0, -3],
     "anchor_from": "top_middle",
     "anchor_to": "top_middle",
-    "text": "Gaia Restructurer",
+    "text": "Restructurer",
     "color": [1, 1, 1],
     "layer": 2
   },
@@ -116,10 +195,10 @@
   },
   "restructurer_grid": {
     "type": "stack_panel",
+    //"$background_images": "gaia_restructurer.cell_image",
     "$index": 0,
     "anchor_from": "top_middle",
     "anchor_to": "top_middle",
-    "$collection_name": "collection",
     "collection_name": "$collection_name",
     "$slot_size": [18, 18],
     "controls": [
@@ -136,89 +215,87 @@
   "restructurer_screen_slots": {
     "type": "panel",
     "size": [162, 54],
-    "anchor_from": "top_middle",
-    "anchor_to": "top_middle",
+    "offset": ["50%-20px", -3],
+    "$collection_name": "container_items",
     "controls": [
       {
         "fuel_input_left@gaia_restructurer.restructurer_grid": {
-          "$collection_name": "container_items",
           "$index": 0,
-          "offset": [-27, -22],
-          "$background_images": "gaia_restructurer.cell_image"
+          "offset": [-27, -22]
         }
       },
       {
         "fuel_input_right@gaia_restructurer.restructurer_grid": {
-          "$collection_name": "container_items",
           "$index": 1,
-          "offset": [27, -22],
-          "$background_images": "gaia_restructurer.cell_image"
+          "offset": [27, -22]
         }
       },
       {
         "material_input@gaia_restructurer.restructurer_grid": {
-          "$collection_name": "container_items",
           "$index": 2,
-          "offset": [0, 0],
-          "$background_images": "gaia_restructurer.cell_image"
+          "offset": [0, -4]
         }
       },
       {
         "material_output_left@gaia_restructurer.restructurer_grid": {
-          "$collection_name": "container_items",
           "$index": 3,
-          "offset": [-9, 10],
-          "$background_images": "gaia_restructurer.cell_image"
+          "offset": [-10, 37]
         }
       },
       {
         "material_output_right@gaia_restructurer.restructurer_grid": {
-          "$collection_name": "container_items",
           "$index": 4,
-          "offset": [9, 10],
-          "$background_images": "gaia_restructurer.cell_image"
+          "offset": [10, 37]
         }
       },
       //anim slots
       {
         "fuel_display_left@gaia_restructurer.restructurer_icon": {
-          "$collection_name": "container_items",
-          "$index": 0,
-          "size": [18, 18],
+          "$index": 5,
+          "offset": [-9, -22],
+          "$texture_path_0": "textures/ui/restructurer_arrow_down_right_0",
+          "$texture_path_1": "textures/ui/restructurer_arrow_down_right_1",
+          "$texture_path_2": "textures/ui/restructurer_arrow_down_right_2",
+          "$texture_path_3": "textures/ui/restructurer_arrow_down_right_3",
+          "$texture_path_4": "textures/ui/restructurer_arrow_down_right_4",
+          "$texture_path_5": "textures/ui/restructurer_arrow_down_right_5",
+          "$texture_path_6": "textures/ui/restructurer_arrow_down_right_6",
+          "$texture_path_7": "textures/ui/restructurer_arrow_down_right_7"
+        }
+      },
+      {
+        "fuel_display_right@gaia_restructurer.restructurer_icon": {
+          "$index": 6,
+          "offset": [9, -22],
           "$texture_path_0": "textures/ui/restructurer_arrow_down_left_0",
           "$texture_path_1": "textures/ui/restructurer_arrow_down_left_1",
           "$texture_path_2": "textures/ui/restructurer_arrow_down_left_2",
           "$texture_path_3": "textures/ui/restructurer_arrow_down_left_3",
-          "offset": [-9, -22]
+          "$texture_path_4": "textures/ui/restructurer_arrow_down_left_4",
+          "$texture_path_5": "textures/ui/restructurer_arrow_down_left_5",
+          "$texture_path_6": "textures/ui/restructurer_arrow_down_left_6",
+          "$texture_path_7": "textures/ui/restructurer_arrow_down_left_7"
         }
       },
       {
-        "fuel_display_right@gaia_restructurer.restructurer_grid": {
-          "$collection_name": "container_items",
-          "$index": 6,
-          "offset": [9, -22],
-          //"$slot_size": [0, 0] ,
-          "$item_renderer_size": [24, 17],
-          "$item_renderer_offset": [0, 0],
-          "$background_images": "gaia_restructurer.cell_image"
-        }
-      },
-      {
-        "progress_display_bottom@gaia_restructurer.restructurer_grid": {
-          "$collection_name": "container_items",
+        "progress_display_bottom@gaia_restructurer.restructurer_icon": {
           "$index": 7,
-          "offset": [0, 4],
-          //"$slot_size": [0, 0] ,
-          "$item_renderer_size": [24, 17],
-          "$item_renderer_offset": [0, 0],
-          "$background_images": "gaia_restructurer.cell_image"
+          "offset": [0, 16],
+          "$texture_path_0": "textures/ui/restructurer_arrow_down_0",
+          "$texture_path_1": "textures/ui/restructurer_arrow_down_1",
+          "$texture_path_2": "textures/ui/restructurer_arrow_down_2",
+          "$texture_path_3": "textures/ui/restructurer_arrow_down_3",
+          "$texture_path_4": "textures/ui/restructurer_arrow_down_4",
+          "$texture_path_5": "textures/ui/restructurer_arrow_down_5",
+          "$texture_path_6": "textures/ui/restructurer_arrow_down_6",
+          "$texture_path_7": "textures/ui/restructurer_arrow_down_7"
         }
       }
     ]
   },
   "gaia_restructurer_panel_top_half": {
     "type": "panel",
-    "size": ["100%", "50% - 12px"],
+    "size": ["100%", "70% - 12px"],
     "offset": [0, 12],
     "anchor_to": "top_left",
     "anchor_from": "top_left",
@@ -227,9 +304,7 @@
         "chest_label@gaia_restructurer.restructurer_label": {}
       },
       {
-        "grid@gaia_restructurer.restructurer_screen_slots": {
-          "offset": [5, 10]
-        }
+        "grid@gaia_restructurer.restructurer_screen_slots": {}
       }
     ]
   }
