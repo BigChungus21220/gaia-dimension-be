@@ -1,0 +1,33 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Gaia Dimension BP",
+    "description": "Bedrock port of the Gaia Dimension Mod by Androsa",
+    "uuid": "6b0938dc-c34f-4010-91d7-76156860a9a4",
+    "version": [1, 0, 0],
+    "min_engine_version": [1, 19, 70]
+  },
+  "modules": [
+    {
+      "description": "s",
+      "uuid": "01b2281d-4f40-40fb-99d5-c83c69c35021",
+      "type": "data",
+      "version": [1, 0, 1]
+    },
+    {
+      "description": "JS",
+      "type": "script",
+      "language": "javascript",
+      "uuid": "1eee9b4c-0dce-41ce-869f-0de89fa98c6a",
+      "version": [1, 1, 0],
+      "entry": "scripts/world.js"
+    }
+  ],
+  "capabilities": ["script_eval"],
+  "dependencies": [
+    {
+      "module_name": "@minecraft/server",
+      "version": "1.7.0-beta"
+    }
+  ]
+}

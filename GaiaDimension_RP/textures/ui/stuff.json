@@ -1,0 +1,92 @@
+{
+  "restructurer_icon": {
+    "type": "stack_panel",
+    "collection_name": "collection",
+    "$texture_path_0|default": "textures/ui/misc/missing_texture",
+    "$texture_path_1|default": "textures/ui/misc/missing_texture",
+    "$texture_path_2|default": "textures/ui/misc/missing_texture",
+    "$texture_path_3|default": "textures/ui/misc/missing_texture",
+    "controls": [
+      {
+        "stage_0_container": {
+          "type": "input_panel",
+          "collection_index": "$index",
+          "controls": [
+            {
+              "stage_0": {
+                "type": "image",
+                "texture": "$texture_path_0",
+                "bindings": [
+                  {
+                    "binding_name": "#inventory_stack_count",
+                    "binding_type": "collection",
+                    "binding_collection_name": "container_items"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(#inventory_stack_count = 0)",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "stage_1": {
+                "type": "image",
+                "texture": "$texture_path_1",
+                "bindings": [
+                  {
+                    "binding_name": "#inventory_stack_count",
+                    "binding_type": "collection",
+                    "binding_collection_name": "container_items"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(#inventory_stack_count = 1)",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "stage_2": {
+                "type": "image",
+                "texture": "$texture_path_2",
+                "bindings": [
+                  {
+                    "binding_name": "#inventory_stack_count",
+                    "binding_type": "collection",
+                    "binding_collection_name": "container_items"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(#inventory_stack_count = 2)",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "stage_3": {
+                "type": "image",
+                "texture": "$texture_path_3",
+                "bindings": [
+                  {
+                    "binding_name": "#inventory_stack_count",
+                    "binding_type": "collection",
+                    "binding_collection_name": "container_items"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(#inventory_stack_count = 3)",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

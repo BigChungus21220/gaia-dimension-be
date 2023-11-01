@@ -2,6 +2,7 @@
   // Alphabetical order please :)
   "ui_defs": [
     "ui/gaia_furnace.json",
+    "ui/gaia_restructurer.json",
     "ui/ui_gaia_common.json"
   ]
 }

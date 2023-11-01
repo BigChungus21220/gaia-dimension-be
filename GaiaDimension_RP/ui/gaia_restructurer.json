@@ -1,0 +1,236 @@
+{
+  "namespace": "gaia_restructurer",
+  "restructurer_icon": {
+    "type": "stack_panel",
+    "collection_name": "collection",
+    "$texture_path_0|default": "textures/ui/misc/missing_texture",
+    "$texture_path_1|default": "textures/ui/misc/missing_texture",
+    "$texture_path_2|default": "textures/ui/misc/missing_texture",
+    "$texture_path_3|default": "textures/ui/misc/missing_texture",
+    "controls": [
+      {
+        "stage_0_container": {
+          "type": "input_panel",
+          "collection_index": "$index",
+          "controls": [
+            {
+              "stage_0": {
+                "type": "image",
+                "texture": "$texture_path_0",
+                "bindings": [
+                  {
+                    "binding_name": "#inventory_stack_count",
+                    "binding_type": "collection",
+                    "binding_collection_name": "container_items"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(#inventory_stack_count = 0)",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "stage_1": {
+                "type": "image",
+                "texture": "$texture_path_1",
+                "bindings": [
+                  {
+                    "binding_name": "#inventory_stack_count",
+                    "binding_type": "collection",
+                    "binding_collection_name": "container_items"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(#inventory_stack_count = 1)",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "stage_2": {
+                "type": "image",
+                "texture": "$texture_path_2",
+                "bindings": [
+                  {
+                    "binding_name": "#inventory_stack_count",
+                    "binding_type": "collection",
+                    "binding_collection_name": "container_items"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(#inventory_stack_count = 2)",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "stage_3": {
+                "type": "image",
+                "texture": "$texture_path_3",
+                "bindings": [
+                  {
+                    "binding_name": "#inventory_stack_count",
+                    "binding_type": "collection",
+                    "binding_collection_name": "container_items"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(#inventory_stack_count = 3)",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "restructurer_label": {
+    "type": "label",
+    "offset": [0, -3],
+    "anchor_from": "top_middle",
+    "anchor_to": "top_middle",
+    "text": "Gaia Restructurer",
+    "color": [1, 1, 1],
+    "layer": 2
+  },
+  "input_grid_panel": {
+    "type": "panel"
+  },
+  "cell_image": {
+    "type": "image",
+    "texture": "textures/ui/invisible",
+    "layer": 1
+  },
+  "background_image": {
+    "type": "image",
+    "texture": "textures/ui/restructurer_background",
+    "size": ["100%", "100%"],
+    "tiled": true,
+    "layer": 1
+  },
+  "restructurer_grid": {
+    "type": "stack_panel",
+    "$index": 0,
+    "anchor_from": "top_middle",
+    "anchor_to": "top_middle",
+    "$collection_name": "collection",
+    "collection_name": "$collection_name",
+    "$slot_size": [18, 18],
+    "controls": [
+      {
+        "left_top@chest.chest_grid_item": {
+          "ignored": false,
+          "$cell_image_size": "$slot_size",
+          "size": "$slot_size",
+          "collection_index": "$index"
+        }
+      }
+    ]
+  },
+  "restructurer_screen_slots": {
+    "type": "panel",
+    "size": [162, 54],
+    "anchor_from": "top_middle",
+    "anchor_to": "top_middle",
+    "controls": [
+      {
+        "fuel_input_left@gaia_restructurer.restructurer_grid": {
+          "$collection_name": "container_items",
+          "$index": 0,
+          "offset": [-27, -22],
+          "$background_images": "gaia_restructurer.cell_image"
+        }
+      },
+      {
+        "fuel_input_right@gaia_restructurer.restructurer_grid": {
+          "$collection_name": "container_items",
+          "$index": 1,
+          "offset": [27, -22],
+          "$background_images": "gaia_restructurer.cell_image"
+        }
+      },
+      {
+        "material_input@gaia_restructurer.restructurer_grid": {
+          "$collection_name": "container_items",
+          "$index": 2,
+          "offset": [0, 0],
+          "$background_images": "gaia_restructurer.cell_image"
+        }
+      },
+      {
+        "material_output_left@gaia_restructurer.restructurer_grid": {
+          "$collection_name": "container_items",
+          "$index": 3,
+          "offset": [-9, 10],
+          "$background_images": "gaia_restructurer.cell_image"
+        }
+      },
+      {
+        "material_output_right@gaia_restructurer.restructurer_grid": {
+          "$collection_name": "container_items",
+          "$index": 4,
+          "offset": [9, 10],
+          "$background_images": "gaia_restructurer.cell_image"
+        }
+      },
+      //anim slots
+      {
+        "fuel_display_left@gaia_restructurer.restructurer_icon": {
+          "$collection_name": "container_items",
+          "$index": 0,
+          "size": [18, 18],
+          "$texture_path_0": "textures/ui/restructurer_arrow_down_left_0",
+          "$texture_path_1": "textures/ui/restructurer_arrow_down_left_1",
+          "$texture_path_2": "textures/ui/restructurer_arrow_down_left_2",
+          "$texture_path_3": "textures/ui/restructurer_arrow_down_left_3",
+          "offset": [-9, -22]
+        }
+      },
+      {
+        "fuel_display_right@gaia_restructurer.restructurer_grid": {
+          "$collection_name": "container_items",
+          "$index": 6,
+          "offset": [9, -22],
+          //"$slot_size": [0, 0] ,
+          "$item_renderer_size": [24, 17],
+          "$item_renderer_offset": [0, 0],
+          "$background_images": "gaia_restructurer.cell_image"
+        }
+      },
+      {
+        "progress_display_bottom@gaia_restructurer.restructurer_grid": {
+          "$collection_name": "container_items",
+          "$index": 7,
+          "offset": [0, 4],
+          //"$slot_size": [0, 0] ,
+          "$item_renderer_size": [24, 17],
+          "$item_renderer_offset": [0, 0],
+          "$background_images": "gaia_restructurer.cell_image"
+        }
+      }
+    ]
+  },
+  "gaia_restructurer_panel_top_half": {
+    "type": "panel",
+    "size": ["100%", "50% - 12px"],
+    "offset": [0, 12],
+    "anchor_to": "top_left",
+    "anchor_from": "top_left",
+    "controls": [
+      {
+        "chest_label@gaia_restructurer.restructurer_label": {}
+      },
+      {
+        "grid@gaia_restructurer.restructurer_screen_slots": {
+          "offset": [5, 10]
+        }
+      }
+    ]
+  }
+}
