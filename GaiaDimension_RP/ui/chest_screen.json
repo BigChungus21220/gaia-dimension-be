@@ -78,7 +78,7 @@
       {
         "root_panel@common.root_panel": {
           "layer": 1,
-          "size": [176, 166],
+          "size": [176, 190],
           "controls": [
             // { "common_panel@common.common_panel": {} },
             {
@@ -94,13 +94,11 @@
                     "small_chest_panel_top_half@gaia_restructurer.gaia_restructurer_panel_top_half": {}
                   },
                   {
-                    "inventory_panel_bottom_half_with_label@gaiafurnace_common.inventory_panel_bottom_half_with_label": {}
-                  },
-                  {
-                    "hotbar_grid@common.hotbar_grid_template": {
-                      "grid_item_template": "gaiafurnace_common.grid_item_for_hotbar"
+                    "inventory_panel_bottom_half_with_label@gaiafurnace_common.inventory_panel_bottom_half_with_label_var": {
+                      "$color": [1,1,1]
                     }
                   },
+                  { "hotbar_grid@common.hotbar_grid_template": {} },
                   {
                     "inventory_take_progress_icon_button@common.inventory_take_progress_icon_button": {}
                   }
