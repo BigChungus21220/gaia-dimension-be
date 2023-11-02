@@ -2,6 +2,9 @@ import { world, system, Vector, Entity, Dimension, Block, World } from "@minecra
 import {log, inGaiaDimension, delay } from './utils.js'
 import { placePortal,decode} from './portal_utils.js'
 const dimensions = ['overworld','nether','the_end'].map(dimensionStr=>world.getDimension(dimensionStr))
+const overworld = dimensions.find(d=>d.id === 'minecraft:overworld')
+const nether = dimensions.find(d=>d.id === 'minecraft:nether')
+const the_end = dimensions.find(d=>d.id === 'minecraft:the_end')
 Entity.prototype.isInPortal = function (){
     try {
 	return this.dimension.getBlock(this.location).typeId === "gaia:gaia_portal";
@@ -25,10 +28,11 @@ async function tpToGaia(entity){
 
 async function backToDimension(entity){
     if (entity.typeId == "minecraft:player"){
-        const teleport = entity.getTag
-        entity.teleport(spawn.location, {dimension: spawn.dimension})
+        const teleport = JSON.parse(entity.getTags()[0])
+        const dimension = entity.getSpawnPoint().dimension
+        entity.teleport({x:teleport.x,y:teleport.y,z:teleport.z}, {dimension: dimension})
         await delay(1);
-        entity.teleport(getTopBlock(spawn.location, spawn.dimension), {dimension: spawn.dimension})
+        entity.teleport(getTopBlock({x:teleport.x,y:teleport.y,z:teleport.z}, dimension), {dimension: dimension})
     } else {
         entity.teleport(world.getDefaultSpawnLocation(), {dimension: overworld})
         await delay(1);
@@ -44,11 +48,21 @@ system.runInterval(() => {
             let lastInPortal = entity.hasTag("inPortal");
             let inPortal = entity.isInPortal() || (dimension.getBlock(new Vector(entity.location.x, 0, entity.location.z)) === undefined && lastInPortal);
             if (inPortal && !lastInPortal){
-                inGaiaDimension(entity) ? backToSpawn(entity) : tpToGaia(entity)
+                inGaiaDimension(entity) ? backToDimension(entity) : tpToGaia(entity)
             }
             inPortal ? entity.addTag('inPortal') : entity.removeTag('inPortal')
         }
     }
 }, 8)
 
-world.afterEvents.
+world.afterEvents.playerDimensionChange.subscribe(ev=>{
+    const {fromLocation,toDimension:{id},player} = ev
+    switch (id) {
+        case 'minecraft:the_end':
+        !player.hasTag(player.getTags()[0]) ? player.addTag(JSON.stringify(fromLocation)) : undefined
+        break;
+        case 'minecraft:overworld':
+            player.hasTag(player.getTags()[0]) ? player.removeTag(player.getTags()[0]) : undefined
+        break;
+    }
+})
