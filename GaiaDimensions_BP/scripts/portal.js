@@ -30,7 +30,7 @@ async function backToDimension(entity){
     if (entity.typeId == "minecraft:player"){
         const teleport = JSON.parse(entity.getTags()[0])
         const dimension = entity.getSpawnPoint().dimension
-        entity.teleport({x:teleport.x,y:teleport.y,z:teleport.z}, {dimension: dimension})
+        entity.teleport({x:teleport.x+2,y:teleport.y,z:teleport.z+2}, {dimension: dimension})
         await delay(1);
         entity.teleport(getTopBlock({x:teleport.x,y:teleport.y,z:teleport.z}, dimension), {dimension: dimension})
     } else {
