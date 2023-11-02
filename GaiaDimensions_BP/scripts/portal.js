@@ -1,12 +1,8 @@
 import { world, system, Vector, Entity, Dimension, Block, World } from "@minecraft/server"
 import {log, inGaiaDimension, delay } from './utils.js'
 import { placePortal,decode} from './portal_utils.js'
-const overworld = world.getDimension("overworld")
-const nether = world.getDimension("nether")
-const the_end = world.getDimension("the_end")
-const dimensions = [overworld, nether, the_end]
-Entity.prototype.isInPortal = function ()
-{
+const dimensions = ['overworld','nether','the_end'].map(dimensionStr=>world.getDimension(dimensionStr))
+Entity.prototype.isInPortal = function (){
     try {
 	return this.dimension.getBlock(this.location).typeId === "gaia:gaia_portal";
     } catch (e){}
@@ -17,29 +13,6 @@ function getTopBlock(location, dimension){
     return Vector.add(dimension.getBlockFromRay(loc, new Vector(0,-1,0)).block.location, new Vector(0,1,0))
 }
 
-/**
- * @param {Vector} location
- * @param {Dimension} dimension
- * @returns {Block|undefined}
- */
-function findGround(location,dimension){
-    try {
-        let blockFound;
-    let y = location.y
-    let check = system.runInterval(()=>{
-        if (y <= 0){
-            return;
-        }
-        const block = dimension.getBlock({x:location.x,y:y,z:location.z})
-        if (block.isSolid() || block.typeId !== 'minecraft:air'){
-            blockFound = block
-            system.clearRun(check)
-        }
-        y--
-    })
-    return blockFound ? blockFound: undefined
-} catch (e){}
-}
 
 async function tpToGaia(entity){
     log(entity.typeId + " sent to Gaia Dimension")
@@ -50,9 +23,9 @@ async function tpToGaia(entity){
     placePortal(new Vector(decode('cfffcccdff'), decode('kh'), decode('cfffcccdff')), the_end, true)
 }
 
-async function backToSpawn(entity){
+async function backToDimension(entity){
     if (entity.typeId == "minecraft:player"){
-        let spawn = findGround({x:entity.getSpawnPoint().x,y:entity.getSpawnPoint().y,z:entity.getSpawnPoint().z},entity.getSpawnPoint().dimension)
+        const teleport = entity.getTag
         entity.teleport(spawn.location, {dimension: spawn.dimension})
         await delay(1);
         entity.teleport(getTopBlock(spawn.location, spawn.dimension), {dimension: spawn.dimension})
@@ -77,3 +50,5 @@ system.runInterval(() => {
         }
     }
 }, 8)
+
+world.afterEvents.
