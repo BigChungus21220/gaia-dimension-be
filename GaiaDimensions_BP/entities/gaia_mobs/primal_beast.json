@@ -1,219 +1,210 @@
 {
   "format_version": "1.13.0",
   "minecraft:entity": {
-      "description": {
-          "identifier": "gaia:primal_beast",
-          "is_spawnable": true,
-          "is_summonable": true,
-          "is_experimental": false,
-          "runtime_identifier": "minecraft:iron_golem"
+    "description": {
+      "identifier": "gaia:primal_beast",
+      "is_spawnable": true,
+      "is_summonable": true,
+      "is_experimental": false,
+      "runtime_identifier": "minecraft:iron_golem"
+    },
+
+    "component_groups": {},
+
+    "components": {
+      "minecraft:underwater_movement": {
+        "value": 5.0
       },
 
-      "component_groups": {},
-
-      "components": {
-        "minecraft:underwater_movement": {
-          "value": 5.0
+      "minecraft:break_blocks": {
+        "breakable_blocks": [
+          "bamboo",
+          "bamboo_sapling",
+          "beetroot",
+          "brown_mushroom",
+          "carrots",
+          "carved_pumpkin",
+          "chorus_flower",
+          "chorus_plant",
+          "deadbush",
+          "double_plant",
+          "leaves",
+          "leaves2",
+          "lit_pumpkin",
+          "melon_block",
+          "melon_stem",
+          "potatoes",
+          "pumpkin",
+          "pumpkin_stem",
+          "red_flower",
+          "red_mushroom",
+          "crimson_fungus",
+          "warped_fungus",
+          "reeds",
+          "sapling",
+          "snow_layer",
+          "sweet_berry_bush",
+          "tallgrass",
+          "turtle_egg",
+          "vine",
+          "waterlily",
+          "wheat",
+          "yellow_flower"
+        ]
       },
-          "minecraft:on_death": {
-            "event": "dead",
-            "target": "self"
-        },
-        "minecraft:break_blocks": {
-            "breakable_blocks": [
-                "bamboo",
-                "bamboo_sapling",
-                "beetroot",
-                "brown_mushroom",
-                "carrots",
-                "carved_pumpkin",
-                "chorus_flower",
-                "chorus_plant",
-                "deadbush",
-                "double_plant",
-                "leaves",
-                "leaves2",
-                "lit_pumpkin",
-                "melon_block",
-                "melon_stem",
-                "potatoes",
-                "pumpkin",
-                "pumpkin_stem",
-                "red_flower",
-                "red_mushroom",
-                "crimson_fungus",
-                "warped_fungus",
-                "reeds",
-                "sapling",
-                "snow_layer",
-                "sweet_berry_bush",
-                "tallgrass",
-                "turtle_egg",
-                "vine",
-                "waterlily",
-                "wheat",
-                "yellow_flower"
-            ]
-        },
-          "minecraft:experience_reward": {
-              "on_death": "50"
-          },
-          "minecraft:is_hidden_when_invisible": {},
-          "minecraft:type_family": {
-              "family": ["mob"]
-          },
-          "minecraft:nameable": {},
-          "minecraft:collision_box": {
-              "width": 1.4,
-              "height": 2.9
-          },
-          "minecraft:loot": {
-              "table": "loot_tables/entities/primal_beast.json"
-          },
-          "minecraft:health": {
-              "value": 100,
-              "max": 100
-          },
-          "minecraft:hurt_on_condition": {
-              "damage_conditions": [{
-                  "filters": {
-                      "test": "in_lava",
-                      "subject": "self",
-                      "operator": "==",
-                      "value": true
-                  },
-                  "cause": "lava",
-                  "damage_per_tick": 4
-              }]
-          },
-          "minecraft:movement": {
-              "value": 0.25
-          },
-          "minecraft:navigation.walk": {
-                  "can_swim": true,
-              "can_path_over_water": false,
-              "avoid_water": true,
-              "avoid_damage_blocks": true
-          },
-          "minecraft:movement.basic": {
-
-          },
-          "minecraft:jump.static": {},
-          "minecraft:can_climb": {},
-          "minecraft:attack": {
-              "damage": {
-                  "range_min": 15,
-                  "range_max": 31
-              },
-              "effect_name": "wither",
-              "effect_duration": 30
-          },
-          "minecraft:damage_sensor": {
-              "triggers": {
-                  "cause": "fall",
-                  "deals_damage": false
-              }
-          },
-          "minecraft:knockback_resistance": {
-              "value": 100
-          },
-          "minecraft:behavior.target_when_pushed": {
-              "priority": 1,
-              "percent_chance": 5.0,
-              "entity_types": [{
-                  "filters": {
-                      "any_of": [{
-                              "test": "is_family",
-                              "subject": "other",
-                              "value": "villager"
-                          },
-                          {
-                              "test": "is_family",
-                              "subject": "other",
-                              "value": "player"
-                          }
-                      ]
-                  }
-              }]
-          },
-          "minecraft:behavior.melee_attack": {
-              "priority": 1,
-              "track_target": true,
-              "melee_fov": 360
-          },
-          "minecraft:behavior.move_towards_target": {
-              "priority": 2,
-              "speed_multiplier": 2.5
-          },
-          "minecraft:behavior.random_stroll": {
-              "priority": 6,
-              "speed_multiplier": 0.9,
-              "xz_dist": 16
-          },
-          "minecraft:behavior.look_at_player": {
-              "priority": 7,
-              "look_distance": 6.0,
-              "probability": 0.02
-          },
-          "minecraft:behavior.random_look_around": {
-              "priority": 8
-          },
-          "minecraft:behavior.nearest_attackable_target": {
-            "priority": 3,
-            "must_reach": true,
-            "must_see": true,
-
-            "entity_types": [
-              {
-              "filters": {
-                  "any_of": [
-                    {
-                          "test": "is_family",
-                          "subject": "other",
-                          "value": "villager"
-                      },
-                      {
-                          "test": "is_family",
-                          "subject": "other",
-                          "value": "player"
-                      }
-                  ]
-              }
+      "minecraft:experience_reward": {
+        "on_death": "50"
+      },
+      "minecraft:is_hidden_when_invisible": {},
+      "minecraft:type_family": {
+        "family": ["mob"]
+      },
+      "minecraft:nameable": {},
+      "minecraft:collision_box": {
+        "width": 1.4,
+        "height": 2.9
+      },
+      "minecraft:loot": {
+        "table": "loot_tables/entities/primal_beast.json"
+      },
+      "minecraft:health": {
+        "value": 100,
+        "max": 100
+      },
+      "minecraft:hurt_on_condition": {
+        "damage_conditions": [
+          {
+            "filters": {
+              "test": "in_lava",
+              "subject": "self",
+              "operator": "==",
+              "value": true
+            },
+            "cause": "lava",
+            "damage_per_tick": 4
           }
-            ]
-        },
-          "minecraft:behavior.hurt_by_target": {
-              "priority": 2,
-              "entity_types": {
-                  "filters": {
-                      "test": "is_family",
-                      "subject": "other",
-                      "operator": "!=",
-                      "value": "creeper"
-                  }
-              }
-          },
-          "minecraft:persistent": {},
-          "minecraft:physics": {},
-          "minecraft:pushable": {
-              "is_pushable": true,
-              "is_pushable_by_piston": true
-          },
-          "minecraft:follow_range": {
-              "value": 64
-          },
-          "minecraft:conditional_bandwidth_optimization": {}
+        ]
       },
+      "minecraft:movement": {
+        "value": 0.25
+      },
+      "minecraft:navigation.walk": {
+        "can_swim": true,
+        "can_path_over_water": false,
+        "avoid_water": true,
+        "avoid_damage_blocks": true
+      },
+      "minecraft:movement.basic": {},
+      "minecraft:jump.static": {},
+      "minecraft:can_climb": {},
+      "minecraft:attack": {
+        "damage": {
+          "range_min": 15,
+          "range_max": 31
+        },
+        "effect_name": "wither",
+        "effect_duration": 30
+      },
+      "minecraft:damage_sensor": {
+        "triggers": {
+          "cause": "fall",
+          "deals_damage": false
+        }
+      },
+      "minecraft:knockback_resistance": {
+        "value": 100
+      },
+      "minecraft:behavior.target_when_pushed": {
+        "priority": 1,
+        "percent_chance": 5.0,
+        "entity_types": [
+          {
+            "filters": {
+              "any_of": [
+                {
+                  "test": "is_family",
+                  "subject": "other",
+                  "value": "villager"
+                },
+                {
+                  "test": "is_family",
+                  "subject": "other",
+                  "value": "player"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "minecraft:behavior.melee_attack": {
+        "priority": 1,
+        "track_target": true,
+        "melee_fov": 360
+      },
+      "minecraft:behavior.move_towards_target": {
+        "priority": 2,
+        "speed_multiplier": 2.5
+      },
+      "minecraft:behavior.random_stroll": {
+        "priority": 6,
+        "speed_multiplier": 0.9,
+        "xz_dist": 16
+      },
+      "minecraft:behavior.look_at_player": {
+        "priority": 7,
+        "look_distance": 6.0,
+        "probability": 0.02
+      },
+      "minecraft:behavior.random_look_around": {
+        "priority": 8
+      },
+      "minecraft:behavior.nearest_attackable_target": {
+        "priority": 3,
+        "must_reach": true,
+        "must_see": true,
 
-      "events": {
+        "entity_types": [
+          {
+            "filters": {
+              "any_of": [
+                {
+                  "test": "is_family",
+                  "subject": "other",
+                  "value": "villager"
+                },
+                {
+                  "test": "is_family",
+                  "subject": "other",
+                  "value": "player"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "minecraft:behavior.hurt_by_target": {
+        "priority": 2,
+        "entity_types": {
+          "filters": {
+            "test": "is_family",
+            "subject": "other",
+            "operator": "!=",
+            "value": "creeper"
+          }
+        }
+      },
+      "minecraft:persistent": {},
+      "minecraft:physics": {},
+      "minecraft:pushable": {
+        "is_pushable": true,
+        "is_pushable_by_piston": true
+      },
+      "minecraft:follow_range": {
+        "value": 64
+      },
+      "minecraft:conditional_bandwidth_optimization": {}
+    },
 
-			"dead": {
-				"run_command": {
-					"command": [
-						""
-					]
-				  }
-				}
-      }
+    "events": {}
   }
 }
