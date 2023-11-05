@@ -127,9 +127,9 @@ export function ConvertCoords(location, fromDimension, toDimension) {
             switch (toDimension) {
                 case 'minecraft:overworld':
                     return {
-                        x: Math.floor(((location.x - xOffset) / scaleFactor -200000)*0.0001),
+                        x: Math.floor(location.x / scaleFactor),
                         y: location.y,
-                        z: Math.floor(((location.z - xOffset) / scaleFactor-200000)*0.0001)
+                        z: Math.floor(location.z / scaleFactor)
                     };
                 default:
                     throw new Error(`Unsupported conversion to ${toDimension}`);
