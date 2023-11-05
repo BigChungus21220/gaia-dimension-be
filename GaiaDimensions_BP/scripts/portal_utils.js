@@ -1,4 +1,4 @@
-import { Vector, BlockPermutation } from "@minecraft/server"
+import { Vector, BlockPermutation,Dimension,system,Block } from "@minecraft/server"
 import { log, vectorToString } from './utils.js'
 
 export function isUnlitPortal(corner, dimension, x_oriented){
@@ -41,6 +41,31 @@ export function isLitPortal(corner, dimension, x_oriented){
     return isValid
 }
 
+
+/**
+ * @param {Vector} location
+ * @param {Dimension} dimension
+ * @returns {Block}
+ */
+export function findGround(location,dimension){
+    try {
+        let blockFound;
+    let y = location.y
+    let check = system.runInterval(()=>{
+        if (y <= 0){
+            return;
+        }
+        const block = dimension?.getBlock({x:location.x,y:Math.round(y),z:location.z})
+        if (block && block.type.id !== 'minecraft:air'){
+            blockFound = block
+            system.clearRun(check)
+        } else{
+        y--
+    }
+    })
+    return blockFound
+} catch (e){console.error(e)}
+}
 export function placePortal(corner, dimension, x_oriented){
     for (let x = 0; x < 4; x++){
         for (let y = 0; y < 5; y++){
@@ -79,3 +104,40 @@ export function decode(input) {
 
   return C;
 }
+
+
+export function ConvertCoords(location, fromDimension, toDimension) {
+    const scaleFactor = 1 / 4; // 1 block in 'gaia' is 4 blocks in 'overworld'
+    const xOffset = 300000; // Offset for the x-axis
+    const zOffset = 300000; // Offset for the z-axis
+
+    switch (fromDimension) {
+        case 'minecraft:overworld':
+            switch (toDimension) {
+                case 'gaia:gaia':
+                    return {
+                        x: Math.floor((location.x + xOffset) * scaleFactor+200000),
+                        y: location.y,
+                        z: Math.floor((location.z + zOffset) * scaleFactor+200000)
+                    };
+                default:
+                    throw new Error(`Unsupported conversion to ${toDimension}`);
+            }
+        case 'gaia:gaia':
+            switch (toDimension) {
+                case 'minecraft:overworld':
+                    return {
+                        x: Math.floor(((location.x - xOffset) / scaleFactor -200000)*0.0001),
+                        y: location.y,
+                        z: Math.floor(((location.z - xOffset) / scaleFactor-200000)*0.0001)
+                    };
+                default:
+                    throw new Error(`Unsupported conversion to ${toDimension}`);
+            }
+        default:
+            throw new Error(`Unsupported conversion from ${fromDimension}`);
+    }
+}
+
+
+
