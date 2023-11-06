@@ -11,18 +11,23 @@ Entity.prototype.isInPortal = function (){
     } catch (e){}
 };
 
+Entity.prototype.turnCoords = function (off = false){
+    this.runCommand(`gamerule showcoordinates ${off}`)
+}
 function getTopBlock(location, dimension){
     let loc = new Vector(Math.floor(location.x), 310, Math.floor(location.z))
     return Vector.add(dimension.getBlockFromRay(loc, new Vector(0,-1,0)).block.location, new Vector(0,1,0))
 }
 
 async function tpToGaia(entity){
+
     if (!inGaiaDimension(entity)&& entity.dimension.id === 'minecraft:the_end'){
         log(`Sending ${entity.nameTag} back to the End`)
         entity.teleport({x:0,y:65,z:0},{dimension:the_end})
         return;
             }
             entity.teleport(ConvertCoords(new Vector(entity.location.x,entity.location.y,entity.location.z),'minecraft:overworld','gaia:gaia'), {dimension: the_end})
+            entity.turnCoords()
             await delay(0.8)
         placePortal(new Vector(entity.location.x,entity.location.y,entity.location.z), the_end, true)
     await delay(0.8)
@@ -72,6 +77,7 @@ async function backToDimension(entity,coord){
         entity.teleport(ConvertCoords({x:teleport.x+2,y:teleport.y,z:teleport.z+2},'gaia:gaia','minecraft:overworld'), {dimension:dimension})
         await delay(1);
         entity.teleport(ConvertCoords(getTopBlock({x:teleport.x,y:teleport.y,z:teleport.z}, overworld),'gaia:gaia','minecraft:overworld'), {dimension: dimension})
+        entity.turnCoords(true)
     } else {
         entity.teleport(world.getDefaultSpawnLocation(), {dimension: overworld})
         await delay(1);
