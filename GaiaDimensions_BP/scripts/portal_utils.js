@@ -1,4 +1,4 @@
-import { Vector, BlockPermutation,Dimension,system,Block } from "@minecraft/server"
+import { Vector, BlockPermutation,Dimension,system,Block, world } from "@minecraft/server"
 import { log, vectorToString } from './utils.js'
 
 export function isUnlitPortal(corner, dimension, x_oriented){
@@ -80,58 +80,6 @@ export function placePortal(corner, dimension, x_oriented){
     }
 }
 
-/**
- * Made by Redux
-* Gets adjacent blocks connected to the current block.
-* @this {Block}
-* @returns {Block[]} - An array of adjacent blocks.
-*/Block.prototype.getAdjacent = function () {
-    const connectedBlocks = [];
-    const visited = new Set();
-    const queue = [{ x: this.x, y: this.y, z: this.z }];
-  
-    const intervalId = system.runInterval(() => {
-      if (queue.length === 0) {
-        system.clearRun(intervalId);
-        return;
-      }
-  
-      const { x, y, z } = queue.shift();
-      const position = `${x},${y},${z}`;
-  
-      if (visited.has(position)) return;
-  
-      visited.add(position);
-  
-      try {
-        const adjacentBlock = this.dimension.getBlock(new Vector(x, y, z));
-        connectedBlocks.push(adjacentBlock);
-        const directions = [
-          { x: 0, y: 0, z: -1 }, // north
-          { x: 1, y: 0, z: 0 },  // east
-          { x: 0, y: 0, z: 1 },  // south
-          { x: -1, y: 0, z: 0 }, // west
-          { x: 0, y: 1, z: 0 },  // up
-          { x: 0, y: -1, z: 0 }  // down
-        ];
-  
-        for (const direction of directions) {
-          const newX = x + direction.x;
-          const newY = y + direction.y;
-          const newZ = z + direction.z;
-          const newPosition = `${newX},${newY},${newZ}`;
-  
-          if (!visited.has(newPosition)) {
-            queue.push({ x: newX, y: newY, z: newZ });
-          }
-        }
-      } catch (err) {
-        console.log(err, err.stack);
-      }
-    });
-system.clearRun(intervalId)
-    return connectedBlocks;
-  };
   
   export function breakPortal(corner, dimension, x_oriented){
     for (let x = -3; x <= 3; x++){
@@ -203,5 +151,112 @@ export function ConvertCoords(location, fromDimension, toDimension) {
     }
 }
 
+/**
+ * @typedef Link
+ * @property {Vector} location
+ * @property {Vector} linkedLocation
+ */
 
+/**
+ * Made by Redux
+ * Class representing a PortalLink.
+ */
+export class PortalLink {
+    /**
+     * Create a PortalLink.
+     */
+    constructor() {
+        /**
+         * @type {Array<Link>}
+         */
+      this.linked = world.getDynamicProperty('PortalLinked') ?? [];
+      this.serialize = JSON.stringify;
+    }
+  
+    /**
+     * Link two locations.
+     * @param {Vector} fromLocation - The starting location.
+     * @param {Vector} toLocation - The ending location.
+     */
+    link(fromLocation, toLocation) {
+      if (typeof fromLocation !== 'object' || typeof toLocation !== 'object') {
+        throw new Error('Both fromLocation and toLocation must be objects');
+      }
+      const data = { location: fromLocation, linkedLocation: toLocation };
+      if (!this.linked.some((d) => d.location === fromLocation && d.linkedLocation === toLocation)) {
+        this.linked.push(data);
+        world.setDynamicProperty('PortalLinked', this.serialize(this.linked));
+      }
+    }
+  
+    /**
+     * Unlink two locations.
+     * @param {Vector} fromLocation - The starting location.
+     * @param {Vector} toLocation - The ending location.
+     */
+    unlink(fromLocation, toLocation) {
+      if (typeof fromLocation !== 'object' || typeof toLocation !== 'object') {
+        throw new Error('Both fromLocation and toLocation must be objects');
+      }
+      this.linked = this.linked.filter(
+        (d) => !(d.location === fromLocation && d.linkedLocation === toLocation)
+      );
+      world.setDynamicProperty('PortalLinked', this.serialize(this.linked));
+    }
 
+    /**
+     * Get the linked location from a given location.
+     * @param {Vector} fromLocation - The starting location.
+     * @returns {Vector} The linked location.
+     */
+    getLinked(fromLocation){
+        if (typeof fromLocation !== 'object') {
+            throw new Error('fromLocation must be a object');
+          }
+        const link = this.linked.find(d=>d.location === fromLocation);
+        return link ? link.linkedLocation : undefined;
+    }
+
+    /**
+     * Get all links.
+     * @returns {Array<Link>} The array of all links.
+     */
+    getAllLinks(){
+        return this.linked;
+    }
+
+    /**
+     * Clear all links.
+     */
+    clearAllLinks(){
+        this.linked = []
+        world.setDynamicProperty('PortalLinked',this.serialize(this.linked))
+    }
+    
+    /**
+     * Check if two locations are linked.
+     * @param {Vector} fromLocation - The starting location.
+     * @param {Vector} toLocation - The ending location.
+     * @returns {boolean} True if the locations are linked, false otherwise.
+     */
+    isLinked(fromLocation,toLocation){
+        return this.linked.some((d) => d.location === fromLocation && d.linkedLocation === toLocation);
+    }
+
+    /**
+     * Get the count of links.
+     * @returns {number} The count of links.
+     */
+    getCount(){
+        return this.linked.length
+    }
+
+    /**
+     * Check if a link exists.
+     * @param {Link} link - The link to check.
+     * @returns {boolean} True if the link exists, false otherwise.
+     */
+    hasLink(link){
+        return this.linked.includes(link)
+    }
+}

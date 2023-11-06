@@ -1,19 +1,12 @@
-import { world, system, Vector, Entity, Dimension, Block, World, Player,Container } from "@minecraft/server"
+import { world, system, Vector, Entity,Player } from "@minecraft/server"
 import {log, inGaiaDimension, delay } from './utils.js'
-import { placePortal,decode,ConvertCoords, breakPortal} from './portal_utils.js'
+import { placePortal,ConvertCoords, breakPortal} from './portal_utils.js'
+
+const prevLocationMap = new Map();
 const locMap = new Map()
 const dimensions = ['overworld','nether','the_end'].map(dimensionStr=>world.getDimension(dimensionStr))
 const overworld = dimensions.find(d=>d.id === 'minecraft:overworld')
 const the_end = dimensions.find(d=>d.id === 'minecraft:the_end')
-Entity.prototype.isInPortal = function (){
-    try {
-	return this.dimension.getBlock(this.location).typeId === "gaia:gaia_portal";
-    } catch (e){}
-};
-
-Entity.prototype.turnCoords = function (off = false){
-    this.runCommand(`gamerule showcoordinates ${off}`)
-}
 function getTopBlock(location, dimension){
     let loc = new Vector(Math.floor(location.x), 310, Math.floor(location.z))
     return Vector.add(dimension.getBlockFromRay(loc, new Vector(0,-1,0)).block.location, new Vector(0,1,0))
@@ -85,10 +78,9 @@ async function backToDimension(entity,coord){
     }
     log(entity.typeId + " sent to overworld")
 } catch (e) {
-}
+} 
 }
 
-const prevLocationMap = new Map();
 
 system.runInterval(() => {
     dimensions.forEach(dimension => {
@@ -97,9 +89,11 @@ system.runInterval(() => {
             const inPortal = entity.isInPortal() || (dimension.getBlock(new Vector(entity.location.x, 0, entity.location.z)) === undefined && lastInPortal);
             const currentLocation = entity.location;
             inPortal ? entity.addTag('inPortal') : entity.removeTag('inPortal');
+            const coord = `x:${locMap?.get(entity.nameTag)?.x} y:${Math.round(entity.location.y)} z:${locMap?.get(entity.nameTag)?.z}`
             if (entity.typeId === 'minecraft:player') {  
+
                 const isPlayerMoving = isMoving(entity);
-                if (isPlayerMoving) {
+                if (isPlayerMoving && inGaiaDimension(entity)) {
                     const prevLocation = prevLocationMap?.get(entity.nameTag);
                         const deltaX = Math.floor(currentLocation.x - prevLocation?.x);
                         const deltaZ = Math.floor(currentLocation.z - prevLocation?.z);
@@ -120,14 +114,14 @@ system.runInterval(() => {
                             locMap.set(entity.nameTag, new Vector(locMap?.get(entity.nameTag)?.x - 1, locMap?.get(entity.nameTag)?.y, locMap?.get(entity.nameTag)?.z - 1)); // Subtract 1 from the movement when moving backward
                         }
 
-                      const coord = `x:${locMap?.get(entity.nameTag)?.x} y:${Math.round(entity.location.y)} z:${locMap?.get(entity.nameTag)?.z}`
                         inGaiaDimension(entity) ? entity?.onScreenDisplay?.setActionBar(coord): undefined;
-                        if (inPortal && !lastInPortal) {
-                            inGaiaDimension(entity) ? backToDimension(entity,parseCoords(coord)) : tpToGaia(entity);
-                        }
+                       
                        
                     }
                 prevLocationMap.set(entity.nameTag, currentLocation);
+            }
+            if (inPortal && !lastInPortal) {
+                inGaiaDimension(entity) ? backToDimension(entity,parseCoords(coord)) : tpToGaia(entity);
             }
         });
     });
