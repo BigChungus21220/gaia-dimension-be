@@ -2,7 +2,7 @@
 	"format_version": "1.20.10",
 	"minecraft:block": {
 		"description": {
-			"identifier": "gaia:green_planks",
+			"identifier": "gaia:malachite_planks",
 			"menu_category": {
 				"category": "construction",
 				"group": "itemGroup.name.planks"
@@ -18,8 +18,7 @@
         "minecraft:flammable": {
        "catch_chance_modifier": 5, 
       "destroy_chance_modifier": 20 
-        }
-      },
+        },
 			"minecraft:unit_cube": {},
 			"minecraft:destructible_by_explosion": {
 				"explosion_resistance": 1
@@ -32,4 +31,4 @@
 		}
 	}
 }
-  }
+}}

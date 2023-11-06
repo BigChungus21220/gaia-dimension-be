@@ -967,7 +967,7 @@
   "sound": "stone"
 },
 "gaia:crusted_malachite_bricks": {
-  "textures": "crusted_malachite_bricks",
+  "textures": "malachite_crusted_bricks",
   "sound": "normal"
 },
 "gaia:crusted_jade_brick_stair": {
@@ -1174,4 +1174,9 @@
 "gaia:green_planks3": {
   "textures":"pulsing_chiselled_malachite_planks"
 },
-"gaia:green_planks3_stairs":{"textures":"pulsing_chiselled_malachite_planks"}}
+"gaia:green_planks3_stairs":{"textures":"pulsing_chiselled_malachite_planks"
+},
+"gaia:burning_planks" : {
+  "sound" : "glass",
+  "textures" : "burning_planks"
+}}

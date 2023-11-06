@@ -1,46 +1,46 @@
 {
-    "format_version": "1.16.100",
-    "minecraft:entity": {
-      "description": {
-        "identifier": "gaiadimension:furnace_entity",
-        "is_spawnable": false,
-        "is_summonable": true,
-        "is_experimental": false
-      },
-      "component_groups": {
-        "despawn_block": {
-            "minecraft:transformation": {
-                "drop_inventory": true,
-                "into": "gaiadimension:despawn"
-            }
+  "format_version": "1.16.100",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "gaiadimension:furnace_entity",
+      "is_spawnable": false,
+      "is_summonable": true,
+      "is_experimental": false
+    },
+    "component_groups": {
+      "despawn_block": {
+        "minecraft:transformation": {
+          "drop_inventory": true,
+          "into": "gaiadimension:despawn"
         }
-      },
-      "components": {
+      }
+    },
+    "components": {
       "minecraft:type_family": {
-          "family": [ "chest", "inanimate" ]
+        "family": ["chest", "inanimate"]
       },
       "minecraft:collision_box": {
-              "height": 0,
-              "width": 0
-          },
-          "minecraft:custom_hit_test": {
-            "hitboxes": [
-                {
-                    "width": 1,
-                    "height": 0.4,
-                    "pivot": [0, 0, 0]
-                }
-            ]
-        },
+        "height": 0,
+        "width": 0
+      },
+      "minecraft:custom_hit_test": {
+        "hitboxes": [
+          {
+            "width": 1,
+            "height": 0.4,
+            "pivot": [0, 0, 0]
+          }
+        ]
+      },
       "minecraft:health": {
-          "value": 1
+        "value": 1
       },
       "minecraft:fire_immune": {},
       "minecraft:damage_sensor": {
-          "triggers": {
-              "cause": "all",
-              "deals_damage": false
-          }
+        "triggers": {
+          "cause": "all",
+          "deals_damage": false
+        }
       },
       "minecraft:physics": {
         "has_gravity": false,
@@ -55,37 +55,37 @@
         "always_show": false,
         "allow_name_tag_renaming": false
       },
-        "minecraft:inventory": {
-            "additional_slots_per_strength": 0,
-            "container_type": "inventory",
-            "inventory_size": 5,
-            "private": false,
-            "restrict_to_owner": false
-        },
-        "minecraft:inside_block_notifier": {
-          "block_list": [
-              {
-                  "block": "air",
-                  "entered_block_event": {
-                      "event": "destroy",
-                      "target": "self"
-                      }
-                  }
-              ]
-          }
+      "minecraft:inventory": {
+        "additional_slots_per_strength": 0,
+        "container_type": "inventory",
+        "inventory_size": 5,
+        "private": false,
+        "restrict_to_owner": false
       },
-      "events": {
-          "destroy": {
-                "add":{
-                    "component_groups":[
-                        "despawn_block"
-                    ]
-                },
-                "run_command": {
-                    "command": ["replaceitem entity @s slot.inventory 3 air", "replaceitem entity @s slot.inventory 4 air"]
-                }
+      "minecraft:inside_block_notifier": {
+        "block_list": [
+          {
+            "block": "air",
+            "entered_block_event": {
+              "event": "destroy",
+              "target": "self"
             }
           }
+        ]
       }
+    },
+    "events": {
+      "destroy": {
+        "add": {
+          "component_groups": ["despawn_block"]
+        },
+        "run_command": {
+          "command": [
+            "replaceitem entity @s slot.inventory 3 air",
+            "replaceitem entity @s slot.inventory 4 air"
+          ]
+        }
+      }
+    }
   }
-  
+}

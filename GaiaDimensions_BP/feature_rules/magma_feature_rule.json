@@ -1,5 +1,5 @@
 {
-	"format_version": "1.18.0",
+	"format_version": "1.20.30",
 	"minecraft:feature_rules": {
 		"description": {
 			"identifier": "gaia:magma_feature_rule",

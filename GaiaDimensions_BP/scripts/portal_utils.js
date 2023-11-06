@@ -1,4 +1,4 @@
-import { Vector, BlockPermutation,Dimension,system,Block } from "@minecraft/server"
+import { Vector, BlockPermutation, world,Dimension,system,Block } from "@minecraft/server"
 import { log, vectorToString } from './utils.js'
 
 export function isUnlitPortal(corner, dimension, x_oriented){
@@ -86,6 +86,9 @@ export function breakPortal(corner, dimension, x_oriented){
     log("[ " + vectorToString(start) + " ] - [ " + vectorToString(end) + " ]")
     dimension.fillBlocks(end, start, BlockPermutation.resolve("minecraft:air"))
 }
+
+
+
 
 
 export function decode(input) {

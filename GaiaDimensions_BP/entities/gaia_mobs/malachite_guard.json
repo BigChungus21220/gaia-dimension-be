@@ -1,403 +1,372 @@
 {
   "format_version": "1.13.0",
   "minecraft:entity": {
-      "description": {
-          "identifier": "gaia:malachite_guard",
-          "is_spawnable": true,
-          "is_summonable": true,
-          "is_experimental": false,
-          "runtime_identifier": "minecraft:iron_golem",
-          "runtime_indentifier": "minecraft:iron_golem",
-          "scripts": {
-              "animate": [
-                  "skyrim5"
-              ]
-          },
-          "animations": {
-              "skyrim5": "controller.animation.malachite_guard"
-          }
+    "description": {
+      "identifier": "gaia:malachite_guard",
+      "is_spawnable": true,
+      "is_summonable": true,
+      "is_experimental": false,
+      "runtime_identifier": "minecraft:iron_golem",
+      "runtime_indentifier": "minecraft:iron_golem",
+      "scripts": {
+        "animate": ["skyrim5"]
       },
+      "animations": {
+        "skyrim5": "controller.animation.malachite_guard"
+      }
+    },
 
-      "component_groups": {
-        "roaring": {
-            "minecraft:behavior.knockback_roar": {
-                "priority": 1,
-                "duration": 1,
-                "attack_time": 0.5,
-                "knockback_damage": 10,
-                "knockback_strength": 3,
-                "knockback_range": 7,
-                "knockback_filters": {
-                    "test": "is_family",
-                    "subject": "other",
-                    "operator": "!=",
-                    "value": "ravager"
-                },
-                "damage_filters": {
-                    "test": "is_family",
-                    "subject": "other",
-                    "operator": "!=",
-                    "value": "illager"
-                },
-                "on_roar_end": {
-                    "event": "no_mg_slam"
-                },
-                "cooldown_time": 0.1
-            }
-        },
-        "resist":{
-            "minecraft:is_ignited": {
-            }
-        },
-        "normal":{
-            "minecraft:attack": {
-                "damage": {
-                    "range_min": 15,
-                    "range_max": 31
-                },
-                "effect_name": "wither",
-                "effect_duration": 30
-            },
-            "minecraft:movement": {
-                "value": 0.25
-            }
-        },
-        "defend":{
-            "minecraft:is_charged": {
-            },
-            "minecraft:attack": {
-                "damage": 0
-            },
-            "minecraft:movement": {
-                "value": 0.0
-            }
+    "component_groups": {
+      "roaring": {
+        "minecraft:behavior.knockback_roar": {
+          "priority": 1,
+          "duration": 1,
+          "attack_time": 0.5,
+          "knockback_damage": 10,
+          "knockback_strength": 3,
+          "knockback_range": 7,
+          "knockback_filters": {
+            "test": "is_family",
+            "subject": "other",
+            "operator": "!=",
+            "value": "ravager"
+          },
+          "damage_filters": {
+            "test": "is_family",
+            "subject": "other",
+            "operator": "!=",
+            "value": "illager"
+          },
+          "on_roar_end": {
+            "event": "no_mg_slam"
+          },
+          "cooldown_time": 0.1
         }
       },
-
-      "components": {
-        "minecraft:underwater_movement": {
-          "value": 5.0
+      "resist": {
+        "minecraft:is_ignited": {}
       },
-          "minecraft:on_death": {
-            "event": "dead",
-            "target": "self"
-        },
-        "minecraft:break_blocks": {
-            "breakable_blocks": [
-                "bamboo",
-                "bamboo_sapling",
-                "beetroot",
-                "brown_mushroom",
-                "carrots",
-                "carved_pumpkin",
-                "chorus_flower",
-                "chorus_plant",
-                "deadbush",
-                "double_plant",
-                "leaves",
-                "leaves2",
-                "lit_pumpkin",
-                "melon_block",
-                "melon_stem",
-                "potatoes",
-                "pumpkin",
-                "pumpkin_stem",
-                "red_flower",
-                "red_mushroom",
-                "crimson_fungus",
-                "warped_fungus",
-                "reeds",
-                "sapling",
-                "snow_layer",
-                "sweet_berry_bush",
-                "tallgrass",
-                "turtle_egg",
-                "vine",
-                "waterlily",
-                "wheat",
-                "yellow_flower"
-            ]
-        },
-          "minecraft:experience_reward": {
-              "on_death": "50"
+      "normal": {
+        "minecraft:attack": {
+          "damage": {
+            "range_min": 15,
+            "range_max": 31
           },
-          "minecraft:boss": {
-            "name": "Malachite Guard",
+          "effect_name": "wither",
+          "effect_duration": 30
+        },
+        "minecraft:movement": {
+          "value": 0.25
+        }
+      },
+      "defend": {
+        "minecraft:is_charged": {},
+        "minecraft:attack": {
+          "damage": 0
+        },
+        "minecraft:movement": {
+          "value": 0.0
+        }
+      }
+    },
 
-            "should_darken_sky": true,
-            "hud_range": 40
-        },
-          "minecraft:is_hidden_when_invisible": {},
-          "minecraft:type_family": {
-              "family": ["mob"]
-          },
-          "minecraft:nameable": {},
-          "minecraft:collision_box": {
-              "width": 1.4,
-              "height": 2.9
-          },
-          "minecraft:loot": {
-              "table": "loot_tables/entities/malachite_guard.json"
-          },
-          "minecraft:health": {
-              "value": 400,
-              "max": 400
-          },
-          "minecraft:hurt_on_condition": {
-              "damage_conditions": [{
-                  "filters": {
-                      "test": "in_lava",
-                      "subject": "self",
-                      "operator": "==",
-                      "value": true
-                  },
-                  "cause": "lava",
-                  "damage_per_tick": 4
-              }]
-          },
-          "minecraft:movement": {
-              "value": 0.25
-          },
-          "minecraft:navigation.walk": {
-                  "can_swim": true,
-              "can_path_over_water": false,
-              "avoid_water": true,
-              "avoid_damage_blocks": true
-          },
-          "minecraft:movement.basic": {
+    "components": {
+      "minecraft:underwater_movement": {
+        "value": 5.0
+      },
+      "minecraft:break_blocks": {
+        "breakable_blocks": [
+          "bamboo",
+          "bamboo_sapling",
+          "beetroot",
+          "brown_mushroom",
+          "carrots",
+          "carved_pumpkin",
+          "chorus_flower",
+          "chorus_plant",
+          "deadbush",
+          "double_plant",
+          "leaves",
+          "leaves2",
+          "lit_pumpkin",
+          "melon_block",
+          "melon_stem",
+          "potatoes",
+          "pumpkin",
+          "pumpkin_stem",
+          "red_flower",
+          "red_mushroom",
+          "crimson_fungus",
+          "warped_fungus",
+          "reeds",
+          "sapling",
+          "snow_layer",
+          "sweet_berry_bush",
+          "tallgrass",
+          "turtle_egg",
+          "vine",
+          "waterlily",
+          "wheat",
+          "yellow_flower"
+        ]
+      },
+      "minecraft:experience_reward": {
+        "on_death": "50"
+      },
+      "minecraft:boss": {
+        "name": "Malachite Guard",
 
-          },
-          "minecraft:jump.static": {},
-          "minecraft:can_climb": {},
-          "minecraft:attack": {
-              "damage": {
-                  "range_min": 15,
-                  "range_max": 31
-              },
-              "effect_name": "wither",
-              "effect_duration": 30
-          },
-          "minecraft:damage_sensor": {
-            "triggers": [    
-                {
-                    "on_damage": {
-                        "filters": {
-                            "test": "is_family",
-                            "subject": "other",
-                            "value": "lightning"
-                        }
-                    },
-                    "deals_damage": false
-                },
-                {
-                  "on_damage": {
-                      "filters": {
-                          "test": "is_family",
-                          "subject": "other",
-                          "value": "undead"
-                      }
-                  },
-                  "deals_damage": false
-              },
-                {
-                    "cause": "fall",
-                    "deals_damage": false
-                }, {
-                    "cause": "fire_tick",
-                    "deals_damage": false
-                },
-                {
-                    "cause": "block_explosion",
-                    "deals_damage": false
-                },
-                {
-                  "cause": "entity_explosion",
-                  "deals_damage": false
-              },
-              {
-                "cause": "void",
-                "deals_damage": false
+        "should_darken_sky": true,
+        "hud_range": 40
+      },
+      "minecraft:is_hidden_when_invisible": {},
+      "minecraft:type_family": {
+        "family": ["mob"]
+      },
+      "minecraft:nameable": {},
+      "minecraft:collision_box": {
+        "width": 1.4,
+        "height": 2.9
+      },
+      "minecraft:loot": {
+        "table": "loot_tables/entities/malachite_guard.json"
+      },
+      "minecraft:health": {
+        "value": 400,
+        "max": 400
+      },
+      "minecraft:hurt_on_condition": {
+        "damage_conditions": [
+          {
+            "filters": {
+              "test": "in_lava",
+              "subject": "self",
+              "operator": "==",
+              "value": true
             },
-            {
-              "cause": "wither",
-              "deals_damage": false
+            "cause": "lava",
+            "damage_per_tick": 4
+          }
+        ]
+      },
+      "minecraft:movement": {
+        "value": 0.25
+      },
+      "minecraft:navigation.walk": {
+        "can_swim": true,
+        "can_path_over_water": false,
+        "avoid_water": true,
+        "avoid_damage_blocks": true
+      },
+      "minecraft:movement.basic": {},
+      "minecraft:jump.static": {},
+      "minecraft:can_climb": {},
+      "minecraft:attack": {
+        "damage": {
+          "range_min": 15,
+          "range_max": 31
+        },
+        "effect_name": "wither",
+        "effect_duration": 30
+      },
+      "minecraft:damage_sensor": {
+        "triggers": [
+          {
+            "on_damage": {
+              "filters": {
+                "test": "is_family",
+                "subject": "other",
+                "value": "lightning"
+              }
+            },
+            "deals_damage": false
+          },
+          {
+            "on_damage": {
+              "filters": {
+                "test": "is_family",
+                "subject": "other",
+                "value": "undead"
+              }
+            },
+            "deals_damage": false
+          },
+          {
+            "cause": "fall",
+            "deals_damage": false
+          },
+          {
+            "cause": "fire_tick",
+            "deals_damage": false
+          },
+          {
+            "cause": "block_explosion",
+            "deals_damage": false
+          },
+          {
+            "cause": "entity_explosion",
+            "deals_damage": false
+          },
+          {
+            "cause": "void",
+            "deals_damage": false
+          },
+          {
+            "cause": "wither",
+            "deals_damage": false
           },
           {
             "cause": "projectile",
             "deals_damage": false
-        },
-            {
-              "cause": "magic",
-              "deals_damage": false
           },
-                {
-                    "cause": "fire",
-                    "deals_damage": false
-                }, 
-                {
-                    "on_damage": {
-                        "filters": {
-                            "all_of": [
-                                {
-                                "test": "has_component",
-                                "subject": "self",
-                                "operator": "==",
-                                "value": "minecraft:is_charged"
-                            }
-                        ]
-                        }
-                    },
-                    "deals_damage": false
-                }
-            ]
-        },
-          "minecraft:knockback_resistance": {
-              "value": 100
+          {
+            "cause": "magic",
+            "deals_damage": false
           },
-          "minecraft:behavior.melee_attack": {
-              "priority": 1,
-              "track_target": true,
-              "melee_fov": 360
+          {
+            "cause": "fire",
+            "deals_damage": false
           },
-          "minecraft:behavior.move_towards_target": {
-              "priority": 2,
-              "speed_multiplier": 2.5
-          },
-          "minecraft:behavior.random_stroll": {
-              "priority": 6,
-              "speed_multiplier": 0.9,
-              "xz_dist": 16
-          },
-          "minecraft:behavior.look_at_player": {
-              "priority": 7,
-              "look_distance": 6.0,
-              "probability": 0.02
-          },
-          "minecraft:behavior.random_look_around": {
-              "priority": 8
-          },
-          "minecraft:behavior.nearest_attackable_target": {
-              "priority": 3,
-              "must_reach": true,
-              "must_see": true,
-
-              "entity_types": [
+          {
+            "on_damage": {
+              "filters": {
+                "all_of": [
                   {
-                      "filters": {
-                          "all_of": [{
-                                  "test": "is_family",
-                                  "subject": "other",
-                                  "value": "player"
-                              }
-                          ]
-                      },
-                      "max_dist": 64
+                    "test": "has_component",
+                    "subject": "self",
+                    "operator": "==",
+                    "value": "minecraft:is_charged"
                   }
-              ]
-          },
-          "minecraft:behavior.hurt_by_target": {
-              "priority": 2,
-              "entity_types": {
-                  "filters": {
-                      "test": "is_family",
-                      "subject": "other",
-                      "operator": "!=",
-                      "value": "creeper"
-                  }
-              }
-          },
-          "minecraft:persistent": {},
-          "minecraft:physics": {},
-          "minecraft:pushable": {
-              "is_pushable": true,
-              "is_pushable_by_piston": true
-          },
-          "minecraft:follow_range": {
-              "value": 64
-          },
-          "minecraft:conditional_bandwidth_optimization": {}
-      },
-
-      "events": {
-        "minecraft:entity_spawned": {
-            "run_command": {
-                "command": [
-                    "summon gaia:malachite_drone ~ ~1 ~4 no \"MG_MINION\"",
-                    "summon gaia:malachite_drone ~ ~1 ~-4 no \"MG_MINION\"",
-                    "summon gaia:malachite_drone ~-4 ~1 ~ no \"MG_MINION\"",
-                    "summon gaia:malachite_drone ~4 ~1 ~ no \"MG_MINION\""
                 ]
               }
             },
-			"dead": {
-				"run_command": {
-					"command": [
-						""
-					]
-				  }
-				},
-                "no_mg_defend": {
-                    "run_command": {
-                        "command": [
-                            "tag @s add mg_defend"
-                        ]
-                      },
-                      "remove": {
-                        "component_groups": [
-                            "defend"
-                        ]
-                    },
-                    "add": {
-                        "component_groups": [
-                            "normal"
-                        ]
-                    }
-                    },
-                    "no_mg_slam": {
-                          "remove": {
-                            "component_groups": [
-                                "slam"
-                            ]
-                        }
-                        },
-                        "mg_slam": {
-                            "sequence":[
-                                {
-                                    "filters": {
-                                        "test": "has_target"
-                                    },
-                            "add": {
-                              "component_groups": [
-                                  "slam"
-                              ]
-                          }
-                        }
-                        ]
-                          },
-                    "mg_defend": {
-                        "run_command": {
-                            "command": [
-                                "tag @s remove mg_defend"
-                            ]
-                          },
-                          "remove": {
-                            "component_groups": [
-                                "normal"
-                            ]
-                        },
-                          "add": {
-                            "component_groups": [
-                                "defend"
-                            ]
-                        }
-                        },
-                        "resist": {
-                            "add": {
-                              "component_groups": [
-                                  "resist"
-                              ]
-                          }
-                          }
+            "deals_damage": false
+          }
+        ]
+      },
+      "minecraft:knockback_resistance": {
+        "value": 100
+      },
+      "minecraft:behavior.melee_attack": {
+        "priority": 1,
+        "track_target": true,
+        "melee_fov": 360
+      },
+      "minecraft:behavior.move_towards_target": {
+        "priority": 2,
+        "speed_multiplier": 2.5
+      },
+      "minecraft:behavior.random_stroll": {
+        "priority": 6,
+        "speed_multiplier": 0.9,
+        "xz_dist": 16
+      },
+      "minecraft:behavior.look_at_player": {
+        "priority": 7,
+        "look_distance": 6.0,
+        "probability": 0.02
+      },
+      "minecraft:behavior.random_look_around": {
+        "priority": 8
+      },
+      "minecraft:behavior.nearest_attackable_target": {
+        "priority": 3,
+        "must_reach": true,
+        "must_see": true,
+
+        "entity_types": [
+          {
+            "filters": {
+              "all_of": [
+                {
+                  "test": "is_family",
+                  "subject": "other",
+                  "value": "player"
+                }
+              ]
+            },
+            "max_dist": 64
+          }
+        ]
+      },
+      "minecraft:behavior.hurt_by_target": {
+        "priority": 2,
+        "entity_types": {
+          "filters": {
+            "test": "is_family",
+            "subject": "other",
+            "operator": "!=",
+            "value": "creeper"
+          }
+        }
+      },
+      "minecraft:persistent": {},
+      "minecraft:physics": {},
+      "minecraft:pushable": {
+        "is_pushable": true,
+        "is_pushable_by_piston": true
+      },
+      "minecraft:follow_range": {
+        "value": 64
+      },
+      "minecraft:conditional_bandwidth_optimization": {}
+    },
+
+    "events": {
+      "minecraft:entity_spawned": {
+        "run_command": {
+          "command": [
+            "summon gaia:malachite_drone ~ ~1 ~4 no \"MG_MINION\"",
+            "summon gaia:malachite_drone ~ ~1 ~-4 no \"MG_MINION\"",
+            "summon gaia:malachite_drone ~-4 ~1 ~ no \"MG_MINION\"",
+            "summon gaia:malachite_drone ~4 ~1 ~ no \"MG_MINION\""
+          ]
+        }
+      },
+      "no_mg_defend": {
+        "run_command": {
+          "command": ["tag @s add mg_defend"]
+        },
+        "remove": {
+          "component_groups": ["defend"]
+        },
+        "add": {
+          "component_groups": ["normal"]
+        }
+      },
+      "no_mg_slam": {
+        "remove": {
+          "component_groups": ["slam"]
+        }
+      },
+      "mg_slam": {
+        "sequence": [
+          {
+            "filters": {
+              "test": "has_target"
+            },
+            "add": {
+              "component_groups": ["slam"]
+            }
+          }
+        ]
+      },
+      "mg_defend": {
+        "run_command": {
+          "command": ["tag @s remove mg_defend"]
+        },
+        "remove": {
+          "component_groups": ["normal"]
+        },
+        "add": {
+          "component_groups": ["defend"]
+        }
+      },
+      "resist": {
+        "add": {
+          "component_groups": ["resist"]
+        }
       }
+    }
   }
 }
