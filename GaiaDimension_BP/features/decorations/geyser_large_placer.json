@@ -1,0 +1,13 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:scatter_feature": {
+		"description": {
+			"identifier": "gaia:decorations/geyser_large_placer"
+		},
+		"places_feature": "gaia:decorations/geyser_large_randomizer",
+		"iterations": 1,
+		"x": -4,
+		"y": -1,
+		"z": -4
+	}
+}

@@ -1,0 +1,14 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:aggregate_feature": {
+        "description": {
+            "identifier": "gaia:foliage/purple_tree_placer_mutant"
+        },
+        "features": [
+			"gaia:foliage/purple_tree_placement_test_mutant",
+			//"flakey:gen/blocks/air",
+            "gaia:foliage/purple_tree_offset"
+        ],
+        "early_out": "first_failure"
+    }
+}

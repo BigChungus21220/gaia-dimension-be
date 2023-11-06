@@ -1,0 +1,14 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:structure_template_feature": {
+	  "description": {
+		"identifier": "gaia:ground_cover/aura_crystal_growth_1"
+	  },
+	  "structure_name": "mystructure:aura_crystal_growth_1",
+	  "adjustment_radius": 8,
+	  "constraints": {
+		"unburied": {},
+		"grounded": {}
+	  }
+	}
+  }

@@ -1,0 +1,19 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:scatter_feature": {
+		"description": {
+			"identifier": "flakey:gen/void/private/air_scatter"
+		},
+		"places_feature": "flakey:gen/blocks/air",
+		"iterations": 320,
+		"x": 0,
+		"z": 0,
+		"y": {
+			"distribution": "fixed_grid",
+			"extent": [
+				-64,
+				256
+			]
+		}
+	}
+}

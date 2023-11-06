@@ -1,0 +1,20 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:single_block_feature": {
+		"description": {
+			"identifier": "gaia:ground_cover/murgni_placement_test"
+		},
+		"places_block": "minecraft:stone",
+		"enforce_placement_rules": true,
+		"enforce_survivability_rules": true,
+		"may_attach_to": {
+			"bottom": [
+				"gaia:pale_green_glitter_grass"
+			]
+		},
+		"may_replace": [
+			"gaia:pale_green_glitter_grass",
+			"minecraft:air"
+		]
+	}
+}

@@ -1,0 +1,25 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:scatter_feature": {
+		"description": {
+			"identifier": "gaia:gen/caves/cave_column_placer"
+		},
+		"places_feature": "gaia:gen/caves/cave_layer_placer",
+		"iterations": 256,
+		"x": {
+			"distribution": "fixed_grid",
+			"extent": [
+				0,
+				15
+			]
+		},
+		"z": {
+			"distribution": "fixed_grid",
+			"extent": [
+				0,
+				15
+			]
+		},
+		"y": 0
+	}
+}

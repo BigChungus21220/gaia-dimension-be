@@ -1,0 +1,134 @@
+{
+  "format_version": "1.16.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "gaia:agate_arrow",
+      "is_spawnable": false,
+      "is_summonable": true,
+      "is_experimental": false,
+      "runtime_identifier": "minecraft:snowball",
+      "scripts":{
+        "animate":[
+          {
+            "particle": "!query.is_on_ground"
+          }
+        ]
+      },
+      "animations":{
+        "particle": "controller.animation.arrow_particle"
+      }
+    },
+    "component_groups": {
+      "spawn_item":{
+        "minecraft:instant_despawn":{}
+      },
+      "pickup_item":{
+        "minecraft:entity_sensor":{
+          "sensor_range": 1.5,
+          "event_filters": { 
+            "test": "is_family",
+            "subject": "other",
+            "value": "player"
+          },
+          "event": "gaia:spawn_item"
+        }
+      },
+
+      "minecraft:player_arrow": {
+        "minecraft:projectile": {
+          "on_hit": {
+            "definition_event": {
+              "affect_projectile": true,
+              "event_trigger": {
+                  "event": "gaia:pickup_item",
+                  "target": "self"
+              }
+            },
+            "impact_damage": {
+              "damage": 7,
+              "knockback": true,
+              "semi_random_diff_damage": true,
+              "destroy_on_hit": false,
+              "max_critical_damage": 14,
+              "min_critical_damage": 13,
+              "power_multiplier": 1.5
+            },
+            "stick_in_ground": {
+              "shake_time" : 0.35
+            },
+            "arrow_effect": {
+            }
+          },
+          "hit_sound": "bow.hit",
+          "power": 5.0,
+          "gravity": 0.05,
+          "uncertainty_base": 1,
+          "uncertainty_multiplier": 0,
+          "anchor": 1,
+          "should_bounce": true,
+          "offset": [ 0, -0.1, 0 ]
+        }
+      }
+    },
+
+    "components": {
+      "minecraft:collision_box": {
+        "width": 0.25,
+        "height": 0.25
+      },
+      "minecraft:type_family": {
+        "family": [ "arrow" ]
+      },
+      "minecraft:scale":{
+        "value": 0.5
+      },
+      "minecraft:physics": {
+      },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": true
+      }
+    },
+
+    "events": {
+      "gaia:particle":{
+        "run_command":{
+          "command":[
+            "particle minecraft:basic_crit_particle ~~~"
+          ]
+        }
+      },
+      "gaia:pickup_item":{
+        "add":{
+          "component_groups":[
+            "pickup_item"
+          ]
+        }
+      },
+      "gaia:spawn_item":{
+        "run_command":{
+          "command":[
+            "give @p[r=3] gaia:agate_arrow 1 0",
+            "playsound random.pop @p[r=3]"
+          ]
+        },
+        "add":{
+          "component_groups":[
+            "spawn_item"
+          ]
+        }
+      },
+      "minecraft:entity_spawned": {
+        "sequence": [
+          {
+            "add": {
+              "component_groups" : [ "minecraft:player_arrow" ]
+            
+            }
+          }
+        ]
+      }
+    }
+
+  }
+}

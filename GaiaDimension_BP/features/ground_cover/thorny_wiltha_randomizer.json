@@ -1,0 +1,14 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:weighted_random_feature": {
+		"description": {
+			"identifier": "gaia:ground_cover/thorny_wiltha_randomizer"
+		},
+		"features": [
+			[ "gaia:ground_cover/thorny_wiltha_0", 1 ],
+			[ "gaia:ground_cover/thorny_wiltha_1", 1 ],
+			[ "gaia:ground_cover/thorny_wiltha_2", 1 ],
+			[ "gaia:ground_cover/thorny_wiltha_3", 1 ]
+		]
+	}
+}

@@ -1,0 +1,11 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:single_block_feature": {
+		"description": {
+			"identifier": "gaia:gen/gaia_blocks/bedrock_pink_agate_forest"
+		},
+		"places_block": "gaia:bedrock_pink_agate_forest",
+		"enforce_placement_rules": false,
+		"enforce_survivability_rules": false
+	}
+}

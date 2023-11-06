@@ -1,0 +1,14 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:weighted_random_feature": {
+		"description": {
+			"identifier": "gaia:ground_cover/ouzium_randomizer"
+		},
+		"features": [
+			[ "gaia:ground_cover/ouzium_0", 1 ],
+			[ "gaia:ground_cover/ouzium_1", 1 ],
+			[ "gaia:ground_cover/ouzium_2", 1 ],
+			[ "gaia:ground_cover/ouzium_3", 1 ]
+		]
+	}
+}

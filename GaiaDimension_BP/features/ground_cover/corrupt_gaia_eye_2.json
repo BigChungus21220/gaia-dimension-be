@@ -1,0 +1,14 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:structure_template_feature": {
+	  "description": {
+		"identifier": "gaia:ground_cover/corrupt_gaia_eye_2"
+	  },
+	  "structure_name": "mystructure:corrupt_gaia_eye_2",
+	  "adjustment_radius": 8,
+	  "constraints": {
+		"unburied": {},
+		"grounded": {}
+	  }
+	}
+  }

@@ -1,0 +1,14 @@
+{
+	"format_version": "1.13.0",
+	"minecraft:weighted_random_feature": {
+		"description": {
+			"identifier": "gaia:ground_cover/singed_crystal_growth_randomizer"
+		},
+		"features": [
+			[ "gaia:ground_cover/singed_crystal_growth_0", 1 ],
+			[ "gaia:ground_cover/singed_crystal_growth_1", 1 ],
+			[ "gaia:ground_cover/singed_crystal_growth_2", 1 ],
+			[ "gaia:ground_cover/singed_crystal_growth_3", 1 ]
+		]
+	}
+}

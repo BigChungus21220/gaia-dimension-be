@@ -1,0 +1,13 @@
+{
+    "format_version": "1.13.0",
+    "minecraft:aggregate_feature": {
+        "description": {
+            "identifier": "gaia:ground_cover/gold_orb_tucher_placer"
+        },
+        "features": [
+			"gaia:ground_cover/gold_orb_tucher_placement_test",
+            "gaia:ground_cover/gold_orb_tucher_randomizer"
+        ],
+        "early_out": "first_failure"
+    }
+}

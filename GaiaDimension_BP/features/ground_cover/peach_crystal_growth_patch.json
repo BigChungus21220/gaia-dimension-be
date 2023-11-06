@@ -1,0 +1,19 @@
+{
+  "format_version": "1.13.0",
+  "minecraft:scatter_feature": {
+    "description": {
+      "identifier": "gaia:ground_cover/peach_crystal_growth_patch"
+    },
+    "places_feature": "gaia:ground_cover/peach_crystal_growth_ground",
+    "iterations": "math.random_integer(5, 10)",
+    "x": {
+      "distribution": "gaussian",
+      "extent": [-10, 10]
+    },
+    "y": 0,
+    "z": {
+      "distribution": "gaussian",
+      "extent": [-10, 10]
+    }
+  }
+}

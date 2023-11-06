@@ -1,0 +1,28 @@
+{
+	"format_version": "1.19.50",
+	"minecraft:feature_rules": {
+		"description": {
+			"identifier": "gaia:goldstone_tree_placement",
+			"places_feature": "gaia:foliage/goldstone_tree"
+		},
+		"conditions": {
+			"placement_pass": "surface_pass",
+			"minecraft:biome_filter": {
+				"test": "has_biome_tag",
+				"value": "the_end"
+			}
+		},
+		"distribution": {
+			"iterations": "(v.originx > 100000 && v.originz > 100000 && v.originx < 200000 && v.originz < 200000)*2",
+			"x": {
+				"distribution": "uniform",
+				"extent": [ 0, 15 ]
+			},
+			"y": "query.above_top_solid(v.worldx, v.worldz)",
+			"z": {
+				"distribution": "uniform",
+				"extent": [ 0, 15 ]
+			}
+		}
+	}
+}
