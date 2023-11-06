@@ -1,7 +1,7 @@
 import { world, system, Vector, Entity,Player } from "@minecraft/server"
 import {log, inGaiaDimension, delay } from './utils.js'
-import { placePortal,ConvertCoords, breakPortal} from './portal_utils.js'
-
+import { placePortal,ConvertCoords, breakPortal,PortalLink} from './portal_utils.js'
+const linker = new PortalLink()
 const prevLocationMap = new Map();
 const locMap = new Map()
 const dimensions = ['overworld','nether','the_end'].map(dimensionStr=>world.getDimension(dimensionStr))
@@ -19,12 +19,16 @@ async function tpToGaia(entity){
         entity.teleport({x:0,y:65,z:0},{dimension:the_end})
         return;
             }
-            entity.teleport(ConvertCoords(new Vector(entity.location.x,entity.location.y,entity.location.z),'minecraft:overworld','gaia:gaia'), {dimension: the_end})
+            const save = entity.location
+           const initialTeleport = ConvertCoords(new Vector(entity.location.x,entity.location.y,entity.location.z),'minecraft:overworld','gaia:gaia')
+            entity.teleport(initialTeleport, {dimension: the_end})
             entity.turnCoords()
             await delay(0.8)
         placePortal(new Vector(entity.location.x,entity.location.y,entity.location.z), the_end, true)
     await delay(0.8)
-    entity.teleport(getTopBlock(entity.location,entity.dimension),{dimension:entity.dimension})
+    let teleport = getTopBlock(entity.location,entity.dimension)
+    entity.teleport({x:teleport.x,y:teleport.y-2,z:teleport.z},{dimension:entity.dimension})
+    linker.link(save,teleport)
     log(entity.typeId + " sent to Gaia Dimension")
 
   
@@ -65,7 +69,7 @@ export default isMoving;
 async function backToDimension(entity,coord){
     try{
     if (entity.typeId == "minecraft:player"){
-        const teleport = coord
+        const teleport = linker.getLinked('end',ConvertCoords(coord,'minecraft:overworld','gaia:gaia')) ?? coord
         let dimension = overworld  ?? entity.getSpawnPoint().dimension
         entity.teleport(ConvertCoords({x:teleport.x+2,y:teleport.y,z:teleport.z+2},'gaia:gaia','minecraft:overworld'), {dimension:dimension})
         await delay(1);

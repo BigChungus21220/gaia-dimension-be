@@ -203,19 +203,29 @@ export class PortalLink {
       );
       world.setDynamicProperty('PortalLinked', this.serialize(this.linked));
     }
-
-    /**
-     * Get the linked location from a given location.
-     * @param {Vector} fromLocation - The starting location.
-     * @returns {Vector} The linked location.
-     */
-    getLinked(fromLocation){
-        if (typeof fromLocation !== 'object') {
-            throw new Error('fromLocation must be a object');
-          }
-        const link = this.linked.find(d=>d.location === fromLocation);
-        return link ? link.linkedLocation : undefined;
+/**
+ * Get the linked location from a given location.
+ * @param {Vector} location - The location.
+ * @param {string} from - Whether the location is the start or end of the linked location
+ * @returns {Vector} The linked location.
+ */
+getLinked(from, location){
+    if (typeof location !== 'object') {
+        throw new Error('location must be an object');
     }
+    let link;
+    switch(from) {
+        case 'start':
+            link = this.linked.find(d => d.location === location);
+            break;
+        case 'end':
+            link = this.linked.find(d => d.linkedLocation === location);
+            break;
+        default:
+            throw new Error(`Invalid value for 'from': ${from}`);
+    }
+    return link ? link.linkedLocation : undefined;
+}
 
     /**
      * Get all links.
