@@ -80,17 +80,77 @@ export function placePortal(corner, dimension, x_oriented){
     }
 }
 
-export function breakPortal(corner, dimension, x_oriented){
-    for (let x = -1; x <= 2; x++){
-        for (let y = -1; y <= 2; y++){
+/**
+ * Made by Redux
+* Gets adjacent blocks connected to the current block.
+* @this {Block}
+* @returns {Block[]} - An array of adjacent blocks.
+*/Block.prototype.getAdjacent = function () {
+    const connectedBlocks = [];
+    const visited = new Set();
+    const queue = [{ x: this.x, y: this.y, z: this.z }];
+  
+    const intervalId = system.runInterval(() => {
+      if (queue.length === 0) {
+        system.clearRun(intervalId);
+        return;
+      }
+  
+      const { x, y, z } = queue.shift();
+      const position = `${x},${y},${z}`;
+  
+      if (visited.has(position)) return;
+  
+      visited.add(position);
+  
+      try {
+        const adjacentBlock = this.dimension.getBlock(new Vector(x, y, z));
+        connectedBlocks.push(adjacentBlock);
+        const directions = [
+          { x: 0, y: 0, z: -1 }, // north
+          { x: 1, y: 0, z: 0 },  // east
+          { x: 0, y: 0, z: 1 },  // south
+          { x: -1, y: 0, z: 0 }, // west
+          { x: 0, y: 1, z: 0 },  // up
+          { x: 0, y: -1, z: 0 }  // down
+        ];
+  
+        for (const direction of directions) {
+          const newX = x + direction.x;
+          const newY = y + direction.y;
+          const newZ = z + direction.z;
+          const newPosition = `${newX},${newY},${newZ}`;
+  
+          if (!visited.has(newPosition)) {
+            queue.push({ x: newX, y: newY, z: newZ });
+          }
+        }
+      } catch (err) {
+        console.log(err, err.stack);
+      }
+    });
+system.clearRun(intervalId)
+    return connectedBlocks;
+  };
+  
+  export function breakPortal(corner, dimension, x_oriented){
+    for (let x = -3; x <= 3; x++){
+        for (let y = -3; y <= 3; y++){
             let blockpos = Vector.add(corner, new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0));
             let block = dimension.getBlock(blockpos);
+            let adjacent = block.getAdjacent()
             if (block.type.id === 'gaia:gaia_portal'){
                 block.setPermutation(BlockPermutation.resolve("minecraft:air"));
             }
+            adjacent.filter(b=>{
+                b.typeId === 'gaia:gaia_portal'
+            }).forEach(b=>{
+                b.setPermutation(BlockPermutation.resolve("minecraft:air"));
+            })
         }
     }
 }
+
 
 export function decode(input) {
   const L = {

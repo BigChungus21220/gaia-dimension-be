@@ -145,4 +145,4 @@ return {
 world.afterEvents.playerBreakBlock.subscribe(ev=>{
     const {block} = ev
     breakPortal(block.location,block.dimension,true)
-},{blockTypes:['gaia:gaia_portal']})
+},{blockTypes:['gaia:keystone_block','gaia:gaia_portal']})
