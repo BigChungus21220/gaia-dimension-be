@@ -159,7 +159,7 @@ export function ConvertCoords(location, fromDimension, toDimension) {
 
 /**
  * Made by Redux
- * Class representing a PortalLink.
+ * Class for Portal Linking.
  */
 export class PortalLink {
     /**
@@ -169,7 +169,7 @@ export class PortalLink {
         /**
          * @type {Array<Link>}
          */
-      this.linked = world.getDynamicProperty('PortalLinked') ?? [];
+      this.linked = JSON.parse(world.getDynamicProperty('PortalLinked')) ?? [];
       this.serialize = JSON.stringify;
     }
   
