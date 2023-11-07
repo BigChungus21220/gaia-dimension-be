@@ -1179,4 +1179,8 @@
 "gaia:burning_planks" : {
   "sound" : "glass",
   "textures" : "burning_planks"
+},
+"gaiadimension:mega_crate" : {
+  "sound" : "normal",
+  "textures" : "mega_storage_crate"
 }}
