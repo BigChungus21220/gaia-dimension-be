@@ -789,4 +789,6 @@
 "malachite_cracked_bricks":{"textures":"textures/blocks/malachite_cracked_bricks"
 },
 "malachite_floor_tiles":{"textures":"textures/blocks/malachite_floor_tiles"
+},
+"mega_storage_crate":{"textures":"textures/blocks/mega_storage_crate"
 }}}
