@@ -13,25 +13,26 @@ function getTopBlock(location, dimension){
 }
 
 async function tpToGaia(entity){
-
-    if (!inGaiaDimension(entity)&& entity.dimension.id === 'minecraft:the_end'){
+    if (!inGaiaDimension(entity) && entity.dimension.id === 'minecraft:the_end'){
         log(`Sending ${entity.nameTag} back to the End`)
         entity.teleport({x:0,y:65,z:0},{dimension:the_end})
         return;
-            }
-            const save = entity.location
-           const initialTeleport = ConvertCoords(new Vector(entity.location.x,entity.location.y,entity.location.z),'minecraft:overworld','gaia:gaia')
-            entity.teleport(initialTeleport, {dimension: the_end})
-            entity.turnCoords()
-            await delay(0.8)
-        placePortal(new Vector(entity.location.x,entity.location.y,entity.location.z), the_end, true)
+    }
+    const save = entity.location
+    const initialTeleport = ConvertCoords(new Vector(entity.location.x,entity.location.y,entity.location.z),'minecraft:overworld','gaia:gaia')
+    entity.teleport(initialTeleport, {dimension: the_end})
+    entity.turnCoords()
+    await delay(0.8)
+    placePortal(new Vector(entity.location.x,entity.location.y,entity.location.z), the_end, true)
     await delay(0.8)
     let teleport = getTopBlock(entity.location,entity.dimension)
-    entity.teleport({x:teleport.x,y:teleport.y-2,z:teleport.z},{dimension:entity.dimension})
-    linker.link(save,teleport)
-    log(entity.typeId + " sent to Gaia Dimension")
+    entity.teleport({x:MathRound(teleport.x),y:MathRound(teleport.y-2),z:MathRound(teleport.z-1)},{dimension:entity.dimension})
+    const existingLink = linker.getLink('start',{x:Math.floor(MathRound(save.x)),y:Math.floor(MathRound(save.y)),z:Math.floor(MathRound(save.z))});
+    if (!existingLink) {
+        linker.link({x:Math.floor(MathRound(save.x)),y:Math.floor(MathRound(save.y)),z:Math.floor(MathRound(save.z))},{x:MathRound(teleport.x),y:MathRound(teleport.y-2),z:MathRound(teleport.z+1)},{x:0,y:3,z:2})
+    }
 
-  
+    log(entity.typeId + " sent to Gaia Dimension")
 }
 
 
@@ -65,24 +66,29 @@ function isMoving (entity) {
 };;
 
 export default isMoving;
- 
 async function backToDimension(entity,coord){
     try{
-    if (entity.typeId == "minecraft:player"){
-        const teleport = linker.getLinked('end',ConvertCoords(coord,'minecraft:overworld','gaia:gaia')) ?? coord
-        let dimension = overworld  ?? entity.getSpawnPoint().dimension
-        entity.teleport(ConvertCoords({x:teleport.x+2,y:teleport.y,z:teleport.z+2},'gaia:gaia','minecraft:overworld'), {dimension:dimension})
-        await delay(1);
-        entity.teleport(ConvertCoords(getTopBlock({x:teleport.x,y:teleport.y,z:teleport.z}, overworld),'gaia:gaia','minecraft:overworld'), {dimension: dimension})
-        entity.turnCoords(true)
-    } else {
-        entity.teleport(world.getDefaultSpawnLocation(), {dimension: overworld})
-        await delay(1);
-        entity.teleport(getTopBlock(world.getDefaultSpawnLocation(), overworld), {dimension: overworld})
-    }
-    log(entity.typeId + " sent to overworld")
-} catch (e) {
-} 
+        if (entity.typeId == "minecraft:player"){
+            const teleport = linker.isEntity('end',entity) ?? coord
+            let dimension = overworld  ?? entity.getSpawnPoint().dimension
+            if (teleport === coord) {
+                entity.teleport(ConvertCoords({x:teleport.x+2,y:teleport.y,z:teleport.z+2},'gaia:gaia','minecraft:overworld'), {dimension:dimension})
+                await delay(1);
+                entity.teleport(ConvertCoords(getTopBlock({x:teleport.x,y:teleport.y,z:teleport.z}, overworld),'gaia:gaia','minecraft:overworld'), {dimension: dimension})
+            } else {
+                entity.teleport({x:teleport.location.x+2,y:teleport.location.y,z:teleport.location.z+2}, {dimension:dimension})
+                await delay(1);
+                entity.teleport(getTopBlock({x:teleport.location.x,y:teleport.y,z:teleport.location.z}, overworld), {dimension: dimension})
+            }
+            entity.turnCoords(true)
+        } else {
+            entity.teleport(world.getDefaultSpawnLocation(), {dimension: overworld})
+            await delay(1);
+            entity.teleport(getTopBlock(world.getDefaultSpawnLocation(), overworld), {dimension: overworld})
+        }
+        log(entity.typeId + " sent to overworld")
+    } catch (e) {
+    } 
 }
 
 
@@ -93,9 +99,8 @@ system.runInterval(() => {
             const inPortal = entity.isInPortal() || (dimension.getBlock(new Vector(entity.location.x, 0, entity.location.z)) === undefined && lastInPortal);
             const currentLocation = entity.location;
             inPortal ? entity.addTag('inPortal') : entity.removeTag('inPortal');
-            const coord = `x:${locMap?.get(entity.nameTag)?.x} y:${Math.round(entity.location.y)} z:${locMap?.get(entity.nameTag)?.z}`
+           
             if (entity.typeId === 'minecraft:player') {  
-
                 const isPlayerMoving = isMoving(entity);
                 if (isPlayerMoving && inGaiaDimension(entity)) {
                     const prevLocation = prevLocationMap?.get(entity.nameTag);
@@ -111,7 +116,7 @@ system.runInterval(() => {
                             delete loc.y;
                             delete loc.z;
                         }
-
+                        const coord = `x:${locMap?.get(entity.nameTag)?.x} y:${Math.round(entity.location.y)} z:${locMap?.get(entity.nameTag)?.z}`
                         if (deltaX > 0 || deltaZ > 0) {
                             locMap.set(entity.nameTag, new Vector(locMap?.get(entity.nameTag)?.x + 1, locMap?.get(entity.nameTag)?.y, locMap?.get(entity.nameTag)?.z + 1)); // Add 1 to the movement when moving forward
                         } else if (deltaX < 0 || deltaZ < 0) {
@@ -119,8 +124,7 @@ system.runInterval(() => {
                         }
 
                         inGaiaDimension(entity) ? entity?.onScreenDisplay?.setActionBar(coord): undefined;
-                       
-                       
+                        
                     }
                 prevLocationMap.set(entity.nameTag, currentLocation);
             }
@@ -144,3 +148,4 @@ world.afterEvents.playerBreakBlock.subscribe(ev=>{
     const {block} = ev
     breakPortal(block.location,block.dimension,true)
 },{blockTypes:['gaia:keystone_block','gaia:gaia_portal']})
+

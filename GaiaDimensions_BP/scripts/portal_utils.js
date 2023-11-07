@@ -1,4 +1,4 @@
-import { Vector, BlockPermutation,Dimension,system,Block, world } from "@minecraft/server"
+import { Vector, BlockPermutation,Dimension,system,Block, world, BlockVolumeUtils, BlockVolumeIntersection } from "@minecraft/server"
 import { log, vectorToString } from './utils.js'
 
 export function isUnlitPortal(corner, dimension, x_oriented){
@@ -80,19 +80,31 @@ export function placePortal(corner, dimension, x_oriented){
     }
 }
 
-  
-  export function breakPortal(corner, dimension, x_oriented){
+export function breakPortal(corner, dimension, x_oriented){
     for (let x = -3; x <= 3; x++){
         for (let y = -3; y <= 3; y++){
+            const linker = new PortalLink()
             let blockpos = Vector.add(corner, new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0));
             let block = dimension.getBlock(blockpos);
             let adjacent = block.getAdjacent()
             if (block.type.id === 'gaia:gaia_portal'){
+                ['start', 'end'].forEach(position => {
+                    const link = linker.getLink(position, blockpos)
+                    if(link){
+                        linker.unlink(link.location, link.linkedLocation)
+                    } else return;
+                });
                 block.setPermutation(BlockPermutation.resolve("minecraft:air"));
             }
             adjacent.filter(b=>{
                 b.typeId === 'gaia:gaia_portal'
             }).forEach(b=>{
+                ['start', 'end'].forEach(position => {
+                    const link = linker.getLink(position, b.location)
+                    if(link){
+                        linker.unlink(link.location, link.linkedLocation)
+                    } else return
+                });
                 b.setPermutation(BlockPermutation.resolve("minecraft:air"));
             })
         }
@@ -155,6 +167,7 @@ export function ConvertCoords(location, fromDimension, toDimension) {
  * @typedef Link
  * @property {Vector} location
  * @property {Vector} linkedLocation
+ * @property {Vector} size
  */
 
 /**
@@ -169,7 +182,7 @@ export class PortalLink {
         /**
          * @type {Array<Link>}
          */
-      this.linked = JSON.parse(world.getDynamicProperty('PortalLinked')) ?? [];
+      this.linked = JSON.parse(world.getDynamicProperty('PortalLinked') ?? "[]");
       this.serialize = JSON.stringify;
     }
   
@@ -177,54 +190,63 @@ export class PortalLink {
      * Link two locations.
      * @param {Vector} fromLocation - The starting location.
      * @param {Vector} toLocation - The ending location.
+     * @param {*} size - The size of the portal.
      */
-    link(fromLocation, toLocation) {
+    link(fromLocation, toLocation,size) {
       if (typeof fromLocation !== 'object' || typeof toLocation !== 'object') {
         throw new Error('Both fromLocation and toLocation must be objects');
       }
-      const data = { location: fromLocation, linkedLocation: toLocation };
+      const data = { location: fromLocation, linkedLocation: toLocation, size:size };
       if (!this.linked.some((d) => d.location === fromLocation && d.linkedLocation === toLocation)) {
         this.linked.push(data);
+        console.warn(this.serialize(this.linked))
         world.setDynamicProperty('PortalLinked', this.serialize(this.linked));
       }
     }
   
     /**
-     * Unlink two locations.
+     * Unlinks a link between two locations.
      * @param {Vector} fromLocation - The starting location.
      * @param {Vector} toLocation - The ending location.
      */
     unlink(fromLocation, toLocation) {
-      if (typeof fromLocation !== 'object' || typeof toLocation !== 'object') {
-        throw new Error('Both fromLocation and toLocation must be objects');
-      }
-      this.linked = this.linked.filter(
-        (d) => !(d.location === fromLocation && d.linkedLocation === toLocation)
-      );
-      world.setDynamicProperty('PortalLinked', this.serialize(this.linked));
+        if (typeof fromLocation !== 'object' || typeof toLocation !== 'object') {
+            throw new Error('Both fromLocation and toLocation must be objects');
+        }
+       this.linked = this.linked.filter(l=>{
+        l.location != fromLocation && l.linkedLocation != toLocation
+       })
+        world.setDynamicProperty('PortalLinked', this.serialize(this.linked));
     }
-/**
+  /**
  * Get the linked location from a given location.
  * @param {Vector} location - The location.
  * @param {string} from - Whether the location is the start or end of the linked location
- * @returns {Vector} The linked location.
+ * @returns {Link} The linked object.
  */
-getLinked(from, location){
+getLink(from, location){
     if (typeof location !== 'object') {
         throw new Error('location must be an object');
     }
     let link;
     switch(from) {
         case 'start':
-            link = this.linked.find(d => d.location === location);
+            link = this.linked.find(d => {
+                const volume = {from: d.location, to: d.size};
+                console.warn(BlockVolumeUtils.isInside(volume, location))
+                return BlockVolumeUtils.isInside(volume, location);
+            });
             break;
         case 'end':
-            link = this.linked.find(d => d.linkedLocation === location);
+            link = this.linked.find(d => {
+                const volume = {from: d.linkedLocation, to: d.size};
+                return BlockVolumeUtils.isInside(volume, location);
+            });
             break;
         default:
             throw new Error(`Invalid value for 'from': ${from}`);
     }
-    return link ? link.linkedLocation : undefined;
+    return link || undefined;
 }
 
     /**
@@ -269,4 +291,34 @@ getLinked(from, location){
     hasLink(link){
         return this.linked.includes(link)
     }
+/**
+ * Check if an entity is within the bounds of a linked portal.
+ * @param {Entity} entity - The entity to check.
+ * @param {string} from - Whether the entity is at the start or end of the linked location
+ * @returns {Link|undefined} The link that the entity is in, or undefined if the entity is not in any linked portal.
+ */
+isEntity(from, entity) {
+    if (typeof entity !== 'object') {
+        throw new Error('entity must be an object');
+    }
+    let link;
+    switch(from){
+        case 'start':
+            link = this.linked.find(link => {
+                const volume = {from: link.location, to: link.size};
+                return BlockVolumeUtils.isInside(volume, entity.location);
+            });
+            break;
+
+        case 'end':
+            link = this.linked.find(link => {
+                const volume = {from: link.linkedLocation, to: link.size};
+                return BlockVolumeUtils.isInside(volume, entity.location);
+            });
+            break;
+        default:
+            throw new Error(`Invalid value for 'from': ${from}`);
+    }
+    return link || undefined;
+}
 }
