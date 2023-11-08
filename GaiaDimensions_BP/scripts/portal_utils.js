@@ -232,14 +232,14 @@ getLink(from, location){
     switch(from) {
         case 'start':
             link = this.linked.find(d => {
-                const volume = {from: d.location, to: d.size};
+                const volume = {from: d.location, to: {x:d.location.x+d.size.x,y:d.location.y+d.size.y,z:d.location.z+d.size.z}};
                 console.warn(BlockVolumeUtils.isInside(volume, location))
                 return BlockVolumeUtils.isInside(volume, location);
             });
             break;
         case 'end':
             link = this.linked.find(d => {
-                const volume = {from: d.linkedLocation, to: d.size};
+                const volume = {from: d.linkedLocation,  to: {x:d.linkedLocation.x+d.size.x,y:d.linkedLocation.y+d.size.y,z:d.linkedLocation.z+d.size.z}} ;
                 return BlockVolumeUtils.isInside(volume, location);
             });
             break;
@@ -305,14 +305,14 @@ isEntity(from, entity) {
     switch(from){
         case 'start':
             link = this.linked.find(link => {
-                const volume = {from: link.location, to: link.size};
+                const volume = {from: link.location, to: {x:link.location.x+link.size.x,y:link.location.y+link.size.y,z:link.location.z+link.size.z}};
                 return BlockVolumeUtils.isInside(volume, entity.location);
             });
             break;
 
         case 'end':
             link = this.linked.find(link => {
-                const volume = {from: link.linkedLocation, to: link.size};
+                const volume = {from: link.linkedLocation, to: {x:link.linkedLocation.x+link.size.x,y:link.linkedLocation.y+link.size.y,z:link.linkedLocation.z+link.size.z}};
                 return BlockVolumeUtils.isInside(volume, entity.location);
             });
             break;
