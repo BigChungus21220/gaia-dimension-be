@@ -1,13 +1,13 @@
-import { world, system, Vector } from "@minecraft/server"
-import { log, inGaiaDimension } from 'utils.js'
+import { world, system } from "@minecraft/server"
+import gaia from "./world"
 
 system.runInterval(() => {
     let players = world.getPlayers()
     for (let player of players){
-        if (inGaiaDimension(player)){
+        if (gaia.isInGaia(player)){
             let entities = player.dimension.getEntities({location: player.location, maxDistance: 500, type: "minecraft:shulker"})
             for (let entity of entities){
-                entity.teleport(new Vector(0, -100, 0))
+                entity.remove()
             }
         }
     }

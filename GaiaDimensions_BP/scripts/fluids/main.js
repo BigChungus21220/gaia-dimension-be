@@ -1,4 +1,5 @@
 import { system, world } from "@minecraft/server";
+import gaia from "../world";
 
 const fluids = [
 "gaia:liquid_bismuth",
@@ -66,9 +67,10 @@ system.runInterval(() => {
     }*/
 
     for (const player of players) {
+      const dimension = world.getDimension(player.dimension.id)
       if (
-        fluids.includes(world.getDimension(player.dimension.id).getBlock({ ...player.location, y: player.location.y + 1 }).typeId) ||
-        fluids.includes(world.getDimension(player.dimension.id).getBlock(player.location).typeId)
+        fluids.includes(dimension.getBlock({ ...player.location, y: player.location.y + 1 }).typeId) ||
+        fluids.includes(dimension.getBlock(player.location).typeId)
       ) {
         player.addEffect("slow_falling", 4, { amplifier: player.isSneaking ? 1 : 2, showParticles: false });
         if (player.isJumping) {
@@ -76,8 +78,8 @@ system.runInterval(() => {
         }
 
         if (
-          hot_fluids.includes(world.getDimension(player.dimension.id).getBlock({ ...player.location, y: player.location.y + 1 }).typeId) ||
-          hot_fluids.includes(world.getDimension(player.dimension.id).getBlock(player.location).typeId)
+          hot_fluids.includes(dimension.getBlock({ ...player.location, y: player.location.y + 1 }).typeId) ||
+          hot_fluids.includes(dimension.getBlock(player.location).typeId)
         ) {
           player.setOnFire(10, true);
         } else {
@@ -85,7 +87,7 @@ system.runInterval(() => {
         }
       }
 
-      if (fluids.includes(world.getDimension(player.dimension.id).getBlock({ ...player.location, y: player.location.y + 1.63 }).typeId)) {
+      if (fluids.includes(dimension.getBlock({ ...player.location, y: player.location.y + 1.63 }).typeId)) {
         player.runCommand("fog @s push fluid:water_fog fluid_fog");
       } else {
         player.runCommand("fog @s remove fluid_fog");
