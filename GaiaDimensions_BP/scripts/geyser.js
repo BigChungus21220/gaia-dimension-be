@@ -1,6 +1,6 @@
 import { system, MolangVariableMap } from "@minecraft/server";
-import { vec3 } from 'Vector.js';
-import { delay } from 'utils.js'
+import { vec3 } from './Vector.js';
+import { delay } from './utils.js'
 
 //applies velocity to entities that stand on an active geyser for duration ticks
 async function push_players(dimension, spawn_pos, duration){

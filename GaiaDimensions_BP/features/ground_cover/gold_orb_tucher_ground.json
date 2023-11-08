@@ -1,5 +1,5 @@
 {
-    "format_version": "1.20.30",
+    "format_version": "1.16.0",
     "minecraft:snap_to_surface_feature": {
       "description": {
         "identifier": "gaia:ground_cover/gold_orb_tucher_ground"

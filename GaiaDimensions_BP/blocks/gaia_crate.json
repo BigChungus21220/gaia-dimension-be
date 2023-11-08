@@ -1,0 +1,51 @@
+{
+    "format_version": "1.19.50",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:mega_crate",
+            "menu_category": {
+                "category": "items",
+                "group": "itemGroup.name.chest",
+                "is_hidden_in_commands": false
+            }
+        },
+        "components": {
+            "minecraft:collision_box": true,
+            "minecraft:selection_box": true,
+            "minecraft:display_name": "Mega Storage Crate",
+            "minecraft:material_instances": {
+                "up": {
+                    "texture": "mega_storage_crate",
+                    "render_method": "opaque"
+                },
+                "down": {
+                    "texture": "mega_storage_crate",
+                    "render_method": "opaque"
+                },
+                "south": {
+                    "texture": "mega_storage_crate",
+                    "render_method": "opaque"
+                },
+                "*": {
+                    "texture": "mega_storage_crate",
+                    "render_method": "opaque"
+                }
+            },
+            "minecraft:unit_cube": {},
+            "minecraft:on_placed": {
+                "event": "setEntity"
+            },
+            "tag:chest":{}
+            }
+        },
+        "events": {
+            "setEntity":{
+                "sequence": [
+                    {
+                        "run_command": {
+                            "command": ["summon gaia:mega_crate_entity mega_crate ~~~"]
+                        }
+                    }
+                ]
+            }
+        }}

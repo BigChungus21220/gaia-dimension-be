@@ -9,6 +9,7 @@
       "runtime_identifier": "minecraft:spider"
     },
 
+
     "component_groups": {
       "minecraft:spider_jockey": {
         "minecraft:addrider": {
@@ -16,9 +17,11 @@
         },
         "minecraft:rideable": {
           "seat_count": 1,
-          "family_types": ["skeleton"],
+          "family_types": [
+            "skeleton"
+          ],
           "seats": {
-            "position": [0.0, 0.54, 0.0]
+            "position": [ 0.0, 0.54, 0.0 ]
           }
         }
       },
@@ -29,9 +32,11 @@
         },
         "minecraft:rideable": {
           "seat_count": 1,
-          "family_types": ["skeleton"],
+          "family_types": [
+            "skeleton"
+          ],
           "seats": {
-            "position": [0.0, 0.54, 0.0]
+            "position": [ 0.0, 0.54, 0.0 ]
           }
         }
       },
@@ -42,9 +47,11 @@
         },
         "minecraft:rideable": {
           "seat_count": 1,
-          "family_types": ["skeleton"],
+          "family_types": [
+            "skeleton"
+          ],
           "seats": {
-            "position": [0.0, 0.54, 0.0]
+            "position": [ 0.0, 0.54, 0.0 ]
           }
         }
       },
@@ -133,13 +140,15 @@
     },
 
     "components": {
-      "minecraft:is_hidden_when_invisible": {},
+      "minecraft:is_hidden_when_invisible": {
+      },
       "minecraft:experience_reward": {
         "on_death": "query.last_hit_by_player ? 5 : 0"
       },
-      "minecraft:nameable": {},
+      "minecraft:nameable": {
+      },
       "minecraft:type_family": {
-        "family": ["spider", "monster", "mob", "arthropod"]
+        "family": [ "spider", "monster", "mob", "arthropod" ]
       },
       "minecraft:breathable": {
         "total_supply": 15,
@@ -159,12 +168,7 @@
       "minecraft:hurt_on_condition": {
         "damage_conditions": [
           {
-            "filters": {
-              "test": "in_lava",
-              "subject": "self",
-              "operator": "==",
-              "value": true
-            },
+            "filters": { "test": "in_lava", "subject": "self", "operator": "==", "value": true },
             "cause": "lava",
             "damage_per_tick": 4
           }
@@ -176,9 +180,12 @@
       "minecraft:navigation.climb": {
         "can_path_over_water": true
       },
-      "minecraft:movement.basic": {},
-      "minecraft:jump.static": {},
-      "minecraft:can_climb": {},
+      "minecraft:movement.basic": {
+      },
+      "minecraft:jump.static": {
+      },
+      "minecraft:can_climb": {
+      },
       "minecraft:attack": {
         "damage": 2
       },
@@ -209,47 +216,63 @@
       "minecraft:behavior.hurt_by_target": {
         "priority": 1
       },
-      "minecraft:physics": {},
+      "minecraft:physics": {
+      },
       "minecraft:pushable": {
         "is_pushable": true,
         "is_pushable_by_piston": true
       },
-      "minecraft:conditional_bandwidth_optimization": {}
+      "minecraft:conditional_bandwidth_optimization": {
+      }
     },
 
     "events": {
       "minecraft:entity_spawned": {
-        "add": {
-          "component_groups": ["minecraft:spider_neutral"]
-        }
+            "add": {
+              "component_groups": [
+                "minecraft:spider_neutral"
+              ]
+            }
       },
 
       "minecraft:become_hostile": {
         "remove": {
-          "component_groups": ["minecraft:spider_neutral"]
+          "component_groups": [
+            "minecraft:spider_neutral"
+          ]
         },
         "add": {
-          "component_groups": ["minecraft:spider_hostile"]
+          "component_groups": [
+            "minecraft:spider_hostile"
+          ]
         }
       },
 
       "minecraft:become_neutral": {
         "remove": {
-          "component_groups": ["minecraft:spider_hostile"]
+          "component_groups": [
+            "minecraft:spider_hostile"
+          ]
         },
         "add": {
-          "component_groups": ["minecraft:spider_neutral"]
+          "component_groups": [
+            "minecraft:spider_neutral"
+          ]
         }
       },
 
       "minecraft:become_angry": {
         "add": {
-          "component_groups": ["minecraft:spider_angry"]
+          "component_groups": [
+            "minecraft:spider_angry"
+          ]
         }
       },
       "minecraft:become_calm": {
         "remove": {
-          "component_groups": ["minecraft:spider_angry"]
+          "component_groups": [
+            "minecraft:spider_angry"
+          ]
         }
       }
     }
