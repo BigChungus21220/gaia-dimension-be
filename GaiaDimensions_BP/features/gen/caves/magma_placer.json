@@ -1,0 +1,19 @@
+{
+	"format_version": "1.20.30",
+	"minecraft:scatter_feature": {
+		"description": {
+			"identifier": "gaia:gen/caves/magma_placer"
+		},
+		"places_feature": "gaia:gen/blocks/magma",
+		"iterations": "return 7;",
+		"x": 0,
+		"z": 0,
+		"y": {
+			"distribution": "fixed_grid",
+			"extent": [
+				"1",
+				"7"
+			]
+		}
+	}
+}
