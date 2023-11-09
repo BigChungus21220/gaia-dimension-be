@@ -4,7 +4,7 @@
   "minecraft:block": {
     "description": {
       "identifier": "gaia:mineral_water_down",
-      "properties": {
+      "states": {
         "gaia:x": [ 0, 1 ],
         "gaia:nx": [ 0, 1 ],
         "gaia:z": [ 0, 1 ],
@@ -35,12 +35,12 @@
       "minecraft:geometry": {
         "identifier": "geometry.fluid",
         "bone_visibility": {
-          "x": "query.block_property('gaia:x') == 0",
-          "nx": "query.block_property('gaia:nx') == 0",
-          "z": "query.block_property('gaia:z') == 0",
-          "nz": "query.block_property('gaia:nz') == 0",
-          "top": "query.block_property('gaia:top') == 0",
-          "bottom": "query.block_property('gaia:bottom') == 0"
+          "x": "query.block_state('gaia:x') == 0",
+          "nx": "query.block_state('gaia:nx') == 0",
+          "z": "query.block_state('gaia:z') == 0",
+          "nz": "query.block_state('gaia:nz') == 0",
+          "top": "query.block_state('gaia:top') == 0",
+          "bottom": "query.block_state('gaia:bottom') == 0"
         }
       },
       "minecraft:light_dampening": 0.0,

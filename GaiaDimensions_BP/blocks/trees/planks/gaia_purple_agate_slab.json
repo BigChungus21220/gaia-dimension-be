@@ -12,14 +12,14 @@
 			"enabled_states": ["minecraft:vertical_half"]
 		  }
 		},
-		"properties": {
+		"states": {
 		  "gaia:double": [false, true]
 		}
 	  },
 	  "permutations": [
 		// Bottom Slab
 		{
-		  "condition": "query.block_property('minecraft:vertical_half') == 'bottom' && !query.block_property('gaia:double')",
+		  "condition": "query.block_state('minecraft:vertical_half') == 'bottom' && !query.block_state('gaia:double')",
 		  "components": {
 			"minecraft:collision_box": {
 			  "origin": [-8, 0, -8],
@@ -37,7 +37,7 @@
 		},
 		// Top Slab
 		{
-		  "condition": "query.block_property('minecraft:vertical_half') == 'top' && !query.block_property('gaia:double')",
+		  "condition": "query.block_state('minecraft:vertical_half') == 'top' && !query.block_state('gaia:double')",
 		  "components": {
 			"minecraft:collision_box": {
 			  "origin": [-8, 8, -8],
@@ -55,7 +55,7 @@
 		},
 		// Double Slab
 		{
-		  "condition": "query.block_property('gaia:double')",
+		  "condition": "query.block_state('gaia:double')",
 		  "components": {
 			"minecraft:unit_cube": {},
 			"minecraft:on_player_destroyed": {
@@ -75,8 +75,8 @@
 		"minecraft:geometry": {
 		  "identifier": "geometry.slab",
 		  "bone_visibility": {
-			"bottom_slab": "query.block_property('minecraft:vertical_half') == 'bottom'",
-			"top_slab": "query.block_property('minecraft:vertical_half') == 'top'"
+			"bottom_slab": "query.block_state('minecraft:vertical_half') == 'bottom'",
+			"top_slab": "query.block_state('minecraft:vertical_half') == 'top'"
 		  }
 		},
 		"minecraft:material_instances": {

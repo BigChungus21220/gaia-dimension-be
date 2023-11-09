@@ -10,7 +10,7 @@
                     ]
                 }
             },
-            "properties": {
+            "states": {
                 "gaia:rotation": {
                     "values": {
                         "min": 0,
