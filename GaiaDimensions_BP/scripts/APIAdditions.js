@@ -1,4 +1,6 @@
-import { Entity,Block,system} from "@minecraft/server";
+import { Entity,Block,system, Dimension, Vector, Direction} from "@minecraft/server";
+import { vec3 } from "./Vector";
+
 
 /**
  * @returns {boolean} Whether the entity is in a gaia portal or not
@@ -70,3 +72,72 @@ Block.prototype.getAdjacent = function () {
 system.clearRun(intervalId)
     return connectedBlocks;
   };
+
+  /**
+   * Finds the ground of a dimension based off a location
+   * @param {Vector} location 
+   * @returns {Block}
+   */
+  Dimension.prototype.findGround = function (location){
+    try {
+        let blockFound;
+    let y = location.y
+    let check = system.runInterval(()=>{
+        if (y <= 0){
+            return;
+        }
+        const block = this?.getBlock({x:location.x,y:Math.round(y),z:location.z})
+        if (block && block.type.id !== 'minecraft:air'){
+            blockFound = block
+            system.clearRun(check)
+        } else{
+        y--
+    }
+    })
+    return blockFound
+} catch (e){console.error(e)}
+}
+
+  
+String.prototype.decode = function () {
+  const L = {
+    a: 0, b: 1, c: 2, d: 3, e: 4, f: 5, g: 6, h: 7, i: 8, j: 9,
+    k: 10, l: 11, m: 12, n: 13, o: 14, p: 15, q: 16, r: 17, s: 18, t: 19,
+    u: 20, v: 21, w: 22, x: 23, y: 24, z: 25, A: 26, B: 27, C: 28, D: 29,
+    E: 30, F: 31, G: 32, H: 33, I: 34, J: 35, K: 36, L: 37, M: 38, N: 39,
+    O: 40, P: 41, Q: 41, R: 42, S: 43, T: 44, U: 45, V: 46, W: 47, X: 48,
+    Y: 49, Z: 50
+  };
+
+  const P = this.split('*');
+  const V = P.map((p) => p.split('').reduce((a, l) => a * L[l], 1));
+  const C = V.reduce((a, v) => a * v, 1); 
+
+  return C;
+}
+
+Vector.prototype.toString = function(){
+  return vec3(this.x,this.y,this.z).toString()
+}
+/**
+ * Converts a Direction to a Vector 
+ * @param {Direction | string} direction
+ */
+Vector.convertDirection = function(direction){
+  switch (direction){
+    case "Up":
+        return new Vector(0,1,0)
+    case "Down":
+        return new Vector(0,-1,0)
+    case "North":
+        return new Vector(0,0,-1)
+    case "South":
+        return new Vector(0,0,1)
+    case "East":
+        return new Vector(-1,0,0)
+    case "West":
+        return new Vector(1,0,0)
+    default:
+        return new Vector(0,0,0)
+}
+}

@@ -174,7 +174,7 @@ export const nativeRecipes = {
     "minecraft:stained_hardened_clay":{
         //hardcoded
         scriptedOutput: function(item=MC.ItemStack("air")){
-            let colorValues = MC.BlockProperties.get("color").validValues
+            let colorValues = MC.BlockStates.get("color").validValues
             for(let i = 0; i < colorValues.length; i++){
                 let condition = `{"color": "${colorValues[i]}"}`
                 let block = MC.BlockPermutation.resolve(item.typeId, JSON.parse(condition))

@@ -1,28 +1,30 @@
 import * as MC from "@minecraft/server";
 import {nativeRecipes, nativeFuels} from "./nativeFurnaceData.js"
+const scoreboard = MC.world.scoreboard
 function setPermutation(block, args){
   let argumentsPermutation = String(JSON.stringify(args).replaceAll("{", "")).replaceAll("}", "")
   block.dimension.runCommandAsync(`setblock ${block.location.x} ${block.location.y} ${block.location.z} ${block.typeId} ${argumentsPermutation}`)
 }
-function temp(block){
-  let test = [
-    {"gaiadimension:direction": 0},
-    {"gaiadimension:lit":false}
-  ]
-  setPermutation(block, test)
-}
+
 function getObjective(id){
-  let objective = MC.world.scoreboard.getObjective(id)
+  let objective = scoreboard.getObjective(id)
   return objective
 }
 function score(entity, mode="add", objectiveId, value){
-  if(mode=="add"){
-    entity.runCommandAsync(`scoreboard players add @s ${objectiveId} ${value}`)
-   }else if(mode == "set"){
-    entity.runCommandAsync(`scoreboard players set @s ${objectiveId} ${value}`)
-   }else if(mode == "remove"){
-    entity.runCommandAsync(`scoreboard players remove @s ${objectiveId} ${value}`)
-  }
+ const objective =  scoreboard.getObjective(objectiveId)
+ switch (mode) {
+  case 'add':
+    objective.addScore(entity,value)
+    break;
+    case 'set':
+    objective.setScore(entity,value)
+    break;
+    case 'remove':
+     objective.addScore(entity,objective.getScore(entity)-value)
+    break;
+    default:
+    throw Error('Invalid mode')
+ }
 }
 
 function percentage(partialValue, totalValue) {
@@ -86,20 +88,28 @@ function getItemTags(itemStack, list){
 export function furnacesLoad(){
   MC.system.afterEvents.scriptEventReceive.subscribe(data=>{
     const { sourceEntity: entity, message, id } = data;
-     if(id == "forge:furnaceProperties"){
-      score(entity, "add", "cookTime", 0)
-      score(entity, "add", "burnTime", 0)
-      score(entity, "add", "burnTimeMax", 0)
-    }
-    if(id == "forge:furnaceLoad"){
-       //command exemple: scriptevent forge:furnaceLoad <prefix:String> <cooktimemax:Int> <flameid: String> <arrowId: String>
+    switch (id) {
+      case 'forge:furnaceProperties':
+        score(entity, "add", "cookTime", 0)
+        score(entity, "add", "burnTime", 0)
+        score(entity, "add", "burnTimeMax", 0)
+        break;
+      
+      case 'forge:furnaceLoad':
+        //command exemple: scriptevent forge:furnaceLoad <prefix:String> <cooktimemax:Int> <flameid: String> <arrowId: String>
         let args = message.split(" ", 5)
         let cookTimeDefault = Number(args[1]);
         const block = entity.dimension.getBlock({x:entity.location.x, y:entity.location.y, z:entity.location.z})
         furnaceReciper(block, entity, {prefix: args[0], cookTickMax: cookTimeDefault, flameId: args[2], arrowId: args[3]})
+        break;
+
+        default:
+        break;
     }
   })
 }
+
+
 
 
 function furnaceReciper(blockOrigin, entity, data={prefix:"forge", cookTickMax: 0, flameId:"forge:flame", arrowId: "forge:arrow"}){
@@ -114,9 +124,9 @@ function furnaceReciper(blockOrigin, entity, data={prefix:"forge", cookTickMax: 
    let burnTimeMax = getObjective("burnTimeMax").getScore(entity);
    barStage(data.flameId, burnTime, burnTimeMax, inventory, 13, 3)
    barStage(data.arrowId, cookTime, data.cookTickMax, inventory, 16, 4)
-   let tag = undefined
-   let outputTyped = undefined
-   let materialTyped = undefined
+   let tag;
+   let outputTyped;
+   let materialTyped;
   if((slots[0] && slots[0].typeId in nativeRecipes) && nativeRecipes[slots[0].typeId].blockState == undefined){
     materialTyped = slots[0].clone()
    }else if((slots[0] && slots[0].typeId in nativeRecipes) && nativeRecipes[slots[0].typeId].blockState){

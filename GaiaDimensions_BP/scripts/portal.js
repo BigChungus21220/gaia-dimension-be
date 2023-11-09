@@ -1,35 +1,35 @@
 import { world, system, Vector, Entity,Player } from "@minecraft/server"
-import {log, inGaiaDimension, delay } from './utils.js'
-import { placePortal,ConvertCoords, breakPortal,PortalLink} from './portal_utils.js'
-const linker = new PortalLink()
+import {log, delay } from './utils.js'
+import gaia from "./world.js";
 const prevLocationMap = new Map();
 const locMap = new Map()
 const dimensions = ['overworld','nether','the_end'].map(dimensionStr=>world.getDimension(dimensionStr))
 const overworld = dimensions.find(d=>d.id === 'minecraft:overworld')
 const the_end = dimensions.find(d=>d.id === 'minecraft:the_end')
+
 function getTopBlock(location, dimension){
     let loc = new Vector(Math.floor(location.x), 310, Math.floor(location.z))
     return Vector.add(dimension.getBlockFromRay(loc, new Vector(0,-1,0)).block.location, new Vector(0,1,0))
 }
 
 async function tpToGaia(entity){
-    if (!inGaiaDimension(entity) && entity.dimension.id === 'minecraft:the_end'){
+    if (!gaia.inGaia(entity) && entity.dimension.id === 'minecraft:the_end'){
         log(`Sending ${entity.nameTag} back to the End`)
         entity.teleport({x:0,y:65,z:0},{dimension:the_end})
         return;
     }
     const save = entity.location
-    const initialTeleport = ConvertCoords(new Vector(entity.location.x,entity.location.y,entity.location.z),'minecraft:overworld','gaia:gaia')
+    const initialTeleport = gaia.convertCoords(new Vector(entity.location.x,entity.location.y,entity.location.z),'minecraft:overworld','gaia:gaia')
     entity.teleport(initialTeleport, {dimension: the_end})
     entity.turnCoords()
     await delay(0.8)
-    placePortal(new Vector(entity.location.x,entity.location.y,entity.location.z), the_end, true)
+    gaia.placePortal(new Vector(entity.location.x,entity.location.y,entity.location.z), the_end, true)
     await delay(0.8)
     let teleport = getTopBlock(entity.location,entity.dimension)
     entity.teleport({x:MathRound(teleport.x),y:MathRound(teleport.y-2),z:MathRound(teleport.z-1)},{dimension:entity.dimension})
-    const existingLink = linker.getLink('start',{x:Math.floor(MathRound(save.x)),y:Math.floor(MathRound(save.y)),z:Math.floor(MathRound(save.z))});
+    const existingLink = gaia.getLink('start',{x:Math.floor(MathRound(save.x)),y:Math.floor(MathRound(save.y)),z:Math.floor(MathRound(save.z))});
     if (!existingLink) {
-        linker.link({x:Math.floor(MathRound(save.x)),y:Math.floor(MathRound(save.y)),z:Math.floor(MathRound(save.z))},{x:MathRound(teleport.x),y:MathRound(teleport.y-2),z:MathRound(teleport.z+1)},{x:0,y:3,z:2})
+        gaia.link({x:Math.floor(MathRound(save.x)),y:Math.floor(MathRound(save.y)),z:Math.floor(MathRound(save.z))},{x:MathRound(teleport.x),y:MathRound(teleport.y-2),z:MathRound(teleport.z+1)},{x:0,y:3,z:2})
     }
 
     log(entity.typeId + " sent to Gaia Dimension")
@@ -66,15 +66,16 @@ function isMoving (entity) {
 };;
 
 export default isMoving;
+
 async function backToDimension(entity,coord){
     try{
         if (entity.typeId == "minecraft:player"){
-            const teleport = linker.isEntity('end',entity) ?? coord
+            const teleport = gaia.isEntityInLinked('end',entity) ?? coord
             let dimension = overworld  ?? entity.getSpawnPoint().dimension
             if (teleport === coord) {
-                entity.teleport(ConvertCoords({x:teleport.x+2,y:teleport.y,z:teleport.z+2},'gaia:gaia','minecraft:overworld'), {dimension:dimension})
+                entity.teleport(gaia.convertCoords({x:teleport.x+2,y:teleport.y,z:teleport.z+2},'gaia:gaia','minecraft:overworld'), {dimension:dimension})
                 await delay(1);
-                entity.teleport(ConvertCoords(getTopBlock({x:teleport.x,y:teleport.y,z:teleport.z}, overworld),'gaia:gaia','minecraft:overworld'), {dimension: dimension})
+                entity.teleport(gaia.convertCoords(getTopBlock({x:teleport.x,y:teleport.y,z:teleport.z}, overworld),'gaia:gaia','minecraft:overworld'), {dimension: dimension})
             } else {
                 entity.teleport({x:teleport.location.x+2,y:teleport.location.y,z:teleport.location.z+2}, {dimension:dimension})
                 await delay(1);
@@ -102,7 +103,7 @@ system.runInterval(() => {
            
             if (entity.typeId === 'minecraft:player') {  
                 const isPlayerMoving = isMoving(entity);
-                if (isPlayerMoving && inGaiaDimension(entity)) {
+                if (isPlayerMoving && gaia.isInGaia(entity)) {
                     const prevLocation = prevLocationMap?.get(entity.nameTag);
                         const deltaX = Math.floor(currentLocation.x - prevLocation?.x);
                         const deltaZ = Math.floor(currentLocation.z - prevLocation?.z);
@@ -123,13 +124,13 @@ system.runInterval(() => {
                             locMap.set(entity.nameTag, new Vector(locMap?.get(entity.nameTag)?.x - 1, locMap?.get(entity.nameTag)?.y, locMap?.get(entity.nameTag)?.z - 1)); // Subtract 1 from the movement when moving backward
                         }
 
-                        inGaiaDimension(entity) ? entity?.onScreenDisplay?.setActionBar(coord): undefined;
+                        gaia.isInGaia(entity) ? entity?.onScreenDisplay?.setActionBar(coord): undefined;
                         
                     }
                 prevLocationMap.set(entity.nameTag, currentLocation);
             }
             if (inPortal && !lastInPortal) {
-                inGaiaDimension(entity) ? backToDimension(entity,parseCoords(coord)) : tpToGaia(entity);
+                gaia.isInGaia(entity) ? backToDimension(entity,parseCoords(coord)) : tpToGaia(entity);
             }
         });
     });
@@ -142,10 +143,3 @@ return {
     z: parseInt(coord.split(':')[3])
 };
 }
-
-
-world.afterEvents.playerBreakBlock.subscribe(ev=>{
-    const {block} = ev
-    breakPortal(block.location,block.dimension,true)
-},{blockTypes:['gaia:keystone_block','gaia:gaia_portal']})
-

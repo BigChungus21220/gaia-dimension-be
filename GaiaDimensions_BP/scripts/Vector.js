@@ -33,7 +33,13 @@
 */
 
 export { vec3 };
-
+/**
+ * 
+ * @param {number} a 
+ * @param {number} b 
+ * @param {number} c 
+ * @returns {Vec3}
+ */
 function vec3(a,b,c){
     if (a === undefined) {
         return new Vec3();
