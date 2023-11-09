@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.30",
+    "minecraft:scatter_feature": {
+        "description": {
+            "identifier": "gaia:conditions/condition_7080430885"
+        },
+        "places_feature": "gaia:gen/base/layer4",
+        "iterations": "t.layer == 4",
+        "x": 0,
+        "z": 0,
+        "y": 0
+    }
+}

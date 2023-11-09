@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.30",
+    "minecraft:scatter_feature": {
+        "description": {
+            "identifier": "gaia:conditions/condition_3618903486"
+        },
+        "places_feature": "gaia:gen/gaia_blocks/gaia_stone",
+        "iterations": "t.biome == 'purple_agate_swamp'",
+        "x": 0,
+        "z": 0,
+        "y": 0
+    }
+}

@@ -3,7 +3,7 @@
   "minecraft:block": {
     "description": {
       "identifier": "gaia:gaia_portal",
-			"properties": {
+			"states": {
 				"gaia:x_oriented": [false, true]
 			}
     },
@@ -49,13 +49,13 @@
     },
     "permutations": [
 			{
-				"condition": "query.block_property('gaia:x_oriented')",
+				"condition": "query.block_state('gaia:x_oriented')",
 				"components": {
           "minecraft:transformation": {"rotation": [0, 90, 0]}
 				}
 			},
       {
-				"condition": "!query.block_property('gaia:x_oriented')",
+				"condition": "!query.block_state('gaia:x_oriented')",
 				"components": {
           "minecraft:transformation": {"rotation": [0, 0, 0]}
 				}

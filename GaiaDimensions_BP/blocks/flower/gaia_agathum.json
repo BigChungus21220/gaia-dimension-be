@@ -6,7 +6,7 @@
       "menu_category": {
         "category": "none"
       },
-      "properties": {
+      "states": {
         "block:rotation": [0, 1, 2, 3]
       }
     },
@@ -74,25 +74,25 @@
     },
     "permutations": [
       {
-        "condition": "query.block_property('block:rotation') == 0",
+        "condition": "query.block_state('block:rotation') == 0",
         "components": {
           "minecraft:rotation": [0, 0, 0]
         }
       },
       {
-        "condition": "query.block_property('block:rotation') == 1",
+        "condition": "query.block_state('block:rotation') == 1",
         "components": {
           "minecraft:rotation": [0, -180, 0]
         }
       },
       {
-        "condition": "query.block_property('block:rotation') == 2",
+        "condition": "query.block_state('block:rotation') == 2",
         "components": {
           "minecraft:rotation": [0, 90, 0]
         }
       },
       {
-        "condition": "query.block_property('block:rotation') == 3",
+        "condition": "query.block_state('block:rotation') == 3",
         "components": {
           "minecraft:rotation": [0, -90, 0]
         }

@@ -7,7 +7,7 @@
 				"category": "construction",
 				"group": "itemGroup.name.stairs"
 			},
-			"properties": {
+			"states": {
 				"gaia:is_upside_down": [
 					false, true
 				],
@@ -74,7 +74,7 @@
 		},
 		"permutations": [
 			{
-				"condition": "query.block_property('gaia:is_upside_down') == false",
+				"condition": "query.block_state('gaia:is_upside_down') == false",
 				"components": {
 					"minecraft:collision_box": {
 						"origin": [ -8, 0, -8 ],
@@ -87,7 +87,7 @@
 				}
 			},
 			{
-				"condition": "query.block_property('gaia:is_upside_down') == true",
+				"condition": "query.block_state('gaia:is_upside_down') == true",
 				"components": {
 					"minecraft:collision_box": {
 						"origin": [ -8, 8, -8 ],
@@ -100,7 +100,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 0) && query.block_property('gaia:is_upside_down') == false",
+				"condition": "(query.block_state('gaia:direction') == 0) && query.block_state('gaia:is_upside_down') == false",
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -135,7 +135,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 0) && query.block_property('gaia:is_upside_down') == true",
+				"condition": "(query.block_state('gaia:direction') == 0) && query.block_state('gaia:is_upside_down') == true",
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -170,7 +170,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 1) && query.block_property('gaia:is_upside_down') == false",
+				"condition": "(query.block_state('gaia:direction') == 1) && query.block_state('gaia:is_upside_down') == false",
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -205,7 +205,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 1) && query.block_property('gaia:is_upside_down') == true",
+				"condition": "(query.block_state('gaia:direction') == 1) && query.block_state('gaia:is_upside_down') == true",
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -240,7 +240,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 2) && query.block_property('gaia:is_upside_down') == false",
+				"condition": "(query.block_state('gaia:direction') == 2) && query.block_state('gaia:is_upside_down') == false",
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -275,7 +275,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 2) && query.block_property('gaia:is_upside_down') == true",
+				"condition": "(query.block_state('gaia:direction') == 2) && query.block_state('gaia:is_upside_down') == true",
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -310,7 +310,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 3) && query.block_property('gaia:is_upside_down') == false",
+				"condition": "(query.block_state('gaia:direction') == 3) && query.block_state('gaia:is_upside_down') == false",
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -345,7 +345,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 3) && query.block_property('gaia:is_upside_down') == true",
+				"condition": "(query.block_state('gaia:direction') == 3) && query.block_state('gaia:is_upside_down') == true",
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -380,7 +380,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 4) && query.block_property('gaia:is_upside_down') == false",	//southwest
+				"condition": "(query.block_state('gaia:direction') == 4) && query.block_state('gaia:is_upside_down') == false",	//southwest
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -415,7 +415,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 4) && query.block_property('gaia:is_upside_down') == true",//southwest
+				"condition": "(query.block_state('gaia:direction') == 4) && query.block_state('gaia:is_upside_down') == true",//southwest
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -450,7 +450,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 5) && query.block_property('gaia:is_upside_down') == false", //southeast
+				"condition": "(query.block_state('gaia:direction') == 5) && query.block_state('gaia:is_upside_down') == false", //southeast
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -485,7 +485,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 5) && query.block_property('gaia:is_upside_down') == true", //southeast
+				"condition": "(query.block_state('gaia:direction') == 5) && query.block_state('gaia:is_upside_down') == true", //southeast
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -520,7 +520,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 6) && query.block_property('gaia:is_upside_down') == false",  //northwest
+				"condition": "(query.block_state('gaia:direction') == 6) && query.block_state('gaia:is_upside_down') == false",  //northwest
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -555,7 +555,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 6) && query.block_property('gaia:is_upside_down') == true", //northwest
+				"condition": "(query.block_state('gaia:direction') == 6) && query.block_state('gaia:is_upside_down') == true", //northwest
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -590,7 +590,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 7) && query.block_property('gaia:is_upside_down') == false", //northeast
+				"condition": "(query.block_state('gaia:direction') == 7) && query.block_state('gaia:is_upside_down') == false", //northeast
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -625,7 +625,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 7) && query.block_property('gaia:is_upside_down') == true", //northeast
+				"condition": "(query.block_state('gaia:direction') == 7) && query.block_state('gaia:is_upside_down') == true", //northeast
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -660,7 +660,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 8) && query.block_property('gaia:is_upside_down') == false", //northeast INNER
+				"condition": "(query.block_state('gaia:direction') == 8) && query.block_state('gaia:is_upside_down') == false", //northeast INNER
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -695,7 +695,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 8) && query.block_property('gaia:is_upside_down') == true", //northeast INNER
+				"condition": "(query.block_state('gaia:direction') == 8) && query.block_state('gaia:is_upside_down') == true", //northeast INNER
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -730,7 +730,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 9) && query.block_property('gaia:is_upside_down') == false", //northwest INNER
+				"condition": "(query.block_state('gaia:direction') == 9) && query.block_state('gaia:is_upside_down') == false", //northwest INNER
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -765,7 +765,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 9) && query.block_property('gaia:is_upside_down') == true", //northwest INNER
+				"condition": "(query.block_state('gaia:direction') == 9) && query.block_state('gaia:is_upside_down') == true", //northwest INNER
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -800,7 +800,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 10) && query.block_property('gaia:is_upside_down') == false", //southwest INNER
+				"condition": "(query.block_state('gaia:direction') == 10) && query.block_state('gaia:is_upside_down') == false", //southwest INNER
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -835,7 +835,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 10) && query.block_property('gaia:is_upside_down') == true", //southwest INNER
+				"condition": "(query.block_state('gaia:direction') == 10) && query.block_state('gaia:is_upside_down') == true", //southwest INNER
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -870,7 +870,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 11) && query.block_property('gaia:is_upside_down') == false", //southeast INNER
+				"condition": "(query.block_state('gaia:direction') == 11) && query.block_state('gaia:is_upside_down') == false", //southeast INNER
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",
@@ -905,7 +905,7 @@
 				}
 			},
 			{
-				"condition": "(query.block_property('gaia:direction') == 11) && query.block_property('gaia:is_upside_down') == true", //southeast INNER
+				"condition": "(query.block_state('gaia:direction') == 11) && query.block_state('gaia:is_upside_down') == true", //southeast INNER
 				"components": {
 					"minecraft:geometry": {
 						"identifier": "geometry.gaia_stairs",

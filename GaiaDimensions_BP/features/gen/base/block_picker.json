@@ -1,71 +1,26 @@
 {
-	"format_version": "1.13.0",
-	"minecraft:conditional_list": {
-		"description": {
-			"identifier": "gaia:gen/base/block_picker"
-		},
-		"conditional_features": [
-            {
-				"places_feature": "flakey:gen/blocks/water",
-				"condition": "t.layer < 1"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/gaia_stone",
-				"condition": "t.layer > 13"
-			},
-			{
-				"places_feature": "gaia:gen/base/layer1",
-                "condition": "t.layer == 1"
-			},
-			{
-				"places_feature": "gaia:gen/base/layer2",
-                "condition": "t.layer == 2"
-			},
-			{
-				"places_feature": "gaia:gen/base/layer3",
-                "condition": "t.layer == 3"
-			},
-			{
-				"places_feature": "gaia:gen/base/layer4",
-                "condition": "t.layer == 4"
-			},
-			{
-				"places_feature": "gaia:gen/base/layer5",
-                "condition": "t.layer == 5"
-			},
-			{
-				"places_feature": "gaia:gen/base/layer6",
-                "condition": "t.layer == 6"
-			},
-			{
-				"places_feature": "gaia:gen/base/layer7",
-                "condition": "t.layer == 7"
-			},
-			{
-				"places_feature": "gaia:gen/base/layer8",
-                "condition": "t.layer == 8"
-			},
-			{
-				"places_feature": "gaia:gen/base/layer9",
-                "condition": "t.layer == 9"
-			},
-			{
-				"places_feature": "gaia:gen/base/layer10",
-                "condition": "t.layer == 10"
-			},
-			{
-				"places_feature": "gaia:gen/base/layer11",
-                "condition": "t.layer == 11"
-			},
-			{
-				"places_feature": "gaia:gen/base/layer12",
-                "condition": "t.layer == 12"
-			},
-			{
-				"places_feature": "gaia:gen/base/layer13",
-                "condition": "t.layer == 13"
-			}
-		],
-		"early_out_scheme": "placement_success"
-	}
+    "format_version": "1.20.30",
+    "minecraft:aggregate_feature": {
+        "description": {
+            "identifier": "gaia:gen/base/block_picker"
+        },
+        "features": [
+            "flakey:conditions/condition_2095340167",
+            "gaia:conditions/condition_6911230967",
+            "gaia:conditions/condition_1619986877",
+            "gaia:conditions/condition_5895826112",
+            "gaia:conditions/condition_8654818204",
+            "gaia:conditions/condition_7080430885",
+            "gaia:conditions/condition_1913185435",
+            "gaia:conditions/condition_9076589353",
+            "gaia:conditions/condition_4909566429",
+            "gaia:conditions/condition_4761954783",
+            "gaia:conditions/condition_6971587869",
+            "gaia:conditions/condition_3763385460",
+            "gaia:conditions/condition_8459653235",
+            "gaia:conditions/condition_3008778251",
+            "gaia:conditions/condition_1025489111"
+        ],
+        "early_out": "first_success"
+    }
 }

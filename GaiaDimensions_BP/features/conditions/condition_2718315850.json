@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.30",
+    "minecraft:scatter_feature": {
+        "description": {
+            "identifier": "gaia:conditions/condition_2718315850"
+        },
+        "places_feature": "gaia:gen/gaia_blocks/salt",
+        "iterations": "t.biome == 'mineral_river'",
+        "x": 0,
+        "z": 0,
+        "y": 0
+    }
+}

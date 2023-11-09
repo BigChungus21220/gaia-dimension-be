@@ -7,7 +7,7 @@
         "category": "nature",
         "group": "itemGroup.name.log"
       },
-      "properties": {
+      "states": {
         "gaia:rotation": [0, 1, 2]
       }
     },
@@ -67,7 +67,7 @@
     },
     "permutations": [
       {
-        "condition": "query.block_property('gaia:rotation') == 0",
+        "condition": "query.block_state('gaia:rotation') == 0",
         "components": {
           "minecraft:transformation": { "rotation": [0, 0, 0] },
           "minecraft:on_interact": {
@@ -77,7 +77,7 @@
         }
       },
       {
-        "condition": "query.block_property('gaia:rotation') == 1",
+        "condition": "query.block_state('gaia:rotation') == 1",
         "components": {
           "minecraft:transformation": { "rotation": [90, 0, 0] },
           "minecraft:on_interact": {
@@ -87,7 +87,7 @@
         }
       },
       {
-        "condition": "query.block_property('gaia:rotation') == 2",
+        "condition": "query.block_state('gaia:rotation') == 2",
         "components": {
           "minecraft:transformation": { "rotation": [0, 0, 90] },
           "minecraft:on_interact": {

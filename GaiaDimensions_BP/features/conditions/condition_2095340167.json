@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.30",
+    "minecraft:scatter_feature": {
+        "description": {
+            "identifier": "flakey:conditions/condition_2095340167"
+        },
+        "places_feature": "flakey:gen/blocks/water",
+        "iterations": "t.layer < 1",
+        "x": 0,
+        "z": 0,
+        "y": 0
+    }
+}

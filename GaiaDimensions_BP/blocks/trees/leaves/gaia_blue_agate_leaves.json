@@ -3,7 +3,7 @@
 	"minecraft:block": {
 		"description": {
 			"identifier": "gaia:blue_agate_leaves",
-			"properties": {
+			"states": {
 				"gaia:decay_tier": [6, 5, 4, 3, 2, 1, 0],
 				"gaia:not_decay": [false, true],
 				"gaia:solid": [false, true]
@@ -58,13 +58,13 @@
 			"gaia:on_destroyed": {
 				"sequence": [
 					{
-						"condition": "query.get_equipped_item_name == 'shears'",
+						"condition": "query.is_item_name_any('slot.weapon.mainhand','shears')",
 						"spawn_loot": {
 							"table": "loot_tables/blocks/gaia/blue_agate_leaves_sheared.json"
 						}
 					},
 					{
-						"condition": "query.get_equipped_item_name != 'shears'",
+						"condition": "!query.is_item_name_any('slot.weapon.mainhand','shears')",
 						"spawn_loot": {
 							"table": "loot_tables/blocks/gaia/blue_agate_leaves.json"
 						}
@@ -97,7 +97,7 @@
 		},
 		"permutations": [
 			{
-				"condition": "query.block_property('gaia:decay_tier') == 0",
+				"condition": "query.block_state('gaia:decay_tier') == 0",
 				"components": {
 					"tag:gaia:decay_tier_0": {},
 					"minecraft:random_ticking": {
@@ -108,43 +108,43 @@
 				}
 			},
 			{
-				"condition": "query.block_property('gaia:decay_tier') == 1",
+				"condition": "query.block_state('gaia:decay_tier') == 1",
 				"components": {
 					"tag:gaia:decay_tier_1": {}
 				}
 			},
 			{
-				"condition": "query.block_property('gaia:decay_tier') == 2",
+				"condition": "query.block_state('gaia:decay_tier') == 2",
 				"components": {
 					"tag:gaia:decay_tier_2": {}
 				}
 			},
 			{
-				"condition": "query.block_property('gaia:decay_tier') == 3",
+				"condition": "query.block_state('gaia:decay_tier') == 3",
 				"components": {
 					"tag:gaia:decay_tier_3": {}
 				}
 			},
 			{
-				"condition": "query.block_property('gaia:decay_tier') == 4",
+				"condition": "query.block_state('gaia:decay_tier') == 4",
 				"components": {
 					"tag:gaia:decay_tier_4": {}
 				}
 			},
       {
-				"condition": "query.block_property('gaia:decay_tier') == 5",
+				"condition": "query.block_state('gaia:decay_tier') == 5",
 				"components": {
 					"tag:gaia:decay_tier_5": {}
 				}
 			},
 			{
-				"condition": "query.block_property('gaia:decay_tier') == 6",
+				"condition": "query.block_state('gaia:decay_tier') == 6",
 				"components": {
 					"tag:gaia:decay_tier_6": {}
 				}
 			},
 			{
-				"condition": "query.block_property('gaia:solid') == true",
+				"condition": "query.block_state('gaia:solid') == true",
 				"components": {
 					"minecraft:material_instances": {
 						"*": {

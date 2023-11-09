@@ -1,71 +1,26 @@
 {
-	"format_version": "1.13.0",
-	"minecraft:conditional_list": {
-		"description": {
-			"identifier": "gaia:gen/base/layer8"
-		},
-		"conditional_features": [
-			{
-				"places_feature": "gaia:gen/gaia_blocks/gaia_stone",
-				"condition": "t.biome == 'mineral_river'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/volcanic_rock",
-				"condition": "t.biome == 'volcanic_lands'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/gaia_stone",
-				"condition": "t.biome == 'shining_grove'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/gaia_stone",
-				"condition": "t.biome == 'smoldering_bog'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/wasteland_stone",
-				"condition": "t.biome == 'static_wasteland'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/gaia_stone",
-				"condition": "t.biome == 'green_agate_jungle'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/gaia_stone",
-				"condition": "t.biome == 'crystal_plains'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/gaia_stone",
-				"condition": "t.biome == 'goldstone_lands'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/gaia_stone",
-				"condition": "t.biome == 'mutant_agate_wildwood'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/gaia_stone",
-				"condition": "t.biome == 'purple_agate_swamp'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/gaia_stone",
-				"condition": "t.biome == 'blue_agate_taiga'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/gaia_stone",
-				"condition": "t.biome == 'pink_agate_forest'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/salt_rock",
-				"condition": "t.biome == 'salt_dunes'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/gaia_stone",
-				"condition": "t.biome == 'fossil_woodland'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/gaia_stone",
-				"condition": "t.biome == 'mineral_resevoir'"
-			}
-		],
-		"early_out_scheme": "placement_success"
-	}
+    "format_version": "1.20.30",
+    "minecraft:aggregate_feature": {
+        "description": {
+            "identifier": "gaia:gen/base/layer8"
+        },
+        "features": [
+            "gaia:conditions/condition_2655740703",
+            "gaia:conditions/condition_6434589781",
+            "gaia:conditions/condition_7713761223",
+            "gaia:conditions/condition_7927415547",
+            "gaia:conditions/condition_5926997601",
+            "gaia:conditions/condition_2769460461",
+            "gaia:conditions/condition_1154683460",
+            "gaia:conditions/condition_7874247593",
+            "gaia:conditions/condition_4545463896",
+            "gaia:conditions/condition_3618903486",
+            "gaia:conditions/condition_6693462268",
+            "gaia:conditions/condition_5041478525",
+            "gaia:conditions/condition_4826322541",
+            "gaia:conditions/condition_5565223436",
+            "gaia:conditions/condition_3574951134"
+        ],
+        "early_out": "first_success"
+    }
 }

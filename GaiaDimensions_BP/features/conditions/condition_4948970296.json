@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.30",
+    "minecraft:scatter_feature": {
+        "description": {
+            "identifier": "gaia:conditions/condition_4948970296"
+        },
+        "places_feature": "gaia:gen/gaia_blocks/bedrock_salt_dunes",
+        "iterations": "t.biome == 'salt_dunes'",
+        "x": 0,
+        "z": 0,
+        "y": 0
+    }
+}

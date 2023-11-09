@@ -1,71 +1,26 @@
 {
-	"format_version": "1.13.0",
-	"minecraft:conditional_list": {
-		"description": {
-			"identifier": "gaia:gen/base/bedrock_picker"
-		},
-		"conditional_features": [
-			{
-				"places_feature": "gaia:gen/gaia_blocks/bedrock_mineral_river",
-				"condition": "t.biome == 'mineral_river'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/bedrock_volcanic_lands",
-				"condition": "t.biome == 'volcanic_lands'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/bedrock_shining_grove",
-				"condition": "t.biome == 'shining_grove'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/bedrock_smoldering_bog",
-				"condition": "t.biome == 'smoldering_bog'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/bedrock_static_wasteland",
-				"condition": "t.biome == 'static_wasteland'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/bedrock_green_agate_jungle",
-				"condition": "t.biome == 'green_agate_jungle'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/bedrock_crystal_plains",
-				"condition": "t.biome == 'crystal_plains'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/bedrock_goldstone_lands",
-				"condition": "t.biome == 'goldstone_lands'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/bedrock_mutant_agate_wildwood",
-				"condition": "t.biome == 'mutant_agate_wildwood'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/bedrock_purple_agate_swamp",
-				"condition": "t.biome == 'purple_agate_swamp'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/bedrock_blue_agate_taiga",
-				"condition": "t.biome == 'blue_agate_taiga'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/bedrock_pink_agate_forest",
-				"condition": "t.biome == 'pink_agate_forest'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/bedrock_salt_dunes",
-				"condition": "t.biome == 'salt_dunes'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/bedrock_fossil_woodland",
-				"condition": "t.biome == 'fossil_woodland'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/bedrock_mineral_resevoir",
-				"condition": "t.biome == 'mineral_resevoir'"
-			}
-		],
-		"early_out_scheme": "placement_success"
-	}
+    "format_version": "1.20.30",
+    "minecraft:aggregate_feature": {
+        "description": {
+            "identifier": "gaia:gen/base/bedrock_picker"
+        },
+        "features": [
+            "gaia:conditions/condition_5411730749",
+            "gaia:conditions/condition_3409836972",
+            "gaia:conditions/condition_8139799737",
+            "gaia:conditions/condition_4541687616",
+            "gaia:conditions/condition_8795298314",
+            "gaia:conditions/condition_5869324426",
+            "gaia:conditions/condition_2930870543",
+            "gaia:conditions/condition_6221643677",
+            "gaia:conditions/condition_8625884949",
+            "gaia:conditions/condition_8990891224",
+            "gaia:conditions/condition_4319223771",
+            "gaia:conditions/condition_2558900700",
+            "gaia:conditions/condition_4948970296",
+            "gaia:conditions/condition_2461997572",
+            "gaia:conditions/condition_1639930954"
+        ],
+        "early_out": "first_success"
+    }
 }
