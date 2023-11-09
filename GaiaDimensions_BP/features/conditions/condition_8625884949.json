@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.30",
+    "minecraft:scatter_feature": {
+        "description": {
+            "identifier": "gaia:conditions/condition_8625884949"
+        },
+        "places_feature": "gaia:gen/gaia_blocks/bedrock_mutant_agate_wildwood",
+        "iterations": "t.biome == 'mutant_agate_wildwood'",
+        "x": 0,
+        "z": 0,
+        "y": 0
+    }
+}

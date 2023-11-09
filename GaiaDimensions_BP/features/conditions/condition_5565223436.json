@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.30",
+    "minecraft:scatter_feature": {
+        "description": {
+            "identifier": "gaia:conditions/condition_5565223436"
+        },
+        "places_feature": "gaia:gen/gaia_blocks/gaia_stone",
+        "iterations": "t.biome == 'fossil_woodland'",
+        "x": 0,
+        "z": 0,
+        "y": 0
+    }
+}

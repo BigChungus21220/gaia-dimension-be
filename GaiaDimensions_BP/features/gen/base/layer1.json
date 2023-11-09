@@ -1,71 +1,26 @@
 {
-	"format_version": "1.13.0",
-	"minecraft:conditional_list": {
-		"description": {
-			"identifier": "gaia:gen/base/layer1"
-		},
-		"conditional_features": [
-			{
-				"places_feature": "gaia:gen/gaia_blocks/salt",
-				"condition": "t.biome == 'mineral_river'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/charred_grass",
-				"condition": "t.biome == 'volcanic_lands'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/soft_grass",
-				"condition": "t.biome == 'shining_grove'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/murky_grass",
-				"condition": "t.biome == 'smoldering_bog'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/wasteland_stone",
-				"condition": "t.biome == 'static_wasteland'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/green_glitter_grass",
-				"condition": "t.biome == 'green_agate_jungle'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/pink_glitter_grass",
-				"condition": "t.biome == 'crystal_plains'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/corrupted_grass",
-				"condition": "t.biome == 'goldstone_lands'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/orange_glitter_grass",
-				"condition": "t.biome == 'mutant_agate_wildwood'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/purple_glitter_grass",
-				"condition": "t.biome == 'purple_agate_swamp'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/blue_glitter_grass",
-				"condition": "t.biome == 'blue_agate_taiga'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/peach_glitter_grass",
-				"condition": "t.biome == 'pink_agate_forest'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/salt",
-				"condition": "t.biome == 'salt_dunes'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/pale_green_glitter_grass",
-				"condition": "t.biome == 'fossil_woodland'"
-			},
-			{
-				"places_feature": "gaia:gen/gaia_blocks/salt",
-				"condition": "t.biome == 'mineral_resevoir'"
-			}
-		],
-		"early_out_scheme": "placement_success"
-	}
+    "format_version": "1.20.30",
+    "minecraft:aggregate_feature": {
+        "description": {
+            "identifier": "gaia:gen/base/layer1"
+        },
+        "features": [
+            "gaia:conditions/condition_2718315850",
+            "gaia:conditions/condition_7051034994",
+            "gaia:conditions/condition_1734596463",
+            "gaia:conditions/condition_7068653192",
+            "gaia:conditions/condition_5926997601",
+            "gaia:conditions/condition_4724898847",
+            "gaia:conditions/condition_8943006311",
+            "gaia:conditions/condition_5224893885",
+            "gaia:conditions/condition_4730238246",
+            "gaia:conditions/condition_4821538671",
+            "gaia:conditions/condition_7992249715",
+            "gaia:conditions/condition_7556536803",
+            "gaia:conditions/condition_7366164315",
+            "gaia:conditions/condition_8159690931",
+            "gaia:conditions/condition_2040768119"
+        ],
+        "early_out": "first_success"
+    }
 }
