@@ -5,6 +5,7 @@ world.afterEvents.itemUseOn.subscribe((event) => {
     if (event.itemStack.typeId == "gaia:glint_and_gold"){
         let pos = Vector.add(Vector.convertDirection(event.blockFace), event.block.location)
         gaia.canLight(event.block.dimension.getBlock(pos))
+        gaia.triggerEvent('portalActivate',{location:pos,dimension:event.block.dimension,source:event.source})
         event.source.playSound('block.end_portal.spawn',{location:event.block.location})
     }
 })
