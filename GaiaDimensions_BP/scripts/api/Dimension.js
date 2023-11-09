@@ -1,5 +1,5 @@
-import { Vector, BlockPermutation,Dimension,system,Block, world, BlockVolumeUtils, BlockVolumeIntersection,Entity, Player } from "@minecraft/server"
-import gaia from "../world.js"
+import { Vector, BlockPermutation,Dimension,system,Block, world, BlockVolumeUtils,Entity, Player} from "@minecraft/server"
+
 
 const biomes = [
     "mineral_river",
@@ -18,21 +18,32 @@ const biomes = [
     "fossil_woodland",
     "mineral_resevoir"
 ]
+
 /**
  * A class that wraps the dimension of gaia
  */
 export class Gaia extends Portal {
     
-    constructor() {}
+    constructor() {
+        /**
+         * @private
+         * @readonly
+         */
+        this.dimension = world.getDimension('the end')
+    }
  /**
   * Get the Entities within the Gaia Dimension
+  * @readonly
   * @returns {Entity[]}
   */
     getEntities(){
+        try {
     return world.getDimension('the end').getEntities({location:{x:200000,y:0,z:200000},farthest:400000,closest:200000})
+} catch (e) { }
     }
 /**
  * Returns Whether or not a player is in the Gaia Dimension
+ * @readonly
  * @param {Player} player 
  * @returns {boolean}
  */
@@ -44,19 +55,22 @@ export class Gaia extends Portal {
  * Returns the name of a biome in Gaia based of a location
  * @param {Vector} position 
  * @param {Dimension} dimension 
+ * @readonly
  * @returns {string} The biome name
  */
-    getBiome(position, dimension){
-        let blockId = dimension.getBlock(new Vector(position.x, 0, position.z))?.typeId
+    getBiome(position){
+        let blockId = this.dimension.getBlock(new Vector(position.x, 0, position.z))?.typeId
         if (blockId.includes("gaia:bedrock_")){
             return blockId.replace("gaia:bedrock_","")
         } else {
             return "none"
         }
     }
-/**
- * Starts the genertion of fog in the Gaia dimension
- */
+
+   /**
+    * @readonly
+   * Starts the generation of fog in the Gaia dimension
+   */
    pushFog(){
     this.generateFog()
 }
@@ -78,12 +92,11 @@ export class Gaia extends Portal {
 
 /**
  * @author Redux
- * 
  * @description Class that manages Portals and Portal Linking.
  */
 class Portal extends Fog {
     /**
-     * Create a PortalLink.
+     * Create a Portal.
      */
     constructor() {
         /**
@@ -391,10 +404,9 @@ convertCoords(location, fromDimension, toDimension) {
 }
 
 class Fog {
-    constructor (){}
-
+    constructor(){}
   generateFog(){
- let playerData = {}
+  let playerData = {}
   system.runInterval(() => {
     let players = world.getPlayers()
     for (let player of players){
@@ -436,7 +448,6 @@ class Fog {
 
     
 }
-
 
 function floorEquals(a, b){
     return Math.floor(a.x) == Math.floor(b.x) && Math.floor(a.z) == Math.floor(b.z)
