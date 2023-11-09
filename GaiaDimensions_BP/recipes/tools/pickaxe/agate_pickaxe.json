@@ -2,7 +2,7 @@
   "format_version": "1.12",
   "minecraft:recipe_shaped": {
     "description": {
-      "identifier": "agate_pickaxe_burnt"
+      "identifier": "agate_pickaxe_malachite"
     },
     "tags": [
       "crafting_table"
@@ -14,7 +14,7 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:burnt_agate_planks"
+        "item": "gaia:malachite_planks"
       },
       "B": {
         "item": "gaia:agate_stick"
