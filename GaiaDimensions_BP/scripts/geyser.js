@@ -34,7 +34,7 @@ async function push_entities(dimension, spawn_pos, duration){
         } else {
             //exit when geyser stops
             //Sends the after event, after the geyser has stopped
-            gaia.triggerEvent('geyserErupt',{dimension:dimension,duration:duration,location:spawn_pos,height:height,entities:dimension.getEntities({location:spawn_pos,maxDistance:1})},'afterEvent')
+            gaia.triggerEvent('geyserErupt',{dimension:dimension,duration:duration,location:spawn_pos,height:height,getAffectedEntities:dimension.getEntities({location:spawn_pos,maxDistance:1})},'afterEvent')
             return;
         }
     }, tickdelay);
