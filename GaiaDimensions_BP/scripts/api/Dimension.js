@@ -1,6 +1,6 @@
-import { Vector, BlockPermutation,Dimension,system,Block, world, BlockVolumeUtils,Entity, Player, ItemStack, Container} from "@minecraft/server"
+import { Vector, BlockPermutation,Dimension,system,Block, world, BlockVolumeUtils,Entity, Player} from "@minecraft/server"
 
-
+ 
 const biomes = [
     "mineral_river",
     "volcanic_lands",
@@ -19,80 +19,236 @@ const biomes = [
     "mineral_resevoir"
 ]
 
-Gaia.prototype.afterEvents.geyserErupt.subscribe(ev=>{
-    const {} = ev
-})
+function floorEquals(a, b){
+    return Math.floor(a.x) == Math.floor(b.x) && Math.floor(a.z) == Math.floor(b.z)
+}
+
 /**
- * A class that wraps the dimension of gaia
+* Generates a unique subscriber ID.
+* @private
+* @returns {string} A unique subscriber ID.
+*/
+function generateId() {
+    return Math.random().toString(36).substring(2, 10);
+ }
+
+/**
+ * @typedef PortalActivate
+ * @property {Vector} location Where the portal was lit/activated
+ * @property {Player} source The Player that lit the portal
+ * @property {Dimension} dimension The dimension where the portal was lit
  */
-export class Gaia extends Portal {
-    
-    constructor() {
-        /**
-         * @private
-         * @readonly
-         */
-        this.dimension = world.getDimension('the end')
-        this.afterEvents = new GaiaAfterEvents()
+
+/**
+ * @typedef GeyserErupt
+ * @property {Vector} location Where the Geyser Erupted
+ * @property {function(): Entity[]} getAffectedEntities Returns a array of Entities that were pushed/effected by the Geyser
+ * @property {Dimension} dimension The Dimension where the Geyser Erupted
+ * @property {number} duration How long the Geyser Erupted
+ * @property {number} height Height of the Geyser Eruption
+ * 
+ */
+class GaiaAfterEvents {
+    constructor (){
+        this.portalActivate = new PortalActivateAfterEventSignal()
+        this.geyserErupt = new GeyserEruptAfterEventSignal()
     }
- /**
-  * Get the Entities within the Gaia Dimension
-  * @readonly
-  * @returns {Entity[]}
+}
+
+
+class PortalActivateAfterEvent {
+    /**
+     * 
+     * @param {PortalActivate} data 
+     */
+ constructor (data){
+    /**
+     * Where the portal was lit/activated
+     */
+  this.location = data.location
+  /**
+  * The dimension where the portal was lit
   */
-    getEntities(){
-        try {
-    return world.getDimension('the end').getEntities({location:{x:200000,y:0,z:200000},farthest:400000,closest:200000})
-} catch (e) { }
+  this.dimension = data.dimension
+  /**
+   * The Player that lit the portal
+   */
+  this.source = data.source
+ }
+}
+
+
+class PortalActivateAfterEventSignal {
+    constructor () {
+        /**
+         * @readonly
+         * @private
+         */
+    this.subscribers = {}
     }
 /**
- * Returns Whether or not a player is in the Gaia Dimension
- * @readonly
- * @param {Player} player 
- * @returns {boolean}
+ * 
+ * @param {function(PortalActivateAfterEvent):void} callback 
+ * @returns {string} The Subsriber id of the Event
  */
-    isInGaia(player){
-        let playerLoc = player.location
-        return player.dimension.id == "minecraft:the_end" && playerLoc.x <= 400000 && playerLoc.z <= 400000 && playerLoc.x >= 200000 && playerLoc.z >= 200000 
-    }
+    subscribe(callback){
+            const subscriberId = generateId()
+            this.subscribers[subscriberId] = callback;
+           const eventCallback = (ev) => {
+           const { id, message } = ev;
+        if (id === 'gaia:portalActivateAfterEvent') {
+            const eventData = new PortalActivateAfterEvent(JSON.parse(message));
+            if (subscriberId in this.subscribers) {
+                this.subscribers[subscriberId](eventData);
+            }
+        }
+    };
+
+    system.afterEvents.scriptEventReceive.subscribe(eventCallback,{namespaces:['gaia']});
+    return subscriberId;
+        }
 /**
- * Returns the name of a biome in Gaia based of a location
- * @param {Vector} position 
- * @param {Dimension} dimension 
- * @readonly
- * @returns {string} The biome name
+ * 
+ * @param {string} subscriberId 
  */
-    getBiome(position){
-        let blockId = this.dimension.getBlock(new Vector(position.x, 0, position.z))?.typeId
-        if (blockId.includes("gaia:bedrock_")){
-            return blockId.replace("gaia:bedrock_","")
-        } else {
-            return "none"
+        unsubscribe(subscriberId){
+            delete this.subscribers[subscriberId]
         }
     }
 
-   /**
-    * @readonly
-   * Starts the generation of fog in the Gaia dimension
-   */
-   pushFog(){
-    this.generateFog()
-}
-/**
- * 
- * @param {string} eventName Name of the Event
- * @param {string} type The type of the event,before or after, must be afterEvent, or beforeEvent
- * @param {Object} data A object containing the event of the data
- */
-   triggerEvent(eventName,data,type){
-   this.runCommand(`scriptevent gaia:${eventName}${type} ${JSON.stringify(data)}`)
-   }
- runCommand(command){
-    this.dimension.runCommand(command)
- }   
+    
+    class GeyserEruptAfterEvent {
+        /**
+         * @param {GeyserErupt} data 
+         */
+      constructor (data){
+        /**
+         * Where the Geyser Erupted
+         * @readonly
+         */
+        this.location = data.location
+        /**
+         * Height of the Geyser Eruption
+         * @readonly
+         */
+        this.height = data.height,
+        /**
+         * The Dimension where the Geyser Erupted
+         * @readonly
+         */
+        this.dimension = data.dimension,
+        /**
+         * How long the Geyser Erupted
+         */
+        this.duration = data.duration,
+        /**
+         * @readonly
+         * @private
+         */
+        this.entities = data.getAffectedEntities
+      }
+         /**
+          * Returns a array of Entities that were pushed/effected by the Geyser
+         * @readonly
+         */
+      getAffectedEntities(){
+        return this.entities()
+      }
+    }
+
+
+    class GeyserEruptAfterEventSignal {
+        constructor () {
+            /**
+             * @readonly
+             * @private
+             */
+        this.subscribers = {}
+        }
+    /**
+     * @readonly
+     * @param {function(GeyserEruptAfterEvent):void} callback 
+     * @returns {string} The Subsriber id of the Event
+     */
+        subscribe(callback){
+                const subscriberId = generateId()
+                this.subscribers[subscriberId] = callback;
+               const eventCallback = (ev) => {
+               const { id, message } = ev;
+            if (id === 'gaia:geyserEruptAfterEvent') {
+                const eventData = new GeyserEruptAfterEvent(JSON.parse(message));
+                if (subscriberId in this.subscribers) {
+                    this.subscribers[subscriberId](eventData);
+                }
+            }
+        };
+    
+        system.afterEvents.scriptEventReceive.subscribe(eventCallback,{namespaces:['gaia']});
+        return subscriberId;
+            }
+    /**
+     * @readonly
+     * Unsubsribes from a event listner 
+     * @param {string} subscriberId 
+     */
+            unsubscribe(subscriberId){
+                delete this.subscribers[subscriberId]
+            }
+    }
+
+class Fog {
+    constructor(){ 
+
+    };
+    generateFog() {
+        let playerData = {};
+        system.runInterval(() => {
+            let players = world.getPlayers();
+            for (let player of players) {
+                let playerId = player.id;
+                let playerInArea = this.isInGaia(player);
+                let playerLocation = player.location;
+    
+                if (
+                    playerData[playerId] === undefined ||
+                    playerData[playerId].lastInArea != playerInArea ||
+                    (playerInArea && !floorEquals(playerLocation, playerData[playerId].lastLocation))
+                ) {
+                    this.updateFog(player);
+                }
+                playerData[playerId] = {
+                    lastInArea: playerInArea,
+                    lastLocation: playerLocation,
+                };
+            }
+        }, 8);
+    }
+    
+    clearFogs(player){
+        for (const biome of biomes){
+            player.runCommandAsync("fog @s remove " + biome)
+        }
+    }
+
+    addFog(player, biome){
+        player.runCommandAsync("fog @s push gaia:" + biome + "_fog " + biome)
+    }
+
+    updateFog(player){
+        this.clearFogs(player)
+        let biome = gaia.getBiome(player.location, player.dimension);
+        if (biome != "none"){
+            this.addFog(player, biome)
+        }
+    }
+
+    
 }
 
 
+
+    
+    
 /**
  * @typedef Link
  * @property {Vector} location
@@ -109,6 +265,7 @@ class Portal extends Fog {
      * Create a Portal.
      */
     constructor() {
+        super ()
         /**
          * @type {Array<Link>}
          * @private
@@ -413,228 +570,79 @@ convertCoords(location, fromDimension, toDimension) {
 }
 }
 
-class Fog {
-    constructor(){}
-  generateFog(){
-  let playerData = {}
-  system.runInterval(() => {
-    let players = world.getPlayers()
-    for (let player of players){
-        let playerId = player.id
-        let playerInArea = gaia.isInGaia(player)
-        let playerLocation = player.location
-
-        if (
-            playerData[playerId] === undefined ||
-            playerData[playerId].lastInArea != playerInArea ||
-            (playerInArea && !floorEquals(playerLocation, playerData[playerId].lastLocation))
-        ){
-            this.updateFog(player)
-        }
-        playerData[playerId] = {
-            lastInArea: playerInArea,
-            lastLocation: playerLocation
-        }
-    }
-}, 8)
-  }
-    clearFogs(player){
-        for (const biome of biomes){
-            player.runCommandAsync("fog @s remove " + biome)
-        }
-    }
-
-    addFog(player, biome){
-        player.runCommandAsync("fog @s push gaia:" + biome + "_fog " + biome)
-    }
-
-    updateFog(player){
-        this.clearFogs(player)
-        let biome = gaia.getBiome(player.location, player.dimension);
-        if (biome != "none"){
-            this.addFog(player, biome)
-        }
-    }
-
+/**
+ * A class that wraps the dimension of gaia
+ * @this {Gaia}
+ */
+export class Gaia extends Portal {
     
-}
-
-function floorEquals(a, b){
-    return Math.floor(a.x) == Math.floor(b.x) && Math.floor(a.z) == Math.floor(b.z)
-}
-
-/**
-* Generates a unique subscriber ID.
-* @private
-* @returns {string} A unique subscriber ID.
-*/
-function generateId() {
-    return Math.random().toString(36).substring(2, 10);
- }
-
-/**
- * @typedef PortalActivate
- * @property {Vector} location Where the portal was lit/activated
- * @property {Player} source The Player that lit the portal
- * @property {Dimension} dimension The dimension where the portal was lit
- */
-
-/**
- * @typedef GeyserErupt
- * @property {Vector} location Where the Geyser Erupted
- * @property {function(): Entity[]} getAffectedEntities Returns a array of Entities that were pushed/effected by the Geyser
- * @property {Dimension} dimension The Dimension where the Geyser Erupted
- * @property {number} duration How long the Geyser Erupted
- * @property {number} height Height of the Geyser Eruption
- * 
- */
-class GaiaAfterEvents {
-    constructor (){
-        this.portalActivate = new PortalActivateAfterEventSignal()
-        this.geyserErupt = new GeyserEruptAfterEventSignal()
+    constructor() {
+        super ()
+        /**
+         * @private
+         * @readonly
+         */
+        this.dimension = world.getDimension('the end')
+        this.afterEvents = new GaiaAfterEvents()
     }
-}
-
-
-class PortalActivateAfterEvent {
-    /**
-     * 
-     * @param {PortalActivate} data 
-     */
- constructor (data){
-    /**
-     * Where the portal was lit/activated
-     */
-  this.location = data.location
-  /**
-  * The dimension where the portal was lit
+ /**
+  * Get the Entities within the Gaia Dimension
+  * @readonly
+  * @returns {Entity[]}
   */
-  this.dimension = data.dimension
-  /**
-   * The Player that lit the portal
+    getEntities(){
+        try {
+    return world.getDimension('the end').getEntities({location:{x:200000,y:0,z:200000},farthest:400000,closest:200000})
+} catch (e) { }
+    }
+/**
+ * Returns Whether or not a player is in the Gaia Dimension
+ * @readonly
+ * @param {Player} player 
+ * @returns {boolean}
+ */
+    isInGaia(player){
+        let playerLoc = player.location
+        return player.dimension.id == "minecraft:the_end" && playerLoc.x <= 400000 && playerLoc.z <= 400000 && playerLoc.x >= 200000 && playerLoc.z >= 200000 
+    }
+/**
+ * Returns the name of a biome in Gaia based of a location
+ * @param {Vector} position 
+ * @param {Dimension} dimension 
+ * @readonly
+ * @returns {string} The biome name
+ */
+    getBiome(position){
+        let blockId = this.dimension.getBlock(new Vector(position.x, 0, position.z))?.typeId
+        if (blockId.includes("gaia:bedrock_")){
+            return blockId.replace("gaia:bedrock_","")
+        } else {
+            return "none"
+        }
+    }
+
+   /**
+    * @readonly
+   * Starts the generation of fog in the Gaia dimension
    */
-  this.source = data.source
- }
+   pushFog(){
+    this.generateFog()
+}
+/**
+ * 
+ * @param {string} eventName Name of the Event
+ * @param {string} type The type of the event,before or after, must be afterEvent, or beforeEvent
+ * @param {Object} data A object containing the event of the data
+ */
+   triggerEvent(eventName,data,type){
+   this.runCommand(`scriptevent gaia:${eventName}${type} ${JSON.stringify(data)}`)
+   }
+ runCommand(command){
+    this.dimension.runCommand(command)
+ }   
 }
 
 
-class PortalActivateAfterEventSignal {
-    constructor () {
-        /**
-         * @readonly
-         * @private
-         */
-    this.subscribers = {}
-    }
-/**
- * 
- * @param {function(PortalActivateAfterEvent):void} callback 
- * @returns {string} The Subsriber id of the Event
- */
-    subscribe(callback){
-            const subscriberId = generateId()
-            this.subscribers[subscriberId] = callback;
-           const eventCallback = (ev) => {
-           const { id, message } = ev;
-        if (id === 'gaia:portalActivateAfterEvent') {
-            const eventData = new PortalActivateAfterEvent(JSON.parse(message));
-            if (subscriberId in this.subscribers) {
-                this.subscribers[subscriberId](eventData);
-            }
-        }
-    };
-
-    system.afterEvents.scriptEventReceive.subscribe(eventCallback,{namespaces:['gaia']});
-    return subscriberId;
-        }
-/**
- * 
- * @param {string} subscriberId 
- */
-        unsubscribe(subscriberId){
-            delete this.subscribers[subscriberId]
-        }
-    }
-
-    
-    class GeyserEruptAfterEvent {
-        /**
-         * @param {GeyserErupt} data 
-         */
-      constructor (data){
-        /**
-         * Where the Geyser Erupted
-         * @readonly
-         */
-        this.location = data.location
-        /**
-         * Height of the Geyser Eruption
-         * @readonly
-         */
-        this.height = data.height,
-        /**
-         * The Dimension where the Geyser Erupted
-         * @readonly
-         */
-        this.dimension = data.dimension,
-        /**
-         * How long the Geyser Erupted
-         */
-        this.duration = data.duration,
-        /**
-         * @readonly
-         * @private
-         */
-        this.entities = data.getAffectedEntities
-      }
-         /**
-          * Returns a array of Entities that were pushed/effected by the Geyser
-         * @readonly
-         */
-      getAffectedEntities(){
-        return this.entities()
-      }
-    }
 
 
-    class GeyserEruptAfterEventSignal {
-        constructor () {
-            /**
-             * @readonly
-             * @private
-             */
-        this.subscribers = {}
-        }
-    /**
-     * @readonly
-     * @param {function(GeyserEruptAfterEvent):void} callback 
-     * @returns {string} The Subsriber id of the Event
-     */
-        subscribe(callback){
-                const subscriberId = generateId()
-                this.subscribers[subscriberId] = callback;
-               const eventCallback = (ev) => {
-               const { id, message } = ev;
-            if (id === 'gaia:geyserEruptAfterEvent') {
-                const eventData = new GeyserEruptAfterEvent(JSON.parse(message));
-                if (subscriberId in this.subscribers) {
-                    this.subscribers[subscriberId](eventData);
-                }
-            }
-        };
-    
-        system.afterEvents.scriptEventReceive.subscribe(eventCallback,{namespaces:['gaia']});
-        return subscriberId;
-            }
-    /**
-     * @readonly
-     * Unsubsribes from a event listner 
-     * @param {string} subscriberId 
-     */
-            unsubscribe(subscriberId){
-                delete this.subscribers[subscriberId]
-            }
-    }
 
-    const gaia = new Gaia()
-    export default gaia

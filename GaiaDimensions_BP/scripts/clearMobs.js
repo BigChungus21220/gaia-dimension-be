@@ -1,5 +1,5 @@
 import { world, system } from "@minecraft/server"
-import gaia from './api/Dimension.js'
+import gaia from './world'
 
 system.runInterval(() => {
     let players = world.getPlayers()

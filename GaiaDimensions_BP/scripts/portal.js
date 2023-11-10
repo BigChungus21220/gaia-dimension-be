@@ -1,6 +1,6 @@
 import { world, system, Vector, Entity,Player } from "@minecraft/server"
 import {log, delay } from './utils.js'
-import gaia from './api/Dimension.js'
+import gaia from './world'
 const prevLocationMap = new Map();
 const locMap = new Map()
 const dimensions = ['overworld','nether','the_end'].map(dimensionStr=>world.getDimension(dimensionStr))

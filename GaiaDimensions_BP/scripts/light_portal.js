@@ -1,5 +1,5 @@
 import { world, Vector} from "@minecraft/server"
-import gaia from './api/Dimension.js'
+import gaia from './world'
 
 world.afterEvents.itemUseOn.subscribe((event) => {
     if (event.itemStack.typeId == "gaia:glint_and_gold"){
