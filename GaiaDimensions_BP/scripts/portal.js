@@ -13,7 +13,7 @@ function getTopBlock(location, dimension){
 }
 
 async function tpToGaia(entity){
-    if (!gaia.inGaia(entity) && entity.dimension.id === 'minecraft:the_end'){
+    if (!gaia.isInGaia(entity) && entity.dimension.id === 'minecraft:the_end'){
         log(`Sending ${entity.nameTag} back to the End`)
         entity.teleport({x:0,y:65,z:0},{dimension:the_end})
         return;
@@ -23,7 +23,7 @@ async function tpToGaia(entity){
     entity.teleport(initialTeleport, {dimension: the_end})
     entity.turnCoords()
     await delay(0.8)
-    gaia.placePortal(new Vector(entity.location.x,entity.location.y,entity.location.z), the_end, true)
+    gaia.lightPortal(new Vector(entity.location.x,entity.location.y,entity.location.z), the_end, true)
     await delay(0.8)
     let teleport = getTopBlock(entity.location,entity.dimension)
     entity.teleport({x:MathRound(teleport.x),y:MathRound(teleport.y-2),z:MathRound(teleport.z-1)},{dimension:entity.dimension})
