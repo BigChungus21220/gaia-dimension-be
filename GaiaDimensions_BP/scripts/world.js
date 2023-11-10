@@ -6,6 +6,7 @@ import './APIAdditions.js';
 import {Gaia} from './api/Dimension.js'
 import {furnacesLoad} from "./api/furnaceAPI.js";
 const gaia = new Gaia();
+gaia.pushFog()
 export default gaia
 furnacesLoad()
 
