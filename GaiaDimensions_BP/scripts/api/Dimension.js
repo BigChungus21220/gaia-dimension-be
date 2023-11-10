@@ -19,6 +19,9 @@ const biomes = [
     "mineral_resevoir"
 ]
 
+Gaia.prototype.afterEvents.geyserErupt.subscribe(ev=>{
+    const {} = ev
+})
 /**
  * A class that wraps the dimension of gaia
  */
@@ -561,14 +564,17 @@ class PortalActivateAfterEventSignal {
       constructor (data){
         /**
          * Where the Geyser Erupted
+         * @readonly
          */
         this.location = data.location
         /**
          * Height of the Geyser Eruption
+         * @readonly
          */
         this.height = data.height,
         /**
          * The Dimension where the Geyser Erupted
+         * @readonly
          */
         this.dimension = data.dimension,
         /**
@@ -576,8 +582,8 @@ class PortalActivateAfterEventSignal {
          */
         this.duration = data.duration,
         /**
-         * @private
          * @readonly
+         * @private
          */
         this.entities = data.getAffectedEntities
       }
@@ -600,7 +606,7 @@ class PortalActivateAfterEventSignal {
         this.subscribers = {}
         }
     /**
-     * 
+     * @readonly
      * @param {function(GeyserEruptAfterEvent):void} callback 
      * @returns {string} The Subsriber id of the Event
      */
@@ -621,6 +627,7 @@ class PortalActivateAfterEventSignal {
         return subscriberId;
             }
     /**
+     * @readonly
      * Unsubsribes from a event listner 
      * @param {string} subscriberId 
      */
@@ -629,3 +636,5 @@ class PortalActivateAfterEventSignal {
             }
     }
 
+    const gaia = new Gaia()
+    export default gaia
