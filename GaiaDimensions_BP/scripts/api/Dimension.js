@@ -48,13 +48,6 @@ function generateId() {
  * @property {number} height Height of the Geyser Eruption
  * 
  */
-class GaiaAfterEvents {
-    constructor (){
-        this.portalActivate = new PortalActivateAfterEventSignal()
-        this.geyserErupt = new GeyserEruptAfterEventSignal()
-    }
-}
-
 
 class PortalActivateAfterEvent {
     /**
@@ -195,6 +188,15 @@ class PortalActivateAfterEventSignal {
                 delete this.subscribers[subscriberId]
             }
     }
+
+    
+class GaiaAfterEvents {
+    constructor (){
+        this.portalActivate = new PortalActivateAfterEventSignal()
+        this.geyserErupt = new GeyserEruptAfterEventSignal()
+    }
+}
+
 
 class Fog {
     constructor(){ 
