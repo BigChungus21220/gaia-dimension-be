@@ -633,7 +633,7 @@ export class Gaia extends Portal {
 /**
  * 
  * @param {string} eventName Name of the Event
- * @param {string} type The type of the event,before or after, must be afterEvent, or beforeEvent
+ * @param {string} type The type of the event,before or after, must be AfterEvent, or BeforeEvent(Not Complete)
  * @param {Object} data A object containing the event of the data
  */
    triggerEvent(eventName,data,type){
