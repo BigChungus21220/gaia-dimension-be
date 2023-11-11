@@ -1166,6 +1166,7 @@ export class Gaia extends Portal {
          */
         this.playerBiomes = {};
         this.afterEvents = new GaiaAfterEvents()
+        this.beforeEvents = new GaiaBeforeEvents();
     }
  /**
   * Get the Entities within the Gaia Dimension
