@@ -727,6 +727,16 @@ class GaiaAfterEvents {
     }
 }
 
+class GaiaBeforeEvents {
+    constructor (){
+        this.portalActivate = new PortalActivateBeforeEventSignal();
+        this.geyserErupt = new GeyserEruptBeforeEventSignal();
+        this.biomeChange = new BiomeChangeBeforeEventSignal();
+        this.fogChange = new FogChangeBeforeEventSignal();
+        this.portalLink = new PortalLinkBeforeEventSignal();
+    }
+}
+
 
 class Fog {
     constructor(){
