@@ -1,5 +1,5 @@
-import { Vector, BlockPermutation,Dimension,system,Block, world, BlockVolumeUtils,Entity, Player} from "@minecraft/server"
-
+import { Vector, BlockPermutation,Dimension,system,Block, world, BlockVolumeUtils,Entity, Player, Trigger} from "@minecraft/server"
+import gaia from '../world'
  
 const biomes = [
     "mineral_river",
@@ -32,6 +32,14 @@ function generateId() {
     return Math.random().toString(36).substring(2, 10);
  }
 
+
+ /**
+ * @typedef PortalLink
+ * @property {Vector} location - The location of portal A.
+ * @property {Vector} linkedLocation - The location of portal B.
+ * @property {Dimension} dimension - The dimension in which the portal linking occurred.
+ */
+
 /**
  * @typedef PortalActivate
  * @property {Vector} location Where the portal was lit/activated
@@ -45,10 +53,158 @@ function generateId() {
  * @property {function(): Entity[]} getAffectedEntities Returns a array of Entities that were pushed/effected by the Geyser
  * @property {Dimension} dimension The Dimension where the Geyser Erupted
  * @property {number} duration How long the Geyser Erupted
- * @property {number} height Height of the Geyser Eruption
- * 
+ * @property {number} height Height of the Geyser Eruption 
  */
 
+/**
+ * @typedef BiomeChange
+ * @property {Vector} location - The location where the biome change occurred.
+ * @property {Player} player - The player associated with the biome change.
+ * @property {Dimension} dimension - The dimension in which the biome change occurred.
+ * @property {string} oldBiome - The previous biome before the change.
+ * @property {string} newBiome - The new biome after the change.
+ */
+
+/**
+ * @typedef FogChange
+ * @property {Player} player The player affected by the fog change.
+ * @property {string} newFog The new fog conditions.
+ */
+
+class FogChangeAfterEvent {
+    /**
+     * @param {FogChange} data 
+     */
+    constructor(data){
+        /**
+         * The player affected by the fog change.
+         */
+        this.player = data.player;
+        /**
+         * The new fog conditions.
+         */
+        this.newFog = data.newFog;
+    }
+}
+
+class FogChangeAfterEventSignal {
+    constructor () {
+        /**
+         * @readonly
+         * @private
+         */
+        this.subscribers = {};
+    }
+
+    /**
+     * @readonly
+     * @param {function(FogChangeAfterEvent):void} callback 
+     * @returns {string} The Subscriber ID of the Event
+     */
+    subscribe(callback){
+        const subscriberId = generateId();
+        this.subscribers[subscriberId] = callback;
+        
+        const eventCallback = (ev) => {
+            const { id, message } = ev;
+            if (id === 'gaia:fogChangeAfterEvent') {
+                const eventData = new FogChangeAfterEvent(JSON.parse(message));
+                if (subscriberId in this.subscribers) {
+                    this.subscribers[subscriberId](eventData);
+                }
+            }
+        };
+
+        system.afterEvents.scriptEventReceive.subscribe(eventCallback, { namespaces: ['gaia'] });
+        return subscriberId;
+    }
+
+    /**
+     * @readonly
+     * Unsubscribes from an event listener.
+     * @param {string} subscriberId 
+     */
+    unsubscribe(subscriberId){
+        delete this.subscribers[subscriberId];
+    }
+}
+class BiomeChangeAfterEvent {
+    /**
+     * @param {BiomeChange} data
+     */
+    constructor(data) {
+        /**
+         * The location where the biome change occurred.
+         * @readonly
+         */
+        this.location = data.location;
+
+        /**
+         * The player associated with the biome change.
+         * @readonly
+         */
+        this.player = data.player;
+
+        /**
+         * The dimension where the biome change occurred, This will always be Gaia
+         * @readonly
+         */
+        this.dimension = data.dimension;
+
+        /**
+         * The previous biome before the change.
+         * @readonly
+         */
+        this.oldBiome = data.oldBiome;
+
+        /**
+         * The new biome after the change.
+         * @readonly
+         */
+        this.newBiome = data.newBiome;
+    }
+}
+
+class BiomeChangeAfterEventSignal {
+    constructor() {
+        /**
+     * @private
+     * @readonly
+     */
+        this.subscribers = {};
+    }
+
+    /**
+     * Subscribe to the BiomeChangeAfterEvent.
+     * @param {function(BiomeChangeAfterEvent):void} callback - The callback function to be called when the event is triggered.
+     * @returns {string} The subscriber id of the event.
+     */
+    subscribe(callback) {
+        const subscriberId = generateId();
+        this.subscribers[subscriberId] = callback;
+
+        const eventCallback = (ev) => {
+            const { id, message } = ev;
+            if (id === 'gaia:biomeChangeAfterEvent') {
+                const eventData = new BiomeChangeAfterEvent(JSON.parse(message));
+                if (subscriberId in this.subscribers) {
+                    this.subscribers[subscriberId](eventData);
+                }
+            }
+        };
+
+        system.afterEvents.scriptEventReceive.subscribe(eventCallback, { namespaces: ['gaia'] });
+        return subscriberId;
+    }
+
+    /**
+     * Unsubscribe from the BiomeChangeAfterEvent.
+     * @param {string} subscriberId - The subscriber id to be unsubscribed.
+     */
+    unsubscribe(subscriberId) {
+        delete this.subscribers[subscriberId];
+    }
+}
 class PortalActivateAfterEvent {
     /**
      * 
@@ -190,17 +346,86 @@ class PortalActivateAfterEventSignal {
     }
 
     
+
+class PortalLinkAfterEvent {
+    /**
+     * @param {PortalLink} data
+     */
+    constructor(data) {
+        /**
+         * The location of portal A.
+         * @readonly
+         */
+        this.portalALocation = data.location;
+
+        /**
+         * The location of portal B.
+         * @readonly
+         */
+        this.portalBLocation = data.linkedLocation;
+
+        /**
+         * The dimension in which the portal linking occurred.
+         * @readonly
+         */
+        this.dimension = data.dimension;
+    }
+}
+
+class PortalLinkAfterEventSignal {
+    /**
+     * @private
+     * @readonly
+     */
+    constructor() {
+        this.subscribers = {};
+    }
+
+    /**
+     * Subscribe to the PortalLinkEvent.
+     * @param {function(PortalLinkAfterEvent):void} callback - The callback function to be called when the event is triggered.
+     * @returns {string} The subscriber id of the event.
+     */
+    subscribe(callback) {
+        const subscriberId = generateId();
+        this.subscribers[subscriberId] = callback;
+
+        const eventCallback = (ev) => {
+            const { id, message } = ev;
+            if (id === 'gaia:portalLinkAfterEvent') {
+                const eventData = new PortalLinkAfterEvent(JSON.parse(message));
+                if (subscriberId in this.subscribers) {
+                    this.subscribers[subscriberId](eventData);
+                }
+            }
+        };
+
+        system.afterEvents.scriptEventReceive.subscribe(eventCallback, { namespaces: ['gaia'] });
+        return subscriberId;
+    }
+
+    /**
+     * Unsubscribe from the PortalLinkEvent.
+     * @param {string} subscriberId - The subscriber id to be unsubscribed.
+     */
+    unsubscribe(subscriberId) {
+        delete this.subscribers[subscriberId];
+    }
+}
+    
 class GaiaAfterEvents {
     constructor (){
-        this.portalActivate = new PortalActivateAfterEventSignal()
-        this.geyserErupt = new GeyserEruptAfterEventSignal()
+        this.portalActivate = new PortalActivateAfterEventSignal();
+        this.geyserErupt = new GeyserEruptAfterEventSignal();
+        this.biomeChange = new BiomeChangeAfterEventSignal();
+        this.fogChange = new FogChangeAfterEventSignal();
+        this.portalLink = new PortalLinkAfterEventSignal();
     }
 }
 
 
 class Fog {
     constructor(){ 
-
     };
     generateFog() {
         let playerData = {};
@@ -208,9 +433,8 @@ class Fog {
             let players = world.getPlayers();
             for (let player of players) {
                 let playerId = player.id;
-                let playerInArea = this.isInGaia(player);
+                let playerInArea = gaia.isInGaia(player);
                 let playerLocation = player.location;
-    
                 if (
                     playerData[playerId] === undefined ||
                     playerData[playerId].lastInArea != playerInArea ||
@@ -242,6 +466,7 @@ class Fog {
         if (biome != "none"){
             this.addFog(player, biome)
         }
+        gaia.triggerEvent('fogChange',{newFog:biome+'_fog'+biome,player:player},'AfterEvent')
     }
 
     
@@ -585,6 +810,11 @@ export class Gaia extends Portal {
          * @readonly
          */
         this.dimension = world.getDimension('the end')
+        /**
+         * @private
+         * @readonly
+         */
+        this.playerBiomes = {};
         this.afterEvents = new GaiaAfterEvents()
     }
  /**
@@ -605,6 +835,12 @@ export class Gaia extends Portal {
  */
     isInGaia(player){
         let playerLoc = player.location
+        const currentBiome = this.getBiome(playerLoc)
+        const previousBiome = this?.getLastBiome(player)
+        if (currentBiome !== previousBiome) {
+            this.setBiome(player, currentBiome);
+            this.triggerEvent('biomeChange',{newBiome:currentBiome,oldBiome:previousBiome},'AfterEvent')
+        }
         return player.dimension.id == "minecraft:the_end" && playerLoc.x <= 400000 && playerLoc.z <= 400000 && playerLoc.x >= 200000 && playerLoc.z >= 200000 
     }
 /**
@@ -622,7 +858,23 @@ export class Gaia extends Portal {
             return "none"
         }
     }
+/**
+     * Update the current biome for a player.
+     * @param {Player} player - The player.
+     * @param {string} biome - The current biome.
+     */
+setBiome(player, biome) {
+    this.playerBiomes[player.id] = biome;
+}
 
+/**
+ * Get the previous biome for a player.
+ * @param {Player} player - The player.
+ * @returns {string | undefined} - The previous biome or undefined if not available.
+ */
+getLastBiome(player) {
+    return this.playerBiomes[player.id];
+}
    /**
     * @readonly
    * Starts the generation of fog in the Gaia dimension
@@ -643,3 +895,4 @@ export class Gaia extends Portal {
     this.dimension.runCommand(command)
  }   
 }
+

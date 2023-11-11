@@ -30,6 +30,7 @@ async function tpToGaia(entity){
     const existingLink = gaia.getLink('start',{x:Math.floor(MathRound(save.x)),y:Math.floor(MathRound(save.y)),z:Math.floor(MathRound(save.z))});
     if (!existingLink) {
         gaia.link({x:Math.floor(MathRound(save.x)),y:Math.floor(MathRound(save.y)),z:Math.floor(MathRound(save.z))},{x:MathRound(teleport.x),y:MathRound(teleport.y-2),z:MathRound(teleport.z+1)},{x:0,y:3,z:2})
+        gaia.triggerEvent('portalLink',{location:save,linkedLocation:teleport,dimension:entity.dimension},'AfterEvent')
     }
 
     log(entity.typeId + " sent to Gaia Dimension")
