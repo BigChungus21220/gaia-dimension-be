@@ -1,6 +1,7 @@
 import { world, system, Vector, Entity,Player } from "@minecraft/server"
 import {log, delay } from './utils.js'
-import gaia from './world'
+import {Gaia} from './api/Dimension.js'
+const gaia = new Gaia()
 const prevLocationMap = new Map();
 const locMap = new Map()
 const dimensions = ['overworld','nether','the_end'].map(dimensionStr=>world.getDimension(dimensionStr))
@@ -144,3 +145,5 @@ return {
     z: parseInt(coord.split(':')[3])
 };
 }
+
+gaia.afterEvents.portalActivate.subscribe(e=>{console.warn(e.source.typeId)})
