@@ -70,7 +70,14 @@ function generateId() {
  * @property {Player} player The player affected by the fog change.
  * @property {string} newFog The new fog conditions.
  */
-
+/**
+ * @typedef Events
+ * @property {PortalLink} portalLink - Data for the portal linking event.
+ * @property {PortalActivate} portalActivate - Data for the portal activation event.
+ * @property {GeyserErupt} geyserErupt - Data for the geyser eruption event.
+ * @property {BiomeChange} biomeChange - Data for the biome change event.
+ * @property {FogChange} fogChange - Data for the fog change event.
+ */
 class FogChangeAfterEvent {
     /**
      * @param {FogChange} data 
@@ -881,6 +888,44 @@ getLastBiome(player) {
    */
    pushFog(){
     this.generateFog()
+}
+/**
+ * Listen for canceled events of any type.
+ * @returns {Events|null} - The data of the canceled event, or null if no event was canceled.
+ */
+getEventCancelled() {
+    let cancelledData = null;
+
+    const eventCallback = (event) => {
+        const { id, message } = event;
+        if (id && id.endsWith('Canceled')) {
+            cancelledData = JSON.parse(message);
+
+            // Handle different types of canceled events
+            switch (cancelledData.type) {
+                case 'PortalLink':
+                    // Handle canceled PortalLink event
+                    console.log('PortalLink event canceled:', cancelledData.data);
+                    break;
+                case 'BiomeChange':
+                    // Handle canceled BiomeChange event
+                    console.log('BiomeChange event canceled:', cancelledData.data);
+                    break;
+                // Add more cases for other event types as needed
+                default:
+                    console.log('Unknown event type canceled:', cancelledData.data);
+            }
+        }
+    };
+
+    const subscriberId = system.beforeEvents.scriptEventReceive.subscribe(eventCallback, { namespaces: ['gaia'] });
+    const unsubscribe = () => {
+        system.beforeEvents.scriptEventReceive.unsubscribe(subscriberId);
+    };
+    return {
+        getCancelledData: () => cancelledData,
+        unsubscribe: unsubscribe,
+    }
 }
 /**
  * 
