@@ -30,6 +30,9 @@ async function tpToGaia(entity){
     entity.teleport({x:MathRound(teleport.x),y:MathRound(teleport.y-2),z:MathRound(teleport.z-1)},{dimension:entity.dimension})
     const existingLink = gaia.getLink('start',{x:Math.floor(MathRound(save.x)),y:Math.floor(MathRound(save.y)),z:Math.floor(MathRound(save.z))});
     if (!existingLink) {
+        gaia.triggerEvent('portalLink',{location:save,linkedLocation:teleport,dimension:entity.dimension},'BeforeEvent')
+        const data = gaia.listenFor('portalLink','Canceled','BeforeEvent')
+        if (data && data.cancel === true) return;
         gaia.link({x:Math.floor(MathRound(save.x)),y:Math.floor(MathRound(save.y)),z:Math.floor(MathRound(save.z))},{x:MathRound(teleport.x),y:MathRound(teleport.y-2),z:MathRound(teleport.z+1)},{x:0,y:3,z:2})
         gaia.triggerEvent('portalLink',{location:save,linkedLocation:teleport,dimension:entity.dimension},'AfterEvent')
     }
@@ -146,4 +149,4 @@ return {
 };
 }
 
-gaia.afterEvents.portalActivate.subscribe(e=>{console.warn(e.source.typeId)})
+gaia.beforeEvents.portalActivate.subscribe(e=>{e.cancel = true})
