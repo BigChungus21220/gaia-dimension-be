@@ -1,19 +1,23 @@
 import * as MC from "@minecraft/server";
 import { nativeRecipes, nativeFuels } from "./nativeFurnaceData.js";
 
+
 const scoreboard = MC.world.scoreboard;
 
 function setPermutation(block, args) {
   try {
-    const argumentsPermutation = String(JSON.stringify(args).replaceAll("{", "")).replaceAll("}", "");
+    const argumentsPermutation = String(JSON.stringify(args).replaceAll("{", "").replaceAll("}", "").replaceAll(':', '='));
     block.dimension.runCommandAsync(`setblock ${block.location.x} ${block.location.y} ${block.location.z} ${block.typeId} ${argumentsPermutation}`);
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error in setPermutation:", error);
+  }
 }
 
 function getObjective(id) {
   try {
-    return scoreboard.getObjective(id);
+    return scoreboard.getObjective(id) ?? scoreboard.addObjective(id, id);
   } catch (error) {
+    console.error("Error in getObjective:", error);
     return null;
   }
 }
@@ -33,10 +37,13 @@ function score(entity, mode = "add", objectiveId, value) {
           objective.addScore(entity, objective.getScore(entity) - value);
           break;
         default:
-          throw Error('Invalid mode');
+          console.error("Invalid mode in score:", mode);
+          break;
       }
     }
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error in score:", error);
+  }
 }
 
 function percentage(partialValue, totalValue) {
@@ -51,11 +58,14 @@ function barStage(itemId, actualValue, valueMax, inv, value, slot) {
 
     for (let i = 0; i <= value; i++) {
       const valueCurrent = Math.floor(percentage(actualValue, valueMax));
-      if (actualValue > 0 && valueCurrent === Math.floor(percentage(i, value))) {
+      MC.world.sendMessage(valueCurrent)
+      if (actualValue > 0 && valueCurrent == Math.floor(percentage(i, value))) {
         inv.setItem(slot, new MC.ItemStack(`${itemId}_${i}`));
       }
     }
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error in barStage:", error);
+  }
 }
 
 function itemManipulate(inv, slot, itemStack, amountMode = "set", amount = 0) {
@@ -75,7 +85,9 @@ function itemManipulate(inv, slot, itemStack, amountMode = "set", amount = 0) {
         inv.setItem(slot, itemReturn);
       }
     }
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error in itemManipulate:", error);
+  }
 }
 
 function getItemTags(itemStack, list) {
@@ -83,7 +95,7 @@ function getItemTags(itemStack, list) {
 
   try {
     block = MC.BlockPermutation.resolve(itemStack?.typeId);
-  } catch (e) {}
+ 
 
   if (block) {
     for (let tags = 0; tags < block.getTags().length; tags++) {
@@ -100,11 +112,16 @@ function getItemTags(itemStack, list) {
       }
     }
   }
+   return tag;
+} catch (error) {
+  console.error("Error in getItemTags:", error);
+}
 
-  return tag;
+ 
 }
 
 export function furnacesLoad() {
+  //Command example: scriptevent forge:furnaceLoad <prefix:String> <cooktimemax:Int> <flameid: String> <arrowId: String>
   MC.system.afterEvents.scriptEventReceive.subscribe(data => {
     try {
       const { sourceEntity: entity, message, id } = data;
@@ -126,7 +143,9 @@ export function furnacesLoad() {
         default:
           break;
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error in furnacesLoad:", error);
+    }
   });
 }
 
@@ -233,5 +252,5 @@ function furnaceReciper(blockOrigin, entity, data = { prefix: "forge", cookTickM
     if (!slots[1] && burnTime === 0 && burnTimeMax > 0) {
       score(entity, "set", "burnTimeMax", 0);
     }
-  } catch (error) {}
+  } catch (error) {console.error('Error in furnaceReciper',error)}
 }
