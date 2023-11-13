@@ -58,13 +58,12 @@ function barStage(itemId, actualValue, valueMax, inv, value, slot) {
 
     for (let i = 0; i <= value; i++) {
       const valueCurrent = Math.floor(percentage(actualValue, valueMax));
-      MC.world.sendMessage(valueCurrent)
       if (actualValue > 0 && valueCurrent == Math.floor(percentage(i, value))) {
         inv.setItem(slot, new MC.ItemStack(`${itemId}_${i}`));
       }
     }
   } catch (error) {
-    console.error("Error in barStage:", error);
+    console.error("Error in barStage:", error.stack);
   }
 }
 
