@@ -4,7 +4,7 @@ import gaia from './world';
 world.afterEvents.itemUseOn.subscribe(async (event) => {
     try {
         if (event.itemStack.typeId === "gaia:glint_and_gold" && event.block.typeId === 'gaia:keystone_block') {
-            const pos = Vector.add(event.blockFace, event.block.location);
+            const pos = Vector.add(Vector.convertDirection(event.blockFace), event.block.location);
 
             const portalData = {
                 location: { x: pos.x, y: pos.y, z: pos.z },
@@ -37,3 +37,4 @@ world.afterEvents.playerBreakBlock.subscribe((ev) => {
     gaia.breakPortal(block.location, block.dimension, true);
     player.playSound('break.amethyst_block', { location: block.location });
 }, { blockTypes: ['gaia:keystone_block', 'gaia:gaia_portal'] });
+
