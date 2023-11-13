@@ -220,10 +220,10 @@ function furnaceReciper(blockOrigin, entity, data = { prefix: "forge", cookTickM
     if (burnTime > 0) {
       score(entity, "remove", "burnTime", 1);
       const blockPerms = blockOrigin.permutation.clone();
-      setPermutation(blockOrigin, [{ "gaiadimension:direction": blockPerms.getState("gaiadimension:direction") }, { "gaiadimension:lit": true }, { "gaiadimension:entity": true }]);
+      setPermutation(blockOrigin, [{"gaiadimension:direction": blockPerms.getState("gaiadimension:direction") }, { "gaiadimension:lit": true}, {"gaiadimension:entity": true }]);
     } else {
       const blockPerms = blockOrigin.permutation.clone();
-      setPermutation(blockOrigin, [{ "gaiadimension:direction": blockPerms.getState("gaiadimension:direction") }, { "gaiadimension:lit": false }, { "gaiadimension:entity": true }]);
+      setPermutation(blockOrigin, [{"gaiadimension:direction": blockPerms.getState("gaiadimension:direction") }, { "gaiadimension:lit": false}, {"gaiadimension:entity": true}]);
     }
 
     if (burnTime === 0 && cookTime > 0) {
