@@ -1,4 +1,5 @@
 import { Vector, BlockPermutation,Dimension,system,Block, world, BlockVolumeUtils,Entity, Player, Trigger} from "@minecraft/server"
+import { delay } from "../utils";
  
 const biomes = [
     "mineral_river",
@@ -78,13 +79,12 @@ function generateId() {
  * @property {FogChange} fogChange - Data for the fog change event.
  */
 
-
 /**
  * Represents an event that occurs before two portals are linked.
  */
 class PortalLinkBeforeEvent {
     /**
-     * @param {PortalLink} data - The data for the portal linking event.
+     * @param {PortalLink} data - Data for the portal linking event.
      */
     constructor(data) {
         /**
@@ -100,6 +100,7 @@ class PortalLinkBeforeEvent {
          * @type {boolean}
          */
         this.cancel = data.cancel || false;
+
         /**
          * The location of portal A.
          * @type {Vector}
@@ -117,16 +118,6 @@ class PortalLinkBeforeEvent {
          * @type {Dimension}
          */
         this.dimension = data.dimension;
- if(this.cancel === true){
- this.sendResponse('Canceled')
- }
-    }
-    /**
-     * @param {string} responseType 
-     * @private
-     */
-    sendResponse(responseType) {
-        world.getDimension('the end').runCommand(`scriptevent gaia:portalLinkBeforeEvent${responseType} ${JSON.stringify({ cancel: this.cancel })}`);
     }
 }
 
@@ -135,7 +126,7 @@ class PortalLinkBeforeEvent {
  */
 class GeyserEruptBeforeEvent {
     /**
-     * @param {GeyserErupt} data - The data for the geyser eruption event.
+     * @param {GeyserErupt} data - Data for the geyser eruption event.
      */
     constructor(data) {
         /**
@@ -181,16 +172,6 @@ class GeyserEruptBeforeEvent {
          * @type {number}
          */
         this.height = data.height;
-        if(this.cancel === true){
-            this.sendResponse('Canceled')
-            }
-    }
-    /**
-     * @param {string} responseType 
-     * @private
-     */
-    sendResponse(responseType) {
-        world.getDimension('the end').runCommand(`scriptevent gaia:geyserEruptBeforeEvent${responseType} ${{ cancel: this.cancel }}`);
     }
 }
 
@@ -199,7 +180,7 @@ class GeyserEruptBeforeEvent {
  */
 class PortalActivateBeforeEvent {
     /**
-     * @param {PortalActivate} data - The data for the portal activation event.
+     * @param {PortalActivate} data - Data for the portal activation event.
      */
     constructor(data) {
         /**
@@ -233,17 +214,6 @@ class PortalActivateBeforeEvent {
          * @type {Dimension}
          */
         this.dimension = data.dimension;
-        console.warn(this.cancel)
-        if(this.cancel === true){
-            this.sendResponse('Canceled')
-            }
-    }
-    /**
-     * @param {string} responseType 
-     * @private
-     */
-    sendResponse(responseType) {
-        world.getDimension('the end').runCommand(`scriptevent gaia:portalActivateBeforeEvent${responseType} ${{ cancel: this.cancel }}`);
     }
 }
 
@@ -252,7 +222,7 @@ class PortalActivateBeforeEvent {
  */
 class FogChangeBeforeEvent {
     /**
-     * @param {FogChange} data - The data for the fog change event.
+     * @param {FogChange} data - Data for the fog change event.
      */
     constructor(data) {
         /**
@@ -269,7 +239,6 @@ class FogChangeBeforeEvent {
          */
         this.cancel = data.cancel || false;
 
-
         /**
          * The player affected by the fog change.
          * @type {Player}
@@ -281,153 +250,19 @@ class FogChangeBeforeEvent {
          * @type {string}
          */
         this.newFog = data.newFog;
-
-        if(this.cancel === true){
-            this.sendResponse('Canceled')
-            }
-    }
-    /**
-     * @param {string} responseType 
-     * @private
-     */
-    sendResponse(responseType) {
-        world.getDimension('the end').runCommand(`scriptevent gaia:fogChangeBeforeEvent${responseType} ${{ cancel: this.cancel }}`);
     }
 }
 
 
-class FogChangeBeforeEventSignal {
-    constructor() {
-        /**
-     * @private
-     * @readonly
-     */
-        this.subscribers = {};
-    }
-
-    /**
-     * Subscribe to the FogChangeBeforeEvent.
-     * @param {function(FogChangeBeforeEvent):void} callback - The callback function to be called when the event is triggered.
-     * @returns {string} The subscriber id of the event.
-     */
-    subscribe(callback) {
-        const subscriberId = generateId();
-        this.subscribers[subscriberId] = callback;
-
-        const eventCallback = (ev) => {
-            const { id, message } = ev;
-            if (id === 'gaia:fogChangeBeforeEvent') {
-                const eventData = new FogChangeBeforeEvent(JSON.parse(message));
-                if (subscriberId in this.subscribers) {
-                    this.subscribers[subscriberId](eventData);
-                }
-            }
-        };
-
-        system.afterEvents.scriptEventReceive.subscribe(eventCallback, { namespaces: ['gaia'] });
-        return subscriberId;
-    }
-
-    /**
-     * Unsubscribe from the FogChangeBeforeEvent.
-     * @param {string} subscriberId - The subscriber id to be unsubscribed.
-     */
-    unsubscribe(subscriberId) {
-        delete this.subscribers[subscriberId];
-    }
-}
-
-class PortalActivateBeforeEventSignal {
-   
-    constructor() {
-         /**
-     * @private
-     * @readonly
-     */
-        this.subscribers = {};
-    }
-
-    /**
-     * Subscribe to the PortalActivateBeforeEvent.
-     * @param {function(PortalActivateBeforeEvent):void} callback - The callback function to be called when the event is triggered.
-     * @returns {string} The subscriber id of the event.
-     */
-    subscribe(callback) {
-        const subscriberId = generateId();
-        this.subscribers[subscriberId] = callback;
-
-        const eventCallback = (ev) => {
-            const { id, message } = ev;
-            if (id === 'gaia:portalActivateBeforeEvent') {
-                const eventData = new PortalActivateBeforeEvent(JSON.parse(message));
-                if (subscriberId in this.subscribers) {
-                    this.subscribers[subscriberId](eventData);
-                }
-            }
-        };
-
-        system.afterEvents.scriptEventReceive.subscribe(eventCallback, { namespaces: ['gaia'] });
-        return subscriberId;
-    }
-
-    /**
-     * Unsubscribe from the PortalActivateBeforeEvent.
-     * @param {string} subscriberId - The subscriber id to be unsubscribed.
-     */
-    unsubscribe(subscriberId) {
-        delete this.subscribers[subscriberId];
-    }
-}
-
-class GeyserEruptBeforeEventSignal {
-    
-    constructor() {
-        /**
-     * @private
-     * @readonly
-     */
-        this.subscribers = {};
-    }
-
-    /**
-     * Subscribe to the GeyserEruptBeforeEvent.
-     * @param {function(GeyserEruptBeforeEvent):void} callback - The callback function to be called when the event is triggered.
-     * @returns {string} The subscriber id of the event.
-     */
-    subscribe(callback) {
-        const subscriberId = generateId();
-        this.subscribers[subscriberId] = callback;
-
-        const eventCallback = (ev) => {
-            const { id, message } = ev;
-            if (id === 'gaia:geyserEruptBeforeEvent') {
-                const eventData = new GeyserEruptBeforeEvent(JSON.parse(message));
-                if (subscriberId in this.subscribers) {
-                    this.subscribers[subscriberId](eventData);
-                }
-            }
-        };
-
-        system.afterEvents.scriptEventReceive.subscribe(eventCallback, { namespaces: ['gaia'] });
-        return subscriberId;
-    }
-
-    /**
-     * Unsubscribe from the GeyserEruptBeforeEvent.
-     * @param {string} subscriberId - The subscriber id to be unsubscribed.
-     */
-    unsubscribe(subscriberId) {
-        delete this.subscribers[subscriberId];
-    }
-}
-
+/**
+ * Represents an event that occurs before two portals are linked.
+ */
 class PortalLinkBeforeEventSignal {
-    
     constructor() {
         /**
-     * @private
-     * @readonly
-     */
+         * @private
+         * @readonly
+         */
         this.subscribers = {};
     }
 
@@ -447,6 +282,10 @@ class PortalLinkBeforeEventSignal {
                 if (subscriberId in this.subscribers) {
                     this.subscribers[subscriberId](eventData);
                 }
+
+                if (eventData.cancel === true) {
+                    this.sendCancel();
+                }
             }
         };
 
@@ -461,7 +300,184 @@ class PortalLinkBeforeEventSignal {
     unsubscribe(subscriberId) {
         delete this.subscribers[subscriberId];
     }
+
+    /**
+     * @param {string} responseType
+     * @private
+     */
+    sendCancel() {
+        world.getDimension('the end').runCommand(`scriptevent gaia:portalLinkBeforeEventCanceled ${JSON.stringify({ cancel: true })}`);
+    }
 }
+
+/**
+ * Represents an event that occurs before a geyser erupts.
+ */
+class GeyserEruptBeforeEventSignal {
+    constructor() {
+        /**
+         * @private
+         * @readonly
+         */
+        this.subscribers = {};
+    }
+
+    /**
+     * Subscribe to the GeyserEruptBeforeEvent.
+     * @param {function(GeyserEruptBeforeEvent):void} callback - The callback function to be called when the event is triggered.
+     * @returns {string} The subscriber id of the event.
+     */
+    subscribe(callback) {
+        const subscriberId = generateId();
+        this.subscribers[subscriberId] = callback;
+
+        const eventCallback = (ev) => {
+            const { id, message } = ev;
+            if (id === 'gaia:geyserEruptBeforeEvent') {
+                const eventData = new GeyserEruptBeforeEvent(JSON.parse(message));
+                if (subscriberId in this.subscribers) {
+                    this.subscribers[subscriberId](eventData);
+                }
+
+                if (eventData.cancel === true) {
+                    this.sendCancel();
+                }
+            }
+        };
+
+        system.afterEvents.scriptEventReceive.subscribe(eventCallback, { namespaces: ['gaia'] });
+        return subscriberId;
+    }
+
+    /**
+     * Unsubscribe from the GeyserEruptBeforeEvent.
+     * @param {string} subscriberId - The subscriber id to be unsubscribed.
+     */
+    unsubscribe(subscriberId) {
+        delete this.subscribers[subscriberId];
+    }
+
+    /**
+     * @param {string} responseType
+     * @private
+     */
+    sendCancel() {
+        world.getDimension('the end').runCommand(`scriptevent gaia:geyserEruptBeforeEventCanceled ${JSON.stringify({ cancel: true })}`);
+    }
+}
+
+/**
+ * Represents an event that occurs before a portal is activated.
+ */
+class PortalActivateBeforeEventSignal {
+    constructor() {
+        /**
+         * @private
+         * @readonly
+         */
+        this.subscribers = {};
+    }
+
+    /**
+     * Subscribe to the PortalActivateBeforeEvent.
+     * @param {function(PortalActivateBeforeEvent):void} callback - The callback function to be called when the event is triggered.
+     * @returns {string} The subscriber id of the event.
+     */
+    subscribe(callback) {
+        const subscriberId = generateId();
+        this.subscribers[subscriberId] = callback;
+
+        const eventCallback = (ev) => {
+            const { id, message } = ev;
+            if (id === 'gaia:portalActivateBeforeEvent') {
+                const eventData = new PortalActivateBeforeEvent(JSON.parse(message));
+                if (subscriberId in this.subscribers) {
+                    this.subscribers[subscriberId](eventData);
+                }
+
+                if (eventData.cancel === true) {
+                    this.sendCancel();
+                }
+            }
+        };
+
+        system.afterEvents.scriptEventReceive.subscribe(eventCallback, { namespaces: ['gaia'] });
+        return subscriberId;
+    }
+
+    /**
+     * Unsubscribe from the PortalActivateBeforeEvent.
+     * @param {string} subscriberId - The subscriber id to be unsubscribed.
+     */
+    unsubscribe(subscriberId) {
+        delete this.subscribers[subscriberId];
+    }
+
+    /**
+     * @param {string} responseType
+     * @private
+     */
+    sendCancel() {
+        world.getDimension('the end').runCommand(`scriptevent gaia:portalActivateBeforeEventCanceled ${JSON.stringify({ cancel: true })}`);
+    }
+}
+
+/**
+ * Represents an event that occurs before a fog change.
+ */
+class FogChangeBeforeEventSignal {
+    constructor() {
+        /**
+         * @private
+         * @readonly
+         */
+        this.subscribers = {};
+    }
+
+    /**
+     * Subscribe to the FogChangeBeforeEvent.
+     * @param {function(FogChangeBeforeEvent):void} callback - The callback function to be called when the event is triggered.
+     * @returns {string} The subscriber id of the event.
+     */
+    subscribe(callback) {
+        const subscriberId = generateId();
+        this.subscribers[subscriberId] = callback;
+
+        const eventCallback = (ev) => {
+            const { id, message } = ev;
+            if (id === 'gaia:fogChangeBeforeEvent') {
+                const eventData = new FogChangeBeforeEvent(JSON.parse(message));
+                if (subscriberId in this.subscribers) {
+                    this.subscribers[subscriberId](eventData);
+                }
+
+                if (eventData.cancel === true) {
+                    this.sendCancel();
+                }
+            }
+        };
+
+        system.afterEvents.scriptEventReceive.subscribe(eventCallback, { namespaces: ['gaia'] });
+        return subscriberId;
+    }
+
+    /**
+     * Unsubscribe from the FogChangeBeforeEvent.
+     * @param {string} subscriberId - The subscriber id to be unsubscribed.
+     */
+    unsubscribe(subscriberId) {
+        delete this.subscribers[subscriberId];
+    }
+
+    /**
+     * @param {string} responseType
+     * @private
+     */
+    sendCancel() {
+        world.getDimension('the end').runCommand(`scriptevent gaia:fogChangeBeforeEventCanceled ${JSON.stringify({ cancel: true })}`);
+    }
+}
+
 
 
 class FogChangeAfterEvent {
@@ -863,11 +879,11 @@ class Fog {
         player.runCommandAsync("fog @s push gaia:" + biome + "_fog " + biome)
     }
 
-    updateFog(player){
+  async  updateFog(player){
         this.clearFogs(player)
         let biome = this.getBiome(player.location, player.dimension);
         this.triggerEvent('fogChange',{newFog:biome+'_fog'+biome,player:player,cancel:false},'BeforeEvent')
-        const data = this.listenFor('fogChange','Canceled','BeforeEvent').getData()
+        const data = await this.listenFor('fogChange','Canceled','BeforeEvent')
         if(data && data.cancel ===true) return;
         if (biome != "none"){
             this.addFog(player, biome)
@@ -912,34 +928,33 @@ class Fog {
     this.runCommand(`scriptevent gaia:${eventName}${type} ${JSON.stringify(data)}`)
     }
 
-    /**
-	 * Listen for events with a specific name and type of response.
-     * @private
-	 * @param {string} eventName - The name of the event to listen for.
-	 * @param {string} responseType - The type of response, e.g., 'Canceled', 'DataChanged', etc.
-	 * @returns {object|null} - The data of the event, or null if no event with the specified name and type occurred.
-	 */
+ /**
+ * Listen for events with a specific name and type of response.
+ * @private
+ * @param {string} eventName - The name of the event to listen for.
+ * @param {string} responseType - The type of response, e.g., 'Canceled', 'DataChanged', etc.
+ * @param {string} eventType - The type of event, e.g., 'BeforeEvent' or 'AfterEvent'.
+ * @returns {Promise<Object>} - A promise that resolves with the event data.
+ */
 listenFor(eventName, responseType, eventType) {
-    let eventData = null;
-    const eventCallback = (event) => {
-        const {
-            id,
-            message
-        } = event;
-        if (id === `gaia:${eventName}${eventType}${responseType}`) {
-            eventData = JSON.parse(message);
-            console.warn(JSON.stringify(eventData))
-        }
-    };
+    return new Promise((resolve) => {
+        const callback = async (event) => {
+            const { id, message } = event;
+            if (id === `gaia:${eventName}${eventType}${responseType}`) {
+                const data = JSON.parse(message);
+                resolve(data);
+            } else {
+               await delay(0.001) 
+               resolve(undefined);
+            }
+        };
 
-system.afterEvents.scriptEventReceive.subscribe(eventCallback, {
-        namespaces: ['gaia']
+        system.afterEvents.scriptEventReceive.subscribe(callback, {
+            namespaces: ['gaia']
+        });
+    }).catch(e => {
+        return undefined;
     });
-    
-
-    return {
-        getData: () => eventData
-    };
 }
 }
 
@@ -988,7 +1003,6 @@ class Portal extends Fog {
       const data = { location: fromLocation, linkedLocation: toLocation, size:size };
       if (!this.linked.some((d) => d.location === fromLocation && d.linkedLocation === toLocation)) {
         this.linked.push(data);
-        console.warn(this.serialize(this.linked))
         world.setDynamicProperty('PortalLinked', this.serialize(this.linked));
       }
     }
@@ -1022,7 +1036,6 @@ getLink(from, location){
         case 'start':
             link = this.linked.find(d => {
                 const volume = {from: d.location, to: {x:d.location.x+d.size.x,y:d.location.y+d.size.y,z:d.location.z+d.size.z}};
-                console.warn(BlockVolumeUtils.isInside(volume, location))
                 return BlockVolumeUtils.isInside(volume, location);
             });
             break;
@@ -1231,6 +1244,7 @@ canLight(block){
     if (light_success){
         this.lightPortal(Vector.add(position, offset), dimension, x_oriented)
     }
+    return light_success
 }
 
 
@@ -1307,13 +1321,16 @@ export class Gaia extends Portal {
  */
     isInGaia(player){
         let playerLoc = player.location
+        const inGaia = player.dimension.id == "minecraft:the_end" && playerLoc.x <= 400000 && playerLoc.z <= 400000 && playerLoc.x >= 200000 && playerLoc.z >= 200000 
+       if (inGaia) {
         const currentBiome = this.getBiome(playerLoc)
         const previousBiome = this?.getLastBiome(player)
         if (currentBiome !== previousBiome) {
             this.setBiome(player, currentBiome);
             this.triggerEvent('biomeChange',{newBiome:currentBiome,oldBiome:previousBiome},'AfterEvent')
         }
-        return player.dimension.id == "minecraft:the_end" && playerLoc.x <= 400000 && playerLoc.z <= 400000 && playerLoc.x >= 200000 && playerLoc.z >= 200000 
+    }
+        return inGaia
     }
 /**
  * Returns the name of a biome in Gaia based of a location
@@ -1355,33 +1372,35 @@ getLastBiome(player) {
     this.generateFog()
 }
 /**
-	 * Listen for events with a specific name and type of response.
-	 * @param {string} eventName - The name of the event to listen for.
-	 * @param {string} responseType - The type of response, e.g., 'Canceled', 'DataChanged', etc.
-	 * @returns {object|null} - The data of the event, or null if no event with the specified name and type occurred.
-	 */
+ * Listen for events with a specific name and type of response.
+ * @param {string} eventName - The name of the event to listen for.
+ * @param {string} responseType - The type of response, e.g., 'Canceled', 'DataChanged', etc.
+ * @param {string} eventType - The type of event, e.g., 'BeforeEvent' or 'AfterEvent'.
+ * @returns {Promise<Object>} - A promise that resolves with the event data.
+ */
 listenFor(eventName, responseType, eventType) {
-    let eventData = null;
-    const eventCallback = (event) => {
-        const {
-            id,
-            message
-        } = event;
-        if (id === `gaia:${eventName}${eventType}${responseType}`) {
-            eventData = JSON.parse(message);
-            console.warn(JSON.stringify(eventData))
-        }
-    };
+    return new Promise((resolve) => {
+        const callback = async (event) => {
+            const { id, message } = event;
+            if (id === `gaia:${eventName}${eventType}${responseType}`) {
+                const data = JSON.parse(message);
+                resolve(data);
+            } else {
+               await delay(0.001) 
+               resolve(undefined);
+            }
+        };
 
-system.afterEvents.scriptEventReceive.subscribe(eventCallback, {
-        namespaces: ['gaia']
+        system.afterEvents.scriptEventReceive.subscribe(callback, {
+            namespaces: ['gaia']
+        });
+    }).catch(e => {
+        return undefined;
     });
-    
-
-    return {
-        getData: () => eventData
-    };
 }
+
+
+
 /**
  * 
  * @param {string} eventName Name of the Event

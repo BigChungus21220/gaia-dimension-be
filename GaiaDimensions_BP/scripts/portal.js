@@ -101,6 +101,7 @@ async function backToDimension(entity,coord){
 system.runInterval(() => {
     dimensions.forEach(dimension => {
         dimension.getEntities().forEach(entity => {
+            const coord = `x:${locMap?.get(entity.nameTag)?.x} y:${Math.round(entity.location.y)} z:${locMap?.get(entity.nameTag)?.z}`
             const lastInPortal = entity.hasTag("inPortal");
             const inPortal = entity.isInPortal() || (dimension.getBlock(new Vector(entity.location.x, 0, entity.location.z)) === undefined && lastInPortal);
             const currentLocation = entity.location;
@@ -122,7 +123,6 @@ system.runInterval(() => {
                             delete loc.y;
                             delete loc.z;
                         }
-                        const coord = `x:${locMap?.get(entity.nameTag)?.x} y:${Math.round(entity.location.y)} z:${locMap?.get(entity.nameTag)?.z}`
                         if (deltaX > 0 || deltaZ > 0) {
                             locMap.set(entity.nameTag, new Vector(locMap?.get(entity.nameTag)?.x + 1, locMap?.get(entity.nameTag)?.y, locMap?.get(entity.nameTag)?.z + 1)); // Add 1 to the movement when moving forward
                         } else if (deltaX < 0 || deltaZ < 0) {
@@ -149,4 +149,6 @@ return {
 };
 }
 
-gaia.beforeEvents.portalActivate.subscribe(e=>{e.cancel = true})
+gaia.beforeEvents.portalActivate.subscribe(ev=>{
+
+})

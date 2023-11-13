@@ -4,16 +4,16 @@ import { delay } from './utils.js'
 import gaia from './world'
 let isCanceled = false
 //applies velocity to entities that stand on an active geyser for duration ticks
-async function push_entities(dimension, spawn_pos, duration){
+function push_entities(dimension, spawn_pos, duration){
     let t = 0;
     let determinant_y = spawn_pos.y - 0.5;
     let tickdelay = 4; //how often to repeat
     let height;
 let beforeEventTriggered = false;
 
-   let geyserId = system.runInterval(() => {
+   let geyserId = system.runInterval(async () => {
         //run only while geyser is active
-        const data = gaia.listenFor('geyserErupt','Canceled','BeforeEvent')
+        const data = await gaia.listenFor('geyserErupt','Canceled','BeforeEvent')
         if (t < duration){
             //loop through all entities
             dimension.getEntities().forEach(function (e){
