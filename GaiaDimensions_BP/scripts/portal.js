@@ -1,16 +1,17 @@
 import { world, system, Vector, Entity,Player } from "@minecraft/server"
 import {log, delay } from './utils.js'
-import {Gaia} from './api/Dimension.js'
-const gaia = new Gaia()
-const prevLocationMap = new Map();
-const locMap = new Map()
-const dimensions = ['overworld','nether','the_end'].map(dimensionStr=>world.getDimension(dimensionStr))
-const overworld = dimensions.find(d=>d.id === 'minecraft:overworld')
-const the_end = dimensions.find(d=>d.id === 'minecraft:the_end')
+import { Gaia } from './api/Dimension.js';
 
-function getTopBlock(location, dimension){
-    let loc = new Vector(Math.floor(location.x), 310, Math.floor(location.z))
-    return Vector.add(dimension.getBlockFromRay(loc, new Vector(0,-1,0)).block.location, new Vector(0,1,0))
+const gaia = new Gaia();
+const prevLocationMap = new Map();
+const locMap = new Map();
+const dimensions = ['overworld', 'nether', 'the_end'].map(dimensionStr => world.getDimension(dimensionStr));
+const overworld = dimensions.find(d => d.id === 'minecraft:overworld');
+const the_end = dimensions.find(d => d.id === 'minecraft:the_end');
+
+function getTopBlock(location, dimension) {
+    const loc = new Vector(Math.floor(location.x), 310, Math.floor(location.z));
+    return Vector.add(dimension.getBlockFromRay(loc, new Vector(0, -1, 0)).block.location, new Vector(0, 1, 0));
 }
 
 async function tpToGaia(entity){
@@ -31,7 +32,7 @@ async function tpToGaia(entity){
     const existingLink = gaia.getLink('start',{x:Math.floor(MathRound(save.x)),y:Math.floor(MathRound(save.y)),z:Math.floor(MathRound(save.z))});
     if (!existingLink) {
         gaia.triggerEvent('portalLink',{location:save,linkedLocation:teleport,dimension:entity.dimension},'BeforeEvent')
-        const data = gaia.listenFor('portalLink','Canceled','BeforeEvent')
+        const data = await gaia.listenFor('portalLink','Canceled','BeforeEvent')
         if (data && data.cancel === true) return;
         gaia.link({x:Math.floor(MathRound(save.x)),y:Math.floor(MathRound(save.y)),z:Math.floor(MathRound(save.z))},{x:MathRound(teleport.x),y:MathRound(teleport.y-2),z:MathRound(teleport.z+1)},{x:0,y:3,z:2})
         gaia.triggerEvent('portalLink',{location:save,linkedLocation:teleport,dimension:entity.dimension},'AfterEvent')
@@ -46,29 +47,27 @@ async function tpToGaia(entity){
  * 
  * @param {number} x 
  */
-function MathRound (x) {
-  return Math.round(x * 1000) / 1000;
-};
+function MathRound(x) {
+    return Math.round(x * 1000) / 1000;
+}
 
 /**
  * Returns `true` if entity is movings
  * @param {Entity} entity 
  */
-function isMoving (entity) {
-  if (!(entity instanceof Player) && !(entity instanceof Entity)) throw new TypeError('Parameter is not Entity or Player');
-  
-  /**
-   * @type {import("@minecraft/server").Vector3}
-   */
-  const vector = {
-    x: MathRound(entity.getVelocity().x),
-    y: MathRound(entity.getVelocity().y),
-    z: MathRound(entity.getVelocity().z)
-  };
 
-  if (vector.x === 0 && vector.y === 0 && vector.z === 0) return false;
-  else return true;
-};;
+function isMoving(entity) {
+    if (!(entity instanceof Player) && !(entity instanceof Entity)) throw new TypeError('Parameter is not Entity or Player');
+
+    const velocity = entity.getVelocity();
+    const vector = {
+        x: MathRound(velocity.x),
+        y: MathRound(velocity.y),
+        z: MathRound(velocity.z)
+    };
+
+    return vector.x !== 0 || vector.y !== 0 || vector.z !== 0;
+}
 
 export default isMoving;
 
@@ -99,8 +98,8 @@ async function backToDimension(entity,coord){
 
 
 system.runInterval(() => {
-    dimensions.forEach(dimension => {
-        dimension.getEntities().forEach(entity => {
+    for (const dimension of dimensions) {
+        for (const entity of dimension.getEntities()) {
             const coord = `x:${locMap?.get(entity.nameTag)?.x} y:${Math.round(entity.location.y)} z:${locMap?.get(entity.nameTag)?.z}`
             const lastInPortal = entity.hasTag("inPortal");
             const inPortal = entity.isInPortal() || (dimension.getBlock(new Vector(entity.location.x, 0, entity.location.z)) === undefined && lastInPortal);
@@ -137,8 +136,8 @@ system.runInterval(() => {
             if (inPortal && !lastInPortal) {
                 gaia.isInGaia(entity) ? backToDimension(entity,parseCoords(coord)) : tpToGaia(entity);
             }
-        });
-    });
+        };
+    };
 }, 6);
 
 function parseCoords(coord){
@@ -150,5 +149,5 @@ return {
 }
 
 gaia.beforeEvents.portalActivate.subscribe(ev=>{
-
+ev.cancel 
 })
