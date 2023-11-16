@@ -1,0 +1,26 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "gaia_stone_stair_0e4c7448"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "A  ",
+      "AA ",
+      "AAA"
+    ],
+    "key": {
+      "A": {
+        "item": "gaia:gaia_stone_stair",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "gaia:gaia_stone_stair",
+      "count": 8
+    }
+  }
+}

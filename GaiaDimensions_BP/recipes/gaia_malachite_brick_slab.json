@@ -1,0 +1,24 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "malachite_brick_slab_64c87609"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "AAA"
+    ],
+    "key": {
+      "A": {
+        "item": "gaia:brick2",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "gaia:brick2_slab",
+      "count": 6
+    }
+  }
+}

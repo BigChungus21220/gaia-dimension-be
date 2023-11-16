@@ -1,0 +1,26 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "pink_agate_stair_47121dcb"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "A  ",
+      "AA ",
+      "AAA"
+    ],
+    "key": {
+      "A": {
+        "item": "gaia:pink_agate_slab",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "gaia:pink_agate_stair",
+      "count": 8
+    }
+  }
+}

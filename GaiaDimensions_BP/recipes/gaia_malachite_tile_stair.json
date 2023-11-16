@@ -1,0 +1,26 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "malachite_tile_stair_2bd604f6"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "A  ",
+      "AA ",
+      "AAA"
+    ],
+    "key": {
+      "A": {
+        "item": "gaia:green_planks",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "gaia:green_planks_stairs",
+      "count": 8
+    }
+  }
+}
