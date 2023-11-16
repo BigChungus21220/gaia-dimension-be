@@ -1,5 +1,5 @@
 {
-	"format_version": "1.20.30",
+	"format_version": "1.20.20",
 	"minecraft:single_block_feature": {
 		"description": {
 			"identifier": "gaia:gen/gaia_blocks/pink_glitter_grass"

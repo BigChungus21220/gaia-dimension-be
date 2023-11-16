@@ -1,5 +1,5 @@
 {
-    "format_version": "1.16.0",
+    "format_version": "1.20.20",
     "minecraft:snap_to_surface_feature": {
       "description": {
         "identifier": "gaia:ground_cover/peach_crystal_growth_ground"

@@ -1,5 +1,5 @@
 {
-	"format_version": "1.13.0",
+	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
 			"identifier": "gaia:jet_tower_feature_rule",
