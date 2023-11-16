@@ -1,0 +1,22 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shapeless": {
+    "description": {
+      "identifier": "tiliou"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "ingredients": [
+      {
+        "item": "gaia:ouzium"
+      },
+      {
+        "item": "gaia:thiscus"
+      }
+    ],
+    "result": {
+      "item": "gaia:tiliou"
+    }
+  }
+}

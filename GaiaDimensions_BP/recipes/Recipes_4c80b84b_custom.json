@@ -1,0 +1,19 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_furnace": {
+    "tags": [
+      "furnace"
+    ],
+    "output": {
+      "item": "gaia:scaynyx_ingot",
+      "data": 0
+    },
+    "input": {
+      "item": "gaia:precious_rock",
+      "data": 0
+    },
+    "description": {
+      "identifier": "recipes_3b673ce5"
+    }
+  }
+}
