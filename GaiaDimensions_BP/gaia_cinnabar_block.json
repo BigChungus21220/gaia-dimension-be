@@ -1,0 +1,26 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "cinnabar_block_512368db"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "AAA",
+      "AAA",
+      "AAA"
+    ],
+    "key": {
+      "A": {
+        "item": "gaia:cinnabar",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "gaia:cinnabar_block",
+      "count": 1
+    }
+  }
+}
