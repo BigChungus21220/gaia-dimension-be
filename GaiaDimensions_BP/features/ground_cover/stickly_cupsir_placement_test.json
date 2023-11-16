@@ -1,5 +1,5 @@
 {
-	"format_version": "1.13.0",
+	"format_version": "1.20.30",
 	"minecraft:single_block_feature": {
 		"description": {
 			"identifier": "gaia:ground_cover/stickly_cupsir_placement_test"

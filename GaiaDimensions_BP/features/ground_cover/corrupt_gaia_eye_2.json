@@ -1,5 +1,5 @@
 {
-	"format_version": "1.13.0",
+	"format_version": "1.20.30",
 	"minecraft:structure_template_feature": {
 	  "description": {
 		"identifier": "gaia:ground_cover/corrupt_gaia_eye_2"
