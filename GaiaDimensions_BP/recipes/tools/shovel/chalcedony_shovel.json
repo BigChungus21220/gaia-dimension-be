@@ -1,0 +1,27 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "chalcedony_shovel"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "A",
+      "B",
+      "B"
+    ],
+    "key": {
+      "A": {
+        "item": "gaia:chalcedony"
+      },
+      "B": {
+        "item": "gaia:agate_stick"
+      }
+    },
+    "result": {
+      "item": "gaia:chalcedony_shovel"
+    }
+  }
+}

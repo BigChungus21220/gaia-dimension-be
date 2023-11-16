@@ -1,0 +1,27 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "sugilite_pickaxe"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "AAA",
+      " B",
+      " B"
+    ],
+    "key": {
+      "A": {
+        "item": "gaia:sugilite"
+      },
+      "B": {
+        "item": "gaia:agate_stick"
+      }
+    },
+    "result": {
+      "item": "gaia:sugilite_pickaxe"
+    }
+  }
+}
