@@ -9,8 +9,7 @@ world.afterEvents.itemUseOn.subscribe(async (event) => {
             const portalData = {
                 location: { x: pos.x, y: pos.y, z: pos.z },
                 dimension: event.block.dimension,
-                source: event.source,
-                cancel: false
+                source: event.source
             };
             gaia.triggerEvent('portalActivate', portalData, 'BeforeEvent');
 

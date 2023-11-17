@@ -1,4 +1,4 @@
-import { system, MolangVariableMap, Player } from "@minecraft/server";
+import { system, MolangVariableMap } from "@minecraft/server";
 import { vec3 } from './Vector.js';
 import { delay } from './utils.js'
 import gaia from './world'
@@ -6,23 +6,24 @@ let isCanceled = false
 //applies velocity to entities that stand on an active geyser for duration ticks
 function push_entities(dimension, spawn_pos, duration){
     let t = 0;
-    let determinant_y = spawn_pos.y - 0.5;
+    const determinant_y = spawn_pos.y - 0.5;
     let tickdelay = 4; //how often to repeat
     let height;
 let beforeEventTriggered = false;
 
    let geyserId = system.runInterval(async () => {
         //run only while geyser is active
+        const geyserData = {dimension:dimension,duration:duration,location:spawn_pos,height:height,getAffectedEntities:()=>dimension.getEntities({location:spawn_pos,maxDistance:1})}
         const data = await gaia.listenFor('geyserErupt','Canceled','BeforeEvent')
         if (t < duration){
             //loop through all entities
             dimension.getEntities().forEach(function (e){
-                let player_pos = e.location;
-                let heightDelta = player_pos.y - determinant_y;
+                const player_pos = e.location;
+                const heightDelta = player_pos.y - determinant_y;
                 height = heightDelta
 
                 if (!beforeEventTriggered) {
-                    gaia.triggerEvent('geyserErupt',{dimension:dimension,duration:duration,location:spawn_pos,height:height,getAffectedEntities:dimension.getEntities({location:spawn_pos,maxDistance:1}),cancel:false},'BeforeEvent');
+                    gaia.triggerEvent('geyserErupt',geyserData,'BeforeEvent');
                     beforeEventTriggered = true;
                 }
           if (data && data.cancel === true) isCanceled = true; system.clearRun(geyserId); 
@@ -43,7 +44,7 @@ let beforeEventTriggered = false;
         } else {
             //exit when geyser stops
             //Sends the after event, after the geyser has stopped
-            gaia.triggerEvent('geyserErupt',{dimension:dimension,duration:duration,location:spawn_pos,height:height,getAffectedEntities:dimension.getEntities({location:spawn_pos,maxDistance:1})},'AfterEvent')
+            gaia.triggerEvent('geyserErupt',geyserData,'AfterEvent')
             return;
         }
     }, tickdelay);
