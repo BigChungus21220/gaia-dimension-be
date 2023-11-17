@@ -1,5 +1,5 @@
 {
-	"format_version": "1.13.0",
+	"format_version": "1.20.20",
 	"minecraft:aggregate_feature": {
 		"description": {
 			"identifier": "gaia:decorations/geyser_layers"
