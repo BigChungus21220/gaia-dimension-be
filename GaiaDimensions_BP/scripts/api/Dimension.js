@@ -1041,6 +1041,12 @@ class GaiaAfterEvents {
         this.biomeChange = new BiomeChangeAfterEventSignal();
         this.fogChange = new FogChangeAfterEventSignal();
         this.portalLink = new PortalLinkAfterEventSignal();
+        /**
+         * Haven't Added in event trigger so currently it does not work
+         * Do NOT use
+         * @deprecated
+         */
+        this.furnaceActivate = new FurnaceActivateAfterEventSignal();
     }
 }
 
@@ -1050,6 +1056,10 @@ class GaiaBeforeEvents {
         this.geyserErupt = new GeyserEruptBeforeEventSignal();
         this.fogChange = new FogChangeBeforeEventSignal();
         this.portalLink = new PortalLinkBeforeEventSignal();
+        /**
+         * Not Finished
+         */
+        this.furnaceActivate = new FurnaceActivateBeforeEventSignal();
     }
 }
 
