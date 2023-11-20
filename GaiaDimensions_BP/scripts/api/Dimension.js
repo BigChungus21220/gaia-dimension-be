@@ -177,7 +177,7 @@ class FurnaceActivateBeforeEventSignal {
 
         const eventCallback = (ev) => {
             const { id, message } = ev;
-            if (id === 'your_namespace:furnaceActivateBeforeEvent') {
+            if (id === 'gaia:furnaceActivateBeforeEvent') {
                 const eventData = new FurnaceActivateBeforeEvent(JSON.parse(message));
                 if (subscriberId in this.subscribers) {
                     this.subscribers[subscriberId](eventData);
@@ -189,7 +189,7 @@ class FurnaceActivateBeforeEventSignal {
             }
         };
 
-        system.afterEvents.scriptEventReceive.subscribe(eventCallback, { namespaces: ['your_namespace'] });
+        system.afterEvents.scriptEventReceive.subscribe(eventCallback, { namespaces: ['gaia'] });
         return subscriberId;
     }
 
