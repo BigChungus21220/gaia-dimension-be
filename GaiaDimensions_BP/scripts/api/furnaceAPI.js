@@ -54,18 +54,19 @@ function barStage(itemId, actualValue, valueMax, inv, value, slot) {
   try {
     if (actualValue === 0) {
       inv.setItem(slot, new MC.ItemStack(`${itemId}_0`));
-    }
-
-    for (let i = 0; i <= value; i++) {
+    } else {
       const valueCurrent = Math.floor(percentage(actualValue, valueMax));
-      if (actualValue > 0 && valueCurrent == Math.floor(percentage(i, value))) {
-        inv.setItem(slot, new MC.ItemStack(`${itemId}_${i}`));
+      for (let i = 0; i <= value; i++) {
+        if (actualValue > 0 && valueCurrent == Math.floor(percentage(i, value))) {
+          inv.setItem(slot, new MC.ItemStack(`${itemId}_${i}`));
+        }
       }
     }
   } catch (error) {
     console.error("Error in barStage:", error.stack);
   }
 }
+
 
 function itemManipulate(inv, slot, itemStack, amountMode = "set", amount = 0) {
   try {
@@ -88,6 +89,7 @@ function itemManipulate(inv, slot, itemStack, amountMode = "set", amount = 0) {
     console.error("Error in itemManipulate:", error);
   }
 }
+
 
 function getItemTags(itemStack, list) {
   let block, tag;
