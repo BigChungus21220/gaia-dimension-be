@@ -78,6 +78,218 @@ function generateId() {
  * @property {BiomeChange} biomeChange - Data for the biome change event.
  * @property {FogChange} fogChange - Data for the fog change event.
  */
+/**
+ * Represents a furnace recipe.
+ * @typedef {Object} FurnaceRecipe
+ * @property {string} input - The item ID used as input in the furnace.
+ * @property {string} output - The output item ID produced in the furnace.
+ * @property {number} cookTimeMax - The maximum cooking time allowed for the recipe (in ticks).
+ * @property {number} burnTimeMax - The maximum burn time allowed for the recipe (in ticks).
+ */
+
+/**
+ * Represents data for furnace activation.
+ * @typedef {Object} FurnaceActivate
+ * @property {Player} player - The player activating the furnace.
+ * @property {FurnaceRecipe} recipe - The recipe to be processed by the furnace.
+ * @property {Vector} location - The location where the furnace is activated.
+ */
+
+
+/**
+ * Represents an event that occurs before a furnace is activated.
+ */
+class FurnaceActivateBeforeEvent {
+    /**
+     * @param {FurnaceActivate} data - Data for the furnace activation event.
+     */
+    constructor(data) {
+        /**
+         * The data for the furnace activation event.
+         * @private
+         * @readonly
+         * @type {FurnaceActivate}
+         */
+        this.data = data;
+
+        /**
+         * Whether the event is canceled.
+         * @type {boolean}
+         */
+        this.cancel = data.cancel || false;
+
+        /**
+         * The player activating the furnace.
+         * @type {Player}
+         */
+        this.player = data.player;
+
+        /**
+         * Additional data specific to furnace activation.
+         * @type {any}
+         */
+        this.activationData = data.activationData;
+
+        /**
+         * The recipe to be processed by the furnace.
+         * @type {FurnaceRecipe}
+         */
+        this.recipe = data.recipe || null;
+    }
+
+    /**
+     * Set the recipe for the furnace activation.
+     * @param {FurnaceRecipe} recipe - The recipe to be set.
+     */
+    setRecipe(recipe) {
+        this.recipe = recipe;
+    }
+
+    /**
+     * Get the recipe for the furnace activation.
+     * @returns {FurnaceRecipe} The recipe.
+     */
+    getRecipe() {
+        return this.recipe;
+    }
+}
+
+/**
+ * Represents a signal for events occurring before a furnace is activated.
+ */
+class FurnaceActivateBeforeEventSignal {
+    constructor() {
+        /**
+         * @private
+         * @readonly
+         */
+        this.subscribers = {};
+    }
+
+    /**
+     * Subscribe to the FurnaceActivateBeforeEvent.
+     * @param {function(FurnaceActivateBeforeEvent):void} callback - The callback function to be called when the event is triggered.
+     * @returns {string} The subscriber id of the event.
+     */
+    subscribe(callback) {
+        const subscriberId = generateId();
+        this.subscribers[subscriberId] = callback;
+
+        const eventCallback = (ev) => {
+            const { id, message } = ev;
+            if (id === 'gaia:furnaceActivateBeforeEvent') {
+                const eventData = new FurnaceActivateBeforeEvent(JSON.parse(message));
+                if (subscriberId in this.subscribers) {
+                    this.subscribers[subscriberId](eventData);
+                }
+
+                if (eventData.cancel === true) {
+                    this.sendCancel();
+                }
+            }
+        };
+
+        system.afterEvents.scriptEventReceive.subscribe(eventCallback, { namespaces: ['gaia'] });
+        return subscriberId;
+    }
+
+    /**
+     * Unsubscribe from the FurnaceActivateBeforeEvent.
+     * @param {string} subscriberId - The subscriber id to be unsubscribed.
+     */
+    unsubscribe(subscriberId) {
+        delete this.subscribers[subscriberId];
+    }
+
+    /**
+     * @private
+     */
+    sendCancel() {
+        world.getDimension('the end').runCommand(`scriptevent gaia:furnaceActivateBeforeEventCanceled ${JSON.stringify({ cancel: true })}`);
+    }
+}
+
+
+
+/**
+ * Represents an event that occurs after a furnace is activated.
+ */
+class FurnaceActivateAfterEvent {
+    /**
+     * @param {FurnaceActivate} data - Data for the furnace activation event.
+     */
+    constructor(data) {
+        /**
+         * The data for the furnace activation event.
+         * @private
+         * @readonly
+         * @type {FurnaceActivate}
+         */
+        this.data = data;
+
+        /**
+         * The player activating the furnace.
+         * @type {Player}
+         */
+        this.player = data.player;
+
+        /**
+         * The recipe that was processed by the furnace.
+         * @type {FurnaceRecipe}
+         */
+        this.recipe = data.recipe;
+
+        /**
+         * The location where the furnace was activated.
+         * @type {Vector}
+         */
+        this.location = data.location;
+    }
+}
+
+/**
+ * Represents a signal for events occurring after a furnace is activated.
+ */
+class FurnaceActivateAfterEventSignal {
+    constructor() {
+        /**
+         * @private
+         * @readonly
+         */
+        this.subscribers = {};
+    }
+
+    /**
+     * Subscribe to the FurnaceActivateAfterEvent.
+     * @param {function(FurnaceActivateAfterEvent):void} callback - The callback function to be called when the event is triggered.
+     * @returns {string} The subscriber id of the event.
+     */
+    subscribe(callback) {
+        const subscriberId = generateId();
+        this.subscribers[subscriberId] = callback;
+
+        const eventCallback = (ev) => {
+            const { id, message } = ev;
+            if (id === 'gaia:furnaceActivateAfterEvent') {
+                const eventData = new FurnaceActivateAfterEvent(JSON.parse(message));
+                if (subscriberId in this.subscribers) {
+                    this.subscribers[subscriberId](eventData);
+                }
+            }
+        };
+
+        system.afterEvents.scriptEventReceive.subscribe(eventCallback, { namespaces: ['your_namespace'] });
+        return subscriberId;
+    }
+
+    /**
+     * Unsubscribe from the FurnaceActivateAfterEvent.
+     * @param {string} subscriberId - The subscriber id to be unsubscribed.
+     */
+    unsubscribe(subscriberId) {
+        delete this.subscribers[subscriberId];
+    }
+}
 
 /**
  * Represents an event that occurs before two portals are linked.
@@ -829,6 +1041,12 @@ class GaiaAfterEvents {
         this.biomeChange = new BiomeChangeAfterEventSignal();
         this.fogChange = new FogChangeAfterEventSignal();
         this.portalLink = new PortalLinkAfterEventSignal();
+        /**
+         * Haven't Added in event trigger so currently it does not work
+         * Do NOT use
+         * @deprecated
+         */
+        this.furnaceActivate = new FurnaceActivateAfterEventSignal();
     }
 }
 
@@ -838,6 +1056,10 @@ class GaiaBeforeEvents {
         this.geyserErupt = new GeyserEruptBeforeEventSignal();
         this.fogChange = new FogChangeBeforeEventSignal();
         this.portalLink = new PortalLinkBeforeEventSignal();
+        /**
+         * Not Finished
+         */
+        this.furnaceActivate = new FurnaceActivateBeforeEventSignal();
     }
 }
 

@@ -25,7 +25,7 @@
 			},
       "minecraft:material_instances": {
         "*": {
-          "texture": "cracked_malachite_bricks",
+          "texture": "malachite_cracked_bricks",
           "render_method": "opaque",
 			"minecraft:map_color": "#ffffff"
 		},

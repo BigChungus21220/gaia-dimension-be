@@ -18,7 +18,6 @@
         "minecraft:flammable": {
        "catch_chance_modifier": 5, 
       "destroy_chance_modifier": 20 
-        }
       },
 			"minecraft:unit_cube": {},
 			"minecraft:destructible_by_explosion": {
@@ -31,5 +30,4 @@
 			"minecraft:map_color": "#ffffff"
 		}
 	}
-}
-  }
+}}}

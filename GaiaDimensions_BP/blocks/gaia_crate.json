@@ -43,7 +43,7 @@
                 "sequence": [
                     {
                         "run_command": {
-                            "command": ["summon gaia:mega_crate_entity mega_crate ~~~"]
+                            "command": ["summon gaiadimension:mega_crate_entity mega_crate ~~~"]
                         }
                     }
                 ]

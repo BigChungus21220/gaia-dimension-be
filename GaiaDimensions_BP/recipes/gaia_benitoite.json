@@ -2,7 +2,7 @@
   "format_version": "1.12",
   "minecraft:recipe_shaped": {
     "description": {
-      "identifier": "hematite"
+      "identifier": "benitoite"
     },
     "tags": [
       "crafting_table"
@@ -12,12 +12,12 @@
     ],
     "key": {
       "B": {
-        "item": "gaia:hematite_block",
+        "item": "gaia:benitoite_block",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:hematite",
+      "item": "gaia:benitoite",
       "count": 9
     }
   }
