@@ -3,35 +3,35 @@ v.x = v.originx/256;
 v.z = v.originz/256;
 
 //noises
-t.rivernoise = math.abs( q.noise(0.5*v.x + 3167.0, 0.5*v.z + 2396.0)*0.25 + q.noise(0.05*v.x - 1279.0, 0.05*v.z - 1279.0));
-t.mountainnoise = math.pow(q.noise(v.x*0.1 + 3812.0, v.z*0.1 + 4598.0), 2.0)*4.0 + q.noise(v.x*0.5 + t.rivernoise*0.5 + 7843.0, v.x*0.5 + t.rivernoise*0.5 + 2364.0)*0.5;
-t.oceannoise = q.noise(0.05*v.x - 1279.0, 0.05*v.z - 2342.0)*0.5 + 0.5;
-t.heightmap = math.lerp(t.rivernoise-0.05, t.mountainnoise - t.oceannoise*0.25, t.rivernoise);
+t.rivernoise = math.abs(q.noise(0.5*v.x + 3167, 0.5*v.z + 2396)*0.25 + q.noise(0.05*v.x - 1279, 0.05*v.z - 1279));
+t.mountainnoise = math.pow(q.noise(v.x*0.1 + 3812, v.z*0.1 + 4598), 2.0)*4 + q.noise(v.x*0.5 + t.rivernoise*0.5 + 7843, v.x*0.5 + t.rivernoise*0.5 + 2364)*0.5;
+t.oceannoise = q.noise(0.05*v.x - 1279, 0.05*v.z - 2342)*0.5 + 0.5;
+t.heightmap = math.lerp(t.rivernoise-0.05, t.mountainnoise*0.7 - t.oceannoise*0.25, t.rivernoise);
 
 //biome type settings
-t.biometyperivermin = -0.05; t.biometyperivermax = 0.0;
-t.biometypemountainmin = 0.9; t.biometypemountainmax = 999.0;
-t.biometypeplainmin = 0.1; t.biometypeplainmax = 0.5;
-t.biometypetaigamin = 0.5; t.biometypetaigamax = 0.9;
+t.biometyperivermin = -0.05; t.biometyperivermax = 0;
+t.biometypemountainmin = 0.95; t.biometypemountainmax = 999;
+t.biometypeplainmin = 0.1; t.biometypeplainmax = 0.7;
+t.biometypetaigamin = 0.7; t.biometypetaigamax = 0.95;
 t.biometypeoceanmin = -2.0; t.biometypeoceanmax = -0.05;
 t.biometypeswampmin = 0.01; t.biometypeswampmax = 0.1;
-t.biometypebeachmin = 0.0; t.biometypebeachmax = 0.01;
+t.biometypebeachmin = 0; t.biometypebeachmax = 0.01;
 
 //cell noise to pick biomes within each biometype
-t.d1 = 999.0;
-t.d2 = 999.0;
-v.c1 = 0.0;
-v.r = q.noise(v.originx/16.0,v.originz/16.0);
-v.px = v.x/2 + v.r*0.05 + t.rivernoise;
-v.pz = v.z/2 + v.r*0.05 + t.rivernoise;
+t.d1 = 999;
+t.d2 = 999;
+v.c1 = 0;
+v.r = q.noise(v.originx/16,v.originz/16);
+v.px = v.x + v.r*0.05 + t.rivernoise;
+v.pz = v.z + v.r*0.05 + t.rivernoise;
 v.i = 0;
 loop(4, {
 	v.p2x = math.floor(v.px) + math.mod(v.i,2);
-	v.p2z = math.floor(v.px) + math.floor(v.i/2);
+	v.p2z = math.floor(v.pz) + math.floor(v.i/2);
 	v.rx = v.p2x*127.1 + v.p2z*311.7; 
 	v.rz = v.p2z*269.5 + v.p2x*183.3;
-	v.rx = (2.0*math.abs(v.rx/3.14 - 2.0*math.floor(v.rx/(2.0*3.14)) - 1.0) - 1.0)*43758.5453123; 
-	v.rz = (2.0*math.abs(v.rz/3.14 - 2.0*math.floor(v.rz/(2.0*3.14)) - 1.0) - 1.0)*43758.5453123;
+	v.rx = (2*math.abs(v.rx/3.14 - 2*math.floor(v.rx/6.28) - 1.0) - 1.0)*43758.5453123; 
+	v.rz = (2*math.abs(v.rz/3.14 - 2*math.floor(v.rz/6.28) - 1.0) - 1.0)*43758.5453123;
 	v.rx = (v.rx - math.floor(v.rx))/2; 
 	v.rz = (v.rz - math.floor(v.rz))/2;
 
@@ -44,7 +44,7 @@ v.dist = math.abs(math.sqrt(t.d2) - t.d1);
 
 //biome determination
 t.biome = 'mineral_resevoir';
-v.determinant_height = t.heightmap >= 0.0 ? t.heightmap + 0.005*(2-v.r)/(2*v.r + 2) : t.heightmap;
+v.determinant_height = t.heightmap >= 0 ? t.heightmap + 0.005*(2-v.r)/(2*v.r + 2) : t.heightmap;
 (t.biometyperivermin <= v.determinant_height && v.determinant_height < t.biometyperivermax) ? {
 	t.biome = 'mineral_river';
 } : {
@@ -82,19 +82,19 @@ v.determinant_height = t.heightmap >= 0.0 ? t.heightmap + 0.005*(2-v.r)/(2*v.r +
 };};};};};};};
 
 //final heightmap edits
-t.heightmap = t.heightmap <= 0.0 ? (t.heightmap > -0.05 ? -0.25*math.sqrt(-t.heightmap) : -math.sqrt(-t.heightmap-0.05) - 0.055901) : t.heightmap*t.heightmap*2.0;
+t.heightmap = t.heightmap <= 0 ? (t.heightmap > -0.05 ? -0.25*math.sqrt(-t.heightmap) : -math.sqrt(-t.heightmap-0.05) - 0.055901) : t.heightmap*t.heightmap*2;
 
-v.noise1 = q.noise(0.01*v.originx + 2354.0, 0.01*v.originz + 3798.0); 
-v.noise2 = q.noise(0.005*v.originx - 1279.0 + v.noise1, 0.005*v.originz - 1279.0 + v.noise1); 
+v.noise1 = q.noise(0.01*v.originx + 2354, 0.01*v.originz + 3798); 
+v.noise2 = q.noise(0.005*v.originx - 1279 + v.noise1, 0.005*v.originz - 1279 + v.noise1); 
 v.dist = math.abs(t.d1 - t.d2);
 v.k = t.biome == 'static_wasteland' ? math.lerp(240,160,v.dist) : 240;
 v.n = 50;
-t.height = t.heightmap*40 + 63 + v.noise2*6.0*t.heightmap;
+t.height = t.heightmap*40 + 63 + v.noise2*6*t.heightmap;
 v.h = math.max(math.min(0.5 + (t.height - v.k)/(2*v.n),1),0);
 t.height = t.height*(1-v.h) + v.k*v.h - v.n*v.h*(1-v.h);
 t.layer = 63 > math.floor(t.height) ? math.floor(t.height) - 63 : 0;
 (t.biome == 'salt_dunes') ? {
-	t.height = t.height + math.lerp(0, v.noise1*16, math.clamp(v.dist*t.heightmap*30.0, 0, 1));
+	t.height = t.height + math.lerp(0, v.noise1*16, math.clamp(v.dist*t.heightmap*30, 0, 1));
 };
 
 return 1;
