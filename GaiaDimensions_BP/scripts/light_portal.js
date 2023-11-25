@@ -32,7 +32,6 @@ world.afterEvents.itemUseOn.subscribe(async (event) => {
 
 world.afterEvents.playerBreakBlock.subscribe((ev) => {
     const { block, player } = ev;
-
     gaia.breakPortal(block.location, block.dimension, true);
     player.playSound('break.amethyst_block', { location: block.location });
 }, { blockTypes: ['gaia:keystone_block', 'gaia:gaia_portal'] });

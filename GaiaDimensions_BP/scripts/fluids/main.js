@@ -1,5 +1,4 @@
 import { system, world } from "@minecraft/server";
-import gaia from "../world";
 
 const fluids = [
 "gaia:liquid_bismuth",
