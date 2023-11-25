@@ -95,7 +95,7 @@ system.clearRun(intervalId)
     }
     })
     return blockFound
-} catch (e){console.error(e)}
+} catch (e){}
 }
 
   

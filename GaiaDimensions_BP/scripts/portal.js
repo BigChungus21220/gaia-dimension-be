@@ -1,5 +1,5 @@
 import { world, system, Vector, Entity,Player } from "@minecraft/server"
-import {log, delay } from './utils.js'
+import {delay } from './utils.js'
 import { Gaia } from './api/Dimension.js';
 
 const gaia = new Gaia();
@@ -29,11 +29,10 @@ async function tpToGaia(entity) {
         gaia.triggerEvent('portalLink',{location:save,linkedLocation:teleport,dimension:entity.dimension},'BeforeEvent')
         const data = await gaia.listenFor('portalLink','Canceled','BeforeEvent')
         if (data && data.cancel === true) return;
+        entity.setDynamicProperty('enteredByPortal',true)
         gaia.link({x:Math.floor(MathRound(save.x)),y:Math.floor(MathRound(save.y)),z:Math.floor(MathRound(save.z))},{x:MathRound(teleport.x),y:MathRound(teleport.y-2),z:MathRound(teleport.z+1)},{x:0,y:3,z:2})
         gaia.triggerEvent('portalLink',{location:save,linkedLocation:teleport,dimension:entity.dimension},'AfterEvent')
     }
-
-    log(entity.typeId + " sent to Gaia Dimension")
 }
 
 
@@ -86,7 +85,6 @@ async function backToDimension(entity,coord){
             await delay(1);
             entity.teleport(getTopBlock(world.getDefaultSpawnLocation(), overworld), {dimension: overworld})
         }
-        log(entity.typeId + " sent to overworld")
     } catch (e) {
     } 
 }
@@ -100,7 +98,7 @@ system.runInterval(async () => {
             const inPortal = entity.isInPortal() || (dimension.getBlock(new Vector(entity.location.x, 0, entity.location.z)) === undefined && lastInPortal);
             const currentLocation = entity.location;
             inPortal ? entity.addTag('inPortal') : entity.removeTag('inPortal');
-           
+           if (gaia.isInGaia(entity) && !entity.getDynamicProperty('enteredByPortal')) entity.teleport({x:0,y:76,z:0});
             if (entity.typeId === 'minecraft:player') {  
                 const isPlayerMoving = isMoving(entity);
                 if (isPlayerMoving && gaia.isInGaia(entity)) {
@@ -142,7 +140,3 @@ return {
     z: parseInt(coord.split(':')[3])
 };
 }
-
-gaia.beforeEvents.portalActivate.subscribe(ev=>{
-ev.cancel 
-})

@@ -17,7 +17,7 @@ function getObjective(id) {
   try {
     return scoreboard.getObjective(id) ?? scoreboard.addObjective(id, id);
   } catch (error) {
-    console.error("Error in getObjective:", error);
+
     return null;
   }
 }
@@ -42,7 +42,7 @@ function score(entity, mode = "add", objectiveId, value) {
       }
     }
   } catch (error) {
-    console.error("Error in score:", error);
+
   }
 }
 
@@ -63,7 +63,6 @@ function barStage(itemId, actualValue, valueMax, inv, value, slot) {
       }
     }
   } catch (error) {
-    console.error("Error in barStage:", error.stack);
   }
 }
 
@@ -86,7 +85,6 @@ function itemManipulate(inv, slot, itemStack, amountMode = "set", amount = 0) {
       }
     }
   } catch (error) {
-    console.error("Error in itemManipulate:", error);
   }
 }
 
@@ -115,7 +113,7 @@ function getItemTags(itemStack, list) {
   }
    return tag;
 } catch (error) {
-  console.error("Error in getItemTags:", error);
+
 }
 
  
@@ -145,7 +143,7 @@ export function furnacesLoad() {
           break;
       }
     } catch (error) {
-      console.error("Error in furnacesLoad:", error);
+
     }
   });
 }
@@ -253,5 +251,5 @@ function furnaceReciper(blockOrigin, entity, data = { prefix: "forge", cookTickM
     if (!slots[1] && burnTime === 0 && burnTimeMax > 0) {
       score(entity, "set", "burnTimeMax", 0);
     }
-  } catch (error) {console.error('Error in furnaceReciper',error)}
+  } catch (error) {}
 }
