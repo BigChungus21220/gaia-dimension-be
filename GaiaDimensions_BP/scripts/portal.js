@@ -15,13 +15,13 @@ function getTopBlock(location, dimension) {
 }
 
 async function tpToGaia(entity) {
+    entity.setDynamicProperty('enteredByPortal',true)
     const save = entity.location
     const initialTeleport = gaia.convertCoords(new Vector(entity.location.x,entity.location.y,entity.location.z),'minecraft:overworld','gaia:gaia')
     entity.teleport(initialTeleport, {dimension: the_end})
     entity.turnCoords()
     await delay(0.8)
     gaia.lightPortal(new Vector(entity.location.x,entity.location.y,entity.location.z), the_end, true)
-    entity.setDynamicProperty('enteredByPortal',true)
     await delay(0.8)
     let teleport = getTopBlock(entity.location,entity.dimension)
     entity.teleport({x:MathRound(teleport.x),y:MathRound(teleport.y),z:MathRound(teleport.z)},{dimension:entity.dimension})
