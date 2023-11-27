@@ -21,6 +21,7 @@ async function tpToGaia(entity) {
     entity.turnCoords()
     await delay(0.8)
     gaia.lightPortal(new Vector(entity.location.x,entity.location.y,entity.location.z), the_end, true)
+    entity.setDynamicProperty('enteredByPortal',true)
     await delay(0.8)
     let teleport = getTopBlock(entity.location,entity.dimension)
     entity.teleport({x:MathRound(teleport.x),y:MathRound(teleport.y),z:MathRound(teleport.z)},{dimension:entity.dimension})
@@ -29,7 +30,6 @@ async function tpToGaia(entity) {
         gaia.triggerEvent('portalLink',{location:save,linkedLocation:teleport,dimension:entity.dimension},'BeforeEvent')
         const data = await gaia.listenFor('portalLink','Canceled','BeforeEvent')
         if (data && data.cancel === true) return;
-        entity.setDynamicProperty('enteredByPortal',true)
         gaia.link({x:Math.floor(MathRound(save.x)),y:Math.floor(MathRound(save.y)),z:Math.floor(MathRound(save.z))},{x:MathRound(teleport.x),y:MathRound(teleport.y-2),z:MathRound(teleport.z+1)},{x:0,y:3,z:2})
         gaia.triggerEvent('portalLink',{location:save,linkedLocation:teleport,dimension:entity.dimension},'AfterEvent')
     }
