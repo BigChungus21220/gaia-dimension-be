@@ -1,0 +1,82 @@
+{
+	"format_version": "1.10.0",
+	"particle_effect": {
+		"description": {
+			"identifier": "gaia:sky_particle",
+			"basic_render_parameters": {
+				"material": "particles_blend",
+				"texture": "textures/environment/gaia_sky.png"
+			}
+		},
+		"components": {
+			"minecraft:emitter_rate_instant": {
+				"num_particles": 1
+			},
+			"minecraft:emitter_lifetime_expression": {
+				"activation_expression": "
+                v.s = 500; 
+                v.i == 0 ? {  
+                    v.x = 1;  
+                    v.y = 0;  
+                    v.z = 0;  
+                    v.d = 1;
+                } : {
+                v.i == 1 ? {
+                    v.x = 1;  
+                    v.y = 0;  
+                    v.z = 0;  
+                    v.d = -1;
+                } : {
+                v.i == 2 ? {  
+                    v.x = 0;  
+                    v.y = 1;  
+                    v.z = 0;  
+                    v.d = 1;
+                } : {
+                v.i == 3 ? {
+                    v.x = 0;  
+                    v.y = 1;  
+                    v.z = 0;  
+                    v.d = -1;
+                } : { 
+                v.i == 4 ? {  
+                    v.x = 0;  
+                    v.y = 0;  
+                    v.z = 1;  
+                    v.d = 1;
+                } : { 
+                v.i == 5 ? {  
+                    v.x = 0;  
+                    v.y = 0;  
+                    v.z = 1;  
+                    v.d = -1;
+                };};};};};}; 
+                return 1;
+                ",
+				"expiration_expression": 0
+			},
+			"minecraft:emitter_shape_point": {
+				"offset": ["v.x*v.d*v.s", "v.y*v.d*v.s", "v.z*v.d*v.s"]
+			},
+			"minecraft:particle_lifetime_expression": {
+				"max_lifetime": 1
+			},
+			"minecraft:particle_initial_speed": 0,
+			"minecraft:particle_motion_dynamic": {},
+			"minecraft:particle_appearance_billboard": {
+				"size": ["v.s", "v.s"],
+				"facing_camera_mode": "direction_z",
+				"direction": {
+					"mode": "custom",
+					"custom_direction": ["v.x*v.d", "v.y*v.d", "v.z*v.d"]
+				},
+				"uv": {
+					"texture_width": 3,
+					"texture_height": 2,
+					"uv": ["(v.x == 1) ? 0 : (v.y == 1 ? 1 : 2)", "v.d == 1 ? 0 : 1"],
+					"uv_size": [1, 1]
+				}
+			}
+		}
+	}
+}

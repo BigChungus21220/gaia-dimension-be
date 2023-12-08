@@ -240,12 +240,7 @@
 
       "events": {
 
-			"dead": {
-				"run_command": {
-					"command": [
-						""
-					]
-				  }
+
 				}
       }
   }

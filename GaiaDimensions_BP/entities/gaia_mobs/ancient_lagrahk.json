@@ -296,12 +296,6 @@
       },
       "events": {
         "dead": {
-            "run_command": {
-                "command": [
-                    ""
-                ]
-              }
-            },
           "start": {
               "add": {
                   "component_groups": [

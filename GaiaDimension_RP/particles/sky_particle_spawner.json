@@ -1,0 +1,71 @@
+{
+  "format_version": "1.10.0",
+  "particle_effect": {
+    "description": {
+      "identifier": "gaia:sky_particle_spawner",
+      "basic_render_parameters": {
+        "material": "particles_alpha",
+        "texture": "textures/particle/particles"
+      }
+    },
+    "events": {
+      "x+": {
+        "particle_effect": {
+          "effect": "gaia:sky_particle",
+          "type": "emitter",
+          "pre_effect_expression": "v.i = 0;"
+        }
+      },
+      "x-": {
+        "particle_effect": {
+          "effect": "gaia:sky_particle",
+          "type": "emitter",
+          "pre_effect_expression": "v.i = 1;"
+        }
+      },
+      "y+": {
+        "particle_effect": {
+          "effect": "gaia:sky_particle",
+          "type": "emitter",
+          "pre_effect_expression": "v.i = 2;"
+        }
+      },
+      "y-": {
+        "particle_effect": {
+          "effect": "gaia:sky_particle",
+          "type": "emitter",
+          "pre_effect_expression": "v.i = 3;"
+        }
+      },
+      "z+": {
+        "particle_effect": {
+          "effect": "gaia:sky_particle",
+          "type": "emitter",
+          "pre_effect_expression": "v.i = 4;"
+        }
+      },
+      "z-": {
+        "particle_effect": {
+          "effect": "gaia:sky_particle",
+          "type": "emitter",
+          "pre_effect_expression": "v.i = 5;"
+        }
+      }
+    },
+    "components": {
+      "minecraft:emitter_rate_manual": {
+        "max_particles": 1
+      },
+      "minecraft:emitter_lifetime_expression": {
+        "activation_expression": 1,
+        "expiration_expression": 1
+      },
+      "minecraft:particle_lifetime_expression": {
+        "expiration_expression": 1
+      },
+      "minecraft:particle_lifetime_events": {
+        "expiration_event": ["x+", "x-", "y+", "y-", "z+", "z-"]
+      }
+    }
+  }
+}
