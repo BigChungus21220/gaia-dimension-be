@@ -15,6 +15,7 @@ function getTopBlock(location, dimension) {
 }
 
 async function tpToGaia(entity) {
+    entity.setDynamicProperty('enteredByPortal',true)
     const save = entity.location
     const initialTeleport = gaia.convertCoords(new Vector(entity.location.x,entity.location.y,entity.location.z),'minecraft:overworld','gaia:gaia')
     entity.teleport(initialTeleport, {dimension: the_end})
@@ -29,7 +30,6 @@ async function tpToGaia(entity) {
         gaia.triggerEvent('portalLink',{location:save,linkedLocation:teleport,dimension:entity.dimension},'BeforeEvent')
         const data = await gaia.listenFor('portalLink','Canceled','BeforeEvent')
         if (data && data.cancel === true) return;
-        entity.setDynamicProperty('enteredByPortal',true)
         gaia.link({x:Math.floor(MathRound(save.x)),y:Math.floor(MathRound(save.y)),z:Math.floor(MathRound(save.z))},{x:MathRound(teleport.x),y:MathRound(teleport.y-2),z:MathRound(teleport.z+1)},{x:0,y:3,z:2})
         gaia.triggerEvent('portalLink',{location:save,linkedLocation:teleport,dimension:entity.dimension},'AfterEvent')
     }

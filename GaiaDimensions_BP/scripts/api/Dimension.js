@@ -1133,12 +1133,14 @@ class Fog {
  * @returns {string} The biome name
  */
     getBiome(position){
+        try {
         let blockId = this.dimension.getBlock(new Vector(position.x, 0, position.z))?.typeId
         if (blockId.includes("gaia:bedrock_")){
             return blockId.replace("gaia:bedrock_","")
         } else {
             return "none"
         }
+    } catch (e) { }
     }
     /**
  * @private
@@ -1562,12 +1564,14 @@ export class Gaia extends Portal {
  * @returns {string} The biome name
  */
     getBiome(position){
+        try {
         let blockId = this.dimension.getBlock(new Vector(position.x, 0, position.z))?.typeId
         if (blockId.includes("gaia:bedrock_")){
             return blockId.replace("gaia:bedrock_","")
         } else {
             return "none"
         }
+    } catch(e) { }
     }
 /**
      * Update the current biome for a player.
