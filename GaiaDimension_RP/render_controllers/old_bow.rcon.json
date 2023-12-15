@@ -19,7 +19,7 @@
             "geometry.old_bow_pull_2"
           ]
         }
-      },
+        },
       "geometry": "array.bow_geo_frames[v.charge_amount]",
       "materials": [ { "*": "v.is_enchanted ? material.enchanted : material.default" } ],
       "textures": [ "array.bow_texture_frames[v.charge_amount]", "texture.enchanted" ]
