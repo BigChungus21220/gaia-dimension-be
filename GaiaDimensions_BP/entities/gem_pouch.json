@@ -1,0 +1,82 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "gaia:gem_pouch_container",
+      "is_spawnable": false,
+      "is_summonable": true,
+      "is_experimental": false
+    },
+    "component_groups": {
+      "gaia:despawning_entity": {
+        "minecraft:transformation": {
+          "drop_inventory": true,
+          "into": "gaia:despawn"
+        }
+      }
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": ["chest", "inanimate"]
+      },
+      "minecraft:collision_box": {
+        "height": 0,
+        "width": 0
+      },
+      "minecraft:custom_hit_test": {
+        "hitboxes": [
+          {
+            "width": 1,
+            "height": 0.3,
+            "pivot": [0, 0.5, 0]
+          }
+        ]
+      },
+      "minecraft:health": {
+        "value": 1
+      },
+      "minecraft:fire_immune": {},
+      "minecraft:damage_sensor": {
+        "triggers": {
+          "cause": "all",
+          "deals_damage": false
+        }
+      },
+      "minecraft:nameable": {},
+      "minecraft:inventory": {
+        "additional_slots_per_strength": 0,
+        "can_be_siphoned_from": false,
+        "container_type": "inventory",
+        "inventory_size": 8,
+        "private": false,
+        "restrict_to_owner": false
+      },
+      "minecraft:timer": {
+        "time": 0.1,
+        "looping": true,
+        "time_down_event": {
+          "event": "tick",
+          "target": "self"
+        }
+      },
+      "minecraft:inside_block_notifier": {
+        "block_list": [
+          {
+            "block": "gaia:purifier",
+            "exited_block_event": {
+              "event": "destroy",
+              "target": "self"
+            }
+          }
+        ]
+      }
+    },
+    "events": {
+      "destroy": {
+        "add": {
+          "component_groups": ["gaia:despawning_entity"]
+        }
+      }
+    }
+  }
+}
