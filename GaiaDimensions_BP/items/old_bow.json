@@ -2,7 +2,7 @@
   "format_version": "1.20.10",
   "minecraft:item": {
     "description": {
-      "identifier": "bow:bow",
+      "identifier": "gaia:old_bow",
       "category": "Equipment"
     },
     "components": {
