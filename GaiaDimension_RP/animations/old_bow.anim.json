@@ -1,7 +1,7 @@
 {
   "format_version": "1.20.10",
   "animations": {
-    "animation.custom_bow.wield": {
+    "animation.old_bow.wield": {
       "loop": true,
       "bones": {
         "rightItem": {
@@ -10,7 +10,7 @@
         }
       }
     },
-    "animation.custom_bow.wield_first_person_pull": {
+    "animation.old_bow.wield_first_person_pull": {
       "loop": true,
       "bones": {
         "rightItem": {
