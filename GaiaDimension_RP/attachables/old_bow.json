@@ -19,10 +19,10 @@
         "old_bow_pull_0": "geometry.old_bow_pull_0",
         "old_bow_pull_1": "geometry.old_bow_pull_1",
         "old_bow_pull_2": "geometry.old_bow_pull_2"
-      },
+        },
       "animations": {
-        "wield": "animation.custom_bow.wield",
-        "wield_first_person_pull": "animation.custom_bow.wield_first_person_pull"
+        "wield": "animation.old_bow.wield",
+        "wield_first_person_pull": "animation.old_bow.wield_first_person_pull"
       },
       "scripts": {
         "pre_animation": [
