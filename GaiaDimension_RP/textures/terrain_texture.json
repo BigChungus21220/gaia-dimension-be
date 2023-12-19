@@ -791,4 +791,37 @@
 "malachite_floor_tiles":{"textures":"textures/blocks/malachite_floor_tiles"
 },
 "mega_storage_crate":{"textures":"textures/blocks/mega_storage_crate"
-}}}
+},
+   "crate": {
+      "textures": "textures/blocks/crate"
+    },
+    "large_crate": {
+      "textures": "textures/blocks/mega_storage_crate"
+    },
+    "gaia_stone_furnace_front": {
+      "textures": "textures/blocks/purifier_front"
+    },
+    "purifier_front_lit": {
+      "textures": "textures/blocks/purifier_front"
+    },
+    "purifier_side": {
+      "textures": "textures/blocks/purifier_side"
+    },
+    "purifier_top": {
+      "textures": "textures/blocks/purifier_side"
+    },
+    "restructer_front": {
+      "textures": "textures/blocks/restructer_front"
+    },
+    "restructer_lit": {
+      "textures": "textures/blocks/restructer_front"
+    },
+    "restructer_side": {
+      "textures": "textures/blocks/restructer_side"
+    },
+    "restructer_top": {
+      "textures": "textures/blocks/restructer_side"
+    }
+  }
+}
+

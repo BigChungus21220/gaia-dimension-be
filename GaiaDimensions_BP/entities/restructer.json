@@ -2,16 +2,16 @@
   "format_version": "1.16.100",
   "minecraft:entity": {
     "description": {
-      "identifier": "gaiadimension:restructurer_entity",
+      "identifier": "gaia:restructer_container",
       "is_spawnable": false,
       "is_summonable": true,
       "is_experimental": false
     },
     "component_groups": {
-      "despawn_block": {
+      "gaia:despawning_entity": {
         "minecraft:transformation": {
           "drop_inventory": true,
-          "into": "gaiadimension:despawn"
+          "into": "gaia:despawn"
         }
       }
     },
@@ -27,8 +27,8 @@
         "hitboxes": [
           {
             "width": 1,
-            "height": 0.4,
-            "pivot": [0, 0, 0]
+            "height": 0.3,
+            "pivot": [0, 0.5, 0]
           }
         ]
       },
@@ -42,31 +42,28 @@
           "deals_damage": false
         }
       },
-      "minecraft:physics": {
-        "has_gravity": false,
-        "has_collision": false,
-        "push_towards_closest_space": false
-      },
-      "minecraft:pushable": {
-        "is_pushable": false,
-        "is_pushable_by_piston": false
-      },
-      "minecraft:nameable": {
-        "always_show": false,
-        "allow_name_tag_renaming": false
-      },
+      "minecraft:nameable": {},
       "minecraft:inventory": {
         "additional_slots_per_strength": 0,
+        "can_be_siphoned_from": false,
         "container_type": "inventory",
         "inventory_size": 8,
         "private": false,
         "restrict_to_owner": false
       },
+      "minecraft:timer": {
+        "time": 0.1,
+        "looping": true,
+        "time_down_event": {
+          "event": "tick",
+          "target": "self"
+        }
+      },
       "minecraft:inside_block_notifier": {
         "block_list": [
           {
-            "block": "air",
-            "entered_block_event": {
+            "block": "gaia:restructer",
+            "exited_block_event": {
               "event": "destroy",
               "target": "self"
             }
@@ -77,14 +74,7 @@
     "events": {
       "destroy": {
         "add": {
-          "component_groups": ["despawn_block"]
-        },
-        "run_command": {
-          "command": [
-            "replaceitem entity @s slot.inventory 6 air",
-            "replaceitem entity @s slot.inventory 7 air",
-            "replaceitem entity @s slot.inventory 8 air"
-          ]
+          "component_groups": ["gaia:despawning_entity"]
         }
       }
     }

@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:entity": {
     "description": {
-      "identifier": "gaiadimension:despawn",
+      "identifier": "gaia:despawn",
       "is_spawnable": false,
       "is_summonable": true,
       "is_experimental": false

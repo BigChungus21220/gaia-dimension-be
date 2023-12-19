@@ -1,0 +1,20 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "amethyst_brick_10136913"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "AA ",
+      "AA "
+    ],
+    "key": {},
+    "result": {
+      "item": "gaia:amethyst_brick",
+      "count": 1
+    }
+  }
+}

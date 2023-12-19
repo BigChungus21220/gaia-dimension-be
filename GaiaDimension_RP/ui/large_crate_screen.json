@@ -1,0 +1,60 @@
+{
+  "namespace": "large_crate_screen",
+  "large_crate_grid": {
+    "type": "grid",
+    "size": [162, 109],
+    "offset": [3, -3],
+    "anchor_from": "top_left",
+    "anchor_to": "top_left",
+    "grid_dimensions": [9, 6],
+    "grid_item_template": "chest.chest_grid_item",
+    "collection_name": "container_items"
+  },
+  "large_crate_panel_top_half": {
+    "type": "panel",
+    "anchor_from": "left_middle",
+    "anchor_to": "left_middle",
+    "controls": [
+      {
+        "grid@large_crate_screen.large_crate_grid": {
+          "layer": 0
+        }
+      }
+    ]
+  },
+  "large_crate_controller": {
+    "type": "panel",
+    "size": ["100%", 200],
+    "offset": [0, 11],
+    "anchor_to": "top_left",
+    "anchor_from": "top_left",
+    "controls": [
+      {
+        "chest_label@chest.chest_label": {
+          "layer": 10,
+          "offset": [74, 10],
+          "color": [1, 1, 1]
+        }
+      },
+      {
+        "close_button@common.close_button": {
+          "offset": [-5, -9]
+        }
+      },
+      {
+        "bg": {
+          "type": "image",
+          "texture": "textures/ui/gaia/Background/g.png",
+          "layer": 5,
+          "size": [175, 299],
+          "offset": [-1, 1]
+        }
+      },
+      {
+        "panel_top_half@large_crate_screen.large_crate_panel_top_half": {
+          "offset": [7, 10]
+        }
+      }
+    ]
+  }
+}

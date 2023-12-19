@@ -1,0 +1,17 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_furnace": {
+    "description": {
+      "identifier": "crystallized_lapis_lazuli"
+    },
+    "tags": [
+      "furnace",
+      "blast_furnace"
+    ],
+    "input": {
+      "item": "minecraft:dye",
+      "data": 4
+    },
+    "output": "gaia:crystallized_lapis_lazuli"
+  }
+}
