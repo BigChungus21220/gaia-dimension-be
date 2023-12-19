@@ -49,8 +49,8 @@
             "minecraft:geometry": {
                 "identifier": "geometry.pyrite_torch",
                 "bone_visibility": {
-                    "ground": "q.block_property('minecraft:block_face') == 'up' && !Math.mod(q.block_property('gaia:rotation'), 4)",
-                    "wall": "q.block_property('minecraft:block_face') != 'up'"
+                    "ground": "q.block_state('minecraft:block_face') == 'up' && !Math.mod(q.block_state('gaia:rotation'), 4)",
+                    "wall": "q.block_state('minecraft:block_face') != 'up'"
                 }
             },
             "minecraft:material_instances": {
@@ -82,7 +82,7 @@
         },
         "permutations": [
             {
-                "condition": "q.block_property('gaia:rotation') >= 4 || q.block_property('minecraft:block_face') == 'north' ",
+                "condition": "q.block_state('gaia:rotation') >= 4 || q.block_state('minecraft:block_face') == 'north' ",
                 "components": {
                     "minecraft:placement_filter": {
                         "conditions": [
@@ -108,7 +108,7 @@
                 }
             },
             {
-                "condition": "q.block_property('gaia:rotation') >= 4 || q.block_property('minecraft:block_face') == 'east'",
+                "condition": "q.block_state('gaia:rotation') >= 4 || q.block_state('minecraft:block_face') == 'east'",
                 "components": {
                     "minecraft:placement_filter": {
                         "conditions": [
@@ -134,7 +134,7 @@
                 }
             },
             {
-                "condition": "q.block_property('gaia:rotation') >= 8 || q.block_property('minecraft:block_face') == 'south'",
+                "condition": "q.block_state('gaia:rotation') >= 8 || q.block_state('minecraft:block_face') == 'south'",
                 "components": {
                     "minecraft:placement_filter": {
                         "conditions": [
@@ -160,7 +160,7 @@
                 }
             },
             {
-                "condition": "q.block_property('gaia:rotation') >= 12 || q.block_property('minecraft:block_face') == 'west'",
+                "condition": "q.block_state('gaia:rotation') >= 12 || q.block_state('minecraft:block_face') == 'west'",
                 "components": {
                     "minecraft:placement_filter": {
                         "conditions": [
@@ -186,7 +186,7 @@
                 }
             },
             {
-                "condition": "q.block_property('minecraft:block_face') != 'up'",
+                "condition": "q.block_state('minecraft:block_face') != 'up'",
                 "components": {
                     "minecraft:selection_box": {
                         "origin": [
@@ -203,7 +203,7 @@
                 }
             },
             {
-                "condition": "q.block_property('minecraft:block_face') == 'up' && !Math.mod(q.block_property('gaia:rotation'), 4)",
+                "condition": "q.block_state('minecraft:block_face') == 'up' && !Math.mod(q.block_state('gaia:rotation'), 4)",
                 "components": {
                     "minecraft:placement_filter": {
                         "conditions": [
@@ -231,7 +231,7 @@
             "gaia:particle": {
                 "sequence": [
                     {
-                        "condition": "q.block_property('minecraft:block_face') == 'north'",
+                        "condition": "q.block_state('minecraft:block_face') == 'north'",
                         "run_command": {
                             "command": [
                                 "particle minecraft:basic_flame_particle ~~0.4~0.3",
@@ -240,7 +240,7 @@
                         }
                     },
                     {
-                        "condition": "q.block_property('minecraft:block_face') == 'south'",
+                        "condition": "q.block_state('minecraft:block_face') == 'south'",
                         "run_command": {
                             "command": [
                                 "particle minecraft:basic_flame_particle ~~0.4~-0.3",
@@ -249,7 +249,7 @@
                         }
                     },
                     {
-                        "condition": "q.block_property('minecraft:block_face') == 'east'",
+                        "condition": "q.block_state('minecraft:block_face') == 'east'",
                         "run_command": {
                             "command": [
                                 "particle minecraft:basic_flame_particle ~-0.3~0.4~",
@@ -258,7 +258,7 @@
                         }
                     },
                     {
-                        "condition": "q.block_property('minecraft:block_face') == 'west'",
+                        "condition": "q.block_state('minecraft:block_face') == 'west'",
                         "run_command": {
                             "command": [
                                 "particle minecraft:basic_flame_particle ~0.3~0.4~",
@@ -267,7 +267,7 @@
                         }
                     },
                     {
-                        "condition": "q.block_property('minecraft:block_face') == 'up' && !Math.mod(q.block_property('gaia:rotation'), 4)",
+                        "condition": "q.block_state('minecraft:block_face') == 'up' && !Math.mod(q.block_state('gaia:rotation'), 4)",
                         "run_command": {
                             "command": [
                                 "particle minecraft:basic_flame_particle ~~0.2~",

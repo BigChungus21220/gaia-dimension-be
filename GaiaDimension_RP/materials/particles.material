@@ -1,0 +1,39 @@
+{
+  "materials": {
+    "version": "1.0.0",
+
+    "particles_sky_material": {
+      "vertexShader": "shaders/color_uv.vertex",
+      "vrGeometryShader": "shaders/color_uv.geometry",
+      "fragmentShader": "shaders/color_texture.fragment",
+
+      "vertexFields": [
+        { "field": "Position" },
+        { "field": "Color" },
+        { "field": "UV0" }
+      ],
+
+      "msaaSupport": "Both",
+
+      "depthFunc": "Always", //no clue if this does anything
+
+      "blendSrc": "SourceAlpha",
+      "blendDst": "One",
+
+      //"+defines": [ "ENABLE_FOG" ],
+      "+states": [
+        "Blending",
+        "DisableCulling", //doesn't work
+        "DisableDepthWrite",
+        "DisableDepthTest" //doesn't work
+      ],
+
+      "+samplerStates": [
+        {
+          "samplerIndex": 0,
+          "textureFilter": "Bilinear" //doesn't work
+        }
+      ]
+    }
+  }
+}

@@ -59,7 +59,7 @@
             "setEntity":{
                 "sequence": [
                     {
-                        "condition": "q.block_property('gaiadimension:entity') == false",
+                        "condition": "q.block_state('gaiadimension:entity') == false",
                         "set_block_property": {
                             "gaiadimension:entity": true
                         },
@@ -83,7 +83,7 @@
         },
         "permutations": [
             {
-                "condition": "q.block_property('gaiadimension:lit') == true",
+                "condition": "q.block_state('gaiadimension:lit') == true",
                 "components": {
                     "minecraft:material_instances": {
                         "up": {
@@ -106,25 +106,25 @@
                 }
             },
             {
-                "condition": "q.block_property('gaiadimension:direction') == 0",
+                "condition": "q.block_state('gaiadimension:direction') == 0",
                 "components": {
                     "minecraft:rotation": [0, 0, 0]
                 }
             },
             {
-                "condition": "q.block_property('gaiadimension:direction') == 1",
+                "condition": "q.block_state('gaiadimension:direction') == 1",
                 "components": {
                     "minecraft:rotation": [0, 180, 0]
                 }
             },
             {
-                "condition": "q.block_property('gaiadimension:direction') == 2",
+                "condition": "q.block_state('gaiadimension:direction') == 2",
                 "components": {
                     "minecraft:rotation": [0, 90, 0]
                 }
             },
             {
-                "condition": "q.block_property('gaiadimension:direction') == 3",
+                "condition": "q.block_state('gaiadimension:direction') == 3",
                 "components": {
                     "minecraft:rotation": [0, 270, 0]
                 }

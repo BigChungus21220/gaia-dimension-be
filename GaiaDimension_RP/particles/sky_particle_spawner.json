@@ -56,15 +56,16 @@
       "minecraft:emitter_rate_manual": {
         "max_particles": 1
       },
-      "minecraft:emitter_lifetime_expression": {
-        "activation_expression": 1,
-        "expiration_expression": 1
+      "minecraft:emitter_lifetime_once": {
+        "active_time": 0.001
       },
       "minecraft:particle_lifetime_expression": {
         "expiration_expression": 1
       },
       "minecraft:particle_lifetime_events": {
-        "expiration_event": ["x+", "x-", "y+", "y-", "z+", "z-"]
+        "timeline": {
+          "0.0": ["x+", "x-", "y+", "y-", "z+", "z-"]
+        }
       }
     }
   }
