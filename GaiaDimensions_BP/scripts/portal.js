@@ -90,10 +90,10 @@ async function backToDimension(entity,coord){
 }
 
 
-system.runInterval(async () => {
+system.runInterval(() => {
     for (const dimension of dimensions) {
         for (const entity of dimension.getEntities()) {
-            const coord = `x:${locMap?.get(entity.nameTag)?.x} y:${Math.round(entity.location.y)} z:${locMap?.get(entity.nameTag)?.z}`
+             const coord = `x:${locMap?.get(entity.nameTag)?.x} y:${Math.round(entity.location.y)} z:${locMap?.get(entity.nameTag)?.z}`
             const lastInPortal = entity.hasTag("inPortal");
             const inPortal = entity.isInPortal() || (dimension.getBlock(new Vector(entity.location.x, 0, entity.location.z)) === undefined && lastInPortal);
             const currentLocation = entity.location;
@@ -102,27 +102,7 @@ system.runInterval(async () => {
             if (entity.typeId === 'minecraft:player') {  
                 const isPlayerMoving = isMoving(entity);
                 if (isPlayerMoving && gaia.isInGaia(entity)) {
-                    const prevLocation = prevLocationMap?.get(entity.nameTag);
-                        const deltaX = Math.floor(currentLocation.x - prevLocation?.x);
-                        const deltaZ = Math.floor(currentLocation.z - prevLocation?.z);
-
-                        let loc = entity.location;
-                        const calVector = new Vector(Math.floor(((loc.x - 200000) / 1000) + deltaX), loc.y, Math.floor(((loc.z - 200000) / 1000) + deltaZ));
-
-                        if (!locMap.has(entity.nameTag)) {
-                            locMap.set(entity.nameTag, calVector);
-                            delete loc.x;
-                            delete loc.y;
-                            delete loc.z;
-                        }
-                        if (deltaX > 0 || deltaZ > 0) {
-                            locMap.set(entity.nameTag, new Vector(locMap?.get(entity.nameTag)?.x + 1, locMap?.get(entity.nameTag)?.y, locMap?.get(entity.nameTag)?.z + 1)); // Add 1 to the movement when moving forward
-                        } else if (deltaX < 0 || deltaZ < 0) {
-                            locMap.set(entity.nameTag, new Vector(locMap?.get(entity.nameTag)?.x - 1, locMap?.get(entity.nameTag)?.y, locMap?.get(entity.nameTag)?.z - 1)); // Subtract 1 from the movement when moving backward
-                        }
-                        await gaia.isInGaia(entity)
- gaia.isInGaia(entity) ? entity?.onScreenDisplay?.setActionBar(coord): undefined;
-                        
+                    calCoords(entity,currentLocation)
                     }
                 prevLocationMap.set(entity.nameTag, currentLocation);
             }
@@ -140,3 +120,27 @@ return {
     z: parseInt(coord.split(':')[3])
 };
 }
+function calCoords(entity, currentLocation) {
+    const prevLocation = prevLocationMap?.get(entity.nameTag);
+    const deltaX = Math.round(currentLocation.x - (prevLocation?.x || 0));
+    const deltaZ = Math.round(currentLocation.z - (prevLocation?.z || 0));
+
+    let loc = entity.location;
+    const calVector = new Vector(Math.round(((loc.x - 200000) / 1000) + deltaX), loc.y, Math.round(((loc.z - 200000) / 1000) + deltaZ));
+
+    if (!locMap.has(entity.nameTag)) {
+        locMap.set(entity.nameTag, calVector);
+        delete loc.x;
+        delete loc.y;
+        delete loc.z;
+    }
+    if (deltaX > 0 || deltaZ > 0) {
+        locMap.set(entity.nameTag, new Vector((locMap?.get(entity.nameTag)?.x || 0) + 1, locMap?.get(entity.nameTag)?.y, locMap?.get(entity.nameTag)?.z + 1)); // Add 1 to the movement when moving forward
+    } else if (deltaX < 0 || deltaZ < 0) {
+        locMap.set(entity.nameTag, new Vector((locMap?.get(entity.nameTag)?.x || 0) - 1, locMap?.get(entity.nameTag)?.y, locMap?.get(entity.nameTag)?.z - 1)); // Subtract 1 from the movement when moving backward
+    }
+    const coord = `x:${MathRound(calVector.x)} y:${Math.round(entity.location.y)} z:${MathRound(calVector.z)}`;
+    gaia.isInGaia(entity) ? entity?.onScreenDisplay?.setActionBar(coord ?? "Loading Coords...") : undefined;
+}
+
+

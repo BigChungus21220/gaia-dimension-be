@@ -34,7 +34,7 @@ function score(entity, mode = "add", objectiveId, value) {
           objective.setScore(entity, value);
           break;
         case 'remove':
-          objective.addScore(entity, objective.getScore(entity) - value);
+          objective.setScore(entity, objective.getScore(entity) - value);
           break;
         default:
           console.error("Invalid mode in score:", mode);
@@ -47,7 +47,7 @@ function score(entity, mode = "add", objectiveId, value) {
 }
 
 function percentage(partialValue, totalValue) {
-  return (100 * partialValue) / totalValue;
+  return Math.round(((100 * partialValue) / totalValue));
 }
 
 function barStage(itemId, actualValue, valueMax, inv, value, slot) {
@@ -57,12 +57,13 @@ function barStage(itemId, actualValue, valueMax, inv, value, slot) {
     } else {
       const valueCurrent = Math.floor(percentage(actualValue, valueMax));
       for (let i = 0; i <= value; i++) {
-        if (actualValue > 0 && valueCurrent == Math.floor(percentage(i, value))) {
+        if (actualValue > 0 && Math.abs(valueCurrent - Math.floor(percentage(i, value))) < 0.0001) {
           inv.setItem(slot, new MC.ItemStack(`${itemId}_${i}`));
         }
       }
     }
   } catch (error) {
+
   }
 }
 
