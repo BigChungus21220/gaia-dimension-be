@@ -1,4 +1,4 @@
-export const nativeRecipeData = {
+export const nativeRecipes = {
   "gaia:moonstone": {
     output: "gaia:albite",
     byproduct: "gaia:black_residue"

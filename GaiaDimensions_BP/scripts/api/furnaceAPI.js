@@ -161,7 +161,6 @@ function furnaceReciper(blockOrigin, entity, data = { prefix: "forge", cookTickM
     const cookTime = getObjective("cookTime")?.getScore(entity);
     const burnTime = getObjective("burnTime")?.getScore(entity);
     const burnTimeMax = getObjective("burnTimeMax")?.getScore(entity);
-
     barStage(data.flameId, burnTime, burnTimeMax, inventory, 13, 3);
     barStage(data.arrowId, cookTime, data.cookTickMax, inventory, 16, 4);
 
@@ -192,27 +191,27 @@ function furnaceReciper(blockOrigin, entity, data = { prefix: "forge", cookTickM
         if (burnTime === 0) {
           if (slots[1].typeId in nativeFuels) {
             if (nativeFuels[slots[1].typeId]?.return === undefined) {
+              score(entity, "set", "burnTimeMax", nativeFuels[slots[1].typeId]);
               score(entity, "set", "burnTime", burnTimeMax);
               MC.system.runTimeout(() => {
                 itemManipulate(inventory, 1, slots[1], "remove", 1);
               }, 1);
-              score(entity, "set", "burnTimeMax", nativeFuels[slots[1].typeId]);
             } else {
+              score(entity, "set", "burnTimeMax", nativeFuels[slots[1].typeId]?.burnTime);
               score(entity, "set", "burnTime", burnTimeMax);
               inventory.setItem(1, new MC.ItemStack(nativeFuels[slots[1].typeId]?.return));
-              score(entity, "set", "burnTimeMax", nativeFuels[slots[1].typeId]?.burnTime);
             }
           } else if (tag in nativeFuels) {
             if (nativeFuels[tag]?.return === undefined) {
+              score(entity, "set", "burnTimeMax", nativeFuels[tag]);
               score(entity, "set", "burnTime", burnTimeMax);
               MC.system.runTimeout(() => {
                 itemManipulate(inventory, 1, slots[1], "remove", 1);
               }, 1);
-              score(entity, "set", "burnTimeMax", nativeFuels[tag]);
             } else {
+              score(entity, "set", "burnTimeMax", nativeFuels[tag]?.burnTime);
               score(entity, "set", "burnTime", burnTimeMax);
               inventory.setItem(1, new MC.ItemStack(nativeFuels[tag]?.return));
-              score(entity, "set", "burnTimeMax", nativeFuels[tag]?.burnTime);
             }
           }
         }
@@ -254,3 +253,5 @@ function furnaceReciper(blockOrigin, entity, data = { prefix: "forge", cookTickM
     }
   } catch (error) {}
 }
+
+

@@ -37,9 +37,6 @@
                 }
             },
             "minecraft:unit_cube": {},
-            "minecraft:on_placed": {
-                "event": "setEntity"
-            },
             "minecraft:on_player_placing": {
                 "event": "setDirection"
             },
@@ -56,20 +53,6 @@
             }
         },
         "events": {
-            "setEntity":{
-                "sequence": [
-                    {
-                        "condition": "q.block_state('gaiadimension:entity') == false",
-                        "set_block_property": {
-                            "gaiadimension:entity": true
-                        },
-                        "run_command": {
-                            "command": ["summon gaiadimension:furnace_entity gaia_furnace ~~~", "execute as @e[r=0] at @s run scriptevent forge:furnaceProperties"]
-                        }
-                    }
-                ]
-              
-            },
             "runFurnace": {
                 "run_command": {
                     "command": ["execute as @e[r=0] at @s run scriptevent forge:furnaceLoad gaiaf 200 forge:flame forge:arrow"]
