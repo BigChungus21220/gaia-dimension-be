@@ -81,7 +81,7 @@
 		},
 		"minecraft:material_instances": {
 		  "*": {
-			"texture": "crusted_amethyst_bricks",
+			"texture": "crusted_amethyst_brick",
 			"render_method": "opaque"
 		  }
 		}

@@ -546,20 +546,20 @@
 "cracked_jet_bricks": {
   "textures": "textures/blocks/cracked_jet_bricks"
 },
-"crusted_amethyst_bricks": {
-  "textures": "textures/blocks/crusted_amethyst_bricks"
+"crusted_amethyst_brick": {
+  "textures": "textures/blocks/crusted_amethyst_brick"
 },
-"crusted_copal_bricks": {
-  "textures": "textures/blocks/crusted_copal_bricks"
+"crusted_copal_brick": {
+  "textures": "textures/blocks/crusted_copal_brick"
 },
 "crusted_gaia_stone_bricks": {
   "textures": "textures/blocks/crusted_gaia_stone_bricks"
 },
-"crusted_jade_bricks": {
-  "textures": "textures/blocks/crusted_jade_bricks"
+"crusted_jade_brick": {
+  "textures": "textures/blocks/crusted_jade_brick"
 },
-"crusted_jet_bricks": {
-  "textures": "textures/blocks/crusted_jet_bricks"
+"crusted_jet_brick": {
+  "textures": "textures/blocks/crusted_jet_brick"
 },
 "diopside_block": {
   "textures": "textures/blocks/diopside_block"

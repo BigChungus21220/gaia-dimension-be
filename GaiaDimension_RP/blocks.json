@@ -956,8 +956,8 @@
 "gaia:crusted_copal_brick_stair": {
   "sound": "stone"
 },
-"gaia:crusted_jade_bricks": {
-  "textures": "crusted_jade_bricks",
+"gaia:crusted_jade_brick": {
+  "textures": "crusted_jade_brick",
   "sound": "normal"
 },
 "gaia:cracked_gaia_stone_brick_slab": {
@@ -977,20 +977,20 @@
   "sound": "stone"
 },
 "gaia:crusted_jet_brick": {
-  "textures": "crusted_jet_bricks",
+  "textures": "crusted_jet_brick",
   "sound": "normal"
 },
-"gaia:crusted_copal_bricks": {
-  "textures": "crusted_copal_bricks",
+"gaia:crusted_copal_brick": {
+  "textures": "crusted_copal_brick",
   "sound": "normal"
 },
-"gaia:crusted_amethyst_bricks": {
-  "textures": "crusted_amethyst_bricks",
+"gaia:crusted_amethyst_brick": {
+  "textures": "crusted_amethyst_brick",
   "sound": "normal"
 },
 "gaia:crusted_copal_brick_slab": {
   "sound": "stone",
-  "textures": "crusted_copal_bricks"
+  "textures": "crusted_copal_brick"
 },
 "gaia:crusted_amethyst_brick_stair": {
   "sound": "stone"
@@ -1013,7 +1013,7 @@
 "gaia:gaia_brick_slab": {
   "sound": "stone"
 },
-"gaia:crusted_gaia_bricks": {
+"gaia:crusted_gaia_brick": {
   "textures": "crusted_gaia_stone_bricks",
   "sound": "normal"
 },

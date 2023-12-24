@@ -2,7 +2,7 @@
 	"format_version": "1.20.10",
 	"minecraft:block": {
 		"description": {
-			"identifier": "gaia:crusted_jet_bricks",
+			"identifier": "gaia:crusted_jet_brick",
 			"menu_category": {
 				"category": "nature",
 				"group": "itemGroup.name.gaia_brick"
@@ -25,14 +25,14 @@
 			},
       "minecraft:material_instances": {
         "*": {
-          "texture": "crusted_jet_bricks",
+          "texture": "crusted_jet_brick",
           "render_method": "opaque",
 			"minecraft:map_color": "#ffffff"
 		},
 		"events": {
 			"destroy": {
 				"spawn_loot": {
-					"table": "loot_tables/blocks/gaia/crusted_jet_bricks.json"
+					"table": "loot_tables/blocks/gaia/crusted_jet_brick.json"
 				}
 			}
 		}

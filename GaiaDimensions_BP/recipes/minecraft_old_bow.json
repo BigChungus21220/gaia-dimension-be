@@ -2,7 +2,7 @@
   "format_version": "1.18.0",
   "minecraft:recipe_shaped": {
     "description": {
-      "identifier": "old_bow:minecraft:old_bow"
+      "identifier": "gaia:old_bow"
     },
     "tags": [
       "crafting_table"

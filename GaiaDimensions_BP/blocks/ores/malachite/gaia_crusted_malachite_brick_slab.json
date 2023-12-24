@@ -81,7 +81,7 @@
 		},
 		"minecraft:material_instances": {
 		  "*": {
-			"texture": "crusted_jet_bricks",
+			"texture": "crusted_jet_brick",
 			"render_method": "opaque"
 		  }
 		}

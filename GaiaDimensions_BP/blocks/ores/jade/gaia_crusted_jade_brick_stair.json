@@ -63,7 +63,7 @@
 			},
 			"minecraft:material_instances": {
 				"*": {
-					"texture": "crusted_jade_bricks",
+					"texture": "crusted_jade_brick",
 					"render_method": "opaque"
 				}
 			},

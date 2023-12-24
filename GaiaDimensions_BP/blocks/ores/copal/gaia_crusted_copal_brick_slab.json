@@ -81,7 +81,7 @@
 		},
 		"minecraft:material_instances": {
 		  "*": {
-			"texture": "crusted_copal_bricks",
+			"texture": "crusted_copal_brick",
 			"render_method": "opaque"
 		  }
 		}
