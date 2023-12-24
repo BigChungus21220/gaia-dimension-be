@@ -26,7 +26,7 @@ world.afterEvents.itemUseOn.subscribe(async (event) => {
             }
         }
     } catch (error) {
-        console.error('Error in itemUseOn event:', error);
+
     }
 });
 

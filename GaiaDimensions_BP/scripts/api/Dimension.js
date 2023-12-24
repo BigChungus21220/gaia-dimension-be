@@ -98,6 +98,7 @@ function generateId() {
 
 /**
  * Represents an event that occurs before a furnace is activated.
+ * @deprecated Have not added in event trigger, so this will not work
  */
 class FurnaceActivateBeforeEvent {
     /**
@@ -213,6 +214,7 @@ class FurnaceActivateBeforeEventSignal {
 
 /**
  * Represents an event that occurs after a furnace is activated.
+ * @deprecated Have not added in event trigger, so this will not work
  */
 class FurnaceActivateAfterEvent {
     /**
@@ -1042,7 +1044,7 @@ class GaiaAfterEvents {
         this.fogChange = new FogChangeAfterEventSignal();
         this.portalLink = new PortalLinkAfterEventSignal();
         /**
-         * Haven't Added in event trigger so currently it does not work
+         * Have not added in event trigger so currently it does not work
          * Do NOT use
          * @deprecated
          */
@@ -1058,6 +1060,7 @@ class GaiaBeforeEvents {
         this.portalLink = new PortalLinkBeforeEventSignal();
         /**
          * Not Finished
+         * @deprecated Have not added in event trigger, so this will not work
          */
         this.furnaceActivate = new FurnaceActivateBeforeEventSignal();
     }
@@ -1101,7 +1104,7 @@ class Fog {
         player.runCommandAsync("fog @s push gaia:" + biome + "_fog " + biome)
     }
 
-  async  updateFog(player){
+  async updateFog(player){
         this.clearFogs(player)
         let biome = this.getBiome(player.location, player.dimension);
         this.triggerEvent('fogChange',{newFog:biome+'_fog'+biome,player:player,cancel:false},'BeforeEvent')
@@ -1195,7 +1198,7 @@ listenFor(eventName, responseType, eventType) {
 
 /**
  * @author Redux
- * @description Class that manages Portals and Portal Linking.
+ * @description Class that manages Portal structures and Portal Linking.
  */
 class Portal extends Fog {
     /**
@@ -1348,11 +1351,12 @@ isEntityInLinked(from, entity) {
     return link || undefined;
 }
 
-lightPortal (corner, dimension, x_oriented){
+async lightPortal (corner, dimension, x_oriented){
     for (let x = 0; x < 4; x++){
         for (let y = 0; y < 5; y++){
             let blockpos = Vector.add(corner, new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0));
             let is_edge = x == 0 || y == 0 || x == 3 || y == 4
+            if (!dimension.getBlock(blockpos).isValid()) await dimension.getBlock(blockpos).isValid()
             if (is_edge){
                 dimension.getBlock(blockpos).setPermutation(BlockPermutation.resolve("gaia:keystone_block"))
             } else {
@@ -1434,6 +1438,7 @@ isUnlit(corner, dimension, x_oriented){
 /**
  * Checks whether a portal can be lit and if so lights the portal
  * @param {Block} block 
+ * @returns {boolean} Whether lighting this portal was a success or not
  */
 canLight(block){
     let position = block.location
@@ -1528,7 +1533,7 @@ export class Gaia extends Portal {
         this.beforeEvents = new GaiaBeforeEvents();
     }
  /**
-  * Get the Entities within the Gaia Dimension
+  * Get the entities within the Gaia Dimension
   * @readonly
   * @returns {Entity[]}
   */

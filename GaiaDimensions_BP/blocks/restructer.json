@@ -37,34 +37,32 @@
         }
       },
       "minecraft:unit_cube": {},
-      "minecraft:on_placed": {
-        "event": "setEntity"
-      },
       "minecraft:on_player_placing": {
         "event": "setDirection"
+      },
+      "minecraft:queued_ticking": {
+          "looping": true,
+          "on_tick": {
+              "event": "runRestructer"
+          },
+          "interval_range": [
+              1,
+              1
+          ]
       }
+
     },
     "events": {
-      "setEntity": {
-        "sequence": [
-          {
-            "condition": "q.block_property('gaiadimension:entity') == false",
-            "set_block_property": {
-              "gaiadimension:entity": true
-            },
-            "run_command": {
-              "command": [
-                "summon gaia:restructer_container restructer_ui ~~~"
-              ]
-            }
-          }
-        ]
-      },
       "setDirection": {
         "set_block_property": {
           "gaiadimension:direction": "(q.cardinal_facing_2d-2)"
         }
-      }
+      },
+      "runRestructer": {
+        "run_command": {
+            "command": ["execute as @e[r=0] at @s run scriptevent forge:restructurerLoad gaiaf 200 forge:restructurer_arrow_down"]
+        }
+    }
     },
     "permutations": [
       {
