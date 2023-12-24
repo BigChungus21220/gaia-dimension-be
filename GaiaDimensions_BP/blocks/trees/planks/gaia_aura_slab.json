@@ -2,7 +2,7 @@
 	"format_version": "1.20.10",
 	"minecraft:block": {
 	  "description": {
-		"identifier": "gaia:aura_planks",
+		"identifier": "gaia:aura_slab",
 		"menu_category": {
 		  "category": "construction",
 		  "group": "itemGroup.name.slab"

@@ -739,14 +739,11 @@
 "leucite_block":{
   "textures": "textures/blocks/leucite_block"
 },
-"block_of_aura":{
-  "textures":"textures/blocks/aura_block"
-},
 "coarse_rock": {
   "textures": "textures/blocks/coarse_rock"
 },
-"corrupted_planks": {
-  "texture":"textures/blocks/corrupted_planks"
+"goldstone_planks": {
+  "texture":"textures/blocks/goldstone_planks"
 },
 "purple_agate_planks": {
   "textures": "textures/blocks/purple_agate_planks"

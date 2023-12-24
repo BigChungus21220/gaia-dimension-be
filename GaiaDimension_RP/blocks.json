@@ -713,7 +713,7 @@
 "gaia:purple_agate_slab": {
   "sound": "normal"
 },
-"gaia:corrupted_planks": {
+"gaia:goldstone_planks": {
   "sound": "normal"
 },
 "gaia:corrupted_slab": {
@@ -1105,7 +1105,7 @@
 "gaia:cracked_malachite_brick_stair": {
   "sound": "stone"
 },
-"gaia:brick1s": {
+"gaia:brick1": {
   "textures": "malachite_chisel_bricks",
   "sound": "normal"
 },

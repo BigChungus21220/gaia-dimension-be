@@ -81,7 +81,7 @@
 		},
 		"minecraft:material_instances": {
 		  "*": {
-			"texture": "corrupted_planks",
+			"texture": "goldstone_planks",
 			"render_method": "opaque"
 		  }
 		}

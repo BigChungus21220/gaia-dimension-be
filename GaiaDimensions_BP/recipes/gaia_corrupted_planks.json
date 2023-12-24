@@ -2,7 +2,7 @@
   "format_version": "1.12",
   "minecraft:recipe_shaped": {
     "description": {
-      "identifier": "corrupted_planks_93e1ec18"
+      "identifier": "goldstone_planks_93e1ec18"
     },
     "tags": [
       "crafting_table"
@@ -17,7 +17,7 @@
       }
     },
     "result": {
-      "item": "gaia:corrupted_planks",
+      "item": "gaia:goldstone_planks",
       "count": 4
     }
   }
