@@ -798,7 +798,7 @@
     "large_crate": {
       "textures": "textures/blocks/mega_storage_crate"
     },
-    "gaia_stone_furnace_front": {
+    "purifier_front": {
       "textures": "textures/blocks/purifier_front"
     },
     "purifier_front_lit": {
