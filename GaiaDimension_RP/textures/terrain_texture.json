@@ -742,8 +742,8 @@
 "coarse_rock": {
   "textures": "textures/blocks/coarse_rock"
 },
-"goldstone_planks": {
-  "texture":"textures/blocks/goldstone_planks"
+"corrupted_tiles": {
+  "texture":"textures/blocks/corrupted_tiles"
 },
 "purple_agate_planks": {
   "textures": "textures/blocks/purple_agate_planks"

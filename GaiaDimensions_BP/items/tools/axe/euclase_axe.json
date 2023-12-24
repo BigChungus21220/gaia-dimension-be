@@ -283,7 +283,7 @@
             }
           },
           {
-            "block": "gaia:goldstone_planks",
+            "block": "gaia:corrupted_tiles",
             "speed": 4,
             "on_dig": {
               "event": "reduce_durability"

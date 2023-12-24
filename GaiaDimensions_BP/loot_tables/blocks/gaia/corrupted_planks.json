@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:goldstone_planks",
+          "name": "gaia:corrupted_tiles",
           "functions": [
             {
               "function": "set_count",
