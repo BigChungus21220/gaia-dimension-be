@@ -1125,7 +1125,7 @@ class Fog {
  */
     isInGaia(player){
         let playerLoc = player.location
-        return player.dimension.id == "minecraft:the_end" && playerLoc.x <= 400000 && playerLoc.z <= 400000 && playerLoc.x >= 200000 && playerLoc.z >= 200000 
+        return player.dimension.id == "minecraft:the_end" && playerLoc.x <= 400000 && playerLoc.z <= 400000 && playerLoc.x >= 100000 && playerLoc.z >= 100000 
     }
 /**
  * Returns the name of a biome in Gaia based of a location
@@ -1479,17 +1479,17 @@ canLight(block){
 
 convertCoords(location, fromDimension, toDimension) {
     const scaleFactor = 1 / 4; // 1 block in 'gaia' is 4 blocks in 'overworld'
-    const xOffset = 300000; // Offset for the x-axis
-    const zOffset = 300000; // Offset for the z-axis
+    const xOffset = 175000; // Offset for the x-axis
+    const zOffset = 175000; // Offset for the z-axis
 
     switch (fromDimension) {
         case 'minecraft:overworld':
             switch (toDimension) {
                 case 'gaia:gaia':
                     return {
-                        x: Math.floor((location.x + xOffset) * scaleFactor+200000),
+                        x: Math.floor((location.x + xOffset) * scaleFactor+100000),
                         y: location.y,
-                        z: Math.floor((location.z + zOffset) * scaleFactor+200000)
+                        z: Math.floor((location.z + zOffset) * scaleFactor+100000)
                     };
                 default:
                     throw new Error(`Unsupported conversion to ${toDimension}`);
@@ -1539,7 +1539,7 @@ export class Gaia extends Portal {
   */
     getEntities(){
         try {
-    return world.getDimension('the end').getEntities({location:{x:200000,y:0,z:200000},farthest:400000,closest:200000})
+    return world.getDimension('the end').getEntities({location:{x:100000,y:0,z:100000},farthest:400000,closest:100000})
 } catch (e) { }
     }
 /**
@@ -1550,7 +1550,7 @@ export class Gaia extends Portal {
  */
     isInGaia(player){
         let playerLoc = player.location
-        const inGaia = player.dimension.id == "minecraft:the_end" && playerLoc.x <= 400000 && playerLoc.z <= 400000 && playerLoc.x >= 200000 && playerLoc.z >= 200000 
+        const inGaia = player.dimension.id == "minecraft:the_end" && playerLoc.x <= 400000 && playerLoc.z <= 400000 && playerLoc.x >= 100000 && playerLoc.z >= 100000 
        if (inGaia) {
         const currentBiome = this.getBiome(playerLoc)
         const previousBiome = this?.getLastBiome(player)

@@ -126,7 +126,7 @@ function calCoords(entity, currentLocation) {
     const deltaZ = Math.round(currentLocation.z - (prevLocation?.z || 0));
 
     let loc = entity.location;
-    const calVector = new Vector(Math.round(((loc.x - 200000) / 1000) + deltaX), loc.y, Math.round(((loc.z - 200000) / 1000) + deltaZ));
+    const calVector = new Vector(Math.round(((loc.x - 100000) / 1000) + deltaX), loc.y, Math.round(((loc.z - 100000) / 1000) + deltaZ));
 
     if (!locMap.has(entity.nameTag)) {
         locMap.set(entity.nameTag, calVector);
