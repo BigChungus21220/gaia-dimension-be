@@ -2,7 +2,7 @@
 	"format_version": "1.20",
 	"minecraft:block": {
 		"description": {
-			"identifier": "gaia:blue_agate_stair",
+			"identifier": "gaia:burning_stair",
 			"menu_category": {
 				"category": "construction",
 				"group": "itemGroup.name.stairs"
