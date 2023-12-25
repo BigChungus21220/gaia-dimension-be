@@ -734,6 +734,77 @@
 		  },
 		  "flame_13": {
 			  "textures": "textures/forge_gui/flame/flame_13"
-		  }
-		  }
-	  }
+			},
+			"restructurer_arrow_0": {
+				"textures": "textures/forge_gui/restructurer_arrow/arrow_0"
+			  },
+			  "restructurer_arrow_1": {
+				  "textures": "textures/forge_gui/restructurer_arrow/arrow_1"
+			  },
+			  "restructurer_arrow_2": {
+				  "textures": "textures/forge_gui/restructurer_arrow/arrow_2"
+			  },
+			  "restructurer_arrow_3": {
+				  "textures": "textures/forge_gui/restructurer_arrow/arrow_3"
+			  },
+			  "restructurer_arrow_4": {
+				  "textures": "textures/forge_gui/restructurer_arrow/arrow_4"
+			  },
+			  "restructurer_arrow_5": {
+				  "textures": "textures/forge_gui/restructurer_arrow/arrow_5"
+			  },
+			  "restructurer_arrow_6": {
+				  "textures": "textures/forge_gui/restructurer_arrow/arrow_6"
+			  },
+			  "restructurer_arrow_7": {
+				  "textures": "textures/forge_gui/restructurer_arrow/arrow_7"
+			  },
+			  "restructurer_arrow_8": {
+				  "textures": "textures/forge_gui/restructurer_arrow/arrow_8"
+			  },
+			  "restructurer_arrow_9": {
+				  "textures": "textures/forge_gui/restructurer_arrow/arrow_9"
+			  },
+			  "restructurer_arrow_10": {
+				  "textures": "textures/forge_gui/restructurer_arrow/arrow_10"
+			  },
+			  "restructurer_arrow_11": {
+				  "textures": "textures/forge_gui/restructurer_arrow/arrow_11"
+			  },
+			  "restructurer_arrow_12": {
+				  "textures": "textures/forge_gui/restructurer_arrow/arrow_12"
+			  },
+			  "restructurer_arrow_13": {
+				  "textures": "textures/forge_gui/restructurer_arrow/arrow_13"
+			  },
+			  "restructurer_arrow_14": {
+				  "textures": "textures/forge_gui/restructurer_arrow/arrow_14"
+			  },
+			  "restructurer_arrow_15": {
+				  "textures": "textures/forge_gui/restructurer_arrow/arrow_15"
+			  },
+			  "restructurer_arrow_16": {
+				  "textures": "textures/forge_gui/restructurer_arrow/arrow_16"
+			  },
+			"restructurer_arrow_17": {
+				"textures": "textures/forge_gui/restructurer_arrow/arrow_17"
+			},
+			"restructurer_arrow_18": {
+				"textures": "textures/forge_gui/restructurer_arrow/arrow_18"
+			},
+			"restructurer_arrow_19": {
+				"textures": "textures/forge_gui/restructurer_arrow/arrow_19"
+			},
+			"restructurer_arrow_20": {
+				"textures": "textures/forge_gui/restructurer_arrow/arrow_20"
+			},
+			"restructurer_arrow_21": {
+				"textures": "textures/forge_gui/restructurer_arrow/arrow_21"
+			},
+			"restructurer_arrow_22": {
+				"textures": "textures/forge_gui/restructurer_arrow/arrow_22"
+			},
+			"restructurer_arrow_23": {
+				"textures": "textures/forge_gui/restructurer_arrow/arrow_23"
+			}
+		  }}

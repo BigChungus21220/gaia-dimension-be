@@ -8,7 +8,7 @@
                 },
                 "components": {
                     "minecraft:icon": {
-                        "texture": "restructurer_arrow_down_5"
+                        "texture": "restructurer_arrow_5"
                     },
                     "minecraft:creative_category": {
                         "parent": "itemGroup.creativity"

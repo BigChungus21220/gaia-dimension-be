@@ -3,12 +3,12 @@
             "format_version": "1.19.10",
             "minecraft:item": {
                 "description": {
-                    "identifier": "forge:restructurer_arrow_2",
+                    "identifier": "forge:restructurer_arrow_18",
                     "category": "commands"
                 },
                 "components": {
                     "minecraft:icon": {
-                        "texture": "restructurer_arrow_2"
+                        "texture": "restructurer_arrow_18"
                     },
                     "minecraft:creative_category": {
                         "parent": "itemGroup.creativity"
