@@ -818,7 +818,49 @@
     },
     "restructer_top": {
       "textures": "textures/blocks/restructer_side"
-    }
-  }
-}
-
+  },
+  "gaia_blue_agate_sapling": {
+    "textures": [
+      "textures/blocks/gaia_blue_agate_sapling"
+    ]
+  },
+  "burning_sapling": {
+    "textures": [
+      "textures/blocks/gaia/burning_sapling"
+    ]
+  },
+  "burnt_sapling": {
+    "textures": [
+      "textures/blocks/gaia/burnt_sapling"
+    ]
+  },
+  "aura_sapling": {
+    "textures": [
+      "textures/blocks/gaia/aura_sapling"
+    ]
+  },
+  "green_agate_sapling": {
+    "textures": [
+      "textures/blocks/gaia/green_agate_sapling"
+    ]
+  },
+  "corrupted_sapling": {
+    "textures": [
+      "textures/blocks/gaia/corrupted_sapling"
+    ]
+  },
+  "pink_agate_sapling": {
+    "textures": [
+      "textures/blocks/gaia/pink_agate_sapling"
+    ]
+  },
+  "fossilized_sapling": {
+    "textures": [
+      "textures/blocks/gaia/fossilized_sapling"
+    ]
+  },
+  "purple_agate_sapling": {
+    "textures": [
+      "textures/blocks/gaia/purple_agate_sapling"
+    ]
+  }}}

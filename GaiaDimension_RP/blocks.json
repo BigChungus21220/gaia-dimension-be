@@ -1183,4 +1183,40 @@
 "gaiadimension:mega_crate" : {
   "sound" : "normal",
   "textures" : "mega_storage_crate"
+},
+"gaia:blue_agate_sapling": {
+  "textures": "blue_agate_sapling",
+  "sound": "normal"
+},
+"gaia:burning_sapling": {
+  "textures": "burning_sapling",
+  "sound": "normal"
+},
+"gaia:burnt_sapling": {
+  "textures": "burnt_sapling",
+  "sound": "normal"
+},
+"gaia:aura_sapling": {
+  "textures": "aura_sapling",
+  "sound": "normal"
+},
+"gaia:corrupted_sapling": {
+  "textures": "corrupted_sapling",
+  "sound": "normal"
+},
+"gaia:green_agate_sapling": {
+  "textures": "green_agate_sapling",
+  "sound": "normal"
+},
+"gaia:pink_agate_sapling": {
+  "textures": "pink_agate_sapling",
+  "sound": "normal"
+},
+"gaia:fossilized_sapling": {
+  "textures": "fossilized_sapling",
+  "sound": "normal"
+},
+"gaia:purple_agate_sapling": {
+  "textures": "purple_agate_sapling",
+  "sound": "normal"
 }}

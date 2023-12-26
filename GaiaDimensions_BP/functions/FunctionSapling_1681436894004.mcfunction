@@ -1,0 +1,1 @@
+structure load burnt ~-2 ~ ~-2

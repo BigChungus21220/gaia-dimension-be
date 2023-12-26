@@ -1,0 +1,1 @@
+structure load aura ~-5 ~ ~-5

@@ -845,4 +845,31 @@
 			},
 			"restructurer_flame_12": {
 				"textures": "textures/forge_gui/restructurer_flame/flame_12"
-			}}}
+			},
+		"blue_agate_sapling": {
+		  "textures": "textures/blocks/blue_agate_sapling"
+		},
+		"burning_sapling": {
+		  "textures": "textures/blocks/burning_sapling"
+		},
+		"burnt_sapling": {
+		  "textures": "textures/blocks/burnt_sapling"
+		},
+		"aura_sapling": {
+		  "textures": "textures/blocks/aura_sapling"
+		},
+		"green_agate_sapling": {
+		  "textures": "textures/blocks/green_agate_sapling"
+		},
+		"corrupted_sapling": {
+		  "textures": "textures/blocks/corrupted_sapling"
+		},
+		"fossilized_sapling": {
+		  "textures": "textures/blocks/fossilized_sapling"
+		},
+		"purple_agate_sapling": {
+		  "textures": "textures/blocks/purple_agate_sapling"
+		},
+		"pink_agate_sapling": {
+		  "textures": "textures/blocks/pink_agate_sapling"
+		}}}

@@ -1,0 +1,99 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaia:aura_sapling",
+      "properties": {}
+    },
+    "components": {
+      "minecraft:loot": "loot_tables/blocks/gaia/aura_sapling.json",
+      "minecraft:destroy_time": 0.0,
+      "minecraft:friction": 0.1,
+      "minecraft:map_color": "#FFFFFF",
+      "minecraft:explosion_resistance": 0.0,
+      "minecraft:block_light_absorption": 0,
+      "minecraft:block_light_emission": 0.0,
+      "minecraft:pick_collision": {
+        "origin": [
+          -6,
+          0,
+          -6
+        ],
+        "size": [
+          12,
+          12,
+          12
+        ]
+      },
+      "minecraft:geometry": "geometry.pa_sapling",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "gaia_aura_sapling",
+          "render_method": "alpha_test"
+        }
+      },
+      "minecraft:entity_collision": false,
+      "minecraft:on_interact": {
+        "event": "random:tick",
+        "target": "self",
+        "condition": "query.get_equipped_item_name == 'bone_meal'"
+      },
+      "minecraft:random_ticking": {
+        "on_tick": {
+          "event": "random:tick",
+          "target": "self"
+        }
+      },
+      "minecraft:on_player_destroyed": {
+        "event": "remove:block",
+        "target": "self"
+      },
+      "minecraft:on_step_on": {
+        "event": "step:on",
+        "target": "self"
+      },
+      "minecraft:on_step_off": {
+        "event": "step:off",
+        "target": "self"
+      },
+      "minecraft:on_placed": {
+        "event": "size:block",
+        "target": "self"
+      },
+      "minecraft:on_fall_on": {
+        "event": "fall:on",
+        "target": "self"
+      },
+      "minecraft:ticking": {
+        "looping": true,
+        "range": [
+          10,
+          10
+        ],
+        "on_tick": {
+          "event": "on_tick",
+          "target": "self"
+        }
+      },
+      "minecraft:creative_category": {
+        "category": "nature"
+      }
+    },
+    "permutations": [],
+    "events": {
+      "remove:block": {},
+      "size:block": {},
+      "step:on": {},
+      "step:off": {},
+      "on_tick": {},
+      "random:tick": {
+        "run_command": {
+          "command": [
+            "function FunctionSapling_1681354414995"
+          ]
+        }
+      },
+      "fall:on": {}
+    }
+  }
+}

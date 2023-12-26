@@ -744,3 +744,42 @@ item.gaia:pyrite_torch_item=Pyrite Torch
 
 item.gaia:glint_and_gold.name=Glint and Gold
 item.gaia:glint_and_gold_item=Glint and Gold
+
+##Plants
+tile.gaia:aura_sapling.name=Aura Sapling
+tile.gaia:aura_sapling=Aura Sapling
+tile.gaia:blue_agate_sapling.name=Blue Agate Sapling
+tile.gaia:blue_agate_sapling=Blue Agate Sapling
+tile.gaia:burning_sapling.name=Fire Agate Sapling
+tile.gaia:burning_sapling=Fire Agate Sapling
+tile.gaia:burnt_sapling.name=Burnt Sapling
+tile.gaia:burnt_sapling=Burnt Sapling
+item.gaia:aura_sapling_placer.name=Aura Sapling
+item.gaia:aura_sapling_placer=Aura Sapling
+item.gaia:burning_sapling_placer.name=Fire Agate Sapling
+item.gaia:burning_sapling_placer=Fire Agate Sapling
+item.gaia:burnt_sapling_placer.name=Burnt Sapling
+item.gaia:burnt_sapling_placer=Burnt Sapling
+item.gaia:blue_agate_sapling_placer.name=Blue Agate Sapling
+item.gaia:blue_agate_sapling_placer=Blue Agate Sapling
+tile.gaia:corrupted_sapling.name=Corrupted Sapling
+tile.gaia:corrupted_sapling=Corrupted Sapling
+tile.gaia:green_agate_sapling.name=Green Agate Sapling
+tile.gaia:green_agate_sapling=Green Agate Sapling
+tile.gaia:pink_agate_sapling.name=Pink Agate Sapling
+tile.gaia:pink_agate_sapling=Pink Agate Sapling
+tile.gaia:purple_agate_sapling.name=Purple Agate Sapling
+tile.gaia:purple_agate_sapling=Purple Agate Sapling
+tile.gaia:fossilized_sapling.name=Fossilized Sapling
+tile.gaia:fossilized_sapling=Fossilized Sapling
+item.gaia:green_agate_sapling_placer.name=Green Agate Sapling
+item.gaia:green_agate_sapling_placer=Green Agate Sapling
+item.gaia:fossilized_sapling_placer.name=Fossilized Sapling
+item.gaia:fossilized_sapling_placer=Fossilized Sapling
+item.gaia:pink_agate_sapling_placer.name=Pink Agate Sapling
+item.gaia:pink_agate_sapling_placer=Pink Agate Sapling
+item.gaia:purple_agate_sapling_placer.name=Purple Agate Sapling
+item.gaia:purple_agate_sapling_placer=Purple Agate Sapling
+item.gaia:corrupted_sapling_placer.name=Corrupted Sapling
+item.gaia:corrupted_sapling_placer=Corrupted Sapling
+
