@@ -806,5 +806,43 @@
 			},
 			"restructurer_arrow_23": {
 				"textures": "textures/forge_gui/restructurer_arrow/arrow_23"
-			}
-		  }}
+			},
+			"restructurer_flame_0": {
+				"textures": "textures/forge_gui/restructurer_flame/flame_0"
+			},
+			"restructurer_flame_1": {
+				"textures": "textures/forge_gui/restructurer_flame/flame_1"
+			},
+			"restructurer_flame_2": {
+				"textures": "textures/forge_gui/restructurer_flame/flame_2"
+			},
+			"restructurer_flame_3": {
+				"textures": "textures/forge_gui/restructurer_flame/flame_3"
+			},
+			"restructurer_flame_4": {
+				"textures": "textures/forge_gui/restructurer_flame/flame_4"
+			},
+			"restructurer_flame_5": {
+				"textures": "textures/forge_gui/restructurer_flame/flame_5"
+			},
+			"restructurer_flame_6": {
+				"textures": "textures/forge_gui/restructurer_flame/flame_6"
+			},
+			"restructurer_flame_7": {
+				"textures": "textures/forge_gui/restructurer_flame/flame_7"
+			},
+			"restructurer_flame_8": {
+				"textures": "textures/forge_gui/restructurer_flame/flame_8"
+			},
+			"restructurer_flame_9": {
+				"textures": "textures/forge_gui/restructurer_flame/flame_9"
+			},
+			"restructurer_flame_10": {
+				"textures": "textures/forge_gui/restructurer_flame/flame_10"
+			},
+			"restructurer_flame_11": {
+				"textures": "textures/forge_gui/restructurer_flame/flame_11"
+			},
+			"restructurer_flame_12": {
+				"textures": "textures/forge_gui/restructurer_flame/flame_12"
+			}}}
