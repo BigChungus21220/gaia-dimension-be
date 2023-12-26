@@ -13,5 +13,12 @@
       "uuid": "82a9793d-912a-4a1a-8414-6549d9bcd79c",
       "version": [1, 0, 0]
     }
-  ]
+  ],
+	"subpacks": [
+		{
+			"folder_name": "chungus_texture",
+			"name": "Fan Texture Revision",
+			"memory_tier": 0
+		}
+	]
 }
