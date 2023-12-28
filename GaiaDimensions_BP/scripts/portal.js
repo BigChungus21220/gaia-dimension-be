@@ -15,7 +15,7 @@ function getTopBlock(location, dimension) {
 }
 
 async function tpToGaia(entity) {
-    entity.setDynamicProperty('enteredByPortal',true)
+    entity.typeId === 'minecraft:player' ? entity.setDynamicProperty('enteredByPortal',true): undefined
     const save = entity.location
     const initialTeleport = gaia.convertCoords(new Vector(entity.location.x,entity.location.y,entity.location.z),'minecraft:overworld','gaia:gaia')
     entity.teleport(initialTeleport, {dimension: the_end})
@@ -98,7 +98,7 @@ system.runInterval(() => {
             const inPortal = entity.isInPortal() || (dimension.getBlock(new Vector(entity.location.x, 0, entity.location.z)) === undefined && lastInPortal);
             const currentLocation = entity.location;
             inPortal ? entity.addTag('inPortal') : entity.removeTag('inPortal');
-           if (gaia.isInGaia(entity) && !entity.getDynamicProperty('enteredByPortal')) entity.teleport({x:0,y:76,z:0});
+           if (gaia.isInGaia(entity)  && entity.typeId === 'minecraft:player' && !entity.getDynamicProperty('enteredByPortal') ) entity.teleport({x:0,y:76,z:0});
             if (entity.typeId === 'minecraft:player') {  
                 const isPlayerMoving = isMoving(entity);
                 if (isPlayerMoving && gaia.isInGaia(entity)) {

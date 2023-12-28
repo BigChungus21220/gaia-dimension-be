@@ -86,7 +86,7 @@ function itemManipulate(inv, slot, itemStack, amountMode = "set", amount = 0) {
 const calculateBurnTime = (shinyBurnTime,essenceBurnTime) =>{
   return Math.round((shinyBurnTime + essenceBurnTime) / 2)
 }
-function barStage(itemId, actualValue, valueMax, inv, value, slot,arrowSide) {
+function barStage(itemId, actualValue, valueMax, inv, value, slot) {
   try {
     if (actualValue === 0) {
       inv.setItem(slot, new MC.ItemStack(`${itemId}_0`));
@@ -94,7 +94,7 @@ function barStage(itemId, actualValue, valueMax, inv, value, slot,arrowSide) {
       const valueCurrent = Math.floor(percentage(actualValue, valueMax));
       for (let i = 0; i <= value; i++) {
         if (actualValue > 0 && Math.abs(valueCurrent - Math.floor(percentage(i, value))) < 0.0001) {
-          arrowSide ? inv.setItem(slot, new MC.ItemStack(`${itemId}_${arrowSide}_${i}`)) : inv.setItem(slot, new MC.ItemStack(`${itemId}_${i}`));
+        inv.setItem(slot, new MC.ItemStack(`${itemId}_${i}`));
         }
       }
     }
@@ -137,9 +137,9 @@ export function restructurerLoad() {
  * 
  * @param {MC.Block} blockOrigin 
  * @param {MC.Entity} entity 
- * @param {Object.< prefix: string, cookTickMax: number, arrowId: string >} data 
+ * @param {Object.< prefix: string, cookTickMax: number, arrowId: string,flameId:string >} data 
  */
-function restructurerReciper(blockOrigin, entity, data = { prefix: "forge", cookTickMax: 0, arrowId: "forge:restructuer_arrow_down"}) {
+function restructurerReciper(blockOrigin, entity, data = { prefix: "forge", cookTickMax: 0, arrowId: "forge:restructurer_arrow",flameId:"forge:restructurer_flame"}) {
   try {
     const inv = entity.getComponent('inventory').container
     const slots = [
@@ -152,9 +152,8 @@ function restructurerReciper(blockOrigin, entity, data = { prefix: "forge", cook
     const cookTime = getObjective("cookTime")?.getScore(entity);
     const burnTime = getObjective("burnTime")?.getScore(entity);
     const burnTimeMax = getObjective("burnTimeMax")?.getScore(entity);
-    barStage(data.arrowId, burnTime, burnTimeMax, inv, 7, 5,"left");
-    barStage(data.arrowId, burnTime, burnTimeMax, inv, 7, 6,"right");
-    barStage(data.arrowId, cookTime, data.cookTickMax, inv, 7, 7);
+    barStage(data.flameId, burnTime, burnTimeMax, inv, 7, 5);
+    barStage(data.arrowId, cookTime, data.cookTickMax, inv, 7, 6);
     let output, byproduct;
     if (slots[3].typeId in nativeRecipes){
       output = new MC.ItemStack(nativeRecipes[slots[3].typeId].output)
