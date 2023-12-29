@@ -105,7 +105,7 @@ function barStage(itemId, actualValue, valueMax, inv, value, slot) {
 
 
 export function restructurerLoad() {
-  //Command example: scriptevent forge:restructurerLoad <prefix:String> <cooktimemax:Int> <arrowId: String>
+  //Command example: scriptevent forge:restructurerLoad <prefix:String> <cooktimemax:Int> <arrowId: String> <flameId:String>
   MC.system.afterEvents.scriptEventReceive.subscribe(data => {
     try {
       const { sourceEntity: entity, message, id } = data;
@@ -118,10 +118,10 @@ export function restructurerLoad() {
           break;
 
         case 'forge:restructurerLoad':
-          const args = message.split(" ", 4);
+          const args = message.split(" ", 5);
           const cookTimeDefault = Number(args[1]);
           const block = entity.dimension.getBlock({ x: entity.location.x, y: entity.location.y, z: entity.location.z });
-          restructurerReciper(block, entity, { prefix: args[0], cookTickMax: cookTimeDefault, arrowId: args[2] });
+          restructurerReciper(block, entity, { prefix: args[0], cookTickMax: cookTimeDefault, arrowId: args[2], flameId:args[3] });
           break;
 
         default:

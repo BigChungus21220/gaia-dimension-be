@@ -60,7 +60,7 @@
       },
       "runRestructer": {
         "run_command": {
-            "command": ["execute as @e[r=0] at @s run scriptevent forge:restructurerLoad gaiaf 200 forge:restructurer_arrow_down"]
+            "command": ["execute as @e[r=0] at @s run scriptevent forge:restructurerLoad gaiaf 200 forge:restructurer_arrow forge:restructer_flame"]
         }
     }
     },
