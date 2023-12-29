@@ -152,14 +152,14 @@ function restructurerReciper(blockOrigin, entity, data = { prefix: "forge", cook
     const cookTime = getObjective("cookTime")?.getScore(entity);
     const burnTime = getObjective("burnTime")?.getScore(entity);
     const burnTimeMax = getObjective("burnTimeMax")?.getScore(entity);
-    barStage(data.flameId, burnTime, burnTimeMax, inv, 7, 5);
-    barStage(data.arrowId, cookTime, data.cookTickMax, inv, 7, 6);
+    barStage(data.flameId, burnTime, burnTimeMax, inv, 12, 5);
+    barStage(data.arrowId, cookTime, data.cookTickMax, inv, 23, 6);
     let output, byproduct;
-    if (slots[3].typeId in nativeRecipes){
-      output = new MC.ItemStack(nativeRecipes[slots[3].typeId].output)
-      byproduct = new MC.ItemStack(nativeRecipes[slots[3].typeId].byproduct)
+    if (slots[2].typeId in nativeRecipes){
+      output = new MC.ItemStack(nativeRecipes[slots[2].typeId].output)
+      byproduct = new MC.ItemStack(nativeRecipes[slots[2].typeId].byproduct)
     }
-if (((slots[3].typeId in nativeRecipes && slots[4] && slots[4].isStackableWith(output)) || (slots[3]?.typeId in nativeRecipes && slots[4] == undefined))){
+if (((slots[2].typeId in nativeRecipes && slots[3] && slots[3].isStackableWith(output)) || (slots[2]?.typeId in nativeRecipes && slots[3] == undefined))){
   if (slots[0] && slots[1]){
   if (burnTime <= 0){
   if (slots[0].typeId in nativeShinyFuel && slots[1].typeId in nativeEssenceFuel){
@@ -177,17 +177,18 @@ if (burnTime > 0 && cookTime < data.cookTickMax) {
   score(entity, "add", "cookTime", 1);
 } else if (burnTime > 0 && cookTime === data.cookTickMax) {
   score(entity, "set", "cookTime", 0);
-  if (slots[4] === undefined) {
-    if (slots[5] === undefined) {
-      inv.setItem(5, byproduct.clone());
+  if (slots[3] === undefined) {
+    if (slots[4] === undefined) {
+      inv.setItem(4, byproduct.clone());
     } else {
-      itemManipulate(inv, 5, slots[5], "add", 1);
+      itemManipulate(inv, 4, slots[4], "add", 1);
     }
-    inv.setItem(4, output.clone());
+    inv.setItem(3, output.clone());
     itemManipulate(inv, 0, slots[0], "remove", 1);
     itemManipulate(inv, 1, slots[1], "remove", 1);
+    itemManipulate(inv, 2, slots[2], "remove", 1);
   } else {
-    itemManipulate(inv, 4, slots[4], "add", 1);
+    itemManipulate(inv, 3, slots[3], "add", 1);
     itemManipulate(inv, 0, slots[0], "remove", 1);
     itemManipulate(inv, 1, slots[1], "remove", 1);
   }
