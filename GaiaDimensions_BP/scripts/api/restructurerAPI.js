@@ -179,17 +179,17 @@ if (burnTime > 0 && cookTime < data.cookTickMax) {
   score(entity, "set", "cookTime", 0);
   if (slots[4] === undefined) {
     if (slots[5] === undefined) {
-      inventory.setItem(5, byproduct.clone());
+      inv.setItem(5, byproduct.clone());
     } else {
-      itemManipulate(inventory, 5, slots[5], "add", 1);
+      itemManipulate(inv, 5, slots[5], "add", 1);
     }
-    inventory.setItem(4, output.clone());
-    itemManipulate(inventory, 0, slots[0], "remove", 1);
-    itemManipulate(inventory, 1, slots[1], "remove", 1);
+    inv.setItem(4, output.clone());
+    itemManipulate(inv, 0, slots[0], "remove", 1);
+    itemManipulate(inv, 1, slots[1], "remove", 1);
   } else {
-    itemManipulate(inventory, 4, slots[4], "add", 1);
-    itemManipulate(inventory, 0, slots[0], "remove", 1);
-    itemManipulate(inventory, 1, slots[1], "remove", 1);
+    itemManipulate(inv, 4, slots[4], "add", 1);
+    itemManipulate(inv, 0, slots[0], "remove", 1);
+    itemManipulate(inv, 1, slots[1], "remove", 1);
   }
 }  
 }
