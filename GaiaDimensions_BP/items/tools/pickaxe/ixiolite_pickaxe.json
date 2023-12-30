@@ -367,7 +367,7 @@
             }
           },
           {
-            "block": "gaia:crusted_amethyst_brick",
+            "block": "gaia:crusted_amethyst_bricks",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"

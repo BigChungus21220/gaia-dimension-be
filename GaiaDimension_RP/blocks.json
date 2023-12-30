@@ -984,7 +984,7 @@
   "textures": "crusted_copal_brick",
   "sound": "normal"
 },
-"gaia:crusted_amethyst_brick": {
+"gaia:crusted_amethyst_bricks": {
   "textures": "crusted_amethyst_brick",
   "sound": "normal"
 },
