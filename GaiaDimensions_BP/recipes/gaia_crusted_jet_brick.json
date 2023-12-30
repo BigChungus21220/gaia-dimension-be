@@ -12,7 +12,7 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:crusted_jet_brick",
+        "item": "gaia:crusted_jet_bricks",
         "data": 0
       },
       "B": {
@@ -21,7 +21,7 @@
       }
     },
     "result": {
-      "item": "gaia:crusted_jet_brick",
+      "item": "gaia:crusted_jet_bricks",
       "count": 1
     }
   }

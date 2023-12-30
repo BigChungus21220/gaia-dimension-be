@@ -956,7 +956,7 @@
 "gaia:crusted_copal_brick_stair": {
   "sound": "stone"
 },
-"gaia:crusted_jade_brick": {
+"gaia:crusted_jade_bricks": {
   "textures": "crusted_jade_brick",
   "sound": "normal"
 },
@@ -976,11 +976,11 @@
 "gaia:crusted_jade_brick_slab": {
   "sound": "stone"
 },
-"gaia:crusted_jet_brick": {
+"gaia:crusted_jet_bricks": {
   "textures": "crusted_jet_brick",
   "sound": "normal"
 },
-"gaia:crusted_copal_brick": {
+"gaia:crusted_copal_bricks": {
   "textures": "crusted_copal_brick",
   "sound": "normal"
 },

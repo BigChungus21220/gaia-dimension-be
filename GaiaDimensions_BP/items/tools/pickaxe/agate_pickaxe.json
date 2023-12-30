@@ -373,7 +373,7 @@
             }
           },
           {
-            "block": "gaia:crusted_copal_brick",
+            "block": "gaia:crusted_copal_bricks",
             "speed": 2,
             "on_dig": {
               "event": "reduce_durability"
@@ -401,7 +401,7 @@
             }
           },
           {
-            "block": "gaia:crusted_jade_brick",
+            "block": "gaia:crusted_jade_bricks",
             "speed": 2,
             "on_dig": {
               "event": "reduce_durability"
@@ -429,7 +429,7 @@
             }
           },
           {
-            "block": "gaia:crusted_jet_brick",
+            "block": "gaia:crusted_jet_bricks",
             "speed": 2,
             "on_dig": {
               "event": "reduce_durability"

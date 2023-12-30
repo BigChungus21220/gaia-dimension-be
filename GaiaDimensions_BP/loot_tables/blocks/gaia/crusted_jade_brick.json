@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:crusted_jade_brick",
+          "name": "gaia:crusted_jade_bricks",
           "functions": [
             {
               "function": "set_count",
