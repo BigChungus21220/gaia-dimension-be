@@ -1,117 +1,82 @@
 {
-  "format_version": "1.19.50",
-  "minecraft:block": {
+  "format_version": "1.16.100",
+  "minecraft:entity": {
     "description": {
-      "identifier": "gaia:restructer",
-      "menu_category": {
-        "category": "items",
-        "group": "itemGroup.name.furnaces",
-        "is_hidden_in_commands": false
-      },
-      "states": {
-        "gaiadimension:direction": [0, 1, 2, 3, 4, 5, 6],
-        "gaiadimension:lit": [false, true],
-        "gaiadimension:entity": [false, true]
+      "identifier": "gaia:restructer_container",
+      "is_spawnable": false,
+      "is_summonable": true,
+      "is_experimental": false
+    },
+    "component_groups": {
+      "gaia:despawning_entity": {
+        "minecraft:transformation": {
+          "drop_inventory": true,
+          "into": "gaia:despawn"
+        }
       }
     },
     "components": {
-      "minecraft:collision_box": true,
-      "minecraft:selection_box": true,
-      "minecraft:display_name": "Restructer",
-      "minecraft:material_instances": {
-        "up": {
-          "texture": "restructer_top",
-          "render_method": "opaque"
-        },
-        "down": {
-          "texture": "restructer_top",
-          "render_method": "opaque"
-        },
-        "south": {
-          "texture": "restructer_front",
-          "render_method": "opaque"
-        },
-        "*": {
-          "texture": "restructer_side",
-          "render_method": "opaque"
+      "minecraft:type_family": {
+        "family": ["chest", "inanimate"]
+      },
+      "minecraft:collision_box": {
+        "height": 0,
+        "width": 0
+      },
+      "minecraft:custom_hit_test": {
+        "hitboxes": [
+          {
+            "width": 1,
+            "height": 0.3,
+            "pivot": [0, 0.5, 0]
+          }
+        ]
+      },
+      "minecraft:health": {
+        "value": 1
+      },
+      "minecraft:fire_immune": {},
+      "minecraft:damage_sensor": {
+        "triggers": {
+          "cause": "all",
+          "deals_damage": false
         }
       },
-      "minecraft:unit_cube": {},
-      "minecraft:on_player_placing": {
-        "event": "setDirection"
+      "minecraft:nameable": {},
+      "minecraft:inventory": {
+        "additional_slots_per_strength": 0,
+        "can_be_siphoned_from": false,
+        "container_type": "inventory",
+        "inventory_size": 8,
+        "private": false,
+        "restrict_to_owner": false
       },
-      "minecraft:queued_ticking": {
-          "looping": true,
-          "on_tick": {
-              "event": "runRestructer"
-          },
-          "interval_range": [
-              1,
-              1
-          ]
-      }
-
-    },
-    "events": {
-      "setDirection": {
-        "set_block_property": {
-          "gaiadimension:direction": "(q.cardinal_facing_2d-2)"
+      "minecraft:timer": {
+        "time": 0.1,
+        "looping": true,
+        "time_down_event": {
+          "event": "tick",
+          "target": "self"
         }
       },
-      "runRestructer": {
-        "run_command": {
-            "command": ["execute as @e[r=0] at @s run scriptevent forge:restructurerLoad gaiaf 200 forge:restructurer_arrow forge:restructer_flame"]
-        }
-    }
-    },
-    "permutations": [
-      {
-        "condition": "q.block_property('gaiadimension:lit') == true",
-        "components": {
-          "minecraft:material_instances": {
-            "up": {
-              "texture": "restructer_top",
-              "render_method": "opaque"
-            },
-            "down": {
-              "texture": "restructer_top",
-              "render_method": "opaque"
-            },
-            "south": {
-              "texture": "restructer_lit",
-              "render_method": "opaque"
-            },
-            "*": {
-              "texture": "restructer_side",
-              "render_method": "opaque"
+      "minecraft:inside_block_notifier": {
+        "block_list": [
+          {
+            "block": "gaia:restructer",
+            "exited_block_event": {
+              "event": "destroy",
+              "target": "self"
             }
           }
-        }
-      },
-      {
-        "condition": "q.block_property('gaiadimension:direction') == 0",
-        "components": {
-          "minecraft:rotation": [0, 0, 0]
-        }
-      },
-      {
-        "condition": "q.block_property('gaiadimension:direction') == 1",
-        "components": {
-          "minecraft:rotation": [0, 180, 0]
-        }
-      },
-      {
-        "condition": "q.block_property('gaiadimension:direction') == 2",
-        "components": {
-          "minecraft:rotation": [0, 90, 0]
-        }
-      },
-      {
-        "condition": "q.block_property('gaiadimension:direction') == 3",
-        "components": {
-          "minecraft:rotation": [0, 270, 0]
+        ]
+      }
+    },
+    "events": {
+      "destroy": {
+        "add": {
+          "component_groups": ["gaia:despawning_entity"]
         }
       }
-    ]
+    }
   }
 }
