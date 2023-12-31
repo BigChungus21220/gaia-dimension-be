@@ -32,7 +32,7 @@ MC.world.afterEvents.playerPlaceBlock.subscribe((events) => {
     if (block.typeId == "gaiadimension:gaia_stone_furnace"){
       let position = block.location;
       let isEntity = events.dimension.spawnEntity(
-        "gaia:furnace_entity",
+        "gaiadimension:furnace_entity",
         new MC.Vector(position.x + 0.5, position.y, position.z + 0.5)
       );
       isEntity.runCommand('scriptevent forge:furnaceProperties')

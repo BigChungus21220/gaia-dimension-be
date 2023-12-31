@@ -1,13 +1,13 @@
 {
   // Alphabetical order please :)
   "ui_defs": [
-    "ui/gaia_furnace.json",
-    "ui/ui_gaia_common.json",
-    "ui/gemPouch_screen.json",
+    "ui/chest_screen.json",
     "ui/crate_screen.json",
+    "ui/gemPouch_screen.json",
     "ui/large_crate_screen.json",
     "ui/purifier_screen.json",
     "ui/restructer_screen.json",
-    "ui/chest_screen.json"
+    "ui/ui_gaia_common.json",
+    "ui/gaia_furnace.json"
   ]
 }

@@ -25,7 +25,7 @@
           12
         ]
       },
-      "minecraft:geometry": "geometry.pa_sapling",
+      "minecraft:geometry": "geometry.custom_sapling",
       "minecraft:material_instances": {
         "*": {
           "texture": "gaia_blue_agate_sapling",
