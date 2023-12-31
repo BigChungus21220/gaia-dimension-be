@@ -252,7 +252,7 @@
       {
         "fuel_display_left@gaia_restructurer.restructurer_icon": {
           "$index": 5,
-          "offset": [-9, -22],
+          "offset": [0, -22],
           "$texture_path_0": "textures/ui/restructurer_arrow_down_right_0",
           "$texture_path_1": "textures/ui/restructurer_arrow_down_right_1",
           "$texture_path_2": "textures/ui/restructurer_arrow_down_right_2",
@@ -266,7 +266,7 @@
       {
         "fuel_display_right@gaia_restructurer.restructurer_icon": {
           "$index": 6,
-          "offset": [9, -22],
+          "offset": [0, -22],
           "$texture_path_0": "textures/ui/restructurer_arrow_down_left_0",
           "$texture_path_1": "textures/ui/restructurer_arrow_down_left_1",
           "$texture_path_2": "textures/ui/restructurer_arrow_down_left_2",
