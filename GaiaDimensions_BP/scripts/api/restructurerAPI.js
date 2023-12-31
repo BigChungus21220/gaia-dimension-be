@@ -152,8 +152,8 @@ function restructurerReciper(blockOrigin, entity, data = { prefix: "forge", cook
     const cookTime = getObjective("cookTime")?.getScore(entity);
     const burnTime = getObjective("burnTime")?.getScore(entity);
     const burnTimeMax = getObjective("burnTimeMax")?.getScore(entity);
-    barStage(data.flameId, burnTime, burnTimeMax, inv, 12, 5);
-    barStage(data.arrowId, cookTime, data.cookTickMax, inv, 23, 6);
+    barStage(data.flameId, burnTime, burnTimeMax, inv, 12, 6);
+    barStage(data.arrowId, cookTime, data.cookTickMax, inv, 23, 7);
     let output, byproduct;
     if (slots[2].typeId in nativeRecipes){
       output = new MC.ItemStack(nativeRecipes[slots[2].typeId].output)
