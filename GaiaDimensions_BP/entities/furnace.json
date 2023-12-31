@@ -12,7 +12,18 @@
         "minecraft:transformation": {
           "drop_inventory": true,
           "into": "gaiadimension:despawn"
+        },
+        "minecraft:timer": {
+          "time": 1,
+          "looping": false,
+          "time_down_event": {
+            "event": "despawn",
+            "target": "self"
+          }
         }
+      },
+      "despawn": {
+        "minecraft:instant_despawn": {}
       }
     },
     "components": {
@@ -33,7 +44,8 @@
         ]
       },
       "minecraft:health": {
-        "value": 1
+        "value": 1,
+        "min": 1
       },
       "minecraft:fire_immune": {},
       "minecraft:damage_sensor": {
@@ -62,19 +74,24 @@
         "private": false,
         "restrict_to_owner": false
       },
-      "minecraft:inside_block_notifier": {
-        "block_list": [
+      "minecraft:block_sensor": {
+        "sensor_radius": 0.5,
+        "on_break": [
           {
-            "block": "air",
-            "entered_block_event": {
-              "event": "destroy",
-              "target": "self"
-            }
+            "block_list": ["gaiadimension:gaia_stone_furnace"],
+            "on_block_broken": "destroy"
           }
         ]
       }
     },
     "events": {
+      "despawn": {
+        "add": {
+          "component_groups": [
+            "despawn"
+          ]
+        }
+      },
       "destroy": {
         "add": {
           "component_groups": ["despawn_block"]
