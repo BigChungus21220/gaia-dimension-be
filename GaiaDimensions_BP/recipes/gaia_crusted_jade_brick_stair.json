@@ -12,7 +12,10 @@
       "AA ",
       "AAA"
     ],
-    "key": {},
+    "key": {"A": {
+      "item": "gaia:crusted_jade_bricks",
+      "data": 0
+    }},
     "result": {
       "item": "gaia:crusted_jade_brick_stair",
       "count": 8

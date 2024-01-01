@@ -1219,4 +1219,8 @@
 "gaia:purple_agate_sapling": {
   "textures": "purple_agate_sapling",
   "sound": "normal"
+},
+"gaia:reinforced_bricks": {
+  "textures": "reinforced_bricks",
+  "sound": "normal"
 }}

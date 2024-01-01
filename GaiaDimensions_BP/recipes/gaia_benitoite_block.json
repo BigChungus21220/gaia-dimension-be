@@ -12,7 +12,10 @@
       "AAA",
       "AAA"
     ],
-    "key": {},
+    "key": {   "A": {
+      "item": "gaia:benitoite",
+      "data": 0
+    }},
     "result": {
       "item": "gaia:benitoite_block",
       "count": 1

@@ -12,7 +12,12 @@
       "AA ",
       "AAA"
     ],
-    "key": {},
+    "key": {
+     "A": {
+      "item": "gaia:amethyst_brick",
+      "data": 0
+    }
+  },
     "result": {
       "item": "gaia:amethyst_stair",
       "count": 8

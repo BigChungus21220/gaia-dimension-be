@@ -863,4 +863,7 @@
     "textures": [
       "textures/blocks/purple_agate_sapling"
     ]
+  },
+  "reinforced_bricks": {
+    "textures": "textures/blocks/reinforced_bricks"
   }}}

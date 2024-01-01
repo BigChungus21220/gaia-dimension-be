@@ -742,7 +742,7 @@ item.gaia:agate_arrow.name=Arrow
 tile.gaia:pyrite_torch.name=Pyrite Torch
 item.gaia:pyrite_torch_item=Pyrite Torch
 
-item.gaia:glint_and_gold.name=Glint and Gold
+tile.gaia:glint_and_gold.name=Glint and Gold
 item.gaia:glint_and_gold_item=Glint and Gold
 
 ##Plants
@@ -783,3 +783,5 @@ item.gaia:purple_agate_sapling_placer=Purple Agate Sapling
 item.gaia:corrupted_sapling_placer.name=Corrupted Sapling
 item.gaia:corrupted_sapling_placer=Corrupted Sapling
 
+tile.gaia:reinforced_bricks.name=Reinforced Bricks
+tile.gaia:reinforced_bricks.name=Compass Block
