@@ -1,5 +1,5 @@
 {
-  "format_version": "1.19.50",
+  "format_version": "1.20.50",
   "minecraft:block": {
     "description": {
       "identifier": "gaia:restructer",
@@ -9,7 +9,7 @@
         "is_hidden_in_commands": false
       },
       "states": {
-        "gaiadimension:direction": [0, 1, 2, 3, 4, 5, 6],
+        "gaiadimension:direction": [2, 3, 4, 5],
         "gaiadimension:lit": [false, true],
         "gaiadimension:entity": [false, true]
       }
@@ -54,8 +54,8 @@
     },
     "events": {
       "setDirection": {
-        "set_block_property": {
-          "gaiadimension:direction": "(q.cardinal_facing_2d-2)"
+        "set_block_state": {
+          "gaiadimension:direction": "q.cardinal_facing_2d"
         }
       },
       "runRestructer": {
@@ -66,7 +66,7 @@
     },
     "permutations": [
       {
-        "condition": "q.block_property('gaiadimension:lit') == true",
+        "condition": "q.block_state('gaiadimension:lit')",
         "components": {
           "minecraft:material_instances": {
             "up": {
@@ -89,27 +89,27 @@
         }
       },
       {
-        "condition": "q.block_property('gaiadimension:direction') == 0",
+        "condition": "q.block_state('gaiadimension:direction') == 3",
         "components": {
-          "minecraft:rotation": [0, 0, 0]
+          "minecraft:transformation": {
+            "rotation": [0, 180, 0]
+          }
         }
       },
       {
-        "condition": "q.block_property('gaiadimension:direction') == 1",
+        "condition": "q.block_state('gaiadimension:direction') == 4",
         "components": {
-          "minecraft:rotation": [0, 180, 0]
+          "minecraft:transformation": {
+            "rotation": [0, 90, 0]
+          }
         }
       },
       {
-        "condition": "q.block_property('gaiadimension:direction') == 2",
+        "condition": "q.block_state('gaiadimension:direction') == 5",
         "components": {
-          "minecraft:rotation": [0, 90, 0]
-        }
-      },
-      {
-        "condition": "q.block_property('gaiadimension:direction') == 3",
-        "components": {
-          "minecraft:rotation": [0, 270, 0]
+          "minecraft:transformation": {
+            "rotation": [0, 270, 0]
+          }
         }
       }
     ]
