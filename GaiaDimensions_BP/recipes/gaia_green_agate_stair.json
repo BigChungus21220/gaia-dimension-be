@@ -2,23 +2,25 @@
   "format_version": "1.12",
   "minecraft:recipe_shaped": {
     "description": {
-      "identifier": "gaia_stone_slab_8dc7ea55"
+      "identifier": "green_agate_stair_ff8a4cf8"
     },
     "tags": [
       "crafting_table"
     ],
     "pattern": [
+      "A  ",
+      "AA ",
       "AAA"
     ],
     "key": {
       "A": {
-        "item": "gaia:gaia_stone",
+        "item": "gaia:green_agate_planks",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:gaia_stone_slab",
-      "count": 6
+      "item": "gaia:green_agate_stair",
+      "count": 8
     }
   }
 }

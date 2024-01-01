@@ -12,7 +12,10 @@
       "AAA",
       "AAA"
     ],
-    "key": {},
+    "key": {"A": {
+      "item": "gaia:hematite",
+      "data": 0
+    }},
     "result": {
       "item": "gaia:hematite_block",
       "count": 1

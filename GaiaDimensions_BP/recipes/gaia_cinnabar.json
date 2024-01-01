@@ -2,23 +2,25 @@
   "format_version": "1.12",
   "minecraft:recipe_shaped": {
     "description": {
-      "identifier": "gaia_stone_slab_8dc7ea55"
+      "identifier": "cinnabar_2828"
     },
     "tags": [
       "crafting_table"
     ],
     "pattern": [
+      "AAA",
+      "AAA",
       "AAA"
     ],
     "key": {
       "A": {
-        "item": "gaia:gaia_stone",
+        "item": "gaia:cinnabar_block",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:gaia_stone_slab",
-      "count": 6
+      "item": "gaia:cinnabar_block",
+      "count": 9
     }
   }
 }

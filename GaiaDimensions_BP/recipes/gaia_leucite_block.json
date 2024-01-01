@@ -12,7 +12,10 @@
       "AAA",
       "AAA"
     ],
-    "key": {},
+    "key": {"A": {
+      "item": "gaia:leucite",
+      "data": 0
+    }},
     "result": {
       "item": "gaia:leucite_block",
       "count": 1
