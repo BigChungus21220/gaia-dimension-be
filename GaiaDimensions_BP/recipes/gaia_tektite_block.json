@@ -12,7 +12,10 @@
       "AAA",
       "AAA"
     ],
-    "key": {},
+    "key": { "a": {
+      "item": "gaia:tektite",
+      "data": 0
+    }},
     "result": {
       "item": "gaia:tektite_block",
       "count": 1
