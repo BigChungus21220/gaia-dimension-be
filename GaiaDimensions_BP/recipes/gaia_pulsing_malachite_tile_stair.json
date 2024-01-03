@@ -14,12 +14,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:pulsing_malachite_planks",
+        "item": "gaia:green_planks3",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:pulsing_malachite_tile_stair",
+      "item": "gaia:green_planks3_stairs",
       "count": 8
     }
   }
