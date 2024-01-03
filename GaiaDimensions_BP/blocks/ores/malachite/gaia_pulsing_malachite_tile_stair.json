@@ -52,7 +52,6 @@
 			"minecraft:destructible_by_mining": {
 				"seconds_to_destroy": 0.5
 			},
-			 : 7,
 			"minecraft:collision_box": {
 				"origin": [-8, 0, -8],
 				"size": [16, 8, 16]
@@ -63,7 +62,7 @@
 			},
 			"minecraft:material_instances": {
 				"*": {
-					"texture": "pulsing_malachite_planks",
+					"texture": "malachite_floor_tiles",
 					"render_method": "opaque"
 				}
 			},
