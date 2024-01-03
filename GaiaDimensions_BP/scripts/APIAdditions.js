@@ -39,7 +39,7 @@ Block.prototype.getAdjacent = function () {
       const { x, y, z } = queue.shift();
       const position = `${x},${y},${z}`;
   
-      if (visited.has(position)) return;
+      if (visited.has(position))
   
       visited.add(position);
   
@@ -122,8 +122,10 @@ Vector.prototype.toString = function(){
 /**
  * Converts a Direction to a Vector 
  * @param {Direction | string} direction
+ * @memberof Vector
+ * @method convertDirection
  */
-Vector.convertDirection = function(direction){
+Vector.prototype.convertDirection = function(direction){
   switch (direction){
     case "Up":
         return new Vector(0,1,0)
