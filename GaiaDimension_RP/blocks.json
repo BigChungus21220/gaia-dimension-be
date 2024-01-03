@@ -1099,7 +1099,7 @@
   "sound": "stone"
 },
 "gaia:green_brick3s": {
-  "textures": "pulsing_malachite_bricks",
+  "textures": "pulsing_malachite_brick",
   "sound": "stone"
 },
 "gaia:cracked_malachite_brick_stair": {

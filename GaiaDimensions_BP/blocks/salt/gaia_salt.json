@@ -1,21 +1,25 @@
 {
-  "format_version": "1.16.100",
-  "minecraft:block": {
-    "description": {
-      "identifier": "gaia:salt",
-      "menu_category": {
-        "category": "nature",
-        "group":   "itemGroup.name.salt"
-      }
-    },
-    "components": {
-      "minecraft:map_color": "#f8ffbd",
-      "minecraft:destructible_by_mining": {
-        "seconds_to_destroy": 1
-      },
-      "minecraft:destructible_by_explosion": {
-        "explosion_resistance": 1
-      }
-    }
-  }
+	"format_version": "1.20.10",
+	"minecraft:block": {
+		"description": {
+			"identifier": "gaia:salt",
+			"menu_category": {
+				"category": "nature",
+				"group": "itemGroup.name.soil"
+			}
+		},
+		"components": {
+			"tag:is_shovelable": {},
+			"tag:dirt": {},
+			"minecraft:loot": "loot_tables/blocks/salt.json",
+			"minecraft:destructible_by_mining": {
+				"seconds_to_destroy": 1
+			},
+			"minecraft:unit_cube": {},
+			"minecraft:destructible_by_explosion": {
+				"explosion_resistance": 1
+			},
+			"minecraft:map_color": "#ffffff"
+		}
+	}
 }

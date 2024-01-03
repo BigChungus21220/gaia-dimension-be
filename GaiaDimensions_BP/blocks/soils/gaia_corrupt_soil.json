@@ -1,21 +1,25 @@
 {
-  "format_version": "1.16.100",
-  "minecraft:block": {
-    "description": {
-      "identifier": "gaia:corrupt_soil",
-      "menu_category": {
-        "category": "nature",
-        "group":   "itemGroup.name.soil"
-      }
-    },
-    "components": {
-      "minecraft:destructible_by_mining": {
+	"format_version": "1.20.10",
+	"minecraft:block": {
+		"description": {
+			"identifier": "gaia:corrupt_soil",
+			"menu_category": {
+				"category": "nature",
+				"group": "itemGroup.name.soil"
+			}
+		},
+		"components": {
+			"tag:is_shovelable": {},
+			"tag:dirt": {},
+			"minecraft:loot": "loot_tables/blocks/corrupt_soil.json",
+			"minecraft:destructible_by_mining": {
 				"seconds_to_destroy": 1
 			},
-      "minecraft:destructible_by_explosion": {
+			"minecraft:unit_cube": {},
+			"minecraft:destructible_by_explosion": {
 				"explosion_resistance": 1
 			},
-      "minecraft:map_color": "#8f8f8f"
-    }
-  }
+			"minecraft:map_color": "#ffffff"
+		}
+	}
 }
