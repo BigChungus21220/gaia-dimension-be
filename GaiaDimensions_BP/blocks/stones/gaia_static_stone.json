@@ -1,22 +1,43 @@
 {
-  "format_version": "1.16.100",
-  "minecraft:block": {
-    "description": {
-      "identifier": "gaia:static_stone",
-      "menu_category": {
-        "category": "nature",
-        "group":   "itemGroup.name.stone"
-      }
-    },
-    "components": {
-      "minecraft:map_color": "#636566",
-      "minecraft:destructible_by_mining": {
-				"seconds_to_destroy": 2
+	"format_version": "1.20.10",
+	"minecraft:block": {
+		"description": {
+			"identifier": "gaia:static_stone",
+			"menu_category": {
+				"category": "nature",
+				"group": "itemGroup.name.stone"
+			}
+		},
+		"components": {
+			"tag:ore": {},
+			"tag:stone": {},
+			"minecraft:loot": "loot_tables/blocks/empty.json",
+			"minecraft:destructible_by_mining": {
+				"seconds_to_destroy": 1
+			},
+			"minecraft:on_player_destroyed": {
+				"event": "destroy",
+				"condition": "(query.equipped_item_any_tag('slot.weapon.mainhand','minecraft:is_pickaxe'))"
+			},
+			"minecraft:unit_cube": {},
+			"minecraft:destructible_by_explosion": {
+				"explosion_resistance": 1
 			},
       "minecraft:light_emission": 8,
-      "minecraft:destructible_by_explosion": {
-				"explosion_resistance": 3
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "static_stone",
+          "render_method": "opaque",
+			"minecraft:map_color": "#ffffff"
+		},
+		"events": {
+			"destroy": {
+				"spawn_loot": {
+					"table": "loot_tables/blocks/gaia/static_stone.json"
+				}
 			}
-    }
+		}
+	}
+}
   }
 }

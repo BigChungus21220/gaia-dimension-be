@@ -1,22 +1,25 @@
 {
-  "format_version": "1.16.100",
-  "minecraft:block": {
-    "description": {
-      "identifier": "gaia:peach_glitter_grass",
-      "menu_category": {
-        "category": "nature",
-        "group":   "itemGroup.name.gaia_grass"
-      }
-    },
-    "components": {
-      "minecraft:loot": "loot_tables/blocks/gaia/peach_glitter_grass.json",
-      "minecraft:map_color": "#fca290",
-      "minecraft:destructible_by_mining": {
-        "seconds_to_destroy": 1
-      },
-      "minecraft:destructible_by_explosion": {
-        "explosion_resistance": 1
-      }
-    }
-  }
+	"format_version": "1.20.10",
+	"minecraft:block": {
+		"description": {
+			"identifier": "gaia:peach_glitter_grass",
+			"menu_category": {
+				"category": "nature",
+				"group": "itemGroup.name.glitter_grass"
+			}
+		},
+		"components": {
+			"tag:is_shovelable": {},
+			"tag:dirt": {},
+			"minecraft:loot": "loot_tables/blocks/peach_glitter_grass.json",
+			"minecraft:destructible_by_mining": {
+				"seconds_to_destroy": 1
+			},
+			"minecraft:unit_cube": {},
+			"minecraft:destructible_by_explosion": {
+				"explosion_resistance": 1
+			},
+			"minecraft:map_color": "#ffffff"
+		}
+	}
 }

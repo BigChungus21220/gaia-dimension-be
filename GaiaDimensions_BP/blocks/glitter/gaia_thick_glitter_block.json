@@ -1,29 +1,32 @@
 {
-  "format_version": "1.16.100",
-  "minecraft:block": {
-    "description": {
-      "identifier": "gaia:thick_glitter_block",
-      "menu_category": {
-        "category": "nature",
-        "group": "itemGroup.name.glitter_blocks"
-      }
-    },
-    "components": {
-      "minecraft:map_color": "#636566",
+	"format_version": "1.20.10",
+	"minecraft:block": {
+		"description": {
+			"identifier": "gaia:thick_glitter_block",
+			"menu_category": {
+				"category": "nature",
+				"group": "itemGroup.name.glitter"
+			}
+		},
+		"components": {
+			"tag:is_shovelable": {},
+			"tag:dirt": {},
+			"minecraft:loot": "loot_tables/blocks/thick_glitter_block.json",
+			"minecraft:destructible_by_mining": {
+				"seconds_to_destroy": 1
+			},
+			"minecraft:unit_cube": {},
+			"minecraft:destructible_by_explosion": {
+				"explosion_resistance": 1
+			},
+      "minecraft:light_emission": 3,
       "minecraft:material_instances": {
         "*": {
           "texture": "thick_glitter_block",
-          "render_method": "blend"
-        }
-      },
-      "minecraft:light_dampening": 2,
-      "minecraft:light_emission": 5,
-      "minecraft:destructible_by_mining": {
-        "seconds_to_destroy": 1
-      },
-      "minecraft:destructible_by_explosion": {
-        "explosion_resistance": 1
-      }
-    }
+          "render_method": "opaque",
+			"minecraft:map_color": "#ffffff"
+		}
+	}
+}
   }
 }
