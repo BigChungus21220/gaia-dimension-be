@@ -17,7 +17,7 @@ function getTopBlock(location, dimension) {
 async function tpToGaia(entity) {
     entity.typeId === 'minecraft:player' ? entity.setDynamicProperty('enteredByPortal',true): undefined
     const save = entity.location
-    const initialTeleport = gaia.convertCoords(new Vector(entity.location.x,entity.location.y,entity.location.z),'minecraft:overworld','gaia:gaia')
+    const initialTeleport = gaia.convertCoords(new Vector(save.x,save.y,save.z),'minecraft:overworld','gaia:gaia')
     entity.teleport(initialTeleport, {dimension: the_end})
     entity.turnCoords()
     await delay(0.8)
