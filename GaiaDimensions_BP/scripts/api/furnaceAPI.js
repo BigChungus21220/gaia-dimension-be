@@ -46,26 +46,22 @@ function score(entity, mode = "add", objectiveId, value) {
   }
 }
 
-function percentage(partialValue, totalValue) {
-  return Math.round(((100 * partialValue) / totalValue));
-}
 
 function barStage(itemId, actualValue, valueMax, inv, value, slot) {
   try {
     if (actualValue === 0) {
       inv.setItem(slot, new MC.ItemStack(`${itemId}_0`));
     } else {
-      const valueCurrent = Math.floor(percentage(actualValue, valueMax));
       for (let i = 0; i <= value; i++) {
-        if (actualValue > 0 && Math.abs(valueCurrent - Math.floor(percentage(i, value))) < 0.0001) {
-          inv.setItem(slot, new MC.ItemStack(`${itemId}_${i}`));
-        }
+        inv.setItem(slot, new MC.ItemStack(`${itemId}_${i}`));
       }
     }
   } catch (error) {
-
+    console.error("Error in barStage:", error);
   }
 }
+
+
 
 
 function itemManipulate(inv, slot, itemStack, amountMode = "set", amount = 0) {

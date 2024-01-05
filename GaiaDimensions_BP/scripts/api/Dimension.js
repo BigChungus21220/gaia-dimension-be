@@ -1,6 +1,6 @@
-import { Vector, BlockPermutation,Dimension,system,Block, world, BlockVolumeUtils,Entity, Player, Trigger} from "@minecraft/server"
+import { Vector, BlockPermutation, Dimension, system, Block, world, BlockVolumeUtils, Entity, Player, Trigger } from "@minecraft/server"
 import { delay } from "../utils";
- 
+
 const biomes = [
     "mineral_river",
     "volcanic_lands",
@@ -19,7 +19,7 @@ const biomes = [
     "mineral_resevoir"
 ]
 
-function floorEquals(a, b){
+function floorEquals(a, b) {
     return Math.floor(a.x) == Math.floor(b.x) && Math.floor(a.z) == Math.floor(b.z)
 }
 
@@ -30,15 +30,15 @@ function floorEquals(a, b){
 */
 function generateId() {
     return Math.random().toString(36).substring(2, 10);
- }
+}
 
 
- /**
- * @typedef PortalLink
- * @property {Vector} location - The location of portal A.
- * @property {Vector} linkedLocation - The location of portal B.
- * @property {Dimension} dimension - The dimension in which the portal linking occurred.
- */
+/**
+* @typedef PortalLink
+* @property {Vector} location - The location of portal A.
+* @property {Vector} linkedLocation - The location of portal B.
+* @property {Dimension} dimension - The dimension in which the portal linking occurred.
+*/
 
 /**
  * @typedef PortalActivate
@@ -698,7 +698,7 @@ class FogChangeAfterEvent {
     /**
      * @param {FogChange} data 
      */
-    constructor(data){
+    constructor(data) {
         /**
          * The player affected by the fog change.
          */
@@ -711,7 +711,7 @@ class FogChangeAfterEvent {
 }
 
 class FogChangeAfterEventSignal {
-    constructor () {
+    constructor() {
         /**
          * @readonly
          * @private
@@ -724,10 +724,10 @@ class FogChangeAfterEventSignal {
      * @param {function(FogChangeAfterEvent):void} callback 
      * @returns {string} The Subscriber ID of the Event
      */
-    subscribe(callback){
+    subscribe(callback) {
         const subscriberId = generateId();
         this.subscribers[subscriberId] = callback;
-        
+
         const eventCallback = (ev) => {
             const { id, message } = ev;
             if (id === 'gaia:fogChangeAfterEvent') {
@@ -747,7 +747,7 @@ class FogChangeAfterEventSignal {
      * Unsubscribes from an event listener.
      * @param {string} subscriberId 
      */
-    unsubscribe(subscriberId){
+    unsubscribe(subscriberId) {
         delete this.subscribers[subscriberId];
     }
 }
@@ -833,67 +833,67 @@ class PortalActivateAfterEvent {
      * 
      * @param {PortalActivate} data 
      */
- constructor (data){
-    /**
-     * Where the portal was lit/activated
-     */
-  this.location = data.location
-  /**
-  * The dimension where the portal was lit
-  */
-  this.dimension = data.dimension
-  /**
-   * The Player that lit the portal
-   */
-  this.source = data.source
- }
+    constructor(data) {
+        /**
+         * Where the portal was lit/activated
+         */
+        this.location = data.location
+        /**
+        * The dimension where the portal was lit
+        */
+        this.dimension = data.dimension
+        /**
+         * The Player that lit the portal
+         */
+        this.source = data.source
+    }
 }
 
 
 class PortalActivateAfterEventSignal {
-    constructor () {
+    constructor() {
         /**
          * @readonly
          * @private
          */
-    this.subscribers = {}
+        this.subscribers = {}
     }
-/**
- * 
- * @param {function(PortalActivateAfterEvent):void} callback 
- * @returns {string} The Subsriber id of the Event
- */
-    subscribe(callback){
-            const subscriberId = generateId()
-            this.subscribers[subscriberId] = callback;
-           const eventCallback = (ev) => {
-           const { id, message } = ev;
-        if (id === 'gaia:portalActivateAfterEvent') {
-            const eventData = new PortalActivateAfterEvent(JSON.parse(message));
-            if (subscriberId in this.subscribers) {
-                this.subscribers[subscriberId](eventData);
+    /**
+     * 
+     * @param {function(PortalActivateAfterEvent):void} callback 
+     * @returns {string} The Subsriber id of the Event
+     */
+    subscribe(callback) {
+        const subscriberId = generateId()
+        this.subscribers[subscriberId] = callback;
+        const eventCallback = (ev) => {
+            const { id, message } = ev;
+            if (id === 'gaia:portalActivateAfterEvent') {
+                const eventData = new PortalActivateAfterEvent(JSON.parse(message));
+                if (subscriberId in this.subscribers) {
+                    this.subscribers[subscriberId](eventData);
+                }
             }
-        }
-    };
+        };
 
-    system.afterEvents.scriptEventReceive.subscribe(eventCallback,{namespaces:['gaia']});
-    return subscriberId;
-        }
-/**
- * 
- * @param {string} subscriberId 
- */
-        unsubscribe(subscriberId){
-            delete this.subscribers[subscriberId]
-        }
+        system.afterEvents.scriptEventReceive.subscribe(eventCallback, { namespaces: ['gaia'] });
+        return subscriberId;
     }
+    /**
+     * 
+     * @param {string} subscriberId 
+     */
+    unsubscribe(subscriberId) {
+        delete this.subscribers[subscriberId]
+    }
+}
 
-    
-    class GeyserEruptAfterEvent {
-        /**
-         * @param {GeyserErupt} data 
-         */
-      constructor (data){
+
+class GeyserEruptAfterEvent {
+    /**
+     * @param {GeyserErupt} data 
+     */
+    constructor(data) {
         /**
          * Where the Geyser Erupted
          * @readonly
@@ -904,49 +904,49 @@ class PortalActivateAfterEventSignal {
          * @readonly
          */
         this.height = data.height,
-        /**
-         * The Dimension where the Geyser Erupted
-         * @readonly
-         */
-        this.dimension = data.dimension,
-        /**
-         * How long the Geyser Erupted
-         */
-        this.duration = data.duration,
-        /**
-         * @readonly
-         * @private
-         */
-        this.entities = data.getAffectedEntities
-      }
-         /**
-          * Returns a array of Entities that were pushed/effected by the Geyser
-         * @readonly
-         */
-      getAffectedEntities(){
-        return this.entities()
-      }
-    }
-
-
-    class GeyserEruptAfterEventSignal {
-        constructor () {
+            /**
+             * The Dimension where the Geyser Erupted
+             * @readonly
+             */
+            this.dimension = data.dimension,
+            /**
+             * How long the Geyser Erupted
+             */
+            this.duration = data.duration,
             /**
              * @readonly
              * @private
              */
+            this.entities = data.getAffectedEntities
+    }
+    /**
+     * Returns a array of Entities that were pushed/effected by the Geyser
+    * @readonly
+    */
+    getAffectedEntities() {
+        return this.entities()
+    }
+}
+
+
+class GeyserEruptAfterEventSignal {
+    constructor() {
+        /**
+         * @readonly
+         * @private
+         */
         this.subscribers = {}
-        }
+    }
     /**
      * @readonly
      * @param {function(GeyserEruptAfterEvent):void} callback 
      * @returns {string} The Subsriber id of the Event
      */
-        subscribe(callback){
-                const subscriberId = generateId()
-                this.subscribers[subscriberId] = callback;
-               const eventCallback = (ev) => {
-               const { id, message } = ev;
+    subscribe(callback) {
+        const subscriberId = generateId()
+        this.subscribers[subscriberId] = callback;
+        const eventCallback = (ev) => {
+            const { id, message } = ev;
             if (id === 'gaia:geyserEruptAfterEvent') {
                 const eventData = new GeyserEruptAfterEvent(JSON.parse(message));
                 if (subscriberId in this.subscribers) {
@@ -954,21 +954,21 @@ class PortalActivateAfterEventSignal {
                 }
             }
         };
-    
-        system.afterEvents.scriptEventReceive.subscribe(eventCallback,{namespaces:['gaia']});
+
+        system.afterEvents.scriptEventReceive.subscribe(eventCallback, { namespaces: ['gaia'] });
         return subscriberId;
-            }
+    }
     /**
      * @readonly
      * Unsubsribes from a event listner 
      * @param {string} subscriberId 
      */
-            unsubscribe(subscriberId){
-                delete this.subscribers[subscriberId]
-            }
+    unsubscribe(subscriberId) {
+        delete this.subscribers[subscriberId]
     }
+}
 
-    
+
 
 class PortalLinkAfterEvent {
     /**
@@ -996,11 +996,11 @@ class PortalLinkAfterEvent {
 }
 
 class PortalLinkAfterEventSignal {
-    /**
+    constructor() {
+        /**
      * @private
      * @readonly
      */
-    constructor() {
         this.subscribers = {};
     }
 
@@ -1035,9 +1035,9 @@ class PortalLinkAfterEventSignal {
         delete this.subscribers[subscriberId];
     }
 }
-    
+
 class GaiaAfterEvents {
-    constructor (){
+    constructor() {
         this.portalActivate = new PortalActivateAfterEventSignal();
         this.geyserErupt = new GeyserEruptAfterEventSignal();
         this.biomeChange = new BiomeChangeAfterEventSignal();
@@ -1049,11 +1049,12 @@ class GaiaAfterEvents {
          * @deprecated
          */
         this.furnaceActivate = new FurnaceActivateAfterEventSignal();
+
     }
 }
 
 class GaiaBeforeEvents {
-    constructor (){
+    constructor() {
         this.portalActivate = new PortalActivateBeforeEventSignal();
         this.geyserErupt = new GeyserEruptBeforeEventSignal();
         this.fogChange = new FogChangeBeforeEventSignal();
@@ -1068,7 +1069,7 @@ class GaiaBeforeEvents {
 
 
 class Fog {
-    constructor(){
+    constructor() {
 
     };
     generateFog() {
@@ -1093,27 +1094,27 @@ class Fog {
             }
         }, 8);
     }
-    
-    clearFogs(player){
-        for (const biome of biomes){
+
+    clearFogs(player) {
+        for (const biome of biomes) {
             player.runCommandAsync("fog @s remove " + biome)
         }
     }
 
-    addFog(player, biome){
+    addFog(player, biome) {
         player.runCommandAsync("fog @s push gaia:" + biome + "_fog " + biome)
     }
 
-  async updateFog(player){
+    async updateFog(player) {
         this.clearFogs(player)
         let biome = this.getBiome(player.location, player.dimension);
-        this.triggerEvent('fogChange',{newFog:biome+'_fog'+biome,player:player,cancel:false},'BeforeEvent')
-        const data = await this.listenFor('fogChange','Canceled','BeforeEvent')
-        if(data && data.cancel ===true) return;
-        if (biome != "none"){
+        this.triggerEvent('fogChange', { newFog: biome + '_fog' + biome, player: player, cancel: false }, 'BeforeEvent')
+        const data = await this.listenFor('fogChange', 'Canceled', 'BeforeEvent')
+        if (data && data.cancel === true) return;
+        if (biome != "none") {
             this.addFog(player, biome)
         }
-        this.triggerEvent('fogChange',{newFog:biome+'_fog'+biome,player:player},'AfterEvent')
+        this.triggerEvent('fogChange', { newFog: biome + '_fog' + biome, player: player }, 'AfterEvent')
     }
 
     /**
@@ -1123,27 +1124,27 @@ class Fog {
  * @param {Player} player 
  * @returns {boolean}
  */
-    isInGaia(player){
+    isInGaia(player) {
         let playerLoc = player.location
-        return player.dimension.id == "minecraft:the_end" && playerLoc.x <= 400000 && playerLoc.z <= 400000 && playerLoc.x >= 100000 && playerLoc.z >= 100000 
+        return player.dimension.id == "minecraft:the_end" && playerLoc.x <= 400000 && playerLoc.z <= 400000 && playerLoc.x >= 100000 && playerLoc.z >= 100000
     }
-/**
- * Returns the name of a biome in Gaia based of a location
- * @private
- * @param {Vector} position 
- * @param {Dimension} dimension 
- * @readonly
- * @returns {string} The biome name
- */
-    getBiome(position){
+    /**
+     * Returns the name of a biome in Gaia based of a location
+     * @private
+     * @param {Vector} position 
+     * @param {Dimension} dimension 
+     * @readonly
+     * @returns {string} The biome name
+     */
+    getBiome(position) {
         try {
-        let blockId = this.dimension.getBlock(new Vector(position.x, 0, position.z))?.typeId
-        if (blockId.includes("gaia:bedrock_")){
-            return blockId.replace("gaia:bedrock_","")
-        } else {
-            return "none"
-        }
-    } catch (e) { }
+            let blockId = this.dimension.getBlock(new Vector(position.x, 0, position.z))?.typeId
+            if (blockId.includes("gaia:bedrock_")) {
+                return blockId.replace("gaia:bedrock_", "")
+            } else {
+                return "none"
+            }
+        } catch (e) { }
     }
     /**
  * @private
@@ -1151,44 +1152,44 @@ class Fog {
  * @param {string} type The type of the event,before or after, must be AfterEvent, or BeforeEvent(Not Complete)
  * @param {Object} data A object containing the event of the data
  */
-   triggerEvent(eventName,data,type){
-    this.runCommand(`scriptevent gaia:${eventName}${type} ${JSON.stringify(data)}`)
+    triggerEvent(eventName, data, type) {
+        this.runCommand(`scriptevent gaia:${eventName}${type} ${JSON.stringify(data)}`)
     }
 
- /**
- * Listen for events with a specific name and type of response.
- * @private
- * @param {string} eventName - The name of the event to listen for.
- * @param {string} responseType - The type of response, e.g., 'Canceled', 'DataChanged', etc.
- * @param {string} eventType - The type of event, e.g., 'BeforeEvent' or 'AfterEvent'.
- * @returns {Promise<Object>} - A promise that resolves with the event data.
- */
-listenFor(eventName, responseType, eventType) {
-    return new Promise((resolve) => {
-        const callback = async (event) => {
-            const { id, message } = event;
-            if (id === `gaia:${eventName}${eventType}${responseType}`) {
-                const data = JSON.parse(message);
-                resolve(data);
-            } else {
-               await delay(0.001) 
-               resolve(undefined);
-            }
-        };
+    /**
+    * Listen for events with a specific name and type of response.
+    * @private
+    * @param {string} eventName - The name of the event to listen for.
+    * @param {string} responseType - The type of response, e.g., 'Canceled', 'DataChanged', etc.
+    * @param {string} eventType - The type of event, e.g., 'BeforeEvent' or 'AfterEvent'.
+    * @returns {Promise<Object>} - A promise that resolves with the event data.
+    */
+    listenFor(eventName, responseType, eventType) {
+        return new Promise((resolve) => {
+            const callback = async (event) => {
+                const { id, message } = event;
+                if (id === `gaia:${eventName}${eventType}${responseType}`) {
+                    const data = JSON.parse(message);
+                    resolve(data);
+                } else {
+                    await delay(0.001)
+                    resolve(undefined);
+                }
+            };
 
-        system.afterEvents.scriptEventReceive.subscribe(callback, {
-            namespaces: ['gaia']
+            system.afterEvents.scriptEventReceive.subscribe(callback, {
+                namespaces: ['gaia']
+            });
+        }).catch(e => {
+            return undefined;
         });
-    }).catch(e => {
-        return undefined;
-    });
-}
+    }
 }
 
 
 
-    
-    
+
+
 /**
  * @typedef Link
  * @property {Vector} location
@@ -1205,35 +1206,35 @@ class Portal extends Fog {
      * Create a Portal.
      */
     constructor() {
-        super ()
+        super()
         /**
          * @type {Array<Link>}
          * @private
          */
-      this.linked = JSON.parse(world.getDynamicProperty('PortalLinked') ?? "[]");
-      /**
-       * @private
-       */
-      this.serialize = JSON.stringify;
+        this.linked = JSON.parse(world.getDynamicProperty('PortalLinked') ?? "[]");
+        /**
+         * @private
+         */
+        this.serialize = JSON.stringify;
     }
-  
+
     /**
      * Link two locations.
      * @param {Vector} fromLocation - The starting location.
      * @param {Vector} toLocation - The ending location.
      * @param {Vector} size - The size of the portal.
      */
-    link(fromLocation, toLocation,size) {
-      if (typeof fromLocation !== 'object' || typeof toLocation !== 'object') {
-        throw new Error('Both fromLocation and toLocation must be objects');
-      }
-      const data = { location: fromLocation, linkedLocation: toLocation, size:size };
-      if (!this.linked.some((d) => d.location === fromLocation && d.linkedLocation === toLocation)) {
-        this.linked.push(data);
-        world.setDynamicProperty('PortalLinked', this.serialize(this.linked));
-      }
+    link(fromLocation, toLocation, size) {
+        if (typeof fromLocation !== 'object' || typeof toLocation !== 'object') {
+            throw new Error('Both fromLocation and toLocation must be objects');
+        }
+        const data = { location: fromLocation, linkedLocation: toLocation, size: size };
+        if (!this.linked.some((d) => d.location === fromLocation && d.linkedLocation === toLocation)) {
+            this.linked.push(data);
+            world.setDynamicProperty('PortalLinked', this.serialize(this.linked));
+        }
     }
-  
+
     /**
      * Unlinks a link between two locations.
      * @param {Vector} fromLocation - The starting location.
@@ -1243,64 +1244,64 @@ class Portal extends Fog {
         if (typeof fromLocation !== 'object' || typeof toLocation !== 'object') {
             throw new Error('Both fromLocation and toLocation must be objects');
         }
-       this.linked = this.linked.filter(l=>{
-        l.location != fromLocation && l.linkedLocation != toLocation
-       })
+        this.linked = this.linked.filter(l => {
+            l.location != fromLocation && l.linkedLocation != toLocation
+        })
         world.setDynamicProperty('PortalLinked', this.serialize(this.linked));
     }
-  /**
- * Get the linked location from a given location.
- * @param {Vector} location - The location.
- * @param {string} from - Whether the location is the start or end of the linked location
- * @returns {Link} The linked object.
- */
-getLink(from, location){
-    if (typeof location !== 'object') {
-        throw new Error('location must be an object');
+    /**
+   * Get the linked location from a given location.
+   * @param {Vector} location - The location.
+   * @param {string} from - Whether the location is the start or end of the linked location
+   * @returns {Link} The linked object.
+   */
+    getLink(from, location) {
+        if (typeof location !== 'object') {
+            throw new Error('location must be an object');
+        }
+        let link;
+        switch (from) {
+            case 'start':
+                link = this.linked.find(d => {
+                    const volume = { from: d.location, to: { x: d.location.x + d.size.x, y: d.location.y + d.size.y, z: d.location.z + d.size.z } };
+                    return BlockVolumeUtils.isInside(volume, location);
+                });
+                break;
+            case 'end':
+                link = this.linked.find(d => {
+                    const volume = { from: d.linkedLocation, to: { x: d.linkedLocation.x + d.size.x, y: d.linkedLocation.y + d.size.y, z: d.linkedLocation.z + d.size.z } };
+                    return BlockVolumeUtils.isInside(volume, location);
+                });
+                break;
+            default:
+                throw new Error(`Invalid value for 'from': ${from}`);
+        }
+        return link || undefined;
     }
-    let link;
-    switch(from) {
-        case 'start':
-            link = this.linked.find(d => {
-                const volume = {from: d.location, to: {x:d.location.x+d.size.x,y:d.location.y+d.size.y,z:d.location.z+d.size.z}};
-                return BlockVolumeUtils.isInside(volume, location);
-            });
-            break;
-        case 'end':
-            link = this.linked.find(d => {
-                const volume = {from: d.linkedLocation,  to: {x:d.linkedLocation.x+d.size.x,y:d.linkedLocation.y+d.size.y,z:d.linkedLocation.z+d.size.z}} ;
-                return BlockVolumeUtils.isInside(volume, location);
-            });
-            break;
-        default:
-            throw new Error(`Invalid value for 'from': ${from}`);
-    }
-    return link || undefined;
-}
 
     /**
      * Get all links.
      * @returns {Array<Link>} The array of all links.
      */
-    getAllLinks(){
+    getAllLinks() {
         return this.linked;
     }
 
     /**
      * Clear all links.
      */
-    clearAllLinks(){
+    clearAllLinks() {
         this.linked = []
-        world.setDynamicProperty('PortalLinked',this.serialize(this.linked))
+        world.setDynamicProperty('PortalLinked', this.serialize(this.linked))
     }
-    
+
     /**
      * Check if two locations are linked.
      * @param {Vector} fromLocation - The starting location.
      * @param {Vector} toLocation - The ending location.
      * @returns {boolean} True if the locations are linked, false otherwise.
      */
-    isLinked(fromLocation,toLocation){
+    isLinked(fromLocation, toLocation) {
         return this.linked.some((d) => d.location === fromLocation && d.linkedLocation === toLocation);
     }
 
@@ -1308,7 +1309,7 @@ getLink(from, location){
      * Get the count of links.
      * @returns {number} The count of links.
      */
-    getCount(){
+    getCount() {
         return this.linked.length
     }
 
@@ -1317,198 +1318,198 @@ getLink(from, location){
      * @param {Link} link - The link to check.
      * @returns {boolean} True if the link exists, false otherwise.
      */
-    hasLink(link){
+    hasLink(link) {
         return this.linked.includes(link)
     }
-/**
- * Check if an entity is within the bounds of a linked portal.
- * @param {Entity} entity - The entity to check.
- * @param {string} from - Whether the entity is at the start or end of the linked location
- * @returns {Link|undefined} The link that the entity is in, or undefined if the entity is not in any linked portal.
- */
-isEntityInLinked(from, entity) {
-    if (typeof entity !== 'object') {
-        throw new Error('entity must be an object');
-    }
-    let link;
-    switch(from){
-        case 'start':
-            link = this.linked.find(link => {
-                const volume = {from: link.location, to: {x:link.location.x+link.size.x,y:link.location.y+link.size.y,z:link.location.z+link.size.z}};
-                return BlockVolumeUtils.isInside(volume, entity.location);
-            });
-            break;
-
-        case 'end':
-            link = this.linked.find(link => {
-                const volume = {from: link.linkedLocation, to: {x:link.linkedLocation.x+link.size.x,y:link.linkedLocation.y+link.size.y,z:link.linkedLocation.z+link.size.z}};
-                return BlockVolumeUtils.isInside(volume, entity.location);
-            });
-            break;
-        default:
-            throw new Error(`Invalid value for 'from': ${from}`);
-    }
-    return link || undefined;
-}
-
-async lightPortal (corner, dimension, x_oriented){
-    for (let x = 0; x < 4; x++){
-        for (let y = 0; y < 5; y++){
-            let blockpos = Vector.add(corner, new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0));
-            let is_edge = x == 0 || y == 0 || x == 3 || y == 4
-            if (!dimension.getBlock(blockpos).isValid()) await dimension.getBlock(blockpos).isValid()
-            if (is_edge){
-                dimension.getBlock(blockpos).setPermutation(BlockPermutation.resolve("gaia:keystone_block"))
-            } else {
-                dimension.getBlock(blockpos).setPermutation(BlockPermutation.resolve("gaia:gaia_portal", {"gaia:x_oriented": x_oriented}))
-            }
+    /**
+     * Check if an entity is within the bounds of a linked portal.
+     * @param {Entity} entity - The entity to check.
+     * @param {string} from - Whether the entity is at the start or end of the linked location
+     * @returns {Link|undefined} The link that the entity is in, or undefined if the entity is not in any linked portal.
+     */
+    isEntityInLinked(from, entity) {
+        if (typeof entity !== 'object') {
+            throw new Error('entity must be an object');
         }
-    }
-}
-
-breakPortal(corner, dimension, x_oriented){
-    for (let x = -3; x <= 3; x++){
-        for (let y = -3; y <= 3; y++){
-            let blockpos = Vector.add(corner, new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0));
-            let block = dimension.getBlock(blockpos);
-            let adjacent = block.getAdjacent()
-            if (block.type.id === 'gaia:gaia_portal'){
-                ['start', 'end'].forEach(position => {
-                    const link = this.getLink(position, blockpos)
-                    if(link){
-                        this.unlink(link.location, link.linkedLocation)
-                    } else return;
+        let link;
+        switch (from) {
+            case 'start':
+                link = this.linked.find(link => {
+                    const volume = { from: link.location, to: { x: link.location.x + link.size.x, y: link.location.y + link.size.y, z: link.location.z + link.size.z } };
+                    return BlockVolumeUtils.isInside(volume, entity.location);
                 });
-                block.setPermutation(BlockPermutation.resolve("minecraft:air"));
-            }
-            adjacent.filter(b=>{
-                b.typeId === 'gaia:gaia_portal'
-            }).forEach(b=>{
-                ['start', 'end'].forEach(position => {
-                    const link = this.getLink(position, b.location)
-                    if(link){
-                        this.unlink(link.location, link.linkedLocation)
-                    } else return
+                break;
+
+            case 'end':
+                link = this.linked.find(link => {
+                    const volume = { from: link.linkedLocation, to: { x: link.linkedLocation.x + link.size.x, y: link.linkedLocation.y + link.size.y, z: link.linkedLocation.z + link.size.z } };
+                    return BlockVolumeUtils.isInside(volume, entity.location);
                 });
-                b.setPermutation(BlockPermutation.resolve("minecraft:air"));
-            })
+                break;
+            default:
+                throw new Error(`Invalid value for 'from': ${from}`);
         }
+        return link || undefined;
     }
-}
 
-isLit(corner, dimension, x_oriented){
-    let isValid = true
-    for (let x = 0; x < 4; x++){
-        for (let y = 0; y < 5; y++){
-            let blockpos = Vector.add(corner, new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0));
-            let blocktype = dimension.getBlock(blockpos).typeId
-            let is_edge = x == 0 || y == 0 || x == 3 || y == 4
-            if (is_edge && blocktype != "gaia:keystone_block"){
-                isValid = false
-                break
-            }
-            if (!is_edge && blocktype != "gaia:gaia_portal"){
-                isValid = false
-                break
+    async lightPortal(corner, dimension, x_oriented) {
+        for (let x = 0; x < 4; x++) {
+            for (let y = 0; y < 5; y++) {
+                let blockpos = Vector.add(corner, new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0));
+                let is_edge = x == 0 || y == 0 || x == 3 || y == 4
+                if (!dimension.getBlock(blockpos)) await dimension.getBlock(blockpos) !== undefined
+                if (is_edge) {
+                    dimension.getBlock(blockpos).setPermutation(BlockPermutation.resolve("gaia:keystone_block"))
+                } else {
+                    dimension.getBlock(blockpos).setPermutation(BlockPermutation.resolve("gaia:gaia_portal", { "gaia:x_oriented": x_oriented }))
+                }
             }
         }
     }
-    return isValid
-}
 
-isUnlit(corner, dimension, x_oriented){
-    let isValid = true
-    for (let x = 0; x < 4; x++){
-        for (let y = 0; y < 5; y++){
-            let blockpos = Vector.add(corner, new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0));
-            let blocktype = dimension.getBlock(blockpos).typeId
-            let is_edge = x == 0 || y == 0 || x == 3 || y == 4
-            if (is_edge && blocktype != "gaia:keystone_block"){
-                isValid = false
-                break
-            }
-            if (!is_edge && blocktype != "minecraft:air"){
-                isValid = false
-                break
-            }
-        }
-    }
-    return isValid
-}
-/**
- * Checks whether a portal can be lit and if so lights the portal
- * @param {Block} block 
- * @returns {boolean} Whether lighting this portal was a success or not
- */
-canLight(block){
-    let position = block.location
-    let dimension = block.dimension
-    let offset = Vector.zero
-    let light_success = false
-    let x_oriented = true
-    for (let x = -2; x <= -1; x++){
-        for (let y = -3; y <= -1; y++){
-            let test_offset = new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0)
-            if (this.isUnlit(Vector.add(position, test_offset), dimension, true)){
-                offset = test_offset
-                light_success = true
-                break
+    breakPortal(corner, dimension, x_oriented) {
+        for (let x = -3; x <= 3; x++) {
+            for (let y = -3; y <= 3; y++) {
+                let blockpos = Vector.add(corner, new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0));
+                let block = dimension.getBlock(blockpos);
+                let adjacent = block.getAdjacent()
+                if (block.type.id === 'gaia:gaia_portal') {
+                    ['start', 'end'].forEach(position => {
+                        const link = this.getLink(position, blockpos)
+                        if (link) {
+                            this.unlink(link.location, link.linkedLocation)
+                        } else return;
+                    });
+                    block.setPermutation(BlockPermutation.resolve("minecraft:air"));
+                }
+                adjacent.filter(b => {
+                    b.typeId === 'gaia:gaia_portal'
+                }).forEach(b => {
+                    ['start', 'end'].forEach(position => {
+                        const link = this.getLink(position, b.location)
+                        if (link) {
+                            this.unlink(link.location, link.linkedLocation)
+                        } else return
+                    });
+                    b.setPermutation(BlockPermutation.resolve("minecraft:air"));
+                })
             }
         }
     }
-    if (!light_success){
-        x_oriented = false
-        for (let x = -2; x <= -1; x++){
-            for (let y = -3; y <= -1; y++){
+
+    isLit(corner, dimension, x_oriented) {
+        let isValid = true
+        for (let x = 0; x < 4; x++) {
+            for (let y = 0; y < 5; y++) {
+                let blockpos = Vector.add(corner, new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0));
+                let blocktype = dimension.getBlock(blockpos).typeId
+                let is_edge = x == 0 || y == 0 || x == 3 || y == 4
+                if (is_edge && blocktype != "gaia:keystone_block") {
+                    isValid = false
+                    break
+                }
+                if (!is_edge && blocktype != "gaia:gaia_portal") {
+                    isValid = false
+                    break
+                }
+            }
+        }
+        return isValid
+    }
+
+    isUnlit(corner, dimension, x_oriented) {
+        let isValid = true
+        for (let x = 0; x < 4; x++) {
+            for (let y = 0; y < 5; y++) {
+                let blockpos = Vector.add(corner, new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0));
+                let blocktype = dimension.getBlock(blockpos).typeId
+                let is_edge = x == 0 || y == 0 || x == 3 || y == 4
+                if (is_edge && blocktype != "gaia:keystone_block") {
+                    isValid = false
+                    break
+                }
+                if (!is_edge && blocktype != "minecraft:air") {
+                    isValid = false
+                    break
+                }
+            }
+        }
+        return isValid
+    }
+    /**
+     * Checks whether a portal can be lit and if so lights the portal
+     * @param {Block} block 
+     * @returns {boolean} Whether lighting this portal was a success or not
+     */
+    canLight(block) {
+        let position = block.location
+        let dimension = block.dimension
+        let offset = Vector.zero
+        let light_success = false
+        let x_oriented = true
+        for (let x = -2; x <= -1; x++) {
+            for (let y = -3; y <= -1; y++) {
                 let test_offset = new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0)
-                if (this.isUnlit(Vector.add(position, test_offset), dimension, false)){
+                if (this.isUnlit(Vector.add(position, test_offset), dimension, true)) {
                     offset = test_offset
                     light_success = true
                     break
                 }
             }
         }
-    }
-
-    if (light_success){
-        this.lightPortal(Vector.add(position, offset), dimension, x_oriented)
-    }
-    return light_success
-}
-
-
-convertCoords(location, fromDimension, toDimension) {
-    const scaleFactor = 1 / 4; // 1 block in 'gaia' is 4 blocks in 'overworld'
-    const xOffset = 175000; // Offset for the x-axis
-    const zOffset = 175000; // Offset for the z-axis
-
-    switch (fromDimension) {
-        case 'minecraft:overworld':
-            switch (toDimension) {
-                case 'gaia:gaia':
-                    return {
-                        x: Math.floor((location.x + xOffset) * scaleFactor+100000),
-                        y: location.y,
-                        z: Math.floor((location.z + zOffset) * scaleFactor+100000)
-                    };
-                default:
-                    throw new Error(`Unsupported conversion to ${toDimension}`);
+        if (!light_success) {
+            x_oriented = false
+            for (let x = -2; x <= -1; x++) {
+                for (let y = -3; y <= -1; y++) {
+                    let test_offset = new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0)
+                    if (this.isUnlit(Vector.add(position, test_offset), dimension, false)) {
+                        offset = test_offset
+                        light_success = true
+                        break
+                    }
+                }
             }
-        case 'gaia:gaia':
-            switch (toDimension) {
-                case 'minecraft:overworld':
-                    return {
-                        x: Math.floor(location.x / scaleFactor),
-                        y: location.y,
-                        z: Math.floor(location.z / scaleFactor)
-                    };
-                default:
-                    throw new Error(`Unsupported conversion to ${toDimension}`);
-            }
-        default:
-            throw new Error(`Unsupported conversion from ${fromDimension}`);
+        }
+
+        if (light_success) {
+            this.lightPortal(Vector.add(position, offset), dimension, x_oriented)
+        }
+        return light_success
     }
-}
+
+
+    convertCoords(location, fromDimension, toDimension) {
+        const scaleFactor = 4; // 1 block in 'gaia' is 4 blocks in 'overworld'
+        const xOffset = 175000; // Offset for the x-axis
+        const zOffset = 175000; // Offset for the z-axis
+
+        switch (fromDimension) {
+            case 'minecraft:overworld':
+                switch (toDimension) {
+                    case 'gaia:gaia':
+                        return {
+                            x: Math.floor(((location.x + 100000) / scaleFactor) + xOffset),
+                            y: location.y,
+                            z: Math.floor(((location.z + 100000) / scaleFactor) + zOffset)
+                        };
+                    default:
+                        throw new Error(`Unsupported conversion to ${toDimension}`);
+                }
+            case 'gaia:gaia':
+                switch (toDimension) {
+                    case 'minecraft:overworld':
+                        return {
+                            x: Math.floor(((location.x - 100000) * scaleFactor) - xOffset),
+                            y: location.y,
+                            z: Math.floor(((location.z - 100000) * scaleFactor) - zOffset)
+                        }
+                    default:
+                        throw new Error(`Unsupported conversion to ${toDimension}`);
+                }
+            default:
+                throw new Error(`Unsupported conversion from ${fromDimension}`);
+        }
+    }
 }
 
 /**
@@ -1516,7 +1517,7 @@ convertCoords(location, fromDimension, toDimension) {
  * @this {Gaia}
  */
 export class Gaia extends Portal {
-    
+
     constructor() {
         super();
         /**
@@ -1532,117 +1533,117 @@ export class Gaia extends Portal {
         this.afterEvents = new GaiaAfterEvents()
         this.beforeEvents = new GaiaBeforeEvents();
     }
- /**
-  * Get the entities within the Gaia Dimension
-  * @readonly
-  * @returns {Entity[]}
-  */
-    getEntities(){
+    /**
+     * Get the entities within the Gaia Dimension
+     * @readonly
+     * @returns {Entity[]}
+     */
+    getEntities() {
         try {
-    return world.getDimension('the end').getEntities({location:{x:100000,y:0,z:100000},farthest:400000,closest:100000})
-} catch (e) { }
+            return world.getDimension('the end').getEntities({ location: { x: 100000, y: 0, z: 100000 }, farthest: 400000, closest: 100000 })
+        } catch (e) { }
     }
-/**
- * Returns Whether or not a player is in the Gaia Dimension
- * @readonly
- * @param {Player} player 
- * @returns {boolean}
- */
-    isInGaia(player){
+    /**
+     * Returns Whether or not a player is in the Gaia Dimension
+     * @readonly
+     * @param {Player} player 
+     * @returns {boolean}
+     */
+    isInGaia(player) {
         let playerLoc = player.location
-        const inGaia = player.dimension.id == "minecraft:the_end" && playerLoc.x <= 400000 && playerLoc.z <= 400000 && playerLoc.x >= 100000 && playerLoc.z >= 100000 
-       if (inGaia) {
-        const currentBiome = this.getBiome(playerLoc)
-        const previousBiome = this?.getLastBiome(player)
-        if (currentBiome !== previousBiome) {
-            this.setBiome(player, currentBiome);
-            this.triggerEvent('biomeChange',{newBiome:currentBiome,oldBiome:previousBiome},'AfterEvent')
+        const inGaia = player.dimension.id == "minecraft:the_end" && playerLoc.x <= 400000 && playerLoc.z <= 400000 && playerLoc.x >= 100000 && playerLoc.z >= 100000
+        if (inGaia) {
+            const currentBiome = this.getBiome(playerLoc)
+            const previousBiome = this?.getLastBiome(player)
+            if (currentBiome !== previousBiome) {
+                this.setBiome(player, currentBiome);
+                this.triggerEvent('biomeChange', { newBiome: currentBiome, oldBiome: previousBiome }, 'AfterEvent')
+            }
         }
-    }
         return inGaia
     }
-/**
- * Returns the name of a biome in Gaia based of a location
- * @param {Vector} position 
- * @param {Dimension} dimension 
- * @readonly
- * @returns {string} The biome name
- */
-    getBiome(position){
-        try {
-        let blockId = this.dimension.getBlock(new Vector(position.x, 0, position.z))?.typeId
-        if (blockId.includes("gaia:bedrock_")){
-            return blockId.replace("gaia:bedrock_","")
-        } else {
-            return "none"
-        }
-    } catch(e) { }
-    }
-/**
-     * Update the current biome for a player.
-     * @param {Player} player - The player.
-     * @param {string} biome - The current biome.
+    /**
+     * Returns the name of a biome in Gaia based of a location
+     * @param {Vector} position 
+     * @param {Dimension} dimension 
+     * @readonly
+     * @returns {string} The biome name
      */
-setBiome(player, biome) {
-    this.playerBiomes[player.id] = biome;
-}
-
-/**
- * Get the previous biome for a player.
- * @param {Player} player - The player.
- * @returns {string | undefined} - The previous biome or undefined if not available.
- */
-getLastBiome(player) {
-    return this.playerBiomes[player.id];
-}
-   /**
-    * @readonly
-   * Starts the generation of fog in the Gaia dimension
-   */
-   pushFog(){
-    this.generateFog()
-}
-/**
- * Listen for events with a specific name and type of response.
- * @param {string} eventName - The name of the event to listen for.
- * @param {string} responseType - The type of response, e.g., 'Canceled', 'DataChanged', etc.
- * @param {string} eventType - The type of event, e.g., 'BeforeEvent' or 'AfterEvent'.
- * @returns {Promise<Object>} - A promise that resolves with the event data.
- */
-listenFor(eventName, responseType, eventType) {
-    return new Promise((resolve) => {
-        const callback = async (event) => {
-            const { id, message } = event;
-            if (id === `gaia:${eventName}${eventType}${responseType}`) {
-                const data = JSON.parse(message);
-                resolve(data);
+    getBiome(position) {
+        try {
+            let blockId = this.dimension.getBlock(new Vector(position.x, 0, position.z))?.typeId
+            if (blockId.includes("gaia:bedrock_")) {
+                return blockId.replace("gaia:bedrock_", "")
             } else {
-               await delay(0.001) 
-               resolve(undefined);
+                return "none"
             }
-        };
+        } catch (e) { }
+    }
+    /**
+         * Update the current biome for a player.
+         * @param {Player} player - The player.
+         * @param {string} biome - The current biome.
+         */
+    setBiome(player, biome) {
+        this.playerBiomes[player.id] = biome;
+    }
 
-        system.afterEvents.scriptEventReceive.subscribe(callback, {
-            namespaces: ['gaia']
+    /**
+     * Get the previous biome for a player.
+     * @param {Player} player - The player.
+     * @returns {string | undefined} - The previous biome or undefined if not available.
+     */
+    getLastBiome(player) {
+        return this.playerBiomes[player.id];
+    }
+    /**
+     * @readonly
+    * Starts the generation of fog in the Gaia dimension
+    */
+    pushFog() {
+        this.generateFog()
+    }
+    /**
+     * Listen for events with a specific name and type of response.
+     * @param {string} eventName - The name of the event to listen for.
+     * @param {string} responseType - The type of response, e.g., 'Canceled', 'DataChanged', etc.
+     * @param {string} eventType - The type of event, e.g., 'BeforeEvent' or 'AfterEvent'.
+     * @returns {Promise<Object>} - A promise that resolves with the event data.
+     */
+    listenFor(eventName, responseType, eventType) {
+        return new Promise((resolve) => {
+            const callback = async (event) => {
+                const { id, message } = event;
+                if (id === `gaia:${eventName}${eventType}${responseType}`) {
+                    const data = JSON.parse(message);
+                    resolve(data);
+                } else {
+                    await delay(0.001)
+                    resolve(undefined);
+                }
+            };
+
+            system.afterEvents.scriptEventReceive.subscribe(callback, {
+                namespaces: ['gaia']
+            });
+        }).catch(e => {
+            return undefined;
         });
-    }).catch(e => {
-        return undefined;
-    });
-}
+    }
 
 
 
-/**
- * 
- * @param {string} eventName Name of the Event
- * @param {string} type The type of the event,before or after, must be AfterEvent, or BeforeEvent(Not Complete)
- * @param {Object} data A object containing the event of the data
- */
-   triggerEvent(eventName,data,type){
-   this.runCommand(`scriptevent gaia:${eventName}${type} ${JSON.stringify(data)}`)
-   }
- runCommand(command){
-    this.dimension.runCommand(command)
- }   
+    /**
+     * 
+     * @param {string} eventName Name of the Event
+     * @param {string} type The type of the event,before or after, must be AfterEvent, or BeforeEvent(Not Complete)
+     * @param {Object} data A object containing the event of the data
+     */
+    triggerEvent(eventName, data, type) {
+        this.runCommand(`scriptevent gaia:${eventName}${type} ${JSON.stringify(data)}`)
+    }
+    runCommand(command) {
+        this.dimension.runCommand(command)
+    }
 }
 
