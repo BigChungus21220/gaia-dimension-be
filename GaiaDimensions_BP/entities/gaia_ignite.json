@@ -1,0 +1,72 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:entity": {
+      "description": {
+          "identifier": "gaia:gaia_ignite",
+          "is_spawnable": false,
+          "is_summonable": true,
+          "is_experimental": false
+      },
+      "component_groups": {
+          "exp": {
+            "minecraft:explode": {
+              "fuse_length": 0,
+              "fuse_lit": true,
+              "power": 0,
+              "causes_fire": false,
+              "breaks_blocks": false,
+              "fire_affected_by_griefing": true,
+              "destroy_affected_by_griefing": true
+             }
+          }
+      },
+      "components": {
+        "minecraft:timer": {
+            "time": 0.1,
+            "looping": false,
+            "time_down_event": {
+                "event": "burn"
+            }
+        },
+          "minecraft:collision_box": {
+              "width": 0.5,
+              "height": 0.5
+          },
+          "minecraft:explode": {
+            "fuse_length": 0.2,
+            "fuse_lit": true,
+            "power": 0,
+            "causes_fire": false,
+            "breaks_blocks": true,
+            "fire_affected_by_griefing": true,
+            "destroy_affected_by_griefing": true
+           },
+           "minecraft:pushable": {
+            "is_pushable": false,
+            "is_pushable_by_piston": false
+        },
+          "minecraft:health": {
+              "value": 1,
+              "min": 1,
+              "max": 1
+          },
+          "minecraft:type_family": {
+              "family": ["summon", "inanimate"]
+          },
+          "minecraft:physics": {
+              "has_gravity": false,
+              "has_collision": false
+          },
+          "minecraft:damage_sensor": [{
+              "cause": "all",
+              "deals_damage": false
+          }]
+      },
+      "events": {
+        "burn": {
+            "run_command": {
+              "command": [
+                "fill ~~~ ~~~ fire -1 replace air"
+              ]
+            }
+        }}}}

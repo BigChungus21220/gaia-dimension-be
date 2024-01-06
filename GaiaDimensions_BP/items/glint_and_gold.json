@@ -10,6 +10,12 @@
 			"minecraft:icon": {
 				"texture":  "glint_and_gold"
 			},
+		"minecraft:display_name": {
+			"value": "Glint and Gold"
+		},
+		"minecraft:entity_placer": {
+			"entity": "gaia:gaia_ignite"
+		  },
 			"minecraft:creative_category": {
 				"parent": "itemGroup.name.equipment"
 			},
