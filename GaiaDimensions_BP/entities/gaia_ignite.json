@@ -66,7 +66,7 @@
         "burn": {
             "run_command": {
               "command": [
-                "fill ~~~ ~~~ fire replace air"
+                "fill ~~~ ~~~ gaia:gold_fire replace air"
               ]
             }
         }}}}

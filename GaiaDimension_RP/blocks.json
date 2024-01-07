@@ -1223,4 +1223,8 @@
 "gaia:reinforced_bricks": {
   "textures": "reinforced_bricks",
   "sound": "normal"
+},
+"gaia:gold_fire": {
+  "textures": "gold_fire",
+  "sound": "normal"
 }}
