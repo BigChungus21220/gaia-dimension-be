@@ -33,7 +33,7 @@
       "tag:fire": {}
     },
     "events": {
-      "gaia:glitter": {
+      "gaia:puff": {
         "run_command": {
           "target": "self",
           "command": [ "fill ~~~ ~~~ air replace gaia:gold_fire" ]
