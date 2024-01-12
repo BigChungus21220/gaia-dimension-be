@@ -30,6 +30,10 @@
         }
       },
       "minecraft:loot": "loot_tables/empty.json",
+      "minecraft:on_interact" : {
+        "event": "gaia:puff2",
+        "target": "self"
+      },
       "tag:fire": {}
     },
     "events": {
@@ -38,7 +42,11 @@
           "target": "self",
           "command": [ "fill ~~~ ~~~ air replace gaia:gold_fire" ]
         }
-      }
-    }
-  }
-}
+      },
+      "gaia:puff2": {
+        "run_command": {
+          "target": "self",
+          "command": [ "fill ~~~ ~~~ air replace gaia:gold_fire",
+                       "playsound fire.fire @p" ]
+        }
+        }}}}
