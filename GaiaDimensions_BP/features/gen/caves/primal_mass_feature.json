@@ -1,0 +1,15 @@
+{
+	"format_version": "1.20.20",
+	"minecraft:ore_feature": {
+		"description": {
+			"identifier": "gaia:gen/caves/primal_mass_feature"
+		},
+		"count": 30,
+		"replace_rules": [
+			{
+				"places_block": "gaia:primal_mass",
+				"may_replace": ["gaia:gaia_stone"]
+			}
+		]
+	}
+}
