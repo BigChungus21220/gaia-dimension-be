@@ -66,7 +66,7 @@
 					"render_method": "opaque"
 				}
 			},
-			"minecraft:loot": "loot_tables/blocks/gaia/pulsing_malachite_planks_stair",	
+			"minecraft:loot": "loot_tables/blocks/gaia/pulsing_malachite_planks_stair.json",	
 			"minecraft:destructible_by_explosion": true,
 			"minecraft:breathability": "air",
 			"tag:wood": {},

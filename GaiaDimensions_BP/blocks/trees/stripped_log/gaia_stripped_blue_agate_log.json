@@ -1,5 +1,5 @@
 {
-  "format_version": "1.16.100",
+  "format_version": "1.20.10",
   "minecraft:block": {
     "description": {
       "identifier": "gaia:stripped_blue_agate_log",
@@ -12,7 +12,6 @@
       }
     },
     "components": {
-      "minecraft:map_color": "#636566",
       "minecraft:on_player_placing": {
         "event": "gaia:rotate"
       },

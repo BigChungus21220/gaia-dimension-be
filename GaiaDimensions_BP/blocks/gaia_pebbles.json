@@ -26,9 +26,10 @@
       "minecraft:material_instances": {
         "*": {
           "texture": "pebbles",
-          "render_method": "opaque",
-			"minecraft:map_color": "#ffffff"
+          "render_method": "opaque"
 		},
+	}
+},
 		"events": {
 			"destroy": {
 				"spawn_loot": {
@@ -37,6 +38,4 @@
 			}
 		}
 	}
-}
-  }
 }

@@ -1,5 +1,5 @@
 {
-	"format_version": "1.20",
+	"format_version": "1.20.10",
 	"minecraft:block": {
 		"description": {
 			"identifier": "gaia:pillar1_stairs",
@@ -67,7 +67,7 @@
 					"render_method": "opaque"
 				}
 			},
-			"minecraft:loot": "loot_tables/blocks/gaia/malachite_pillar_stairs",	
+			"minecraft:loot": "loot_tables/blocks/gaia/malachite_pillar_stairs.json",	
 			"minecraft:destructible_by_explosion": true,
 			"minecraft:breathability": "air",
 			"tag:wood": {},

@@ -22,7 +22,14 @@
 			"minecraft:unit_cube": {},
 			"minecraft:destructible_by_explosion": {
 				"explosion_resistance": 1
-			}},
+			},
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "salt_rock",
+          "render_method": "opaque"
+		}
+	}
+},
 		"events": {
 			"destroy": {
 				"spawn_loot": {
@@ -32,4 +39,3 @@
 		}
 	}
 }
-  
