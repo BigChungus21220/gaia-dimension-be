@@ -138,5 +138,9 @@
       "flipbook_texture": "textures/blocks/gaia_portal",
       "atlas_tile": "gaia_portal",
       "ticks_per_frame": 1
-    }
-    ]
+   },
+    {
+      "flipbook_texture": "textures/blocks/gold_fire",
+      "atlas_tile": "gold_fire",
+      "ticks_per_frame": 1
+    }]

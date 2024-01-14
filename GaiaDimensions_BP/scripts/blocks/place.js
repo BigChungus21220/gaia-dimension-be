@@ -4,8 +4,8 @@ MC.system.beforeEvents.watchdogTerminate.subscribe(
   (events) => (events.cancel = true)
 );
 MC.world.afterEvents.playerPlaceBlock.subscribe((events) => {
-  let block = events.block;
-  let player = events.player;
+  const { block, player } = events;
+
   if (player) {
     if (block.typeId == "gaia:purifier") {
       let position = block.location;
@@ -24,23 +24,21 @@ MC.world.afterEvents.playerPlaceBlock.subscribe((events) => {
       isEntity.runCommand('scriptevent forge:restructurerProperties')
       isEntity.nameTag = "restructer_ui";
       const property = block.permutation.getState('gaiadimension:entity')
-      if(property === false){
-        block.setPermutation(MC.BlockPermutation.resolve(block.typeId,{"gaiadimension:entity":true}))
+      if (property === false) {
+        block.setPermutation(MC.BlockPermutation.resolve(block.typeId, { "gaiadimension:entity": true }))
       }
     }
 
-    if (block.typeId == "gaiadimension:gaia_stone_furnace"){
+    if (block.typeId == "gaiadimension:gaia_stone_furnace") {
       let position = block.location;
       let isEntity = events.dimension.spawnEntity(
         "gaiadimension:furnace_entity",
         new MC.Vector(position.x + 0.5, position.y, position.z + 0.5)
       );
-      isEntity.runCommand('scriptevent forge:furnaceProperties')
+      isEntity.runCommand('scriptevent forge:furnaceProperties');
       isEntity.nameTag = "gaia_furnace";
-      const property = block.permutation.getState('gaiadimension:entity')
-      if(property === false){
-        block.setPermutation(MC.BlockPermutation.resolve(block.typeId,{"gaiadimension:entity":true}))
-      }
+      const property = block.permutation.getState('gaiadimension:entity');
+      if (!property) block.setPermutation(MC.BlockPermutation.resolve(block.typeId, { "gaiadimension:entity": true }));
     }
     if (block.typeId == "gaia:crate") {
       let position = block.location;

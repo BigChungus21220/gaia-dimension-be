@@ -1,31 +1,68 @@
 {
-  "format_version": "1.16.100",
+  "format_version": "1.20.10",
   "minecraft:block": {
     "description": {
       "identifier": "gaia:pillar1",
-      "category": "Nature"
+      "menu_category": {
+        "category": "nature",
+        "group": "itemGroup.name.log"
+      },
+      "states": {
+        "gaia:rotation": [0, 1, 2]
+      }
     },
     "components": {
-      "minecraft:loot": "loot_tables/blocks/gaia/malachite_pillar.json",
-      "minecraft:destroy_time": 3.0,
-      "minecraft:friction": 0.7,
-      "minecraft:map_color": "#FFFFFF",
-      "minecraft:explosion_resistance": 7.0,
-      "minecraft:block_light_absorption": 0.0,
-      "minecraft:block_light_emission": 1.0,
-      "minecraft:on_player_destroyed": {
-        "event": "remove:block",
-        "target": "self"
+      "minecraft:on_player_placing": {
+        "event": "gaia:rotate"
       },
       "minecraft:material_instances": {
-        "*": {
-          "texture": "gaia:pillar1",
-          "render_method": "opaque"
+				"*": {
+					"texture": "pillar1_side",
+					"render_method": "opaque"
+				},
+				"up": {
+					"texture": "pillar1_end",
+					"render_method": "opaque"
+				},
+        "down": {
+					"texture": "pillar1_end",
+					"render_method": "opaque"
+				}
+			},
+      "minecraft:unit_cube": {},
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 2
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 2
+      }
+    },
+    "events": {
+      "gaia:rotate": {
+        "set_block_property": {
+          "gaia:rotation": "Math.floor(query.block_face / 2)"
+        }
+      }
+    },
+    "permutations": [
+      {
+        "condition": "query.block_state('gaia:rotation') == 0",
+        "components": {
+          "minecraft:transformation": { "rotation": [0, 0, 0] }
         }
       },
-      "minecraft:creative_category": {
-        "category": "nature"
+      {
+        "condition": "query.block_state('gaia:rotation') == 1",
+        "components": {
+          "minecraft:transformation": { "rotation": [90, 0, 0] }
+        }
+      },
+      {
+        "condition": "query.block_state('gaia:rotation') == 2",
+        "components": {
+          "minecraft:transformation": { "rotation": [0, 0, 90] }
+        }
       }
-    }
+    ]
   }
 }

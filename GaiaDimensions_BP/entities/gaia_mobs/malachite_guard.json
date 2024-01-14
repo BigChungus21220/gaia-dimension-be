@@ -149,7 +149,7 @@
               "value": true
             },
             "cause": "lava",
-            "damage_per_tick": 4
+            "damage_per_tick": 0
           }
         ]
       },

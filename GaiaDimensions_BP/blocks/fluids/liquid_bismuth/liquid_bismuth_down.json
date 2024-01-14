@@ -47,6 +47,7 @@
       "minecraft:selection_box": false,
       "minecraft:destructible_by_mining": false,
       "minecraft:collision_box": false,
+      "minecraft:light_emission": 15,
       "minecraft:destructible_by_explosion": false,
       "minecraft:flammable": false
     },

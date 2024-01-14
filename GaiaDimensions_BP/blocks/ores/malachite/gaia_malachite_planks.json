@@ -4,30 +4,38 @@
 		"description": {
 			"identifier": "gaia:green_planks",
 			"menu_category": {
-				"category": "construction",
-				"group": "itemGroup.name.planks"
+				"category": "nature",
+				"group": "itemGroup.name.gaia_brick"
 			}
 		},
 		"components": {
-			"tag:stone": {},
 			"tag:is_axeable": {},
-			"minecraft:loot": "loot_tables/blocks/malachite_planks.json",
+			"tag:stone": {},
+			"minecraft:loot": "loot_tables/blocks/empty.json",
 			"minecraft:destructible_by_mining": {
 				"seconds_to_destroy": 1
 			},
-        "minecraft:flammable": {
-       "catch_chance_modifier": 0, 
-      "destroy_chance_modifier": 0 
-      },
+			"minecraft:on_player_destroyed": {
+				"event": "destroy",
+				"condition": "(query.equipped_item_any_tag('slot.weapon.mainhand','minecraft:is_pickaxe'))"
+			},
 			"minecraft:unit_cube": {},
 			"minecraft:destructible_by_explosion": {
-				"explosion_resistance": 3
+				"explosion_resistance": 1
 			},
       "minecraft:material_instances": {
         "*": {
-          "texture": "malachite_floor_tiles",
-          "render_method": "opaque",
-			"minecraft:map_color": "#ffffff"
+          "texture": "malachite_florr_tiles",
+          "render_method": "opaque"
 		}
 	}
-}}}
+},
+		"events": {
+			"destroy": {
+				"spawn_loot": {
+					"table": "loot_tables/blocks/gaia/malachite_planks.json"
+				}
+			}
+		}
+	}
+  }

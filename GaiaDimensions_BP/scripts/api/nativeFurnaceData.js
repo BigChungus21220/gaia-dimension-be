@@ -1,249 +1,246 @@
-import * as MC from "@minecraft/server";
+import { BlockPermutation, BlockStates, ItemStack } from "@minecraft/server";
 export const nativeRecipes = {
-    "minecraft:raw_iron":{
+    "minecraft:raw_iron": {
         output: "minecraft:iron_ingot"
     },
-    "minecraft:raw_gold":{
+    "minecraft:raw_gold": {
         output: "minecraft:gold_ingot"
     },
-    "minecraft:raw_copper":{
+    "minecraft:raw_copper": {
         output: "minecraft:copper_ingot"
     },
-    "minecraft:copper_ore":{
+    "minecraft:copper_ore": {
         output: "minecraft:copper_ingot"
     },
-    "minecraft:iron_ore":{
+    "minecraft:iron_ore": {
         output: "minecraft:iron_ingot"
     },
-    "minecraft:gold_ore":{
+    "minecraft:gold_ore": {
         output: "minecraft:gold_ingot"
     },
-    "minecraft:diamond_ore":{
+    "minecraft:diamond_ore": {
         output: "minecraft:diamond"
     },
-    "minecraft:lapis_ore":{
+    "minecraft:lapis_ore": {
         output: "minecraft:lapis_lazuli"
     },
-    "minecraft:redstone_ore":{
+    "minecraft:redstone_ore": {
         output: "minecraft:redstone"
     },
-    "minecraft:coal_ore":{
+    "minecraft:coal_ore": {
         output: "minecraft:coal"
     },
-    "minecraft:emerald_ore":{
+    "minecraft:emerald_ore": {
         output: "minecraft:emerald"
     },
-    "minecraft:deepslate_copper_ore":{
+    "minecraft:deepslate_copper_ore": {
         output: "minecraft:copper_ingot"
     },
-    "minecraft:deepslate_iron_ore":{
+    "minecraft:deepslate_iron_ore": {
         output: "minecraft:iron_ingot"
     },
-    "minecraft:deepslate_gold_ore":{
+    "minecraft:deepslate_gold_ore": {
         output: "minecraft:gold_ingot"
     },
-    "minecraft:deepslate_diamond_ore":{
+    "minecraft:deepslate_diamond_ore": {
         output: "minecraft:diamond"
     },
-    "minecraft:deepslate_lapis_ore":{
+    "minecraft:deepslate_lapis_ore": {
         output: "minecraft:lapis_lazuli"
     },
-    "minecraft:deepslate_redstone_ore":{
+    "minecraft:deepslate_redstone_ore": {
         output: "minecraft:redstone"
     },
-    "minecraft:deepslate_coal_ore":{
+    "minecraft:deepslate_coal_ore": {
         output: "minecraft:coal"
     },
-    "minecraft:deepslate_emerald_ore":{
+    "minecraft:deepslate_emerald_ore": {
         output: "minecraft:emerald"
     },
-    "minecraft:quartz_ore":{
+    "minecraft:quartz_ore": {
         output: "minecraft:quartz"
     },
-    "minecraft:ancient_debris":{
+    "minecraft:ancient_debris": {
         output: "minecraft:netherite_scrap"
     },
-    "minecraft:nether_gold_ore":{
+    "minecraft:nether_gold_ore": {
         output: "minecraft:gold_ingot"
     },
-    "minecraft:deepslate_emerald_ore":{
-        output: "minecraft:emerald"
-    },
-    "minecraft:porkchop":{
+    "minecraft:porkchop": {
         output: "minecraft:cooked_porkchop"
     },
-    "minecraft:beef":{
+    "minecraft:beef": {
         output: "minecraft:cooked_beef"
     },
-    "minecraft:chicken":{
+    "minecraft:chicken": {
         output: "minecraft:cooked_chicken"
     },
-    "minecraft:cod":{
+    "minecraft:cod": {
         output: "minecraft:cooked_cod"
     },
-    "minecraft:salmon":{
+    "minecraft:salmon": {
         output: "minecraft:cooked_salmon"
     },
-    "minecraft:potato":{
+    "minecraft:potato": {
         output: "minecraft:baked_potato"
     },
-    "minecraft:mutton":{
+    "minecraft:mutton": {
         output: "minecraft:cooked_mutton"
     },
-    "minecraft:rabbit":{
+    "minecraft:rabbit": {
         output: "minecraft:cooked_rabbit"
     },
-    "minecraft:kelp":{
+    "minecraft:kelp": {
         output: "minecraft:dried_kelp"
     },
-    "minecraft:sand":{
+    "minecraft:sand": {
         output: "minecraft:glass"
     },
-    "minecraft:cobblestone":{
+    "minecraft:cobblestone": {
         output: "minecraft:stone"
     },
-    "minecraft:sandstone":{
+    "minecraft:sandstone": {
         output: "minecraft:sandstone",
         outputBlockState: {
-            "sand_stone_type":  "smooth"
+            "sand_stone_type": "smooth"
         },
         blockState: {
             "sand_stone_type": "default"
         }
     },
-    "minecraft:red_sandstone":{
+    "minecraft:red_sandstone": {
         output: "minecraft:red_sandstone",
         outputBlockState: {
-            "sand_stone_type":  "smooth"
+            "sand_stone_type": "smooth"
         },
         blockState: {
             "sand_stone_type": "default"
         }
     },
-    "minecraft:stone":{
+    "minecraft:stone": {
         output: "minecraft:smooth_stone",
         blockState: {
             "stone_type": "stone"
         }
     },
-    "minecraft:quartz_block":{
+    "minecraft:quartz_block": {
         output: "minecraft:quartz_block",
         outputBlockState: {
-            "chisel_type":  "smooth"
+            "chisel_type": "smooth"
         },
         blockState: {
             "chisel_type": "default"
         }
     },
-    "minecraft:clay_ball":{
+    "minecraft:clay_ball": {
         output: "minecraft:brick"
     },
-    "minecraft:netherrack":{
+    "minecraft:netherrack": {
         output: "minecraft:netherbrick"
     },
-    "minecraft:nether_brick":{
+    "minecraft:nether_brick": {
         output: "minecraft:cracked_nether_bricks"
     },
-    "minecraft:basalt":{
+    "minecraft:basalt": {
         output: "minecraft:smooth_basalt"
     },
-    "minecraft:clay":{
+    "minecraft:clay": {
         output: "minecraft:hardened_clay"
     },
-    "minecraft:stonebrick":{
+    "minecraft:stonebrick": {
         output: "minecraft:stonebrick",
         outputBlockState: {
-            "stone_brick_type":  "cracked"
+            "stone_brick_type": "cracked"
         },
         blockState: {
             "stone_brick_type": "default"
         }
     },
-    "minecraft:polished_blackstone_bricks":{
+    "minecraft:polished_blackstone_bricks": {
         output: "minecraft:cracked_polished_blackstone_bricks"
     },
-    "minecraft:coobled_deepslate":{
+    "minecraft:coobled_deepslate": {
         output: "minecraft:deepslate"
     },
-    "minecraft:deepslate_bricks":{
+    "minecraft:deepslate_bricks": {
         output: "minecraft:cracked_deepslate_bricks"
     },
-    "minecraft:deepslate_tiles":{
+    "minecraft:deepslate_tiles": {
         output: "minecraft:cracked_deepslate_tiles"
     },
-    "minecraft:stained_hardened_clay":{
+    "minecraft:stained_hardened_clay": {
         //hardcoded
-        scriptedOutput: function(item=MC.ItemStack("air")){
-            let colorValues = MC.BlockStates.get("color").validValues
-            for(let i = 0; i < colorValues.length; i++){
-                let condition = `{"color": "${colorValues[i]}"}`
-                let block = MC.BlockPermutation.resolve(item.typeId, JSON.parse(condition))
-                let itemCompare = block.getItemStack(1)
-                if(item.isStackableWith(itemCompare)){
-                    let output = new MC.ItemStack(`minecraft:${colorValues[i]}_glazed_terracotta`) 
+        scriptedOutput: function (item = new ItemStack("air")) {
+            let colorValues = BlockStates.get("color").validValues;
+            for (const color of colorValues) {
+                let condition = `{"color": "${color}"}`
+                let block = BlockPermutation.resolve(item.typeId, JSON.parse(condition))
+                let itemCompare = block.getItemStack(1);
+                if (item.isStackableWith(itemCompare)) {
+                    let output = new ItemStack(`minecraft:${color}_glazed_terracotta`)
                     return output
                 }
             }
         }
     },
-    "minecraft:cactus":{
+    "minecraft:cactus": {
         output: "minecraft:green_dye"
     },
-    "minecraft:oak_log":{
+    "minecraft:oak_log": {
         output: "minecraft:charcoal"
     },
-    "minecraft:spruce_log":{
+    "minecraft:spruce_log": {
         output: "minecraft:charcoal"
     },
-    "minecraft:birch_log":{
+    "minecraft:birch_log": {
         output: "minecraft:charcoal"
     },
-    "minecraft:jungle_log":{
+    "minecraft:jungle_log": {
         output: "minecraft:charcoal"
     },
-    "minecraft:acacia_log":{
+    "minecraft:acacia_log": {
         output: "minecraft:charcoal"
     },
-    "minecraft:dark_oak_log":{
+    "minecraft:dark_oak_log": {
         output: "minecraft:charcoal"
     },
-    "minecraft:cherry_log":{
+    "minecraft:cherry_log": {
         output: "minecraft:charcoal"
     },
-    "minecraft:mangrove_log":{
+    "minecraft:mangrove_log": {
         output: "minecraft:charcoal"
     },
-    "minecraft:stripped_oak_log":{
+    "minecraft:stripped_oak_log": {
         output: "minecraft:charcoal"
     },
-    "minecraft:stripped_spruce_log":{
+    "minecraft:stripped_spruce_log": {
         output: "minecraft:charcoal"
     },
-    "minecraft:stripped_birch_log":{
+    "minecraft:stripped_birch_log": {
         output: "minecraft:charcoal"
     },
-    "minecraft:stripped_jungle_log":{
+    "minecraft:stripped_jungle_log": {
         output: "minecraft:charcoal"
     },
-    "minecraft:stripped_acacia_log":{
+    "minecraft:stripped_acacia_log": {
         output: "minecraft:charcoal"
     },
-    "minecraft:stripped_dark_oak_log":{
+    "minecraft:stripped_dark_oak_log": {
         output: "minecraft:charcoal"
     },
-    "minecraft:stripped_cherry_log":{
+    "minecraft:stripped_cherry_log": {
         output: "minecraft:charcoal"
     },
-    "minecraft:stripped_mangrove_log":{
+    "minecraft:stripped_mangrove_log": {
         output: "minecraft:charcoal"
     },
-    "minecraft:wood":{
+    "minecraft:wood": {
         output: "minecraft:charcoal"
     },
-    "minecraft:chorus_fruit":{
+    "minecraft:chorus_fruit": {
         output: "minecraft:popped_chorus_fruit"
     },
-    "minecraft:sea_pickle":{
+    "minecraft:sea_pickle": {
         output: "minecraft:lime_dye"
     },
 }
@@ -251,7 +248,7 @@ export const nativeFuels = {
     "minecraft:coal_block": 16000,
     "minecraft:dried_kelp_block": 4000,
     "minecraft:blaze_rod": 2400,
-    "minecraft:lava_bucket":{
+    "minecraft:lava_bucket": {
         burnTime: 20000,
         return: "minecraft:bucket"
     },

@@ -1,27 +1,41 @@
 {
-  "format_version": "1.16.100",
-  "minecraft:block": {
-    "description": {
-      "identifier": "gaia:brick1",
-      "category": "Nature"
-    },
-    "components": {
-      "minecraft:loot": "loot_tables/blocks/gaia/chiselled_malachite_brick.json",
-      "minecraft:destroy_time": 2.0,
-      "minecraft:friction": 0.7,
-      "minecraft:map_color": "#FFFFFF",
-      "minecraft:explosion_resistance": 1.0,
-      "minecraft:block_light_absorption": 0.0,
-      "minecraft:block_light_emission": 1.0,
+	"format_version": "1.20.10",
+	"minecraft:block": {
+		"description": {
+			"identifier": "gaia:brick1",
+			"menu_category": {
+				"category": "nature",
+				"group": "itemGroup.name.gaia_brick"
+			}
+		},
+		"components": {
+			"tag:brick": {},
+			"tag:stone": {},
+			"minecraft:loot": "loot_tables/blocks/empty.json",
+			"minecraft:destructible_by_mining": {
+				"seconds_to_destroy": 1
+			},
+			"minecraft:on_player_destroyed": {
+				"event": "destroy",
+				"condition": "(query.equipped_item_any_tag('slot.weapon.mainhand','minecraft:is_pickaxe'))"
+			},
+			"minecraft:unit_cube": {},
+			"minecraft:destructible_by_explosion": {
+				"explosion_resistance": 1
+			},
       "minecraft:material_instances": {
         "*": {
           "texture": "malachite_chisel_bricks",
           "render_method": "opaque"
-        }
-      },
-      "minecraft:creative_category": {
-        "category": "nature"
-      }
-    }
-      }
+		}
+  }
+},
+		"events": {
+			"destroy": {
+				"spawn_loot": {
+					"table": "loot_tables/blocks/gaia/chiselled_malachite_bricks.json"
+				}
+			}
+		}
+  }
 }
