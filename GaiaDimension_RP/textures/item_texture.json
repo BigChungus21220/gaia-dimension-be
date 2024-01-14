@@ -872,4 +872,136 @@
 		},
 		"pink_agate_sapling": {
 		  "textures": "textures/blocks/pink_agate_sapling"
-		}}}
+	},
+	"purifier_arrow_0": {
+		"textures": "textures/forge_gui/purifier_arrow/arrow_0"
+	  },
+	  "purifier_arrow_1": {
+		  "textures": "textures/forge_gui/purifier_arrow/arrow_1"
+	  },
+	  "purifier_arrow_2": {
+		  "textures": "textures/forge_gui/purifier_arrow/arrow_2"
+	  },
+	  "purifier_arrow_3": {
+		  "textures": "textures/forge_gui/purifier_arrow/arrow_3"
+	  },
+	  "purifier_arrow_4": {
+		  "textures": "textures/forge_gui/purifier_arrow/arrow_4"
+	  },
+	  "purifier_arrow_5": {
+		  "textures": "textures/forge_gui/purifier_arrow/arrow_5"
+	  },
+	  "purifier_arrow_6": {
+		  "textures": "textures/forge_gui/purifier_arrow/arrow_6"
+	  },
+	  "purifier_arrow_7": {
+		  "textures": "textures/forge_gui/purifier_arrow/arrow_7"
+	  },
+	  "purifier_arrow_8": {
+		  "textures": "textures/forge_gui/purifier_arrow/arrow_8"
+	  },
+	  "purifier_arrow_9": {
+		  "textures": "textures/forge_gui/purifier_arrow/arrow_9"
+	  },
+	  "purifier_arrow_10": {
+		  "textures": "textures/forge_gui/purifier_arrow/arrow_10"
+	  },
+	  "purifier_arrow_11": {
+		  "textures": "textures/forge_gui/purifier_arrow/arrow_11"
+	  },
+	  "purifier_arrow_12": {
+		  "textures": "textures/forge_gui/purifier_arrow/arrow_12"
+	  },
+	  "purifier_arrow_13": {
+		  "textures": "textures/forge_gui/purifier_arrow/arrow_13"
+	  },
+	  "purifier_arrow_14": {
+		  "textures": "textures/forge_gui/purifier_arrow/arrow_14"
+	  },
+	  "purifier_arrow_15": {
+		  "textures": "textures/forge_gui/purifier_arrow/arrow_15"
+	  },
+	  "purifier_arrow_16": {
+		  "textures": "textures/forge_gui/purifier_arrow/arrow_16"
+	  },
+	"purifier_arrow_17": {
+		"textures": "textures/forge_gui/purifier_arrow/arrow_17"
+	},
+	"purifier_arrow_18": {
+		"textures": "textures/forge_gui/purifier_arrow/arrow_18"
+	},
+	"purifier_arrow_19": {
+		"textures": "textures/forge_gui/purifier_arrow/arrow_19"
+	},
+	"purifier_arrow_20": {
+		"textures": "textures/forge_gui/purifier_arrow/arrow_20"
+	},
+	"purifier_arrow_21": {
+		"textures": "textures/forge_gui/purifier_arrow/arrow_21"
+	},
+	"purifier_arrow_22": {
+		"textures": "textures/forge_gui/purifier_arrow/arrow_22"
+	},
+	"purifier_arrow_23": {
+		"textures": "textures/forge_gui/purifier_arrow/arrow_23"
+	},
+	"radiator_0": {
+		"textures": "textures/forge_gui/purifier_radiator/radiator_0"
+	  },
+	  "radiator_1": {
+		  "textures": "textures/forge_gui/purifier_radiator/radiator_1"
+	  },
+	  "radiator_2": {
+		  "textures": "textures/forge_gui/purifier_radiator/radiator_2"
+	  },
+	  "radiator_3": {
+		  "textures": "textures/forge_gui/purifier_radiator/radiator_3"
+	  },
+	  "radiator_4": {
+		  "textures": "textures/forge_gui/purifier_radiator/radiator_4"
+	  },
+	  "radiator_5": {
+		  "textures": "textures/forge_gui/purifier_radiator/radiator_5"
+	  },
+	  "radiator_6": {
+		  "textures": "textures/forge_gui/purifier_radiator/radiator_6"
+	  },
+	  "radiator_7": {
+		  "textures": "textures/forge_gui/purifier_radiator/radiator_7"
+	  },
+	  "radiator_8": {
+		  "textures": "textures/forge_gui/purifier_radiator/radiator_8"
+	  },
+	  "radiator_9": {
+		  "textures": "textures/forge_gui/purifier_radiator/radiator_9"
+	  },
+	  "radiator_10": {
+		  "textures": "textures/forge_gui/purifier_radiator/radiator_10"
+	  },
+	  "radiator_11": {
+		  "textures": "textures/forge_gui/purifier_radiator/radiator_11"
+	  },
+	  "radiator_12": {
+		  "textures": "textures/forge_gui/purifier_radiator/radiator_12"
+	  },
+	  "radiator_13": {
+		  "textures": "textures/forge_gui/purifier_radiator/radiator_13"
+	  },
+	  "radiator_14": {
+		  "textures": "textures/forge_gui/purifier_radiator/radiator_14"
+	  },
+	  "radiator_15": {
+		  "textures": "textures/forge_gui/purifier_radiator/radiator_15"
+	  },
+	  "radiator_16": {
+		  "textures": "textures/forge_gui/purifier_radiator/radiator_16"
+	  },
+	"radiator_17": {
+		"textures": "textures/forge_gui/purifier_radiator/radiator_17"
+	},
+	"radiator_18": {
+		"textures": "textures/forge_gui/purifier_radiator/radiator_18"
+	},
+	"radiator_19": {
+		"textures": "textures/forge_gui/purifier_radiator/radiator_19"
+	}}}
