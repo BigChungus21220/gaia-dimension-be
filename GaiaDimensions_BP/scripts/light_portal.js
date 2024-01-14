@@ -1,4 +1,4 @@
-import { world, Vector, Dimension } from "@minecraft/server";
+import { world, Vector} from "@minecraft/server";
 import gaia from './world';
 
 world.afterEvents.itemUseOn.subscribe(async (event) => {
