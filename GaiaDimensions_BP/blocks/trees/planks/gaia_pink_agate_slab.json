@@ -88,7 +88,7 @@
 	  },
 	  "events": {
 		"gaia:full_slab": {
-		  "set_block_property": {
+		  "set_block_state": {
 			"gaia:double": true
 		  },
 		  "run_command": {

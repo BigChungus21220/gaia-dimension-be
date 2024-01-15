@@ -8,10 +8,6 @@
 
 		"places_feature": "gaia:gen/caves/frail_glitter_block",
 
-		"scatter_chance": {
-			"numerator": 100,
-			"denominator": 100
-		},
 		"iterations": 64,
 
 		"x": {
