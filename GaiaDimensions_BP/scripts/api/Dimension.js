@@ -1,6 +1,10 @@
 import { Vector, BlockPermutation, Dimension, system, Block, world, BlockVolumeUtils, Entity, Player, Trigger } from "@minecraft/server"
 import { delay } from "../utils";
 
+const gaia_start = {x:100000, z:100000};
+const gaia_end = {x:400000, z:400000};
+const gaia_origin = {x:(gaia_start.x + gaia_end.x)/2,z:(gaia_start.z + gaia_end.z)/2};
+
 const biomes = [
     "mineral_river",
     "volcanic_lands",
@@ -22,6 +26,23 @@ const biomes = [
 function floorEquals(a, b) {
     return Math.floor(a.x) == Math.floor(b.x) && Math.floor(a.z) == Math.floor(b.z)
 }
+
+/** 
+ * Checks if a given position is in a given area bounded by start and end vectors (inclusive)
+ * @warning y axis is ignored
+ * @param point position to check
+ * @param start bottom corner of bounding box
+ * @param end top corner of bounding box
+ * @returns {bool} Whether the vector is in the bounds
+*/
+function inAABB(point,start,end){
+    return 
+        start.x <= point.x && point.x <= end.x && 
+        start.z <= point.z && point.z <= end.z;
+}
+
+//collapse to hide gibberish
+// #region events
 
 /**
 * Generates a unique subscriber ID.
@@ -1066,7 +1087,7 @@ class GaiaBeforeEvents {
         this.furnaceActivate = new FurnaceActivateBeforeEventSignal();
     }
 }
-
+// #endregion
 
 class Fog {
     constructor() {
@@ -1117,17 +1138,6 @@ class Fog {
         this.triggerEvent('fogChange', { newFog: biome + '_fog' + biome, player: player }, 'AfterEvent')
     }
 
-    /**
- * Returns Whether or not a player is in the Gaia Dimension
- * @private
- * @readonly
- * @param {Player} player 
- * @returns {boolean}
- */
-    isInGaia(player) {
-        let playerLoc = player.location
-        return player.dimension.id == "minecraft:the_end" && playerLoc.x <= 400000 && playerLoc.z <= 400000 && playerLoc.x >= 100000 && playerLoc.z >= 100000
-    }
     /**
      * Returns the name of a biome in Gaia based of a location
      * @private
@@ -1480,17 +1490,16 @@ class Portal extends Fog {
 
     convertCoords(location, fromDimension, toDimension) {
         const scaleFactor = 4; // 1 block in 'gaia' is 4 blocks in 'overworld'
-        const xOffset = 175000; // Offset for the x-axis
-        const zOffset = 175000; // Offset for the z-axis
 
         switch (fromDimension) {
             case 'minecraft:overworld':
                 switch (toDimension) {
                     case 'gaia:gaia':
+                        //remaps area (-35700, -35700), (35700, 35700) in the overworld to (100000, 100000), (400000, 400000) in gaia
                         return {
-                            x: Math.floor(((location.x + 100000) / scaleFactor) + xOffset),
+                            x: Math.floor(location.x/scaleFactor + gaia_origin.x),
                             y: location.y,
-                            z: Math.floor(((location.z + 100000) / scaleFactor) + zOffset)
+                            z: Math.floor(location.z/scaleFactor + gaia_origin.z)
                         };
                     default:
                         throw new Error(`Unsupported conversion to ${toDimension}`);
@@ -1498,10 +1507,11 @@ class Portal extends Fog {
             case 'gaia:gaia':
                 switch (toDimension) {
                     case 'minecraft:overworld':
+                        //remaps area (100000, 100000), (400000, 400000) in gaia to (-35700, -35700), (35700, 35700) in the overworld
                         return {
-                            x: Math.floor(((location.x - 100000) * scaleFactor) - xOffset),
+                            x: Math.floor((location.x - gaia_origin.x)*scaleFactor),
                             y: location.y,
-                            z: Math.floor(((location.z - 100000) * scaleFactor) - zOffset)
+                            z: Math.floor((location.z - gaia_origin.z)*scaleFactor)
                         }
                     default:
                         throw new Error(`Unsupported conversion to ${toDimension}`);
@@ -1540,9 +1550,11 @@ export class Gaia extends Portal {
      */
     getEntities() {
         try {
-            return world.getDimension('the end').getEntities({ location: { x: 100000, y: 0, z: 100000 }, farthest: 400000, closest: 100000 })
+            //gets up to 10k entities that are in gaia
+            return world.getDimension('the end').getEntities({ location: { x: gaia_origin.x, y: 0, z: gaia_origin.z }, closest: 10000 }).filter((entity) => inAABB(entity.location, gaia_start, gaia_end))
         } catch (e) { }
     }
+
     /**
      * Returns Whether or not a player is in the Gaia Dimension
      * @readonly
@@ -1551,7 +1563,7 @@ export class Gaia extends Portal {
      */
     isInGaia(player) {
         let playerLoc = player.location
-        const inGaia = player.dimension.id == "minecraft:the_end" && playerLoc.x <= 400000 && playerLoc.z <= 400000 && playerLoc.x >= 100000 && playerLoc.z >= 100000
+        const inGaia = player.dimension.id == "minecraft:the_end" && inAABB(playerLoc.x, gaia_start, gaia_end)
         if (inGaia) {
             const currentBiome = this.getBiome(playerLoc)
             const previousBiome = this?.getLastBiome(player)
