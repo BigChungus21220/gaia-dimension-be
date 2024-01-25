@@ -1,5 +1,5 @@
 {
-  "format_version": "1.13.0",
+  "format_version": "1.16.0",
   "minecraft:entity": {
     "description": {
       "identifier": "gaia:malachite_guard",
@@ -69,7 +69,6 @@
         }
       }
     },
-
     "components": {
       "minecraft:underwater_movement": {
         "value": 5.0
@@ -315,7 +314,6 @@
       },
       "minecraft:conditional_bandwidth_optimization": {}
     },
-
     "events": {
       "minecraft:entity_spawned": {
         "run_command": {
