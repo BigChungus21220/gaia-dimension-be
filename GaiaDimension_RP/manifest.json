@@ -26,9 +26,14 @@
   ],
 	"subpacks": [
 		{
-			"folder_name": "chungus_texture",
-			"name": "Fan Texture Revision",
+			"folder_name": "revamped",
+			"name": "Unofficial Revised Textures",
 			"memory_tier": 0
+		},
+    {
+			"folder_name": "original",
+			"name": "Original Textures",
+			"memory_tier": 1
 		}
 	]
 }
