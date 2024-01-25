@@ -1,0 +1,20 @@
+{
+	"format_version": "1.16.100",
+	"minecraft:item": {
+		"description": {
+			"identifier": "gaia:bulbous_hobina_item",
+			"category": "nature"
+		},
+		"components": {
+			"minecraft:icon": {
+				"texture":  "bulbous_hobina"
+			},
+			"minecraft:creative_category": {
+				"parent": "itemGroup.name.flower"
+			},
+			"minecraft:block_placer": {
+				"block": "gaia:bulbous_hobina"
+			}
+		}
+	}
+}

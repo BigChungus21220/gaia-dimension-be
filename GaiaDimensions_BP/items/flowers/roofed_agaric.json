@@ -1,0 +1,20 @@
+{
+	"format_version": "1.16.100",
+	"minecraft:item": {
+		"description": {
+			"identifier": "gaia:roofed_agaric_item",
+			"category": "nature"
+		},
+		"components": {
+			"minecraft:icon": {
+				"texture":  "roofed_agaric"
+			},
+			"minecraft:creative_category": {
+				"parent": "itemGroup.name.flower"
+			},
+			"minecraft:block_placer": {
+				"block": "gaia:roofed_agaric"
+			}
+		}
+	}
+}

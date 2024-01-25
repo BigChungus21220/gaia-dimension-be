@@ -1,0 +1,31 @@
+{
+  "format_version": "1.8.0",
+  "minecraft:spawn_rules": {
+    "description": {
+      "identifier": "gaia:bismuth_ulterus",
+      "population_control": "monster"
+    },
+    "conditions": [
+      {
+        "minecraft:spawns_on_surface": {},
+        "minecraft:spawns_on_block_filter": "gaia:murky_grass",
+        "minecraft:brightness_filter": {
+          "min": 0,
+          "max": 10,
+          "adjust_for_weather": true
+        },
+        "minecraft:difficulty_filter": {
+          "min": "easy",
+          "max": "hard"
+        },
+        "minecraft:weight": {
+          "default": 5
+        },
+        "minecraft:herd": {
+          "min_size": 3,
+          "max_size": 3
+        }
+      }
+    ]
+  }
+}

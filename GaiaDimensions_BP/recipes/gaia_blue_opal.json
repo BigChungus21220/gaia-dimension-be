@@ -1,0 +1,24 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "blue_opal_77606b5c"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "B"
+    ],
+    "key": {
+      "B": {
+        "item": "gaia:blue_opal_block",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "gaia:blue_opal",
+      "count": 9
+    }
+  }
+}

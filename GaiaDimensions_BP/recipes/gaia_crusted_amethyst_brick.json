@@ -1,0 +1,28 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "crusted_amethyst_brick_c9057ccc"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "AB"
+    ],
+    "key": {
+      "A": {
+        "item": "gaia:amethyst_brick",
+        "data": 0
+      },
+      "B": {
+        "item": "gaia:crystal_shard",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "gaia:crusted_amethyst_bricks",
+      "count": 1
+    }
+  }
+}

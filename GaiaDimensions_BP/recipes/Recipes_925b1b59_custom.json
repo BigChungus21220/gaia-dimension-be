@@ -1,0 +1,19 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_furnace": {
+    "tags": [
+      "furnace"
+    ],
+    "output": {
+      "item": "gaia:cinnabar",
+      "data": 0
+    },
+    "input": {
+      "item": "gaia:cinnabar_ore",
+      "data": 0
+    },
+    "description": {
+      "identifier": "recipes_07ea5f90"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "jade_brick_stair_3b5743ca"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "A  ",
+      "AA ",
+      "AAA"
+    ],
+    "key": {"A": {
+      "item": "gaia:jade_bricks",
+      "data": 0
+    }},
+    "result": {
+      "item": "gaia:jade_brick_stair",
+      "count": 8
+    }
+  }
+}

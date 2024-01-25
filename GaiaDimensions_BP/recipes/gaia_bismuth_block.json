@@ -1,0 +1,26 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "bismuth_block_89a1ca57"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "AAA",
+      "AAA",
+      "AAA"
+    ],
+    "key": {
+      "A": {
+        "item": "gaia:bismuth_crystal",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "gaia:bismuth_block",
+      "count": 1
+    }
+  }
+}

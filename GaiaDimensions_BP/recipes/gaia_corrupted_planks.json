@@ -1,0 +1,24 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "corrupted_tiles_93e1ec18"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "B"
+    ],
+    "key": {
+      "B": {
+        "item": "gaia:corrupted_log",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "gaia:corrupted_tiles",
+      "count": 4
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:liquid_aura_bucket",
+      "category": "items"
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "liquid_aura_bucket"
+      },
+      "minecraft:display_name": {
+        "value": "Liquid Aura Bucket"
+      },
+      "minecraft:max_stack_size": 1,
+      "minecraft:block_placer": {
+        "block": "gaia:liquid_aura"
+      }
+    }
+  }
+}

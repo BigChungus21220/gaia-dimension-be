@@ -1,0 +1,24 @@
+{
+    "format_version": "1.12",
+    "minecraft:recipe_shaped": {
+      "description": {
+        "identifier": "chalcedony_block_1667285c"
+      },
+      "tags": [
+        "crafting_table"
+      ],
+      "pattern": [
+        "A"
+      ],
+      "key": {
+        "A": {
+          "item": "gaia:chalcedony",
+          "data": 0
+        }
+      },
+      "result": {
+        "item": "gaia:chalcedony_block",
+        "count": 1
+      }
+    }
+  }

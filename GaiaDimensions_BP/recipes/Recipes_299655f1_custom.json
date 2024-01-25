@@ -1,0 +1,19 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_furnace": {
+    "tags": [
+      "furnace"
+    ],
+    "output": {
+      "item": "gaia:tektite",
+      "data": 0
+    },
+    "input": {
+      "item": "gaia:tektite_ore",
+      "data": 0
+    },
+    "description": {
+      "identifier": "recipes_f9cd6252"
+    }
+  }
+}
