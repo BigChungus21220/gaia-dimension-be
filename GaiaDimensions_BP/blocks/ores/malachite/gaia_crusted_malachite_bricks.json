@@ -2,7 +2,7 @@
 	"format_version": "1.20.10",
 	"minecraft:block": {
 		"description": {
-			"identifier": "gaia:crusted_malachite_bricks",
+			"identifier": "gaia:crusted_greenstone_bricks",
 			"menu_category": {
 				"category": "nature",
 				"group": "itemGroup.name.gaia_brick"
@@ -25,7 +25,7 @@
 			},
       "minecraft:material_instances": {
         "*": {
-          "texture": "crusted_malachite_bricks",
+          "texture": "malachite_crusted_bricks",
           "render_method": "opaque"
 		},
 		"events": {

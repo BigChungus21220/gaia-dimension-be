@@ -13,6 +13,9 @@
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 13
       },
+      "minecraft:display_name": {
+        "value": "Keystone Block"
+      },
       "minecraft:destructible_by_explosion": {
         "explosion_resistance": 999999
       },

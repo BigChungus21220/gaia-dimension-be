@@ -25,7 +25,7 @@
 			},
       "minecraft:material_instances": {
         "*": {
-          "texture": "malachite_florr_tiles",
+          "texture": "malachite_floor_tiles",
           "render_method": "opaque"
 		}
 	}
