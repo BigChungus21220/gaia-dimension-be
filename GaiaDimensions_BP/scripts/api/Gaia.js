@@ -52,7 +52,7 @@ export class Gaia {
      */
     getBiome(location){
         if (this.isInGaia(location)){
-            const block = this.getBlock(Vector(location.x,0,location.z)).typeId.replace("gaia:bedrock_");
+            const block = this.getBlock(Vector(location.x,0,location.z)).typeId.replace("gaia:bedrock_","");
             if (block == null){
                 return false;
             } else {

@@ -1,43 +1,5 @@
 import { Entity, Block, system, Dimension, Vector, Direction, Player } from "@minecraft/server";
-import { vec3 } from "./Vector";
-
-/**
-* Returns the name of a biome in Gaia based of a location
-* @param {Vector} position 
-* @param {Dimension} dimension 
-* @readonly
-* @returns {string} The biome name
-*/
-Player.prototype.getCurrentBiome = function () {
-  try {
-    let blockId = this.dimension.getBlock(new Vector(this.x, 0, this.z))?.typeId
-    if (blockId.includes("gaia:bedrock_")) {
-      blockId = blockId.replace("gaia:bedrock_", "")
-      this.setDynamicProperty('gaia:currentBiome', blockId)
-      return blockId
-    } else {
-      return "none"
-    }
-  } catch (e) { }
-}
-
-/**
-    * Update the current biome for a player.
-    * @param {Player} player - The player.
-    * @param {string} biome - The current biome.
-    */
-Player.prototype.setBiome = function (biomeId) {
-  this.setDynamicProperty('gaia:currentBiome', biomeId);
-}
-
-/**
-* Get the previous biome for a player.
-* @param {Player} player - The player.
-* @returns {string | undefined} - The previous biome or undefined if not available.
-*/
-Player.prototype.getLastBiome = function () {
-  return this?.getDynamicProperty('gaia:currentBiome') ?? 'none'
-}
+import { vec3, Vec3 } from "./Vector";
 
 /**
  * @returns {boolean} Whether the entity is in a gaia portal or not
@@ -58,53 +20,47 @@ Entity.prototype.turnCoords = function (on = false) {
 
 /**
  * Made by Redux
-* Gets adjacent blocks connected to the current block.
-* @this {Block}
-* @returns {Block[]} - An array of adjacent blocks.
-*/
-Block.prototype.getAdjacent = function () {
-  const connectedBlocks = [];
-  const visited = new Set();
-  const queue = [{ x: this.x, y: this.y, z: this.z }];
+ * Gets adjacent blocks connected to the current block.
+ * @this {Block}
+ * @param {function} filter A filter to apply to the search
+ * @param {number} maxSearch The maximum number of blocks to search
+ * @returns {Block[]} - An array of adjacent blocks.
+ */
+Block.prototype.getAdjacent = function (filter, maxSearch) {
+  const connectedBlocks = []; //blocks that are connected to this block
+  const visited = []; //blocks that have been checked
+  const queue = [vec3(this.location)]; //blocks to check next
 
+  let i = 0;
   const intervalId = system.runInterval(() => {
-    if (queue.length === 0) {
+    //exit condition
+    if (queue.length === 0 || i >= maxSearch) {
       system.clearRun(intervalId);
       return;
     }
 
-    const { x, y, z } = queue.shift();
-    const position = `${x},${y},${z}`;
+    const position = queue.shift(); //get next position in queue
+    visited.add(position);
 
-    if (visited.has(position))
-
-      visited.add(position);
-
+    //in case of unloaded chunks
     try {
-      const adjacentBlock = this.dimension.getBlock(new Vector(x, y, z));
-      connectedBlocks.push(adjacentBlock);
-      const directions = [
-        { x: 0, y: 0, z: -1 }, // north
-        { x: 1, y: 0, z: 0 },  // east
-        { x: 0, y: 0, z: 1 },  // south
-        { x: -1, y: 0, z: 0 }, // west
-        { x: 0, y: 1, z: 0 },  // up
-        { x: 0, y: -1, z: 0 }  // down
-      ];
-
-      for (const direction of directions) {
-        const newX = x + direction.x;
-        const newY = y + direction.y;
-        const newZ = z + direction.z;
-        const newPosition = `${newX},${newY},${newZ}`;
-
-        if (!visited.has(newPosition)) {
-          queue.push({ x: newX, y: newY, z: newZ });
+      const currentBlock = this.dimension.getBlock(new Vector(x, y, z));
+      
+      //check if current block meets filter
+      if (filter(currentBlock)){
+        connectedBlocks.push(adjacentBlock);
+  
+        //add adjacent blocks to queue
+        for (const direction of Vec3.directions) {
+          const newPosition = position.add(direction);
+          if (!visited.has(newPosition)) queue.push(newPosition);
         }
       }
     } catch (err) {
       console.log(err, err.stack);
     }
+
+    i++;
   });
   system.clearRun(intervalId)
   return connectedBlocks;
@@ -154,7 +110,7 @@ String.prototype.decode = function () {
 }
 
 Vector.prototype.toString = function () {
-  return vec3(this.x, this.y, this.z).toString()
+  return vec3(this.x, this.y, this.z).toString();
 }
 /**
  * Converts a Direction to a Vector 
