@@ -38,8 +38,6 @@ world.afterEvents.playerPlaceBlock.subscribe(({ player, block, dimension }) => {
     const entity = dimension.spawnEntity(entityId, block.center());
     entity.nameTag = nametag;
     const property = block.permutation.getState('gaiadimension:entity');
-    if (!property) {
-      block.setPermutation(BlockPermutation.resolve(block.typeId, { "gaiadimension:entity": true }));
-    }
+    if (!property) block.setPermutation(BlockPermutation.resolve(block.typeId, { "gaiadimension:entity": true }));
   }
 }, { blockTypes: Object.keys(blockEntities) });
