@@ -11,7 +11,7 @@ import { Vector, BlockPermutation, Block, world, BlockVolumeUtils, Entity} from 
  * @author Redux
  * @description Class that manages Portal structures and Portal Linking.
  */
-class Portal extends Fog {
+class Portal {
     /**
      * Create a Portal.
      */

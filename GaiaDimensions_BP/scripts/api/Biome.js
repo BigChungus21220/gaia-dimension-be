@@ -1,3 +1,4 @@
+import {Gaia} from './Gaia'
 /**
  * Handles biome changes
  */

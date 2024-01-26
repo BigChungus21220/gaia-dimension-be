@@ -4,7 +4,7 @@ import { the_end } from "../utils";
 /**
  * Class containing methods relating to the Gaia dimension
  */
-class Gaia {
+export class Gaia {
     /**
      * Range of blocks in the end that Gaia takes up
      */
@@ -95,7 +95,7 @@ class Gaia {
      * @returns {CommandResult} The result of the command
      */
     run_command(command){
-        return the_end.run_command(command);
+        return the_end.runCommand(command);
     }
 
     /**
