@@ -11,7 +11,7 @@ class FogSystem {
      * Updates the fogs applied to the player
      * @param {Player} player Player to update fogs of
      */
-    updateFog(player){
+    static updateFog(player){
         if (Gaia.isInGaia(player.location)) {
             const currentBiome = BiomeSystem.getBiome(player);
             this.setFog(player, currentBiome);
@@ -24,7 +24,7 @@ class FogSystem {
      * Removes all fogs applied to the player
      * @param {Player} player Player to remove fogs from
      */
-    clearFogs(player) {
+    static clearFogs(player) {
         for (const biome of playerData[player.id]) {
             player.runCommandAsync("fog @s remove " + biome);
             this.playerFogs[player.id] = [];
@@ -36,7 +36,7 @@ class FogSystem {
      * @param {Player} player The player to add a fog to
      * @param {string} biome The biome fog to add to the player
      */
-    setFog(player, biome) {
+    static setFog(player, biome) {
         this.clearFogs(player);
         player.runCommandAsync("fog @s push gaia:" + biome + "_fog " + biome);
         this.playerFogs[player.id].push(biome);

@@ -1,14 +1,9 @@
-import { world, system } from "@minecraft/server"
-import gaia from './world'
+import { system } from "@minecraft/server"
+import Gaia from './api/Gaia'
 
 system.runInterval(() => {
-    const players = world.getPlayers()
+    const players = Gaia.getPlayers();
     for (const player of players){
-        if (gaia.isInGaia(player)){
-            const entities = player.dimension.getEntities({location: player.location, maxDistance: 500, type: "minecraft:shulker"})
-            for (const entity of entities){
-                entity.remove()
-            }
-        }
+        Gaia.getEntities({location: player.location, maxDistance: 500, type: "minecraft:shulker"}).forEach((entity) => entity.remove())
     }
 },8)
