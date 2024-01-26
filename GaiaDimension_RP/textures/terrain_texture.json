@@ -867,7 +867,7 @@
   "reinforced_bricks": {
     "textures": "textures/blocks/reinforced_bricks"
   },
-  "pulsing_malachite_bricks": { "textures": "textures/blocks/reinforced_bricks"
+  "pulsing_malachite_bricks": { "textures": "textures/blocks/pulsing_malachite_bricks"
 },
 "gold_fire": {
   "textures": "textures/blocks/gold_fire"
