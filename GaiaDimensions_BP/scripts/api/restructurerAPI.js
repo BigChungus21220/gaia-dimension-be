@@ -1,221 +1,103 @@
-import * as MC from '@minecraft/server'
-import { nativeEssenceFuel, nativeRecipes, nativeShinyFuel } from './nativeRestructurerData'
-
-const scoreboard = MC.world.scoreboard;
-
-function setPermutation(block, args) {
-  try {
-    const argumentsPermutation = String(JSON.stringify(args).replaceAll("{", "").replaceAll("}", "").replaceAll(':', '='));
-    block.dimension.runCommandAsync(`setblock ${block.location.x} ${block.location.y} ${block.location.z} ${block.typeId} ${argumentsPermutation}`);
-  } catch (error) {
-    console.error("Error in setPermutation:", error);
-  }
-}
-
-function getObjective(id) {
-  try {
-    return scoreboard.getObjective(id) ?? scoreboard.addObjective(id, id);
-  } catch (error) {
-
-    return null;
-  }
-}
-
-function score(entity, mode = "add", objectiveId, value) {
-  try {
-    const objective = getObjective(objectiveId);
-    if (objective) {
-      switch (mode) {
-        case 'add':
-          objective.addScore(entity, value);
-          break;
-        case 'set':
-          objective.setScore(entity, value);
-          break;
-        case 'remove':
-          objective.setScore(entity, objective.getScore(entity) - value);
-          break;
-        default:
-          console.error("Invalid mode in score:", mode);
-          break;
-      }
-    }
-  } catch (error) {
-
-  }
-}
-
-function percentage(partialValue, totalValue) {
-  return Math.round(((100 * partialValue) / totalValue));
-}
-
-function itemManipulate(inv, slot, itemStack, amountMode = "set", amount = 0) {
-  try {
-    switch (amountMode) {
-      case "remove":
-        if (amount > 0) {
-          if (itemStack?.amount > 1 && amount < itemStack.maxAmount) {
-            const itemReturn = itemStack.clone();
-            itemReturn.amount -= amount;
-            inv.setItem(slot, itemReturn);
-          } else if (itemStack?.amount === amount) {
-            inv.setItem(slot, new MC.ItemStack("air"));
-          }
-        }
-        break;
-
-      case "add":
-        if (amount > 0) {
-          if (itemStack?.amount > 0 && amount < itemStack.maxAmount) {
-            const itemReturn = itemStack.clone();
-            itemReturn.amount += amount;
-            inv.setItem(slot, itemReturn);
-          }
-        }
-        break;
-      default:
-        break;
-    } 
-
-
-  } catch (error) {
-    // Handle errors if needed
-  }
-}
-
-const calculateBurnTime = (shinyBurnTime,essenceBurnTime) =>{
-  return Math.round((shinyBurnTime + essenceBurnTime) / 2)
-}
-function barStage(itemId, actualValue, valueMax, inv, value, slot) {
-  try {
-    if (actualValue === 0) {
-      inv.setItem(slot, new MC.ItemStack(`${itemId}_0`));
-    } else {
-      const valueCurrent = Math.floor(percentage(actualValue, valueMax));
-      for (let i = 0; i <= value; i++) {
-        if (actualValue > 0 && Math.abs(valueCurrent - Math.floor(percentage(i, value))) < 0.0001) {
-        inv.setItem(slot, new MC.ItemStack(`${itemId}_${i}`));
-        }
-      }
-    }
-  } catch (error) {
-
-  }
-}
-
+import { BlockPermutation, ItemStack, system, world } from "@minecraft/server";
+import { nativeRecipes, nativeShinyFuel, nativeEssenceFuel } from "./nativeRestructurerData.js";
 
 export function restructurerLoad() {
-  //Command example: scriptevent forge:restructurerLoad <prefix:String> <cooktimemax:Int> <arrowId: String> <flameId:String>
-  MC.system.afterEvents.scriptEventReceive.subscribe(data => {
-    try {
-      const { sourceEntity: entity, message, id } = data;
+  const dimensions = [
+    world.getDimension('overworld'),
+    world.getDimension('nether'),
+    world.getDimension('the end'),
+  ];
 
-      switch (id) {
-        case 'forge:restructurerProperties':
-          score(entity, "add", "cookTime", 0);
-          score(entity, "add", "burnTime", 0);
-          score(entity, "add", "burnTimeMax", 0);
-          break;
-
-        case 'forge:restructurerLoad':
-          const args = message.split(" ", 5);
-          const cookTimeDefault = Number(args[1]);
-          const block = entity.dimension.getBlock({ x: entity.location.x, y: entity.location.y, z: entity.location.z });
-          restructurerReciper(block, entity, { prefix: args[0], cookTickMax: cookTimeDefault, arrowId: args[2], flameId:args[3] });
-          break;
-
-        default:
-          break;
-      }
-    } catch (error) {
-
-    }
+  system.runInterval(() => {
+    const entities = dimensions.flatMap((dimension) => dimension.getEntities({ type: 'gaia:restructer_container' }));
+    entities.forEach(entity => doRestructurer(entity, entity.dimension.getBlock(entity.location)));
   });
 }
 
-/**
- * 
- * @param {MC.Block} blockOrigin 
- * @param {MC.Entity} entity 
- * @param {Object.< prefix: string, cookTickMax: number, arrowId: string,flameId:string >} data 
- */
-function restructurerReciper(blockOrigin, entity, data = { prefix: "forge", cookTickMax: 0, arrowId: "forge:restructurer_arrow",flameId:"forge:restructurer_flame"}) {
-  try {
-    const inv = entity.getComponent('inventory').container
-    const slots = [
-      inv.getItem(0), //First input(shiny item) slot
-      inv.getItem(1), //Second input(essence item) slot
-      inv.getItem(2), //Third input slot(ingredient input)
-      inv.getItem(3), //Output slot,
-      inv.getItem(4)  //Residue slot
-    ]
-    const cookTime = getObjective("cookTime")?.getScore(entity);
-    const burnTime = getObjective("burnTime")?.getScore(entity);
-    const burnTimeMax = getObjective("burnTimeMax")?.getScore(entity);
-    barStage(data.flameId, burnTime, burnTimeMax, inv, 12, 6);
-    barStage(data.arrowId, cookTime, data.cookTickMax, inv, 23, 7);
-    let output, byproduct;
-    if (slots[2].typeId in nativeRecipes){
-      output = new MC.ItemStack(nativeRecipes[slots[2].typeId].output)
-      byproduct = new MC.ItemStack(nativeRecipes[slots[2].typeId].byproduct)
-    }
-if (((slots[2].typeId in nativeRecipes && slots[3] && slots[3].isStackableWith(output)) || (slots[2]?.typeId in nativeRecipes && slots[3] == undefined))){
-  if (slots[0] && slots[1]){
-  if (burnTime <= 0){
-  if (slots[0].typeId in nativeShinyFuel && slots[1].typeId in nativeEssenceFuel){
-    score(entity, "set", "burnTimeMax", calculateBurnTime(nativeShinyFuel[slots[0].typeId],nativeEssenceFuel[slots[1].typeId]))
-    score(entity, "set", "burnTime", burnTimeMax);
-    MC.system.runTimeout(() => {
-      itemManipulate(inv, 0, slots[0], "remove", 1);
-      itemManipulate(inv, 1, slots[1], "remove", 1);
-    }, 1);
+function doRestructurer(restructurer, block) {
+  const inv = restructurer.getComponent('inventory').container;
+  const shinyInput = inv.getItem(0);
+  const essenceInput = inv.getItem(1);
+  const ingredientInput = inv.getItem(2);
+  const outputItem = inv.getItem(3);
+  const byproductOutput = inv.getItem(4);
+
+  const fuelValue = getScore(restructurer, 'fuelValue');
+  const cookValue = getScore(restructurer, 'cookValue');
+  const cookTime = getScore(restructurer, 'cookTime');
+
+  if (fuelValue > 0) setScore(restructurer, 'fuelValue', fuelValue - 1);
+
+  inv.setItem(5, new ItemStack(`forge:restructurer_flame_${fuelValue > 0 ? Math.floor((fuelValue * 13) / (cookTime * 3.5)) : 0}`));
+  inv.setItem(6, new ItemStack(`forge:restructurer_arrow_${Math.ceil((cookValue * 16) / 700)}`));
+
+  if (!shinyInput || !essenceInput) {
+    if (cookValue > 0) setScore(restructurer, 'cookValue', cookValue - 1);
+    return;
   }
-}
+  const recipe = nativeRecipes[ingredientInput.typeId];
+  const output = new ItemStack(recipe.output);
+  const byproduct = new ItemStack(recipe.byproduct)
+
+  if (!recipe) {
+    if (cookValue > 0) setScore(restructurer, 'cookValue', cookValue - 1);
+    return;
+  }
+
+  if (fuelValue === 0) {
+    if (!shinyInput && !essenceInput) return block.setPermutation(BlockPermutation.resolve(block.typeId, { 'gaiadimension:lit': false }));
+    const fuelData = calculateBurnTime(nativeShinyFuel[shinyInput.typeId], nativeEssenceFuel[essenceInput.typeId]);
+    if (!fuelData) return block.setPermutation(BlockPermutation.resolve(block.typeId, { 'gaiadimension:lit': false }));
+
+    if (shinyInput.amount > 1) {
+      shinyInput.amount--;
+      inv.setItem(0, shinyInput);
+    } else inv.setItem(0, undefined);
+
+    if (essenceInput.amount > 1) {
+      essenceInput.amount--;
+      inv.setItem(1, essenceInput);
+    } else inv.setItem(1, undefined);
+
+    const burnTime = fuelData
+    setScore(restructurer, 'fuelValue', burnTime * 3.5);
+
+    setScore(restructurer, 'cookTime', burnTime);
+  } else block.setPermutation(BlockPermutation.resolve(block.typeId, { 'gaiadimension:lit': true }));
+
+  if (outputItem && (outputItem.typeId !== output.typeId || outputItem.amount === 64)) return;
+
+  setScore(restructurer, 'cookValue', cookValue < 700 ? (cookValue + 1) : 0);
+  if (cookValue < 700) return;
+
+  if (outputItem) output.amount += outputItem.amount;
+  if (byproductOutput) byproduct.amount += byproductOutput.amount;
+  inv.setItem(3, output);
+  inv.setItem(4, byproduct);
+
+  if (ingredientInput.amount > 0) {
+    ingredientInput.amount--;
+    inv.setItem(2, ingredientInput);
+  } else inv.setItem(2, undefined);
 }
 
-if (burnTime > 0 && cookTime < data.cookTickMax) {
-  score(entity, "add", "cookTime", 1);
-} else if (burnTime > 0 && cookTime === data.cookTickMax) {
-  score(entity, "set", "cookTime", 0);
-  if (slots[3] === undefined) {
-    if (slots[4] === undefined) {
-      inv.setItem(4, byproduct.clone());
-    } else {
-      itemManipulate(inv, 4, slots[4], "add", 1);
-    }
-    inv.setItem(3, output.clone());
-    itemManipulate(inv, 0, slots[0], "remove", 1);
-    itemManipulate(inv, 1, slots[1], "remove", 1);
-    itemManipulate(inv, 2, slots[2], "remove", 1);
-  } else {
-    itemManipulate(inv, 3, slots[3], "add", 1);
-    itemManipulate(inv, 0, slots[0], "remove", 1);
-    itemManipulate(inv, 1, slots[1], "remove", 1);
-  }
-}  
-}
-else {
-  if (cookTime > 0) {
-    score(entity, "set", "cookTime", 0);
-  }
-}
-if (burnTime > 0) {
-  score(entity, "remove", "burnTime", 1);
-  const blockPerms = blockOrigin.permutation.clone();
-  setPermutation(blockOrigin, [{"gaiadimension:direction": blockPerms.getState("gaiadimension:direction") }, { "gaiadimension:lit": true}, {"gaiadimension:entity": true }]);
-} else {
-  const blockPerms = blockOrigin.permutation.clone();
-  setPermutation(blockOrigin, [{"gaiadimension:direction": blockPerms.getState("gaiadimension:direction") }, { "gaiadimension:lit": false}, {"gaiadimension:entity": true}]);
+function getScore(entity, objectiveId) {
+  const scoreboard = world.scoreboard;
+  const score = scoreboard.getObjective(objectiveId) || scoreboard.addObjective(objectiveId, objectiveId);
+  return score.hasParticipant(entity) ? score.getScore(entity) : 0;
 }
 
-if (burnTime === 0 && cookTime > 0) {
-  score(entity, "remove", "cookTime", 1);
+function setScore(entity, objectiveId, value) {
+  const scoreboard = world.scoreboard;
+  const score = scoreboard.getObjective(objectiveId) || scoreboard.addObjective(objectiveId, objectiveId);
+  score.setScore(entity, value);
 }
 
-if (!(slots[0] && slots[1]) && burnTime === 0 && burnTimeMax > 0) {
-  score(entity, "set", "burnTimeMax", 0);
-}
-  } catch (e) {
 
-  }
+
+const calculateBurnTime = (shinyBurnTime, essenceBurnTime) => {
+  return Math.round((shinyBurnTime + essenceBurnTime) / 2)
 }
+
+
+

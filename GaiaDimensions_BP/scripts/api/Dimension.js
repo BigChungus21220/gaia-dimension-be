@@ -1,10 +1,10 @@
-import { Vector, BlockPermutation, Dimension, system, Block, world, BlockVolumeUtils, Entity, Player, Trigger } from "@minecraft/server"
+import { Vector, BlockPermutation, Dimension, system, Block, world, BlockVolumeUtils, Entity, Player} from "@minecraft/server"
 import { delay } from "../utils";
 
-const gaia_start = {x:100000, z:100000};
-const gaia_end = {x:400000, z:400000};
-const gaia_origin = {x:(gaia_start.x + gaia_end.x)/2,z:(gaia_start.z + gaia_end.z)/2};
-
+const gaia_start = { x: 100000, z: 100000 };
+const gaia_end = { x: 400000, z: 400000 };
+const gaia_origin = { x: (gaia_start.x + gaia_end.x) / 2, z: (gaia_start.z + gaia_end.z) / 2 };
+const the_end = world.getDimension('the_end')
 const biomes = [
     "mineral_river",
     "volcanic_lands",
@@ -27,6 +27,17 @@ function floorEquals(a, b) {
     return Math.floor(a.x) == Math.floor(b.x) && Math.floor(a.z) == Math.floor(b.z)
 }
 
+/**
+ * Returns whether or not an entity is in the Gaia Dimension
+ * @readonly
+ * @param {Entity} entity
+ * @returns {boolean}
+ */
+if (Entity.isInGaia == null) Entity.prototype.isInGaia = function () {
+    const inGaia = this.dimension.id == "minecraft:the_end" && inAABB(location, gaia_start, gaia_end)
+    return inGaia
+}
+
 /** 
  * Checks if a given position is in a given area bounded by start and end vectors (inclusive)
  * @warning y axis is ignored
@@ -35,10 +46,10 @@ function floorEquals(a, b) {
  * @param end top corner of bounding box
  * @returns {bool} Whether the vector is in the bounds
 */
-function inAABB(point,start,end){
-    return 
-        start.x <= point.x && point.x <= end.x && 
-        start.z <= point.z && point.z <= end.z;
+function inAABB(point, start, end) {
+    return (
+        start.x <= point.x && point.x <= end.x &&
+        start.z <= point.z && point.z <= end.z);
 }
 
 //collapse to hide gibberish
@@ -1089,9 +1100,8 @@ class GaiaBeforeEvents {
 }
 // #endregion
 
-class Fog {
+class FogSystem {
     constructor() {
-
     };
     generateFog() {
         let playerData = {};
@@ -1099,15 +1109,7 @@ class Fog {
             let players = world.getPlayers();
             for (let player of players) {
                 let playerId = player.id;
-                let playerInArea = player.isInGaia();
-                if (playerInArea) {
-                    const currentBiome = this.getBiome(playerLoc)
-                    const previousBiome = this?.getLastBiome(player)
-                    if (currentBiome !== previousBiome) {
-                        this.setBiome(player, currentBiome);
-                        this.triggerEvent('biomeChange', { newBiome: currentBiome, oldBiome: previousBiome }, 'AfterEvent')
-                    }
-                }
+                let playerInArea = this.isInGaia(player);
                 let playerLocation = player.location;
                 if (
                     playerData[playerId] === undefined ||
@@ -1131,30 +1133,23 @@ class Fog {
     }
 
     addFog(player, biome) {
-        player.runCommandAsync("fog @s push gaia:" + biome + "_fog " + biome)
+        player.runCommand("fog @s push gaia:" + biome + "_fog " + biome)
     }
 
     async updateFog(player) {
+        const eventData = { newFog: biome + '_fog' + biome, player: player }
         this.clearFogs(player)
-        let biome = this.getBiome(player.location, player.dimension);
-        this.triggerEvent('fogChange', { newFog: biome + '_fog' + biome, player: player, cancel: false }, 'BeforeEvent')
+        let biome = player.getCurrentBiome();
+        player.runCommand(`scriptevent gaia:fogChangeBeforeEvent ${JSON.stringify(eventData)}`)
         const data = await this.listenFor('fogChange', 'Canceled', 'BeforeEvent')
         if (data && data.cancel === true) return;
         if (biome != "none") {
             this.addFog(player, biome)
         }
-        this.triggerEvent('fogChange', { newFog: biome + '_fog' + biome, player: player }, 'AfterEvent')
+        player.runCommand(`scriptevent gaia:fogChangeAfterEvent ${JSON.stringify(eventData)}`)
     }
 
-    /**
-     * @private
-     * @param {string} eventName Name of the Event
-     * @param {string} type The type of the event,before or after, must be AfterEvent, or BeforeEvent(Not Complete)
-     * @param {Object} data A object containing the event of the data
-     */
-    triggerEvent(eventName, data, type) {
-        this.runCommand(`scriptevent gaia:${eventName}${type} ${JSON.stringify(data)}`)
-    }
+
 
     /**
     * Listen for events with a specific name and type of response.
@@ -1201,7 +1196,7 @@ class Fog {
  * @author Redux
  * @description Class that manages Portal structures and Portal Linking.
  */
-class Portal extends Fog {
+class Portal extends FogSystem {
     /**
      * Create a Portal.
      */
@@ -1487,9 +1482,9 @@ class Portal extends Fog {
                     case 'gaia:gaia':
                         //remaps area (-35700, -35700), (35700, 35700) in the overworld to (100000, 100000), (400000, 400000) in gaia
                         return {
-                            x: Math.floor(location.x/scaleFactor + gaia_origin.x),
+                            x: Math.floor(location.x / scaleFactor + gaia_origin.x),
                             y: location.y,
-                            z: Math.floor(location.z/scaleFactor + gaia_origin.z)
+                            z: Math.floor(location.z / scaleFactor + gaia_origin.z)
                         };
                     default:
                         throw new Error(`Unsupported conversion to ${toDimension}`);
@@ -1499,9 +1494,9 @@ class Portal extends Fog {
                     case 'minecraft:overworld':
                         //remaps area (100000, 100000), (400000, 400000) in gaia to (-35700, -35700), (35700, 35700) in the overworld
                         return {
-                            x: Math.floor((location.x - gaia_origin.x)*scaleFactor),
+                            x: Math.floor((location.x - gaia_origin.x) * scaleFactor),
                             y: location.y,
-                            z: Math.floor((location.z - gaia_origin.z)*scaleFactor)
+                            z: Math.floor((location.z - gaia_origin.z) * scaleFactor)
                         }
                     default:
                         throw new Error(`Unsupported conversion to ${toDimension}`);
@@ -1512,16 +1507,7 @@ class Portal extends Fog {
     }
 }
 
-/**
- * Returns whether or not an entity is in the Gaia Dimension
- * @readonly
- * @param {Entity} entity
- * @returns {boolean}
- */
-if (Entity.isInGaia == null) Entity.prototype.isInGaia = () => {
-    const inGaia = dimension.id == "minecraft:the_end" && inAABB(location, gaia_start, gaia_end)
-    return inGaia
-}
+
 
 /**
  * A class that wraps the dimension of gaia
@@ -1530,16 +1516,7 @@ if (Entity.isInGaia == null) Entity.prototype.isInGaia = () => {
 export class Gaia extends Portal {
 
     constructor() {
-        super(); //wtf in hell
-        /**
-         * @private
-         * @readonly
-         */
-        /**
-         * @private
-         * @readonly
-         */
-        this.playerBiomes = {};
+        super(); //wtf in hell, ? -kumja1
         this.afterEvents = new GaiaAfterEvents()
         this.beforeEvents = new GaiaBeforeEvents();
     }
@@ -1554,42 +1531,6 @@ export class Gaia extends Portal {
             //gets all entities that are in gaia
             return the_end.getEntities({}).filter((entity) => inAABB(entity.location, gaia_start, gaia_end))
         } catch (e) { }
-    }
-
-    /**
-     * Returns the name of a biome in Gaia based of a location
-     * @param {Vector} position 
-     * @param {Dimension} dimension 
-     * @readonly
-     * @returns {string} The biome name
-     */
-    getBiome(position) {
-        try {
-            let blockId = this.dimension.getBlock(new Vector(position.x, 0, position.z))?.typeId
-            if (blockId.includes("gaia:bedrock_")) {
-                return blockId.replace("gaia:bedrock_", "")
-            } else {
-                return "none"
-            }
-        } catch (e) { }
-    }
-
-    /**
-         * Update the current biome for a player.
-         * @param {Player} player - The player.
-         * @param {string} biome - The current biome.
-         */
-    setBiome(player, biome) {
-        this.playerBiomes[player.id] = biome;
-    }
-
-    /**
-     * Get the previous biome for a player.
-     * @param {Player} player - The player.
-     * @returns {string | undefined} - The previous biome or undefined if not available.
-     */
-    getLastBiome(player) {
-        return this.playerBiomes[player.id];
     }
 
     /**
