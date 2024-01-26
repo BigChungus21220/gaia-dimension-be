@@ -31,7 +31,7 @@ function doRestructurer(restructurer, block) {
   inv.setItem(5, new ItemStack(`forge:restructurer_flame_${fuelValue > 0 ? Math.floor((fuelValue * 13) / (cookTime * 3.5)) : 0}`));
   inv.setItem(6, new ItemStack(`forge:restructurer_arrow_${Math.ceil((cookValue * 16) / 700)}`));
 
-  if (!inputItem) {
+  if (!shinyInput || !essenceInput) {
     if (cookValue > 0) setScore(restructurer, 'cookValue', cookValue - 1);
     return;
   }

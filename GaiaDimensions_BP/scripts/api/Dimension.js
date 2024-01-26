@@ -1,10 +1,10 @@
-import { Vector, BlockPermutation, Dimension, system, Block, world, BlockVolumeUtils, Entity, Player, Trigger } from "@minecraft/server"
+import { Vector, BlockPermutation, Dimension, system, Block, world, BlockVolumeUtils, Entity, Player} from "@minecraft/server"
 import { delay } from "../utils";
 
 const gaia_start = { x: 100000, z: 100000 };
 const gaia_end = { x: 400000, z: 400000 };
 const gaia_origin = { x: (gaia_start.x + gaia_end.x) / 2, z: (gaia_start.z + gaia_end.z) / 2 };
-
+const the_end = world.getDimension('the_end')
 const biomes = [
     "mineral_river",
     "volcanic_lands",
@@ -27,6 +27,16 @@ function floorEquals(a, b) {
     return Math.floor(a.x) == Math.floor(b.x) && Math.floor(a.z) == Math.floor(b.z)
 }
 
+/**
+ * Returns whether or not an entity is in the Gaia Dimension
+ * @readonly
+ * @param {Entity} entity
+ * @returns {boolean}
+ */
+if (Entity.isInGaia == null) Entity.prototype.isInGaia = function () {
+    const inGaia = this.dimension.id == "minecraft:the_end" && inAABB(location, gaia_start, gaia_end)
+    return inGaia
+}
 
 /** 
  * Checks if a given position is in a given area bounded by start and end vectors (inclusive)
@@ -39,11 +49,10 @@ function floorEquals(a, b) {
 function inAABB(point, start, end) {
     return (
         start.x <= point.x && point.x <= end.x &&
-        start.z <= point.z && point.z <= end.z
-    );
+        start.z <= point.z && point.z <= end.z);
 }
 
-//collapse to hide jsdocs
+//collapse to hide gibberish
 // #region events
 
 /**
@@ -140,7 +149,7 @@ class FurnaceActivateBeforeEvent {
          * Whether the event is canceled.
          * @type {boolean}
          */
-        this.cancel = data?.cancel || false;
+        this.cancel = data.cancel || false;
 
         /**
          * The player activating the furnace.
@@ -1091,10 +1100,8 @@ class GaiaBeforeEvents {
 }
 // #endregion
 
-// #region Dimension & Systems
-class GaiaFogSystem {
+class FogSystem {
     constructor() {
-        this.gaia
     };
     generateFog() {
         let playerData = {};
@@ -1130,7 +1137,7 @@ class GaiaFogSystem {
     }
 
     async updateFog(player) {
-        const eventData = { newFog: biome + '_fog' + biome, player: player}
+        const eventData = { newFog: biome + '_fog' + biome, player: player }
         this.clearFogs(player)
         let biome = player.getCurrentBiome();
         player.runCommand(`scriptevent gaia:fogChangeBeforeEvent ${JSON.stringify(eventData)}`)
@@ -1142,7 +1149,7 @@ class GaiaFogSystem {
         player.runCommand(`scriptevent gaia:fogChangeAfterEvent ${JSON.stringify(eventData)}`)
     }
 
-   
+
 
     /**
     * Listen for events with a specific name and type of response.
@@ -1189,7 +1196,7 @@ class GaiaFogSystem {
  * @author Redux
  * @description Class that manages Portal structures and Portal Linking.
  */
-class GaiaPortals extends GaiaFogSystem {
+class Portal extends FogSystem {
     /**
      * Create a Portal.
      */
@@ -1468,15 +1475,16 @@ class GaiaPortals extends GaiaFogSystem {
 
     convertCoords(location, fromDimension, toDimension) {
         const scaleFactor = 4; // 1 block in 'gaia' is 4 blocks in 'overworld'
+
         switch (fromDimension) {
             case 'minecraft:overworld':
                 switch (toDimension) {
                     case 'gaia:gaia':
                         //remaps area (-35700, -35700), (35700, 35700) in the overworld to (100000, 100000), (400000, 400000) in gaia
                         return {
-                            x: Math.floor((location.x / scaleFactor) + gaia_origin.x),
+                            x: Math.floor(location.x / scaleFactor + gaia_origin.x),
                             y: location.y,
-                            z: Math.floor((location.z / scaleFactor) + gaia_origin.z)
+                            z: Math.floor(location.z / scaleFactor + gaia_origin.z)
                         };
                     default:
                         throw new Error(`Unsupported conversion to ${toDimension}`);
@@ -1499,27 +1507,20 @@ class GaiaPortals extends GaiaFogSystem {
     }
 }
 
+
+
 /**
  * A class that wraps the dimension of gaia
  * @this {Gaia}
  */
-export class Gaia extends GaiaPortals {
+export class Gaia extends Portal {
 
     constructor() {
-        super();
-        /**
-         * @private
-         * @readonly
-         */
-        this.dimension = world.getDimension('the end')
-        /**
-         * @private
-         * @readonly
-         */
-        this.playerBiomes = {};
+        super(); //wtf in hell, ? -kumja1
         this.afterEvents = new GaiaAfterEvents()
         this.beforeEvents = new GaiaBeforeEvents();
     }
+
     /**
      * Get the entities within the Gaia Dimension
      * @readonly
@@ -1527,31 +1528,19 @@ export class Gaia extends GaiaPortals {
      */
     getEntities() {
         try {
-            //gets up to 10k entities that are in gaia
-            return world.getDimension('the end').getEntities({ location: { x: gaia_origin.x, y: 0, z: gaia_origin.z }, closest: 10000 }).filter((entity) => inAABB(entity.location, gaia_start, gaia_end))
+            //gets all entities that are in gaia
+            return the_end.getEntities({}).filter((entity) => inAABB(entity.location, gaia_start, gaia_end))
         } catch (e) { }
     }
 
     /**
-     * Returns Whether or not a player is in the Gaia Dimension
      * @readonly
-     * @param {Player} player 
-     * @returns {boolean}
-     */
-    isInGaia(player) {
-        let playerLoc = player.location
-        const inGaia = player.dimension.id == "minecraft:the_end" && inAABB(playerLoc.x, gaia_start, gaia_end)
-        if (inGaia) {
-            const currentBiome = player.getBiome(playerLoc)
-            const previousBiome = player?.getLastBiome(player)
-            if (currentBiome !== previousBiome) {
-                player.setBiome(player, currentBiome);
-                this.triggerEvent('biomeChange', { newBiome: currentBiome, oldBiome: previousBiome }, 'AfterEvent')
-            }
-        }
-        return inGaia
+    * Starts the generation of fog in the Gaia dimension
+    */
+    pushFog() {
+        this.generateFog()
     }
-   
+
     /**
      * Listen for events with a specific name and type of response.
      * @param {string} eventName - The name of the event to listen for.
@@ -1580,6 +1569,8 @@ export class Gaia extends GaiaPortals {
         });
     }
 
+
+
     /**
      * 
      * @param {string} eventName Name of the Event
@@ -1590,7 +1581,7 @@ export class Gaia extends GaiaPortals {
         this.runCommand(`scriptevent gaia:${eventName}${type} ${JSON.stringify(data)}`)
     }
     runCommand(command) {
-        this.dimension.runCommand(command)
+        the_end.runCommand(command)
     }
 }
 

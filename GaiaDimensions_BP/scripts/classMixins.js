@@ -39,6 +39,7 @@ Player.prototype.getLastBiome = function () {
   return this?.getDynamicProperty('gaia:currentBiome') ?? 'none'
 }
 
+
 /**
  * @returns {boolean} Whether the entity is in a gaia portal or not
  */
