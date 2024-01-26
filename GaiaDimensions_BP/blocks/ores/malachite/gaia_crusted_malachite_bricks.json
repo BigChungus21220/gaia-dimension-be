@@ -25,7 +25,7 @@
 			},
       "minecraft:material_instances": {
         "*": {
-          "texture": "crusted_malachite_bricks",
+          "texture": "malachite_crusted_bricks",
           "render_method": "opaque"
 		},
 		"events": {
