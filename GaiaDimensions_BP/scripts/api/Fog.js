@@ -1,3 +1,6 @@
+import { Gaia } from "./Gaia";
+
+
 /**
  * Handles fog changes
  */
@@ -11,7 +14,7 @@ class FogSystem {
      * Updates the fogs applied to the player
      * @param {Player} player Player to update fogs of
      */
-    static updateFog(player){
+    static updateFog(player) {
         if (Gaia.isInGaia(player.location)) {
             const currentBiome = BiomeSystem.getBiome(player);
             this.setFog(player, currentBiome);

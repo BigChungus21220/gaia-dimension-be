@@ -5,7 +5,7 @@ export default Gaia;
 /**
  * Class containing methods relating to the Gaia dimension
  */
-class Gaia {
+export class Gaia {
 
     /**
      * Range of blocks in the end that Gaia takes up

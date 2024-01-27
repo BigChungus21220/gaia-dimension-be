@@ -1,3 +1,4 @@
+import './classMixins.js';
 import './geyser.js';
 import './clearMobs.js';
 import './portal.js';
