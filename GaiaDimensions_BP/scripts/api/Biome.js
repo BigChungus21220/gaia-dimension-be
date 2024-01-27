@@ -12,7 +12,7 @@ class BiomeSystem {
      * Checks and updates player biome
      * @param {Player} player Player to update biome of
      */
-    updateBiome(player){
+    static updateBiome(player){
         const biome = Gaia.getBiome(player.location);
         if (Gaia.isInGaia(player.location)) {
             if (playerBiomes[player.id] != biome){
@@ -27,7 +27,7 @@ class BiomeSystem {
      * @param {Player} player Player to get biome of
      * @returns {string} Biome player is in
      */
-    getBiome(player){
+    static getBiome(player){
         return playerBiomes[player.id];
     }
 }

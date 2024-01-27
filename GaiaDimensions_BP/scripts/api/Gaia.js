@@ -1,10 +1,12 @@
 import { Vector } from "@minecraft/server"
 import { the_end } from "../utils";
+export default Gaia;
 
 /**
  * Class containing methods relating to the Gaia dimension
  */
-export class Gaia {
+class Gaia {
+
     /**
      * Range of blocks in the end that Gaia takes up
      */
@@ -41,7 +43,7 @@ export class Gaia {
      * @param {Vector} location location to check
      * @returns {boolean} Whether or not the location is in Gaia
      */
-    isInGaia(location){
+    static isInGaia(location){
         return range.start.x <= location.x && location.x <= range.end.x && range.start.z <= location.z && location.z <= range.end.z;
     }
 
@@ -50,7 +52,7 @@ export class Gaia {
      * @param {Vector} location location to check
      * @returns {string|boolean} The biome the location is in (if applicable, otherwise false)
      */
-    getBiome(location){
+    static getBiome(location){
         if (this.isInGaia(location)){
             const block = this.getBlock(Vector(location.x,0,location.z)).typeId.replace("gaia:bedrock_","");
             if (block == null){
@@ -67,7 +69,7 @@ export class Gaia {
      * @param {EntityQueryOptions} entityQueryOptions Query to use for search
      * @returns {Entity[]} All entities matching the query
      */
-    getEntities(entityQueryOptions){
+    static getEntities(entityQueryOptions){
         return the_end.getEntities(entityQueryOptions).filter((entity) => this.isInGaia(entity));
     }
 
@@ -76,7 +78,7 @@ export class Gaia {
      * @param {EntityQueryOptions} entityQueryOptions Query to use for search
      * @returns {Player[]} All players matching the query
      */
-    getPlayers(entityQueryOptions){
+    static getPlayers(entityQueryOptions){
         return the_end.getPlayers(entityQueryOptions).filter((entity) => this.isInGaia(entity));
     }
 
@@ -85,7 +87,7 @@ export class Gaia {
      * @param {Vector} location Location to get block from
      * @returns {Block} The block at the location
      */
-    getBlock(location){
+    static getBlock(location){
         return the_end.getBlock(location);
     }
 
@@ -94,8 +96,8 @@ export class Gaia {
      * @param {string} command Command to run
      * @returns {CommandResult} The result of the command
      */
-    run_command(command){
-        return the_end.runCommand(command);
+    static run_command(command){
+        return the_end.run_command(command);
     }
 
     /**
@@ -104,7 +106,7 @@ export class Gaia {
      * @param {Vector} location Location to spawn entity
      * @returns {Entity} The spawned entity
      */
-    spawnEntity(identifier, location){
+    static spawnEntity(identifier, location){
         return the_end.spawnEntity(identifier, location);
     }
 
@@ -114,7 +116,7 @@ export class Gaia {
      * @param {Vector} location Location to spawn item
      * @returns {Entity} The spawned item entity
      */
-    spawnItem(itemStack, location){
+    static spawnItem(itemStack, location){
         return the_end.spawnItem(itemStack, location);
     } 
 
@@ -124,7 +126,7 @@ export class Gaia {
      * @param {Vector} location Location to spawn particle
      * @param {MolangVariableMap} molangVariables optional varibles for this particle
      */
-    spawnParticle(effectName, location, molangVariables = {}){
+    static spawnParticle(effectName, location, molangVariables = {}){
         return the_end.spawnParticle(effectName, location, molangVariables);
     } 
 }
