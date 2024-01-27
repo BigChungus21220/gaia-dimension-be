@@ -1,10 +1,18 @@
 import {Gaia} from './Gaia'
+import * as Events from "./Events"
+
+//Subscribe updateBiome to playerChangeBlock
+Events.playerChangeBlock.subscribe((eventData) => {
+    BiomeSystem.updateBiome(eventData.player);
+})
+
+
 /**
  * Handles biome changes
  */
 class BiomeSystem {
     /**
-     * The biome each player is in
+     * The biome each player is in (should be made private)
      */
     static playerBiomes = {};
 
@@ -16,7 +24,7 @@ class BiomeSystem {
         const biome = Gaia.getBiome(player.location);
         if (Gaia.isInGaia(player.location)) {
             if (playerBiomes[player.id] != biome){
-                //send biomeChange event
+                Events.playerChangeBiome.trigger({player:player,biome:biome}); //trigger playerChangeBiome
             }
         }
         playerBiomes[player.id] = biome;
