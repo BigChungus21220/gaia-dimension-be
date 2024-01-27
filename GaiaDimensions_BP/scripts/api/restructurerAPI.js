@@ -46,8 +46,8 @@ function doRestructurer(restructurer, block) {
 
   if (fuelValue === 0) {
     if (!shinyInput && !essenceInput) return block.setPermutation(BlockPermutation.resolve(block.typeId, { 'gaiadimension:lit': false }));
-    const fuelData = calculateBurnTime(nativeShinyFuel[shinyInput.typeId], nativeEssenceFuel[essenceInput.typeId]);
-    if (!fuelData) return block.setPermutation(BlockPermutation.resolve(block.typeId, { 'gaiadimension:lit': false }));
+    const fuelAmount = calculateBurnTime(nativeShinyFuel[shinyInput.typeId], nativeEssenceFuel[essenceInput.typeId]);
+    if (!fuelAmount) return block.setPermutation(BlockPermutation.resolve(block.typeId, { 'gaiadimension:lit': false }));
 
     if (shinyInput.amount > 1) {
       shinyInput.amount--;
@@ -59,7 +59,7 @@ function doRestructurer(restructurer, block) {
       inv.setItem(1, essenceInput);
     } else inv.setItem(1, undefined);
 
-    const burnTime = fuelData
+    const burnTime = fuelAmount
     setScore(restructurer, 'fuelValue', burnTime * 3.5);
 
     setScore(restructurer, 'cookTime', burnTime);
