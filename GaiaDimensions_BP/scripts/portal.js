@@ -1,7 +1,7 @@
-import { world, system, Vector, Entity,Player, Dimension } from "@minecraft/server"
+import { world, system, Vector, Entity,Player} from "@minecraft/server"
 import {delay } from './utils.js'
 import { Gaia } from './api/Dimension.js'
-system
+
 const gaia = new Gaia();
 const prevLocationMap = new Map();
 const locMap = new Map();
@@ -142,5 +142,3 @@ function calCoords(entity, currentLocation) {
     const coord = `x:${MathRound(calVector.x)} y:${Math.round(entity.location.y)} z:${MathRound(calVector.z)}`;
     gaia.isInGaia(entity) ? entity?.onScreenDisplay?.setActionBar(coord ?? "Loading Coords...") : undefined;
 }
-
-
