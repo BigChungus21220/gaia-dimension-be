@@ -362,7 +362,7 @@
           "requires": "($display_title = 'restructer_ui')",
           "$screen_content": "chest.restructer_root_panel",
           "$screen_bg_content": "common.screen_background",
-          "$display_title": "Restructer",
+          "$display_title": "Restructurer",
           "$container_size": 54
         }
       },
