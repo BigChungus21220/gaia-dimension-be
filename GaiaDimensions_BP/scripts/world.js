@@ -5,6 +5,7 @@ import './tickEvents.js'
 import './light_portal.js';
 import '.classMixins.js';
 import "./blocks/place.js";
+import "./blocks/pouch.js";
 import {furnacesLoad} from "./api/furnaceAPI.js";
 import {restructurerLoad} from "./api/restructurerAPI.js"
 furnacesLoad()

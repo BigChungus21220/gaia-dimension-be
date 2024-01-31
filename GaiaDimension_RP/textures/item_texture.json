@@ -1004,4 +1004,7 @@
 	},
 	"radiator_19": {
 		"textures": "textures/forge_gui/purifier_radiator/radiator_19"
+	},
+	"gemstone_pouch": {
+		"textures": "textures/items/gemstone_pouch"
 	}}}
