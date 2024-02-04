@@ -29,7 +29,7 @@
     {
       "type": "script",
       "language": "javascript",
-      "entry": "GaiaFluids.js",
+      "entry": "fluids.js",
       "uuid": "64467473-c239-4bbe-967e-512bdd999c86",
       "version": [1, 0, 0]
     }
