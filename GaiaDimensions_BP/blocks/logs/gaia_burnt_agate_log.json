@@ -39,7 +39,7 @@
       "minecraft:destructible_by_explosion": {
         "explosion_resistance": 1
       },
-      "tag:gaia:burnt_agate_log": {},
+      "tag:gaia:burnt_log": {},
       "minecraft:on_interact": {
         "condition": "query.equipped_item_any_tag('slot.weapon.mainhand', 'minecraft:is_axe')",
         "event": "gaia:strip_0"
