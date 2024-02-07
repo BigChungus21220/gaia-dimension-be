@@ -20,6 +20,7 @@
 				"condition": "(query.equipped_item_any_tag('slot.weapon.mainhand','minecraft:is_pickaxe'))"
 			},
 			"minecraft:unit_cube": {},
+			"minecraft:display_name": "Pulsing Malachite Tiles",
 			"minecraft:destructible_by_explosion": {
 				"explosion_resistance": 1
 			},
