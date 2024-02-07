@@ -29,7 +29,7 @@
 			"render_method": "opaque"
 		},
 		"up": {
-			"texture": "salt_rock_up",
+			"texture": "salt_rock_top",
 			"render_method": "opaque"
 		},
 		"down": {

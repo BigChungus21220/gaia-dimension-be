@@ -10,8 +10,8 @@ const blockEntities = {
     nametag: 'purifier_ui'
   },
   'gaia:restructurer': {
-    entityId: 'gaia:restructer_container',
-    nametag: 'restructer_ui'
+    entityId: 'gaia:restructurer_container',
+    nametag: 'restructurer_ui'
   },
   'gaiadimension:gaia_stone_furnace': {
     entityId: 'gaiadimension:furnace_entity',

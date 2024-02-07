@@ -807,17 +807,17 @@
     "purifier_top": {
       "textures": "textures/blocks/purifier_side"
     },
-    "restructer_front": {
-      "textures": "textures/blocks/restructer_front"
+    "restructurer_front": {
+      "textures": "textures/blocks/restructurer_front"
     },
-    "restructer_lit": {
-      "textures": "textures/blocks/restructer_front"
+    "restructurer_lit": {
+      "textures": "textures/blocks/restructurer_front"
     },
-    "restructer_side": {
-      "textures": "textures/blocks/restructer_side"
+    "restructurer_side": {
+      "textures": "textures/blocks/restructurer_side"
     },
-    "restructer_top": {
-      "textures": "textures/blocks/restructer_side"
+    "restructurer_top": {
+      "textures": "textures/blocks/restructurer_side"
   },
   "gaia_blue_agate_sapling": {
     "textures": [
