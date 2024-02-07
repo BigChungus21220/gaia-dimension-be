@@ -17,15 +17,15 @@
       },
       "minecraft:material_instances": {
 				"*": {
-					"texture": "pillar1_side",
+					"texture": "malachite_pillar_side",
 					"render_method": "opaque"
 				},
 				"up": {
-					"texture": "pillar1_end",
+					"texture": "malachite_pillar_end",
 					"render_method": "opaque"
 				},
         "down": {
-					"texture": "pillar1_end",
+					"texture": "malachite_pillar_end",
 					"render_method": "opaque"
 				}
 			},

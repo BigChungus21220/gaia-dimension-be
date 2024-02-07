@@ -871,4 +871,5 @@
 },
 "gold_fire": {
   "textures": "textures/blocks/gold_fire"
-}}}
+},
+"pulsing_malachite_planks":  { "textures": "textures/blocks/pulsing_malachite_planks" }}}
