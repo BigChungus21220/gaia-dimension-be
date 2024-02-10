@@ -874,4 +874,8 @@
 },
 "pulsing_malachite_planks":  { "textures": "textures/blocks/pulsing_malachite_planks" 
 },
-"gaia_corrupted_planks":  { "textures": "textures/blocks/gaia_corrupted_planks" }}}
+"gaia_corrupted_planks":  { "textures": "textures/blocks/gaia_corrupted_planks" 
+},
+"missingno_plant":  { "textures": "textures/blocks/missingno_plant" 
+},
+"missingno_fungus":  { "textures": "textures/blocks/missingno_fungus" }}}
