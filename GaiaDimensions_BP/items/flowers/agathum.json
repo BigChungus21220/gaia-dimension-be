@@ -9,6 +9,8 @@
 			"minecraft:icon": {
 				"texture":  "agathum"
 			},
+		"minecraft:display_name": {
+		  "value": "Agathum" },
 			"minecraft:creative_category": {
 				"parent": "itemGroup.name.flower"
 			},

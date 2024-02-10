@@ -9,6 +9,8 @@
 			"minecraft:icon": {
 				"texture":  "mutant_crystal_growth"
 			},
+			"minecraft:display_name": {
+				"value": "Mutant Crystal Growth" },
 			"minecraft:creative_category": {
 				"parent": "itemGroup.name.flower"
 			},

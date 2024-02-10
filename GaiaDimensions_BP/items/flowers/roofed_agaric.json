@@ -9,6 +9,8 @@
 			"minecraft:icon": {
 				"texture":  "roofed_agaric"
 			},
+			"minecraft:display_name": {
+				"value": "Roofed Agaric" },
 			"minecraft:creative_category": {
 				"parent": "itemGroup.name.flower"
 			},

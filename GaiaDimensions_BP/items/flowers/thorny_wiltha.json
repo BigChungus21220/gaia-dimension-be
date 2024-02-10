@@ -9,6 +9,8 @@
 			"minecraft:icon": {
 				"texture":  "thorny_wiltha"
 			},
+			"minecraft:display_name": {
+				"value": "Thorny Witha" },
 			"minecraft:creative_category": {
 				"parent": "itemGroup.name.flower"
 			},

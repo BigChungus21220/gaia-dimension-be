@@ -9,6 +9,8 @@
 			"minecraft:icon": {
 				"texture":  "spotted_kersei"
 			},
+			"minecraft:display_name": {
+				"value": "Spotted Kersei" },
 			"minecraft:creative_category": {
 				"parent": "itemGroup.name.flower"
 			},

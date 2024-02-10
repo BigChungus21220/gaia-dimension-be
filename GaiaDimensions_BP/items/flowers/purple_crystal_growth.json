@@ -9,6 +9,8 @@
 			"minecraft:icon": {
 				"texture":  "purple_crystal_growth"
 			},
+			"minecraft:display_name": {
+				"value": "Purple Crystal Growth" },
 			"minecraft:creative_category": {
 				"parent": "itemGroup.name.flower"
 			},

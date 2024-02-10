@@ -9,6 +9,8 @@
 			"minecraft:icon": {
 				"texture":  "stickly_cupsir"
 			},
+			"minecraft:display_name": {
+				"value": "Stick Cupsir" },
 			"minecraft:creative_category": {
 				"parent": "itemGroup.name.flower"
 			},

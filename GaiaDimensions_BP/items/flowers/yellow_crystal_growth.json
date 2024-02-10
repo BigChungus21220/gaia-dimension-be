@@ -9,6 +9,8 @@
 			"minecraft:icon": {
 				"texture":  "yellow_crystal_growth"
 			},
+			"minecraft:display_name": {
+				"value": "Yellow Crystal Growth" },
 			"minecraft:creative_category": {
 				"parent": "itemGroup.name.flower"
 			},

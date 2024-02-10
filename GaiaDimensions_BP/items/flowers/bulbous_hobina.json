@@ -9,6 +9,8 @@
 			"minecraft:icon": {
 				"texture":  "bulbous_hobina"
 			},
+			"minecraft:display_name": {
+				"value": "Bulbous Hobina" },
 			"minecraft:creative_category": {
 				"parent": "itemGroup.name.flower"
 			},

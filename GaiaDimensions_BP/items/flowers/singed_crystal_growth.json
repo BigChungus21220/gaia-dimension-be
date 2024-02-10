@@ -9,6 +9,8 @@
 			"minecraft:icon": {
 				"texture":  "singed_crystal_growth"
 			},
+			"minecraft:display_name": {
+				"value": "Singed Crystal Growth" },
 			"minecraft:creative_category": {
 				"parent": "itemGroup.name.flower"
 			},

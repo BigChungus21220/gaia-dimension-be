@@ -9,6 +9,8 @@
 			"minecraft:icon": {
 				"texture":  "gold_orb_tucher"
 			},
+			"minecraft:display_name": {
+				"value": "Gold Orb Tucher" },
 			"minecraft:creative_category": {
 				"parent": "itemGroup.name.flower"
 			},
