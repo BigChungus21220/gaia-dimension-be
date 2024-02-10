@@ -17,7 +17,7 @@
     "components": {
       "minecraft:collision_box": true,
       "minecraft:selection_box": true,
-      "minecraft:display_name": "crate",
+      "minecraft:display_name": "Crate",
       "minecraft:material_instances": {
         "*": {
           "texture": "crate",

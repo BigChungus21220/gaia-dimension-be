@@ -23,6 +23,7 @@
 				}
 			},
       "minecraft:unit_cube": {},
+      "minecraft:display_name": "Burnt Wood",
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 1
       },

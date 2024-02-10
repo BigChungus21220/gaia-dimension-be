@@ -56,6 +56,7 @@
 				"origin": [-8, 0, -8],
 				"size": [16, 8, 16]
 			},
+			"minecraft:display_name": "Pulsing Malachite Tile Stairs",
 			"minecraft:selection_box": {
 				"origin": [-8, 0, -8],
 				"size": [16, 8, 16]
