@@ -30,11 +30,11 @@ export const playerChangeBiome = new GaiaEvent();
 class GaiaEvent {
     #subscribers = []; // # means private field
 
-    subscribe(fn){
+    subscribe(fn) {
         this.#subscribers.push(fn);
     }
 
-    trigger(eventData){
+    trigger(eventData) {
         this.#subscribers.forEach((fn) => fn(eventData));
     }
 }

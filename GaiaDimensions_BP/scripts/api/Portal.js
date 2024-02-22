@@ -1,5 +1,5 @@
-import { Vector, BlockPermutation, Block, world, BlockVolumeUtils, Entity} from "@minecraft/server"
-
+import { Vector, BlockPermutation, Block, world, BlockVolumeUtils, Entity } from "@minecraft/server"
+export default Portal
 /**
  * @typedef Link
  * @property {Vector} location
@@ -13,32 +13,27 @@ import { Vector, BlockPermutation, Block, world, BlockVolumeUtils, Entity} from 
  */
 class Portal {
     /**
-     * Create a Portal.
+     * @type {Array<Link>}
+     * @private
      */
-    constructor() {
-        super()
-        /**
-         * @type {Array<Link>}
-         * @private
-         */
-        this.linked = JSON.parse(world.getDynamicProperty('PortalLinked') ?? "[]");
-        /**
-         * @private
-         */
-        this.serialize = JSON.stringify;
-    }
+    static linked = JSON.parse(world.getDynamicProperty('PortalLinked') ?? "[]");
+    /**
+     * @private
+     */
+    static serialize = JSON.stringify;
+    static PortalSizeY = 3;
+    static PortalSizeZ = 2;
 
     /**
      * Link two locations.
      * @param {Vector} fromLocation - The starting location.
      * @param {Vector} toLocation - The ending location.
-     * @param {Vector} size - The size of the portal.
      */
-    link(fromLocation, toLocation, size) {
+    static link(fromLocation, toLocation) {
         if (typeof fromLocation !== 'object' || typeof toLocation !== 'object') {
             throw new Error('Both fromLocation and toLocation must be objects');
         }
-        const data = { location: fromLocation, linkedLocation: toLocation, size: size };
+        const data = { location: fromLocation, linkedLocation: toLocation };
         if (!this.linked.some((d) => d.location === fromLocation && d.linkedLocation === toLocation)) {
             this.linked.push(data);
             world.setDynamicProperty('PortalLinked', this.serialize(this.linked));
@@ -50,7 +45,7 @@ class Portal {
      * @param {Vector} fromLocation - The starting location.
      * @param {Vector} toLocation - The ending location.
      */
-    unlink(fromLocation, toLocation) {
+    static unlink(fromLocation, toLocation) {
         if (typeof fromLocation !== 'object' || typeof toLocation !== 'object') {
             throw new Error('Both fromLocation and toLocation must be objects');
         }
@@ -65,7 +60,7 @@ class Portal {
    * @param {string} from - Whether the location is the start or end of the linked location
    * @returns {Link} The linked object.
    */
-    getLink(from, location) {
+    static getLink(from, location) {
         if (typeof location !== 'object') {
             throw new Error('location must be an object');
         }
@@ -73,13 +68,13 @@ class Portal {
         switch (from) {
             case 'start':
                 link = this.linked.find(d => {
-                    const volume = { from: d.location, to: { x: d.location.x + d.size.x, y: d.location.y + d.size.y, z: d.location.z + d.size.z } };
+                    const volume = { from: d.location, to: { x: d.location.x, y: d.location.y + this.PortalSizeY, z: d.location.z + this.PortalSizeZ } };
                     return BlockVolumeUtils.isInside(volume, location);
                 });
                 break;
             case 'end':
                 link = this.linked.find(d => {
-                    const volume = { from: d.linkedLocation, to: { x: d.linkedLocation.x + d.size.x, y: d.linkedLocation.y + d.size.y, z: d.linkedLocation.z + d.size.z } };
+                    const volume = { from: d.linkedLocation, to: { x: d.linkedLocation.x, y: d.linkedLocation.y + this.PortalSizeY, z: d.linkedLocation.z + this.PortalSizeZ } };
                     return BlockVolumeUtils.isInside(volume, location);
                 });
                 break;
@@ -93,14 +88,14 @@ class Portal {
      * Get all links.
      * @returns {Array<Link>} The array of all links.
      */
-    getAllLinks() {
+    static getAllLinks() {
         return this.linked;
     }
 
     /**
      * Clear all links.
      */
-    clearAllLinks() {
+    static clearAllLinks() {
         this.linked = []
         world.setDynamicProperty('PortalLinked', this.serialize(this.linked))
     }
@@ -111,7 +106,7 @@ class Portal {
      * @param {Vector} toLocation - The ending location.
      * @returns {boolean} True if the locations are linked, false otherwise.
      */
-    isLinked(fromLocation, toLocation) {
+    static isLinked(fromLocation, toLocation) {
         return this.linked.some((d) => d.location === fromLocation && d.linkedLocation === toLocation);
     }
 
@@ -119,7 +114,7 @@ class Portal {
      * Get the count of links.
      * @returns {number} The count of links.
      */
-    getCount() {
+    static getCount() {
         return this.linked.length
     }
 
@@ -128,7 +123,7 @@ class Portal {
      * @param {Link} link - The link to check.
      * @returns {boolean} True if the link exists, false otherwise.
      */
-    hasLink(link) {
+    static hasLink(link) {
         return this.linked.includes(link)
     }
     /**
@@ -137,7 +132,7 @@ class Portal {
      * @param {string} from - Whether the entity is at the start or end of the linked location
      * @returns {Link|undefined} The link that the entity is in, or undefined if the entity is not in any linked portal.
      */
-    isEntityInLinked(from, entity) {
+    static isEntityInLinked(from, entity) {
         if (typeof entity !== 'object') {
             throw new Error('entity must be an object');
         }
@@ -145,14 +140,14 @@ class Portal {
         switch (from) {
             case 'start':
                 link = this.linked.find(link => {
-                    const volume = { from: link.location, to: { x: link.location.x + link.size.x, y: link.location.y + link.size.y, z: link.location.z + link.size.z } };
+                    const volume = { from: link.location, to: { x: link.location.x, y: link.location.y + this.PortalSizeY, z: link.location.z + this.PortalSizeZ } };
                     return BlockVolumeUtils.isInside(volume, entity.location);
                 });
                 break;
 
             case 'end':
                 link = this.linked.find(link => {
-                    const volume = { from: link.linkedLocation, to: { x: link.linkedLocation.x + link.size.x, y: link.linkedLocation.y + link.size.y, z: link.linkedLocation.z + link.size.z } };
+                    const volume = { from: link.linkedLocation, to: { x: link.linkedLocation.x, y: link.linkedLocation.y + this.PortalSizeY, z: link.linkedLocation.z + this.PortalSizeZ } };
                     return BlockVolumeUtils.isInside(volume, entity.location);
                 });
                 break;
@@ -162,7 +157,7 @@ class Portal {
         return link || undefined;
     }
 
-    async lightPortal(corner, dimension, x_oriented) {
+    static async lightPortal(corner, dimension, x_oriented) {
         for (let x = 0; x < 4; x++) {
             for (let y = 0; y < 5; y++) {
                 let blockpos = Vector.add(corner, new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0));
@@ -177,37 +172,21 @@ class Portal {
         }
     }
 
-    breakPortal(corner, dimension, x_oriented) {
-        for (let x = -3; x <= 3; x++) {
-            for (let y = -3; y <= 3; y++) {
-                let blockpos = Vector.add(corner, new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0));
-                let block = dimension.getBlock(blockpos);
-                let adjacent = block.getAdjacent()
-                if (block.type.id === 'gaia:gaia_portal') {
-                    ['start', 'end'].forEach(position => {
-                        const link = this.getLink(position, blockpos)
-                        if (link) {
-                            this.unlink(link.location, link.linkedLocation)
-                        } else return;
-                    });
-                    block.setPermutation(BlockPermutation.resolve("minecraft:air"));
-                }
-                adjacent.filter(b => {
-                    b.typeId === 'gaia:gaia_portal'
-                }).forEach(b => {
-                    ['start', 'end'].forEach(position => {
-                        const link = this.getLink(position, b.location)
-                        if (link) {
-                            this.unlink(link.location, link.linkedLocation)
-                        } else return
-                    });
-                    b.setPermutation(BlockPermutation.resolve("minecraft:air"));
-                })
-            }
-        }
+    static breakPortal(block) {
+        const positions = ['start', 'end']
+        const adjacent = block.getAdjacent((block) => block.typeId === 'gaia:gaia_portal', 14);
+        adjacent.forEach(b => {
+            positions.forEach(position => {
+                const link = this.getLink(position, b.location)
+                if (link) {
+                    this.unlink(link.location, link.linkedLocation)
+                } else return
+            });
+            b.setPermutation(BlockPermutation.resolve("minecraft:air"));
+        })
     }
 
-    isLit(corner, dimension, x_oriented) {
+    static isLit(corner, dimension, x_oriented) {
         let isValid = true
         for (let x = 0; x < 4; x++) {
             for (let y = 0; y < 5; y++) {
@@ -227,7 +206,7 @@ class Portal {
         return isValid
     }
 
-    isUnlit(corner, dimension, x_oriented) {
+    static isUnlit(corner, dimension, x_oriented) {
         let isValid = true
         for (let x = 0; x < 4; x++) {
             for (let y = 0; y < 5; y++) {
@@ -251,7 +230,7 @@ class Portal {
      * @param {Block} block 
      * @returns {boolean} Whether lighting this portal was a success or not
      */
-    canLight(block) {
+    static canLight(block) {
         let position = block.location
         let dimension = block.dimension
         let offset = Vector.zero

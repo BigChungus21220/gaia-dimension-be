@@ -1,28 +1,12 @@
 import { world, Vector} from "@minecraft/server";
-import gaia from './world';
-
-world.afterEvents.itemUseOn.subscribe(async (event) => {
+import Portal from './api/Portal'
+world.afterEvents.itemUseOn.subscribe(({source,itemStack,block,blockFace}) => {
     try {
-        if (event.itemStack.typeId === "gaia:glint_and_gold" && event.block.typeId === 'gaia:keystone_block') {
-            const pos = Vector.add(Vector.convertDirection(event.blockFace), event.block.location);
-
-            const portalData = {
-                location: { x: pos.x, y: pos.y, z: pos.z },
-                dimension: event.block.dimension,
-                source: event.source
-            };
-            gaia.triggerEvent('portalActivate', portalData, 'BeforeEvent');
-
-            const data = await gaia.listenFor('portalActivate', 'Canceled', 'BeforeEvent');
-            if (data && data.cancel) {
-                return;
-            }
-
-            const lit = gaia.canLight(event.block.dimension.getBlock(pos));
-
+        if (itemStack.typeId === "gaia:glint_and_gold" && block.typeId === 'gaia:keystone_block') {
+            const pos = Vector.add(Vector.convertDirection(blockFace), block.location);
+            const lit = Portal.canLight(block.dimension.getBlock(pos));
             if (lit) {
-                gaia.triggerEvent('portalActivate', portalData, 'AfterEvent');
-                event.source.playSound('block.end_portal.spawn', { location: event.block.location });
+                source.playSound('block.end_portal.spawn', { location: block.location });
             }
         }
     } catch (error) {
@@ -32,7 +16,7 @@ world.afterEvents.itemUseOn.subscribe(async (event) => {
 
 world.afterEvents.playerBreakBlock.subscribe((ev) => {
     const { block, player } = ev;
-    gaia.breakPortal(block.location, block.dimension, true);
+    Portal.breakPortal(block.location, block.dimension, true);
     player.playSound('break.amethyst_block', { location: block.location });
 }, { blockTypes: ['gaia:keystone_block', 'gaia:gaia_portal'] });
 

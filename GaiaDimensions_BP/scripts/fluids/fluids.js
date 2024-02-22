@@ -47,7 +47,7 @@ const hot_fluids = [
 ]
 
 system.runInterval(() => {
-    const players = Array.from(world.getPlayers());
+    const players = world.getPlayers();
   
     /*for (const entity of world.getDimension("overworld").getEntities()) { // Activate to let fluids effect entities (Causes some lag)
       if (

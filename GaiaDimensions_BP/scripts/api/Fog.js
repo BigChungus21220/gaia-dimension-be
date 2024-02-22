@@ -3,7 +3,7 @@ import * as Events from "./Events";
 
 //Subscribe updateFog to playerChangeBiome
 Events.playerChangeBiome.subscribe((eventData) => {
-    FogSystem.updateFog(eventData.player,eventData.biome);
+    FogSystem.updateFog(eventData.player, eventData.biome);
 })
 
 
@@ -20,7 +20,7 @@ class FogSystem {
      * Updates the fogs applied to the player
      * @param {Player} player Player to update fogs of
      */
-    static updateFog(player,biome) {
+    static updateFog(player, biome) {
         if (Gaia.isInGaia(player.location)) {
             this.setFog(player, biome);
         } else {

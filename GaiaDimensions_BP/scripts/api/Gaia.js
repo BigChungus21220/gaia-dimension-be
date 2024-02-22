@@ -10,12 +10,12 @@ class Gaia {
     /**
      * Range of blocks in the end that Gaia takes up
      */
-    static range = {start:{x:100000, z:100000}, end:{x:400000, z:400000}};
+    static range = { start: { x: 100000, z: 100000 }, end: { x: 400000, z: 400000 } };
 
     /**
      * Center block of Gaia dimension
      */
-    static origin = {x:(range.start.x + range.end.x)/2,z:(range.start.z + range.end.z)/2};
+    static origin = { x: (range.start.x + range.end.x) / 2, z: (range.start.z + range.end.z) / 2 };
 
     /**
      * Biomes found in Gaia
@@ -43,7 +43,7 @@ class Gaia {
      * @param {Vector} location location to check
      * @returns {boolean} Whether or not the location is in Gaia
      */
-    static isInGaia(location){
+    static isInGaia(location) {
         return range.start.x <= location.x && location.x <= range.end.x && range.start.z <= location.z && location.z <= range.end.z;
     }
 
@@ -52,10 +52,10 @@ class Gaia {
      * @param {Vector} location location to check
      * @returns {string|boolean} The biome the location is in (if applicable, otherwise false)
      */
-    static getBiome(location){
-        if (this.isInGaia(location)){
-            const block = this.getBlock(new Vector(location.x,0,location.z)).typeId.replace("gaia:bedrock_","");
-            if (block == null){
+    static getBiome(location) {
+        if (this.isInGaia(location)) {
+            const block = this.getBlock(new Vector(location.x, 0, location.z)).typeId.replace("gaia:bedrock_", "");
+            if (block == null) {
                 return false;
             } else {
                 return block;
@@ -69,7 +69,7 @@ class Gaia {
      * @param {EntityQueryOptions} entityQueryOptions Query to use for search
      * @returns {Entity[]} All entities matching the query
      */
-    static getEntities(entityQueryOptions){
+    static getEntities(entityQueryOptions) {
         return the_end.getEntities(entityQueryOptions).filter((entity) => this.isInGaia(entity));
     }
 
@@ -78,7 +78,7 @@ class Gaia {
      * @param {EntityQueryOptions} entityQueryOptions Query to use for search
      * @returns {Player[]} All players matching the query
      */
-    static getPlayers(entityQueryOptions){
+    static getPlayers(entityQueryOptions) {
         return the_end.getPlayers(entityQueryOptions).filter((entity) => this.isInGaia(entity));
     }
 
@@ -87,7 +87,7 @@ class Gaia {
      * @param {Vector} location Location to get block from
      * @returns {Block} The block at the location
      */
-    static getBlock(location){
+    static getBlock(location) {
         return the_end.getBlock(location);
     }
 
@@ -96,7 +96,7 @@ class Gaia {
      * @param {string} command Command to run
      * @returns {CommandResult} The result of the command
      */
-    static run_command(command){
+    static run_command(command) {
         return the_end.run_command(command);
     }
 
@@ -106,7 +106,7 @@ class Gaia {
      * @param {Vector} location Location to spawn entity
      * @returns {Entity} The spawned entity
      */
-    static spawnEntity(identifier, location){
+    static spawnEntity(identifier, location) {
         return the_end.spawnEntity(identifier, location);
     }
 
@@ -116,9 +116,9 @@ class Gaia {
      * @param {Vector} location Location to spawn item
      * @returns {Entity} The spawned item entity
      */
-    static spawnItem(itemStack, location){
+    static spawnItem(itemStack, location) {
         return the_end.spawnItem(itemStack, location);
-    } 
+    }
 
     /**
      * Spawns a particle effect in Gaia
@@ -126,8 +126,8 @@ class Gaia {
      * @param {Vector} location Location to spawn particle
      * @param {MolangVariableMap} molangVariables optional varibles for this particle
      */
-    static spawnParticle(effectName, location, molangVariables = {}){
+    static spawnParticle(effectName, location, molangVariables = {}) {
         return the_end.spawnParticle(effectName, location, molangVariables);
-    } 
+    }
 }
 

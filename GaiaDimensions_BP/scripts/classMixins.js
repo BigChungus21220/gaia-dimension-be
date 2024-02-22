@@ -1,6 +1,6 @@
-import { Entity, Block, system, Dimension, Vector, Direction, Player } from "@minecraft/server";
+import { Entity, Block, system, Dimension, Vector, Direction, World, Player } from "@minecraft/server";
 import { vec3, Vec3 } from "./Vector";
-
+import { CoordinateDisplay } from './api/CoordinateDisplay'
 /**
  * @returns {boolean} Whether the entity is in a gaia portal or not
  */
@@ -11,26 +11,38 @@ Entity.prototype.isInPortal = function () {
 };
 
 /**
- * @param {boolean} [off] Whether to turn off/on the coordinate indicator. By default this is false
+ * @param {boolean} [on] Whether to turn off/on the coordinate indicator. By default this is false
  */
 Entity.prototype.turnCoords = function (on = false) {
   this.runCommand(`gamerule showcoordinates ${on}`)
 }
 
+Object.defineProperty(Player.prototype, 'coordinateDisplay', {
+  get: function () {
+    if (!this._coordinateDisplay) {
+      this._coordinateDisplay = new CoordinateDisplay(this);
+    }
+    return this._coordinateDisplay;
+  }
+}),
+
+
+  World.prototype.getAllDimensions = function () {
+    ['overworld', 'nether', 'the_end'].map(dimensionStr => this.getDimension(dimensionStr));
+  }
 
 /**
  * Made by Redux
  * Gets adjacent blocks connected to the current block.
  * @this {Block}
- * @param {function} filter A filter to apply to the search
+ * @param {function(Block):void} filter A filter to apply to the search
  * @param {number} maxSearch The maximum number of blocks to search
  * @returns {Block[]} - An array of adjacent blocks.
  */
 Block.prototype.getAdjacent = function (filter, maxSearch) {
   const connectedBlocks = []; //blocks that are connected to this block
-  const visited = []; //blocks that have been checked
+  const visited = new Set(); //blocks that have been checked
   const queue = [vec3(this.location)]; //blocks to check next
-
   let i = 0;
   const intervalId = system.runInterval(() => {
     //exit condition
@@ -44,12 +56,11 @@ Block.prototype.getAdjacent = function (filter, maxSearch) {
 
     //in case of unloaded chunks
     try {
-      const currentBlock = this.dimension.getBlock(new Vector(x, y, z));
-      
+      const currentBlock = this?.dimension?.getBlock(new Vector(x, y, z));
+
       //check if current block meets filter
-      if (filter(currentBlock)){
-        connectedBlocks.push(adjacentBlock);
-  
+      if (filter(currentBlock)) {
+        connectedBlocks.push(currentBlock);
         //add adjacent blocks to queue
         for (const direction of Vec3.directions) {
           const newPosition = position.add(direction);
@@ -59,7 +70,6 @@ Block.prototype.getAdjacent = function (filter, maxSearch) {
     } catch (err) {
       console.log(err, err.stack);
     }
-
     i++;
   });
   system.clearRun(intervalId)
@@ -119,20 +129,5 @@ Vector.prototype.toString = function () {
  * @method convertDirection
  */
 Vector.prototype.convertDirection = function (direction) {
-  switch (direction) {
-    case "Up":
-      return new Vector(0, 1, 0)
-    case "Down":
-      return new Vector(0, -1, 0)
-    case "North":
-      return new Vector(0, 0, -1)
-    case "South":
-      return new Vector(0, 0, 1)
-    case "East":
-      return new Vector(-1, 0, 0)
-    case "West":
-      return new Vector(1, 0, 0)
-    default:
-      return new Vector(0, 0, 0)
-  }
+  return vec3(direction.toLowerCase())
 }
