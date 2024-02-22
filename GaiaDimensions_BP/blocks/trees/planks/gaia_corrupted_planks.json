@@ -17,13 +17,8 @@
 			},
       "minecraft:material_instances": {
         "*": {
-          "texture": "corrupted_tiles",
+          "texture": "gaia_corrupted_planks",
           "render_method": "opaque"
-        }
-      },
-        "minecraft:flammable": {
-       "catch_chance_modifier": 5, 
-      "destroy_chance_modifier": 20 
         }
       },
 			"minecraft:unit_cube": {},
@@ -33,3 +28,4 @@
 			"minecraft:map_color": "#ffffff"
 		}
 	}
+}

@@ -24,9 +24,17 @@
 				"explosion_resistance": 1
 			},
       "minecraft:material_instances": {
-        "*": {
-          "texture": "salt_rock",
-          "render_method": "opaque"
+		"*": {
+			"texture": "salt_rock_side",
+			"render_method": "opaque"
+		},
+		"up": {
+			"texture": "salt_rock_top",
+			"render_method": "opaque"
+		},
+		"down": {
+			"texture": "salt_rock_bottom",
+			"render_method": "opaque"
 		}
 	}
 },

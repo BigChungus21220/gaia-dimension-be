@@ -81,7 +81,7 @@
 		},
 		"minecraft:material_instances": {
 		  "*": {
-			"texture": "corrupted_tiles",
+			"texture": "gaia_corrupted_planks",
 			"render_method": "opaque"
 		  }
 		}

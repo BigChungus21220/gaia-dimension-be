@@ -17,6 +17,7 @@
         "explosion_resistance": 999999
       },
       "minecraft:map_color": "#ffffff",
+      "minecraft:display_name": "Keystone Block",
       "minecraft:unit_cube": {}
     }
   }

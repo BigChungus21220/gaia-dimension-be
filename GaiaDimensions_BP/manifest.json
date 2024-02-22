@@ -25,6 +25,13 @@
       "uuid": "1eee9b4c-0dce-41ce-869f-0de89fa98c6a",
       "version": [1, 1, 0],
       "entry": "scripts/world.js"
+    },
+    {
+      "type": "script",
+      "language": "javascript",
+      "entry": "fluids.js",
+      "uuid": "64467473-c239-4bbe-967e-512bdd999c86",
+      "version": [1, 0, 0]
     }
   ],
   "capabilities": ["script_eval"],

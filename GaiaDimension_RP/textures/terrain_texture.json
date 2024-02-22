@@ -807,17 +807,17 @@
     "purifier_top": {
       "textures": "textures/blocks/purifier_side"
     },
-    "restructer_front": {
-      "textures": "textures/blocks/restructer_front"
+    "restructurer_front": {
+      "textures": "textures/blocks/restructurer_front"
     },
-    "restructer_lit": {
-      "textures": "textures/blocks/restructer_front"
+    "restructurer_lit": {
+      "textures": "textures/blocks/restructurer_front"
     },
-    "restructer_side": {
-      "textures": "textures/blocks/restructer_side"
+    "restructurer_side": {
+      "textures": "textures/blocks/restructurer_side"
     },
-    "restructer_top": {
-      "textures": "textures/blocks/restructer_side"
+    "restructurer_top": {
+      "textures": "textures/blocks/restructurer_side"
   },
   "gaia_blue_agate_sapling": {
     "textures": [
@@ -871,4 +871,11 @@
 },
 "gold_fire": {
   "textures": "textures/blocks/gold_fire"
-}}}
+},
+"pulsing_malachite_planks":  { "textures": "textures/blocks/pulsing_malachite_planks" 
+},
+"gaia_corrupted_planks":  { "textures": "textures/blocks/gaia_corrupted_planks" 
+},
+"missingno_plant":  { "textures": "textures/blocks/missingno_plant" 
+},
+"missingno_fungus":  { "textures": "textures/blocks/missingno_fungus" }}}

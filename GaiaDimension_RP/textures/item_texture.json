@@ -1004,4 +1004,10 @@
 	},
 	"radiator_19": {
 		"textures": "textures/forge_gui/purifier_radiator/radiator_19"
-	}}}
+	},
+	"gemstone_pouch": {
+		"textures": "textures/items/gemstone_pouch"
+	},
+	"missingno_plant":  { "textures": "textures/blocks/missingno_plant" 
+	},
+	"missingno_fungus":  { "textures": "textures/blocks/missingno_fungus" }}}

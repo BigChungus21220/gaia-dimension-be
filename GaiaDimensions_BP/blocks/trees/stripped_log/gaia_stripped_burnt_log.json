@@ -31,6 +31,7 @@
 				}
 			},
       "minecraft:unit_cube": {},
+      "minecraft:display_name": "Stripped Burnt Agate Log",
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 1
       },

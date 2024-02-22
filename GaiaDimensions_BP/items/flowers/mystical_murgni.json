@@ -9,6 +9,8 @@
 			"minecraft:icon": {
 				"texture":  "mystical_murgni"
 			},
+			"minecraft:display_name": {
+				"value": "Mystical Murgni" },
 			"minecraft:creative_category": {
 				"parent": "itemGroup.name.flower"
 			},

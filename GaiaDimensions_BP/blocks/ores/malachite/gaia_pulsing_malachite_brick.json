@@ -25,7 +25,7 @@
 			},
       "minecraft:material_instances": {
         "*": {
-          "texture": "pulsing_malachite_brick",
+          "texture": "pulsing_malachite_bricks",
           "render_method": "opaque"
 		}
 	}

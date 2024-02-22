@@ -11,12 +11,12 @@
       "minecraft:light_dampening": 0,
       "minecraft:collision_box": false,
       "minecraft:light_emission": 15,
-      "minecraft:selection_box": true,
+      "minecraft:selection_box": false,
       "minecraft:geometry": "geometry.gaia_fire",
       "minecraft:destructible_by_explosion": false,
       "minecraft:queued_ticking": {
         "looping": true,
-        "interval_range": [60, 60], 
+        "interval_range": [100, 300], 
         "on_tick": {
           "event": "gaia:puff"
         }

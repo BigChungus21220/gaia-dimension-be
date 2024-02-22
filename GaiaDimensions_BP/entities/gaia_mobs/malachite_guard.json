@@ -7,7 +7,6 @@
       "is_summonable": true,
       "is_experimental": false,
       "runtime_identifier": "minecraft:iron_golem",
-      "runtime_indentifier": "minecraft:iron_golem",
       "scripts": {
         "animate": ["skyrim5"]
       },
@@ -119,7 +118,6 @@
       },
       "minecraft:boss": {
         "name": "Malachite Guard",
-
         "should_darken_sky": true,
         "hud_range": 40
       },
@@ -320,10 +318,10 @@
       "minecraft:entity_spawned": {
         "run_command": {
           "command": [
-            "summon gaia:malachite_drone ~ ~1 ~4 no \"MG_MINION\"",
-            "summon gaia:malachite_drone ~ ~1 ~-4 no \"MG_MINION\"",
-            "summon gaia:malachite_drone ~-4 ~1 ~ no \"MG_MINION\"",
-            "summon gaia:malachite_drone ~4 ~1 ~ no \"MG_MINION\""
+            "summon gaia:malachite_drone MG_MINION ~ ~ ~4",
+            "summon gaia:malachite_drone MG_MINION ~ ~ ~-4",
+            "summon gaia:malachite_drone MG_MINION ~4 ~ ~",
+            "summon gaia:malachite_drone MG_MINION ~-4 ~ ~"
           ]
         }
       },

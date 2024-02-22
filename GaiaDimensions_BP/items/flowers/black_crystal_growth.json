@@ -12,6 +12,8 @@
 			"minecraft:creative_category": {
 				"parent": "itemGroup.name.flower"
 			},
+			"minecraft:display_name": {
+				"value": "Black Crystal Growth" },
 			"minecraft:block_placer": {
 				"block": "gaia:black_crystal_growth"
 			}

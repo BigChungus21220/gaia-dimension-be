@@ -12,9 +12,9 @@ world.afterEvents.itemUseOn.subscribe(({source,itemStack,block,blockFace}) => {
     } catch (error) {
 
     }
-});
-
-world.afterEvents.playerBreakBlock.subscribe((ev) => {
+  });
+  
+  system.afterEvents.playerBreakBlock.subscribe((ev) => {
     const { block, player } = ev;
     Portal.breakPortal(block.location, block.dimension, true);
     player.playSound('break.amethyst_block', { location: block.location });

@@ -9,6 +9,8 @@
 			"minecraft:icon": {
 				"texture":  "ouzium"
 			},
+			"minecraft:display_name": {
+				"value": "Ouzium" },
 			"minecraft:creative_category": {
 				"parent": "itemGroup.name.flower"
 			},

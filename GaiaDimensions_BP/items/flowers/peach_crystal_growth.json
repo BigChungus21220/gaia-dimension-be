@@ -9,6 +9,8 @@
 			"minecraft:icon": {
 				"texture":  "peach_crystal_growth"
 			},
+			"minecraft:display_name": {
+				"value": "Peach Crystal Growth" },
 			"minecraft:creative_category": {
 				"parent": "itemGroup.name.flower"
 			},

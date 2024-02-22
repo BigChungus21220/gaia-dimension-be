@@ -9,6 +9,8 @@
 			"minecraft:icon": {
 				"texture":  "corrupt_varloom"
 			},
+			"minecraft:display_name": {
+				"value": "Corrupt Varloom" },
 			"minecraft:creative_category": {
 				"parent": "itemGroup.name.flower"
 			},

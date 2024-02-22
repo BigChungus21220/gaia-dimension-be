@@ -1,6 +1,6 @@
 {
-  "namespace": "restructer_screen",
-  "restructer_grid": {
+  "namespace": "restructurer_screen",
+  "restructurer_grid": {
     "type": "grid",
     "size": [54, 54],
     "anchor_from": "center",
@@ -136,7 +136,7 @@
       }
     ]
   },
-  "large_restructer_grid": {
+  "large_restructurer_grid": {
     "type": "grid",
     "size": [162, 432],
     "anchor_from": "top_left",
@@ -145,20 +145,20 @@
     "grid_item_template": "chest.chest_grid_item",
     "collection_name": "container_items"
   },
-  "restructer_panel_top_half": {
+  "restructurer_panel_top_half": {
     "type": "panel",
     "anchor_from": "left_middle",
     "anchor_to": "left_middle",
     "controls": [
       {
-        "grid@restructer_screen.restructer_grid": {
+        "grid@restructurer_screen.restructurer_grid": {
           "offset": [0, 0],
           "layer": 0
         }
       }
     ]
   },
-  "restructer_controller": {
+  "restructurer_controller": {
     "type": "panel",
     "size": ["100%", 200],
     "offset": [0, 11],
@@ -187,7 +187,7 @@
         }
       },
       {
-        "panel_top_half@restructer_screen.restructer_panel_top_half": {
+        "panel_top_half@restructurer_screen.restructurer_panel_top_half": {
           "offset": [7, 10]
         }
       }

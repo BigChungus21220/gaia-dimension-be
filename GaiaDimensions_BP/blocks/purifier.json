@@ -17,7 +17,7 @@
     "components": {
       "minecraft:collision_box": true,
       "minecraft:selection_box": true,
-      "minecraft:display_name": "purifier",
+      "minecraft:display_name": "Purifier",
       "minecraft:material_instances": {
         "up": {
           "texture": "purifier_top",

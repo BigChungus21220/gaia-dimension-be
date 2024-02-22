@@ -2,7 +2,7 @@
   "format_version": "1.19.50",
   "minecraft:block": {
     "description": {
-      "identifier": "gaia:restructer",
+      "identifier": "gaia:restructurer",
       "menu_category": {
         "category": "items",
         "group": "itemGroup.name.furnaces",
@@ -17,22 +17,22 @@
     "components": {
       "minecraft:collision_box": true,
       "minecraft:selection_box": true,
-      "minecraft:display_name": "Restructer",
+      "minecraft:display_name": "Restructurer",
       "minecraft:material_instances": {
         "up": {
-          "texture": "restructer_top",
+          "texture": "restructurer_top",
           "render_method": "opaque"
         },
         "down": {
-          "texture": "restructer_top",
+          "texture": "restructurer_top",
           "render_method": "opaque"
         },
         "south": {
-          "texture": "restructer_front",
+          "texture": "restructurer_front",
           "render_method": "opaque"
         },
         "*": {
-          "texture": "restructer_side",
+          "texture": "restructurer_side",
           "render_method": "opaque"
         }
       },
@@ -43,7 +43,7 @@
       "minecraft:queued_ticking": {
           "looping": true,
           "on_tick": {
-              "event": "runRestructer"
+              "event": "runrestructurer"
           },
           "interval_range": [
               1,
@@ -58,9 +58,9 @@
           "gaiadimension:direction": "(q.cardinal_facing_2d-2)"
         }
       },
-      "runRestructer": {
+      "runrestructurer": {
         "run_command": {
-            "command": ["execute as @e[r=0] at @s run scriptevent forge:restructurerLoad gaiaf 200 forge:restructurer_arrow forge:restructer_flame"]
+            "command": ["execute as @e[r=0] at @s run scriptevent forge:restructurerLoad gaiaf 200 forge:restructurer_arrow forge:restructurer_flame"]
         }
     }
     },
@@ -70,19 +70,19 @@
         "components": {
           "minecraft:material_instances": {
             "up": {
-              "texture": "restructer_top",
+              "texture": "restructurer_top",
               "render_method": "opaque"
             },
             "down": {
-              "texture": "restructer_top",
+              "texture": "restructurer_top",
               "render_method": "opaque"
             },
             "south": {
-              "texture": "restructer_lit",
+              "texture": "restructurer_lit",
               "render_method": "opaque"
             },
             "*": {
-              "texture": "restructer_side",
+              "texture": "restructurer_side",
               "render_method": "opaque"
             }
           }

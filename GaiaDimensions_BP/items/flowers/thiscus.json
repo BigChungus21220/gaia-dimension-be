@@ -9,6 +9,8 @@
 			"minecraft:icon": {
 				"texture":  "thiscus"
 			},
+			"minecraft:display_name": {
+				"value": "Thiscus" },
 			"minecraft:creative_category": {
 				"parent": "itemGroup.name.flower"
 			},

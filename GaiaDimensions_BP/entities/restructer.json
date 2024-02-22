@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:entity": {
     "description": {
-      "identifier": "gaia:restructer_container",
+      "identifier": "gaia:restructurer_container",
       "is_spawnable": false,
       "is_summonable": true,
       "is_experimental": false
@@ -62,7 +62,7 @@
       "minecraft:inside_block_notifier": {
         "block_list": [
           {
-            "block": "gaia:restructer",
+            "block": "gaia:restructurer",
             "exited_block_event": {
               "event": "destroy",
               "target": "self"
