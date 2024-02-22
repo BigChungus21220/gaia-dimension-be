@@ -56,7 +56,7 @@ Block.prototype.getAdjacent = function (filter, maxSearch) {
 
     //in case of unloaded chunks
     try {
-      const currentBlock = this?.dimension?.getBlock(new Vector(x, y, z));
+      const currentBlock = this?.dimension?.getBlock(vec3(x, y, z));
 
       //check if current block meets filter
       if (filter(currentBlock)) {
