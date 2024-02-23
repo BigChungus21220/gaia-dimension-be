@@ -16,7 +16,13 @@
         "skyblend": "textures/entity/skyblend"
       },
       "particle_effects": {
-				"gaia_planet": "gaia:gaia_planet",
+	"sky1": "gaia:sky1",
+        "sky2": "gaia:sky2",
+        "sky_side1": "gaia:sky_side1",
+        "sky_side2": "gaia:sky_side2",
+        "sky_side3": "gaia:sky_side3",
+        "sky_side4": "gaia:sky_side4"
+	"gaia_planet": "gaia:gaia_planet",
         "cloud0": "gaia:cloud_0",
         "cloud1": "gaia:cloud_1",
         "cloud2": "gaia:cloud_2",
@@ -33,12 +39,14 @@
       "scripts": {
         "scale": "0.9375",
         "initialize": [
+	  "v.biome = 0.0;",
           "variable.is_holding_right = 0.0;",
           "variable.is_blinking = 0.0;",
           "variable.last_blink_time = 0.0;",
           "variable.hand_bob = 0.0;"
         ],
         "pre_animation": [
+	  "v.biome = query.biome_has_any_tag('the_end');",
           "variable.helmet_layer_visible = 1.0;",
           "variable.leg_layer_visible = 1.0;",
           "variable.boot_layer_visible = 1.0;",
@@ -57,10 +65,14 @@
           "root",
           "spawn_gaia_planet",
           "spawn_cloud",
-          "skyblend"
+          "skyblend",
+	  {
+            "nebula": "v.is_first_person&&v.biome"
+          }
         ]
       },
       "animations": {
+	"nebula": "animation.skybox.gaia",
         "skyblend": "animation.player.skyblend",
         "spawn_gaia_planet": "controller.animation.gaia_sky.planet",
         "spawn_cloud": "controller.animation.gaia_sky.cloud",
