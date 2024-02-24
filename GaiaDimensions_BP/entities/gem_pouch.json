@@ -17,7 +17,7 @@
     },
     "components": {
       "minecraft:type_family": {
-        "family": ["chest", "inanimate"]
+        "family": ["pouch", "inanimate"]
       },
       "minecraft:collision_box": {
         "height": 0,
