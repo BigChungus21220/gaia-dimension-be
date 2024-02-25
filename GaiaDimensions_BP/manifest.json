@@ -13,44 +13,23 @@
   },
   "modules": [
     {
-      "description": "s",
-      "uuid": "01b2281d-4f40-40fb-99d5-c83c69c35021",
-      "type": "data",
-      "version": [1, 0, 1]
-    },
-    {
       "description": "JS",
       "type": "script",
       "language": "javascript",
       "uuid": "1eee9b4c-0dce-41ce-869f-0de89fa98c6a",
       "version": [1, 1, 0],
       "entry": "scripts/world.js"
-    },
-    {
-      "type": "script",
-      "language": "javascript",
-      "entry": "fluids.js",
-      "uuid": "64467473-c239-4bbe-967e-512bdd999c86",
-      "version": [1, 0, 0]
-    },
-    {
-			"description": "JavaScript module code",
-			"language": "javascript",
-			"type": "script",
-			"uuid": "90f5ce78-6e65-470d-9b91-0649ca62713c",
-			"version": [0,0,7],
-			"entry": "scripts/Pouch.js"
-		}
+    }
   ],
   "capabilities": ["script_eval"],
   "dependencies": [
     {
-      "uuid": "9bb67595-4e8b-46e5-bd28-413bfaf1e346",
+      "uuid": "40be5674-757f-4633-8284-4bf164c65808",
       "version": [1, 0, 0]
     },
     {
       "module_name": "@minecraft/server",
-      "version": "1.8.0-beta"
+      "version": "1.9.0-beta"
     }
   ]
 }

@@ -1,4 +1,4 @@
-import {world, system, ItemStack, EnchantmentTypes} from '@minecraft/server'
+import {world, system,} from '@minecraft/server'
 
 const forbiddentItems = ["shulker"]
 
@@ -6,6 +6,7 @@ system.beforeEvents.watchdogTerminate.subscribe((eventData)=>{
     eventData.cancel = true
 })
 
+//CREDIT TO DEWDIMPPLE FOR THE CODE
 system.runTimeout(()=>{
     system.runInterval(()=>{
         let allPlayers = world.getAllPlayers()
@@ -121,12 +122,12 @@ function onChanged(player, playerInventory, propertyDataCurrent, propertyDataOld
                 playerInventory.setItem(propertyDataCurrent.slot, currentItem)
                 let pouchEntity = player.dimension.spawnEntity("gaia:gem_pouch_container", player.location)
                 pouchEntity.triggerEvent(pouchType(currentItem))
-                pouchEntity.addTag(bpId)
+                pouchEntity.addTag(pouchId)
                 pouchEntity.nameTag = pouchName(currentItem)
             }else{ //Open Old Pouch
                 let pouchEntityQuery = {tags:[`${propertyDataOld.id}`]}
-                let bpEntities = player.dimension.getEntities(pouchEntityQuery)
-                for(let pouchEntity of bpEntities){
+                let pouchEntities = player.dimension.getEntities(pouchEntityQuery)
+                for(let pouchEntity of pouchEntities){
                     closePouch(pouchEntity, player, propertyDataOld)
                 }
                 openPouch(player, currentItem)               
