@@ -1,6 +1,5 @@
 import { Vector } from "@minecraft/server"
 import { the_end } from "../utils";
-export default Gaia;
 
 /**
  * Class containing methods relating to the Gaia dimension
@@ -15,7 +14,7 @@ class Gaia {
     /**
      * Center block of Gaia dimension
      */
-    static origin = { x: (range.start.x + range.end.x) / 2, z: (range.start.z + range.end.z) / 2 };
+    static origin = { x: (this.range.start.x + this.range.end.x) / 2, z: (this.range.start.z + this.range.end.z) / 2 };
 
     /**
      * Biomes found in Gaia
@@ -44,7 +43,7 @@ class Gaia {
      * @returns {boolean} Whether or not the location is in Gaia
      */
     static isInGaia(location) {
-        return range.start.x <= location.x && location.x <= range.end.x && range.start.z <= location.z && location.z <= range.end.z;
+        return this.range.start.x <= location.x && location.x <= this.range.end.x && this.range.start.z <= location.z && location.z <= this.range.end.z;
     }
 
     /**
@@ -130,4 +129,7 @@ class Gaia {
         return the_end.spawnParticle(effectName, location, molangVariables);
     }
 }
+
+export default Gaia;
+
 

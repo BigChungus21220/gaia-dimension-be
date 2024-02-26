@@ -11,17 +11,7 @@
 export { vec2, vec3, vec4, Vec2, Vec3, Vec4 };
 
 
-/**
- * A list of all directions in 3d
- */
-const directions = [
-    Vec3.up,
-    Vec3.down,
-    Vec3.north,
-    Vec3.south,
-    Vec3.east,
-    Vec3.west
-];
+
 
 //#region vec2
 /**
@@ -635,7 +625,7 @@ function vec3(a, b, c) {
     if (a === undefined) { //no paramters
         return new Vec3(0, 0, 0);
     } else if (b === undefined) { //one parameter
-        if (a instanceof String) { //string input
+        if (typeof a == 'string') { //string input
             const lookup = {
                 up: new Vec3(0, 1, 0),
                 down: new Vec3(0, -1, 0),
@@ -1923,3 +1913,15 @@ class Vec4 {
     }
 }
 //#endregion
+
+/**
+ * A list of all directions in 3d
+ */
+var directions = [
+    Vec3.up,
+    Vec3.down,
+    Vec3.north,
+    Vec3.south,
+    Vec3.east,
+    Vec3.west
+];

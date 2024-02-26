@@ -1,3 +1,16 @@
+
+class GaiaEvent {
+    #subscribers = []; // # means private field
+
+    subscribe(fn) {
+        this.#subscribers.push(fn);
+    }
+
+    trigger(eventData) {
+        this.#subscribers.forEach((fn) => fn(eventData));
+    }
+}
+
 //#region event definitions
 
 /**
@@ -26,15 +39,3 @@ export const playerChangeBlock = new GaiaEvent();
 export const playerChangeBiome = new GaiaEvent();
 
 //#endregion
-
-class GaiaEvent {
-    #subscribers = []; // # means private field
-
-    subscribe(fn) {
-        this.#subscribers.push(fn);
-    }
-
-    trigger(eventData) {
-        this.#subscribers.forEach((fn) => fn(eventData));
-    }
-}

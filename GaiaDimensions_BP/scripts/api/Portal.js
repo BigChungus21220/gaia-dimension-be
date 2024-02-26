@@ -1,5 +1,4 @@
 import { Vector, BlockPermutation, Block, world, BlockVolumeUtils, Entity } from "@minecraft/server"
-export default Portal
 /**
  * @typedef Link
  * @property {Vector} location
@@ -162,7 +161,9 @@ class Portal {
             for (let y = 0; y < 5; y++) {
                 let blockpos = Vector.add(corner, new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0));
                 let is_edge = x == 0 || y == 0 || x == 3 || y == 4
-                if (!dimension.getBlock(blockpos)) await dimension.getBlock(blockpos) !== undefined
+                const blockLoaded = new Promise((resolve)=>{ const block = dimension.getBlock(blockpos); if (block !== undefined) { return resolve(block)}})
+                if (!dimension.getBlock(blockpos)) await blockLoaded;
+                
                 if (is_edge) {
                     dimension.getBlock(blockpos).setPermutation(BlockPermutation.resolve("gaia:keystone_block"))
                 } else {
@@ -174,13 +175,13 @@ class Portal {
 
     static breakPortal(block) {
         const positions = ['start', 'end']
-        const adjacent = block.getAdjacent((block) => block.typeId === 'gaia:gaia_portal', 14);
+        const adjacent = block.getAdjacent((block) => block.typeId === 'gaia:gaia_portal', 40);
         adjacent.forEach(b => {
             positions.forEach(position => {
                 const link = this.getLink(position, b.location)
                 if (link) {
                     this.unlink(link.location, link.linkedLocation)
-                } else return
+                } else return;
             });
             b.setPermutation(BlockPermutation.resolve("minecraft:air"));
         })
@@ -266,3 +267,6 @@ class Portal {
         return light_success
     }
 }
+
+
+export default Portal;

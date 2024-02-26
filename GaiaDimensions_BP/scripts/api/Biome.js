@@ -39,3 +39,5 @@ class BiomeSystem {
         return this.#playerBiomes[player.id];
     }
 }
+
+export default BiomeSystem

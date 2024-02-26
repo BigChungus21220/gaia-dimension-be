@@ -1,6 +1,12 @@
 import { Entity, Block, system, Dimension, Vector, Direction, World, Player } from "@minecraft/server";
 import { vec3, Vec3 } from "./Vector";
 import { CoordinateDisplay } from './api/CoordinateDisplay'
+
+
+ World.prototype.getAllDimensions = function () {
+   return ['overworld', 'nether', 'the_end'].map(dimensionStr => this.getDimension(dimensionStr));
+  }
+
 /**
  * @returns {boolean} Whether the entity is in a gaia portal or not
  */
@@ -17,19 +23,17 @@ Entity.prototype.turnCoords = function (on = false) {
   this.runCommand(`gamerule showcoordinates ${on}`)
 }
 
-Object.defineProperty(Player.prototype, 'coordinateDisplay', {
-  get: function () {
+Object.defineProperty(Entity.prototype, 'coordinateDisplay', {
+  get: function ()  {
     if (!this._coordinateDisplay) {
       this._coordinateDisplay = new CoordinateDisplay(this);
     }
     return this._coordinateDisplay;
   }
-}),
+})
 
 
-  World.prototype.getAllDimensions = function () {
-    ['overworld', 'nether', 'the_end'].map(dimensionStr => this.getDimension(dimensionStr));
-  }
+ 
 
 /**
  * Made by Redux
@@ -40,41 +44,36 @@ Object.defineProperty(Player.prototype, 'coordinateDisplay', {
  * @returns {Block[]} - An array of adjacent blocks.
  */
 Block.prototype.getAdjacent = function (filter, maxSearch) {
-  const connectedBlocks = []; //blocks that are connected to this block
-  const visited = new Set(); //blocks that have been checked
-  const queue = [vec3(this.location)]; //blocks to check next
-  let i = 0;
-  const intervalId = system.runInterval(() => {
-    //exit condition
-    if (queue.length === 0 || i >= maxSearch) {
-      system.clearRun(intervalId);
-      return;
-    }
+  const connectedBlocks = [];
+  const visited = new Set();
+  // Fix issue with directly passing in this.location to vec3 fuxntion
+  const {x,y,z} = this.location;
+  const queue = [vec3(x,y,z)];
 
-    const position = queue.shift(); //get next position in queue
-    visited.add(position);
+  while (queue.length > 0 && connectedBlocks.length < maxSearch) {
+    const currentPosition = queue.shift();
+    visited.add(currentPosition);
 
-    //in case of unloaded chunks
     try {
-      const currentBlock = this?.dimension?.getBlock(vec3(x, y, z));
-
-      //check if current block meets filter
-      if (filter(currentBlock)) {
-        connectedBlocks.push(currentBlock);
-        //add adjacent blocks to queue
-        for (const direction of Vec3.directions) {
-          const newPosition = position.add(direction);
-          if (!visited.has(newPosition)) queue.push(newPosition);
+      for (const direction of Vec3.directions) {
+        const newPosition = currentPosition.add(direction);
+        if (!visited.has(newPosition)) {
+          const adjacentBlock = this.dimension.getBlock(
+            new Vector(newPosition.x, newPosition.y, newPosition.z)
+          );
+          if (adjacentBlock && filter(adjacentBlock)) {
+            connectedBlocks.push(adjacentBlock);
+            queue.push(newPosition);
+          }
         }
       }
     } catch (err) {
-      console.log(err, err.stack);
+      console.warn(err, err.stack);
     }
-    i++;
-  });
-  system.clearRun(intervalId)
+  }
+
   return connectedBlocks;
-};
+}
 
 /**
  * Finds the ground of a dimension based off a location
@@ -128,6 +127,8 @@ Vector.prototype.toString = function () {
  * @memberof Vector
  * @method convertDirection
  */
-Vector.prototype.convertDirection = function (direction) {
+Vector.convertDirection = function (direction) {
   return vec3(direction.toLowerCase())
 }
+
+console.warn(JSON.stringify(Vector.prototype))
