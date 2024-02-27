@@ -10,10 +10,10 @@
     "components": {
       "minecraft:loot": "loot_tables/blocks/empty.json",
       "minecraft:destructible_by_mining": {
-        "seconds_to_destroy": 99999
+        "seconds_to_destroy": 0
       },
       "minecraft:destructible_by_explosion": {
-        "explosion_resistance": 1
+        "explosion_resistance": 9999
       },
       "minecraft:selection_box": {
         "origin": [-8, 0, -2],
