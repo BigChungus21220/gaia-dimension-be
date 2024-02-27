@@ -12,6 +12,7 @@
 			"tag:is_shovelable": {},
 			"tag:dirt": {},
 			"minecraft:loot": "loot_tables/blocks/pink_sludge_block.json",
+			"minecraft:light_emission": 15,
 			"minecraft:destructible_by_mining": {
 				"seconds_to_destroy": 0.5
 			},

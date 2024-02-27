@@ -43,7 +43,8 @@
         "explosion_resistance": 1
       },
       "minecraft:unit_cube": {},
-      "minecraft:light_dampening": 8,
+      "minecraft:light_dampening": 0,
+	  "minecraft:light_emission": 15,
       "tag:gaia:burnt_leaves": {},
 			"minecraft:material_instances": {
 				"*": {
