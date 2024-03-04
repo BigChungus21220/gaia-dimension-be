@@ -8,7 +8,7 @@ import {isSame} from './utils'
 system.runInterval(()=>Events.tick1.trigger(),1);
 system.runInterval(()=>Events.tick2.trigger(),2);
 system.runInterval(()=>Events.tick8.trigger(),8);
-
+system.runInterval(()=>Events.tick30.trigger(),30);
 
 //clear entities
 Events.tick8.subscribe(() => {
@@ -20,6 +20,15 @@ Events.tick8.subscribe(() => {
     }
 })
 
+//endstone clear
+Events.tick30.subscribe(() => {
+    const players = Gaia.getPlayers();
+    for (const player of players){
+        if (player) {
+        Gaia.getBlock({location: player.location, maxDistance: 500, type: "minecraft:end_stone"}).setPermutation(BlockPermutation.resolve("minecraft:air"));
+        }
+    }
+})
 
 //update biomes/fog
 let playerLocations = {}

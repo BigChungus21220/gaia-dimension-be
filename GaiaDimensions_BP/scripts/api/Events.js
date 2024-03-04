@@ -29,6 +29,11 @@ export const tick2 = new GaiaEvent();
 export const tick8 = new GaiaEvent();
 
 /**
+ * An event that fires every 30 ticks
+ */
+export const tick30 = new GaiaEvent();
+
+/**
  * An event that fires when the block the player is standing on changes (only evaluates for x and z axis)
  */
 export const playerChangeBlock = new GaiaEvent();
