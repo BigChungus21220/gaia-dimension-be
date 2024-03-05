@@ -25,7 +25,7 @@ Events.tick30.subscribe(() => {
     const players = Gaia.getPlayers();
     for (const player of players){
         if (player) {
-        Gaia.getBlock({location: player.location, maxDistance: 500, type: "minecraft:end_stone"}).setPermutation(BlockPermutation.resolve("minecraft:air"));
+        Gaia.getBlock({location: player.location, maxDistance: 500, type: "minecraft:end_stone"}).setType(("minecraft:air"));
         }
     }
 })
