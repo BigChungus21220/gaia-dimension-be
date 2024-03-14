@@ -6,10 +6,9 @@
 			"places_feature": "gaia:gen/structures/jade_tower_feature"
 		},
 		"conditions": {
-			"placement_pass": "after_sky_pass",
+			"placement_pass": "surface_pass",
 			"minecraft:biome_filter": {
 				"test": "has_biome_tag",
-				"operator": "==",
 				"value": "the_end"
 			}
 		},
@@ -24,10 +23,7 @@
 				"extent": [0, 16],
 				"distribution": "uniform"
 			},
-			"scatter_chance": {
-				"numerator":4,
-				"denominator": 100
+			"scatter_chance": 3
 			}
 		}
 	}
-}
