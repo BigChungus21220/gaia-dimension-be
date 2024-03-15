@@ -1,4 +1,4 @@
-import { Vector, BlockPermutation, Block, world, BlockVolumeUtils, Entity } from "@minecraft/server"
+import { Vector, BlockPermutation, Block, world, BlockVolume, Entity } from "@minecraft/server"
 /**
  * @typedef Link
  * @property {Vector} location
@@ -68,13 +68,13 @@ class Portal {
             case 'start':
                 link = this.linked.find(d => {
                     const volume = { from: d.location, to: { x: d.location.x, y: d.location.y + this.PortalSizeY, z: d.location.z + this.PortalSizeZ } };
-                    return BlockVolumeUtils.isInside(volume, location);
+                    return BlockVolume.isInside(volume, location);
                 });
                 break;
             case 'end':
                 link = this.linked.find(d => {
                     const volume = { from: d.linkedLocation, to: { x: d.linkedLocation.x, y: d.linkedLocation.y + this.PortalSizeY, z: d.linkedLocation.z + this.PortalSizeZ } };
-                    return BlockVolumeUtils.isInside(volume, location);
+                    return BlockVolume.isInside(volume, location);
                 });
                 break;
             default:
@@ -140,14 +140,14 @@ class Portal {
             case 'start':
                 link = this.linked.find(link => {
                     const volume = { from: link.location, to: { x: link.location.x, y: link.location.y + this.PortalSizeY, z: link.location.z + this.PortalSizeZ } };
-                    return BlockVolumeUtils.isInside(volume, entity.location);
+                    return BlockVolume.isInside(volume, entity.location);
                 });
                 break;
 
             case 'end':
                 link = this.linked.find(link => {
                     const volume = { from: link.linkedLocation, to: { x: link.linkedLocation.x, y: link.linkedLocation.y + this.PortalSizeY, z: link.linkedLocation.z + this.PortalSizeZ } };
-                    return BlockVolumeUtils.isInside(volume, entity.location);
+                    return BlockVolume.isInside(volume, entity.location);
                 });
                 break;
             default:
