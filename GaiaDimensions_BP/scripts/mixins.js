@@ -1,4 +1,4 @@
-import { Entity, Block, system, Dimension, Vector, Direction, World} from "@minecraft/server";
+import { Entity, Block, system, Dimension, World} from "@minecraft/server";
 import { vec3, Vec3 } from "./Vector";
 import { CoordinateDisplay } from './api/CoordinateDisplay'
 
@@ -76,7 +76,7 @@ Block.prototype.getAdjacent = function (filter, maxSearch) {
 
 /**
  * Finds the ground of a dimension based off a location
- * @param {Vector} location 
+ * @param {Vec3} location 
  * @returns {Block}
  */
 Dimension.prototype.findGround = function (location) {
@@ -117,15 +117,4 @@ String.prototype.decode = function () {
   return C;
 }
 
-Vector.prototype.toString = function () {
-  return vec3(this.x, this.y, this.z).toString();
-}
-/**
- * Converts a Direction to a Vector 
- * @param {Direction | string} direction
- * @memberof Vector
- * @method convertDirection
- */
-Vector.convertDirection = function (direction) {
-  return vec3(direction.toLowerCase())
-}
+

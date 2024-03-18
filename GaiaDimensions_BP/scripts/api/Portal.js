@@ -1,9 +1,10 @@
-import { Vector, BlockPermutation, Block, world, Entity, BlockVolume } from "@minecraft/server"
+import { BlockPermutation, Block, world, Entity, BlockVolume } from "@minecraft/server"
+import { Vec3, vec3 } from "../Vec3";
 /**
  * @typedef Link
- * @property {Vector} location
- * @property {Vector} linkedLocation
- * @property {Vector} size
+ * @property {Vec3} location
+ * @property {Vec3} linkedLocation
+ * @property {Vec3} size
  */
 
 /**
@@ -26,8 +27,8 @@ class Portal {
 
     /**
      * Link two locations.
-     * @param {Vector} fromLocation - The starting location.
-     * @param {Vector} toLocation - The ending location.
+     * @param {Vec3} fromLocation - The starting location.
+     * @param {Vec3} toLocation - The ending location.
      */
     static link(fromLocation, toLocation) {
         if (typeof fromLocation !== 'object' || typeof toLocation !== 'object') {
@@ -42,8 +43,8 @@ class Portal {
 
     /**
      * Unlinks a link between two locations.
-     * @param {Vector} fromLocation - The starting location.
-     * @param {Vector} toLocation - The ending location.
+     * @param {Vec3} fromLocation - The starting location.
+     * @param {Vec3} toLocation - The ending location.
      */
     static unlink(fromLocation, toLocation) {
         if (typeof fromLocation !== 'object' || typeof toLocation !== 'object') {
@@ -56,7 +57,7 @@ class Portal {
     }
     /**
    * Get the linked location from a given location.
-   * @param {Vector} location - The location.
+   * @param {Vec3} location - The location.
    * @param {string} from - Whether the location is the start or end of the linked location
    * @returns {Link} The linked object.
    */
@@ -102,8 +103,8 @@ class Portal {
 
     /**
      * Check if two locations are linked.
-     * @param {Vector} fromLocation - The starting location.
-     * @param {Vector} toLocation - The ending location.
+     * @param {Vec3} fromLocation - The starting location.
+     * @param {Vec3} toLocation - The ending location.
      * @returns {boolean} True if the locations are linked, false otherwise.
      */
     static isLinked(fromLocation, toLocation) {
@@ -159,7 +160,7 @@ class Portal {
     static async lightPortal(corner, dimension, x_oriented) {
         for (let x = 0; x < 4; x++) {
             for (let y = 0; y < 5; y++) {
-                let blockpos = Vector.add(corner, new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0));
+                let blockpos = vec3(corner).add(vec3(x_oriented ? 0 : x, y, x_oriented ? x : 0));
                 let is_edge = x == 0 || y == 0 || x == 3 || y == 4
                 const block = await new Promise((resolve) => { const block = dimension.getBlock(blockpos); if (block !== undefined) { resolve(block) } })
                 if (is_edge) {
@@ -174,7 +175,7 @@ class Portal {
     static breakPortal(block) {
         const adjacent = block.getAdjacent((block) => block.typeId === 'gaia:gaia_portal', 40);
         adjacent.forEach(b => {
-           this.LinkPositions.forEach(position => {
+            this.LinkPositions.forEach(position => {
                 const link = this.getLink(position, b.location)
                 if (link) {
                     this.unlink(link.location, link.linkedLocation)
@@ -188,7 +189,7 @@ class Portal {
         let isValid = true
         for (let x = 0; x < 4; x++) {
             for (let y = 0; y < 5; y++) {
-                let blockpos = Vector.add(corner, new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0));
+                let blockpos = vec3(corner).add(vec3(x_oriented ? 0 : x, y, x_oriented ? x : 0));
                 let blocktype = dimension.getBlock(blockpos).typeId
                 let is_edge = x == 0 || y == 0 || x == 3 || y == 4
                 if (is_edge && blocktype != "gaia:keystone_block") {
@@ -208,7 +209,7 @@ class Portal {
         let isValid = true
         for (let x = 0; x < 4; x++) {
             for (let y = 0; y < 5; y++) {
-                let blockpos = Vector.add(corner, new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0));
+                let blockpos = vec3(corner).add(vec3(x_oriented ? 0 : x, y, x_oriented ? x : 0));
                 let blocktype = dimension.getBlock(blockpos).typeId
                 let is_edge = x == 0 || y == 0 || x == 3 || y == 4
                 if (is_edge && blocktype != "gaia:keystone_block") {
@@ -231,13 +232,13 @@ class Portal {
     static canLight(block) {
         let position = block.location
         let dimension = block.dimension
-        let offset = Vector.zero
+        let offset = vec3(0, 0, 0)
         let light_success = false
         let x_oriented = true
         for (let x = -2; x <= -1; x++) {
             for (let y = -3; y <= -1; y++) {
-                let test_offset = new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0)
-                if (this.isUnlit(Vector.add(position, test_offset), dimension, true)) {
+                let test_offset = vec3(x_oriented ? 0 : x, y, x_oriented ? x : 0)
+                if (this.isUnlit(vec3(position).add(test_offset), dimension, true)) {
                     offset = test_offset
                     light_success = true
                     break
@@ -248,8 +249,8 @@ class Portal {
             x_oriented = false
             for (let x = -2; x <= -1; x++) {
                 for (let y = -3; y <= -1; y++) {
-                    let test_offset = new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0)
-                    if (this.isUnlit(Vector.add(position, test_offset), dimension, false)) {
+                    let test_offset = vec3(x_oriented ? 0 : x, y, x_oriented ? x : 0)
+                    if (this.isUnlit(vec3(position).add(test_offset), dimension, false)) {
                         offset = test_offset
                         light_success = true
                         break
@@ -259,7 +260,7 @@ class Portal {
         }
 
         if (light_success) {
-            this.lightPortal(Vector.add(position, offset), dimension, x_oriented)
+            this.lightPortal(vec3(position).add(offset), dimension, x_oriented)
         }
         return light_success
     }
