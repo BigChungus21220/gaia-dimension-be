@@ -1,6 +1,7 @@
-import { world, Vector, system, BlockPermutation } from "@minecraft/server";
+import { world, system } from "@minecraft/server";
 import Portal from "./api/Portal";
-import { Vec3, vec3 } from "./Vector";
+import { vec3 } from "./Vector";
+
 world.afterEvents.itemUseOn.subscribe(
   ({ source, itemStack, block, blockFace }) => {
     try {
@@ -8,10 +9,9 @@ world.afterEvents.itemUseOn.subscribe(
         itemStack.typeId === "gaia:glint_and_gold" &&
         block.typeId === "gaia:keystone_block"
       ) {
-        const pos = Vector.add(
-          Vector.convertDirection(blockFace),
-          block.location
-        );
+        const pos = vec3(block.location).add(
+          vec3(blockFace.toLowerCase())
+        )
         const lit = Portal.canLight(block.dimension.getBlock(pos));
         if (lit) {
           source.playSound("block.end_portal.spawn", {
@@ -32,5 +32,5 @@ world.beforeEvents.playerBreakBlock.subscribe(
       player.playSound("break.amethyst_block", { location: block.location });
     });
   },
-  { blockTypes: ["gaia:keystone_block", "gaia:gaia_portal", "minecraft:grass"] }
+  { blockTypes: ["gaia:keystone_block", "gaia:gaia_portal"] }
 );

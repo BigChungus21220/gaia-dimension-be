@@ -1,4 +1,4 @@
-import { Vector } from "@minecraft/server"
+import { Vector,Player } from "@minecraft/server"
 import { the_end } from "../utils";
 
 /**

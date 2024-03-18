@@ -97,7 +97,7 @@ system.runTimeout(()=>{
 
     //Manage Inactive Backpacks
     system.runInterval(()=>{
-        let pouchEntities = getGemstonePouchEntity({families:["pouch"]})
+        let pouchEntities = getPouchEntity({families:["pouch"]})
         for(let pouchEntity of pouchEntities){
             let playerQuery = {type:"minecraft:player", location:pouchEntity.location, maxDistance:3}
             let players = pouchEntity.dimension.getEntities(playerQuery)

@@ -1,4 +1,4 @@
-import { Vector, BlockPermutation, Block, world, BlockVolume, Entity } from "@minecraft/server"
+import { Vector, BlockPermutation, Block, world, Entity, BlockVolume } from "@minecraft/server"
 /**
  * @typedef Link
  * @property {Vector} location
@@ -16,6 +16,7 @@ class Portal {
      * @private
      */
     static linked = JSON.parse(world.getDynamicProperty('PortalLinked') ?? "[]");
+    static LinkPositions = ['start', 'end']
     /**
      * @private
      */
@@ -66,15 +67,15 @@ class Portal {
         let link;
         switch (from) {
             case 'start':
-                link = this.linked.find(d => {
-                    const volume = { from: d.location, to: { x: d.location.x, y: d.location.y + this.PortalSizeY, z: d.location.z + this.PortalSizeZ } };
-                    return BlockVolume.isInside(volume, location);
+                link = this.linked.find(link => {
+                    const volume = new BlockVolume(link.location, { x: link.location.x, y: link.location.y + this.PortalSizeY, z: link.location.z + this.PortalSizeZ });
+                    return volume.isInside(location)
                 });
                 break;
             case 'end':
-                link = this.linked.find(d => {
-                    const volume = { from: d.linkedLocation, to: { x: d.linkedLocation.x, y: d.linkedLocation.y + this.PortalSizeY, z: d.linkedLocation.z + this.PortalSizeZ } };
-                    return BlockVolume.isInside(volume, location);
+                link = this.linked.find(link => {
+                    const volume = new BlockVolume(link.linkedLocation, { x: link.linkedLocation.x, y: link.linkedLocation.y + this.PortalSizeY, z: link.linkedLocation.z + this.PortalSizeZ });
+                    return volume.isInside(location)
                 });
                 break;
             default:
@@ -139,15 +140,14 @@ class Portal {
         switch (from) {
             case 'start':
                 link = this.linked.find(link => {
-                    const volume = { from: link.location, to: { x: link.location.x, y: link.location.y + this.PortalSizeY, z: link.location.z + this.PortalSizeZ } };
-                    return BlockVolume.isInside(volume, entity.location);
+                    const volume = new BlockVolume(link.location, { x: link.location.x, y: link.location.y + this.PortalSizeY, z: link.location.z + this.PortalSizeZ });
+                    return volume.isInside(entity.locationlocation)
                 });
                 break;
-
             case 'end':
                 link = this.linked.find(link => {
-                    const volume = { from: link.linkedLocation, to: { x: link.linkedLocation.x, y: link.linkedLocation.y + this.PortalSizeY, z: link.linkedLocation.z + this.PortalSizeZ } };
-                    return BlockVolume.isInside(volume, entity.location);
+                    const volume = new BlockVolume(link.linkedLocation, { x: link.linkedLocation.x, y: link.linkedLocation.y + this.PortalSizeY, z: link.linkedLocation.z + this.PortalSizeZ });
+                    return volume.isInside(entity.location)
                 });
                 break;
             default:
@@ -161,23 +161,20 @@ class Portal {
             for (let y = 0; y < 5; y++) {
                 let blockpos = Vector.add(corner, new Vector(x_oriented ? 0 : x, y, x_oriented ? x : 0));
                 let is_edge = x == 0 || y == 0 || x == 3 || y == 4
-                const blockLoaded = new Promise((resolve)=>{ const block = dimension.getBlock(blockpos); if (block !== undefined) { return resolve(block)}})
-                if (!dimension.getBlock(blockpos)) await blockLoaded;
-                
+                const block = await new Promise((resolve) => { const block = dimension.getBlock(blockpos); if (block !== undefined) { resolve(block) } })
                 if (is_edge) {
-                    dimension.getBlock(blockpos).setPermutation(BlockPermutation.resolve("gaia:keystone_block"))
+                    block.setPermutation(BlockPermutation.resolve("gaia:keystone_block"))
                 } else {
-                    dimension.getBlock(blockpos).setPermutation(BlockPermutation.resolve("gaia:gaia_portal", { "gaia:x_oriented": x_oriented }))
+                    block.setPermutation(BlockPermutation.resolve("gaia:gaia_portal", { "gaia:x_oriented": x_oriented }))
                 }
             }
         }
     }
 
     static breakPortal(block) {
-        const positions = ['start', 'end']
         const adjacent = block.getAdjacent((block) => block.typeId === 'gaia:gaia_portal', 40);
         adjacent.forEach(b => {
-            positions.forEach(position => {
+           this.LinkPositions.forEach(position => {
                 const link = this.getLink(position, b.location)
                 if (link) {
                     this.unlink(link.location, link.linkedLocation)

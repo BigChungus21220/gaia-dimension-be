@@ -1,10 +1,6 @@
 import {Gaia} from './Gaia'
 import * as Events from "./Events"
 
-//Subscribe updateBiome to playerChangeBlock
-Events.playerChangeBlock.subscribe((eventData) => {
-    BiomeSystem.updateBiome(eventData.player);
-})
 
 
 /**
@@ -41,3 +37,9 @@ class BiomeSystem {
 }
 
 export default BiomeSystem
+
+
+//Subscribe updateBiome to playerChangeBlock
+Events.playerChangeBlock.subscribe((eventData) => {
+    BiomeSystem.updateBiome(eventData.player);
+})
