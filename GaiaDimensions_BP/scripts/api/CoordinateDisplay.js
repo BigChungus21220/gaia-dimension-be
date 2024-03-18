@@ -22,10 +22,10 @@ export class CoordinateDisplay {
         let temporaryLoc = location;
 
         const calVector = vec3(
-            MathRound(((temporaryLoc.x - 100000) / 1000) + deltaX),
-            MathRound(temporaryLoc.y),
-            MathRound(((temporaryLoc.z - 100000) / 1000) + deltaZ)
-        );
+            ((temporaryLoc.x - 100000) / 1000) + deltaX,
+            temporaryLoc.y,
+            ((temporaryLoc.z - 100000) / 1000) + deltaZ
+        ).round();
 
         temporaryLoc = undefined;
         
