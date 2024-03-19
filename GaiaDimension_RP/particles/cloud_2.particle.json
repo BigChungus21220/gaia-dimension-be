@@ -40,7 +40,7 @@
 						v.l = math.sqrt(v.vx*v.vx + v.vz*v.vz);
 						v.vx = v.vx/v.l;
 						v.vz = v.vz/v.l;
-						return v.px;"
+						return v.px;",
 					240, 
 					"v.pz"
 				]
