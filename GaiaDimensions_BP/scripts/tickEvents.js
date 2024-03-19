@@ -31,20 +31,20 @@ Events.tick30.subscribe(() => {
     }
 })
 
-//update biomes/fog
-let playerLocations = {}
+let playerLocations = {};
 
 Events.tick2.subscribe(() => {
     const players = Gaia.getPlayers();
     for (const player of players) {
         if (player) {
-            const { x, y, z } = player.location
+            const { x, y, z } = player.location;
             // Account for only x and z
             const floorpos = vec3(x, 0, z).floor();
-            if (!isSame(floorpos, playerLocations[player.id])) {
+            if (!isSame(floorpos, playerLocations[player.id] ?? {x,0,z})) {
                 Events.playerChangeBlock.trigger({ player: player });
-            }
-            playerLocations[player.id] = { x, y: 0, z }
+            } 
+            playerLocations[player.id] = floorpos; // Update player location after trigger
         }
     }
-})
+});
+
