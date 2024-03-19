@@ -1,6 +1,6 @@
 import { BlockPermutation, system, world } from "@minecraft/server"
 import Gaia from './api/Gaia'
-import { vec3 } from './Vector'
+import { vec3 } from './Vec3'
 import * as Events from "./api/Events"
 import { isSame } from './utils'
 

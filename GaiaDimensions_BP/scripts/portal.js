@@ -2,7 +2,7 @@ import { world, system, Player, Entity } from "@minecraft/server"
 import { delay, convertCoords, overworld, the_end } from './utils.js'
 import Gaia from './api/Gaia.js'
 import Portal from "./api/Portal.js";
-import { vec3 } from "./Vector.js";
+import { vec3 } from "./Vec3.js";
 
 const dimensions = world.getAllDimensions();
 
