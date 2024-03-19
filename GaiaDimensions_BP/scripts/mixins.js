@@ -1,11 +1,11 @@
-import { Entity, Block, system, Dimension, Vector, Direction, World, Player } from "@minecraft/server";
+import { Entity, Block, system, Dimension, World} from "@minecraft/server";
 import { vec3, Vec3 } from "./Vector";
 import { CoordinateDisplay } from './api/CoordinateDisplay'
 
 
- World.prototype.getAllDimensions = function () {
-   return ['overworld', 'nether', 'the_end'].map(dimensionStr => this.getDimension(dimensionStr));
-  }
+World.prototype.getAllDimensions = function () {
+  return ['overworld', 'nether', 'the_end'].map(dimensionStr => this.getDimension(dimensionStr));
+}
 
 /**
  * @returns {boolean} Whether the entity is in a gaia portal or not
@@ -24,7 +24,7 @@ Entity.prototype.turnCoords = function (on = false) {
 }
 
 Object.defineProperty(Entity.prototype, 'coordinateDisplay', {
-  get: function ()  {
+  get: function () {
     if (!this._coordinateDisplay) {
       this._coordinateDisplay = new CoordinateDisplay(this);
     }
@@ -33,7 +33,6 @@ Object.defineProperty(Entity.prototype, 'coordinateDisplay', {
 })
 
 
- 
 
 /**
  * Made by Redux
@@ -46,9 +45,9 @@ Object.defineProperty(Entity.prototype, 'coordinateDisplay', {
 Block.prototype.getAdjacent = function (filter, maxSearch) {
   const connectedBlocks = [];
   const visited = new Set();
-  // Fix issue with directly passing in this.location to vec3 fuxntion
-  const {x,y,z} = this.location;
-  const queue = [vec3(x,y,z)];
+  // Fix issue with directly passing in this.location to vec3 function
+  const { x, y, z } = this.location;
+  const queue = [vec3(x, y, z)];
 
   while (queue.length > 0 && connectedBlocks.length < maxSearch) {
     const currentPosition = queue.shift();
@@ -59,7 +58,7 @@ Block.prototype.getAdjacent = function (filter, maxSearch) {
         const newPosition = currentPosition.add(direction);
         if (!visited.has(newPosition)) {
           const adjacentBlock = this.dimension.getBlock(
-            new Vector(newPosition.x, newPosition.y, newPosition.z)
+           vec3(newPosition.x, newPosition.y, newPosition.z)
           );
           if (adjacentBlock && filter(adjacentBlock)) {
             connectedBlocks.push(adjacentBlock);
@@ -77,7 +76,7 @@ Block.prototype.getAdjacent = function (filter, maxSearch) {
 
 /**
  * Finds the ground of a dimension based off a location
- * @param {Vector} location 
+ * @param {Vec3} location 
  * @returns {Block}
  */
 Dimension.prototype.findGround = function (location) {
@@ -118,17 +117,4 @@ String.prototype.decode = function () {
   return C;
 }
 
-Vector.prototype.toString = function () {
-  return vec3(this.x, this.y, this.z).toString();
-}
-/**
- * Converts a Direction to a Vector 
- * @param {Direction | string} direction
- * @memberof Vector
- * @method convertDirection
- */
-Vector.convertDirection = function (direction) {
-  return vec3(direction.toLowerCase())
-}
 
-console.warn(JSON.stringify(Vector.prototype))
