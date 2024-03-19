@@ -1,4 +1,4 @@
-import './classMixins.js';
+import './mixins.js';
 import './geyser.js';
 import './portal.js';
 import './tickEvents.js'
