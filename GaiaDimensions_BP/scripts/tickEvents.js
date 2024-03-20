@@ -20,16 +20,6 @@ Events.tick8.subscribe(() => {
     }
 })
 
-//endstone clear
-Events.tick30.subscribe(() => {
-    const players = Gaia.getPlayers();
-    for (const player of players) {
-        if (player) {
-            const { x, y, z } = player.location
-            player.dimension.fillBlocks(player.location, { x: x + 500, y: y + 500, z: z + 500 }, BlockPermutation.resolve('minecraft:air'), { matchingBlock: BlockPermutation.resolve('minecraft:endstone') })
-        }
-    }
-})
 
 let playerLocations = {};
 
