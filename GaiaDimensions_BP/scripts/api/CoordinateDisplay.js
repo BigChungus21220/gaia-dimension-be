@@ -39,9 +39,9 @@ export class CoordinateDisplay {
             const movementZ = (locMap.get(name)?.current.z || 0) + (deltaZ > 0 ? 1 : -1);
             locMap.set(name, { current: vec3(movementX, location.y, movementZ) });
         }
-
-        const isNonNumerical = isNaN(calVector.x) && isNaN(calVector.z);
-        const coord = isNonNumerical ? "Loading Coordinates..." : `x: ${calVector.x} y: ${calVector.y} z: ${calVector.z}`;
+      const currentLocation = locMap.get(name).current
+        const isNonNumerical = isNaN(currentLocation.x) && isNaN(currentLocation.z);
+        const coord = isNonNumerical ? "Loading Coordinates..." : `x: ${currentLocation.x} y: ${currentLocation.y} z: ${currentLocation.z}`;
         return coord;
     }
 }
