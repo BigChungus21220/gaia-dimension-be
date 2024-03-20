@@ -1,4 +1,4 @@
-import { Entity, Block, system, Dimension, World} from "@minecraft/server";
+import { Entity, Block, system, Dimension, Vector, Direction, World, Player } from "@minecraft/server";
 import { vec3, Vec3 } from "./Vector";
 import { CoordinateDisplay } from './api/CoordinateDisplay'
 
@@ -45,7 +45,7 @@ Object.defineProperty(Entity.prototype, 'coordinateDisplay', {
 Block.prototype.getAdjacent = function (filter, maxSearch) {
   const connectedBlocks = [];
   const visited = new Set();
-  // Fix issue with directly passing in this.location to vec3 function
+  // Fix issue with directly passing in this.location to vec3 fuxntion
   const { x, y, z } = this.location;
   const queue = [vec3(x, y, z)];
 
@@ -58,7 +58,7 @@ Block.prototype.getAdjacent = function (filter, maxSearch) {
         const newPosition = currentPosition.add(direction);
         if (!visited.has(newPosition)) {
           const adjacentBlock = this.dimension.getBlock(
-           vec3(newPosition.x, newPosition.y, newPosition.z)
+            new Vector(newPosition.x, newPosition.y, newPosition.z)
           );
           if (adjacentBlock && filter(adjacentBlock)) {
             connectedBlocks.push(adjacentBlock);
@@ -76,7 +76,7 @@ Block.prototype.getAdjacent = function (filter, maxSearch) {
 
 /**
  * Finds the ground of a dimension based off a location
- * @param {Vec3} location 
+ * @param {Vector} location 
  * @returns {Block}
  */
 Dimension.prototype.findGround = function (location) {
@@ -117,4 +117,15 @@ String.prototype.decode = function () {
   return C;
 }
 
-
+Vector.prototype.toString = function () {
+  return vec3(this.x, this.y, this.z).toString();
+}
+/**
+ * Converts a Direction to a Vector 
+ * @param {Direction | string} direction
+ * @memberof Vector
+ * @method convertDirection
+ */
+Vector.convertDirection = function (direction) {
+  return vec3(direction.toLowerCase())
+}

@@ -1,15 +1,15 @@
-import { world, system, Player, Entity } from "@minecraft/server"
+import { world, system, Vector, Player, Entity } from "@minecraft/server"
 import { delay, convertCoords, overworld, the_end } from './utils.js'
 import Gaia from './api/Gaia.js'
 import Portal from "./api/Portal.js";
-import { vec3 } from "./Vec3.js";
+import { vec3 } from "./Vector.js";
 
 const dimensions = world.getAllDimensions();
 
 async function getTopBlock(location, dimension) {
-    const loc = vec3(location.x, 310, location.z).round();
-    const block = await new Promise((resolve) => { const block = dimension?.getBlockFromRay(loc, vec3(0, -1, 0))?.block; if (block != undefined) { resolve(block) } })
-    return vec3(block.location).add(vec3(0, 1, 0));
+    const loc = new Vector(Math.floor(location.x), 310, Math.floor(location.z));
+    const block = await new Promise((resolve) => { const block = dimension?.getBlockFromRay(loc, new Vector(0, -1, 0))?.block; if (block) { resolve(block) } })
+    return Vector.add(block.location, new Vector(0, 1, 0));
 }
 
 /**
@@ -69,7 +69,7 @@ system.runInterval(() => {
     for (const dimension of dimensions) {
         for (const entity of dimension.getEntities()) {
             const lastInPortal = entity.hasTag("inPortal");
-            const inPortal = entity.isInPortal() || (dimension.getBlock(vec3(entity.location.x, 0, entity.location.z)) === undefined && lastInPortal);
+            const inPortal = entity.isInPortal() || (dimension.getBlock(new Vector(entity.location.x, 0, entity.location.z)) === undefined && lastInPortal);
             inPortal ? entity.addTag('inPortal') : entity.removeTag('inPortal');
             const coord = entity.coordinateDisplay.coordinates();
             if (entity instanceof Player) {
@@ -90,7 +90,7 @@ function parseCoords(coord) {
 
     switch (typeof coord) {
         case "string":
-            const parts = coord.split(':').map(part => parseInt(part.trim()));
+            const parts = coord.split(':').map(part => parseInt(part));
             return {
                 x: parts[1],
                 y: parts[2],

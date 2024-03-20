@@ -1,6 +1,6 @@
-import {Player } from "@minecraft/server"
+import { Vector,Player } from "@minecraft/server"
 import { the_end } from "../utils";
-import { Vec3, vec3 } from "../Vec3";
+
 /**
  * Class containing methods relating to the Gaia dimension
  */
@@ -39,7 +39,7 @@ class Gaia {
 
     /**
      * Checks whether a given location is in Gaia
-     * @param {Vec3} location location to check
+     * @param {Vector} location location to check
      * @returns {boolean} Whether or not the location is in Gaia
      */
     static isInGaia(location) {
@@ -48,12 +48,12 @@ class Gaia {
 
     /**
      * Gets the biome that a given location is in
-     * @param {Vec3} location location to check
+     * @param {Vector} location location to check
      * @returns {string|boolean} The biome the location is in (if applicable, otherwise false)
      */
     static getBiome(location) {
         if (this.isInGaia(location)) {
-            const block = this.getBlock(vec3(location.x, 0, location.z)).typeId.replace("gaia:bedrock_", "");
+            const block = this.getBlock(new Vector(location.x, 0, location.z)).typeId.replace("gaia:bedrock_", "");
             if (block == null) {
                 return false;
             } else {
@@ -83,7 +83,7 @@ class Gaia {
 
     /**
      * Returns the block at the given location
-     * @param {Vec3} location Location to get block from
+     * @param {Vector} location Location to get block from
      * @returns {Block} The block at the location
      */
     static getBlock(location) {
@@ -102,7 +102,7 @@ class Gaia {
     /**
      * Spawns an entity in Gaia
      * @param {string} identifier Entity type to spawn
-     * @param {Vec3} location Location to spawn entity
+     * @param {Vector} location Location to spawn entity
      * @returns {Entity} The spawned entity
      */
     static spawnEntity(identifier, location) {
@@ -112,7 +112,7 @@ class Gaia {
     /**
      * Spawns an item in Gaia
      * @param {ItemStack} itemStack Item stack to spawn
-     * @param {Vec3} location Location to spawn item
+     * @param {Vector} location Location to spawn item
      * @returns {Entity} The spawned item entity
      */
     static spawnItem(itemStack, location) {
@@ -122,7 +122,7 @@ class Gaia {
     /**
      * Spawns a particle effect in Gaia
      * @param {ItemStack} itemStack Particle to spawn
-     * @param {Vec3} location Location to spawn particle
+     * @param {Vector} location Location to spawn particle
      * @param {MolangVariableMap} molangVariables optional varibles for this particle
      */
     static spawnParticle(effectName, location, molangVariables = {}) {
