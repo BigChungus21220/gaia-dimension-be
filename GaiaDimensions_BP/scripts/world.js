@@ -1,12 +1,11 @@
 import './classMixins.js';
 import './geyser.js';
-import './portal.js';
+//import './portal.js';
+import './api/Biome.js'
+import './api/Fog.js'
 import './tickEvents.js'
 import './light_portal.js';
-import '.classMixins.js';
-import "./blocks/place.js";
-import "./pouch.js";
-import {furnacesLoad} from "./api/furnaceAPI.js";
-import {restructurerLoad} from "./api/restructurerAPI.js"
-furnacesLoad()
-restructurerLoad()
+//import {furnacesLoad} from "./api/furnaceAPI.js";
+//import {restructurerLoad} from "./api/restructurerAPI.js"
+//furnacesLoad()
+//restructurerLoad()

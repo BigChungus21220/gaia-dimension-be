@@ -57,7 +57,7 @@
                 }
             },
             {
-                "fuel_input@gaia_furnace.furnace_grid":{
+                "material_output@gaia_furnace.furnace_grid":{
                     "$collection_name": "container_items",
                     "$index": 2,
                     "offset": [45.5, -4.4],

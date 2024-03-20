@@ -10,19 +10,6 @@
 
 export { vec2, vec3, vec4, Vec2, Vec3, Vec4 };
 
-
-/**
- * A list of all directions in 3d
- */
-const directions = [
-    Vec3.up,
-    Vec3.down,
-    Vec3.north,
-    Vec3.south,
-    Vec3.east,
-    Vec3.west
-];
-
 //#region vec2
 /**
 * Creates a Vec2
@@ -716,41 +703,6 @@ class Vec3 {
     }
 
     /**
-     * A vector pointing up
-     */
-    static get up(){ return vec3(0,1,0); }
-
-    /**
-     * A vector pointing down
-     */
-    static get down(){ return vec3(0,-1,0); }
-
-    /**
-     * A vector pointing north
-     */
-    static get north(){ return vec3(0,0,-1); }
-
-    /**
-     * A vector pointing south
-     */
-    static get south(){ return vec3(0,0,1); }
-
-    /**
-     * A vector pointing east
-     */
-    static get east(){ return vec3(1,0,0); }
-
-    /**
-     * A vector pointing west
-     */
-    static get west(){ return vec3(-1,0,0); }
-
-    /**
-     * All 3d directions
-     */
-    static get directions(){ return directions; }
-
-    /**
     * Create a Vec3
     * @param {number} x x component of vector
     * @param {number} y y component of vector
@@ -766,6 +718,50 @@ class Vec3 {
         } else {
             throw new Error("All constructor inputs must be numbers");
         }
+    }
+
+    /**
+     * A vector pointing up
+     */
+    static get up(){ return new Vec3(0,1,0); }
+
+    /**
+     * A vector pointing down
+     */
+    static get down(){ return new Vec3(0,-1,0); }
+
+    /**
+     * A vector pointing north
+     */
+    static get north(){ return new Vec3(0,0,-1); }
+
+    /**
+     * A vector pointing south
+     */
+    static get south(){ return new Vec3(0,0,1); }
+
+    /**
+     * A vector pointing east
+     */
+    static get east(){ return new Vec3(1,0,0); }
+
+    /**
+     * A vector pointing west
+     */
+    static get west(){ return new Vec3(-1,0,0); }
+
+    /**
+     * A list of all directions in 3d
+     */
+    static get directions(){
+        return [
+            Vec3.up,
+            Vec3.down,
+            Vec3.north,
+            Vec3.south,
+            Vec3.east,
+            Vec3.west
+        ];
     }
     
     /**
@@ -785,6 +781,15 @@ class Vec3 {
     toObject(){
         return {x:this.x, y:this.y, z:this.z};
     }
+
+    /**
+    * Determines whether this vector equals another vector
+    * @return {bool} Whether this vector equals another vector
+    **/
+    equals(other){
+        return this.x == other.x && this.y == other.y && this.z == other.z;
+    }
+
 
     /**
     * Adds to this vector

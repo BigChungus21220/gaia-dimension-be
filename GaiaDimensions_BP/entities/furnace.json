@@ -2,16 +2,28 @@
   "format_version": "1.16.100",
   "minecraft:entity": {
     "description": {
-      "identifier": "gaiadimension:furnace_entity",
+      "identifier": "gaia:furnace_entity",
       "is_spawnable": false,
       "is_summonable": true,
-      "is_experimental": false
+      "is_experimental": false,
+      "properties": {
+        "gaia:cook_timer": {
+          "type": "int",
+          "range": [ 0, 3200],
+          "default": 0
+        },
+        "gaia:burn_timer": {
+          "type": "int",
+          "range": [ 0, 3200],
+          "default": 0
+        }
+      }
     },
     "component_groups": {
       "despawn_block": {
         "minecraft:transformation": {
           "drop_inventory": true,
-          "into": "gaiadimension:despawn"
+          "into": "gaia:despawn"
         },
         "minecraft:timer": {
           "time": 1,
@@ -28,7 +40,7 @@
     },
     "components": {
       "minecraft:type_family": {
-        "family": ["chest", "inanimate"]
+        "family": ["furnace", "inanimate"]
       },
       "minecraft:collision_box": {
         "height": 0,
@@ -78,7 +90,7 @@
         "sensor_radius": 0.5,
         "on_break": [
           {
-            "block_list": ["gaiadimension:gaia_stone_furnace"],
+            "block_list": ["gaia:gaia_stone_furnace"],
             "on_block_broken": "destroy"
           }
         ]
@@ -96,7 +108,7 @@
         "add": {
           "component_groups": ["despawn_block"]
         },
-        "run_command": {
+        "queue_command": {
           "command": [
             "replaceitem entity @s slot.inventory 3 air",
             "replaceitem entity @s slot.inventory 4 air"

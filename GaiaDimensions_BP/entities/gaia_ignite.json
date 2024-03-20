@@ -64,7 +64,7 @@
       },
       "events": {
         "burn": {
-            "run_command": {
+            "queue_command": {
               "command": [
                 "fill ~~~ ~~~ gaia:gold_fire replace air"
               ]

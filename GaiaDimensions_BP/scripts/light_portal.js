@@ -1,13 +1,14 @@
 import { world, Vector} from "@minecraft/server";
-import gaia from './world';
+import { Gaia } from './api/Gaia';
+import { vec3, Vec3 } from "Vector.js";
 
 world.afterEvents.itemUseOn.subscribe(async (event) => {
     try {
         if (event.itemStack.typeId === "gaia:glint_and_gold" && event.block.typeId === 'gaia:keystone_block') {
-            const pos = Vector.add(Vector.convertDirection(event.blockFace), event.block.location);
+            const pos = vec3(event.blockFace).add(vec3(event.block.location));
 
             const portalData = {
-                location: { x: pos.x, y: pos.y, z: pos.z },
+                location: pos,
                 dimension: event.block.dimension,
                 source: event.source
             };

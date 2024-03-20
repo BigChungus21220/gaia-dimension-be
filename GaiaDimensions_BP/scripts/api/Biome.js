@@ -23,11 +23,11 @@ class BiomeSystem {
     static updateBiome(player){
         const biome = Gaia.getBiome(player.location);
         if (Gaia.isInGaia(player.location)) {
-            if (playerBiomes[player.id] != biome){
+            if (BiomeSystem.playerBiomes[player.id] != biome){
                 Events.playerChangeBiome.trigger({player:player,biome:biome}); //trigger playerChangeBiome
             }
         }
-        playerBiomes[player.id] = biome;
+        BiomeSystem.playerBiomes[player.id] = biome;
     }
 
     /**
@@ -36,6 +36,6 @@ class BiomeSystem {
      * @returns {string} Biome player is in
      */
     static getBiome(player){
-        return playerBiomes[player.id];
+        return BiomeSystem.playerBiomes[player.id];
     }
 }

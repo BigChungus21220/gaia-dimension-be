@@ -316,7 +316,7 @@
 
     "events": {
       "minecraft:entity_spawned": {
-        "run_command": {
+        "queue_command": {
           "command": [
             "summon gaia:malachite_drone MG_MINION ~ ~ ~4",
             "summon gaia:malachite_drone MG_MINION ~ ~ ~-4",
@@ -327,7 +327,7 @@
       },
       "dead": {},
       "no_mg_defend": {
-        "run_command": {
+        "queue_command": {
           "command": ["tag @s add mg_defend"]
         },
         "remove": {
@@ -355,7 +355,7 @@
         ]
       },
       "mg_defend": {
-        "run_command": {
+        "queue_command": {
           "command": ["tag @s remove mg_defend"]
         },
         "remove": {

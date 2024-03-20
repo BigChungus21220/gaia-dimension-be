@@ -1,11 +1,10 @@
 import { Vector } from "@minecraft/server"
 import { the_end } from "../utils";
-export default Gaia;
 
 /**
  * Class containing methods relating to the Gaia dimension
  */
-class Gaia {
+export class Gaia {
 
     /**
      * Range of blocks in the end that Gaia takes up
@@ -15,7 +14,7 @@ class Gaia {
     /**
      * Center block of Gaia dimension
      */
-    static origin = {x:(range.start.x + range.end.x)/2,z:(range.start.z + range.end.z)/2};
+    static origin = {x:(100000 + 400000)/2,z:(100000 + 400000)/2};
 
     /**
      * Biomes found in Gaia
@@ -44,7 +43,7 @@ class Gaia {
      * @returns {boolean} Whether or not the location is in Gaia
      */
     static isInGaia(location){
-        return range.start.x <= location.x && location.x <= range.end.x && range.start.z <= location.z && location.z <= range.end.z;
+        return Gaia.range.start.x <= location.x && location.x <= Gaia.range.end.x && Gaia.range.start.z <= location.z && location.z <= Gaia.range.end.z;
     }
 
     /**
@@ -70,7 +69,7 @@ class Gaia {
      * @returns {Entity[]} All entities matching the query
      */
     static getEntities(entityQueryOptions){
-        return the_end.getEntities(entityQueryOptions).filter((entity) => this.isInGaia(entity));
+        return the_end.getEntities(entityQueryOptions).filter((entity) => this.isInGaia(entity.location));
     }
 
     /**
@@ -79,7 +78,7 @@ class Gaia {
      * @returns {Player[]} All players matching the query
      */
     static getPlayers(entityQueryOptions){
-        return the_end.getPlayers(entityQueryOptions).filter((entity) => this.isInGaia(entity));
+        return the_end.getPlayers(entityQueryOptions).filter((entity) => this.isInGaia(entity.location));
     }
 
     /**

@@ -7,7 +7,7 @@
 				"default" : {
 					"transitions" : [
 						{
-							"spawn" : "q.is_local_player && !q.is_in_ui"
+							"spawn" : "!(q.is_in_ui || v.is_paperdoll) && q.is_local_player"
 						}
 					]
 				},
@@ -32,25 +32,25 @@
 				"default" : {
 					"transitions" : [
 						{
-							"spawn0" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 0"
+							"spawn0" : "!(q.is_in_ui || v.is_paperdoll) && q.is_local_player && v.cloud_picker == 0"
 						},
 						{
-							"spawn1" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 1"
+							"spawn1" : "!(q.is_in_ui || v.is_paperdoll) && q.is_local_player && v.cloud_picker == 1"
 						},
 						{
-							"spawn2" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 2"
+							"spawn2" : "!(q.is_in_ui || v.is_paperdoll) && q.is_local_player && v.cloud_picker == 2"
 						},
 						{
-							"spawn3" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 3"
+							"spawn3" : "!(q.is_in_ui || v.is_paperdoll) && q.is_local_player && v.cloud_picker == 3"
 						},
 						{
-							"spawn4" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 4"
+							"spawn4" : "!(q.is_in_ui || v.is_paperdoll) && q.is_local_player && v.cloud_picker == 4"
 						},
 						{
-							"spawn5" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 5"
+							"spawn5" : "!(q.is_in_ui || v.is_paperdoll) && q.is_local_player && v.cloud_picker == 5"
 						},
 						{
-							"spawn6" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 6"
+							"spawn6" : "!(q.is_in_ui || v.is_paperdoll) && q.is_local_player && v.cloud_picker == 6"
 						}
 					]
 				},

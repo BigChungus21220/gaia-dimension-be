@@ -1,4 +1,5 @@
 import { Entity, Block, system, Dimension, Vector, Direction, Player } from "@minecraft/server";
+import { InventoryBlock } from "./api/InventoryBlock";
 import { vec3, Vec3 } from "./Vector";
 
 /**
@@ -16,7 +17,6 @@ Entity.prototype.isInPortal = function () {
 Entity.prototype.turnCoords = function (on = false) {
   this.runCommand(`gamerule showcoordinates ${on}`)
 }
-
 
 /**
  * Made by Redux

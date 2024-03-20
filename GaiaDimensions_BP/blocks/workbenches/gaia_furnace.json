@@ -1,0 +1,145 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaia:gaia_furnace",
+      "menu_category": {
+        "category": "items",
+        "group": "itemGroup.name.furnaces",
+        "is_hidden_in_commands": false
+      },
+      "traits": {
+        "minecraft:placement_direction": {
+          "enabled_states": ["minecraft:cardinal_direction"]
+        }
+      },
+      "states": {
+        "gaia:lit": [false, true]
+      }
+    },
+    "components": {
+      "minecraft:collision_box": true,
+      "minecraft:selection_box": true,
+      "minecraft:display_name": "Gaia Stone Furnace",
+      "minecraft:material_instances": {
+        "up": {
+          "texture": "gaia_stone_furnace_top",
+          "render_method": "opaque"
+        },
+        "down": {
+          "texture": "gaia_stone_furnace_top",
+          "render_method": "opaque"
+        },
+        "south": {
+          "texture": "gaia_stone_furnace_front",
+          "render_method": "opaque"
+        },
+        "*": {
+          "texture": "gaia_stone_furnace_side",
+          "render_method": "opaque"
+        }
+      },
+      "minecraft:light_emission": 0,
+      "minecraft:unit_cube": {},
+      "tag:furnace": {},
+      "minecraft:queued_ticking": {
+        "looping": true,
+        "on_tick": {
+          "event": "update"
+        },
+        "interval_range": [1, 1]
+      }
+    },
+    "events": {
+      "update": {
+        "run_command": {
+          "command": [
+            "execute as @e[r=0] at @s run scriptevent forge:furnaceLoad gaiaf 200 forge:flame forge:arrow"
+          ]
+        }
+      }
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('gaia:lit') == true",
+        "components": {
+          "minecraft:material_instances": {
+            "up": {
+              "texture": "gaia_stone_furnace_top",
+              "render_method": "opaque"
+            },
+            "down": {
+              "texture": "gaia_stone_furnace_top",
+              "render_method": "opaque"
+            },
+            "south": {
+              "texture": "gaia_stone_furnace_front",
+              "render_method": "opaque"
+            },
+            "*": {
+              "texture": "gaia_stone_furnace_side",
+              "render_method": "opaque"
+            }
+          },
+          "minecraft:light_emission": 10
+        }
+      },
+      {
+        "condition": "q.block_state('gaia:lit') == true",
+        "components": {
+          "minecraft:material_instances": {
+            "up": {
+              "texture": "gaia_stone_furnace_top",
+              "render_method": "opaque"
+            },
+            "down": {
+              "texture": "gaia_stone_furnace_top",
+              "render_method": "opaque"
+            },
+            "south": {
+              "texture": "gaia_stone_furnace_front_lit",
+              "render_method": "opaque"
+            },
+            "*": {
+              "texture": "gaia_stone_furnace_side",
+              "render_method": "opaque"
+            }
+          },
+          "minecraft:light_emission": 0
+        }
+      },
+      {
+        "condition": "query.block_state('minecraft:cardinal_direction') == 'south'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [0, 0, 0]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaia:direction') == 'north'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [0, 180, 0]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaia:direction') == 'west'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [0, 90, 0]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaia:direction') == 'east'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [0, 270, 0]
+          }
+        }
+      }
+    ]
+  }
+}

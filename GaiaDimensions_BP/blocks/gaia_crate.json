@@ -2,20 +2,20 @@
   "format_version": "1.19.50",
   "minecraft:block": {
     "description": {
-      "identifier": "gaia:large_crate",
+      "identifier": "gaia:crate",
       "menu_category": {
         "category": "items",
-        "group": "itemGroup.name.furnaces",
+        "group": "itemGroup.name.chest",
         "is_hidden_in_commands": false
       }
     },
     "components": {
       "minecraft:collision_box": true,
       "minecraft:selection_box": true,
-      "minecraft:display_name": "Large Crate",
+      "minecraft:display_name": "Crate",
       "minecraft:material_instances": {
         "*": {
-          "texture": "large_crate",
+          "texture": "crate",
           "render_method": "opaque",
           "minecraft:map_color": "#ffffff"
         }

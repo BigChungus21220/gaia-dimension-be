@@ -22,9 +22,9 @@ class FogSystem {
      */
     static updateFog(player,biome) {
         if (Gaia.isInGaia(player.location)) {
-            this.setFog(player, biome);
+            FogSystem.setFog(player, biome);
         } else {
-            this.clearFogs(player);
+            FogSystem.clearFogs(player);
         }
     }
 
@@ -33,9 +33,12 @@ class FogSystem {
      * @param {Player} player Player to remove fogs from
      */
     static clearFogs(player) {
-        for (const biome of playerData[player.id]) {
-            player.runCommandAsync("fog @s remove " + biome);
-            this.playerFogs[player.id] = [];
+        if(!FogSystem.playerFogs.hasOwnProperty(player.id)){
+            FogSystem.playerFogs[player.id] = [];
+        }
+        for (const fog of FogSystem.playerFogs[player.id]) {
+            player.runCommandAsync("fog @s remove " + fog);
+            FogSystem.playerFogs[player.id] = [];
         }
     }
 
@@ -45,8 +48,11 @@ class FogSystem {
      * @param {string} biome The biome fog to add to the player
      */
     static setFog(player, biome) {
-        this.clearFogs(player);
+        if(!FogSystem.playerFogs.hasOwnProperty(player.id)){
+            FogSystem.playerFogs[player.id] = [];
+        }
+        FogSystem.clearFogs(player);
         player.runCommandAsync("fog @s push gaia:" + biome + "_fog " + biome);
-        this.playerFogs[player.id].push(biome);
+        FogSystem.playerFogs[player.id].push(biome);
     }
 }
