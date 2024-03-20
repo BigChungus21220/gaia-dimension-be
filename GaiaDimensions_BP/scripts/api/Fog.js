@@ -1,10 +1,7 @@
-import { Gaia } from "./Gaia";
+import Gaia from "./Gaia";
 import * as Events from "./Events";
 
-//Subscribe updateFog to playerChangeBiome
-Events.playerChangeBiome.subscribe((eventData) => {
-    FogSystem.updateFog(eventData.player, eventData.biome);
-})
+
 
 /**
  * Handles fog changes
@@ -49,3 +46,8 @@ class FogSystem {
         this.playerFogs[player.id].push(biome);
     }
 }
+
+//Subscribe updateFog to playerChangeBiome
+Events.playerChangeBiome.subscribe((eventData) => {
+    FogSystem.updateFog(eventData.player, eventData.biome);
+})

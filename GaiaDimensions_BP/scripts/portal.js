@@ -1,15 +1,15 @@
-import { world, system, Vector, Player, Entity } from "@minecraft/server"
+import { world, system, Player, Entity } from "@minecraft/server"
 import { delay, convertCoords, overworld, the_end } from './utils.js'
 import Gaia from './api/Gaia.js'
 import Portal from "./api/Portal.js";
-import { vec3 } from "./Vector.js";
+import { vec3 } from "./Vec3.js";
 
 const dimensions = world.getAllDimensions();
 
 async function getTopBlock(location, dimension) {
-    const loc = new Vector(Math.floor(location.x), 310, Math.floor(location.z));
-    const block = await new Promise((resolve) => { const block = dimension?.getBlockFromRay(loc, new Vector(0, -1, 0))?.block; if (block) { resolve(block) } })
-    return Vector.add(block.location, new Vector(0, 1, 0));
+    const loc = vec3(location.x, 310, location.z).round();
+    const block = await new Promise((resolve) => { const block = dimension?.getBlockFromRay(loc, vec3(0, -1, 0))?.block; if (block != undefined) { resolve(block) } })
+    return vec3(block.location).add(vec3(0, 1, 0));
 }
 
 /**
@@ -54,9 +54,9 @@ async function backToDimension(entity, coord) {
         if (entity.typeId == "minecraft:player") {
             const teleportLoc = Portal.isEntityInLinked('end', entity)?.location
             const { x, y, z } = teleportLoc ?? coord
-            const dimension = overworld ?? entity.getSpawnPoint()?.dimension
-            entity.teleport(convertCoords(await getTopBlock({ x: x, y: y, z: z }, dimension), entity), { dimension: dimension })
+            const dimension = overworld ?? entity.getSpawnPoint()?.dimension;
             entity.turnCoords(true)
+            entity.teleport(convertCoords(await getTopBlock({ x: x, y: y, z: z }, dimension), entity), { dimension: dimension })
         } else {
             entity.teleport(await getTopBlock(world.getDefaultSpawnLocation(), overworld), { dimension: overworld })
         }
@@ -69,18 +69,18 @@ system.runInterval(() => {
     for (const dimension of dimensions) {
         for (const entity of dimension.getEntities()) {
             const lastInPortal = entity.hasTag("inPortal");
-            const inPortal = entity.isInPortal() || (dimension.getBlock(new Vector(entity.location.x, 0, entity.location.z)) === undefined && lastInPortal);
+            const inPortal = entity.isInPortal() || (dimension.getBlock(vec3(entity.location.x, 0, entity.location.z)) === undefined && lastInPortal);
             inPortal ? entity.addTag('inPortal') : entity.removeTag('inPortal');
             const coord = entity.coordinateDisplay.coordinates();
             if (entity instanceof Player) {
-                if (Gaia.isInGaia(entity) && !entity.getDynamicProperty('enteredByPortal')) entity.teleport({ x: 0, y: 76, z: 0 });
+                if (Gaia.isInGaia(entity.location) && !entity.getDynamicProperty('enteredByPortal')) entity.teleport({ x: 0, y: 76, z: 0 });
                 const isPlayerMoving = isMoving(entity);
-                if (isPlayerMoving && Gaia.isInGaia(entity)) {
+                if (isPlayerMoving && Gaia.isInGaia(entity.location)) {
                     entity.coordinateDisplay.setCoordinate(coord)
                 }
             }
             if (inPortal && !lastInPortal) {
-                Gaia.isInGaia(entity) ? backToDimension(entity, parseCoords(coord)) : tpToGaia(entity);
+                Gaia.isInGaia(entity.location) ? backToDimension(entity, parseCoords(coord)) : tpToGaia(entity);
             }
         };
     };
@@ -90,7 +90,7 @@ function parseCoords(coord) {
 
     switch (typeof coord) {
         case "string":
-            const parts = coord.split(':').map(part => parseInt(part));
+            const parts = coord.split(':').map(part => parseInt(part.trim()));
             return {
                 x: parts[1],
                 y: parts[2],

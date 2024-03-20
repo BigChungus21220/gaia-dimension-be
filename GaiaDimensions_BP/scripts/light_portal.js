@@ -1,6 +1,7 @@
 import { world, system } from "@minecraft/server";
 import Portal from "./api/Portal";
-import { vec3 } from "./Vector";
+import { vec3 } from "./Vec3";
+
 world.afterEvents.itemUseOn.subscribe(
   ({ source, itemStack, block, blockFace }) => {
     try {
@@ -31,5 +32,5 @@ world.beforeEvents.playerBreakBlock.subscribe(
       player.playSound("break.amethyst_block", { location: block.location });
     });
   },
-  { blockTypes: ["gaia:keystone_block", "gaia:gaia_portal"] }
+  { blockTypes: ["gaia:keystone_block"] }
 );
