@@ -40,7 +40,7 @@ Events.tick2.subscribe(() => {
             const { x, y, z } = player.location;
             // Account for only x and z
             const floorpos = vec3(x, 0, z).floor();
-            if (!isSame(floorpos, playerLocations[player.id] ?? {x,0,z})) {
+            if (!isSame(floorpos, playerLocations[player.id] ?? {x,0:z})) {
                 Events.playerChangeBlock.trigger({ player: player });
             } 
             playerLocations[player.id] = floorpos; // Update player location after trigger
