@@ -19,7 +19,7 @@
 			"minecraft:destructible_by_explosion": {
 				"explosion_resistance": 1
 			},
-      "minecraft:light_emission": 2,
+      "minecraft:light_emission": 12,
       "minecraft:material_instances": {
         "*": {
           "texture": "gummy_glitter_block",

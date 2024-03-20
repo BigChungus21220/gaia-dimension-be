@@ -29,12 +29,12 @@
   "capabilities": ["script_eval"],
   "dependencies": [
     {
-      "uuid": "9bb67595-4e8b-46e5-bd28-413bfaf1e346",
+      "uuid": "40be5674-757f-4633-8284-4bf164c65808",
       "version": [1, 0, 0]
     },
     {
       "module_name": "@minecraft/server",
-      "version": "1.9.0-beta"
+      "version": "1.10.0-beta"
     }
   ]
 }

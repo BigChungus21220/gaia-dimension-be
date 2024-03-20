@@ -5,7 +5,6 @@ import './api/Biome.js'
 import './api/Fog.js'
 import './tickEvents.js'
 import './light_portal.js';
-//import {furnacesLoad} from "./api/furnaceAPI.js";
-//import {restructurerLoad} from "./api/restructurerAPI.js"
-//furnacesLoad()
-//restructurerLoad()
+import "./blocks/place.js";
+import "./fluids/fluids.js";
+

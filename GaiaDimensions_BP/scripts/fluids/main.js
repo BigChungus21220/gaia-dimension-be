@@ -47,7 +47,7 @@ const hot_fluids = [
 ]
 
 system.runInterval(() => {
-    const players = Array.from(world.getPlayers());
+    const players = world.getPlayers();
   
     /*for (const entity of world.getDimension("overworld").getEntities()) { // Activate to let fluids effect entities (Causes some lag)
       if (
@@ -68,8 +68,8 @@ system.runInterval(() => {
     for (const player of players) {
       const dimension = world.getDimension(player.dimension.id)
       if (
-        fluids.includes(dimension.getBlock({ ...player.location, y: player.location.y + 1 }).typeId) ||
-        fluids.includes(dimension.getBlock(player.location).typeId)
+        fluids.includes(dimension.getBlock({ ...player?.location, y: player?.location?.y + 1 })?.typeId) ||
+        fluids.includes(dimension.getBlock(player?.location)?.typeId)
       ) {
         player.addEffect("slow_falling", 4, { amplifier: player.isSneaking ? 1 : 2, showParticles: false });
         if (player.isJumping) {
@@ -77,8 +77,8 @@ system.runInterval(() => {
         }
 
         if (
-          hot_fluids.includes(dimension.getBlock({ ...player.location, y: player.location.y + 1 }).typeId) ||
-          hot_fluids.includes(dimension.getBlock(player.location).typeId)
+          hot_fluids.includes(dimension.getBlock({ ...player.location, y: player.location.y + 1 })?.typeId) ||
+          hot_fluids.includes(dimension.getBlock(player?.location)?.typeId)
         ) {
           player.setOnFire(10, true);
         } else {
@@ -86,7 +86,7 @@ system.runInterval(() => {
         }
       }
 
-      if (fluids.includes(dimension.getBlock({ ...player.location, y: player.location.y + 1.63 }).typeId)) {
+      if (fluids.includes(dimension.getBlock({ ...player?.location, y: player?.location?.y + 1.63 })?.typeId)) {
         player.runCommand("fog @s push fluid:water_fog fluid_fog");
       } else {
         player.runCommand("fog @s remove fluid_fog");

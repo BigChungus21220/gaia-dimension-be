@@ -43,6 +43,7 @@
         "explosion_resistance": 1
       },
       "minecraft:unit_cube": {},
+	  "minecraft:light_emission": 15,
       "minecraft:light_dampening": 8,
       "tag:gaia:corrupted_leaves": {},
 			"minecraft:material_instances": {

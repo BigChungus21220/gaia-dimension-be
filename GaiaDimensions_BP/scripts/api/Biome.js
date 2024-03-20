@@ -14,7 +14,7 @@ class BiomeSystem {
     /**
      * The biome each player is in (should be made private)
      */
-    static playerBiomes = {};
+    static #playerBiomes = {};
 
     /**
      * Checks and updates player biome
@@ -23,11 +23,11 @@ class BiomeSystem {
     static updateBiome(player){
         const biome = Gaia.getBiome(player.location);
         if (Gaia.isInGaia(player.location)) {
-            if (BiomeSystem.playerBiomes[player.id] != biome){
+            if (this.#playerBiomes[player.id] != biome){
                 Events.playerChangeBiome.trigger({player:player,biome:biome}); //trigger playerChangeBiome
             }
         }
-        BiomeSystem.playerBiomes[player.id] = biome;
+        this.#playerBiomes[player.id] = biome;
     }
 
     /**
@@ -36,6 +36,8 @@ class BiomeSystem {
      * @returns {string} Biome player is in
      */
     static getBiome(player){
-        return BiomeSystem.playerBiomes[player.id];
+        return this.#playerBiomes[player.id];
     }
 }
+
+export default BiomeSystem

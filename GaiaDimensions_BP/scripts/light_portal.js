@@ -1,39 +1,35 @@
-import { world, Vector} from "@minecraft/server";
-import { Gaia } from './api/Gaia';
-import { vec3, Vec3 } from "Vector.js";
-
-world.afterEvents.itemUseOn.subscribe(async (event) => {
+import { world, system } from "@minecraft/server";
+import Portal from "./api/Portal";
+import { vec3 } from "./Vector";
+world.afterEvents.itemUseOn.subscribe(
+  ({ source, itemStack, block, blockFace }) => {
     try {
-        if (event.itemStack.typeId === "gaia:glint_and_gold" && event.block.typeId === 'gaia:keystone_block') {
-            const pos = vec3(event.blockFace).add(vec3(event.block.location));
-
-            const portalData = {
-                location: pos,
-                dimension: event.block.dimension,
-                source: event.source
-            };
-            gaia.triggerEvent('portalActivate', portalData, 'BeforeEvent');
-
-            const data = await gaia.listenFor('portalActivate', 'Canceled', 'BeforeEvent');
-            if (data && data.cancel) {
-                return;
-            }
-
-            const lit = gaia.canLight(event.block.dimension.getBlock(pos));
-
-            if (lit) {
-                gaia.triggerEvent('portalActivate', portalData, 'AfterEvent');
-                event.source.playSound('block.end_portal.spawn', { location: event.block.location });
-            }
+      if (
+        itemStack.typeId === "gaia:glint_and_gold" &&
+        block.typeId === "gaia:keystone_block"
+      ) {
+        const pos = vec3(block.location).add(
+          vec3(blockFace.toLowerCase())
+        )
+        const lit = Portal.canLight(block.dimension.getBlock(pos));
+        if (lit) {
+          source.playSound("block.end_portal.spawn", {
+            location: block.location,
+          });
         }
+      }
     } catch (error) {
-
+      console.error(error, error.stack);
     }
-});
+  }
+);
 
-world.afterEvents.playerBreakBlock.subscribe((ev) => {
-    const { block, player } = ev;
-    gaia.breakPortal(block.location, block.dimension, true);
-    player.playSound('break.amethyst_block', { location: block.location });
-}, { blockTypes: ['gaia:keystone_block', 'gaia:gaia_portal'] });
-
+world.beforeEvents.playerBreakBlock.subscribe(
+  ({ block, player }) => {
+    system.runTimeout(() => {
+      Portal.breakPortal(block);
+      player.playSound("break.amethyst_block", { location: block.location });
+    });
+  },
+  { blockTypes: ["gaia:keystone_block", "gaia:gaia_portal"] }
+);

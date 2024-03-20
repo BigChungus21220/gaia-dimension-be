@@ -1,6 +1,12 @@
 import { Entity, Block, system, Dimension, Vector, Direction, Player } from "@minecraft/server";
 import { InventoryBlock } from "./api/InventoryBlock";
 import { vec3, Vec3 } from "./Vector";
+import { CoordinateDisplay } from './api/CoordinateDisplay'
+
+
+World.prototype.getAllDimensions = function () {
+  return ['overworld', 'nether', 'the_end'].map(dimensionStr => this.getDimension(dimensionStr));
+}
 
 /**
  * @returns {boolean} Whether the entity is in a gaia portal or not
@@ -12,59 +18,62 @@ Entity.prototype.isInPortal = function () {
 };
 
 /**
- * @param {boolean} [off] Whether to turn off/on the coordinate indicator. By default this is false
+ * @param {boolean} [on] Whether to turn off/on the coordinate indicator. By default this is false
  */
 Entity.prototype.turnCoords = function (on = false) {
   this.runCommand(`gamerule showcoordinates ${on}`)
 }
 
+Object.defineProperty(Entity.prototype, 'coordinateDisplay', {
+  get: function () {
+    if (!this._coordinateDisplay) {
+      this._coordinateDisplay = new CoordinateDisplay(this);
+    }
+    return this._coordinateDisplay;
+  }
+})
+
+
+
 /**
  * Made by Redux
  * Gets adjacent blocks connected to the current block.
  * @this {Block}
- * @param {function} filter A filter to apply to the search
+ * @param {function(Block):void} filter A filter to apply to the search
  * @param {number} maxSearch The maximum number of blocks to search
  * @returns {Block[]} - An array of adjacent blocks.
  */
 Block.prototype.getAdjacent = function (filter, maxSearch) {
-  const connectedBlocks = []; //blocks that are connected to this block
-  const visited = []; //blocks that have been checked
-  const queue = [vec3(this.location)]; //blocks to check next
+  const connectedBlocks = [];
+  const visited = new Set();
+  // Fix issue with directly passing in this.location to vec3 fuxntion
+  const { x, y, z } = this.location;
+  const queue = [vec3(x, y, z)];
 
-  let i = 0;
-  const intervalId = system.runInterval(() => {
-    //exit condition
-    if (queue.length === 0 || i >= maxSearch) {
-      system.clearRun(intervalId);
-      return;
-    }
+  while (queue.length > 0 && connectedBlocks.length < maxSearch) {
+    const currentPosition = queue.shift();
+    visited.add(currentPosition);
 
-    const position = queue.shift(); //get next position in queue
-    visited.add(position);
-
-    //in case of unloaded chunks
     try {
-      const currentBlock = this.dimension.getBlock(new Vector(x, y, z));
-      
-      //check if current block meets filter
-      if (filter(currentBlock)){
-        connectedBlocks.push(adjacentBlock);
-  
-        //add adjacent blocks to queue
-        for (const direction of Vec3.directions) {
-          const newPosition = position.add(direction);
-          if (!visited.has(newPosition)) queue.push(newPosition);
+      for (const direction of Vec3.directions) {
+        const newPosition = currentPosition.add(direction);
+        if (!visited.has(newPosition)) {
+          const adjacentBlock = this.dimension.getBlock(
+            new Vector(newPosition.x, newPosition.y, newPosition.z)
+          );
+          if (adjacentBlock && filter(adjacentBlock)) {
+            connectedBlocks.push(adjacentBlock);
+            queue.push(newPosition);
+          }
         }
       }
     } catch (err) {
-      console.log(err, err.stack);
+      console.warn(err, err.stack);
     }
+  }
 
-    i++;
-  });
-  system.clearRun(intervalId)
   return connectedBlocks;
-};
+}
 
 /**
  * Finds the ground of a dimension based off a location
@@ -118,21 +127,6 @@ Vector.prototype.toString = function () {
  * @memberof Vector
  * @method convertDirection
  */
-Vector.prototype.convertDirection = function (direction) {
-  switch (direction) {
-    case "Up":
-      return new Vector(0, 1, 0)
-    case "Down":
-      return new Vector(0, -1, 0)
-    case "North":
-      return new Vector(0, 0, -1)
-    case "South":
-      return new Vector(0, 0, 1)
-    case "East":
-      return new Vector(-1, 0, 0)
-    case "West":
-      return new Vector(1, 0, 0)
-    default:
-      return new Vector(0, 0, 0)
-  }
+Vector.convertDirection = function (direction) {
+  return vec3(direction.toLowerCase())
 }

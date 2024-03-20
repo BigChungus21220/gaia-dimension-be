@@ -1,47 +1,13 @@
-import { world } from "@minecraft/server";
 
-const doLogging = true;
-
-/**
- * An event
- */
 class GaiaEvent {
-    /**
-     * The list of subscribers for this event
-     */
-    subscribers; // # means private field
+    #subscribers = []; // # means private field
 
-    /**
-     * The message to send when the event fires
-     */
-    message;
-
-    /**
-     * Creates a new event
-     * @param {string} message the message to send on fire
-     */
-    constructor(message){
-        this.message = message;
-        this.subscribers = [];
+    subscribe(fn) {
+        this.#subscribers.push(fn);
     }
 
-    /**
-     * Subscribes a function to this event
-     * @param {function} fn The function to subscribe
-     */
-    subscribe(fn){
-        this.subscribers.push(fn);
-    }
-
-    /**
-     * Triggers this event
-     * @param {object} eventData 
-     */
-    trigger(eventData = {}){
-        if (doLogging) world.sendMessage(this.message);
-        for (const fn of this.subscribers){
-            (() => {fn(eventData)})();
-        }
+    trigger(eventData) {
+        this.#subscribers.forEach((fn) => fn(eventData));
     }
 }
 
@@ -61,6 +27,11 @@ export const tick2 = new GaiaEvent("tick2");
  * An event that fires every 8 ticks
  */
 export const tick8 = new GaiaEvent("tick8");
+
+/**
+ * An event that fires every 30 ticks
+ */
+export const tick30 = new GaiaEvent();
 
 /**
  * An event that fires when the block the player is standing on changes (only evaluates for x and z axis)
