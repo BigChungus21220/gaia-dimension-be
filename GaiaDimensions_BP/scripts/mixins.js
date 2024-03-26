@@ -1,4 +1,4 @@
-import { Entity, Block, system, Dimension, World} from "@minecraft/server";
+import { Entity, Block, World } from "@minecraft/server";
 import { vec3, Vec3 } from "./Vec3";
 import { CoordinateDisplay } from './api/CoordinateDisplay'
 
@@ -58,7 +58,7 @@ Block.prototype.getAdjacent = function (filter, maxSearch) {
         const newPosition = currentPosition.add(direction);
         if (!visited.has(newPosition)) {
           const adjacentBlock = this.dimension.getBlock(
-           vec3(newPosition.x, newPosition.y, newPosition.z)
+            vec3(newPosition.x, newPosition.y, newPosition.z)
           );
           if (adjacentBlock && filter(adjacentBlock)) {
             connectedBlocks.push(adjacentBlock);
@@ -72,49 +72,6 @@ Block.prototype.getAdjacent = function (filter, maxSearch) {
   }
 
   return connectedBlocks;
-}
-
-/**
- * Finds the ground of a dimension based off a location
- * @param {Vec3} location 
- * @returns {Block}
- */
-Dimension.prototype.findGround = function (location) {
-  try {
-    let blockFound;
-    let y = location.y
-    let check = system.runInterval(() => {
-      if (y <= 0) {
-        return;
-      }
-      const block = this?.getBlock({ x: location.x, y: Math.round(y), z: location.z })
-      if (block && block.type.id !== 'minecraft:air') {
-        blockFound = block
-        system.clearRun(check)
-      } else {
-        y--
-      }
-    })
-    return blockFound
-  } catch (e) { }
-}
-
-
-String.prototype.decode = function () {
-  const L = {
-    a: 0, b: 1, c: 2, d: 3, e: 4, f: 5, g: 6, h: 7, i: 8, j: 9,
-    k: 10, l: 11, m: 12, n: 13, o: 14, p: 15, q: 16, r: 17, s: 18, t: 19,
-    u: 20, v: 21, w: 22, x: 23, y: 24, z: 25, A: 26, B: 27, C: 28, D: 29,
-    E: 30, F: 31, G: 32, H: 33, I: 34, J: 35, K: 36, L: 37, M: 38, N: 39,
-    O: 40, P: 41, Q: 41, R: 42, S: 43, T: 44, U: 45, V: 46, W: 47, X: 48,
-    Y: 49, Z: 50
-  };
-
-  const P = this.split('*');
-  const V = P.map((p) => p.split('').reduce((a, l) => a * L[l], 1));
-  const C = V.reduce((a, v) => a * v, 1);
-
-  return C;
 }
 
 

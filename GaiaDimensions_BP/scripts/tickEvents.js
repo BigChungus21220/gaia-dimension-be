@@ -2,7 +2,6 @@ import { BlockPermutation, system} from "@minecraft/server"
 import Gaia from './api/Gaia'
 import { vec3 } from './Vec3'
 import * as Events from "./api/Events"
-import { isSame } from './utils'
 
 //event triggers
 system.runInterval(() => Events.tick1.trigger(), 1);
@@ -26,15 +25,13 @@ let playerLocations = {};
 Events.tick2.subscribe(() => {
     const players = Gaia.getPlayers();
     for (const player of players) {
-        if (player) {
             const { x, y, z } = player.location;
             // Account for only x and z
             const floorpos = vec3(x, 0, z).floor();
-            if (!isSame(floorpos, playerLocations[player.id] ?? { x, y: 0, z })) {
+            if (!floorpos.compareWith(playerLocations[player.id] ?? floorpos)) {
                 Events.playerChangeBlock.trigger({ player: player });
             }
             playerLocations[player.id] = floorpos; // Update player location after trigger
-        }
     }
 });
 

@@ -1,244 +1,201 @@
-import {world, system,} from '@minecraft/server'
+import { world, system } from '@minecraft/server';
+import { vec3 } from './Vec3';
+import { EnchantmentWrapper } from './EnchantWrapper';
 
-const forbiddentItems = ["shulker"]
+class PouchManager {
+    constructor() {
+        this.forbiddenItems = ["shulker"];
+        this.playerPropertiesCache = new Map();
+    }
 
-system.beforeEvents.watchdogTerminate.subscribe((eventData)=>{
-    eventData.cancel = true
-})
+    setup() {
+        system.beforeEvents.watchdogTerminate.subscribe((eventData) => {
+            eventData.cancel = true;
+        });
+        system.runTimeout(() => {
+            this.runIntervals();
+        }, 60);
+    }
 
-//CREDIT TO DEWDIMPPLE FOR THE CODE
-system.runTimeout(()=>{
-    system.runInterval(()=>{
-        let allPlayers = world.getAllPlayers()
+    runIntervals() {
+        system.runInterval(this.checkItemChanges.bind(this), 1);
+        system.runInterval(this.manageInactiveBackpacks.bind(this), 60);
+    }
 
-        //Item Changing Event
-        for(let player of allPlayers){
-            let currentHeldItemStatusProperty = player.getDynamicProperty(`playerHeldItemStatus`)
-            let currentPropertyJson
-            let inventory = player.getComponent("inventory").container
-            let selectedSlot = player.selectedSlot
-            let itemHolding = inventory.getItem(selectedSlot)
-            let propertyInterface = {item:undefined, slot:undefined, id:undefined}
-            let changed = false
+    checkItemChanges() {
+        const allPlayers = world.getAllPlayers();
+        for (const player of allPlayers) {
+            const propertyDataCurrent = this.getPropertyJson(player);
+            const inventory = player.getComponent("inventory").container;
+            const selectedSlot = player.selectedSlot;
+            const itemHolding = inventory.getItem(selectedSlot);
+            const propertyInterface = {
+                item: itemHolding ? itemHolding.typeId : undefined,
+                slot: selectedSlot,
+                id: itemHolding ? (itemHolding.getLore().length > 0 ? itemHolding.getLore()[0] : undefined) : undefined
+            };
 
-            if(itemHolding){
-                propertyInterface.item = itemHolding.typeId
-                if(itemHolding.getLore().length>0){
-                    propertyInterface.id = itemHolding.getLore()[0]
+            let changed = false;
+            const currentHeldItemStatusProperty = player.getDynamicProperty(`playerHeldItemStatus`);
+            if (currentHeldItemStatusProperty !== undefined && JSON.stringify(propertyInterface) !== currentHeldItemStatusProperty) {
+                if (propertyDataCurrent.slot !== selectedSlot || (itemHolding && propertyDataCurrent.item !== itemHolding.typeId) || (!itemHolding && propertyDataCurrent.item !== undefined)) {
+                    changed = true;
                 }
+                player.setDynamicProperty(`playerHeldItemStatus`, JSON.stringify(propertyInterface));
+            } else {
+                player.setDynamicProperty(`playerHeldItemStatus`, JSON.stringify(propertyInterface));
             }
-            propertyInterface.slot = selectedSlot
-            //world.sendMessage(`${currentHeldItemStatusProperty} -- ${JSON.stringify(propertyInterface)}`)
-            if(currentHeldItemStatusProperty != undefined){
-                if(JSON.stringify(propertyInterface) != currentHeldItemStatusProperty){
-                    currentPropertyJson = JSON.parse(currentHeldItemStatusProperty)
-                    if(currentPropertyJson.slot != selectedSlot) {
-                        changed = true
-                    }
-                    if(itemHolding){
-                        if(currentPropertyJson.item != itemHolding.typeId){
-                            changed = true
-                        }                    
-                    }else{
-                        if(currentPropertyJson.item != undefined){
-                            changed = true
-                        }
-                        if(currentPropertyJson.item == undefined && itemHolding == undefined){
-                            changed = false
-                        }
-                    }
-                    if(changed){
-                        //player.sendMessage(`Item Changed - ${JSON.stringify(propertyInterface)}`)
-                        onChanged(player, inventory, propertyInterface, currentPropertyJson)
-                        player.setDynamicProperty(`playerHeldItemStatus`,JSON.stringify(propertyInterface))
-                    }else{
-                        player.setDynamicProperty(`playerHeldItemStatus`,JSON.stringify(propertyInterface))
-                    }
-                }
-            }else{
-                player.setDynamicProperty(`playerHeldItemStatus`,JSON.stringify(propertyInterface))
-            }
-            
-            //Teleport Pouch Entity to Player
-            if(itemHolding != undefined){
-                if(itemHolding.typeId.includes("gaia:gem_pouch")){
-                    if(propertyInterface.id != undefined){
-                        let pouchEntityQuery = {tags:[propertyInterface.id]}
-                        let pouchEntities = player.dimension.getEntities(pouchEntityQuery)
-                        for(let pouchEntity of pouchEntities){
-                            let newLocation = player.location
-                            newLocation.y = newLocation.y+1.5
-                            pouchEntity.teleport(newLocation)
-                        }
-                    }
-                }
-            }                      
-        }
 
-        //Record Items When Pouch Close
-        let pouchCloseQuery = {tags:["close"]}
-        let pouchCloseEntities = getPouchEntity(pouchCloseQuery)
-        for(let pouchEntity of pouchCloseEntities){           
-            let pouchEntityInventory = pouchEntity.getComponent("inventory").container
-            let lore = recordItems(gaiaEntity.getTags()[0], pouchEntityInventory, pouchEntity)
-            let playerQuery = {type:"minecraft:player", closest:1, location:pouchEntity.location}
-            let playerEntity = pouchEntity.dimension.getEntities(playerQuery)
-            for(let player of playerEntity){
-                let inventory = player.getComponent("inventory").container
-                let item = inventory.getItem(player.selectedSlot)
-                if(!item) continue               
-                if(item.getLore()[0] != pouchEntity.getTags()[0]) continue
-                item.setLore(lore)
-                inventory.setItem(player.selectedSlot, item)
-            }
-            pouchEntity.removeTag("close")
-        }
-    },1)
-
-    //Manage Inactive Backpacks
-    system.runInterval(()=>{
-        let pouchEntities = getPouchEntity({families:["pouch"]})
-        for(let pouchEntity of pouchEntities){
-            let playerQuery = {type:"minecraft:player", location:pouchEntity.location, maxDistance:3}
-            let players = pouchEntity.dimension.getEntities(playerQuery)
-            let newLocation = pouchEntity.location
-            newLocation.y = -64
-            if(players.length==0){
-                pouchEntity.teleport(newLocation)
+            if (itemHolding && itemHolding.typeId.includes("gaia:gem_pouch") && propertyInterface.id !== undefined) {
+                this.adjustPouchEntity(player, propertyInterface.id);
             }
         }
-    },60)
-},60)
+    }
 
-function onChanged(player, playerInventory, propertyDataCurrent, propertyDataOld){
-    let currentItem = playerInventory.getItem(propertyDataCurrent.slot) 
+    getPropertyJson(player) {
+        if (this.playerPropertiesCache.has(player)) {
+            return this.playerPropertiesCache.get(player);
+        }
+        const property = player.getDynamicProperty(`playerHeldItemStatus`);
+        const parsedProperty = property !== undefined ? JSON.parse(property) : { item: undefined, slot: player.selectedSlot, id: undefined };
+        this.playerPropertiesCache.set(player, parsedProperty);
+        return parsedProperty;
+    }
 
-    if(currentItem != undefined){
-        if(currentItem.typeId.includes("gaia:gem_pouch")){
-            let lore = currentItem.getLore()            
-            if(lore.length == 0){ //Create New Pouch ID
-                let pouchId = `gempouch_id:${Math.floor(Math.random() * 9999)}`
-                currentItem.setLore([pouchId])
-                playerInventory.setItem(propertyDataCurrent.slot, currentItem)
-                let pouchEntity = player.dimension.spawnEntity("gaia:gem_pouch_container", player.location)
-                pouchEntity.triggerEvent(pouchType(currentItem))
-                pouchEntity.addTag(pouchId)
-                pouchEntity.nameTag = pouchName(currentItem)
-            }else{ //Open Old Pouch
-                let pouchEntityQuery = {tags:[`${propertyDataOld.id}`]}
-                let pouchEntities = player.dimension.getEntities(pouchEntityQuery)
-                for(let pouchEntity of pouchEntities){
-                    closePouch(pouchEntity, player, propertyDataOld)
-                }
-                openPouch(player, currentItem)               
+    adjustPouchEntity(player, pouchId) {
+        const pouchEntities = player.dimension.getEntities({ tags: [pouchId] });
+        for (const pouchEntity of pouchEntities) {
+            const newLocation = vec3(pouchEntity.location);
+            newLocation.y += 1.5;
+            pouchEntity.teleport(newLocation);
+        }
+    }
+
+    onChanged(player, playerInventory, propertyDataCurrent, propertyDataOld) {
+        const currentItem = playerInventory.getItem(propertyDataCurrent.slot);
+        if (currentItem !== undefined) {
+            if (currentItem.typeId.includes("gaia:gem_pouch")) {
+                this.adjustGemPouch(currentItem, player, propertyDataOld);
+            } else {
+                this.adjustNonPouchEntity(player, propertyDataOld);
             }
-        }else{                     
-            let pouchEntityQuery = {tags:[`${propertyDataOld.id}`]}
-            let pouchEntities = player.dimension.getEntities(pouchEntityQuery)
-            for(let pouchEntity of pouchEntities){
-                let pouchEntityInv = pouchEntity.getComponent("inventory").container
-                for(let slot=0; slot<pouchEntityInv.size; slot++){
-                    let item = pouchEntityInv.getItem(slot)
-                    if(!item) continue
-                    if(forbiddentItems.find((itemName) => item.typeId.includes(itemName))){
-                        pouchEntity.dimension.spawnItem(item, pouchEntity.location)
-                        pouchEntityInv.setItem(slot, undefined)
-                    }
-                }
-                closePouch(pouchEntity, player, propertyDataOld)
+        } else {
+            if (propertyDataOld.id !== undefined) {
+                this.adjustNonPouchEntity(undefined, player, propertyDataOld);
             }
         }
-    }else{
-        if(propertyDataOld.id != undefined){
-            let pouchEntityQuery = {tags:[`${propertyDataOld.id}`]}
-            let pouchEntities = player.dimension.getEntities(pouchEntityQuery)
-            for(let pouchEntity of pouchEntities){
-                let pouchEntityInv = pouchEntity.getComponent("inventory").container
-                for(let slot=0; slot<pouchEntityInv.size; slot++){
-                    let item = pouchEntityInv.getItem(slot)
-                    if(!item) continue
-                    if(forbiddentItems.find((itemName) => item.typeId.includes(itemName))){
-                        pouchEntity.dimension.spawnItem(item, pouchEntity.location)
-                        pouchEntityInv.setItem(slot, undefined)
-                    }
-                }
-                closePouch(pouchEntity, player, propertyDataOld)      
+    }
+
+    adjustGemPouch(currentItem, player, propertyDataOld) {
+        const lore = currentItem.getLore();
+        if (lore.length === 0) {
+            this.createPouch(currentItem, player);
+        } else {
+            const pouchEntities = player.dimension.getEntities({ tags: [`${propertyDataOld.id}`] });
+            for (const pouchEntity of pouchEntities) {
+                this.closePouch(pouchEntity, player, propertyDataOld);
             }
+            this.openPouch(player, currentItem);
         }
-    }   
+    }
+
+    createPouch(currentItem, player) {
+        const inv =  player.getComponent("inventory").container
+        const pouchId = `gempouch_id:${Math.floor(Math.random() * 9999)}`;
+        currentItem.setLore([pouchId]);
+       inv.setItem(player.selectedSlot, currentItem);
+        const pouchEntity = player.dimension.spawnEntity("gaia:gem_pouch_container", player.location);
+        pouchEntity.triggerEvent(pouchType(currentItem));
+        pouchEntity.addTag(pouchId);
+        pouchEntity.nameTag = pouchName(currentItem);
+    }
+
+    adjustNonPouchEntity(player, propertyDataOld) {
+        const pouchEntities = player.dimension.getEntities({ tags: [`${propertyDataOld.id}`] });
+        for (const pouchEntity of pouchEntities) {
+            const pouchEntityInv = pouchEntity.getComponent("inventory").container;
+            for (let slot = 0; slot < pouchEntityInv.size; slot++) {
+                const item = pouchEntityInv.getItem(slot);
+                if (!item) continue;
+                if (this.forbiddenItems.find((itemName) => item.typeId.includes(itemName))) {
+                    pouchEntity.dimension.spawnItem(item, pouchEntity.location);
+                    pouchEntityInv.setItem(slot, undefined);
+                }
+            }
+            this.closePouch(pouchEntity, player, propertyDataOld);
+        }
+    }
+
+    closePouch(pouchEntity, player, propertyDataOld) {
+        const newLocation = vec3(pouchEntity.location);
+        newLocation.y = -64;
+        pouchEntity.teleport(newLocation);
+        const pouchOldEntityQuery = { tags: [`${propertyDataOld.id}`] };
+        const pouchOldEntity = player.dimension.getEntities(pouchOldEntityQuery);
+        let newLore = [];
+        for (const pouchOldEntities of pouchOldEntity) {
+            const pouchOldInventory = pouchOldEntities.getComponent("inventory").container;
+            newLore = this.recordItems(propertyDataOld.id, pouchOldInventory);
+        }
+        const inv = player.getComponent("inventory").container;
+        const playerHeldItem = inv.getItem(propertyDataOld.slot);
+        playerHeldItem.setLore(newLore);
+        inv.setItem(propertyDataOld.slot, playerHeldItem);
+    }
+
+    recordItems(id, inventory) {
+        let count = 0;
+        let countOverflow = 0;
+        let backupItemList = [];
+        let lore = [`${id}`];
+        for (let slot = 0; slot < inventory.size; slot++) {
+            const item = inventory.getItem(slot);
+            if (!item) continue;
+            if (this.forbiddenItems.find((itemName) => item.typeId.includes(itemName))) {
+                inventory.setItem(slot, undefined);
+                continue;
+            }
+            backupItemList.push(this.getItemProperties(item));
+            let itemName = "";
+            const itemNameArray = item.typeId.split(":",'')[1].split("_",'');
+            for (const itemStr of itemNameArray) {
+                itemName += itemStr.charAt(0).toUpperCase() + itemStr.slice(1) + " ";
+            }
+            if (count < 5) {
+                lore.push(`§7${itemName}x${item.amount}`);
+            } else {
+                countOverflow++;
+            }
+            count++;
+        }
+        if (countOverflow > 0) {
+            lore.push(`§7and ${countOverflow} more...`);
+        }
+        world.setDynamicProperty(`${id}`, JSON.stringify(backupItemList));
+        return lore;
+    }
+
+    getItemProperties(item) {
+        const Enchantments = new EnchantmentWrapper(item);
+        const enchantList = Enchantments.getEnchantments().map(enchant => ({
+            name: enchant.type,
+            level: enchant.level
+        }));
+
+        const itemInterface = {
+            id: item.typeId,
+            amount: item.amount,
+            durability: item.hasComponent("durability") ? item.getComponent("durability").damage : undefined,
+            lore: item.getLore().length > 0 ? item.getLore() : undefined,
+            enchant: enchantList.length > 0 ? enchantList : undefined,
+            name: item.nameTag ? item.nameTag : undefined
+        };
+
+        return itemInterface;
+    }
 }
 
-function closePouch(pouchEntity, player, propertyDataOld){
-    let newLocation = pouchEntity.location
-    newLocation.y = -64
-    pouchEntity.teleport(newLocation)
-    let pouchOldEntityQuery = {tags:[`${propertyDataOld.id}`]}
-    let pouchOldEntity = player.dimension.getEntities(pouchOldEntityQuery)   
-    let newLore = []
-    for(let pouchOldEntities of pouchOldEntity){                     
-        let pouchOldInventory = pouchOldEntities.getComponent("inventory").container
-        newLore = recordItems(propertyDataOld.id, pouchOldInventory)
-    }
-    let playerHeldItem = player.getComponent("inventory").container.getItem(propertyDataOld.slot)
-    playerHeldItem.setLore(newLore)
-    player.getComponent("inventory").container.setItem(propertyDataOld.slot, playerHeldItem)
-}
+// Create new pouch manager
+const pouchManager = new PouchManager();
 
-function recordItems(id, inventory, pouchEntity){    
-    let count = 0;
-    let countOverflow = 0
-    let backupItemList = []
-    let lore = [`${id}`]
-    for(let slot=0; slot<inventory.size; slot++){        
-        let item = inventory.getItem(slot)
-        if(!item) continue
-        if(forbiddentItems.find((itemName) => item.typeId.includes(itemName))){
-            pouchEntity.dimension.spawnItem(item, pouchEntity.location)
-            inventory.setItem(slot, undefined)
-            continue
-        }
-        backupItemList.push(getItemProperties(item))
-        let itemName = ""
-        let itemNameArray = item.typeId.split(":")[1].split("_")
-        for(let itemStr of itemNameArray){
-            itemName +=  itemStr.charAt(0).toUpperCase() + itemStr.slice(1) + " ";
-        }
-        if(count < 5){
-            lore.push(`§7${itemName}x${item.amount}`)     
-        }else{
-            countOverflow++
-        }       
-        count++        
-    }
-    if(countOverflow>0){
-        lore.push(`§7and ${countOverflow} more...`)
-    }
-    world.setDynamicProperty(`${id}`, JSON.stringify(backupItemList))
-    world.sendMessage(`${world.getDynamicPropertyTotalByteCount()}`)
-    world.sendMessage(world.getDynamicProperty(`${id}`))
-    return lore
-}
-
-function getItemProperties(item){
-    let itemInterface = {id:undefined, name:undefined, amount:undefined, lore:undefined, durability:undefined, enchant:undefined}
-    let enchantList = Enchantments.getEnchants(item)
-    let enchantArray = []
-    itemInterface.id = item.typeId
-    itemInterface.amount = item.amount
-    if(item.hasComponent("durability")){
-        itemInterface.durability = item.getComponent("durability").damage
-    }   
-    if(item.nameTag) itemInterface.name = item.nameTag
-    if(item.getLore().length > 0) itemInterface.lore = item.getLore()
-    if(enchantList.length>0){
-        for(let enchant of enchantList){
-            let enchantInterface = {enchantName:undefined,level:undefined}
-            enchantInterface.enchantName = enchant.type.id
-            enchantInterface.level = enchant.level
-            enchantArray.push(enchantInterface)
-        }
-    itemInterface.enchant = enchantArray
-    }
-    return itemInterface
-}
-
+pouchManager.setup()
