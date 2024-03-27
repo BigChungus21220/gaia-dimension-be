@@ -18,7 +18,7 @@
       "language": "javascript",
       "uuid": "1eee9b4c-0dce-41ce-869f-0de89fa98c6a",
       "version": [1, 1, 0],
-      "entry": "scripts/world.js"
+      "entry": "scripts/GaiaDimensionMod.js"
     }
   ],
   "capabilities": ["script_eval"],

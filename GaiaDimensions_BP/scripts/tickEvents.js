@@ -1,7 +1,7 @@
 import { BlockPermutation, system} from "@minecraft/server"
-import Gaia from './api/Gaia'
-import { vec3 } from './Vec3'
-import * as Events from "./api/Events"
+import Gaia from './world/Gaia'
+import { vec3 } from './apis/Vec3'
+import * as Events from "./world/Events"
 
 //event triggers
 system.runInterval(() => Events.tick1.trigger(), 1);
