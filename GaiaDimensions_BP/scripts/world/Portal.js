@@ -1,5 +1,5 @@
 import { BlockPermutation, Block, world, Entity, BlockVolume } from "@minecraft/server"
-import { Vec3, vec3 } from "../apis/Vec3";
+import { Vec3, vec3 } from "../Vec3";
 /**
  * @typedef Link
  * @property {Vec3} location

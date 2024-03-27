@@ -1,5 +1,5 @@
 import { world, system } from '@minecraft/server';
-import { vec3 } from './apis/Vec3';
+import { vec3 } from './Vec3';
 import { EnchantmentWrapper } from './data/EnchantWrapper';
 
 class PouchManager {

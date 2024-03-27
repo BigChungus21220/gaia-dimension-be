@@ -1,5 +1,5 @@
 import { system } from "@minecraft/server";
-import { vec3 } from '../apis/Vec3.js';
+import { vec3 } from '../Vec3.js';
 import { delay } from '../utils.js'
 
 

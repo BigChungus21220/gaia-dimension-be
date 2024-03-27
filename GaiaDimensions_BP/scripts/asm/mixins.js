@@ -1,5 +1,5 @@
 import { Entity, Block, World } from "@minecraft/server";
-import { vec3, Vec3 } from "../apis/Vec3";
+import { vec3, Vec3 } from "../Vec3";
 import { CoordinateDisplay } from '../world/CoordinateDisplay'
 
 

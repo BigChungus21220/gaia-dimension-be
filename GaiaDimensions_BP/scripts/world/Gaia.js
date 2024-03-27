@@ -1,6 +1,6 @@
 import {Player } from "@minecraft/server"
 import { the_end } from "../utils";
-import { Vec3, vec3 } from "../apis/Vec3";
+import { Vec3, vec3 } from "../Vec3";
 /**
  * Class containing methods relating to the Gaia dimension
  */

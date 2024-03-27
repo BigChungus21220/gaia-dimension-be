@@ -1,5 +1,5 @@
 import './asm/mixins.js';
-import "./apis/Vec3.js";
+import "./Vec3.js";
 import './blocks/geyser.js';
 import './GaiaTeleporter.js';
 import './tickEvents.js'
