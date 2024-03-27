@@ -1235,6 +1235,19 @@ class Vec3 {
         }
     }
 
+
+    /**
+    * Compares this Vec3 instance with another Vec3 to determine if they are equal.
+    * @param {Vec3} otherVec3 The Vec3 instance to compare with.
+    * @returns {boolean} Returns true if this Vec3 is equal to the otherVec3, false otherwise.
+    */
+    compareWith(otherVec3) {
+        const { x: thisX, y: thisY, z: thisZ } = this;
+        const { x: vecX, y: vecY, z: vecZ } = otherVec3;
+        return thisX === vecX && thisY === vecY && thisZ === vecZ;
+    }
+
+
     /**
     * Gets the length squared of this vector
     * @return {number} The length squared of this vector

@@ -1,5 +1,6 @@
 import {system, world} from "@minecraft/server";
 import Gaia from './api/Gaia'
+import { vec3 } from "./Vec3";
 
 
 export function delay(ticks) {
@@ -87,10 +88,6 @@ export function convertCoords(location, entity) {
  */
 export function MathRound(x) {
     return Math.round(x);
-}
-
-export function isSame(targetObj, compareObj) {
-    return JSON.stringify(targetObj) === JSON.stringify(compareObj)
 }
 
 export const the_end = world.getDimension('the_end');
