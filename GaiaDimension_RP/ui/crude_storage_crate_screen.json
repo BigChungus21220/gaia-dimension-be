@@ -1,0 +1,60 @@
+{
+  "namespace": "crude_storage_crate_screen",
+  "crude_storage_crate_grid": {
+    "type": "grid",
+    "size": [162, 50],
+    "offset": [3, 53],
+    "anchor_from": "top_left",
+    "anchor_to": "top_left",
+    "grid_dimensions": [9, 3],
+    "grid_item_template": "chest.chest_grid_item",
+    "collection_name": "container_items"
+  },
+  "crude_storage_crate_panel_top_half": {
+    "type": "panel",
+    "anchor_from": "left_middle",
+    "anchor_to": "left_middle",
+    "controls": [
+      {
+        "grid@crude_storage_crate_screen.crude_storage_crate_grid": {
+          "layer": 0
+        }
+      }
+    ]
+  },
+  "crude_storage_crate_controller": {
+    "type": "panel",
+    "size": ["100%", 200],
+    "offset": [0, 11],
+    "anchor_to": "top_left",
+    "anchor_from": "top_left",
+    "controls": [
+      {
+        "chest_label@chest.chest_label": {
+          "layer": 10,
+          "offset": [74, 10],
+          "color": [1, 1, 1]
+        }
+      },
+      {
+        "close_button@common.close_button": {
+          "offset": [-5, 43]
+        }
+      },
+      {
+        "bg": {
+          "type": "image",
+          "texture": "textures/ui/gaia/small_crate.png",
+          "layer": 5,
+          "size": [175, 299],
+          "offset": [-1, 29]
+        }
+      },
+      {
+        "panel_top_half@crude_storage_crate_screen.crude_storage_crate_panel_top_half": {
+          "offset": [7, 10]
+        }
+      }
+    ]
+  }
+}

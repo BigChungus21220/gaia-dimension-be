@@ -1,0 +1,76 @@
+{
+  "format_version": "1.20.80",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "gaia:crude_storage_crate",
+      "is_spawnable": false,
+      "is_summonable": true,
+      "is_experimental": false,
+      "properties": {
+        "gaia:can_interact": {
+          "type": "bool",
+          "values": [true, false],
+          "default": false
+        }
+      }
+    },
+    "components": {
+      "minecraft:fire_immune": {},
+      "minecraft:type_family": {
+        "family": ["container", "inanimate"]
+      },
+      "minecraft:health": {
+        "value": 1,
+        "max": 1,
+        "min": 1
+      },
+      "minecraft:collision_box": {
+        "width": 1.0,
+        "height": 1.0
+      },
+      "minecraft:damage_sensor": {
+        "triggers": {
+          "cause": "all",
+          "deals_damage": false
+        }
+      },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      },
+      "minecraft:conditional_bandwidth_optimization": {
+        "default_values": {
+          "max_dropped_ticks": 20,
+          "use_motion_prediction_hints": false,
+          "max_optimized_distance": 0
+        }
+      },
+      "minecraft:inventory": {
+        "private": false,
+        "inventory_size": 8,
+        "restrict_to_owner": false,
+        "can_be_siphoned_from": false,
+        "container_type": "inventory",
+        "additional_slots_per_strength": 0
+      }
+    },
+    "permutations": [
+      {
+        "condition": "!query.property('gaia:can_interact')",
+        "components": {
+          "minecraft:scale": {
+            "value": 0.01
+          }
+        }
+      },
+      {
+        "condition": "query.property('gaia:can_interact')",
+        "components": {
+          "minecraft:scale": {
+            "value": 1.0
+          }
+        }
+      }
+    ]
+  }
+}

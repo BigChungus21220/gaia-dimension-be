@@ -1,0 +1,25 @@
+{
+  "format_version": "1.20.80",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaia:geyser_vent",
+      "menu_category": {
+        "category": "nature",
+        "group": "itemGroup.name.geyser_vent"
+      }
+    },
+    "components": {
+      "minecraft:custom_components": ["gaia:geyser_vent"],
+      "minecraft:tick": {
+        "interval_range": [1000, 1200]
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 1
+      },
+      "minecraft:map_color": "#81f53d"
+    }
+  }
+}

@@ -3,3 +3,8 @@
 node_modules
 forge-1.16.5-36.2.34-mdk
 .vscode
+/node_modules
+node_modules/@minecraft/server/index.d.ts
+node_modules/@minecraft/server/package.json
+package-lock.json
+/Gaia-Dimension

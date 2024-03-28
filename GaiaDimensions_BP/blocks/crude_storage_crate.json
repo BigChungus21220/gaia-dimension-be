@@ -1,0 +1,25 @@
+{
+  "format_version": "1.20.80",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaia:crude_storage_crate",
+      "menu_category": {
+        "category": "items",
+        "group": "itemGroup.name.furnaces",
+        "is_hidden_in_commands": false
+      }
+    },
+    "components": {
+      "minecraft:collision_box": true,
+      "minecraft:selection_box": true,
+      "minecraft:geometry": "geometry.full_block",
+      "minecraft:custom_components": ["gaia:small_crate"],
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "crude_storage_crate",
+          "render_method": "opaque"
+        }
+      }
+    }
+  }
+}

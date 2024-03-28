@@ -1,146 +1,137 @@
 [
   {
-    "flipbook_texture": "textures/blocks/gaia_portal",
     "atlas_tile": "gaia_portal",
+    "flipbook_texture": "textures/blocks/gaia_portal",
     "ticks_per_frame": 10
   },
   {
-    "flipbook_texture": "textures/blocks/active_rock",
     "atlas_tile": "active_rock",
+    "flipbook_texture": "textures/blocks/active_rock",
     "ticks_per_frame": 40
   },
   {
-    "flipbook_texture": "textures/blocks/burning_log_end",
     "atlas_tile": "burning_log_end",
+    "flipbook_texture": "textures/blocks/burning_log_end",
     "ticks_per_frame": 30
   },
   {
-    "flipbook_texture": "textures/blocks/burning_log_side",
     "atlas_tile": "burning_log_side",
+    "flipbook_texture": "textures/blocks/burning_log_side",
     "ticks_per_frame": 30
   },
   {
-    "flipbook_texture": "textures/blocks/stripped_burning_log_end",
     "atlas_tile": "stripped_burning_log_end",
+    "flipbook_texture": "textures/blocks/stripped_burning_log_end",
     "ticks_per_frame": 30
   },
   {
-    "flipbook_texture": "textures/blocks/stripped_burning_log_side",
     "atlas_tile": "stripped_burning_log_side",
+    "flipbook_texture": "textures/blocks/stripped_burning_log_side",
     "ticks_per_frame": 30
   },
   {
-    "flipbook_texture": "textures/blocks/burning_leaves",
     "atlas_tile": "burning_leaves",
+    "flipbook_texture": "textures/blocks/burning_leaves",
     "ticks_per_frame": 30
   },
   {
-    "flipbook_texture": "textures/blocks/burning_leaves_opaque",
     "atlas_tile": "burning_leaves_opaque",
+    "flipbook_texture": "textures/blocks/burning_leaves_opaque",
     "ticks_per_frame": 30
   },
   {
-      "flipbook_texture": "textures/blocks/active_rock",
-      "atlas_tile": "active_rock",
-      "ticks_per_frame": 40
-    },
-    {
-      "flipbook_texture": "textures/blocks/burning_log_end",
-      "atlas_tile": "burning_log_end",
-      "ticks_per_frame": 30
-    },
-    {
-      "flipbook_texture": "textures/blocks/burning_log_side",
-      "atlas_tile": "burning_log_side",
-      "ticks_per_frame": 30
-    },
-    {
-      "flipbook_texture": "textures/blocks/stripped_burning_log_end",
-      "atlas_tile": "stripped_burning_log_end",
-      "ticks_per_frame": 30
-    },
-    {
-      "flipbook_texture": "textures/blocks/stripped_burning_log_side",
-      "atlas_tile": "stripped_burning_log_side",
-      "ticks_per_frame": 30
-    },
-    {
-      "flipbook_texture": "textures/blocks/burning_leaves",
-      "atlas_tile": "burning_leaves",
-      "ticks_per_frame": 30
-    },
-    {
-      "flipbook_texture": "textures/blocks/burning_leaves_opaque",
-      "atlas_tile": "burning_leaves_opaque",
-      "ticks_per_frame": 30
-    },
-    {
-      "flipbook_texture": "textures/blocks/liquid_bismuth_flowing",
-      "atlas_tile": "liquid_bismuth_flowing",
-      "ticks_per_frame": 3
-    },
-    {
-      "flipbook_texture": "textures/blocks/liquid_bismuth_still",
-      "atlas_tile": "liquid_bismuth_still",
-      "ticks_per_frame": 4
-    },
-    {
-      "flipbook_texture": "textures/blocks/mineral_water_flowing",
-      "atlas_tile": "mineral_water_flowing",
-      "ticks_per_frame": 3
-    },
-    {
-      "flipbook_texture": "textures/blocks/mineral_water_still",
-      "atlas_tile": "mineral_water_still",
-      "ticks_per_frame": 8
-    },
-    {
-      "flipbook_texture": "textures/blocks/superhot_magma_flowing",
-      "atlas_tile": "superhot_magma_flowing",
-      "ticks_per_frame": 3
-    },
-    {
-      "flipbook_texture": "textures/blocks/superhot_magma_still",
-      "atlas_tile": "superhot_magma_still",
-      "ticks_per_frame": 8
-    },
-    {
-      "flipbook_texture": "textures/blocks/liquid_aura_flowing",
-      "atlas_tile": "liquid_aura_flowing",
-      "ticks_per_frame": 3
-    },
-    {
-      "flipbook_texture": "textures/blocks/liquid_aura_still",
-      "atlas_tile": "liquid_aura_still",
-      "ticks_per_frame": 8
-    },
-    {
-      "flipbook_texture": "textures/blocks/sweet_muck_flowing",
-      "atlas_tile": "sweet_muck_flowing",
-      "ticks_per_frame": 3
-    },
-    {
-      "flipbook_texture": "textures/blocks/sweet_muck_still",
-      "atlas_tile": "sweet_muck_still",
-      "ticks_per_frame": 8
-    },
-    {
-    "flipbook_texture": "textures/blocks/burning_planks",
-    "atlas_tile": "burning_planks",
+    "atlas_tile": "active_rock",
+    "flipbook_texture": "textures/blocks/active_rock",
+    "ticks_per_frame": 40
+  },
+  {
+    "atlas_tile": "burning_log_end",
+    "flipbook_texture": "textures/blocks/burning_log_end",
     "ticks_per_frame": 30
-    },
-      {
-        "flipbook_texture": "textures/blocks/gaia_portal",
-        "atlas_tile": "gaia_portal",
-        "ticks_per_frame": 1
-      },
-    {
-      "flipbook_texture": "textures/blocks/gaia_portal",
-      "atlas_tile": "gaia_portal",
-      "ticks_per_frame": 1
-   },
-    {
-      "flipbook_texture": "textures/blocks/gold_fire",
-      "atlas_tile": "gold_fire",
-      "ticks_per_frame": 1
-    }]
+  },
+  {
+    "atlas_tile": "burning_log_side",
+    "flipbook_texture": "textures/blocks/burning_log_side",
+    "ticks_per_frame": 30
+  },
+  {
+    "atlas_tile": "stripped_burning_log_end",
+    "flipbook_texture": "textures/blocks/stripped_burning_log_end",
+    "ticks_per_frame": 30
+  },
+  {
+    "atlas_tile": "stripped_burning_log_side",
+    "flipbook_texture": "textures/blocks/stripped_burning_log_side",
+    "ticks_per_frame": 30
+  },
+  {
+    "atlas_tile": "burning_leaves",
+    "flipbook_texture": "textures/blocks/burning_leaves",
+    "ticks_per_frame": 30
+  },
+  {
+    "atlas_tile": "burning_leaves_opaque",
+    "flipbook_texture": "textures/blocks/burning_leaves_opaque",
+    "ticks_per_frame": 30
+  },
+  {
+    "atlas_tile": "liquid_bismuth_flowing",
+    "flipbook_texture": "textures/blocks/liquid_bismuth_flowing",
+    "ticks_per_frame": 3
+  },
+  {
+    "atlas_tile": "liquid_bismuth_still",
+    "flipbook_texture": "textures/blocks/liquid_bismuth_still",
+    "ticks_per_frame": 4
+  },
+  {
+    "atlas_tile": "mineral_water_flowing",
+    "flipbook_texture": "textures/blocks/mineral_water_flowing",
+    "ticks_per_frame": 3
+  },
+  {
+    "atlas_tile": "mineral_water_still",
+    "flipbook_texture": "textures/blocks/mineral_water_still",
+    "ticks_per_frame": 8
+  },
+  {
+    "atlas_tile": "superhot_magma_flowing",
+    "flipbook_texture": "textures/blocks/superhot_magma_flowing",
+    "ticks_per_frame": 3
+  },
+  {
+    "atlas_tile": "superhot_magma_still",
+    "flipbook_texture": "textures/blocks/superhot_magma_still",
+    "ticks_per_frame": 8
+  },
+  {
+    "atlas_tile": "liquid_aura_flowing",
+    "flipbook_texture": "textures/blocks/liquid_aura_flowing",
+    "ticks_per_frame": 3
+  },
+  {
+    "atlas_tile": "liquid_aura_still",
+    "flipbook_texture": "textures/blocks/liquid_aura_still",
+    "ticks_per_frame": 8
+  },
+  {
+    "atlas_tile": "sweet_muck_flowing",
+    "flipbook_texture": "textures/blocks/sweet_muck_flowing",
+    "ticks_per_frame": 3
+  },
+  {
+    "atlas_tile": "sweet_muck_still",
+    "flipbook_texture": "textures/blocks/sweet_muck_still",
+    "ticks_per_frame": 8
+  },
+  {
+    "atlas_tile": "burning_planks",
+    "flipbook_texture": "textures/blocks/burning_planks",
+    "ticks_per_frame": 30
+  },
+  {
+    "atlas_tile": "gold_fire",
+    "flipbook_texture": "textures/blocks/gold_fire",
+    "ticks_per_frame": 1
+  }
+]

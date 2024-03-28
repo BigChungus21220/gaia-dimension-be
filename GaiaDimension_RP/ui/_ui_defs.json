@@ -2,7 +2,7 @@
   // Alphabetical order please :)
   "ui_defs": [
     "ui/chest_screen.json",
-    "ui/crate_screen.json",
+    "ui/crude_storage_crate_screen.json",
     "ui/gemPouch_screen.json",
     "ui/large_crate_screen.json",
     "ui/purifier_screen.json",
