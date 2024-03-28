@@ -67,7 +67,7 @@ system.runInterval(() => {
 
             let coord;
             if (entity instanceof Player) {
-                coord = entity.coordinateDisplay.coordinates();
+                coord = entity.coordinateDisplay.updateCoordinates();
                 if (Gaia.isInGaia(entity.location) && !entity.getDynamicProperty('enteredByPortal')) {
                     entity.teleport({ x: 0, y: 76, z: 0 });
                 }
