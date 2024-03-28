@@ -9,4 +9,4 @@ import "./fluids/fluids.js";
 import "./world/Biome.js";
 import "./world/Fog.js";
 import './GemPouchData.js';
-import "./world/ClearTerrain.js"
+import "./world/TerrainInterpolator.js"
