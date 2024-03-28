@@ -1,6 +1,5 @@
-import { BlockPermutation, Player, system, world } from "@minecraft/server";
+import { BlockPermutation, system, world } from "@minecraft/server";
 import Gaia from "./Gaia";
-
 const air = BlockPermutation.resolve("minecraft:air");
 const endstone = BlockPermutation.resolve("minecraft:end_stone");
 const flower = BlockPermutation.resolve("minecraft:chorus_flower");
@@ -10,18 +9,31 @@ const ysize = 16;
 
 const the_end = world.getDimension("the_end");
 
-
+/**
+ * Class for endless object databases
+ */
 class EndlessDB {
   prefix = '';
+  /**
+   * 
+   * @param {string} prefix Prefix for the database. Should be unique for each DB
+   */
   constructor(prefix) {
     this.prefix = prefix
   }
+  /**
+   * Count of used dynamic properties for this DB
+   */
   get count() {
     return world.getDynamicProperty(this.prefix + "count") ?? 1
   }
   set count(value) {
     world.setDynamicProperty(this.prefix + "count", value)
   }
+  /**
+   * Gets all data stored in DB
+   * @returns Database object
+   */
   getAll() {
     let json = '';
     for (let i = 0; i < this.count; i++) {
@@ -29,8 +41,12 @@ class EndlessDB {
     }
     return JSON.parse(json === "" ? "{}" : json)
   }
-  setAll(obj) {
-    let json = JSON.stringify(obj);
+  /**
+   * 
+   * @param {object} object Saves given data into DB (rewriting)
+   */
+  setAll(object) {
+    let json = JSON.stringify(object);
     let i = 0;
     while (json.length !== 0) {
       world.setDynamicProperty(this.prefix + "part_" + i, json.slice(0, 32767))
@@ -41,6 +57,9 @@ class EndlessDB {
   }
 }
 
+/**
+ * A piece of loaded blocks with utils 
+ */
 class MiniChunk {
   x;
   y;
@@ -52,10 +71,18 @@ class MiniChunk {
     this.z = Math.floor(chunkLoc.z);
     this.dim = dim;
   }
+  /**
+   * Alternative constructor
+   * @param {Vector} pos 
+   * @param {Dimension} dim 
+   */
   static getAt(pos, dim = the_end) {
     let { x, y, z } = pos;
     return new this({ x: x / size, z: z / size, y: y / ysize }, dim)
   }
+  /**
+   * if the chunk is already cleared
+   */
   get isChecked() {
     let chunk = data[this.y]?.[this.x]?.[this.z];
     return !!chunk
@@ -87,34 +114,33 @@ class MiniChunk {
     return blocks
   }
   clear() {
-    this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: endstone })
-    this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: flower })
-    this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: plant })
-
+    try{
+      this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: endstone })
+      this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: flower })
+      this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: plant })
+    } catch (e) {}
   }
 }
+/**
+ * Class for optimization
+ */
 class TaskQueue {
   tasks = [];
   #run;
-  runCount = 1;
-  timeout = 0;
-  constructor(count = 1) {
-    if (count > 0) {
-      this.runCount = count;
-    } else {
-      this.runCount = 1;
-      this.timeout = -count;
-    }
-  }
-
-  run() {
+  runCount;
+  /**
+   * 
+   * @param {number} runCount 
+   */
+  run(runCount) {
     this.#run = system.runInterval(() => {
-      for (let iter = 0; iter < this.runCount; iter++) {
+      for (let iter = 0; iter < runCount; iter++) {
         if (this.tasks.length !== 0) {
           this.tasks.shift()()
         } else Q.push(() => main())
       }
-    }, this.timeout)
+    },0);
+    this.runCount = runCount;
   }
   stop() {
     system.clearRun(this.#run)
@@ -128,11 +154,13 @@ class TaskQueue {
 
 let DB = new EndlessDB("lum:stone:");
 let data = DB.getAll();
-const Q = new TaskQueue(30);
-Q.run();
+const Q = new TaskQueue();
+Q.run(30);
+
+
 const main = () => {
   for (const p of Gaia.getPlayers()) {
-    //fell free to change
+    //feel free to change
     let range = 8;
     // try{
     //   while (p.dimension.getBlock({...off,x:off.x+(range+1)*size})){
@@ -163,8 +191,7 @@ const main = () => {
     Q.push(() => console.warn("Clearing Done"))
     DB.setAll(data);
   }
-};
-system.runTimeout(main, 0)
+}
 
 //tps counter
 export var ticksPerSecond = 20;
@@ -172,9 +199,17 @@ var startTime = new Date();
 system.runInterval(() => {
   ticksPerSecond = 150000 / (new Date() - startTime);
   startTime = new Date();
-  console.warn(ticksPerSecond);
+  console.warn("TPS: "+ticksPerSecond);
   console.warn("Count of dynProps: " + DB.count);
-  console.warn("Queue: " + Q.tasks.length);
+  if (ticksPerSecond > 20.2) {
+    Q.stop();
+    Q.run(Q.runCount+1)
+  } else if (ticksPerSecond < 19.3){
+    Q.stop();
+    Q.run(Q.runCount-1)
+  };
+  console.warn("Operations per tick: " + Q.runCount);
+  DB.setAll(data);
 }, 149)
 
 system.beforeEvents.watchdogTerminate.subscribe((e) => {

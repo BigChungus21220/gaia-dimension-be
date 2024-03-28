@@ -19,7 +19,7 @@ class PouchManager {
 
     runIntervals() {
         system.runInterval(this.checkItemChanges.bind(this), 1);
-        system.runInterval(this.manageInactiveBackpacks.bind(this), 60);
+        system.runInterval(this.manageInactiveBackpacks.bind(this), 60); // this line throws error because manageInactiveBackpacks doesn't exist fr
     }
 
     checkItemChanges() {

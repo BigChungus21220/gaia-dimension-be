@@ -1,4 +1,4 @@
-import { vec3 } from "../math/Vec3";
+import { vec3 } from "../Vec3";
 import { MathRound as round } from "../utils";
 
 export class CoordinateDisplay {

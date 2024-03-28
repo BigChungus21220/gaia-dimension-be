@@ -69,7 +69,7 @@ class Gaia {
      * @returns {Entity[]} All entities matching the query
      */
     static getEntities(entityQueryOptions) {
-        return the_end.getEntities(entityQueryOptions).filter((entity) => this.isInGaia(entity));
+        return the_end.getEntities(entityQueryOptions).filter((entity) => this.isInGaia(entity.location));
     }
 
     /**
@@ -78,7 +78,7 @@ class Gaia {
      * @returns {Player[]} All players matching the query
      */
     static getPlayers(entityQueryOptions) {
-        return the_end.getPlayers(entityQueryOptions).filter((entity) => this.isInGaia(entity));
+        return the_end.getPlayers(entityQueryOptions).filter((entity) => this.isInGaia(entity.location));
     }
 
     /**

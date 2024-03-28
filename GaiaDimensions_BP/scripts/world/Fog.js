@@ -29,10 +29,10 @@ class FogSystem {
      * @param {Player} player Player to remove fogs from
      */
     static clearFogs(player) {
-        for (const biome of playerData[player.id]) {
+        for (const biome of this.playerFogs[player.id] ?? []) {
             player.runCommandAsync("fog @s remove " + biome);
-            this.playerFogs[player.id] = [];
         }
+        this.playerFogs[player.id] = [];
     }
 
     /**
