@@ -1,0 +1,8 @@
+{
+  "namespace": "progress",
+
+  "theend_loading_progress_screen": {
+    "$screen_content": "common.base_screen_empty_panel",
+    "$screen_bg_content": "common.base_screen_empty_panel"
+  }
+}
