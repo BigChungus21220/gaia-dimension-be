@@ -101,6 +101,9 @@ class MiniChunk {
       }
     };
   }
+  /**
+   * unused
+   */
   getBlocks() {
     let blocks = [];
     for (let x = this.x * size; x < this.x * size + size; x++) {
@@ -135,7 +138,7 @@ class TaskQueue {
       for (let iter = 0; iter < runCount; iter++) {
         if (this.tasks.length !== 0) {
           this.tasks.shift()()
-        } else Q.push(() => main())
+        } else this.push(main)
       }
     },0);
     this.runCount = runCount;
@@ -157,7 +160,9 @@ Q.run(30);
 
 
 const main = () => {
-  for (const p of Gaia.getPlayers()) {
+  //for (const p of Gaia.getPlayers()) {
+  for (const p of world.getAllPlayers()) { // it's used for testing
+    if (p.dimension !== the_end) return;
     //feel free to change
     let range = 8;
     // try{
@@ -173,14 +178,12 @@ const main = () => {
             if (x === 0 && y === 0 && z === 0 && radius > 1) continue;
             //console.warn('x:'+x+' y:'+y+' z:'+z)
             Q.push(() => {
-              try {
-                const chunk = MiniChunk.getAt({ x: (loc.x + x) * size, y: (loc.y + y) * ysize, z: (loc.z + z) * size }, p.dimension);
-                if (chunk.isChecked) {
-                  return
-                };
-                chunk.clear();
-                chunk.isChecked = true;
-              } catch (e) { }
+              const chunk = MiniChunk.getAt({ x: (loc.x + x) * size, y: (loc.y + y) * ysize, z: (loc.z + z) * size }, p.dimension);
+              if (chunk.isChecked) {
+                return
+              };
+              chunk.clear();
+              chunk.isChecked = true;
             })
           }
         }
@@ -199,7 +202,7 @@ system.runInterval(() => {
   startTime = new Date();
   console.warn("TPS: "+ticksPerSecond);
   console.warn("Count of dynProps: " + DB.count);
-  if (ticksPerSecond > 20.2) {
+  if (ticksPerSecond > 20.15) {
     Q.stop();
     Q.run(Q.runCount+1)
   } else if (ticksPerSecond < 19.3){
