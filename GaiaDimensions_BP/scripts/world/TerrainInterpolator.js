@@ -153,7 +153,7 @@ class TaskQueue {
 
 
 
-let DB = new EndlessDB("lum:stone:");
+let DB = new EndlessDB("lum:end_stone_clearing:");
 let data = DB.getAll();
 const Q = new TaskQueue();
 Q.run(30);
