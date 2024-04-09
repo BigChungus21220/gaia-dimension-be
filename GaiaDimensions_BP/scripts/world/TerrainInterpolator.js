@@ -1,5 +1,6 @@
 import { BlockPermutation, system, world } from "@minecraft/server";
 import Gaia from "./Gaia";
+import { the_end } from "../utils";
 const air = BlockPermutation.resolve("minecraft:air");
 const endstone = BlockPermutation.resolve("minecraft:end_stone");
 const flower = BlockPermutation.resolve("minecraft:chorus_flower");
@@ -7,7 +8,6 @@ const plant = BlockPermutation.resolve("minecraft:chorus_plant");
 const size = 16;
 const ysize = 16;
 
-const the_end = world.getDimension("the_end");
 
 /**
  * Class for endless object databases
