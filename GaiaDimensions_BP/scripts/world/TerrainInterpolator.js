@@ -173,6 +173,7 @@ const main = () => {
     let loc = p.location;
     for (let radius = 1; radius <= range; radius++) {
       for (let y = -2; y <= 3; y++) {
+        if (loc.y + y*ysize < the_end.heightRange.min || loc.y + y*ysize > the_end.heightRange.max) continue;
         for (let x = -radius; x <= radius; x++) {
           for (let z = -radius; z <= radius; z++) {
             if (x === 0 && y === 0 && z === 0 && radius > 1) continue;
