@@ -117,9 +117,11 @@ class MiniChunk {
     return blocks
   }
   clear() {
-    this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: endstone })
-    this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: flower })
-    this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: plant })
+    try{     
+      this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: endstone })
+      this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: flower })
+      this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: plant })
+    } catch(e){throw new Error("Failed clearing at position { x:"+this.x * size+", y:"+this.y * ysize+", z:"+this.z * size+" }")}
   }
 }
 /**
@@ -158,11 +160,9 @@ let data = DB.getAll();
 const Q = new TaskQueue();
 Q.run(30);
 
-
+console.warn("Terrain Interpolator loaded sucessfully")
 const main = () => {
-  //for (const p of Gaia.getPlayers()) {
-  for (const p of world.getAllPlayers()) { // it's used for testing
-    if (p.dimension !== the_end) return;
+  for (const p of Gaia.getPlayers()) {
     //feel free to change
     let range = 8;
     // try{
@@ -178,7 +178,7 @@ const main = () => {
             if (x === 0 && y === 0 && z === 0 && radius > 1) continue;
             //console.warn('x:'+x+' y:'+y+' z:'+z)
             Q.push(() => {
-              const chunk = MiniChunk.getAt({ x: (loc.x + x) * size, y: (loc.y + y) * ysize, z: (loc.z + z) * size }, p.dimension);
+              const chunk = MiniChunk.getAt({ x: loc.x + x * size, y: loc.y + y * ysize, z: loc.z + z * size }, p.dimension);
               if (chunk.isChecked) {
                 return
               };
@@ -209,6 +209,8 @@ system.runInterval(() => {
     Q.stop();
     Q.run(Q.runCount-1)
   };
+  console.warn("Total byte size of dynprops (not only my ones): "+world.getDynamicPropertyTotalByteCount())
+  console.warn(JSON.stringify(world.getDynamicPropertyIds().filter((value)=>value.startsWith(DB.prefix))))
   console.warn("Operations per tick: " + Q.runCount);
   DB.setAll(data);
 }, 149)
