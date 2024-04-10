@@ -11,7 +11,7 @@
 		"components": {
 			"tag:is_shovelable": {},
 			"tag:dirt": {},
-			"minecraft:loot": "loot_tables/blocks/light_soil.json",
+			"minecraft:loot": "loot_tables/blocks/gaia/light_soil.json",
 			"minecraft:destructible_by_mining": {
 				"seconds_to_destroy": 1
 			},

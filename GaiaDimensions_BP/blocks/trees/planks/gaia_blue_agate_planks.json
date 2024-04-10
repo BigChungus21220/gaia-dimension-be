@@ -11,7 +11,7 @@
 		"components": {
 			"tag:wood": {},
 			"tag:is_axeable": {},
-			"minecraft:loot": "loot_tables/blocks/blue_agate_planks.json",
+			"minecraft:loot": "loot_tables/blocks/gaia/blue_agate_planks.json",
 			"minecraft:destructible_by_mining": {
 				"seconds_to_destroy": 1
       },

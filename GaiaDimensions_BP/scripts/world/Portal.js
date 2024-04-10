@@ -258,7 +258,6 @@ class Portal {
                 }
             }
         }
-
         if (light_success) {
             this.lightPortal(vec3(position).add(offset), dimension, x_oriented)
         }

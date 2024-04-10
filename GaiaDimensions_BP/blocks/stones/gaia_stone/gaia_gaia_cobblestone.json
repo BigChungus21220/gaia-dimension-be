@@ -10,13 +10,9 @@
     "components": {
       "tag:ore": {},
       "tag:stone": {},
-      "minecraft:loot": "loot_tables/blocks/empty.json",
+      "minecraft:loot": "loot_tables/blocks/gaia/gaia_cobblestone.json",
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 1
-      },
-      "minecraft:on_player_destroyed": {
-        "event": "destroy",
-        "condition": "(query.equipped_item_any_tag('slot.weapon.mainhand','minecraft:is_pickaxe'))"
       },
       "minecraft:unit_cube": {},
       "minecraft:destructible_by_explosion": {

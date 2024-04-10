@@ -11,15 +11,12 @@
 		"components": {
 			"tag:ore": {},
 			"tag:stone": {},
-			"minecraft:loot": "loot_tables/blocks/empty.json",
+			"minecraft:loot": "loot_tables/blocks/gaia/charged_mineral.json",
 			"minecraft:destructible_by_mining": {
 				"seconds_to_destroy": 1
 			},
-      "minecraft:light_emission": 5,
-			"minecraft:on_player_destroyed": {
-				"event": "destroy",
-				"condition": "(query.equipped_item_any_tag('slot.weapon.mainhand','minecraft:is_pickaxe'))"
-			},
+      "minecraft:light_emission": 10,
+		
 			"minecraft:unit_cube": {},
 			"minecraft:destructible_by_explosion": {
 				"explosion_resistance": 1
@@ -30,13 +27,4 @@
           "render_method": "opaque"
 		}
 	}
-},
-		"events": {
-			"destroy": {
-				"spawn_loot": {
-					"table": "loot_tables/blocks/gaia/charged_mineral.json"
-				}
-			}
-		}
-	}
-}
+		}}}

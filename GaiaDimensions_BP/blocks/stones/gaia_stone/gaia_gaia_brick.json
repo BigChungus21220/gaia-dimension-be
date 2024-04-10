@@ -15,10 +15,7 @@
 			"minecraft:destructible_by_mining": {
 				"seconds_to_destroy": 1
 			},
-			"minecraft:on_player_destroyed": {
-				"event": "destroy",
-				"condition": "(query.equipped_item_any_tag('slot.weapon.mainhand','minecraft:is_pickaxe'))"
-			},
+		
 			"minecraft:unit_cube": {},
 			"minecraft:destructible_by_explosion": {
 				"explosion_resistance": 1
@@ -28,13 +25,6 @@
           "texture": "gaia_stone_bricks",
           "render_method": "opaque",
 			"minecraft:map_color": "#ffffff"
-		},
-		"events": {
-			"destroy": {
-				"spawn_loot": {
-					"table": "loot_tables/blocks/gaia/gaia_brick.json"
-				}
-			}
 		}
 	}
 }

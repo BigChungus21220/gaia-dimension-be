@@ -114,7 +114,7 @@
         ]
       },
       "minecraft:experience_reward": {
-        "on_death": "50"
+        "on_death": "100"
       },
       "minecraft:boss": {
         "name": "Malachite Guard",
@@ -134,8 +134,8 @@
         "table": "loot_tables/entities/malachite_guard.json"
       },
       "minecraft:health": {
-        "value": 400,
-        "max": 400
+        "value": 800,
+        "max": 800
       },
       "minecraft:hurt_on_condition": {
         "damage_conditions": [
@@ -247,7 +247,7 @@
         ]
       },
       "minecraft:knockback_resistance": {
-        "value": 100
+        "value": 1000
       },
       "minecraft:behavior.melee_attack": {
         "priority": 1,
