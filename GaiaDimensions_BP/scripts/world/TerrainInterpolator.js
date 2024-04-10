@@ -1,5 +1,6 @@
 import { BlockPermutation, system, world } from "@minecraft/server";
 import Gaia from "./Gaia";
+import { the_end } from "../utils";
 const air = BlockPermutation.resolve("minecraft:air");
 const endstone = BlockPermutation.resolve("minecraft:end_stone");
 const flower = BlockPermutation.resolve("minecraft:chorus_flower");
@@ -7,7 +8,6 @@ const plant = BlockPermutation.resolve("minecraft:chorus_plant");
 const size = 16;
 const ysize = 16;
 
-const the_end = world.getDimension("the_end");
 
 /**
  * Class for endless object databases
@@ -101,6 +101,9 @@ class MiniChunk {
       }
     };
   }
+  /**
+   * unused
+   */
   getBlocks() {
     let blocks = [];
     for (let x = this.x * size; x < this.x * size + size; x++) {
@@ -114,9 +117,11 @@ class MiniChunk {
     return blocks
   }
   clear() {
-    this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: endstone })
-    this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: flower })
-    this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: plant })
+    try{     
+      this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: endstone })
+      this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: flower })
+      this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: plant })
+    } catch(e){throw new Error("Failed clearing at position { x:"+this.x * size+", y:"+this.y * ysize+", z:"+this.z * size+" }")}
   }
 }
 /**
@@ -135,7 +140,7 @@ class TaskQueue {
       for (let iter = 0; iter < runCount; iter++) {
         if (this.tasks.length !== 0) {
           this.tasks.shift()()
-        } else Q.push(() => main())
+        } else this.push(main)
       }
     },0);
     this.runCount = runCount;
@@ -150,12 +155,12 @@ class TaskQueue {
 
 
 
-let DB = new EndlessDB("lum:stone:");
+let DB = new EndlessDB("lum:end_stone_clearing:");
 let data = DB.getAll();
 const Q = new TaskQueue();
 Q.run(30);
 
-
+console.warn("Terrain Interpolator loaded sucessfully")
 const main = () => {
   for (const p of Gaia.getPlayers()) {
     //feel free to change
@@ -168,19 +173,18 @@ const main = () => {
     let loc = p.location;
     for (let radius = 1; radius <= range; radius++) {
       for (let y = -2; y <= 3; y++) {
+        if (loc.y + y*ysize < the_end.heightRange.min || loc.y + y*ysize > the_end.heightRange.max) continue;
         for (let x = -radius; x <= radius; x++) {
           for (let z = -radius; z <= radius; z++) {
             if (x === 0 && y === 0 && z === 0 && radius > 1) continue;
             //console.warn('x:'+x+' y:'+y+' z:'+z)
             Q.push(() => {
-              try {
-                const chunk = MiniChunk.getAt({ x: (loc.x + x) * size, y: (loc.y + y) * ysize, z: (loc.z + z) * size }, p.dimension);
-                if (chunk.isChecked) {
-                  return
-                };
-                chunk.clear();
-                chunk.isChecked = true;
-              } catch (e) { }
+              const chunk = MiniChunk.getAt({ x: loc.x + x * size, y: loc.y + y * ysize, z: loc.z + z * size }, p.dimension);
+              if (chunk.isChecked) {
+                return
+              };
+              chunk.clear();
+              chunk.isChecked = true;
             })
           }
         }
@@ -199,13 +203,15 @@ system.runInterval(() => {
   startTime = new Date();
   console.warn("TPS: "+ticksPerSecond);
   console.warn("Count of dynProps: " + DB.count);
-  if (ticksPerSecond > 20.2) {
+  if (ticksPerSecond > 20.15) {
     Q.stop();
     Q.run(Q.runCount+1)
   } else if (ticksPerSecond < 19.3){
     Q.stop();
     Q.run(Q.runCount-1)
   };
+  console.warn("Total byte size of dynprops (not only my ones): "+world.getDynamicPropertyTotalByteCount())
+  console.warn(JSON.stringify(world.getDynamicPropertyIds().filter((value)=>value.startsWith(DB.prefix))))
   console.warn("Operations per tick: " + Q.runCount);
   DB.setAll(data);
 }, 149)
