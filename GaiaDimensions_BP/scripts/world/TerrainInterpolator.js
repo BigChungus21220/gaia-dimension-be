@@ -6,7 +6,7 @@ const endstone = BlockPermutation.resolve("minecraft:end_stone");
 const flower = BlockPermutation.resolve("minecraft:chorus_flower");
 const plant = BlockPermutation.resolve("minecraft:chorus_plant");
 const bedrock = BlockPermutation.resolve("minecraft:bedrock");
-const gateway = BlockPermutation.resolve("minecraft:end_portal");
+const gateway = BlockPermutation.resolve("minecraft:end_gateway");
 const size = 16;
 const ysize = 16;
 
