@@ -5,7 +5,7 @@
 			"identifier": "gaia:mg_explosion",
 			"basic_render_parameters": {
 				"material": "particles_blend",
-				"texture": "textures/particle/yellow_fire"
+				"texture": "textures/particle/green_fire"
 			}
 		},
 		"components": {
@@ -14,7 +14,7 @@
 				"rotation": false
 			},
 			"minecraft:emitter_rate_instant": {
-				"num_particles": 400
+				"num_particles": 100
 			},
 			"minecraft:emitter_lifetime_once": {
 				"active_time": 1
@@ -51,7 +51,7 @@
 			},
 			"minecraft:particle_motion_collision": {
 				"collision_drag": 1,
-				"coefficient_of_restitution": 0.3,
+				"coefficient_of_restitution": 0.4,
 				"collision_radius": 0.2
 			},
 			"minecraft:particle_appearance_lighting": {},

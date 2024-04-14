@@ -18,7 +18,7 @@
 			},
 			"minecraft:emitter_lifetime_looping": {
 				"active_time": 1,
-				"sleep_time": 59
+				"sleep_time": 9999999
 			},
 			"minecraft:emitter_shape_point": {
 				"offset": [0, -150, 0]

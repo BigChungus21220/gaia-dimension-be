@@ -5,6 +5,8 @@ const air = BlockPermutation.resolve("minecraft:air");
 const endstone = BlockPermutation.resolve("minecraft:end_stone");
 const flower = BlockPermutation.resolve("minecraft:chorus_flower");
 const plant = BlockPermutation.resolve("minecraft:chorus_plant");
+const bedrock = BlockPermutation.resolve("minecraft:bedrock");
+const gateway = BlockPermutation.resolve("minecraft:end_portal");
 const size = 16;
 const ysize = 16;
 
@@ -121,6 +123,9 @@ class MiniChunk {
       this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: endstone })
       this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: flower })
       this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: plant })
+      this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: endstone })
+      this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: bedrock })
+      this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: gateway })
     } catch(e){throw new Error("Failed clearing at position { x:"+this.x * size+", y:"+this.y * ysize+", z:"+this.z * size+" }")}
   }
 }
