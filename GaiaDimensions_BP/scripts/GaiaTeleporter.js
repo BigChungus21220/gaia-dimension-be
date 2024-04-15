@@ -7,7 +7,7 @@ import { vec3 } from "./Vec3.js";
 const dimensions = world.getAllDimensions();
 
 async function getTopBlock(location, dimension) {
-    const loc = vec3(location.x, 310, location.z).round();
+    const loc = vec3(location.x, dimension.heightRange.max, location.z).round();
     const block = await new Promise((resolve) => {
         const block = dimension?.getBlockFromRay(loc, vec3(0, -1, 0))?.block;
         if (block != undefined) {
@@ -34,7 +34,7 @@ async function tpToGaia(entity) {
     Portal.lightPortal(entity.location, the_end, true);
     await delay(0.8);
 
-    const topBlockVec = await getTopBlock(entity.location, entity.dimension);
+    const topBlockVec = (await getTopBlock(entity.location, entity.dimension)) ?? entity.location;
     entity.teleport(topBlockVec, { dimension: entity.dimension });
     const existingLink = Portal.getLink('start', backUpLoc);
     if (!existingLink) {
@@ -52,7 +52,7 @@ async function backToDimension(entity, coord = undefined) {
         }
         const dimension = (entity instanceof Player) ? (entity.getSpawnPoint()?.dimension ?? overworld) : overworld;
         entity.turnCoords(true);
-        entity.teleport(convertCoords(await getTopBlock(teleportLoc, dimension), entity), { dimension });
+        entity.teleport(convertCoords(await getTopBlock(teleportLoc, dimension) ?? coord, entity), { dimension });
     } catch (error) {
 
     }
