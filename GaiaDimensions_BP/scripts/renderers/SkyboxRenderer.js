@@ -21,7 +21,7 @@ Events.playerChangeBlock.subscribe((player) => {
 
  class SkyboxRenderer {
      constructor(player) {
-         this.tick(59)
+         this.tick(60)
      }
        /**
    * Spawns the Skybox (in Gaia)
@@ -30,6 +30,7 @@ Events.playerChangeBlock.subscribe((player) => {
    * @param {MolangVariableMap} molangVariables Optional variables for this particle
    */
   static spawnSkybox( location, molangVariables = {}) {
+    const results = [];
     Gaia.spawnParticle("gaia:sky1", location , molangVariables);
     Gaia.spawnParticle("gaia:sky2", location , molangVariables);
     Gaia.spawnParticle("gaia:sky_side1", location , molangVariables);
@@ -37,6 +38,7 @@ Events.playerChangeBlock.subscribe((player) => {
     Gaia.spawnParticle("gaia:sky_side3", location , molangVariables);
     Gaia.spawnParticle("gaia:sky_side4", location , molangVariables);
     Gaia.spawnParticle("gaia:gaia_planet", location , molangVariables);
+    return results;
   }
 }
 // Return the class and method
