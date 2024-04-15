@@ -6,7 +6,7 @@ import {vec3} from './vec3.js'
 //event that handles the skybox
 Events.playerChangeBlock.subscribe((eventData) => {
     let spawn_pos = (eventData.player)
-    let players = Gaia.getPlayers();
+    const players = Gaia.getPlayers();
     for (const player of players) {
       const { x, y, z } = player.location;
       const floorpos = vec3(x, 0, z).floor();
