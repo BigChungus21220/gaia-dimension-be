@@ -13,13 +13,14 @@ Events.playerChangeBlock.subscribe((eventData) => {
       if (!floorpos.compareWith(playerLocations[player.id] ?? floorpos)) {
         Events.playerChangeBlock.trigger({ player: player });
       }
-      playerLocations[player.id] = floorpos;
+      const check = Gaia.isInGaia(player.location.getBlock(pos));
       Gaia.spawnParticle("gaia:sky1", spawn_pos);
       Gaia.spawnParticle("gaia:sky2", spawn_pos);
       Gaia.spawnParticle("gaia:sky_side1", spawn_pos);
       Gaia.spawnParticle("gaia:sky_side2", spawn_pos);
       Gaia.spawnParticle("gaia:sky_side3", spawn_pos);
       Gaia.spawnParticle("gaia:sky_side4", spawn_pos);
+      Gaia.spawnParticle("gaia:gaia_planet", spawn_pos);
     }
   });
 
