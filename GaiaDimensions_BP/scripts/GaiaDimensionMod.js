@@ -13,15 +13,6 @@ import "./world/TerrainInterpolator.js";
 
 // to change
 import { world, system } from "@minecraft/server";
+import SkyboxRenderer from './renderers/Skybox.js';
 
-function showSkybox() {
-    system.runTimeout(() => {
-        for (const player of world.getPlayers()) {
-            const { x, y, z } = player.location;
-            if (x > 1000 && z > 1000 && player.dimension.id == 'minecraft:the_end') {
-                player.playAnimation('animation.skybox.gaia');
-            }
-        }
-    }, 100);
-}
-showSkybox();
+system.runTimeout(() => SkyboxRenderer.setSkybox(),100)

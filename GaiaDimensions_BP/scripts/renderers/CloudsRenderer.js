@@ -1,7 +1,7 @@
 import {world , system } from '@minecraft/server';
 import * as Events from '../world/Events'
 import Gaia from '../world/Gaia'
-import {vec3} from './vec3.js'
+import {vec3} from './Vec3.js'
 
 //event that handles the skybox
 Events.playerChangeBlock.subscribe((player) => {
@@ -40,4 +40,4 @@ Events.playerChangeBlock.subscribe((player) => {
   }
 }
 // Return the class and method
-SkyboxRenderer;
+export default SkyboxRenderer;

@@ -5,3 +5,22 @@
     "npm": "^10.2.5"
   }
 }
+
+
+
+// to change
+import { world, system } from "@minecraft/server";
+import Gaia from './world/Gaia.js';
+
+function showSkybox() {
+    system.runTimeout(() => {
+        let players = Gaia.getPlayers()
+        for (const player of players) {
+            const { x, y, z } = player.location;
+            if (x > 1000 && z > 1000 && player.dimension.id == 'minecraft:the_end') {
+                player.playAnimation('animation.skybox.gaia');
+            }
+        }
+    }, 100);
+}
+showSkybox();
