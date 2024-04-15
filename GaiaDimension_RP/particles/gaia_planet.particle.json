@@ -1,44 +1,43 @@
 {
-  "format_version": "1.10.0",
-  "particle_effect": {
-    "description": {
-      "identifier": "gaia:gaia_planet",
-      "basic_render_parameters": {
-        "material": "particles_alpha",
-        "texture": "textures/particle/gaia_planet"
-      }
-    },
-    "components": {
-      "minecraft:emitter_initialization": {
+	"format_version": "1.10.0",
+	"particle_effect": {
+		"description": {
+			"identifier": "gaia:gaia_planet",
+			"basic_render_parameters": {
+				"material": "particles_alpha",
+				"texture": "textures/particle/gaia_planet"
+			}
+		},
+		"components": {
+			"minecraft:emitter_initialization": {
 				"creation_expression": "v.last_exp = false;"
 			},
-      "minecraft:emitter_local_space": {
-        "position": true,
-        "rotation": false
-      },
-      "minecraft:emitter_rate_instant": {
-        "num_particles": 1
-      },
-      "minecraft:emitter_lifetime_once": {
-        "active_time": 0.5
-      },
-      "minecraft:emitter_shape_point": {
-        "offset": [-148, 470, -86]
-      },
-      "minecraft:particle_lifetime_expression": {
-        "max_lifetime": 1
-      },
-      "minecraft:particle_initial_speed": 0,
-      "minecraft:particle_appearance_billboard": {
-        "size": [50, 50],
-        "facing_camera_mode": "lookat_xyz",
-        "uv": {
-          "texture_width": 16,
-          "texture_height": 16,
-          "uv": [0, 0],
-          "uv_size": [16, 16]
-        }
-      }
-    }
-  }
+			"minecraft:emitter_local_space": {
+				"position": true,
+				"rotation": false
+			},
+			"minecraft:emitter_rate_instant": {
+				"num_particles": 1
+			},
+			"minecraft:emitter_lifetime_once": {
+				"active_time": 59
+			},
+			"minecraft:emitter_shape_point": {
+				"offset": [-30, 470, -10]
+			},
+			"minecraft:particle_lifetime_expression": {
+				"max_lifetime": 9.9
+			},
+			"minecraft:particle_appearance_billboard": {
+				"size": [50, 50],
+				"facing_camera_mode": "lookat_xyz",
+				"uv": {
+					"texture_width": 64,
+					"texture_height": 64,
+					"uv": [-3, 1],
+					"uv_size": [64, 64]
+				}
+			}
+		}
+	}
 }
