@@ -3,13 +3,12 @@ import * as Events from '../world/Events.js'
 import Gaia from '../world/Gaia.js'
 
 class SkyboxRenderer {
-    constructor() {
-      this.tick = Events.tick60;
+    constructor(tick) {
+      this.tick = tick;
     }
   
     /**
      * Spawns the Skybox (in Gaia)
-     * @param {Vec3} location Location to spawn skybox
      * @param {MolangVariableMap} molangVariables Optional variables for this skybox
      */
     static setSkybox() {
@@ -17,15 +16,14 @@ class SkyboxRenderer {
       for (const player of players) {
         if (this.isInGaia(location)) {
           player.playAnimation('animation.skybox.gaia');
+          return true;
+        } else {
+            return false;
         }
+    }
       }
     }
   
-    static isInGaia() {
-      // Check if the location is within Gaia
-      // Implementation goes here
-    }
-  }
   system.runTimeout(() => SkyboxRenderer.setSkybox(),100)
   //export
   export default SkyboxRenderer;
