@@ -10,9 +10,6 @@ import "./world/Biome.js";
 import "./world/Fog.js";
 import './GemPouchData.js';
 import "./world/TerrainInterpolator.js";
+import './renderers/Skybox.js';
 
-// to change
-import { world, system } from "@minecraft/server";
-import SkyboxRenderer from './renderers/Skybox.js';
 
-system.runTimeout(() => SkyboxRenderer.setSkybox(),100)
