@@ -18,6 +18,7 @@ function showSkybox() {
     system.runTimeout(() => {
         for (const player of world.getPlayers()) {
             const { x, y, z } = player.location;
+            // u know, just change the coords condition
             if (x > 1000 && z > 1000 && player.dimension.id == 'minecraft:the_end') {
                 player.playAnimation('animation.skybox.gaia');
             }
