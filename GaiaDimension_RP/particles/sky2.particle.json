@@ -17,7 +17,7 @@
 				"num_particles": 1
 			},
 			"minecraft:emitter_lifetime_looping": {
-				"active_time": 99999999,
+				"active_time": 59,
 				"sleep_time": 1
 			},
 			"minecraft:emitter_shape_point": {
