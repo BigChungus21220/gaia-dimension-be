@@ -107,7 +107,7 @@ class PouchManager {
         const pouchEntity = player.dimension.spawnEntity("gaia:gem_pouch_container", player.location);
         pouchEntity.triggerEvent(pouchType(currentItem));
         pouchEntity.addTag(pouchId);
-        pouchEntity.nameTag = pouchName(currentItem);
+        pouchEntity.nameTag = this.pouchName(currentItem);
     }
 
     adjustNonPouchEntity(player, propertyDataOld) {
