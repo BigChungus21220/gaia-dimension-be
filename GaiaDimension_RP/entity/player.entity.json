@@ -39,14 +39,13 @@
       "scripts": {
         "scale": "0.9375",
         "initialize": [
-          "v.biome = 0.0;",
           "variable.is_holding_right = 0.0;",
           "variable.is_blinking = 0.0;",
           "variable.last_blink_time = 0.0;",
           "variable.hand_bob = 0.0;"
         ],
         "pre_animation": [
-          "v.biome = query.biome_has_any_tag('the_end');",
+          "v.biome = (1.0);",
           "variable.helmet_layer_visible = 1.0;",
           "variable.leg_layer_visible = 1.0;",
           "variable.boot_layer_visible = 1.0;",
@@ -65,10 +64,7 @@
           "root",
           "spawn_gaia_planet",
           "spawn_cloud",
-          "skyblend",
-          {
-            "nebula": "v.is_first_person&&v.biome"
-          }
+          "skyblend"
         ]
       },
       "animations": {
