@@ -9,7 +9,9 @@ import "./fluids/fluids.js";
 import "./world/Biome.js";
 import "./world/Fog.js";
 import './GemPouchData.js';
-import "./world/TerrainInterpolator.js"
+import "./world/TerrainInterpolator.js";
+
+// to change
 import { world, system } from "@minecraft/server";
 
 function showSkybox() {
