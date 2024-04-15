@@ -10,3 +10,16 @@ import "./world/Biome.js";
 import "./world/Fog.js";
 import './GemPouchData.js';
 import "./world/TerrainInterpolator.js"
+import { world, system } from "@minecraft/server";
+
+function showSkybox() {
+    system.runTimeout(() => {
+        for (const player of world.getPlayers()) {
+            const { x, y, z } = player.location;
+            if (x > 1000 && z > 1000 && player.dimension.id == 'minecraft:the_end') {
+                player.playAnimation('animation.skybox.gaia');
+            }
+        }
+    }, 100);
+}
+showSkybox();
