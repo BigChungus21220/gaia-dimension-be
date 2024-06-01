@@ -9,7 +9,7 @@ class SkyboxRenderer {
       let players = Gaia.getPlayers();
       for (const player of players) {
         if (Gaia.isInGaia(player.location)) {
-          player.playAnimation('animation.skybox.gaia');
+          player.setProperty('gaia:skybox_property',);
           return true;
         } else {
             return false;
