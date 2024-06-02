@@ -1,7 +1,7 @@
 import { system } from "@minecraft/server";
 import { vec3 } from '../Vec3.js';
 import { delay } from '../utils.js'
-
+import { world } from "@minecraft/server"
 
 //applies velocity to entities that stand on an active geyser for duration ticks
 function push_entities(dimension, spawn_pos, duration) {
@@ -36,18 +36,7 @@ function push_entities(dimension, spawn_pos, duration) {
     }, tickdelay);
 }
 
-system.afterEvents.scriptEventReceive.subscribe(async (event) => {
-    if (event.id == "gaia:geyser.erupt") {
-        let block = event.sourceBlock;
-        let dimension = block.dimension;
-        let spawn_pos = vec3(block.location).add(vec3(0.5, 1.1, 0.5)).toObject();
-        dimension.getPlayers().forEach((e) => { e.playSound("geyser.blast", { location: spawn_pos }) });
-        await delay(10);
-        push_entities(dimension, spawn_pos, 120); //start blasting entities
-        dimension.spawnParticle("gaia:geyser_pre_steam", spawn_pos);
-        await delay(20);
-        dimension.spawnParticle("gaia:geyser_steam", spawn_pos);
-        dimension.spawnParticle("gaia:geyser_blast", spawn_pos);
-
-    }
-});
+world.beforeEvents.worldInitialize.subscribe((eventData) => {
+    // Register a custom component named kai:on_interact for log interaction
+    eventData.blockTypeRegistry.registerCustomComponent('gaia:geyser', {
+        
