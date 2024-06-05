@@ -20,7 +20,7 @@ world.beforeEvents.worldInitialize.subscribe(eventData => {
             const selectedItem = equipment.getEquipment('Mainhand');
 
             // Check if the selected item is a slab and the block is not already double
-            if (selectedItem?.typeId === 'kai:slab' && !block.permutation.getState('kai:double')) {
+            if (selectedItem?.typeId === 'block:slab' && !block.permutation.getState('block:double')) {
                 // Check if the interaction is valid based on vertical half and face
                 const verticalHalf = block.permutation.getState('minecraft:vertical_half');
                 const isBottomUp = verticalHalf === 'bottom' && face === 'Up';

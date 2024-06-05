@@ -1,10 +1,8 @@
 import { system } from "@minecraft/server";
 import { vec3 } from '../Vec3.js';
-import { delay } from '../utils.js'
-import { world } from "@minecraft/server"
 
 //applies velocity to entities that stand on an active geyser for duration ticks
-function push_entities(dimension, spawn_pos, duration) {
+export function push_entities(dimension, spawn_pos, duration) {
     let t = 0;
     const determinant_y = spawn_pos.y - 0.5;
     let tickdelay = 4; //how often to repeat
@@ -36,7 +34,3 @@ function push_entities(dimension, spawn_pos, duration) {
     }, tickdelay);
 }
 
-world.beforeEvents.worldInitialize.subscribe((eventData) => {
-    // Register a custom component named kai:on_interact for log interaction
-    eventData.blockTypeRegistry.registerCustomComponent('gaia:geyser', {
-        
