@@ -1,6 +1,6 @@
 import { vec3 } from '../Vec3.js';
 import { world } from "@minecraft/server";
-import { push_entities } from "./Geyser.js";
+import { push_entities } from "./geyser.js";
 import { delay } from '../utils.js';
 
 world.beforeEvents.worldInitialize.subscribe(eventData => {
