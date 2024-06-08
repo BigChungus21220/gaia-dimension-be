@@ -37,7 +37,7 @@ world.beforeEvents.worldInitialize.subscribe(eventData => {
                         }
                     }
                     // Set block to double and remove water if present
-                    block.setPermutation(block.permutation.withState('kai:double', true));
+                    block.setPermutation(block.permutation.withState('block:double', true));
                     block.setWaterlogged(false);
                     // Play sound effect
                     player.playSound('use.stone');
@@ -45,13 +45,13 @@ world.beforeEvents.worldInitialize.subscribe(eventData => {
             }
 
             // Check if the selected item is a water bucket and the block is not waterlogged or double
-            if (selectedItem?.typeId === 'minecraft:water_bucket' && !block.permutation.getState('kai:waterlogged') && !block.permutation.getState('kai:double')) {
+            if (selectedItem?.typeId === 'minecraft:water_bucket' && !block.permutation.getState('block:waterlogged') && !block.permutation.getState('block:double')) {
                 // If not in creative mode, replace water bucket with empty bucket
                 if (player.getGameMode() !== "creative") {
                     equipment.setEquipment('Mainhand', new ItemStack('minecraft:bucket', 1));
                 }
                 // Set block to waterlogged and place corresponding structure
-                block.setPermutation(block.permutation.withState('kai:waterlogged', true));
+                block.setPermutation(block.permutation.withState('block:waterlogged', true));
                 const verticalHalf = block.permutation.getState('minecraft:vertical_half');
                 const structureName = (verticalHalf === 'bottom') ? 'mystructure:bottomSlab' : 'mystructure:topSlab'; // These structures contains your slab waterlogged, made with an NBT editor
                 const { x, y, z } = block;

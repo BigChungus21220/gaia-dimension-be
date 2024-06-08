@@ -6,7 +6,7 @@ import { delay } from '../utils.js';
 world.beforeEvents.worldInitialize.subscribe(eventData => {
     eventData.blockTypeRegistry.registerCustomComponent('gaia:geyser', {
         async OnStepOn(e) {
-            let { block } = e;
+            let block = e;
             let dimension = block.dimension;
             let spawn_pos = vec3(block.location).add(vec3(0.5, 1.1, 0.5)).toObject();
             dimension.getPlayers().forEach((e) => { e.playSound("geyser.blast", { location: spawn_pos }) });
