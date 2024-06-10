@@ -89,3 +89,16 @@ world.beforeEvents.worldInitialize.subscribe(eventData => {
         }
     });
 });
+
+world.beforeEvents.worldInitialize.subscribe(eventData => {
+    // Register a custom component for normal slabs
+    eventData.blockTypeRegistry.registerCustomComponent('block:wood_slab_destroy', {
+        // Define behavior when a player destroys the slab
+        onPlayerDestroy(e) {
+             //Spawn shit
+            const block = e;
+                const slabbingItem = new ItemStack('gaia:agate_slab', 1);
+                e.dimension.spawnItem(slabbingItem, block.location);
+            }
+        }
+)});

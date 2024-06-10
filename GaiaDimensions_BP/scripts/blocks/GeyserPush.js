@@ -3,6 +3,8 @@ import { world } from "@minecraft/server";
 import { push_entities } from "./geyser.js";
 import { delay } from '../utils.js';
 
+
+//blast entities using the geyser
 world.beforeEvents.worldInitialize.subscribe(eventData => {
     eventData.blockTypeRegistry.registerCustomComponent('gaia:geyser', {
         async OnStepOn(e) {
