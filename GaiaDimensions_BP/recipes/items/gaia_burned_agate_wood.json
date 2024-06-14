@@ -1,0 +1,25 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "burned_agate_wood_1309bde8"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "AA ",
+      "AA "
+    ],
+    "key": {
+      "A": {
+        "item": "gaia:burned_agate_log",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "gaia:burned_agate_wood",
+      "count": 3
+    }
+  }
+}

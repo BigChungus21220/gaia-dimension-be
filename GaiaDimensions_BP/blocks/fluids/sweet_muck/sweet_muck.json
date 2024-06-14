@@ -88,74 +88,74 @@
 
           {
             "condition": "query.block_neighbor_has_any_tag(0, 0, -1, 'template_full')",
-            "set_block_property": {
+            "set_block_state": {
               "gaia:nz": 1
             }
           },
           {
             "condition": "query.block_neighbor_has_any_tag(0, 0, 1, 'template_full')",
-            "set_block_property": {
+            "set_block_state": {
               "gaia:z": 1
             }
           },
           {
             "condition": "query.block_neighbor_has_any_tag(1, 0, 0, 'template_full')",
-            "set_block_property": {
+            "set_block_state": {
               "gaia:x": 1
             }
           },
           {
             "condition": "query.block_neighbor_has_any_tag(-1, 0, 0, 'template_full')",
-            "set_block_property": {
+            "set_block_state": {
               "gaia:nx": 1
             }
           },
           {
             "condition": "query.block_neighbor_has_any_tag(0, 1, 0, 'template_full')",
-            "set_block_property": {
+            "set_block_state": {
               "gaia:top": 1
             }
           },
           {
             "condition": "query.block_neighbor_has_any_tag(0, -1, 0, 'template_full')",
-            "set_block_property": {
+            "set_block_state": {
               "gaia:bottom": 1
             }
           },
 
           {
             "condition": "!query.block_neighbor_has_any_tag(0, 0, -1, 'template_full')",
-            "set_block_property": {
+            "set_block_state": {
               "gaia:nz": 0
             }
           },
           {
             "condition": "!query.block_neighbor_has_any_tag(0, 0, 1, 'template_full')",
-            "set_block_property": {
+            "set_block_state": {
               "gaia:z": 0
             }
           },
           {
             "condition": "!query.block_neighbor_has_any_tag(1, 0, 0, 'template_full')",
-            "set_block_property": {
+            "set_block_state": {
               "gaia:x": 0
             }
           },
           {
             "condition": "!query.block_neighbor_has_any_tag(-1, 0, 0, 'template_full')",
-            "set_block_property": {
+            "set_block_state": {
               "gaia:nx": 0
             }
           },
           {
             "condition": "!query.block_neighbor_has_any_tag(0, 1, 0, 'template_full')",
-            "set_block_property": {
+            "set_block_state": {
               "gaia:top": 0
             }
           },
           {
             "condition": "!query.block_neighbor_has_any_tag(0, -1, 0, 'template_full')",
-            "set_block_property": {
+            "set_block_state": {
               "gaia:bottom": 0
             }
           }

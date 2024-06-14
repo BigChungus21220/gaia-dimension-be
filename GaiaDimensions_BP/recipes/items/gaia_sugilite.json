@@ -1,0 +1,24 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "sugilite_8a4651fd"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "B"
+    ],
+    "key": {
+      "B": {
+        "item": "gaia:sugilite_block",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "gaia:sugilite",
+      "count": 9
+    }
+  }
+}

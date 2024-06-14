@@ -1,0 +1,25 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "burning_wood_abf7d7cb"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "AA ",
+      "AA "
+    ],
+    "key": {
+      "A": {
+        "item": "gaia:burning_log",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "gaia:burning_wood",
+      "count": 3
+    }
+  }
+}

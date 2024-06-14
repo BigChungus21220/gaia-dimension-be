@@ -1,0 +1,16 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_furnace": {
+    "description": {
+      "identifier": "cooked_luggeroth_chop"
+    },
+    "tags": [
+      "furnace",
+      "smoker",
+      "campfire",
+      "soul_campfire"
+    ],
+    "input": "gaia:luggeroth_chop",
+    "output": "gaia:cooked_luggeroth_chop"
+  }
+}

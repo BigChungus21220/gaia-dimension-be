@@ -1,0 +1,24 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "pulsing_chiseled_malachite_brick_slab_9eb4fe04"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "AAA"
+    ],
+    "key": {
+      "A": {
+        "item": "gaia:brick3",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "gaia:brick3_slab",
+      "count": 1
+    }
+  }
+}

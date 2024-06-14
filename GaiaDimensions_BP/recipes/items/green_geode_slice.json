@@ -1,0 +1,20 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shapeless": {
+    "description": {
+      "identifier": "green_geode_slice"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "ingredients": [
+      {
+        "item": "gaia:green_geode"
+      }
+    ],
+    "result": {
+      "item": "gaia:green_geode_slice",
+      "count": 4
+    }
+  }
+}

@@ -852,8 +852,8 @@
 		"burning_sapling": {
 		  "textures": "textures/blocks/burning_sapling"
 		},
-		"burnt_sapling": {
-		  "textures": "textures/blocks/burnt_sapling"
+		"burned_sapling": {
+		  "textures": "textures/blocks/burned_sapling"
 		},
 		"aura_sapling": {
 		  "textures": "textures/blocks/aura_sapling"

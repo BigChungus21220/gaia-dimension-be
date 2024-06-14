@@ -1,0 +1,24 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "gaia_cobblestone_slab_d425e7dd"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "AAA"
+    ],
+    "key": {
+      "A": {
+        "item": "gaia:gaia_cobblestone",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "gaia:gaia_cobblestone_slab",
+      "count": 6
+    }
+  }
+}

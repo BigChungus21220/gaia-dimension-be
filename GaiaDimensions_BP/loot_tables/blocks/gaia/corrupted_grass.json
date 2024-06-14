@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:corrupted_grass",
+          "name": "gaia:corrupt_grass",
           "functions": [
             {
               "function": "set_count",

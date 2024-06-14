@@ -1,0 +1,79 @@
+{
+  "format_version": "1.20.20",
+  "minecraft:tree_feature": {
+    "description": {
+      "identifier": "gaia:foliage/burned_tree"
+    },
+    "acacia_trunk": {
+      "trunk_width": 1,
+      "trunk_height": {
+        "base": 3,
+        "intervals": [ 2 ],
+        "min_height_for_canopy": 3
+      },
+      "trunk_block": "gaia:burned_log",
+      "trunk_lean": {
+        "allow_diagonal_growth": true,
+        "lean_height": {
+          "range_min": 2,
+          "range_max": 3
+        },
+        "lean_steps": {
+          "range_min": 3,
+          "range_max": 4
+        },
+        "lean_length": {
+          "range_min": 1,
+          "range_max": 1
+        }
+      }
+    },
+    "random_spread_canopy": {
+      "canopy_height": 2,
+      "canopy_radius": 3,
+      "leaf_placement_attempts": 50,
+      "leaf_blocks": [
+        ["gaia:burned_leaves", 3]
+      ]
+    },
+    "base_block": [
+      "gaia:cinder"
+    ],
+    "may_grow_on": [
+      "gaia:charred_grass"
+    ],
+    "may_replace": [
+      "minecraft:air",
+      "gaia:aura_leaves",
+      "gaia:burning_leaves",
+      "gaia:burned_leaves",
+      "gaia:corrupted_leaves",
+      "gaia:fossilized_leaves",
+      "gaia:green_agate_leaves",
+      "gaia:blue_agate_leaves",
+      "gaia:pink_agate_leaves",
+      "gaia:purple_agate_leaves"
+    ],
+    "may_grow_through": [
+      "gaia:orange_glitter_grass",
+      "gaia:blue_glitter_grass",
+      "gaia:green_glitter_grass",
+      "gaia:charred_grass",
+      "gaia:pale_green_glitter_grass",
+      "gaia:purple_glitter_grass",
+      "gaia:orange_glitter_grass",
+      "gaia:soft_grass",
+      "gaia:murky_grass",
+      "gaia:corrupt_grass",
+      "gaia:pink_glitter_grass",
+      "gaia:peach_glitter_grass",
+      "gaia:orange_glitter_grass",
+      "gaia:light_soil",
+      "gaia:heavy_soil",
+      "gaia:cinder",
+      "gaia:corrupt_soil",
+      "gaia:boggy_soil",
+      "gaia:light_soil"
+    ]
+  }
+}

@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:corrupted_soil",
+          "name": "gaia:corrupt_soil",
           "functions": [
             {
               "function": "set_count",

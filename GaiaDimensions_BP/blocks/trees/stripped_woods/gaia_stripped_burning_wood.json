@@ -22,7 +22,6 @@
 					"render_method": "opaque"
 				}
 			},
-      "minecraft:unit_cube": {},
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 1
       },
@@ -32,7 +31,7 @@
     },
     "events": {
       "gaia:rotate": {
-        "set_block_property": {
+        "set_block_state": {
           "gaia:rotation": "Math.floor(query.block_face / 2)"
         }
       }
@@ -47,12 +46,14 @@
       {
         "condition": "query.block_state('gaia:rotation') == 1",
         "components": {
+          "minecraft:geometry": "minecraft:geometry.full_block",
           "minecraft:transformation": { "rotation": [90, 0, 0] }
         }
       },
       {
         "condition": "query.block_state('gaia:rotation') == 2",
         "components": {
+          "minecraft:geometry": "minecraft:geometry.full_block",
           "minecraft:transformation": { "rotation": [0, 0, 90] }
         }
       }

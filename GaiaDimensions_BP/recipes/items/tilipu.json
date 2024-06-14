@@ -1,0 +1,22 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shapeless": {
+    "description": {
+      "identifier": "tilipu"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "ingredients": [
+      {
+        "item": "gaia:bulbous_hobina"
+      },
+      {
+        "item": "gaia:thiscus"
+      }
+    ],
+    "result": {
+      "item": "gaia:tilipu"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "crusted_amethyst_brick_slab_902e2b0c"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "AAA"
+    ],
+    "key": {
+      "A": {
+        "item": "gaia:crusted_amethyst_bricks",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "gaia:crusted_amethyst_brick_slab",
+      "count": 6
+    }
+  }
+}

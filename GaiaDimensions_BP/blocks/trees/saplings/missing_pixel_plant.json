@@ -1,0 +1,62 @@
+{
+  "format_version": "1.20.80",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaia:missing_pixel_plant"
+    },
+    "components": {
+      "minecraft:loot": "loot_tables/blocks/gaia/missing_pixel_plant.json",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 0.0
+      },      
+      "minecraft:selection_box": {
+        "origin": [
+          -6,
+          0,
+          -6
+        ],
+        "size": [
+          12,
+          12,
+          12
+        ]
+      },
+      "minecraft:geometry": "geometry.custom_sapling",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "missingno_plant",
+          "render_method": "alpha_test"
+        }
+      },
+      "minecraft:placement_filter": {
+        "conditions": [
+          {
+            "allowed_faces": ["up"],
+            "block_filter": [
+              "gaia:orange_glitter_grass",
+              "gaia:blue_glitter_grass",
+              "gaia:green_glitter_grass",
+              "gaia:charred_grass",
+              "gaia:pale_green_glitter_grass",
+              "gaia:purple_glitter_grass",
+              "gaia:orange_glitter_grass",
+              "gaia:soft_grass",
+              "gaia:murky_grass",
+              "gaia:corrupt_grass",
+              "gaia:pink_glitter_grass",
+              "gaia:peach_glitter_grass",
+              "gaia:orange_glitter_grass",
+              "gaia:light_soil",
+              "gaia:heavy_soil",
+              "gaia:cinder",
+              "gaia:corrupt_soil",
+              "gaia:boggy_soil",
+              "gaia:light_soil"
+            ]
+          }
+        ]
+      },      
+      "minecraft:collision_box": false
+    }
+  }
+}

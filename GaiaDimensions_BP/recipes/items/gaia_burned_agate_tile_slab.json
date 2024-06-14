@@ -1,0 +1,24 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "burned_agate_tile_slab_b279b4bf"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "AAA"
+    ],
+    "key": {
+      "A": {
+        "item": "gaia:burned_agate_planks",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "gaia:burned_agate_tile_slab",
+      "count": 6
+    }
+  }
+}

@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:green_planks_stairs",
+          "name": "gaia:malachite_tiles_stairs",
           "functions": [
             {
               "function": "set_count",

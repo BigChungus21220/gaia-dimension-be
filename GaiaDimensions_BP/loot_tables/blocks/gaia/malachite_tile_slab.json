@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:green_planks_slab",
+          "name": "gaia:malachite_tiles_slab",
           "functions": [
             {
               "function": "set_count",

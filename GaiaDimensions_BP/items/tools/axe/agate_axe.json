@@ -44,14 +44,14 @@
         "use_efficiency": true,
         "destroy_speeds": [
           {
-            "block": "gaia:burnt_agate_tile_slab",
+            "block": "gaia:burned_agate_tile_slab",
             "speed": 2,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:burnt_agate_stair",
+            "block": "gaia:burned_agate_stair",
             "speed": 2,
             "on_dig": {
               "event": "reduce_durability"
@@ -100,7 +100,7 @@
             }
           },
           {
-            "block": "gaia:stripped_burnt_agate_log",
+            "block": "gaia:stripped_burned_agate_log",
             "speed": 2,
             "on_dig": {
               "event": "reduce_durability"
@@ -121,7 +121,7 @@
             }
           },
           {
-            "block": "gaia:stripped_burnt_agate_wood",
+            "block": "gaia:stripped_burned_agate_wood",
             "speed": 2,
             "on_dig": {
               "event": "reduce_durability"
@@ -177,7 +177,7 @@
             }
           },
           {
-            "block": "gaia:burnt_agate_wood",
+            "block": "gaia:burned_agate_wood",
             "speed": 2,
             "on_dig": {
               "event": "reduce_durability"
@@ -373,14 +373,14 @@
             }
           },
           {
-            "block": "gaia:burnt_agate_planks",
+            "block": "gaia:burned_agate_planks",
             "speed": 2,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:burnt_agate_log",
+            "block": "gaia:burned_agate_log",
             "speed": 2,
             "on_dig": {
               "event": "reduce_durability"
@@ -422,7 +422,7 @@
             }
           },
           {
-            "block": "gaia:burnt_agate",
+            "block": "gaia:burned_agate",
             "speed": 2,
             "on_dig": {
               "event": "reduce_durability"

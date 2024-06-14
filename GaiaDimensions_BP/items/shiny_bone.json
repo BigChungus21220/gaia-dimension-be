@@ -2,7 +2,7 @@
 	"format_version": "1.20.50",
 	"minecraft:item": {
 		"description": {
-			"identifier": "gaia:",
+			"identifier": "gaia:shiny_bone",
 			"menu_category": {
 				"category": "Items"
 			}

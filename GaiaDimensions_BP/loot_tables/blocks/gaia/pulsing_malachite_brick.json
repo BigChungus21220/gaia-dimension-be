@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:green_brick3",
+          "name": "gaia:pulsing_malachite_bricks",
           "functions": [
             {
               "function": "set_count",

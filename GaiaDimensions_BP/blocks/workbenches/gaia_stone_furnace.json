@@ -18,6 +18,7 @@
             "minecraft:collision_box": true,
             "minecraft:selection_box": true,
             "minecraft:display_name": "Gaia Stone Furnace",
+            "minecraft:geometry": "minecraft:geometry.full_block",
             "minecraft:material_instances": {
                 "up": {
                     "texture": "gaia_stone_furnace_top",
@@ -36,7 +37,6 @@
                     "render_method": "opaque"
                 }
             },
-            "minecraft:unit_cube": {},
             "minecraft:on_player_placing": {
                 "event": "setDirection"
             },
@@ -59,7 +59,7 @@
                 }
             },
             "setDirection": {
-                "set_block_property": {
+                "set_block_state": {
                     "gaiadimension:direction": "(q.cardinal_facing_2d-2)"
                 }
             }

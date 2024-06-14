@@ -1,0 +1,22 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shapeless": {
+    "description": {
+      "identifier": "tilipi"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "ingredients": [
+      {
+        "item": "gaia:spotted_kersei"
+      },
+      {
+        "item": "gaia:thiscus"
+      }
+    ],
+    "result": {
+      "item": "gaia:tilipi"
+    }
+  }
+}

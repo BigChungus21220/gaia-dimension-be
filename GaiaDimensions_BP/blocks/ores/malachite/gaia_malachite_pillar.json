@@ -53,12 +53,14 @@
       {
         "condition": "query.block_state('gaia:rotation') == 1",
         "components": {
+          "minecraft:geometry": "minecraft:geometry.full_block",
           "minecraft:transformation": { "rotation": [90, 0, 0] }
         }
       },
       {
         "condition": "query.block_state('gaia:rotation') == 2",
         "components": {
+          "minecraft:geometry": "minecraft:geometry.full_block",
           "minecraft:transformation": { "rotation": [0, 0, 90] }
         }
       }

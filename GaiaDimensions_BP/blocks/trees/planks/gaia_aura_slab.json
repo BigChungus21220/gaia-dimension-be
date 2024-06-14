@@ -57,7 +57,6 @@
 		{
 		  "condition": "query.block_state('gaia:double')",
 		  "components": {
-			"minecraft:unit_cube": {},
 			"minecraft:on_player_destroyed": {
 			  "event": "gaia:double_destroy"
 			}
@@ -88,7 +87,7 @@
 	  },
 	  "events": {
 		"gaia:full_slab": {
-		  "set_block_property": {
+		  "set_block_state": {
 			"gaia:double": true
 		  },
 		  "run_command": {

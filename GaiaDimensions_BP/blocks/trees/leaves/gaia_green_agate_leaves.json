@@ -42,7 +42,6 @@
       "minecraft:destructible_by_explosion": {
         "explosion_resistance": 1
       },
-      "minecraft:unit_cube": {},
 	  "minecraft:light_emission": 15,
       "minecraft:light_dampening": 8,
       "tag:gaia:green_agate_leaves": {},
@@ -76,19 +75,19 @@
 				"sequence": [
 					{
 						"condition": "q.block_state('gaia:not_decay') == false",
-						"set_block_property": {
+						"set_block_state": {
 							"gaia:decay_tier": "(    q.block_neighbor_has_any_tag(0,0,-1,'gaia:green_agate_log') ||    q.block_neighbor_has_any_tag(0,0,1,'gaia:green_agate_log') ||    q.block_neighbor_has_any_tag(-1,0,0,'gaia:green_agate_log') ||    q.block_neighbor_has_any_tag(1,0,0,'gaia:green_agate_log') ||    q.block_neighbor_has_any_tag(0,-1,0,'gaia:green_agate_log') ||    q.block_neighbor_has_any_tag(0,1,0,'gaia:green_agate_log')) ?     6: (    (        q.block_neighbor_has_any_tag(0,0,-1,'gaia:decay_tier_6') ||         q.block_neighbor_has_any_tag(0,0,1,'gaia:decay_tier_6') ||         q.block_neighbor_has_any_tag(-1,0,0,'gaia:decay_tier_6') ||         q.block_neighbor_has_any_tag(1,0,0,'gaia:decay_tier_6') ||         q.block_neighbor_has_any_tag(0,-1,0,'gaia:decay_tier_6') ||         q.block_neighbor_has_any_tag(0,1,0,'gaia:decay_tier_6')    ) ?        5     : (         (            q.block_neighbor_has_any_tag(0,0,-1,'gaia:decay_tier_5') ||             q.block_neighbor_has_any_tag(0,0,1,'gaia:decay_tier_5') ||             q.block_neighbor_has_any_tag(-1,0,0,'gaia:decay_tier_5') ||             q.block_neighbor_has_any_tag(1,0,0,'gaia:decay_tier_5') ||             q.block_neighbor_has_any_tag(0,-1,0,'gaia:decay_tier_5') ||             q.block_neighbor_has_any_tag(0,1,0,'gaia:decay_tier_5')        ) ?            4         : (             (                q.block_neighbor_has_any_tag(0,0,-1,'gaia:decay_tier_4') ||                 q.block_neighbor_has_any_tag(0,0,1,'gaia:decay_tier_4') ||                 q.block_neighbor_has_any_tag(-1,0,0,'gaia:decay_tier_4') ||                 q.block_neighbor_has_any_tag(1,0,0,'gaia:decay_tier_4') ||                 q.block_neighbor_has_any_tag(0,-1,0,'gaia:decay_tier_4') ||                 q.block_neighbor_has_any_tag(0,1,0,'gaia:decay_tier_4')            ) ?                3            : (                (                    q.block_neighbor_has_any_tag(0,0,-1,'gaia:decay_tier_3') ||                     q.block_neighbor_has_any_tag(0,0,1,'gaia:decay_tier_3') ||                     q.block_neighbor_has_any_tag(-1,0,0,'gaia:decay_tier_3') ||                     q.block_neighbor_has_any_tag(1,0,0,'gaia:decay_tier_3') ||                     q.block_neighbor_has_any_tag(0,-1,0,'gaia:decay_tier_3') ||                     q.block_neighbor_has_any_tag(0,1,0,'gaia:decay_tier_3')                ) ?                    2                : (                    (                        q.block_neighbor_has_any_tag(0,0,-1,'gaia:decay_tier_2') ||                         q.block_neighbor_has_any_tag(0,0,1,'gaia:decay_tier_2') ||                         q.block_neighbor_has_any_tag(-1,0,0,'gaia:decay_tier_2') ||                         q.block_neighbor_has_any_tag(1,0,0,'gaia:decay_tier_2') ||                         q.block_neighbor_has_any_tag(0,-1,0,'gaia:decay_tier_2') ||                         q.block_neighbor_has_any_tag(0,1,0,'gaia:decay_tier_2')                    ) ?                        1                    : (                        0                    )                )            )        )     ) )"
 						}
 					},
 					{
-						"set_block_property": {
+						"set_block_state": {
 							"gaia:solid": "q.block_neighbor_has_any_tag(0,0,-1,'gaia:green_agate_log','gaia:green_agate_leaves') && q.block_neighbor_has_any_tag(0,0,1,'gaia:green_agate_log','gaia:green_agate_leaves') && q.block_neighbor_has_any_tag(0,1,0,'gaia:green_agate_log','gaia:green_agate_leaves') && q.block_neighbor_has_any_tag(0,-1,0,'gaia:green_agate_log','gaia:green_agate_leaves') && q.block_neighbor_has_any_tag(-1,0,0,'gaia:green_agate_log','gaia:green_agate_leaves') && q.block_neighbor_has_any_tag(1,0,0,'gaia:green_agate_log','gaia:green_agate_leaves')"
 						}
 					}
 				]
 			},
 			"gaia:stop_decay": {
-				"set_block_property": {
+				"set_block_state": {
 					"gaia:not_decay": true
 				}
 			},

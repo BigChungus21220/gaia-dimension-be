@@ -1,0 +1,24 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "purple_agate_planks_06d7c483"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "B"
+    ],
+    "key": {
+      "B": {
+        "item": "gaia:purple_agate_log",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "gaia:purple_agate_planks",
+      "count": 4
+    }
+  }
+}

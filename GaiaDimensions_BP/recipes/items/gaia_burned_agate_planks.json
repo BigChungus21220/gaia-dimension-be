@@ -1,0 +1,24 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "burned_agate_planks_d19584e1"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "B"
+    ],
+    "key": {
+      "B": {
+        "item": "gaia:burned_agate_log",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "gaia:burned_agate_planks",
+      "count": 4
+    }
+  }
+}

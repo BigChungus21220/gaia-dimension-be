@@ -2,7 +2,7 @@
 	"format_version": "1.20.80",
 	"minecraft:block": {
 		"description": {
-			"identifier": "gaia:green_brick3",
+			"identifier": "gaia:pulsing_malachite_bricks",
 			"menu_category": {
 				"category": "nature",
 				"group": "itemGroup.name.gaia_brick"

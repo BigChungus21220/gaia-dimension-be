@@ -1,0 +1,27 @@
+{
+  "format_version": "1.18.0",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "pyrite_torch:gaia:pyrite_torch"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "abc",
+      "def",
+      "ghi"
+    ],
+    "key": {
+      "b": {
+        "item": "gaia:pyrite"
+      },
+      "e": {
+        "item": "gaia:agate_stick"
+      }
+    },
+    "result": {
+      "item": "gaia:pyrite_torch_item"
+    }
+  }
+}

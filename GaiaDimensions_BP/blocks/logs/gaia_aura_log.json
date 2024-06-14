@@ -80,6 +80,7 @@
       {
         "condition": "query.block_state('gaia:rotation') == 1",
         "components": {
+          "minecraft:geometry": "minecraft:geometry.full_block",
           "minecraft:transformation": { "rotation": [90, 0, 0] },
           "minecraft:on_interact": {
             "condition": "query.equipped_item_any_tag('slot.weapon.mainhand', 'minecraft:is_axe')",
@@ -90,6 +91,7 @@
       {
         "condition": "query.block_state('gaia:rotation') == 2",
         "components": {
+          "minecraft:geometry": "minecraft:geometry.full_block",
           "minecraft:transformation": { "rotation": [0, 0, 90] },
           "minecraft:on_interact": {
             "condition": "query.equipped_item_any_tag('slot.weapon.mainhand', 'minecraft:is_axe')",

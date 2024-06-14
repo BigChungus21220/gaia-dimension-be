@@ -58,7 +58,7 @@
             }
           },
           {
-            "block": "gaia:pulsing_malachite_planks",
+            "block": "gaia:pulsing_malachite_tiles",
             "speed": 2,
             "on_dig": {
               "event": "reduce_durability"
@@ -100,7 +100,7 @@
             }
           },
           {
-            "block": "gaia:green_brick3",
+            "block": "gaia:pulsing_malachite_bricks",
             "speed": 2,
             "on_dig": {
               "event": "reduce_durability"
@@ -170,7 +170,7 @@
             }
           },
           {
-            "block": "gaia:green_planks_stairs",
+            "block": "gaia:malachite_tiles_stairs",
             "speed": 2,
             "on_dig": {
               "event": "reduce_durability"

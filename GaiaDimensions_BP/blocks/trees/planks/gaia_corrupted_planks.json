@@ -21,7 +21,6 @@
           "render_method": "opaque"
         }
       },
-			"minecraft:unit_cube": {},
 			"minecraft:destructible_by_explosion": {
 				"explosion_resistance": 1
 			},

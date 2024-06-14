@@ -1,0 +1,24 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "moonstone_block_abfbd0dd"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "AAA",
+      "AAA",
+      "AAA"
+    ],
+    "key": { "A": {
+      "item": "gaia:moonstone",
+      "data": 0
+    }},
+    "result": {
+      "item": "gaia:moonstone_block",
+      "count": 1
+    }
+  }
+}

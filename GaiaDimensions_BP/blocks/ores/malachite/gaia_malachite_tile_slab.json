@@ -2,7 +2,7 @@
 	"format_version": "1.20.80",
 	"minecraft:block": {
 	  "description": {
-		"identifier": "gaia:green_planks_slab",
+		"identifier": "gaia:malachite_tiles_slab",
 		"menu_category": {
 		  "category": "construction",
 		  "group": "itemGroup.name.slab"
