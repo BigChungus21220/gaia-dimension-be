@@ -40,7 +40,7 @@
               "gaia:charred_grass",
               "gaia:pale_green_glitter_grass",
               "gaia:purple_glitter_grass",
-              "gaia:corrupted_grass",
+              "gaia:corrupt_grass",
               "gaia:soft_grass",
               "gaia:murky_grass",
               "gaia:corrupt_grass",
@@ -66,7 +66,7 @@
     },
     "events": {
       "update_rotation": {
-        "set_block_property": {
+        "set_block_state": {
           "block:rotation": "math.random_integer(0, 3)"
         }
       }

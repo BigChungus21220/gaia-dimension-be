@@ -738,10 +738,6 @@
 "gaia:burning_slab": {
   "sound": "normal"
 },
-"gaia:corrupted_soil": {
-  "textures": "corrupted_soil",
-  "sound": "gravel"
-},
 "gaia:jade_bricks": {
   "textures": "jade_bricks",
   "sound": "normal"

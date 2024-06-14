@@ -11,11 +11,10 @@
 		"components": {
 			"tag:is_shovelable": {},
 			"tag:dirt": {},
-			"minecraft:loot": "loot_tables/blocks/gaia/corrupted_soil.json",
+			"minecraft:loot": "loot_tables/blocks/gaia/corrupt_soil.json",
 			"minecraft:destructible_by_mining": {
 				"seconds_to_destroy": 1
 			},
-			"minecraft:unit_cube": {},
 			"minecraft:light_emission": 9,
 			"minecraft:destructible_by_explosion": {
 				"explosion_resistance": 1

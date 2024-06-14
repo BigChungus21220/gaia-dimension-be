@@ -4,7 +4,7 @@
         "description": {
             "identifier": "gaia:conditions/condition_7388580628"
         },
-        "places_feature": "gaia:gen/gaia_blocks/corrupted_soil",
+        "places_feature": "gaia:gen/gaia_blocks/corrupt_soil",
         "iterations": "t.biome == 'goldstone_lands'",
         "x": 0,
         "z": 0,

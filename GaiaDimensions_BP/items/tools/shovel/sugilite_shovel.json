@@ -45,13 +45,6 @@
         "use_efficiency": true,
         "destroy_speeds": [
           {
-            "block": "gaia:green_soft_grass",
-            "speed": 3,
-            "on_dig": {
-              "event": "reduce_durability"
-            }
-          },
-          {
             "block": "gaia:soft_grass",
             "speed": 3,
             "on_dig": {
@@ -66,7 +59,7 @@
             }
           },
           {
-            "block": "gaia:corrupted_grass",
+            "block": "gaia:corrupt_grass",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"
@@ -80,7 +73,7 @@
             }
           },
           {
-            "block": "gaia:corrupted_soil",
+            "block": "gaia:corrupt_soil",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"

@@ -1,20 +1,20 @@
+//rewrite: add pyrite_torch block
 {
-    "format_version": "1.16.100",
-    "minecraft:item": {
-        "description": {
-            "identifier": "gaia:pyrite_torch_item",
-            "category": "items"
-        },
-        "components": {
-            "minecraft:block_placer": {
-                "block": "gaia:pyrite_torch"
-            },
-            "minecraft:creative_category": {
-                "parent": "items"
-            },
-            "minecraft:icon": {
-                "texture": "pyrite_torch"
-            }
-        }
-    }
+	"format_version": "1.20.50",
+	"minecraft:item": {
+		"description": {
+			"identifier": "gaia:pyrite_torch_item",
+			"menu_category": {
+				"category": "Items"
+			}
+		},
+		"components": {
+            // "minecraft:block_placer": {
+            //     "block": "gaia:pyrite_torch"
+            // },
+			"minecraft:icon": {
+				"texture": "pyrite_torch"
+			}
+		}
+	}
 }

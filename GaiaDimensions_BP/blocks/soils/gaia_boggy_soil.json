@@ -15,7 +15,6 @@
 			"minecraft:destructible_by_mining": {
 				"seconds_to_destroy": 1
 			},
-			"minecraft:unit_cube": {},
 			"minecraft:light_emission": 10,
 			"minecraft:destructible_by_explosion": {
 				"explosion_resistance": 1

@@ -18,8 +18,7 @@
           "texture": "gaia_bedrock",
           "render_method": "opaque"
         }
-      },
-      "minecraft:unit_cube": {}
+      }
     }
   }
 }

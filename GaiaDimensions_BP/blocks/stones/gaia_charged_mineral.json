@@ -17,7 +17,6 @@
 			},
       "minecraft:light_emission": 10,
 		
-			"minecraft:unit_cube": {},
 			"minecraft:destructible_by_explosion": {
 				"explosion_resistance": 1
 			},

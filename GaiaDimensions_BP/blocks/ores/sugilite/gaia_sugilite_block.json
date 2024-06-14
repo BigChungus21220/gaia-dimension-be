@@ -17,7 +17,6 @@
 				"seconds_to_destroy": 2
 			},
 		
-			"minecraft:unit_cube": {},
 			"minecraft:destructible_by_explosion": {
 				"explosion_resistance": 1
 			},
