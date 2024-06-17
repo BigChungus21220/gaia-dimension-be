@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:brick1_stairs",
+          "name": "gaia:chiseled_malachite_bricks_stairs",
           "functions": [
             {
               "function": "set_count",

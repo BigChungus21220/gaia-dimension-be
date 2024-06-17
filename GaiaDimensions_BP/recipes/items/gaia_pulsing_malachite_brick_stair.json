@@ -2,7 +2,7 @@
   "format_version": "1.12",
   "minecraft:recipe_shaped": {
     "description": {
-      "identifier": "pulsing_malachite_brick_stair_68c39bc6"
+      "identifier": "pulsing_malachite_bricks_stairs_68c39bc6"
     },
     "tags": [
       "crafting_table"
@@ -19,7 +19,7 @@
       }
     },
     "result": {
-      "item": "gaia:green_stairs",
+      "item": "gaia:pulsing_malachite_bricks_stairs",
       "count": 8
     }
   }

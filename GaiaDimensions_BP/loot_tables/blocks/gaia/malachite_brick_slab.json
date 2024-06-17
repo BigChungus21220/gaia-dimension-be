@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:brick2_slab",
+          "name": "gaia:malachite_bricks_slab",
           "functions": [
             {
               "function": "set_count",

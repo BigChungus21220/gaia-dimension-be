@@ -12,12 +12,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:brick3",
+        "item": "gaia:pulsing_chiseled_malachite_bricks",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:brick3_slab",
+      "item": "gaia:pulsing_chiseled_malachite_bricks_slab",
       "count": 1
     }
   }

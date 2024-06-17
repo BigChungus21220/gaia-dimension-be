@@ -14,12 +14,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:pillar1",
+        "item": "gaia:malachite_pillar",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:pillar1_stairs",
+      "item": "gaia:malachite_pillar_stairs",
       "count": 8
     }
   }

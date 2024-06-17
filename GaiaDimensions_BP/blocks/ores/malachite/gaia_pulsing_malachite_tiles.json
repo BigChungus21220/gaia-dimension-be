@@ -16,7 +16,6 @@
 				"seconds_to_destroy": 1
 			},
 		
-			"minecraft:display_name": "Pulsing Malachite Tiles",
 			"minecraft:destructible_by_explosion": {
 				"explosion_resistance": 1
 			},

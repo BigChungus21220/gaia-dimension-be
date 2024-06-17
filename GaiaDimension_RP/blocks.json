@@ -776,8 +776,12 @@
   "textures": "foggy_glass",
   "sound": "glass"
 },
-"gaia:brick2": {
+"gaia:malachite_bricks": {
   "textures": "malachite_bricks",
+  "sound": "normal"
+},
+"gaia:malachite_planks": {
+  "textures": "malachite_planks",
   "sound": "normal"
 },
 "gaia:amethyst_slab": {
@@ -999,13 +1003,13 @@
 "gaia:crusted_amethyst_brick_stair": {
   "sound": "stone"
 },
-"gaia:crusted_malachite_brick_stair": {
+"gaia:crusted_malachite_bricks_stairs": {
   "sound": "stone"
 },
 "gaia:crusted_amethyst_brick_slab": {
   "sound": "stone"
 },
-"gaia:crusted_malachite_brick_slab": {
+"gaia:crusted_malachite_bricks_slab": {
   "sound": "stone"
 },
 "gaia:crusted_gaia_brick_slab": {
@@ -1080,63 +1084,63 @@
   "textures": "goldstone_block",
   "sound": "normal"
 },
-"gaia:brick2_stairs": {
+"gaia:malachite_bricks_stairs": {
   "sound": "stone"
 },
 "gaia:malachite_tiles_stairs": {
   "sound": "stone"
-},
-"gaia:brick1_slab": {
+},//
+"gaia:chiseled_malachite_bricks_slab": {
   "sound": "stone"
 },
-"gaia:brick2_slab": {
+"gaia:malachite_bricks_slab": {
   "sound": "stone"
 },
-"gaia:cracked_malachite_brick_slab": {
+"gaia:cracked_malachite_bricks_slab": {
   "sound": "stone"
 },
 "gaia:cracked_malachite_bricks": {
   "textures": "malachite_cracked_bricks",
   "sound": "normal"
 },
-"gaia:brick1_stairs": {
+"gaia:chiseled_malachite_bricks_stairs": {
   "sound": "stone"
 },
 "gaia:pulsing_malachite_bricks": {
   "textures": "pulsing_malachite_bricks",
   "sound": "stone"
 },
-"gaia:cracked_malachite_brick_stair": {
+"gaia:cracked_malachite_bricks_stairs": {
   "sound": "stone"
 },
-"gaia:brick1": {
-  "textures": "malachite_chisel_bricks",
+"gaia:chiseled_malachite_bricks": {
+  "textures": "chiseled_malachite_bricks",
   "sound": "normal"
 },
-"gaia:brick3_slab": {
+"gaia:pulsing_chiseled_malachite_bricks_slab": {
   "sound": "stone"
 },
-"gaia:brick3": {
+"gaia:pulsing_chiseled_malachite_bricks": {
   "textures": "pulsing_chiseled_malachite_brick",
   "sound": "normal"
 },
-"gaia:green_stairs": {
+"gaia:pulsing_malachite_bricks_stairs": {
   "sound": "stone"
 },
 "gaia:pulsing_malachite_tiles": {
   "textures": "pulsing_malachite_tiles",
   "sound": "normal"
 },
-"gaia:pillar1_stairs": {
+"gaia:malachite_pillar_stairs": {
   "sound": "normal"
 },
-"gaia:brick3_stairs": {
+"gaia:pulsing_chiseled_malachite_bricks_stairs": {
   "sound": "stone"
-},/* unused
-"gaia:pulsing_malachite_tile_stair": {
+},
+"gaia:pulsing_malachite_tiles_stairs": {
   "sound": "stone"
-},*/
-"gaia:pillar1": {
+},
+"gaia:malachite_pillar": {
   "textures": {
     "up": "malachite_pillar_end",
     "down": "malachite_pillar_end",
@@ -1174,11 +1178,6 @@
 "gaia:keystone_block": {
   "textures": "keystone_block",
   "sound": "basalt"
-},/* unused
-"gaia:malachite_tiles3": {
-  "textures":"pulsing_chiselled_malachite_tiles"
-},*/
-"gaia:pulsing_malachite_tile_stair":{"textures":"pulsing_chiselled_malachite_tiles"
 },
 "gaia:burning_planks" : {
   "sound" : "glass",

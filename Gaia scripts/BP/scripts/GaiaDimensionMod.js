@@ -4,7 +4,7 @@ import './AllBlocks.js';
 import './GaiaTeleporter.js';
 import './tickEvents.js'
 import './Ignition.js';
-import "./blocks/place.js";
+//import "./blocks/place.js"; //not found
 import "./fluids/fluids.js";
 import "./world/Biome.js";
 import "./world/Fog.js";

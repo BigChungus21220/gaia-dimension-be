@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:pulsing_malachite_tile_stair",
+          "name": "gaia:pulsing_malachite_tiles_stairs",
           "functions": [
             {
               "function": "set_count",

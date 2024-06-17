@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:cracked_malachite_brick",
+          "name": "gaia:cracked_malachite_bricks",
           "functions": [
             {
               "function": "set_count",

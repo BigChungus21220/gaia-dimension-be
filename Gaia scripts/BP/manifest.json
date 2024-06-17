@@ -1,0 +1,31 @@
+{
+  "format_version": 2,
+  "metadata": {
+    "license": "GNU",
+    "url": "https://github.com/BigChungus21220/gaia-dimension-be"
+  },
+  "header": {
+    "name": "Gaia Dimension Scripts",
+    "description": "separated from the main pack to make debugging faster",
+    "uuid": "cbe6e87c-d4bc-4986-9241-0f872c1f4d32",
+    "version": [1, 0, 0],
+    "min_engine_version": [1, 20, 30]
+  },
+  "modules": [
+    {
+      "description": "JS",
+      "type": "script",
+      "language": "javascript",
+      "uuid": "1eee9b4c-0dce-41ce-869f-0de89fa98c6a",
+      "version": [1, 1, 0],
+      "entry": "scripts/GaiaDimensionMod.js"
+    }
+  ],
+  "capabilities": ["script_eval"],
+  "dependencies": [
+    {
+      "module_name": "@minecraft/server",
+      "version": "1.12.0-beta"
+    }
+  ]
+}

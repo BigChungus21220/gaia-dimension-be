@@ -45,14 +45,14 @@
         "use_efficiency": true,
         "destroy_speeds": [
           {
-            "block": "gaia:pillar1_stairs",
+            "block": "gaia:malachite_pillar_stairs",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:pillar1",
+            "block": "gaia:malachite_pillar",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"
@@ -66,35 +66,35 @@
             }
           },
           {
-            "block": "gaia:pulsing_malachite_tile_stair",
+            "block": "gaia:pulsing_malachite_tiles_stairs",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:green_stairs",
+            "block": "gaia:pulsing_malachite_bricks_stairs",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:brick3_stairs",
+            "block": "gaia:pulsing_chiseled_malachite_bricks_stairs",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:brick3",
+            "block": "gaia:pulsing_chiseled_malachite_bricks",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:brick3_slab",
+            "block": "gaia:pulsing_chiseled_malachite_bricks_slab",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"
@@ -108,28 +108,28 @@
             }
           },
           {
-            "block": "gaia:brick1",
+            "block": "gaia:chiseled_malachite_bricks",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:brick1_slab",
+            "block": "gaia:chiseled_malachite_bricks_slab",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:brick1_stairs",
+            "block": "gaia:chiseled_malachite_bricks_stairs",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:cracked_malachite_brick",
+            "block": "gaia:cracked_malachite_bricks",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"
@@ -150,14 +150,14 @@
             }
           },
           {
-            "block": "gaia:brick2_slab",
+            "block": "gaia:malachite_bricks_slab",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:brick2_stairs",
+            "block": "gaia:malachite_bricks_stairs",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"
@@ -339,14 +339,14 @@
             }
           },
           {
-            "block": "gaia:crusted_malachite_brick_stair",
+            "block": "gaia:crusted_malachite_bricks_stairs",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:crusted_malachite_brick_slab",
+            "block": "gaia:crusted_malachite_bricks_slab",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"
@@ -451,7 +451,7 @@
             }
           },
           {
-            "block": "gaia:cracked_jet_brick",
+            "block": "gaia:cracked_jet_bricks",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"
@@ -738,7 +738,7 @@
             }
           },
           {
-            "block": "gaia:brick2",
+            "block": "gaia:malachite_bricks",
             "speed": 3,
             "on_dig": {
               "event": "reduce_durability"

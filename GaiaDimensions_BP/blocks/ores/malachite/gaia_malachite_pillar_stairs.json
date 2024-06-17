@@ -1,8 +1,8 @@
 {
-	"format_version": "1.20",
+	"format_version": "1.20.80",
 	"minecraft:block": {
 		"description": {
-			"identifier": "gaia:brick3_stairs",
+			"identifier": "gaia:malachite_pillar_stairs",
 			"menu_category": {
 				"category": "construction",
 				"group": "itemGroup.name.stairs"
@@ -63,11 +63,11 @@
 			},
 			"minecraft:material_instances": {
 				"*": {
-					"texture": "pulsing_chiseled_malachite_brick",
+					"texture": "malachite_pillar_side",
 					"render_method": "opaque"
 				}
 			},
-			"minecraft:loot": "loot_tables/blocks/gaia/pulsing_chiseled_malachite_brick_stair",	
+			"minecraft:loot": "loot_tables/blocks/gaia/malachite_pillar_stairs.json",	
 			"minecraft:destructible_by_explosion": true,
 			"minecraft:breathability": "air",
 			"tag:wood": {},

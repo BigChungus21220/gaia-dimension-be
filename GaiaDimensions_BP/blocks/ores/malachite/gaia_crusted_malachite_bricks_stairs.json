@@ -1,8 +1,8 @@
 {
-	"format_version": "1.20",
+	"format_version": "1.20.80",
 	"minecraft:block": {
 		"description": {
-			"identifier": "gaia:pulsing_malachite_tile_stair",
+			"identifier": "gaia:crusted_malachite_bricks_stairs",
 			"menu_category": {
 				"category": "construction",
 				"group": "itemGroup.name.stairs"
@@ -52,6 +52,7 @@
 			"minecraft:destructible_by_mining": {
 				"seconds_to_destroy": 0.5
 			},
+			 
 			"minecraft:collision_box": {
 				"origin": [-8, 0, -8],
 				"size": [16, 8, 16]
@@ -62,11 +63,11 @@
 			},
 			"minecraft:material_instances": {
 				"*": {
-					"texture": "malachite_floor_tiles",
+					"texture": "malachite_crusted_bricks",
 					"render_method": "opaque"
 				}
 			},
-			"minecraft:loot": "loot_tables/blocks/gaia/pulsing_malachite_tiles_stair.json",	
+			"minecraft:loot": "loot_tables/blocks/gaia/crusted_malachite_bricks_stairs",	
 			"minecraft:destructible_by_explosion": true,
 			"minecraft:breathability": "air",
 			"tag:wood": {},

@@ -126,7 +126,7 @@ class MiniChunk {
       this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: endstone })
       this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: bedrock })
       this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: gateway })
-    } catch(e){throw new Error("Failed clearing at position { x:"+this.x * size+", y:"+this.y * ysize+", z:"+this.z * size+" }")}
+    } catch(e){null /*throw new Error("Failed clearing at position { x:"+this.x * size+", y:"+this.y * ysize+", z:"+this.z * size+" }")*/}
   }
 }
 /**
@@ -165,7 +165,7 @@ let data = DB.getAll();
 const Q = new TaskQueue();
 Q.run(30);
 
-console.warn("Terrain Interpolator loaded sucessfully")
+//console.warn("Terrain Interpolator loaded sucessfully")
 const main = () => {
   for (const p of Gaia.getPlayers()) {
     //feel free to change
@@ -195,7 +195,7 @@ const main = () => {
         }
       }
     };
-    Q.push(() => console.warn("Clearing Done"))
+    Q.push(() => null/*console.warn("Clearing Done")*/)
     DB.setAll(data);
   }
 }
@@ -206,8 +206,8 @@ var startTime = new Date();
 system.runInterval(() => {
   ticksPerSecond = 150000 / (new Date() - startTime);
   startTime = new Date();
-  console.warn("TPS: "+ticksPerSecond);
-  console.warn("Count of dynProps: " + DB.count);
+  // console.warn("TPS: "+ticksPerSecond);
+  // console.warn("Count of dynProps: " + DB.count);
   if (ticksPerSecond > 20.15) {
     Q.stop();
     Q.run(Q.runCount+1)
@@ -215,9 +215,9 @@ system.runInterval(() => {
     Q.stop();
     Q.run(Q.runCount-1)
   };
-  console.warn("Total byte size of dynprops (not only my ones): "+world.getDynamicPropertyTotalByteCount())
-  console.warn(JSON.stringify(world.getDynamicPropertyIds().filter((value)=>value.startsWith(DB.prefix))))
-  console.warn("Operations per tick: " + Q.runCount);
+  // console.warn("Total byte size of dynprops (not only my ones): "+world.getDynamicPropertyTotalByteCount())
+  // console.warn(JSON.stringify(world.getDynamicPropertyIds().filter((value)=>value.startsWith(DB.prefix))))
+  // console.warn("Operations per tick: " + Q.runCount);
   DB.setAll(data);
 }, 149)
 

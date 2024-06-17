@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:pillar1_stairs",
+          "name": "gaia:malachite_pillar_stairs",
           "functions": [
             {
               "function": "set_count",
