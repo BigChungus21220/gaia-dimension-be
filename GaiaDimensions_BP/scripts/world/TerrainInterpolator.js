@@ -1,3 +1,12 @@
+//* *//
+//Прощай, старый друг
+//Прощавай, старий друг
+//* Спасибо тебе, добрый друг, за то, что был с нами в студии, мы тебя любим на земле и на небесах
+//* Дякуємо тобі, добрий друже, за те, що був з нами в студії, ми тебе любимо на землі і на небі
+// We will never forget you Error404
+//* *//
+// The stars will remember your name
+// Code was made by Error404
 import { BlockPermutation, system, world } from "@minecraft/server";
 import Gaia from "./Gaia";
 import { the_end } from "../utils";

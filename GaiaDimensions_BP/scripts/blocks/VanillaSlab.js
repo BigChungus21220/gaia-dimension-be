@@ -3,7 +3,7 @@ import { world, ItemStack } from '@minecraft/server';
 //Template from Kaioga Block Repository
 // Subscribe to the 'worldInitialize' event to register custom components
 world.beforeEvents.worldInitialize.subscribe(eventData => {
-    // Register a custom component named kai:on_interact for slab interaction 
+    // Register a custom component for slab interaction 
     eventData.blockTypeRegistry.registerCustomComponent('block:slab', {
         // Define the behavior when a player interacts with the slab
         onPlayerInteract(e) {
