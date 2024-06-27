@@ -2,7 +2,7 @@
 	"format_version": "1.20.80",
 	"minecraft:block": {
 	  "description": {
-		"identifier": "gaia:brick1_slab",
+		"identifier": "gaia:pulsing_chiseled_malachite_bricks_slab",
 		"menu_category": {
 		  "category": "construction",
 		  "group": "itemGroup.name.slab"
@@ -80,7 +80,7 @@
 	  "minecraft:custom_components": ["block:slab"], 
 		"minecraft:material_instances": {
 		  "*": {
-			"texture": "malachite_chisel_bricks",
+			"texture": "pulsing_chiseled_malachite_brick",
 			"render_method": "opaque"
 		  }
 		}

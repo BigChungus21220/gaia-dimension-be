@@ -2,7 +2,7 @@
   "format_version": "1.20.80",
   "minecraft:block": {
     "description": {
-      "identifier": "gaia:pillar1",
+      "identifier": "gaia:malachite_pillar",
       "menu_category": {
         "category": "nature",
         "group": "itemGroup.name.log"

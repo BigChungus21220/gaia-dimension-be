@@ -2,7 +2,7 @@
 	"format_version": "1.20.80",
 	"minecraft:block": {
 	  "description": {
-		"identifier": "gaia:crusted_malachite_brick_slab",
+		"identifier": "gaia:crusted_malachite_bricks_slab",
 		"menu_category": {
 		  "category": "construction",
 		  "group": "itemGroup.name.slab"
@@ -80,7 +80,7 @@
 	  "minecraft:custom_components": ["block:slab"], 
 		"minecraft:material_instances": {
 		  "*": {
-			"texture": "crusted_jet_brick",
+			"texture": "malachite_crusted_brick",
 			"render_method": "opaque"
 		  }
 		}

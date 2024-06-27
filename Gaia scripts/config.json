@@ -1,0 +1,21 @@
+{
+	"$schema": "https://raw.githubusercontent.com/Bedrock-OSS/regolith-schemas/main/config/v1.1.json",
+	"author": "",
+	"name": "gaia_scripts",
+	"packs": {
+		"behaviorPack": "./BP"
+	},
+	"regolith": {
+		"dataPath": "./.regolith/data",
+		"filterDefinitions": {},
+		"profiles": {
+			"default": {
+				"export": {
+					"readOnly": false,
+					"target": "development"
+				},
+				"filters": []
+			}
+		}
+	}
+}

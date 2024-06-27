@@ -2,7 +2,7 @@
 	"format_version": "1.20.80",
 	"minecraft:block": {
 		"description": {
-			"identifier": "gaia:green_planks3",
+			"identifier": "gaia:pulsing_malachite_planks",
 			"menu_category": {
 				"category": "nature",
 				"group": "itemGroup.name.gaia_brick"
@@ -16,7 +16,6 @@
 				"seconds_to_destroy": 1
 			},
 		
-			"minecraft:display_name": "Pulsing Malachite Tiles",
 			"minecraft:destructible_by_explosion": {
 				"explosion_resistance": 1
 			},

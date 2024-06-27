@@ -14,12 +14,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:brick1",
+        "item": "gaia:chiseled_malachite_bricks",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:brick1_stairs",
+      "item": "gaia:chiseled_malachite_bricks_stairs",
       "count": 8
     }
   }

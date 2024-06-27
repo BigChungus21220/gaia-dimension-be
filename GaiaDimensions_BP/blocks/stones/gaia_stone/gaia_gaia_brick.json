@@ -18,14 +18,7 @@
 		
 			"minecraft:destructible_by_explosion": {
 				"explosion_resistance": 1
-			},
-      "minecraft:material_instances": {
-        "*": {
-          "texture": "gaia_stone_bricks",
-          "render_method": "opaque",
-			"minecraft:map_color": "#ffffff"
+			}
 		}
-	}
-}
-  }
+  	}
 }

@@ -12,7 +12,6 @@
 			"tag:brick": {},
 			"tag:stone": {},
 			"minecraft:loot": "loot_tables/blocks/empty.json",
-			"minecraft:display_name": "Cracked Gaia Stone Bricks",
 			"minecraft:destructible_by_mining": {
 				"seconds_to_destroy": 1
 			},

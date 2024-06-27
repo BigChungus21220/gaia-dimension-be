@@ -2,7 +2,7 @@
 	"format_version": "1.20.80",
 	"minecraft:block": {
 		"description": {
-			"identifier": "gaia:cracked_malachite_brick_stair",
+			"identifier": "gaia:cracked_malachite_bricks_stairs",
 			"menu_category": {
 				"category": "construction",
 				"group": "itemGroup.name.stairs"

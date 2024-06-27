@@ -647,7 +647,7 @@
     "malachite_cracked_brick": {
       "textures": "textures/blocks/malachite_cracked_bricks"
     },
-    "malachite_chisel_brick": {
+    "chiseled_malachite_bricks": {
       "textures": "textures/blocks/malachite_chisel_bricks"
     },
     "malachite_pillar_end": {

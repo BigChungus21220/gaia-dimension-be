@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:cracked_jet_brick",
+          "name": "gaia:cracked_jet_bricks",
           "functions": [
             {
               "function": "set_count",

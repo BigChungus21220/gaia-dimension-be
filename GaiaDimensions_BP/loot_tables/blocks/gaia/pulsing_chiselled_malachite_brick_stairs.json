@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:brick3_stairs",
+          "name": "gaia:pulsing_chiseled_malachite_bricks_stairs",
           "functions": [
             {
               "function": "set_count",

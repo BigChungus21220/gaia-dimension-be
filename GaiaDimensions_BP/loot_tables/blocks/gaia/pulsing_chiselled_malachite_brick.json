@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:brick3",
+          "name": "gaia:pulsing_chiseled_malachite_bricks",
           "functions": [
             {
               "function": "set_count",

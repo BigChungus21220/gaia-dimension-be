@@ -12,12 +12,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:brick2",
+        "item": "gaia:malachite_bricks",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:brick2_slab",
+      "item": "gaia:malachite_bricks_slab",
       "count": 6
     }
   }

@@ -21,7 +21,7 @@
               }
             }
           ],
-          "name": "gaia:brick2"
+          "name": "gaia:malachite_bricks"
         },
         {
           "type": "minecraft:item",
@@ -51,7 +51,7 @@
               }
             }
           ],
-          "name": "gaia:pillar1"
+          "name": "gaia:malachite_pillar"
         },
         {
           "type": "minecraft:item",

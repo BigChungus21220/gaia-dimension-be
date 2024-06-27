@@ -11,25 +11,18 @@
     "version": [1, 0, 0],
     "min_engine_version": [1, 20, 30]
   },
-  "modules": [
-    {
-      "description": "JS",
-      "type": "script",
-      "language": "javascript",
-      "uuid": "1eee9b4c-0dce-41ce-869f-0de89fa98c6a",
-      "version": [1, 1, 0],
-      "entry": "scripts/none.js"
-    }
-  ],
+    "modules": [
+        {
+            "type": "data",
+            "uuid": "047cbae1-5f94-4bc7-9c07-57c67e2aebb3",
+            "version": [1, 0, 0]
+        }
+    ],
   "capabilities": ["script_eval"],
   "dependencies": [
     {
       "uuid": "40be5674-757f-4633-8284-4bf164c65808",
       "version": [1, 0, 0]
-    }/*,
-    {
-      "module_name": "@minecraft/server",
-      "version": "1.11.0"
-    }*/
+    }
   ]
 }

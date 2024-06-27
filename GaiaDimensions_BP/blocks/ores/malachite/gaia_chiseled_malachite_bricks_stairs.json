@@ -2,7 +2,7 @@
 	"format_version": "1.20.80",
 	"minecraft:block": {
 		"description": {
-			"identifier": "gaia:brick2_stairs",
+			"identifier": "gaia:chiseled_malachite_bricks_stairs",
 			"menu_category": {
 				"category": "construction",
 				"group": "itemGroup.name.stairs"
@@ -63,11 +63,11 @@
 			},
 			"minecraft:material_instances": {
 				"*": {
-					"texture": "malachite_bricks",
+					"texture": "malachite_chisel_bricks",
 					"render_method": "opaque"
 				}
 			},
-			"minecraft:loot": "loot_tables/blocks/gaia/malachite_brick_stairs",	
+			"minecraft:loot": "loot_tables/blocks/gaia/chiseled_malachite_brick_stairs",	
 			"minecraft:destructible_by_explosion": true,
 			"minecraft:breathability": "air",
 			"tag:wood": {},

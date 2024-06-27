@@ -2,7 +2,7 @@
 	"format_version": "1.20.80",
 	"minecraft:block": {
 		"description": {
-			"identifier": "gaia:green_stairs",
+			"identifier": "gaia:malachite_bricks_stairs",
 			"menu_category": {
 				"category": "construction",
 				"group": "itemGroup.name.stairs"
@@ -63,11 +63,11 @@
 			},
 			"minecraft:material_instances": {
 				"*": {
-					"texture": "pulsing_malachite_bricks",
+					"texture": "malachite_bricks",
 					"render_method": "opaque"
 				}
 			},
-			"minecraft:loot": "loot_tables/blocks/gaia/pulsing_malachite_brick_stair.json",	
+			"minecraft:loot": "loot_tables/blocks/gaia/malachite_brick_stairs",	
 			"minecraft:destructible_by_explosion": true,
 			"minecraft:breathability": "air",
 			"tag:wood": {},

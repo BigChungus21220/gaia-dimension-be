@@ -2,7 +2,7 @@
 	"format_version": "1.20.80",
 	"minecraft:block": {
 		"description": {
-			"identifier": "gaia:brick3",
+			"identifier": "gaia:chiseled_malachite_bricks",
 			"menu_category": {
 				"category": "nature",
 				"group": "itemGroup.name.gaia_brick"
@@ -21,17 +21,17 @@
 			},
       "minecraft:material_instances": {
         "*": {
-          "texture": "pulsing_chiselled_malachite_brick",
+          "texture": "malachite_chisel_bricks",
           "render_method": "opaque"
 		}
-	}
+  }
 },
 		"events": {
 			"destroy": {
 				"spawn_loot": {
-					"table": "loot_tables/blocks/gaia/pulsing_chiselled_malachite_brick.json"
+					"table": "loot_tables/blocks/gaia/chiseled_malachite_bricks.json"
 				}
 			}
 		}
-	}
+  }
 }
