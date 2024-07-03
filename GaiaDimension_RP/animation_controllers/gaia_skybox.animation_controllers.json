@@ -1,56 +1,31 @@
 {
 	"format_version" : "1.10.0",
 	"animation_controllers" : {
-		"controller.animation.gaia_sky.planet" : {
+		"controller.animation.gaia_sky.rendering" : {
 			"initial_state" : "default",
 			"states" : {
 				"default" : {
 					"transitions" : [
 						{
-							"spawn" : "q.is_local_player && !q.is_in_ui &&  q.property(gaia:in_gaia)"
-						}
-					]
-				},
-				"spawn" : {
-					"animations": ["one_second_timer"],
-					"particle_effects": [
-						{
-						  	"effect": "gaia_planet"
-						}
-					],
-					"transitions" : [
-						{
-							"default" : "q.any_animation_finished"
-						}
-					]
-				}
-			}
-		},
-		"controller.animation.gaia_sky.cloud" : {
-			"initial_state" : "default",
-			"states" : {
-				"default" : {
-					"transitions" : [
-						{
-							"spawn0" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 0 &&  q.property(gaia:in_gaia)"
+							"spawn0" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 0 &&  q.property(inGaia)"
 						},
 						{
-							"spawn1" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 1 &&  q.property(gaia:in_gaia)"
+							"spawn1" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 1 &&  q.property(inGaia)"
 						},
 						{
-							"spawn2" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 2 &&  q.property(gaia:in_gaia)"
+							"spawn2" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 2 &&  q.property(inGaia)"
 						},
 						{
-							"spawn3" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 3 &&  q.property(gaia:in_gaia)"
+							"spawn3" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 3 &&  q.property(inGaia)"
 						},
 						{
-							"spawn4" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 4 &&  q.property(gaia:in_gaia)"
+							"spawn4" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 4 &&  q.property(inGaia)"
 						},
 						{
-							"spawn5" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 5 &&  q.property(gaia:in_gaia)"
+							"spawn5" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 5 &&  q.property(inGaia)"
 						},
 						{
-							"spawn6" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 6 &&  q.property(gaia:in_gaia)"
+							"spawn6" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 6 &&  q.property(inGaia)"
 						}
 					]
 				},
