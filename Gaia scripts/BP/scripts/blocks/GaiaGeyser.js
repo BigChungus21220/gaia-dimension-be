@@ -1,6 +1,7 @@
 import { system } from "@minecraft/server";
 import { vec3 } from '../Vec3.js';
 
+
 //applies velocity to entities that stand on an active geyser for duration ticks
 function push_entities(dimension, spawn_pos, duration) {
     let t = 0;
