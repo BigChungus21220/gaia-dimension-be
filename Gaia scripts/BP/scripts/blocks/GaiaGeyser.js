@@ -1,8 +1,9 @@
-import { system } from "@minecraft/server";
-import {Vec3} from '../Vec3.js';
+import { system, world } from "@minecraft/server";
+import { delay } from '../utils.js';
+import { Vec3 } from '../Vec3.js';
 
 //applies velocity to entities that stand on an active geyser for duration ticks
-export function push_entities(dimension, spawn_pos, duration) {
+ function push_entities(dimension, spawn_pos, duration) {
     let t = 0;
     const determinant_y = spawn_pos.y - 0.5;
     let tickdelay = 4; //how often to repeat
@@ -34,3 +35,20 @@ export function push_entities(dimension, spawn_pos, duration) {
     }, tickdelay);
 }
 
+//blast entities using the geyser
+world.beforeEvents.worldInitialize.subscribe(eventData => {
+    eventData.blockTypeRegistry.registerCustomComponent('gaia:geyser', {
+        async onStepOn(e) {
+            let block = e;
+            let dimension = block.dimension;
+            let spawn_pos = Vec3.add(block.location,Vec3(0.5, 1.1, 0.5))
+            dimension.getPlayers().forEach((e) => { e.playSound("geyser.blast", { location: spawn_pos }) });
+            await delay(10);
+            push_entities(dimension, spawn_pos, 120); //start blasting entities
+            dimension.spawnParticle("gaia:geyser_pre_steam", spawn_pos);
+            await delay(20);
+            dimension.spawnParticle("gaia:geyser_steam", spawn_pos);
+            dimension.spawnParticle("gaia:geyser_blast", spawn_pos);
+    
+        }
+    })});
