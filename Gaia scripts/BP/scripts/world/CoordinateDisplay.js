@@ -1,51 +1,65 @@
-import { vec3 } from "../Vec3";
+import { Vec3 } from "../Vec3";
 import { MathRound as round } from "../utils";
 
 export class CoordinateDisplay {
-    static locationMap = new Map();
+    static #locationMap = new Map();
 
     constructor(player) {
         this.player = player;
     }
 
-    setCoordinate(coordString) {
-        this.player.onScreenDisplay.setActionBar(coordString);
-    }
-
     static adjustCoordinates(x, z) {
-        const adjustedX = round((x - 100000) / 1000);
-        const adjustedZ = round((z - 100000) / 1000);
-        return { adjustedX, adjustedZ };
+        return {
+            adjustedX: Math.floor((x - 100000) / 1000),
+            adjustedZ: Math.floor((z - 100000) / 1000)
+        };
     }
 
     updateCoordinates() {
-        const { location, name } = this.player;
-        const { locationMap } = CoordinateDisplay;
+        const { name, location } = this.player;
+        const locationMap = CoordinateDisplay.#locationMap;
 
-        const prevLocation = locationMap.get(name)?.current || { x: 0, z: 0 };
+        // Retrieve previous location or initialize with current location
+        const prevLocation = locationMap.get(name)?.current || Vec3.round(location);
 
-        const deltaX = location.x - prevLocation.x;
-        const deltaZ = location.z - prevLocation.z;
+        // Determine movement direction and adjust coordinates
+        let adjustedX = 0;
+        let adjustedZ = 0;
 
-        const { adjustedX, adjustedZ } = CoordinateDisplay.adjustCoordinates(deltaX, deltaZ);
-
-        if (!locationMap.has(name)) {
-            const { adjustedX: newX, adjustedZ: newZ } = CoordinateDisplay.adjustCoordinates(location.x, location.z);
-            const calculatedVector = vec3(newX + adjustedX, location.y, newZ + adjustedZ).round();
-            locationMap.set(name, { current: calculatedVector });
-        } else {
-            if (adjustedX !== 0 || adjustedZ !== 0) {
-                const current = locationMap.get(name).current || { x: 0, z: 0 };
-                const movementX = current.x + (adjustedX > 0 ? 1 : -1);
-                const movementZ = current.z + (adjustedZ > 0 ? 1 : -1);
-                locationMap.set(name, { current: vec3(movementX, location.y, movementZ).round() });
-            }
+        if (location.x > prevLocation.x) {
+            adjustedX = 1; // Move forward in x direction
+        } else if (location.x < prevLocation.x) {
+            adjustedX = -1; // Move backward in x direction
         }
 
+        if (location.z > prevLocation.z) {
+            adjustedZ = 1; // Move forward in z direction
+        } else if (location.z < prevLocation.z) {
+            adjustedZ = -1; // Move backward in z direction
+        }
+
+        // Update coordinates based on adjustments
+        let current = { ...prevLocation };
+        current.x += adjustedX;
+        current.z += adjustedZ;
+        current.y = location.y; // Update y-coordinate
+
+        locationMap.set(name, { current: Vec3.round(current) });
+
+        // Retrieve current location data
         const currentLocation = locationMap.get(name)?.current;
 
-        const isNonNumerical = isNaN(currentLocation?.x) && isNaN(currentLocation?.z);
-        const coordString = isNonNumerical ? "Loading Coordinates..." : `x: ${currentLocation.x} y: ${currentLocation.y} z: ${currentLocation.z}`;
-        return coordString;
+        // Prepare coordinate string for display
+        const coordString = isNaN(currentLocation?.x) || isNaN(currentLocation?.z)
+            ? "Loading Coordinates..."
+            : `x: ${currentLocation.x} y: ${currentLocation.y} z: ${currentLocation.z}`;
+
+        // Update player display with coordinates
+        this.player.onScreenDisplay.setActionBar(coordString);
+    }
+
+    get coord() {
+        const currentLocation = CoordinateDisplay.#locationMap.get(this.player.name)?.current;
+        return currentLocation ? { x: currentLocation.x, y: currentLocation.y, z: currentLocation.z } : null;
     }
 }

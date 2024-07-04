@@ -3,21 +3,14 @@ import Gaia from '../world/Gaia.js'
 class SkyboxRenderer {
     /**
      * Spawns the Skybox (in Gaia)
-     * @param {MolangVariableMap} molangVariables Optional variables for this skybox
      */
     static renderSkybox() {
       let players = Gaia.getPlayers();
       for (const player of players) {
-        if (Gaia.isInGaia(player.location)) {
-          player.setProperty('gaia:in_gaia',); //there is now lmao
-          return true;
-        } else {
-            return false;
-        }
-    }
+            if (player.getProperty('gaia:in_gaia') == true) player.setProperty('gaia:in_gaia',true);
+           }
       }
     }
   
   //export
   export default SkyboxRenderer;
-

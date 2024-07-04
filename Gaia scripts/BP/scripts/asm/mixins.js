@@ -1,5 +1,5 @@
 import { Entity, Block, World } from "@minecraft/server";
-import { vec3, Vec3 } from "../Vec3";
+import { Vec3 } from "../Vec3";
 import { CoordinateDisplay } from '../world/CoordinateDisplay'
 
 
@@ -42,36 +42,43 @@ Object.defineProperty(Entity.prototype, 'coordinateDisplay', {
  * @param {number} maxSearch The maximum number of blocks to search
  * @returns {Block[]} - An array of adjacent blocks.
  */
-Block.prototype.getAdjacent = function (filter, maxSearch) {
-  const connectedBlocks = [];
-  const visited = new Set();
-  // Fix issue with directly passing in this.location to vec3 function
-  const { x, y, z } = this.location;
-  const queue = [vec3(x, y, z)];
-
-  while (queue.length > 0 && connectedBlocks.length < maxSearch) {
-    const currentPosition = queue.shift();
-    visited.add(currentPosition);
-
-    try {
-      for (const direction of Vec3.directions) {
-        const newPosition = currentPosition.add(direction);
-        if (!visited.has(newPosition)) {
-          const adjacentBlock = this.dimension.getBlock(
-            vec3(newPosition.x, newPosition.y, newPosition.z)
-          );
-          if (adjacentBlock && filter(adjacentBlock)) {
-            connectedBlocks.push(adjacentBlock);
-            queue.push(newPosition);
-          }
+Block.prototype.getAdjacent = function (
+    maxSearch,
+    filter = (block) => block && block?.isValid()
+) {
+    const connectedBlocks = [];
+    const visited = new Set();
+    const queue = [this.location];
+    while (queue.length > 0 && connectedBlocks.length < maxSearch) {
+        const hash = Vec3.stringify(queue.shift());
+        if (!visited.has(hash)) {
+            visited.add(hash);
+            try {
+                for (const dir of [
+                    Vec3.up,
+                    Vec3.down,
+                    Vec3.forward,
+                    Vec3.backward,
+                    Vec3.left,
+                    Vec3.right,
+                ]) {
+                    const offsetBlock = this.offset(dir);
+                    const newHash = Vec3.stringify(offsetBlock.location);
+                    if (!visited.has(newHash)) {
+                        if (filter(offsetBlock)) {
+                            connectedBlocks.push(offsetBlock);
+                            queue.push(offsetBlock.location);
+                        }
+                    }
+                }
+            } catch (err) {
+                console.warn(err, err.stack);
+            }
         }
-      }
-    } catch (err) {
-      console.warn(err, err.stack);
     }
-  }
 
-  return connectedBlocks;
-}
+    return connectedBlocks;
+};
+
 
 
