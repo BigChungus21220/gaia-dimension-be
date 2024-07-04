@@ -64,7 +64,8 @@
           "root",
           "spawn_gaia_planet",
           "spawn_cloud",
-          "skyblend"
+          "skyblend",
+          "nebula"
         ]
       },
       "animations": {

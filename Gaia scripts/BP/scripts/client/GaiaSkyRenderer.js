@@ -9,7 +9,7 @@ class SkyboxRenderer {
       let players = Gaia.getPlayers();
       for (const player of players) {
         if (Gaia.isInGaia(player.location)) {
-          //player.setProperty('gaia:skybox_property',); //there is no player.json file lol
+          player.setProperty('gaia:in_gaia',); //there is now lmao
           return true;
         } else {
             return false;

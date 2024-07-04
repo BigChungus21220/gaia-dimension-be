@@ -3,7 +3,7 @@
   "animations": {
     "animation.particle.one_second": {
       "loop": false,
-      "animation_length": 1.1
+      "animation_length": 1.0
     }
   }
 }

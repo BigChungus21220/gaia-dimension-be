@@ -7,33 +7,30 @@
 				"default" : {
 					"transitions" : [
 						{
-							"spawn0" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 0 &&  q.property(inGaia)"
+							"summon" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 0 &&  q.property(gaia:in_gaia)"
 						},
 						{
-							"spawn1" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 1 &&  q.property(inGaia)"
+							"summon0" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 1 &&  q.property(gaia:in_gaia)"
 						},
 						{
-							"spawn2" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 2 &&  q.property(inGaia)"
+							"summon1" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 2 &&  q.property(gaia:in_gaia)"
 						},
 						{
-							"spawn3" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 3 &&  q.property(inGaia)"
+							"summon2" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 3 &&  q.property(gaia:in_gaia)"
 						},
 						{
-							"spawn4" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 4 &&  q.property(inGaia)"
+							"summon3" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 2 &&  q.property(gaia:in_gaia)"
 						},
 						{
-							"spawn5" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 5 &&  q.property(inGaia)"
-						},
-						{
-							"spawn6" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 6 &&  q.property(inGaia)"
+							"summon4" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 3 &&  q.property(gaia:in_gaia)"
 						}
 					]
 				},
-				"spawn0" : {
+				"summon" : {
 					"animations": ["one_second_timer"],
 					"particle_effects": [
 						{
-						  	"effect": "cloud0"
+						  	"effect": "sky_side1"
 						}
 					],
 					"transitions" : [
@@ -42,11 +39,11 @@
 						}
 					]
 				},
-				"spawn1" : {
+				"summon0" : {
 					"animations": ["one_second_timer"],
 					"particle_effects": [
 						{
-						  	"effect": "cloud1"
+						  	"effect": "sky_side2"
 						}
 					],
 					"transitions" : [
@@ -55,11 +52,11 @@
 						}
 					]
 				},
-				"spawn2" : {
+				"summon1" : {
 					"animations": ["one_second_timer"],
 					"particle_effects": [
 						{
-						  	"effect": "cloud2"
+						  	"effect": "sky_side3"
 						}
 					],
 					"transitions" : [
@@ -68,11 +65,11 @@
 						}
 					]
 				},
-				"spawn3" : {
+				"summon2" : {
 					"animations": ["one_second_timer"],
 					"particle_effects": [
 						{
-						  	"effect": "cloud3"
+						  	"effect": "sky_side4"
 						}
 					],
 					"transitions" : [
@@ -81,11 +78,11 @@
 						}
 					]
 				},
-				"spawn4" : {
+				"summon3" : {
 					"animations": ["one_second_timer"],
 					"particle_effects": [
 						{
-						  	"effect": "cloud4"
+						  	"effect": "sky1"
 						}
 					],
 					"transitions" : [
@@ -94,24 +91,11 @@
 						}
 					]
 				},
-				"spawn5" : {
+				"summon4" : {
 					"animations": ["one_second_timer"],
 					"particle_effects": [
 						{
-						  	"effect": "cloud5"
-						}
-					],
-					"transitions" : [
-						{
-							"default" : "q.any_animation_finished"
-						}
-					]
-				},
-				"spawn6" : {
-					"animations": ["one_second_timer"],
-					"particle_effects": [
-						{
-						  	"effect": "cloud6"
+						  	"effect": "sky2"
 						}
 					],
 					"transitions" : [
