@@ -1,6 +1,5 @@
 import {system, world} from "@minecraft/server";
 import Gaia from './world/Gaia'
-import { vec3 } from "./Vec3";
 
 
 export function delay(ticks) {

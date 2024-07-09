@@ -1,6 +1,6 @@
-import { system } from "@minecraft/server"
+import {system} from "@minecraft/server"
 import Gaia from './world/Gaia'
-import { vec3 } from './Vec3'
+import {Vec3} from './Vec3'
 import * as Events from "./world/Events"
 import SkyboxRenderer from "./renderers/Skybox";
 
@@ -16,7 +16,11 @@ Events.tick8.subscribe(() => {
     const players = Gaia.getPlayers();
     for (const player of players) {
         if (player) {
-            Gaia.getEntities({ location: player.location, maxDistance: 500, type: "minecraft:shulker" }).forEach((entity) => entity?.remove())
+            Gaia.getEntities({
+                location: player.location,
+                maxDistance: 500,
+                type: "minecraft:shulker"
+            }).forEach((entity) => entity?.remove())
         }
     }
 })
@@ -27,11 +31,10 @@ let playerLocations = {};
 Events.tick2.subscribe(() => {
     const players = Gaia.getPlayers();
     for (const player of players) {
-        const { x, y, z } = player.location;
         // Account for only x and z
-        const floorpos = vec3(x, 0, z).floor();
-        if (!floorpos.compareWith(playerLocations[player.id] ?? floorpos)) {
-            Events.playerChangeBlock.trigger({ player: player });
+        const floorpos = Vec3.from({...player.location, y: 0}).floor();
+        if (!floorpos.equals(playerLocations[player.id] ?? floorpos)) {
+            Events.playerChangeBlock.trigger({player: player});
         }
         playerLocations[player.id] = floorpos; // Update player location after trigger
     }

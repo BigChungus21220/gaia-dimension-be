@@ -1,6 +1,6 @@
 import {Player } from "@minecraft/server"
 import { the_end } from "../utils";
-import { Vec3, vec3 } from "../Vec3";
+import { Vec3 } from "../Vec3";
 /**
  * Class containing methods relating to the Gaia dimension
  */
@@ -53,7 +53,7 @@ class Gaia {
      */
     static getBiome(location) {
         if (this.isInGaia(location)) {
-            const block = this.getBlock(vec3(location.x, 0, location.z)).typeId.replace("gaia:bedrock_", "");
+            const block = this.getBlock({...location,y:0}).typeId.replace("gaia:bedrock_", "");
             if (block == null) {
                 return false;
             } else {

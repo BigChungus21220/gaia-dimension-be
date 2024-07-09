@@ -7,6 +7,7 @@
 //* *//
 // The stars will remember your name
 // Code was made by Error404
+
 import { BlockPermutation, system, world } from "@minecraft/server";
 import Gaia from "./Gaia";
 import { the_end } from "../utils";
