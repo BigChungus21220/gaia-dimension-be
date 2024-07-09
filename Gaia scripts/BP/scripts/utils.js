@@ -93,3 +93,24 @@ export function MathRound(x) {
 export const the_end = world.getDimension('the_end');
 export const overworld = world.getDimension('overworld')
 
+
+/*
+useful piece of Yasser code*/
+function get_data(machine) { 
+    return machines[machine.typeId.replace('gaia:furnaces:', ''      
+    )
+    ] 
+}
+function str(object) { 
+    return JSON.stringify(object) 
+}
+function compare_lists(list1, list2) {
+	for (let i = 0; i < list1.length; i++) {
+		if (list1[i] != list2[i]) return false
+	} return true
+}
+export {
+    get_data,
+    str,
+    compare_lists
+}
