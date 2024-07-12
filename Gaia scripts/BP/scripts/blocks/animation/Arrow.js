@@ -26,22 +26,22 @@ class Inventory {
 
 //Animate a slot
   class AnimatedSlot {
-    static Animate (inv, slot, itemStack, amountMode = "set", amount = 0) {
+    static Animate (inv = Inventory , slot, itemStack, amountMode = "set", amount = 0) {
      //Checks if the ammount mode is remove and above 0
         if (amountMode === "remove" && amount > 0) {
             //Checks if itemStack ammount is greater than 1 and less than the max ammount
         if (itemStack?.amount > 1 && amount < itemStack.maxAmount) {
         const itemReturn = itemStack.clone();
           itemReturn.amount -= amount;
-          inv.setItem(slot, itemReturn);
+          Inventory.setItem(slot, itemReturn);
         } else if (itemStack?.amount === amount) {
-          inv.setItem(slot, new ItemStack("air"));
+          Inventory.setItem(slot, new ItemStack("air"));
         }
       } else if (amountMode === "add" && amount > 0) {
         if (itemStack?.amount > 0 && amount < itemStack.maxAmount) {
           const itemReturn = itemStack.clone();
           itemReturn.amount += amount;
-          inv.setItem(slot, itemReturn);
+          Inventory.setItem(slot, itemReturn);
         }
       }
     }
