@@ -16,11 +16,12 @@ static barStage(itemId, actualValue, valueMax, inv, value, slot) {
 }
 //Inventory Manipulation
 class Inventory {
-    setItem(slot, item) {
+    setItem(slot, ItemStack) {
         return ContainerSlot.setItem(slot, ItemStack);
       // Implement the actual logic to set the item in the inventory
     }
 }
+
 
 
 //Animate a slot
@@ -30,7 +31,7 @@ class Inventory {
         if (amountMode === "remove" && amount > 0) {
             //Checks if itemStack ammount is greater than 1 and less than the max ammount
         if (itemStack?.amount > 1 && amount < itemStack.maxAmount) {
-          const itemReturn = itemStack.clone();
+        const itemReturn = itemStack.clone();
           itemReturn.amount -= amount;
           inv.setItem(slot, itemReturn);
         } else if (itemStack?.amount === amount) {
