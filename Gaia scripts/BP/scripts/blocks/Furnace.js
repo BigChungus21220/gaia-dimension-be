@@ -1,6 +1,7 @@
 
 import { BlockPermutation, ItemStack, system, world } from "@minecraft/server";
 import { nativeRecipes, nativeFuels } from "./nativeFurnaceData.js";
+import AnimatedSlot from "./animation/Arrow.js";
 
 const scoreboard = world.scoreboard;
 
@@ -140,7 +141,7 @@ function furnaceReciper(blockOrigin, entity, data = { prefix: "forge", cookTickM
                 if (!Data2.return) {
                   score(entity, "set", "burnTimeMax", nativeFuels[slot2.typeId]);
                   score(entity, "set", "burnTime", burnTimeMax);
-                  system.run(() => itemManipulate(inventory, 1, slot2, "remove", 1));
+                  system.run(() => AnimatedSlot.Animate(inventory, 1, slot2, "remove", 1));
                 } else {
                   score(entity, "set", "burnTimeMax", Data2.burnTime);
                   score(entity, "set", "burnTime", burnTimeMax);
@@ -150,7 +151,7 @@ function furnaceReciper(blockOrigin, entity, data = { prefix: "forge", cookTickM
                 if (!nativeFuels[tag]?.return) {
                   score(entity, "set", "burnTimeMax", nativeFuels[tag]);
                   score(entity, "set", "burnTime", burnTimeMax);
-                  system.run(() => itemManipulate(inventory, 1, slot2, "remove", 1));
+                  system.run(() => AnimatedSlot.Animate(inventory, 1, slot2, "remove", 1));
                 } else {
                   score(entity, "set", "burnTimeMax", nativeFuels[tag]?.burnTime);
                   score(entity, "set", "burnTime", burnTimeMax);
@@ -166,10 +167,10 @@ function furnaceReciper(blockOrigin, entity, data = { prefix: "forge", cookTickM
             score(entity, "set", "cookTime", 0);
             if (!slot3) {
               inventory.setItem(2, outputTyped.clone());
-              itemManipulate(inventory, 0, slot1, "remove", 1);
+              AnimatedSlot.Animate(inventory, 0, slot1, "remove", 1);
             } else {
-              itemManipulate(inventory, 2, slot3, "add", 1);
-              itemManipulate(inventory, 0, slot1, "remove", 1);
+              AnimatedSlot.Animate(inventory, 2, slot3, "add", 1);
+              AnimatedSlot.Animate(inventory, 0, slot1, "remove", 1);
             }
           }
         } else if (cookTime > 0) score(entity, "set", "cookTime", 0);
