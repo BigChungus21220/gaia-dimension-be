@@ -1,5 +1,5 @@
 import { ContainerSlot } from "@minecraft/server";
-
+import { ItemStack } from "@minecraft/server";
 //
 class barStaging {
 static barStage(itemId, actualValue, valueMax, inv, value, slot) {
@@ -14,6 +14,8 @@ static barStage(itemId, actualValue, valueMax, inv, value, slot) {
     }
   }
 }
+
+
 //Inventory Manipulation
 class Inventory {
     setItem(slot, ItemStack) {
@@ -26,22 +28,22 @@ class Inventory {
 
 //Animate a slot
   class AnimatedSlot {
-    static Animate (inv = Inventory , slot, itemStack, amountMode = "set", amount = 0) {
+    static Animate (inv , slot, itemStack, amountMode = "set", amount = 0) {
      //Checks if the ammount mode is remove and above 0
         if (amountMode === "remove" && amount > 0) {
             //Checks if itemStack ammount is greater than 1 and less than the max ammount
         if (itemStack?.amount > 1 && amount < itemStack.maxAmount) {
         const itemReturn = itemStack.clone();
           itemReturn.amount -= amount;
-          Inventory.setItem(slot, itemReturn);
+          inv.setItem(slot, itemReturn);
         } else if (itemStack?.amount === amount) {
-          Inventory.setItem(slot, new ItemStack("air"));
+          inv.setItem(slot, new ItemStack("air"));
         }
       } else if (amountMode === "add" && amount > 0) {
         if (itemStack?.amount > 0 && amount < itemStack.maxAmount) {
           const itemReturn = itemStack.clone();
           itemReturn.amount += amount;
-          Inventory.setItem(slot, itemReturn);
+          inv.setItem(slot, itemReturn);
         }
       }
     }
