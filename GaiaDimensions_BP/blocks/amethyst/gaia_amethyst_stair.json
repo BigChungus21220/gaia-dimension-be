@@ -69,7 +69,7 @@
 		  "explosion_resistance": 12
 		},
 	"minecraft:custom_components": [
-	  "cosmos:stairs"
+	  "vanillablock:stairs"
 	],
 	"minecraft:tick": {
 	  "interval_range": [
