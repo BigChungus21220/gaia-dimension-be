@@ -1,7 +1,8 @@
 
 import { BlockPermutation, ItemStack, system, world } from "@minecraft/server";
 import { nativeRecipes, nativeFuels } from "./nativeFurnaceData.js";
-import AnimatedSlot from "./animation/Arrow.js";
+import{ AnimatedSlot } from "./animation/Arrow.js";
+import { barStage } from "./animation/Flame.js";
 
 const scoreboard = world.scoreboard;
 
@@ -106,9 +107,9 @@ function furnaceReciper(blockOrigin, entity, data = { prefix: "forge", cookTickM
     const burnTime = objs[1].hasParticipant(entity) ? objs[1].getScore(entity) : 0;
     const burnTimeMax = objs[2].hasParticipant(entity) ? objs[2].getScore(entity) : 0;
 
-    // the barStage function is not found
-    // barStage(data.flameId, burnTime, burnTimeMax, inventory, 13, 3);
-    // barStage(data.arrowId, cookTime, data.cookTickMax, inventory, 16, 4);
+ 
+     barStage(data.flameId, burnTime, burnTimeMax, inventory, 13, 3);
+     barStage(data.arrowId, cookTime, data.cookTickMax, inventory, 16, 4);
 
     let tag;
     let outputTyped;
