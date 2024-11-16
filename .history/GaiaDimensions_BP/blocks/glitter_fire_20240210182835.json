@@ -35,4 +35,18 @@
         "target": "self"
       },
       "tag:fire": {}
-    }}}
+    },
+    "events": {
+      "gaia:puff": {
+        "run_command": {
+          "target": "self",
+          "command": [ "fill ~~~ ~~~ air replace gaia:gold_fire" ]
+        }
+      },
+      "gaia:puff2": {
+        "run_command": {
+          "target": "self",
+          "command": [ "fill ~~~ ~~~ air replace gaia:gold_fire",
+                       "playsound fire.fire @p" ]
+        }
+        }}}}

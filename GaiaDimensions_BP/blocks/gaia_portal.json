@@ -38,15 +38,6 @@
       },
       "minecraft:map_color": "#ffffff"
     },
-    "events": {
-      "gaia:particle": {
-        "run_command": {
-          "command": [
-            "particle gaia:portal_particle ~ ~ ~"
-          ]
-        }
-      }
-    },
     "permutations": [
 			{
 				"condition": "query.block_state('gaia:x_oriented')",

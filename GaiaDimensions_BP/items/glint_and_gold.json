@@ -1,6 +1,5 @@
-//rewrite: use custom item componants
 {
-	"format_version": "1.20.50",
+    "format_version": "1.20.50",
 	"minecraft:item": {
 		"description": {
 			"identifier": "gaia:glint_and_gold",
@@ -15,15 +14,7 @@
 			},
 			"minecraft:icon": {
 				"texture": "glint_and_gold"
-			}/*,
-			"minecraft:on_use_on": {
-				"on_use_on": {
-					"event": "gaia:nothing"
-				}
-			}*/
-		},
-		"events": {
-			"gaia:nothing": {}
+			}
 		}
 	}
 }
