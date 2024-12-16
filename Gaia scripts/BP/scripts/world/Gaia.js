@@ -1,4 +1,4 @@
-import {Player } from "@minecraft/server"
+import {Player, Vector3 } from "@minecraft/server"
 import { the_end } from "../utils";
 import { Vec3 } from "../Vec3";
 /**
@@ -39,7 +39,7 @@ class Gaia {
 
     /**
      * Checks whether a given location is in Gaia
-     * @param {Vec3} location location to check
+     * @param {import("@minecraft/server").Vector3} location location to check
      * @returns {boolean} Whether or not the location is in Gaia
      */
     static isInGaia(location) {

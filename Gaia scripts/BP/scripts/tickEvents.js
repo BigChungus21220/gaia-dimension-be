@@ -9,7 +9,7 @@ system.runInterval(() => Events.tick1.trigger(), 1);
 system.runInterval(() => Events.tick2.trigger(), 2);
 system.runInterval(() => Events.tick8.trigger(), 8);
 system.runInterval(() => Events.tick30.trigger(), 30);
-system.runInterval(() => Events.tick100.trigger(), 100);
+system.runJob(() => Events.tick100.trigger(), 100);
 
 //clear entities
 Events.tick8.subscribe(() => {
@@ -40,6 +40,3 @@ Events.tick2.subscribe(() => {
     }
 });
 
-Events.tick100.subscribe(() => {
-    SkyboxRenderer.renderSkybox();
-})

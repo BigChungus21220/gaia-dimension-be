@@ -247,7 +247,7 @@
         ]
       },
       "minecraft:knockback_resistance": {
-        "value": 1000
+        "value": 10000
       },
       "minecraft:behavior.melee_attack": {
         "priority": 1,
