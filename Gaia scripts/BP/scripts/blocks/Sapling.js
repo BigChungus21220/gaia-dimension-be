@@ -1,15 +1,10 @@
-import { Entity, Block, Player, system } from "@minecraft/server"
+import { world, Entity, Block, Player, system } from "@minecraft/server"
 
-function loadStructure( blockLocation) {
-    const block = world.getBlock(block.location);
-    if (block) {
-        const treeTypeId = block.typeId ;  
-        // Construct the command string
-        const command = `structure load ${treeTypeId} ${block.location.x} ${block.location.y} ${block.location.z}`;
-        entity.runCommandAsync(command);
+function loadStructure(blockTypeId, dimension, blockLocation) {
+    if (block.typeId && dimension && block.location) {
+         world.structureManager.place(blockTypeId, dimension, blockLocation)
     }
 }
-
 world.beforeEvents.worldInitialize.subscribe(eventData => {
     eventData.blockTypeRegistry.registerCustomComponent('gaia:sapling', {
         onRandomTick(block) {
