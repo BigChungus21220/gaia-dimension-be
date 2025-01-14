@@ -70,7 +70,7 @@ tick8.subscribe(() => {
     for (const dimension of dimensions) {
         for (const entity of dimension.getEntities()) {
             // Check if the entity is an instance of Entity
-            if (!(entity instanceof Entity)) {
+            if (!(entity instanceof Player)) {
                 continue; // Skip if not an instance of Entity
             }
 

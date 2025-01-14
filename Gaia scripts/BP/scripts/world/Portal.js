@@ -9,7 +9,7 @@ import {Vec3} from "../Vec3";
  */
 
 /**
- * @author Redux
+ * @author Refracted
  * @description Class that manages Portal structures and Portal Linking.
  */
 class Portal {
