@@ -1,5 +1,6 @@
 import {world, system, Player, Dimension, Entity} from "@minecraft/server";
 import {delay, convertCoords, overworld, the_end} from './utils.js';
+import { CoordinateDisplay } from "./world/CoordinateDisplay"
 import Gaia from './world/Gaia.js';
 import Portal from "./world/Portal.js";
 import {Vec3} from "./Vec3.js";
