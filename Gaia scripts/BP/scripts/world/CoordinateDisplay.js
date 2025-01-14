@@ -15,7 +15,7 @@ export class CoordinateDisplay {
             adjustedZ: Math.floor((z - 100000) / 1000)
         };
     }
-
+//Update Coordinates within Gaia Dimensiom
     updateCoordinates() {
         const { name, location } = this.player;
         const locationMap = CoordinateDisplay.#locationMap;

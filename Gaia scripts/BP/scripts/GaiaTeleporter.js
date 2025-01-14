@@ -100,7 +100,8 @@ tick8.subscribe(() => {
     }
 });
 
-playerChangeBlock.subscribe(({player}) => {
-    player.coordinateDisplay.updateCoordinates();
-})
-
+playerChangeBlock.subscribe(({ player }) => {
+    if (player.coordinateDisplay instanceof CoordinateDisplay) {
+        player.coordinateDisplay.updateCoordinates();
+    }
+});
