@@ -1,4 +1,4 @@
-import {world, system, Player, Dimension} from "@minecraft/server";
+import {world, system, Player, Dimension, Entity} from "@minecraft/server";
 import {delay, convertCoords, overworld, the_end} from './utils.js';
 import Gaia from './world/Gaia.js';
 import Portal from "./world/Portal.js";
@@ -41,41 +41,58 @@ async function tpToGaia(entity) {
 
 async function backToDimension(entity, coord = undefined) {
     try {
-        let teleportLoc,dimension;
+        let teleportLoc, dimension;
+
+        // Check if entity is a Player instance
         if (entity instanceof Player) {
-            dimension = entity.getSpawnPoint()?.dimension ?? overworld
+            dimension = entity.getSpawnPoint()?.dimension ?? overworld;
             teleportLoc = Portal.isEntityInLinked('end', entity)?.location ?? coord;
         } else {
-            dimension = overworld
+            dimension = overworld;
             teleportLoc = await getTopBlock(world.getDefaultSpawnLocation(), overworld);
         }
-        entity.turnCoords(true);
-        entity.teleport(convertCoords(await getTopBlock(teleportLoc, dimension) ?? coord, entity), {dimension});
-    } catch (error) {
 
+        // Ensure entity is an instance of Entity before calling teleport
+        if (!(entity instanceof Player)) {
+            throw new Error("The provided entity is not an instance of Entity.");
+        }
+
+        entity.turnCoords(true);
+        // Make sure convertCoords and getTopBlock return valid values
+        const targetLocation = await getTopBlock(teleportLoc, dimension) ?? coord;
+        entity.teleport(convertCoords(targetLocation, entity), { dimension });
+    } catch (error) {
+        console.error("Error in backToDimension:", error);
     }
 }
 
 tick8.subscribe(() => {
     for (const dimension of dimensions) {
         for (const entity of dimension.getEntities()) {
+            // Check if the entity is an instance of Entity
+            if (!(entity instanceof Entity)) {
+                continue; // Skip if not an instance of Entity
+            }
+
             const lastInPortal = entity.hasTag("inPortal");
             const inPortal = entity.isInPortal() || (dimension.getBlock({
                 ...entity.location,
                 y: 0
             }) === undefined && lastInPortal);
+
             inPortal ? entity.addTag('inPortal') : entity.removeTag('inPortal');
+
             if (entity instanceof Player) {
                 if (Gaia.isInGaia(entity.location) && !entity.getDynamicProperty('enteredByPortal')) {
                     entity.teleport({x: 0, y: 76, z: 0});
                 }
-            }
 
-            if (inPortal && !lastInPortal) {
-                if (entity instanceof Player) {
-                    const coords = entity.coordinateDisplay.coord
+                if (inPortal && !lastInPortal) {
+                    const coords = entity.coordinateDisplay.coord;
                     Gaia.isInGaia(entity.location) ? backToDimension(entity, coords) : tpToGaia(entity);
-                } else {
+                }
+            } else {
+                if (inPortal && !lastInPortal) {
                     backToDimension(entity);
                 }
             }
