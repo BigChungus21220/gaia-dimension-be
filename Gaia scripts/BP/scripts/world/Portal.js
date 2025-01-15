@@ -97,7 +97,7 @@ class Portal {
                         y: link.location.y + this.PortalSizeY,
                         z: link.location.z + this.PortalSizeZ
                     });
-                    return volume.isInside(location);
+                    return volume.isInside(entity.location);
                 });
                 break;
             case 'end':
