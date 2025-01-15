@@ -105,7 +105,7 @@ tick8.subscribe(() => {
 });
 
 playerChangeBlock.subscribe(({ player }) => {
-    if (player.coordinateDisplay instanceof CoordinateDisplay) {
+    if (player instanceof Player && coordinateDisplay instanceof CoordinateDisplay) {
         player.coordinateDisplay.updateCoordinates();
     }
 });

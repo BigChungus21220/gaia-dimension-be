@@ -16,7 +16,7 @@ export class CoordinateDisplay {
         };
     }
 //Update Coordinates within Gaia Dimensiom
-    updateCoordinates() {
+     updateCoordinates() {
         const { name, location } = this.player;
         const locationMap = CoordinateDisplay.#locationMap;
 

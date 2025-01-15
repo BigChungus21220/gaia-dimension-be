@@ -28,15 +28,11 @@
         }
       },
       "minecraft:light_emission": 10,
-      "minecraft:queued_ticking": {
+      "minecraft:custom_components": ["gaia:gaia_portal"],
+      "minecraft:tick": {
         "looping": true,
-        "interval_range": [20, 20],
-        "on_tick": {
-          "event": "gaia:particle",
-          "target": "self"
-        }
-      },
-      "minecraft:map_color": "#ffffff"
+        "interval_range": [20, 20]
+      }
     },
     "permutations": [
 			{
