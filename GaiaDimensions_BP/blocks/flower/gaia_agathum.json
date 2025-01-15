@@ -15,9 +15,6 @@
       "minecraft:destructible_by_explosion": {
         "explosion_resistance": 0
       },
-      "minecraft:on_placed": {
-        "event": "update_rotation"
-      },
       "minecraft:material_instances": {
         "*": {
           "texture": "agathum",
@@ -41,7 +38,6 @@
               "gaia:soft_grass",
               "gaia:murky_grass",
               "gaia:corrupt_grass",
-              "gaia:peach_glitter_grass",
               "gaia:peach_glitter_grass",
               "gaia:orange_glitter_grass",
               "gaia:light_soil",

@@ -1,1 +1,0 @@
-structure load pinkagate ~-3 ~ ~-3

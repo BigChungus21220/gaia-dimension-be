@@ -1,1 +1,0 @@
-structure load blueagate ~-3 ~ ~-3

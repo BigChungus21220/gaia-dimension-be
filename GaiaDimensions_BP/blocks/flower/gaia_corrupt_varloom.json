@@ -14,9 +14,7 @@
       },
       "minecraft:destructible_by_explosion": {
         "explosion_resistance": 0
-      },
-      "minecraft:on_placed": {
-        "event": "update_rotation"
+     
       },
       "minecraft:material_instances": {
         "*": {

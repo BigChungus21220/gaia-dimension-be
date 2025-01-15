@@ -14,9 +14,7 @@
       },
       "minecraft:destructible_by_explosion": {
         "explosion_resistance": 0
-      },
-      "minecraft:on_placed": {
-        "event": "update_rotation"
+     
       },
       "minecraft:material_instances": {
         "*": {
@@ -37,7 +35,7 @@
               "gaia:charred_grass",
               "gaia:pale_green_glitter_grass",
               "gaia:purple_glitter_grass",
-              "gaia:corrupted_glitter_grass",
+              "gaia:corrupt_grass",
               "gaia:soft_grass",
               "gaia:murky_grass",
               "gaia:corrupt_grass",
