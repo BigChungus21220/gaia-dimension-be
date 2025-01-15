@@ -53,12 +53,12 @@ async function backToDimension(entity, coord = undefined) {
             teleportLoc = await getTopBlock(world.getDefaultSpawnLocation(), overworld);
         }
 
-        // Ensure entity is an instance of Entity before calling teleport
-        if (!(entity instanceof Player)) {
+        // Ensure entity is an instance of Entity before the call
+        if (!(entity instanceof Entity)) {
             throw new Error("The provided entity is not an instance of Entity.");
         }
 
-        entity.turnCoords(true);
+        entity.convertCoords(true);
         // Make sure convertCoords and getTopBlock return valid values
         const targetLocation = await getTopBlock(teleportLoc, dimension) ?? coord;
         entity.teleport(convertCoords(targetLocation, entity), { dimension });
