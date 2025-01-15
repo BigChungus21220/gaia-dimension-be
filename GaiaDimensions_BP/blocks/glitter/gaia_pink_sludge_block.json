@@ -5,13 +5,13 @@
 			"identifier": "gaia:pink_sludge_block",
 			"menu_category": {
 				"category": "nature",
-				"group": "itemGroup.name.soil"
+				"group": "itemGroup.name.grass"
 			}
 		},
 		"components": {
 			"tag:is_shovelable": {},
 			"tag:dirt": {},
-			"minecraft:loot": "loot_tables/blocks/pink_sludge_block.json",
+			"minecraft:loot": "loot_tables/blocks/gaia/pink_sludge_block.json",
 			"minecraft:light_emission": 12,
 			"minecraft:destructible_by_mining": {
 				"seconds_to_destroy": 0.5

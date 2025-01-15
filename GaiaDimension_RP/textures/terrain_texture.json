@@ -369,12 +369,6 @@
     "geyser_vent_bottom": {
       "textures": "textures/blocks/geyser_vent_bottom"
     },
-    "pink_glitter_grass_top": {
-      "textures": "textures/blocks/pink_glitter_grass_top"
-    },
-    "pink_glitter_grass_side": {
-      "textures": "textures/blocks/pink_glitter_grass_side"
-    },
     "blue_glitter_grass_top": {
       "textures": "textures/blocks/blue_glitter_grass_top"
     },

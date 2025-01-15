@@ -247,22 +247,7 @@
     "textures": "stripped_burned_log_side",
     "sound": "wood"
   },
-  "gaia:burned_log": {
-    "textures": {
-      "up": "burned_log_end",
-      "side": "burned_log_side",
-      "down": "burned_log_end"
-    },
-    "sound": "wood"
-  },
-  "gaia:stripped_burned_log": {
-    "textures": {
-      "up": "stripped_burned_log_end",
-      "side": "stripped_burned_log_side",
-      "down": "stripped_burned_log_end"
-    },
-    "sound": "wood"
-  },
+
   "gaia:corrupted_leaves":{
     "textures": "corrupted_leaves_opaque",
     "sound": "grass"
@@ -454,18 +439,6 @@
       "up": true
     },
     "sound": "stone"
-  },
-  "gaia:pink_glitter_grass": {
-    "textures": {
-      "up": "pink_glitter_grass_top",
-      "side": "pink_glitter_grass_side",
-      "down": "heavy_soil"
-    },
-    "isotropic": {
-      "down": true,
-      "up": true
-    },
-    "sound": "grass"
   },
   "gaia:blue_glitter_grass": {
     "textures": {

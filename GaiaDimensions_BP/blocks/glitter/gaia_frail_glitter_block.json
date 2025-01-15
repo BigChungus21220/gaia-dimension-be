@@ -5,13 +5,13 @@
 			"identifier": "gaia:frail_glitter_block",
 			"menu_category": {
 				"category": "nature",
-				"group": "itemGroup.name.glitter"
+				"group": "itemGroup.name.grass"
 			}
 		},
 		"components": {
 			"tag:is_shovelable": {},
 			"tag:dirt": {},
-			"minecraft:loot": "loot_tables/blocks/frail_glitter_block.json",
+			"minecraft:loot": "loot_tables/blocks/gaia/frail_glitter_block.json",
 			"minecraft:destructible_by_mining": {
 				"seconds_to_destroy": 0.5
 			},
@@ -22,8 +22,7 @@
       "minecraft:material_instances": {
         "*": {
           "texture": "frail_glitter_block",
-          "render_method": "blend",
-			"minecraft:map_color": "#ffffff"
+          "render_method": "blend"
 		}
 	}
 }

@@ -4,7 +4,7 @@
         "description": {
             "identifier": "gaia:conditions/condition_8943006311"
         },
-        "places_feature": "gaia:gen/gaia_blocks/pink_glitter_grass",
+        "places_feature": "gaia:gen/gaia_blocks/peach_glitter_grass",
         "iterations": "t.biome == 'crystal_plains'",
         "x": 0,
         "z": 0,

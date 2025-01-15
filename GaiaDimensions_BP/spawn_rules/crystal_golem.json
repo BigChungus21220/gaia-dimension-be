@@ -8,7 +8,7 @@
     "conditions": [
       {
         "minecraft:spawns_on_surface": {},
-        "minecraft:spawns_on_block_filter": "gaia:pink_glitter_grass",
+        "minecraft:spawns_on_block_filter": "gaia:peach_glitter_grass",
         "minecraft:brightness_filter": {
           "min": 0,
           "max": 10,

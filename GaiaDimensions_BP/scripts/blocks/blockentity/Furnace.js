@@ -1,5 +1,5 @@
 import { world, system, ItemStack} from "@minecraft/server"
-import { nativeRecipes, nativeFuels } from "../data/NativeFurnaceData.js"
+import { nativeRecipes, nativeFuels } from "../../data/NativeFurnaceData.js"
 
 ItemStack.prototype.decrementStack = function(decrementItemAmount=1) {
     if (this.amount > decrementItemAmount) {

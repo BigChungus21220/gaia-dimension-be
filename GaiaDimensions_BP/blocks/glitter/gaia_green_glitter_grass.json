@@ -5,13 +5,13 @@
 			"identifier": "gaia:green_glitter_grass",
 			"menu_category": {
 				"category": "nature",
-				"group": "itemGroup.name.glitter_grass"
+				"group": "itemGroup.name.grass"
 			}
 		},
 		"components": {
 			"tag:is_shovelable": {},
 			"tag:dirt": {},
-			"minecraft:loot": "loot_tables/blocks/green_glitter_grass.json",
+			"minecraft:loot": "loot_tables/blocks/gaia/green_glitter_grass.json",
 			"minecraft:light_emission": 12,
 			"minecraft:destructible_by_mining": {
 				"seconds_to_destroy": 1

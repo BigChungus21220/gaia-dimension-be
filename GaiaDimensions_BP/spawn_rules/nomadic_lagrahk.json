@@ -29,7 +29,7 @@
       {
         "minecraft:spawns_on_surface": {},
         "minecraft:spawns_on_block_filter": [
-          "minecraft:pink_glitter_grass",
+          "minecraft:peach_glitter_grass",
           "minecraft:murky_grass"
         ],
         "minecraft:brightness_filter": {

@@ -5,13 +5,13 @@
 			"identifier": "gaia:charred_grass",
 			"menu_category": {
 				"category": "nature",
-				"group": "itemGroup.name.glitter_grass"
+				"group": "itemGroup.name.grass"
 			}
 		},
 		"components": {
 			"tag:is_shovelable": {},
 			"tag:dirt": {},
-			"minecraft:loot": "loot_tables/blocks/charred_grass.json",
+			"minecraft:loot": "loot_tables/blocks/gaia/charred_grass.json",
 			"minecraft:destructible_by_mining": {
 				"seconds_to_destroy": 1
 			},

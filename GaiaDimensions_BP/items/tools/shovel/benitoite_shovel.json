@@ -115,7 +115,7 @@
             }
           },
           {
-            "block": "gaia:pink_glitter_grass",
+            "block": "gaia:peach_glitter_grass",
             "speed": 6,
             "on_dig": {
               "event": "reduce_durability"

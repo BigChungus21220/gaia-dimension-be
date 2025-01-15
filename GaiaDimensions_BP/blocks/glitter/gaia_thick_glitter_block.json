@@ -5,13 +5,13 @@
 			"identifier": "gaia:thick_glitter_block",
 			"menu_category": {
 				"category": "nature",
-				"group": "itemGroup.name.glitter"
+				"group": "itemGroup.name.grass"
 			}
 		},
 		"components": {
 			"tag:is_shovelable": {},
 			"tag:dirt": {},
-			"minecraft:loot": "loot_tables/blocks/thick_glitter_block.json",
+			"minecraft:loot": "loot_tables/blocks/gaia/thick_glitter_block.json",
 			"minecraft:destructible_by_mining": {
 				"seconds_to_destroy": 1
 			},
@@ -22,8 +22,7 @@
       "minecraft:material_instances": {
         "*": {
           "texture": "thick_glitter_block",
-          "render_method": "opaque",
-			"minecraft:map_color": "#ffffff"
+          "render_method": "opaque"
 		}
 	}
 }

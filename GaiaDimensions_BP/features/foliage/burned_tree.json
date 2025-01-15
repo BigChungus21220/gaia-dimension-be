@@ -11,7 +11,7 @@
         "intervals": [ 2 ],
         "min_height_for_canopy": 3
       },
-      "trunk_block": "gaia:burned_log",
+      "trunk_block": "gaia:burned_agate_log",
       "trunk_lean": {
         "allow_diagonal_growth": true,
         "lean_height": {
@@ -65,7 +65,7 @@
       "gaia:soft_grass",
       "gaia:murky_grass",
       "gaia:corrupt_grass",
-      "gaia:pink_glitter_grass",
+      "gaia:peach_glitter_grass",
       "gaia:peach_glitter_grass",
       "gaia:orange_glitter_grass",
       "gaia:light_soil",

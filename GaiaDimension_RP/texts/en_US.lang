@@ -186,7 +186,7 @@ entity.gaia:spell_element.name=Spell Element
 ## Blocks
 tile.gaia:heavy_soil.name=Heavy Soil
 tile.gaia:active_rock.name=Active Rock
-tile.gaia:pink_glitter_grass.name=Glitter Grass
+tile.gaia:peach_glitter_grass.name=Glitter Grass
 tile.gaia:orange_glitter_grass.name=Glitter Grass
 tile.gaia:block_of_aura_crystal.name=Block of Aura Crystal
 tile.gaia:blue_glitter_grass.name=Glitter Grass

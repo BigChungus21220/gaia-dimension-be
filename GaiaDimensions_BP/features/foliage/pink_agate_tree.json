@@ -17,7 +17,7 @@
       "gaia:heavy_soil"
     ],
     "may_grow_on": [
-      "gaia:pink_glitter_grass",
+      "gaia:peach_glitter_grass",
       "gaia:heavy_soil"
     ],
     "may_replace": [
@@ -43,7 +43,7 @@
       "gaia:soft_grass",
       "gaia:murky_grass",
       "gaia:corrupt_grass",
-      "gaia:pink_glitter_grass",
+      "gaia:peach_glitter_grass",
       "gaia:peach_glitter_grass",
       "gaia:orange_glitter_grass",
       "gaia:light_soil",
