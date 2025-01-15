@@ -19,9 +19,7 @@ class Portal {
      */
     static linked = JSON.parse(world.getDynamicProperty('PortalLinked') ?? "[]");
     static LinkPositions = ['start', 'end']
-    /**
-     * @private
-     */
+    /** @private */
     static serialize = JSON.stringify;
     static PortalSizeY = 3;
     static PortalSizeZ = 2;
@@ -36,7 +34,7 @@ class Portal {
             throw new Error('Both fromLocation and toLocation must be objects');
         }
         if (!this.isLinked(fromLocation, toLocation)) {
-            this.linked.push({location: fromLocation, linkedLocation: toLocation});
+            this.linked.push({ location: fromLocation, linkedLocation: toLocation });
             world.setDynamicProperty('PortalLinked', this.serialize(this.linked));
         }
     }
@@ -51,16 +49,17 @@ class Portal {
             throw new Error('Both fromLocation and toLocation must be objects');
         }
         this.linked = this.linked.filter(l => 
-    l.location !== fromLocation || l.linkedLocation !== toLocation
-)
+            !(l.location.x === fromLocation.x && l.location.y === fromLocation.y && l.location.z === fromLocation.z &&
+              l.linkedLocation.x === toLocation.x && l.linkedLocation.y === toLocation.y && l.linkedLocation.z === toLocation.z)
+        );
         world.setDynamicProperty('PortalLinked', this.serialize(this.linked));
     }
 
     /**
      * Get the linked location from a given location.
      * @param {Vec3} location - The location.
-     * @param {string} from - Whether the location is the start or end of the linked location
-     * @returns {Link} The linked object.
+     * @param {string} from - Whether the location is the start or end of the linked location.
+     * @returns {Link|undefined} The linked object.
      */
     static getLink(from, location) {
         if (typeof location !== 'object') {
@@ -75,7 +74,7 @@ class Portal {
                         y: link.location.y + this.PortalSizeY,
                         z: link.location.z + this.PortalSizeZ
                     });
-                    return volume.isInside(location)
+                    return volume.isInside(location);
                 });
                 break;
             case 'end':
@@ -85,7 +84,7 @@ class Portal {
                         y: link.linkedLocation.y + this.PortalSizeY,
                         z: link.linkedLocation.z + this.PortalSizeZ
                     });
-                    return volume.isInside(location)
+                    return volume.isInside(location);
                 });
                 break;
             default:
@@ -94,7 +93,6 @@ class Portal {
         return link || undefined;
     }
 
-
     /**
      * Check if two locations are linked.
      * @param {Vec3} fromLocation - The starting location.
@@ -102,13 +100,20 @@ class Portal {
      * @returns {boolean} True if the locations are linked, false otherwise.
      */
     static isLinked(fromLocation, toLocation) {
-        return this.linked.some((d) => d.location === fromLocation && d.linkedLocation === toLocation);
+        return this.linked.some(d => 
+            d.location.x === fromLocation.x && 
+            d.location.y === fromLocation.y && 
+            d.location.z === fromLocation.z &&
+            d.linkedLocation.x === toLocation.x && 
+            d.linkedLocation.y === toLocation.y && 
+            d.linkedLocation.z === toLocation.z
+        );
     }
 
     /**
      * Check if an entity is within the bounds of a linked portal.
      * @param {Entity} entity - The entity to check.
-     * @param {string} from - Whether the entity is at the start or end of the linked location
+     * @param {string} from - Whether the entity is at the start or end of the linked location.
      * @returns {Link|undefined} The link that the entity is in, or undefined if the entity is not in any linked portal.
      */
     static isEntityInLinked(from, entity) {
@@ -124,7 +129,7 @@ class Portal {
                         y: link.location.y + this.PortalSizeY,
                         z: link.location.z + this.PortalSizeZ
                     });
-                    return volume.isInside(entity.location)
+                    return volume.isInside(entity.location);
                 });
                 break;
             case 'end':
@@ -134,7 +139,7 @@ class Portal {
                         y: link.linkedLocation.y + this.PortalSizeY,
                         z: link.linkedLocation.z + this.PortalSizeZ
                     });
-                    return volume.isInside(entity.location)
+                    return volume.isInside(entity.location);
                 });
                 break;
             default:
@@ -146,83 +151,82 @@ class Portal {
     static async lightPortal(corner, dimension, x_oriented) {
         for (let x = 0; x < 4; x++) {
             for (let y = 0; y < 5; y++) {
-                let blockpos = Vec3.add(corner, {x: x_oriented ? 0 : x, y, z: x_oriented ? x : 0});
-                let is_edge = x == 0 || y == 0 || x == 3 || y == 4
+                let blockpos = Vec3.add(corner, { x: x_oriented ? 0 : x, y, z: x_oriented ? x : 0 });
+                let is_edge = x === 0 || y === 0 || x === 3 || y === 4;
                 const block = await new Promise((resolve) => {
                     const block = dimension.getBlock(blockpos);
                     if (block !== undefined) {
-                        resolve(block)
+                        resolve(block);
                     }
-                })
+                });
                 if (is_edge) {
-                    block.setPermutation(BlockPermutation.resolve("gaia:keystone_block"))
+                    block.setPermutation(BlockPermutation.resolve("gaia:keystone_block"));
                 } else {
-                    block.setPermutation(BlockPermutation.resolve("gaia:gaia_portal", {"gaia:x_oriented": x_oriented}))
+                    block.setPermutation(BlockPermutation.resolve("gaia:gaia_portal", { "gaia:x_oriented": x_oriented }));
                 }
             }
         }
     }
 
     static breakPortal(block) {
-        const adjacent = block.getAdjacent((block) => block.typeId === 'gaia:gaia_portal', 40);
+        const adjacent = block.getAdjacent(b => b.typeId === 'gaia:gaia_portal', 40);
         adjacent.forEach(b => {
             this.LinkPositions.forEach(position => {
-                const link = this.getLink(position, b.location)
-                if (!link) return;
-                    this.unlink(link.location, link.linkedLocation)
-                
+                const link = this.getLink(position, b.location);
+                if (link) {
+                    this.unlink(link.location, link.linkedLocation);
+                }
             });
             b.setPermutation(BlockPermutation.resolve("minecraft:air"));
-        })
+        });
     }
 
     static isUnlit(corner, dimension, x_oriented) {
-        let isValid = true
+        let isValid = true;
         for (let x = 0; x < 4; x++) {
             for (let y = 0; y < 5; y++) {
-                let blockpos = Vec3.add(corner, {x: x_oriented ? 0 : x, y, z: x_oriented ? x : 0});
-                let blocktype = dimension.getBlock(blockpos).typeId
-                let is_edge = x == 0 || y == 0 || x == 3 || y == 4
-                if (is_edge && blocktype != "gaia:keystone_block") {
-                    isValid = false
-                    break
+                let blockpos = Vec3.add(corner, { x: x_oriented ? 0 : x, y, z: x_oriented ? x : 0 });
+                let blocktype = dimension.getBlock(blockpos).typeId;
+                let is_edge = x === 0 || y === 0 || x === 3 || y === 4;
+                if (is_edge && blocktype !== "gaia:keystone_block") {
+                    isValid = false;
+                    break;
                 }
-                if (!is_edge && blocktype != "minecraft:air") {
-                    isValid = false
-                    break
+                if (!is_edge && blocktype !== "minecraft:air") {
+                    isValid = false;
+                    break;
                 }
             }
         }
-        return isValid
+        return isValid;
     }
 
     /**
-     * Checks whether a portal can be lit and if so lights the portal
+     * Checks whether a portal can be lit and if so lights the portal.
      * @param {Block} block
-     * @returns {boolean} Whether lighting this portal was a success or not
+     * @returns {boolean} Whether lighting this portal was a success or not.
      */
     static canLight(block) {
-        let position = block.location
-        let dimension = block.dimension
-        let offset = Vec3.zero
-        let light_success = false
-        let x_oriented = true
+        let position = block.location;
+        let dimension = block.dimension;
+        let offset = Vec3.zero;
+        let light_success = false;
+        let x_oriented = true;
         for (let x = -2; x <= -1; x++) {
             for (let y = -3; y <= -1; y++) {
-                let test_offset = {x: x_oriented ? 0 : x, y, z: x_oriented ? x : 0}
+                let test_offset = { x: x_oriented ? 0 : x, y, z: x_oriented ? x : 0 };
                 if (this.isUnlit(Vec3.add(position, test_offset), dimension, true)) {
-                    offset = test_offset
-                    light_success = true
-                    break
+                    offset = test_offset;
+                    light_success = true;
+                    break;
                 }
             }
         }
         if (light_success) {
-            this.lightPortal(Vec3.add(position, offset), dimension, x_oriented)
+            this.lightPortal(Vec3.add(position, offset), dimension, x_oriented);
         }
-        return light_success
+        return light_success;
     }
 }
-
 
 export default Portal;
