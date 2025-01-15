@@ -10,3 +10,8 @@ import "../blocks/logs/PurpleAgateLog.js";
 import "../blocks/logs/BurnedAgateLog.js"
 import "../blocks/GaiaGeyser.js"
 import "../blocks/PortalBlock.js"
+
+//slab registry
+import "../blocks/slabs/AmethystSlab.js"
+import "../blocks/slabs/CrackedAmethystSlab.js"
+import "../blocks/slabs/CrustedAmethystSlab.js"

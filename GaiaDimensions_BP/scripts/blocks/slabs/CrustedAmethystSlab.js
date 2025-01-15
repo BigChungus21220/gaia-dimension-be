@@ -3,7 +3,7 @@ import { world, ItemStack } from '@minecraft/server';
 // Subscribe to the 'worldInitialize' event to register custom components
 world.beforeEvents.worldInitialize.subscribe(eventData => {
     // Register a custom component named 'kai:on_interact' for slab interaction 
-    eventData.blockComponentRegistry.registerCustomComponent('gaia:cracked_amethyst_slab', {
+    eventData.blockComponentRegistry.registerCustomComponent('gaia:crusted_amethyst_slab', {
         // Define the behavior when a player interacts with the slab
         onPlayerInteract(e) {
             // Destructure event data for easier access
@@ -19,7 +19,7 @@ world.beforeEvents.worldInitialize.subscribe(eventData => {
             const selectedItem = equipment.getEquipment('Mainhand');
 
             // Check if the selected item is a slab and the block is not already double
-            if (selectedItem?.typeId === 'gaia:cracked_amethyst_slab' && !block.permutation.getState('kai:double')) {
+            if (selectedItem?.typeId === 'gaia:crusted_amethyst_slab' && !block.permutation.getState('kai:double')) {
                 // Check if the interaction is valid based on vertical half and face
                 const verticalHalf = block.permutation.getState('minecraft:vertical_half');
                 const isBottomUp = verticalHalf === 'bottom' && face === 'Up';
@@ -53,7 +53,7 @@ world.beforeEvents.worldInitialize.subscribe(eventData => {
                 // Set block to waterlogged and place corresponding structure
                 block.setPermutation(block.permutation.withState('block:waterlogged', true));
                 const verticalHalf = block.permutation.getState('minecraft:vertical_half');
-                const structureName = (verticalHalf === 'bottom') ? 'mystructure:CrackedAmethystBottomSlab' : 'mystructure:CrackedAmethystTopSlab'; // These structures contain your slab waterlogged, made with an NBT editor
+                const structureName = (verticalHalf === 'bottom') ? 'mystructure:CrustedAmethystBottomSlab' : 'mystructure:CrustedAmethystTopSlab'; // These structures contain your slab waterlogged, made with an NBT editor
                 const { x, y, z } = block.location; // Use block.location to get coordinates
                 world.structureManager.place(structureName, e.dimension, { x, y, z });
             }
@@ -77,7 +77,7 @@ world.beforeEvents.worldInitialize.subscribe(eventData => {
 
             // If the item is a pickaxe, spawn one slab in the block's position
             if (isPickaxe) {
-                const slabItem = new ItemStack('gaia:cracked_amethyst_slab', 1);
+                const slabItem = new ItemStack('gaia:crusted_amethyst_slab', 1);
                 e.dimension.spawnItem(slabItem, block.location);
             }
         }

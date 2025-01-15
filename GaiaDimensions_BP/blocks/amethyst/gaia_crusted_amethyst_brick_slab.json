@@ -26,7 +26,6 @@
 	  }
   },
   "permutations": [
-	  // Bottom Slab
 	  {
 		  "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && !q.block_state('kai:double')",
 		  "components": {
@@ -39,8 +38,7 @@
 				  "size": [16, 8, 16 ]
 			  }
 		  }
-	  },
-	  // Top Slab
+	  },  
 	  {
 		  "condition": "q.block_state('minecraft:vertical_half') == 'top' && !q.block_state('kai:double')",
 		  "components": {
@@ -54,12 +52,11 @@
 			  }
 		  }
 	  },
-	  // Double Slab
 	  {
 		  "condition": "q.block_state('kai:double')",
 		  "components": {
 			  "minecraft:geometry": "minecraft:geometry.full_block",
-			  "minecraft:custom_components": ["block:slab_destroy"] 
+			  "minecraft:custom_components": ["gaia:crusted_amethyst_slab"] 
 		  }
 	  }
   ],
@@ -77,7 +74,7 @@
 			  "top_slab": "q.block_state('minecraft:vertical_half') == 'top'"
 		  }
 	  },
-	  "minecraft:custom_components": ["block:slab"], 
+	  "minecraft:custom_components": ["gaia:crusted_amethyst_slab"], 
 		"minecraft:material_instances": {
 		  "*": {
 			"texture": "crusted_amethyst_brick",
