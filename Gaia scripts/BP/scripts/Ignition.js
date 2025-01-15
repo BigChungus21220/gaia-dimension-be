@@ -10,7 +10,7 @@ world.afterEvents.itemUseOn.subscribe(
                 block.typeId === "gaia:keystone_block"
             ) {
                 const pos = Vec3.add(block.location, Vec3[blockFace.toLowerCase()])
-                const lit = Portal.canLight(block.dimension.getBlock(pos));
+                const lit = Portal.canLight(block.dimension.getBlocks(pos));
                 if (lit) {
                     source.playSound("block.end_portal.spawn", {
                         location: block.location,
