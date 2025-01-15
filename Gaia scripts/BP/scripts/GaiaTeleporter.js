@@ -26,7 +26,7 @@ async function tpToGaia(entity) {
     const backUpLoc = Vec3.round(entity.location);
     const initialTeleport = convertCoords(backUpLoc, entity);
     entity.teleport(initialTeleport, {dimension: the_end});
-    entity.turnCoords();
+    entity.convertCoords();
     await delay(0.8);
 
     Portal.lightPortal(entity.location, the_end, true);
