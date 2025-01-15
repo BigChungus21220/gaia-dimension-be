@@ -50,9 +50,9 @@ class Portal {
         if (typeof fromLocation !== 'object' || typeof toLocation !== 'object') {
             throw new Error('Both fromLocation and toLocation must be objects');
         }
-        this.linked = this.linked.filter(l => {
-            l.location != fromLocation && l.linkedLocation != toLocation
-        })
+        this.linked = this.linked.filter(l => 
+    l.location !== fromLocation || l.linkedLocation !== toLocation
+)
         world.setDynamicProperty('PortalLinked', this.serialize(this.linked));
     }
 
