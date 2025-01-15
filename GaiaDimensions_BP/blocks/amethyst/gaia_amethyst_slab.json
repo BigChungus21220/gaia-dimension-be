@@ -15,7 +15,7 @@
 			}
 		},
 		"states": {
-			"block:double": [
+			"kai:double": [
 				false,
 				true
 			],
@@ -27,7 +27,7 @@
 	},
 	"permutations": [
 		{
-			"condition": "q.block_state('minecraft:vertical_half') == 'bottom' && !q.block_state('block:double')",
+			"condition": "q.block_state('minecraft:vertical_half') == 'bottom' && !q.block_state('kai:double')",
 			"components": {
 				"minecraft:collision_box": {
 					"origin": [-8, 0, -8],
@@ -40,7 +40,7 @@
 			}
 		},
 		{
-			"condition": "q.block_state('minecraft:vertical_half') == 'top' && !q.block_state('block:double')",
+			"condition": "q.block_state('minecraft:vertical_half') == 'top' && !q.block_state('kai:double')",
 			"components": {
 				"minecraft:collision_box": {
 					"origin": [-8, 8, -8],
@@ -53,10 +53,10 @@
 			}
 		},
 		{
-			"condition": "q.block_state('block:double')",
+			"condition": "q.block_state('kai:double')",
 			"components": {
 				"minecraft:geometry": "minecraft:geometry.full_block",
-				"minecraft:custom_components": ["block:slab_destroy"] 
+				"minecraft:custom_components": ["gaia:amethyst_slab"] 
 			}
 		}
 	],
@@ -74,7 +74,7 @@
 				"top_slab": "q.block_state('minecraft:vertical_half') == 'top'"
 			}
 		},
-		"minecraft:custom_components": ["block:slab"], 
+		"minecraft:custom_components": ["gaia:amethyst_slab"], 
 		"minecraft:material_instances": {
 		  "*": {
 			"texture": "amethyst_bricks",

@@ -6,7 +6,7 @@ function loadStructure(blockTypeId, dimension, blockLocation) {
     }
 }
 world.beforeEvents.worldInitialize.subscribe(eventData => {
-    eventData.blockTypeRegistry.registerCustomComponent('gaia:sapling', {
+    eventData.blockComponentRegistry.registerCustomComponent('gaia:sapling', {
         onRandomTick(block) {
          loadStructure(block.location);
         }

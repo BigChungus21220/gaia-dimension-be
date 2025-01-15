@@ -37,7 +37,7 @@ import { Vec3 } from '../Vec3.js';
 
 //blast entities using the geyser
 world.beforeEvents.worldInitialize.subscribe(eventData => {
-    eventData.blockTypeRegistry.registerCustomComponent('gaia:geyser', {
+    eventData.blockComponentRegistry.registerCustomComponent('gaia:geyser', {
         async onStepOn(e) {
             let block = e;
             let dimension = block.dimension;

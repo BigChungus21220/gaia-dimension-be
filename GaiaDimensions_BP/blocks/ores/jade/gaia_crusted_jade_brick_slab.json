@@ -15,7 +15,7 @@
 		  }
 	  },
 	  "states": {
-		  "block:double": [
+		  "kai:double": [
 			  false,
 			  true
 		  ],
@@ -28,7 +28,7 @@
   "permutations": [
 	  // Bottom Slab
 	  {
-		  "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && !q.block_state('block:double')",
+		  "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && !q.block_state('kai:double')",
 		  "components": {
 			  "minecraft:collision_box": {
 				  "origin": [-8, 0, -8],
@@ -42,7 +42,7 @@
 	  },
 	  // Top Slab
 	  {
-		  "condition": "q.block_state('minecraft:vertical_half') == 'top' && !q.block_state('block:double')",
+		  "condition": "q.block_state('minecraft:vertical_half') == 'top' && !q.block_state('kai:double')",
 		  "components": {
 			  "minecraft:collision_box": {
 				  "origin": [-8, 8, -8],
@@ -56,7 +56,7 @@
 	  },
 	  // Double Slab
 	  {
-		  "condition": "q.block_state('block:double')",
+		  "condition": "q.block_state('kai:double')",
 		  "components": {
 			  "minecraft:geometry": "minecraft:geometry.full_block",
 			  "minecraft:custom_components": ["block:slab_destroy"] 

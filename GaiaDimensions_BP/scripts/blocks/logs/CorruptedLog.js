@@ -5,7 +5,7 @@ import { world, BlockPermutation } from '@minecraft/server';
 // Subscribe to the 'worldInitialize' event to register custom components
 world.beforeEvents.worldInitialize.subscribe(eventData => {
     // Register a custom component named kai:on_interact for log interaction
-    eventData.blockTypeRegistry.registerCustomComponent('gaia:corrupted_log', {
+    eventData.blockComponentRegistry.registerCustomComponent('gaia:corrupted_log', {
         // Define the behavior when a player interacts with the block
         onPlayerInteract(e) {
             // Destructure event data for easier access

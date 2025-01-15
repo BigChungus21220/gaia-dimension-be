@@ -44,8 +44,8 @@ function set_corners(direction, [north, east, south, west]) {
 	return [north_east, north_west, south_east, south_west]
 }
 
-world.beforeEvents.worldInitialize.subscribe(({ blockTypeRegistry }) => {
-	blockTypeRegistry.registerCustomComponent('block:stairs', {
+world.beforeEvents.worldInitialize.subscribe(({ blockComponentRegistry }) => {
+	blockComponentRegistry.registerCustomComponent('block:stairs', {
 		beforeOnPlayerPlace(event) {
 			const perm = event.permutationToPlace
 			const direction = perm.getState("minecraft:cardinal_direction")
