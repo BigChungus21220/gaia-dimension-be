@@ -18,7 +18,7 @@ class Portal {
      * @private
      */
     static linked = JSON.parse(world.getDynamicProperty('PortalLinked') ?? "[]");
-    static LinkPositions = ['start', 'end']
+    static LinkPositions = ['start', 'end'];
     /** @private */
     static serialize = JSON.stringify;
     static PortalSizeY = 3;
@@ -65,49 +65,7 @@ class Portal {
         if (typeof location !== 'object') {
             throw new Error('location must be an object');
         }
-        let link;
-        switch (from) {
-            case 'start':
-                link = this.linked.find(link => {
-                    const volume = new BlockVolume(link.location, {
-                        x: link.location.x,
-                        y: link.location.y + this.PortalSizeY,
-                        z: link.location.z + this.PortalSizeZ
-                    });
-                    return volume.isInside(location);
-                });
-                break;
-            case 'end':
-                link = this.linked.find(link => {
-                    const volume = new BlockVolume(link.linkedLocation, {
-                        x: link.linkedLocation.x,
-                        y: link.linkedLocation.y + this.PortalSizeY,
-                        z: link.linkedLocation.z + this.PortalSizeZ
-                    });
-                    return volume.isInside(location);
-                });
-                break;
-            default:
-                throw new Error(`Invalid value for 'from': ${from}`);
-        }
-        return link || undefined;
-    }
-
-    /**
-     * Check if two locations are linked.
-     * @param {Vec3} fromLocation - The starting location.
-     * @param {Vec3} toLocation - The ending location.
-     * @returns {boolean} True if the locations are linked, false otherwise.
-     */
-    static isLinked(fromLocation, toLocation) {
-        return this.linked.some(d => 
-            d.location.x === fromLocation.x && 
-            d.location.y === fromLocation.y && 
-            d.location.z === fromLocation.z &&
-            d.linkedLocation.x === toLocation.x && 
-            d.linkedLocation.y === toLocation.y && 
-            d.linkedLocation.z === toLocation.z
-        );
+        return this.findLink(from, location);
     }
 
     /**
@@ -120,6 +78,16 @@ class Portal {
         if (typeof entity !== 'object') {
             throw new Error('entity must be an object');
         }
+        return this.findLink(from, entity.location);
+    }
+
+    /**
+     * Find the link based on the origin and the given location.
+     * @param {string} from - The origin ('start' or 'end').
+     * @param {Vec3} location - The location to check.
+     * @returns {Link|undefined} The found link or undefined.
+     */
+    static findLink(from, location) {
         let link;
         switch (from) {
             case 'start':
@@ -129,7 +97,7 @@ class Portal {
                         y: link.location.y + this.PortalSizeY,
                         z: link.location.z + this.PortalSizeZ
                     });
-                    return volume.isInside(entity.location);
+                    return volume.isInside(location);
                 });
                 break;
             case 'end':
@@ -139,7 +107,7 @@ class Portal {
                         y: link.linkedLocation.y + this.PortalSizeY,
                         z: link.linkedLocation.z + this.PortalSizeZ
                     });
-                    return volume.isInside(entity.location);
+                    return volume.isInside(location);
                 });
                 break;
             default:
@@ -147,6 +115,8 @@ class Portal {
         }
         return link || undefined;
     }
+
+    // ... (rest of the methods remain unchanged)
 
     static async lightPortal(corner, dimension, x_oriented) {
         for (let x = 0; x < 4; x++) {
@@ -169,7 +139,7 @@ class Portal {
     }
 
     static breakPortal(block) {
-        const adjacent = block.getAdjacent(b => block.typeId === 'gaia:gaia_portal', 40);
+        const adjacent = block.getAdjacent(b => b.typeId === 'gaia:gaia_portal', 40);
         adjacent.forEach(b => {
             this.LinkPositions.forEach(position => {
                 const link = this.getLink(position, block.location);
