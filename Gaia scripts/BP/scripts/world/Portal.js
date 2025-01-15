@@ -1,5 +1,5 @@
-import {BlockPermutation, Block, world, Entity, BlockVolume} from "@minecraft/server"
-import {Vec3} from "../Vec3";
+import { BlockPermutation, Block, world, Entity, BlockVolume } from "@minecraft/server";
+import { Vec3 } from "../Vec3";
 
 /**
  * @typedef Link
@@ -23,6 +23,31 @@ class Portal {
     static serialize = JSON.stringify;
     static PortalSizeY = 3;
     static PortalSizeZ = 2;
+
+    /**
+     * Get adjacent blocks of a specific type within a defined range.
+     * @param {Block} block - The reference block.
+     * @param {string} typeId - The type ID to match for adjacent blocks.
+     * @returns {Array<Block>} An array of adjacent blocks that match the type ID.
+     */
+    static getAdjacentBlocks(block, typeId) {
+        const adjacentBlocks = [];
+        const directions = [
+            { x: 1, y: 0, z: 0 }, { x: -1, y: 0, z: 0 },
+            { x: 0, y: 1, z: 0 }, { x: 0, y: -1, z: 0 },
+            { x: 0, y: 0, z: 1 }, { x: 0, y: 0, z: -1 }
+        ];
+
+        for (const dir of directions) {
+            const adjacentPos = Vec3.add(block.location, dir);
+            const adjacentBlock = block.dimension.getBlock(adjacentPos);
+            if (adjacentBlock && adjacentBlock.typeId === typeId) {
+                adjacentBlocks.push(adjacentBlock);
+            }
+        }
+
+        return adjacentBlocks;
+    }
 
     /**
      * Link two locations.
@@ -97,7 +122,7 @@ class Portal {
                         y: link.location.y + this.PortalSizeY,
                         z: link.location.z + this.PortalSizeZ
                     });
-                    return volume.isInside(entity.location);
+                    return volume.isInside(location); // Fixed the variable reference here
                 });
                 break;
             case 'end':
@@ -115,8 +140,6 @@ class Portal {
         }
         return link || undefined;
     }
-
-    // ... (rest of the methods remain unchanged)
 
     static async lightPortal(corner, dimension, x_oriented) {
         for (let x = 0; x < 4; x++) {
@@ -139,7 +162,7 @@ class Portal {
     }
 
     static breakPortal(block) {
-        const adjacent = block.getAdjacent(b => b.typeId === 'gaia:gaia_portal', 40);
+        const adjacent = this.getAdjacentBlocks(block, 'gaia:gaia_portal');
         adjacent.forEach(b => {
             this.LinkPositions.forEach(position => {
                 const link = this.getLink(position, block.location);
