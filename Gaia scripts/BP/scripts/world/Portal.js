@@ -172,7 +172,7 @@ class Portal {
         const adjacent = block.getAdjacent(b => block.typeId === 'gaia:gaia_portal', 40);
         adjacent.forEach(b => {
             this.LinkPositions.forEach(position => {
-                const link = this.getLink(position, b.location);
+                const link = this.getLink(position, block.location);
                 if (link) {
                     this.unlink(link.location, link.linkedLocation);
                 }
