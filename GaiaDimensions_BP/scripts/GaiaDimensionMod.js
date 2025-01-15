@@ -7,6 +7,6 @@ import './Ignition.js';
 import "./fluids/fluids.js";
 import "./world/Biome.js";
 import "./world/Fog.js";
-import "./world/TerrainInterpolator.js";
-import './client/GaiaSkyRenderer.js';
+import "./world/TerrainPatching.js";
+//import './client/GaiaSkyRenderer.js';
 
