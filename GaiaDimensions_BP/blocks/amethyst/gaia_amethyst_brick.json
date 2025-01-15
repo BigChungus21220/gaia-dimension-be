@@ -5,7 +5,7 @@
 			"identifier": "gaia:amethyst_brick",
 			"menu_category": {
 				"category": "nature",
-				"group": "itemGroup.name.gaia_brick"
+				"group": "itemGroup.name.stoneBrick"
 			}
 		},
 		"components": {
@@ -23,8 +23,7 @@
       "minecraft:material_instances": {
         "*": {
           "texture": "amethyst_bricks",
-          "render_method": "opaque",
-			"minecraft:map_color": "#ffffff"
+          "render_method": "opaque"
 	}
 }
   }

@@ -1,6 +1,4 @@
-//--------------template by Provedule, download on https://www.provedule.com/---------
-{
-  "format_version": "1.20.80",
+ "format_version": "1.20.80",
   "minecraft:block": {
     "description": {
       "identifier": "gaia:liquid_aura_down",
@@ -14,11 +12,9 @@
       }
     },
     "components": {
-      "minecraft:queued_ticking": {
+      "minecraft:ticking": {
         "looping": true,
-        "interval_range": [ 0.2, 0.2 ],
-        "on_tick": {
-          "event": "gaia:flow"
+        "interval_range": [ 5, 5 ],
         }
       },
       "minecraft:loot": "loot_tables/blocks/null.json",

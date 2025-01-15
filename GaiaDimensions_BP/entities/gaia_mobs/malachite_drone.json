@@ -68,7 +68,7 @@
       "minecraft:damage_sensor": {
         "triggers": {
           "cause": "fall",
-          "deals_damage": false
+          "deals_damage": "no"
         }
       },
       "minecraft:movement": {
@@ -154,11 +154,6 @@
       "minecraft:conditional_bandwidth_optimization": {}
     },
     "events": {
-      "minecraft:entity_spawned": {
-        "add": {
-          "component_groups": [""]
-        }
-      },
       "switch_to_melee": {
         "remove": {
           "component_groups": ["ranged_mode"]

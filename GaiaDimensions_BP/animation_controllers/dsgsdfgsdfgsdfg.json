@@ -11,7 +11,7 @@
             "woah": {
                 "on_entry": [
                     "/event entity @s resist",
-                    "/effect @s resistance 9999999 2 true"
+                    "/effect @s minecraft:resistance 9999999 2 true"
                 ]
             }
         }
