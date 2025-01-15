@@ -47,7 +47,7 @@ async function backToDimension(entity, coord = undefined) {
         // Check if entity is a Player instance
         if (entity instanceof Player) {
             dimension = entity.getSpawnPoint()?.dimension ?? overworld;
-            teleportLoc = Portal.isEntityInLinked('end', entity)?.location ?? coord;
+            teleportLoc = Portal.isEntityInLinked('end', entity)?.location ?? entity.location; // Use entity's location
         } else {
             dimension = overworld;
             teleportLoc = await getTopBlock(world.getDefaultSpawnLocation(), overworld);
@@ -58,7 +58,9 @@ async function backToDimension(entity, coord = undefined) {
             throw new Error("The provided entity is not an instance of Entity.");
         }
 
-        entity.convertCoords(true);
+        // Pass the player's location to convertCoords
+        const convertedCoords = entity.convertCoords(entity.location); // Pass the location
+
         // Make sure convertCoords and getTopBlock return valid values
         const targetLocation = await getTopBlock(teleportLoc, dimension) ?? coord;
         entity.teleport(convertCoords(targetLocation, entity), { dimension });
@@ -66,6 +68,7 @@ async function backToDimension(entity, coord = undefined) {
         console.error("Error in backToDimension:", error);
     }
 }
+
 
 tick8.subscribe(() => {
     for (const dimension of dimensions) {
