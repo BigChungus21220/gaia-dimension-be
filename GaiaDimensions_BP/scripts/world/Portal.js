@@ -140,27 +140,25 @@ class Portal {
         }
         return link || undefined;
     }
-
     static async lightPortal(corner, dimension, x_oriented) {
         for (let x = 0; x < 4; x++) {
             for (let y = 0; y < 5; y++) {
                 let blockpos = Vec3.add(corner, { x: x_oriented ? 0 : x, y, z: x_oriented ? x : 0 });
                 let is_edge = x === 0 || y === 0 || x === 3 || y === 4;
                 const block = await new Promise((resolve) => {
-                    const block = dimension.getBlock(blockpos);
-                    if (block !== undefined) {
-                        resolve(block);
-                    }
+                    resolve(dimension.getBlock(blockpos));
                 });
-                if (is_edge) {
-                    block.setPermutation(BlockPermutation.resolve("gaia:keystone_block"));
-                } else {
-                    block.setPermutation(BlockPermutation.resolve("gaia:gaia_portal", { "gaia:x_oriented": x_oriented }));
+    
+                if (block !== undefined) {
+                    if (is_edge) {
+                        block.setPermutation(BlockPermutation.resolve("gaia:keystone_block"));
+                    } else {
+                        block.setPermutation(BlockPermutation.resolve("gaia:gaia_portal", { "gaia:x_oriented": x_oriented }));
+                    }
                 }
             }
         }
     }
-
     static breakPortal(block) {
         const adjacent = this.getAdjacentBlocks(block, 'gaia:gaia_portal');
         adjacent.forEach(b => {
