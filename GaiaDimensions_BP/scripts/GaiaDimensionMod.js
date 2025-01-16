@@ -9,4 +9,4 @@ import './registration/ModBlocks.js';
 //import "./world/Fog.js";
 //import "./world/TerrainPatching.js";
 //import './client/GaiaSkyRenderer.js';
-
+import "./entity/MalachiteGuard.js"
