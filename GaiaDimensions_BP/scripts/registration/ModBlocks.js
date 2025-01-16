@@ -1,4 +1,4 @@
-
+//all the logs
 import "../blocks/logs/AuraLog.js";
 import "../blocks/logs/BlueAgateLog.js";
 import "../blocks/logs/FossilizedLog.js";
