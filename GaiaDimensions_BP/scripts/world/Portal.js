@@ -1,4 +1,4 @@
-import { BlockPermutation, Block, world, Entity, BlockVolume } from "@minecraft/server";
+import { Dimension, BlockPermutation, Block, world, Entity, BlockVolume } from "@minecraft/server";
 import { Vec3 } from "../Vec3";
 
 /**
@@ -41,7 +41,7 @@ class Portal {
         for (const dir of directions) {
             const adjacentPos = Vec3.add(block.location, dir);
             const adjacentBlock = block.dimension.getBlock(adjacentPos);
-            if (adjacentBlock && adjacentBlock.typeId === typeId) {
+            if (adjacentBlock && adjacentBlock.typeId) {
                 adjacentBlocks.push(adjacentBlock);
             }
         }
@@ -140,25 +140,22 @@ class Portal {
         }
         return link || undefined;
     }
-    static async lightPortal(corner, dimension, x_oriented) {
+    static lightPortal(corner, dimension, x_oriented) {
         for (let x = 0; x < 4; x++) {
             for (let y = 0; y < 5; y++) {
-                let blockpos = Vec3.add(corner, { x: x_oriented ? 0 : x, y, z: x_oriented ? x : 0 });
-                let is_edge = x === 0 || y === 0 || x === 3 || y === 4;
-                const block = await new Promise((resolve) => {
-                    resolve(dimension.getBlock(blockpos));
-                });
-    
+                const is_edge = x === 0 || y === 0 || x === 3 || y === 4;
+                const block = dimension.getBlock(Vec3.add(corner, { x: x_oriented ? 0 : x, y, z: x_oriented ? x : 0 }))
+      
                 if (block !== undefined) {
                     if (is_edge) {
-                        block.setPermutation(BlockPermutation.resolve("gaia:keystone_block"));
+                      block.setType('gaia:keystone_block')
                     } else {
-                        block.setPermutation(BlockPermutation.resolve("gaia:gaia_portal", { "gaia:x_oriented": x_oriented }));
+                      block.setPermutation(BlockPermutation.resolve("gaia:gaia_portal", { "gaia:x_oriented": x_oriented }));
                     }
                 }
             }
         }
-    }
+      }
     static breakPortal(block) {
         const adjacent = this.getAdjacentBlocks(block, 'gaia:gaia_portal');
         adjacent.forEach(b => {
@@ -221,3 +218,5 @@ class Portal {
 }
 
 export default Portal;
+
+

@@ -1,5 +1,5 @@
 import {world, system, Player, Dimension, Entity} from "@minecraft/server";
-import {delay, convertCoords, overworld, the_end} from './utils.js';
+import {delay, convertCoords, overworld, gaia} from './utils.js';
 import { CoordinateDisplay } from "./world/CoordinateDisplay.js"
 import Gaia from './world/Gaia.js';
 import Portal from "./world/Portal.js";
@@ -16,24 +16,43 @@ async function getTopBlock(location, dimension) {
 }
 
 function isMoving(entity) {
-    if (!(entity instanceof Player)) throw new TypeError('Parameter is not a Player');
+    if (!(entity instanceof Entity)) throw new TypeError('Parameter is not a Player');
     const {x, y, z} = entity.getVelocity();
     return [x, y, z].some(v => v !== 0);
 }
 
 async function tpToGaia(entity) {
-    if (entity instanceof Player) entity.setDynamicProperty('enteredByPortal', true);
+    // Check if the entity is an instance of Entity
+    if (!(entity instanceof Entity)) {
+        console.error("The provided entity is not an instance of Entity.");
+        return;
+    }
+
+    // Set a dynamic property on the entity
+    entity.setDynamicProperty('enteredByPortal', true);
+    
+    // Backup the current location
     const backUpLoc = Vec3.round(entity.location);
     const initialTeleport = convertCoords(backUpLoc, entity);
-    entity.teleport(initialTeleport, {dimension: the_end});
-    entity.convertCoords();
+
+    // Teleport the entity
+    entity.teleport(initialTeleport, { dimension: gaia});
+
+    // Convert coordinates after teleporting
+    convertCoords();
     await delay(0.8);
 
-    Portal.lightPortal(entity.location, the_end, true);
+    // Light the portal
+    Portal.lightPortal(entity.location, gaia, true);
     await delay(0.8);
 
+    // Get the top block location
     const topBlockVec = (await getTopBlock(entity.location, entity.dimension)) ?? entity.location;
-    entity.teleport(topBlockVec, {dimension: entity.dimension});
+
+    // Teleport again to the top block location
+    entity.teleport(topBlockVec, { dimension: entity.dimension });
+
+    // Link the portal if it doesn't already exist
     const existingLink = Portal.getLink('start', backUpLoc);
     if (!existingLink) {
         Portal.link(backUpLoc, topBlockVec);

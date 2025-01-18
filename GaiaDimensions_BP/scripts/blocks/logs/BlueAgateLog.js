@@ -1,10 +1,10 @@
 // Import necessary modules from Minecraft server API
-//Template from Kaioga Block Repository
+// Template from Kaioga Block Repository
 import { world, BlockPermutation } from '@minecraft/server';
 
-// Subscribe to the 'worldInitialize' event to register custom components
+// Subscribe to the world initialization event
 world.beforeEvents.worldInitialize.subscribe(eventData => {
-    // Register a custom component named kai:on_interact for log interaction
+    // Register a custom component for log interaction
     eventData.blockComponentRegistry.registerCustomComponent('gaia:blue_agate_log', {
         // Define the behavior when a player interacts with the block
         onPlayerInteract(e) {
@@ -20,17 +20,18 @@ world.beforeEvents.worldInitialize.subscribe(eventData => {
 
             // Get the current block state
             const blockState = block.permutation.getState("minecraft:block_face");
-            
-            // If block state exists, resolve the stripped log permutation based on the block_face block trait
+
+            // If block state exists, set the type of the block
             if (blockState) {
-                const strippedLog = BlockPermutation.resolve('gaia:stripped_blue_agate_log', {"minecraft:block_face": blockState});
-                
+                // Create a new BlockPermutation with the same block face state
+                const strippedLogPermutation = BlockPermutation.resolve("gaia:stripped_" + block.typeId, { "minecraft:block_face": blockState });
+
                 // Set the block permutation to the stripped log
-                block.setPermutation(strippedLog);
+                block.setPermutation(strippedLogPermutation);
+                
+                // Play wood step sound effect
+                player.playSound('step.wood');
             }
-            
-            // Play wood step sound effect
-            player.playSound('step.wood');
         }
     });
 });

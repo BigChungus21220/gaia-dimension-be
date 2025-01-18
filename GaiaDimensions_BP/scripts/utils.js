@@ -5,6 +5,9 @@ import Gaia from './world/Gaia'
 export function delay(ticks) {
     return new Promise(res => system.runTimeout(res, ticks * 20));
 }
+
+
+//convert coordinate
 export function convertCoords(location, entity) {
     let fromDimension, toDimension, scaleFactor;
     const dimensionId = entity.dimension.id.split(':').pop()
@@ -89,6 +92,7 @@ export function MathRound(x) {
     return Math.round(x);
 }
 
+export const gaia = the_end 
 export const the_end = world.getDimension('the_end');
 export const overworld = world.getDimension('overworld')
 

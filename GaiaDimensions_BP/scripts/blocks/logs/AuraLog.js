@@ -4,7 +4,7 @@ import { world, BlockPermutation } from '@minecraft/server';
 
 // Subscribe to the 'worldInitialize' event to register custom components
 world.beforeEvents.worldInitialize.subscribe(eventData => {
-    // Register a custom component named kai:on_interact for log interaction
+    // Register a custom component named for log interaction
     eventData.blockComponentRegistry.registerCustomComponent('gaia:aura_log', {
         // Define the behavior when a player interacts with the block
         onPlayerInteract(e) {
@@ -23,7 +23,7 @@ world.beforeEvents.worldInitialize.subscribe(eventData => {
             
             // If block state exists, resolve the stripped log permutation based on the block_face block trait
             if (blockState) {
-                const strippedLog = BlockPermutation.resolve('gaia:stripped_aura_log', {"minecraft:block_face": blockState});
+                const strippedLog = block.setType('gaia:stripped_aura_log', {"minecraft:block_face": blockState});
                 
                 // Set the block permutation to the stripped log
                 block.setPermutation(strippedLog);
