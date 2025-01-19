@@ -6,6 +6,7 @@ import Portal from "./world/Portal.js";
 import {Vec3} from "./Vec3.js";
 import {playerChangeBlock, tick8} from "./world/Events.js";
 
+
 const dimensions = world.getAllDimensions();
 
 /**
