@@ -48,11 +48,7 @@ async function tpToGaia(entity) {
 
     // Get the top block location
     const topBlockVec = (await getTopBlock(entity.location, entity.dimension)) ?? entity.location;
-
-    // Teleport again to the top block location
     entity.teleport(topBlockVec, { dimension: entity.dimension });
-
-    // Link the portal if it doesn't already exist
     const existingLink = Portal.getLink('start', backUpLoc);
     if (!existingLink) {
         Portal.link(backUpLoc, topBlockVec);
@@ -76,13 +72,8 @@ async function backToDimension(entity, coord = undefined) {
         if (!(entity instanceof Entity)) {
             throw new Error("The provided entity is not an instance of Entity.");
         }
-
-        // Pass the player's location to convertCoords
-        const convertedCoords = entity.convertCoords(entity.location); // Pass the location
-
-        // Make sure convertCoords and getTopBlock return valid values
         const targetLocation = await getTopBlock(teleportLoc, dimension) ?? coord;
-        entity.teleport(convertCoords(targetLocation, entity), { dimension });
+        entity.teleport(convertCoords(targetLocation, entity), { dimension : overworld });
     } catch (error) {
         console.error("Error in backToDimension:", error);
     }
@@ -124,7 +115,9 @@ tick8.subscribe(() => {
 });
 
 playerChangeBlock.subscribe(({ player }) => {
-    if (player instanceof Player && coordinateDisplay instanceof CoordinateDisplay) {
-        player.coordinateDisplay.updateCoordinates();
+    if (player instanceof Player) {
+        if (coordinateDisplay instanceof CoordinateDisplay) {
+            coordinateDisplay.updateCoordinates();
+        }
     }
 });
