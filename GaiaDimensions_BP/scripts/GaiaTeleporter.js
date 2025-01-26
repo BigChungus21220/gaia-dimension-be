@@ -23,12 +23,6 @@ function isMoving(entity) {
 }
 
 async function tpToGaia(entity) {
-    // Check if the entity is an instance of Entity
-    if (!(entity instanceof Entity)) {
-        console.error("The provided entity is not an instance of Entity.");
-        return;
-    }
-
     // Set a dynamic property on the entity
     entity.setDynamicProperty('enteredByPortal', true);
     
