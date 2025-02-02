@@ -1,5 +1,5 @@
 import { Player, Entity, world, ScreenDisplay, system } from "@minecraft/server";
-export { Level, ModDimension };
+export { level, ModDimension };
 const ALL_MOD_DIMENSIONS = {};
 
 /**
@@ -184,3 +184,45 @@ class Level {
     }
 }
 
+const level = new Level
+
+// Coordinate display
+
+// Returns the coordinates that should be displayed on the screen
+function planet_coords(entity) {
+    if (entity.dimension.id != 'minecraft:the_end') return entity.location;
+    let planet = Planet.getAll().find(pl => pl.isOnPlanet(entity.location))
+    return planet?.offset(entity.location) || entity.location
+  }
+  
+  world.afterEvents.gameRuleChange.subscribe(({rule, value}) => {
+      if (rule == "showCoordinates" && value == false)
+          world.getAllPlayers().forEach(player =>
+              player.onScreenDisplay.setActionBar(`§.`)
+          )
+      }
+  )
+  
+  system.runInterval(() => {
+      if (!world.gameRules.showCoordinates) return
+      world.getAllPlayers().forEach(player => {
+          let {x, y, z} = planet_coords(player)
+          x = Math.floor(x)
+          y = Math.floor(y)
+          z = Math.floor(z)
+          player.onScreenDisplay.setActionBar(`Position: ${x}, ${y}, ${z}`)
+      })
+  })
+  
+  // Adding Gravity
+  system.runTimeout(() => {
+      for (let planet of Planet.getAll()) {
+          planet.events.onJoin('addGravity', ((event, player) => {
+              new Gravity(player).setTemp(planet.gravity)
+          }))
+  
+          planet.events.onLeave('removeGravity', ((event, player) => {
+              new Gravity(player).setTemp(9.8)
+          }))
+      }
+  })

@@ -1,7 +1,7 @@
 import Gaia from "./Gaia";
 import * as Events from "./Events";
 import { Player } from "@minecraft/server";
-import { Level, ModDimension } from "./ModDimension";
+import { Level } from "./ModDimension";
 
 const level = new Level();
 const dimension = level.getDimension('gaia');

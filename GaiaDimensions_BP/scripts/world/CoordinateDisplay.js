@@ -1,5 +1,5 @@
 import { ScreenDisplay, world, system } from "@minecraft/server";
-import { Planet } from "planets/dimension/GalacticraftPlanets.js";
+import { ModDimension } from "./ModDimension";
 
 /**
  * Class to manage player coordinates relative to a planet's coordinates
@@ -60,7 +60,7 @@ export class CoordinateManager {
      */
     getCoords(entity) {
         if (entity.dimension.id !== 'minecraft:the_end') return entity.location;
-        let planet = Planet.getAll().find(pl => pl.isOnPlanet(entity.location));
-        return planet?.offset(entity.location) || entity.location;
+        let gaia = ModDimension.getAll().find(pl => pl.isOnDimension(entity.location));
+        return gaia?.offset(entity.location) || entity.location;
     }
 }

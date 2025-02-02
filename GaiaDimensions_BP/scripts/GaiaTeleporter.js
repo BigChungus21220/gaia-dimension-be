@@ -1,6 +1,6 @@
 import {world, system, Player, Dimension, Entity} from "@minecraft/server";
 import {delay, convertCoords, overworld, gaia} from './utils.js';
-import { CoordinateDisplay } from "./world/CoordinateDisplay.js"
+import { CoordinateManager } from "./world/CoordinateDisplay.js"
 import Gaia from './world/Gaia.js';
 import Portal from "./world/Portal.js";
 import {Vec3} from "./Vec3.js";
@@ -111,7 +111,7 @@ tick8.subscribe(() => {
 
 playerChangeBlock.subscribe(({ player }) => {
     if (player instanceof Player) {
-        if (coordinateDisplay instanceof CoordinateDisplay) {
+        if (coordinateDisplay instanceof CoordinateManager) {
             coordinateDisplay.updateCoordinates();
         }
     }
