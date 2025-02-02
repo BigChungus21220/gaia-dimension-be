@@ -1,66 +1,66 @@
-import { Vec3 } from "../Vec3";
-import { MathRound as round } from "../utils";
-import { Vector } from "@minecraft/server"
+import { ScreenDisplay, world, system } from "@minecraft/server";
+import { Planet } from "planets/dimension/GalacticraftPlanets.js";
 
-export class CoordinateDisplay {
-    static #locationMap = new Map();
-
+/**
+ * Class to manage player coordinates relative to a planet's coordinates
+ */
+export class CoordinateManager {
+    /**
+     * Creates an instance of CoordinateManager for a player
+     * @param {Player} player - The player object
+     */
     constructor(player) {
         this.player = player;
+        
+        // Bind the player's display to the custom action bar logic
+        this.bindDisplay();
     }
 
-    static adjustCoordinates(x, z) {
-        return {
-            adjustedX: Math.floor((x - 100000) / 1000),
-            adjustedZ: Math.floor((z - 100000) / 1000)
+    /**
+     * Binds the action bar to display coordinates
+     */
+    bindDisplay() {
+        const oldSetActionBar = ScreenDisplay.prototype.setActionBar;
+        const actionbars = new WeakMap();
+        const displayBind = new WeakMap();
+
+        ScreenDisplay.prototype.setActionBar = function(text) {
+            let func = oldSetActionBar.bind(this);
+            if (!world.gameRules.showCoordinates) {
+                func(text);
+                return;
+            }
+
+            let result = text === "COORDS" ? (actionbars.get(this) || { time: 0, text: '' }) : {
+                time: system.currentTick + 100,
+                text: text
+            };
+
+            if (text !== "COORDS") actionbars.set(this, result);
+            let loc = this.getCoords(displayBind.get(this));
+            result = ['x', 'y', 'z'].map(axis => Math.round(loc[axis])).join(' ') + (result.time > system.currentTick ? '\n' + result.text : '');
+
+            func(result);
         };
-    }
-//Update Coordinates within Gaia Dimensiom
-     updateCoordinates() {
-        const { name, location } = this.player;
-        const locationMap = CoordinateDisplay.#locationMap;
 
-        // Retrieve previous location or initialize with current location
-        const prevLocation = locationMap.get(name)?.current || Vec3.round(location);
-
-        // Determine movement direction and adjust coordinates
-        let adjustedX = 0;
-        let adjustedZ = 0;
-
-        if (location.x > prevLocation.x) {
-            adjustedX = 1; // Move forward in x direction
-        } else if (location.x < prevLocation.x) {
-            adjustedX = -1; // Move backward in x direction
-        }
-
-        if (location.z > prevLocation.z) {
-            adjustedZ = 1; // Move forward in z direction
-        } else if (location.z < prevLocation.z) {
-            adjustedZ = -1; // Move backward in z direction
-        }
-
-        // Update coordinates based on adjustments
-        let current = { ...prevLocation };
-        current.x += adjustedX;
-        current.z += adjustedZ;
-        current.y = location.y; // Update y-coordinate
-
-        locationMap.set(name, { current: Vec3.round(current) });
-
-        // Retrieve current location data
-        const currentLocation = locationMap.get(name)?.current;
-
-        // Prepare coordinate string for display
-        const coordString = isNaN(currentLocation?.x) || isNaN(currentLocation?.z)
-            ? "Loading Coordinates..."
-            : `x: ${currentLocation.x} y: ${currentLocation.y} z: ${currentLocation.z}`;
-
-        // Update player display with coordinates
-        this.player.onScreenDisplay.setActionBar(coordString);
+        // Periodically update the action bar for all players
+        system.runInterval(() => {
+            if (!world.gameRules.showCoordinates) return;
+            for (let player of world.getAllPlayers()) {
+                displayBind.set(player.onScreenDisplay, player);
+                player.onScreenDisplay.setActionBar('COORDS');
+            }
+        });
     }
 
-    get coord() {
-        const currentLocation = CoordinateDisplay.#locationMap.get(this.player.name)?.current;
-        return currentLocation ? { x: currentLocation.x, y: currentLocation.y, z: currentLocation.z } : null;
+    /**
+     * Gets coordinates relative to the planet or regular coordinates
+     * @param {Vector} entity - The player object to get the location from
+     * @returns {Vector} The player's position relative to the planet's origin or regular coordinates
+     */
+    getCoords(entity) {
+        if (entity.dimension.id !== 'minecraft:the_end') return entity.location;
+        let planet = Planet.getAll().find(pl => pl.isOnPlanet(entity.location));
+        return planet?.offset(entity.location) || entity.location;
     }
 }
