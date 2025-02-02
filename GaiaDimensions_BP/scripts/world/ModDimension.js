@@ -1,16 +1,19 @@
 import { Player, Entity, world, ScreenDisplay, system } from "@minecraft/server";
 export { CustomDimension };
+const ALL_MOD_DIMENSIONS = {};
 
-
-class CustomDimension {
-    constructor({ type, range, parentDimension }) {
+/**
+ * Class representing a ModDimension
+ */
+class ModDimension {
+    constructor({ type, range, inheritance }) {
         this.type = type;
         this.range = range;
         this.center = {
             x: (this.range.start.x + this.range.end.x) / 2,
             z: (this.range.start.z + this.range.end.z) / 2
         };
-        this.parentDimension = world.getDimension(parentDimension);
+        this.inheritance = world.getDimension(inheritance);
         this.eventsHandler = new DimensionEvents(this);
     }
 
@@ -33,13 +36,13 @@ class CustomDimension {
     }
 
     getEntities(entityQueryOptions) {
-        return this.parentDimension.getEntities(entityQueryOptions).filter(entity => 
+        return this.inheritance.getEntities(entityQueryOptions).filter(entity => 
             this.isInDimension(entity.location)
         );
     }
 
     getPlayers(entityQueryOptions) {
-        return this.parentDimension.getPlayers(entityQueryOptions).filter(entity => 
+        return this.inheritance.getPlayers(entityQueryOptions).filter(entity => 
             this.isInDimension(entity.location)
         );
     }
@@ -53,30 +56,33 @@ class CustomDimension {
     }
 
     static register(id, options) {
-        if (CustomDimension.get(id) !== undefined) {
+        if (ModDimension.get(id) !== undefined) {
             throw new Error('Dimension with id "' + id + '" is already registered');
         }
         options = {
             range: options.range || { start: { x: -1, z: -1 }, end: { x: 1, z: 1 } },
-            parentDimension: options.parentDimension || 'the_end'
+            inheritance: options.inheritance || 'the_end'
         };
-        ALL_CUSTOM_DIMENSIONS[id] = new CustomDimension({
+        ALL_MOD_DIMENSIONS[id] = new ModDimension({
             type: id,
             range: options.range,
-            parentDimension: options.parentDimension
+            inheritance: options.inheritance
         });
-        return CustomDimension.get(id);
+        return ModDimension.get(id);
     }
 
     static get(id) {
-        return ALL_CUSTOM_DIMENSIONS[id];
+        return ALL_MOD_DIMENSIONS[id];
     }
 
     static getAll() {
-        return Object.keys(ALL_CUSTOM_DIMENSIONS).map(id => this.get(id));
+        return Object.keys(ALL_MOD_DIMENSIONS).map(id => this.get(id));
     }
 }
 
+/**
+ * Class to handle events related to dimensions
+ */
 class DimensionEvents {
     constructor(dimension) {
         this.dimension = dimension;
@@ -144,6 +150,9 @@ class DimensionEvents {
     }
 }
 
+/**
+ * Class representing an individual dimension event
+ */
 class DimensionEvent {
     constructor(id, type, callback, handler) {
         this.id = id;
@@ -156,3 +165,22 @@ class DimensionEvent {
         this.handler.removeEvent(this.id);
     }
 }
+
+/**
+ * Level class to manage dimensions
+ */
+class Level {
+    constructor() {
+        this.dimensions = ALL_MOD_DIMENSIONS;
+    }
+
+    /**
+     * Gets a specific dimension by ID
+     * @param {string} id - The ID of the dimension to retrieve
+     * @returns {ModDimension|undefined} The dimension if found, otherwise undefined
+     */
+    getDimension(id) {
+        return ModDimension.get(id);
+    }
+}
+
