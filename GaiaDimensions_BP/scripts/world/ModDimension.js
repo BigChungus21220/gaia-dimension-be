@@ -1,5 +1,5 @@
 import { Player, Entity, world, ScreenDisplay, system } from "@minecraft/server";
-export { CustomDimension };
+export { Level, ModDimension };
 const ALL_MOD_DIMENSIONS = {};
 
 /**

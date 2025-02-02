@@ -1,8 +1,10 @@
 import Gaia from "./Gaia";
 import * as Events from "./Events";
+import { Player } from "@minecraft/server";
+import { Level, ModDimension } from "./ModDimension";
 
-
-
+const level = new Level();
+const dimension = level.getDimension('gaia');
 /**
  * Handles fog changes
  */
@@ -17,7 +19,7 @@ class FogSystem {
      * @param {Player} player Player to update fogs of
      */
     static updateFog(player, biome) {
-        if (Gaia.isInGaia(player.location)) {
+        if (dimension.isInDimension(player.location)) {
             this.setFog(player, biome);
         } else {
             this.clearFogs(player);
@@ -30,7 +32,7 @@ class FogSystem {
      */
     static clearFogs(player) {
         for (const biome of this.playerFogs[player.id] ?? []) {
-            player.runCommandAsync("fog @s remove " + biome);
+            player.runCommand("fog @s remove " + biome);
         }
         this.playerFogs[player.id] = [];
     }
@@ -42,7 +44,7 @@ class FogSystem {
      */
     static setFog(player, biome) {
         this.clearFogs(player);
-        player.runCommandAsync("fog @s push gaia:" + biome + "_fog " + biome);
+        player.runCommand("fog @s push gaia:" + biome + "_fog " + biome);
         this.playerFogs[player.id].push(biome);
     }
 }
