@@ -14,13 +14,6 @@
       "minecraft:selection_box": false,
       "minecraft:geometry": "geometry.gaia_fire",
       "minecraft:destructible_by_explosion": false,
-      "minecraft:queued_ticking": {
-        "looping": true,
-        "interval_range": [100, 300], 
-        "on_tick": {
-          "event": "gaia:puff"
-        }
-      },
       "minecraft:material_instances": {
         "*": {
           "texture": "gold_fire", 
@@ -30,9 +23,5 @@
         }
       },
       "minecraft:loot": "loot_tables/empty.json",
-      "minecraft:on_interact" : {
-        "event": "gaia:puff2",
-        "target": "self"
-      },
       "tag:fire": {}
     }}}
