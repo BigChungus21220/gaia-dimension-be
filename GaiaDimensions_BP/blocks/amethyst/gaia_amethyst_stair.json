@@ -1,5 +1,5 @@
 {
-	"format_version": "1.20",
+	"format_version": "1.21.60",
 	"minecraft:block": {
 		"description": {
 			"identifier": "gaia:amethyst_stair",
@@ -59,7 +59,7 @@
 				}
 			},
 			"minecraft:loot": "loot_tables/blocks/gaia/amethyst_stairs.json",	
-			"minecraft:breathability": "air",
+			
 			"tag:wood": {},
 			"tag:stairs": {},
 		"minecraft:destructible_by_mining": {

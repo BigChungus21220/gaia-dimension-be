@@ -10,3 +10,4 @@ import './registration/ModBlocks.js';
 //import "./world/TerrainPatching.js";
 //import './client/GaiaSkyRenderer.js';
 import "./entity/MalachiteGuard.js"
+import "./world/DimensionRegistry.js"
