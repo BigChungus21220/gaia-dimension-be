@@ -64,3 +64,5 @@ export class CoordinateManager {
         return gaia?.offset(entity.location) || entity.location;
     }
 }
+
+
