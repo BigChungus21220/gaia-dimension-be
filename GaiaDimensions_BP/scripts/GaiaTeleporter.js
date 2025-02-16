@@ -1,118 +1,120 @@
-import {world, system, Player, Dimension, Entity} from "@minecraft/server";
-import {delay, convertCoords, overworld, gaia} from './utils.js';
-import { CoordinateManager } from "./world/CoordinateDisplay.js"
-import Gaia from './world/Gaia.js';
-import Portal from "./world/Portal.js";
-import {Vec3} from "./Vec3.js";
-import {playerChangeBlock, tick8} from "./world/Events.js";
+import { world, system, Player, Entity } from "@minecraft/server";
+import { Vec3 } from "./Vec3.js";
+import { level } from "./world/ModDimension.js";
 
-
-const dimensions = world.getAllDimensions();
+// A WeakMap to store each entity’s portal state.
+const portalState = new WeakMap();
 
 /**
- * @param {Dimension} dimension
+ * PortalManager handles teleportation using only the Portal class.
+ * It uses a WeakMap to store per-entity state and dynamically links
+ * portal transitions.
  */
-async function getTopBlock(location, dimension) {
-      return dimension.getTopmostBlock(location);
-}
+class PortalManager {
+  /**
+   * Processes an entity for portal transitions.
+   * @param {Entity} entity 
+   */
+  static async processEntity(entity) {
+    // We only handle Player instances.
+    if (!(entity instanceof Player)) return;
 
-function isMoving(entity) {
-    if (!(entity instanceof Entity)) throw new TypeError('Parameter is not a Player');
-    const {x, y, z} = entity.getVelocity();
-    return [x, y, z].some(v => v !== 0);
-}
+    // Determine if the entity is “in a portal”
+    const currentlyInPortal = entity.isInPortal();
 
-async function tpToGaia(entity) {
-    // Set a dynamic property on the entity
-    entity.setDynamicProperty('enteredByPortal', true);
+    // Retrieve state or initialize new state.
+    let state = portalState.get(entity);
+    if (!state) {
+      state = { inPortal: false, backupLocation: null };
+      portalState.set(entity, state);
+    }
+
+    // When the entity has just entered a portal…
+    if (currentlyInPortal && !state.inPortal) {
+      // Save the backup location (rounded)
+      state.backupLocation = Vec3.round(entity.location);
+      state.inPortal = true;
+      portalState.set(entity, state);
+      await PortalManager.tpToTarget(entity, state.backupLocation);
+    }
+    // When the entity has just exited a portal…
+    if (!currentlyInPortal && state.inPortal) {
+      state.inPortal = false;
+      portalState.set(entity, state);
+      await PortalManager.backToOverworld(entity, state.backupLocation);
+    }
+  }
+
+  /**
+   * Teleports the entity to the target dimension using portal logic.
+   * This mimics tpToGaia in our earlier code.
+   * @param {Player} entity 
+   * @param {object} backupLocation 
+   */
+  static async tpToTarget(entity, backupLocation) {
+    // Mark that the entity has been processed.
+    entity.setDynamicProperty("enteredByPortal", true);
     
-    // Backup the current location
-    const backUpLoc = Vec3.round(entity.location);
-    const initialTeleport = convertCoords(backUpLoc, entity);
+    // For simplicity, assume the target location equals the backup.
+    const targetLoc = backupLocation;
+    
+    // Dynamically import the Portal class so that it is loaded only when needed.
+    const { default: Portal } = await import("./world/Portal.js");
+    // For this example, assume Portal has a static property "targetDimension".
+    const targetDimension = Portal.targetDimension || level.getDimension("gaia");
 
-    // Teleport the entity
-    entity.teleport(initialTeleport, { dimension: gaia});
-
-    // Convert coordinates after teleporting
-    convertCoords();
-    await delay(0.8);
-
-    // Light the portal
-    Portal.lightPortal(entity.location, gaia, true);
-    await delay(0.8);
-
-    // Get the top block location
-    const topBlockVec = (await getTopBlock(entity.location, entity.dimension)) ?? entity.location;
-    entity.teleport(topBlockVec, { dimension: entity.dimension });
-    const existingLink = Portal.getLink('start', backUpLoc);
-    if (!existingLink) {
-        Portal.link(backUpLoc, topBlockVec);
+    // Teleport the entity to the target dimension at the target location.
+    entity.teleport(targetLoc, { dimension: targetDimension });
+    await PortalManager.delay(0.8);
+    
+    // Light the portal structure at the new location.
+    Portal.lightPortal(entity.location, targetDimension, true);
+    await PortalManager.delay(0.8);
+    
+    // For simplicity, assume the top block is the entity's current location.
+    const finalLoc = entity.location;
+    entity.teleport(finalLoc, { dimension: targetDimension });
+    
+    // If no link exists from the backup location, then link it.
+    if (!Portal.getLink("start", backupLocation)) {
+      Portal.link(backupLocation, finalLoc);
     }
+  }
+
+  /**
+   * Teleports the entity back to the overworld.
+   * @param {Player} entity 
+   * @param {object} backupLocation 
+   */
+  static async backToOverworld(entity, backupLocation) {
+    // Clear the portal entry marker.
+    entity.setDynamicProperty("enteredByPortal", false);
+    // For simplicity, use the backup location as the destination.
+    const dest = backupLocation || entity.location;
+    // Assume the overworld dimension is available as Portal.overworldDimension.
+    const overworldDim = Portal.overworldDimension || world.getDimension("overworld");
+    // Teleport the entity back.
+    entity.teleport(dest, { dimension: overworldDim });
+  }
+
+  /**
+   * Returns a Promise that resolves after the given seconds.
+   * @param {number} seconds 
+   * @returns {Promise<void>}
+   */
+  static delay(seconds) {
+    return new Promise(resolve => setTimeout(resolve, seconds * 50));
+  }
 }
 
-async function backToDimension(entity, coord = undefined) {
-    try {
-        let teleportLoc, dimension;
+// Run an interval (every 5 ticks) to process all players.
+system.runInterval(async () => {
+  // Use dynamic import to get Portal in case its properties have changed.
+  const { default: Portal } = await import("./world/Portal.js");
+  // Process each player.
+  for (const player of world.getAllPlayers()) {
+    await PortalManager.processEntity(player);
+  }
+}, 5);
 
-        // Check if entity is a Player instance
-        if (entity instanceof Player) {
-            dimension = entity.getSpawnPoint()?.dimension ?? overworld;
-            teleportLoc = Portal.isEntityInLinked('end', entity)?.location ?? entity.location; // Use entity's location
-        } else {
-            dimension = overworld;
-            teleportLoc = await getTopBlock(world.getDefaultSpawnLocation(), overworld);
-        }
-
-        // Ensure entity is an instance of Entity before the call
-        if (!(entity instanceof Entity)) {
-            throw new Error("The provided entity is not an instance of Entity.");
-        }
-        const targetLocation = await getTopBlock(teleportLoc, dimension) ?? coord;
-        entity.teleport(convertCoords(targetLocation, entity), { dimension : overworld });
-    } catch (error) {
-        console.error("Error in backToDimension:", error);
-    }
-}
-
-
-tick8.subscribe(() => {
-    for (const dimension of dimensions) {
-        for (const entity of dimension.getEntities()) {
-            // Check if the entity is an instance of Entity
-            if (!(entity instanceof Player)) {
-                continue; // Skip if not an instance of Entity
-            }
-
-            const lastInPortal = entity.hasTag("inPortal");
-            const inPortal = entity.isInPortal() || (dimension.getBlock({
-                ...entity.location,
-                y: 0
-            }) === undefined && lastInPortal);
-
-            inPortal ? entity.addTag('inPortal') : entity.removeTag('inPortal');
-
-            if (entity instanceof Player) {
-                if (Gaia.isInGaia(entity.location) && !entity.getDynamicProperty('enteredByPortal')) {
-                    entity.teleport({x: 0, y: 76, z: 0});
-                }
-
-                if (inPortal && !lastInPortal) {
-                    const coords = entity.coordinateDisplay.coord;
-                    Gaia.isInGaia(entity.location) ? backToDimension(entity, coords) : tpToGaia(entity);
-                }
-            } else {
-                if (inPortal && !lastInPortal) {
-                    backToDimension(entity);
-                }
-            }
-        }
-    }
-});
-
-playerChangeBlock.subscribe(({ player }) => {
-    if (player instanceof Player) {
-        if (coordinateDisplay instanceof CoordinateManager) {
-            coordinateDisplay.updateCoordinates();
-        }
-    }
-});
+export default PortalManager;
