@@ -47,7 +47,6 @@ class PortalManager {
 
   /**
    * Teleports the entity to the target dimension using portal logic.
-   * This mimics tpToGaia in our earlier code.
    * @param {Player} entity 
    * @param {object} backupLocation 
    */
