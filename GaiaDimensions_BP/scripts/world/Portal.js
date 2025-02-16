@@ -41,12 +41,29 @@ class Portal {
         for (const dir of directions) {
             const adjacentPos = Vec3.add(block.location, dir);
             const adjacentBlock = block.dimension.getBlock(adjacentPos);
-            if (adjacentBlock && adjacentBlock.typeId) {
+            if (adjacentBlock && adjacentBlock.typeId === typeId) {
                 adjacentBlocks.push(adjacentBlock);
             }
         }
 
         return adjacentBlocks;
+    }
+
+    /**
+     * Checks if two locations are already linked.
+     * @param {Vec3} fromLocation 
+     * @param {Vec3} toLocation 
+     * @returns {boolean}
+     */
+    static isLinked(fromLocation, toLocation) {
+        return this.linked.some(link =>
+            link.location.x === fromLocation.x &&
+            link.location.y === fromLocation.y &&
+            link.location.z === fromLocation.z &&
+            link.linkedLocation.x === toLocation.x &&
+            link.linkedLocation.y === toLocation.y &&
+            link.linkedLocation.z === toLocation.z
+        );
     }
 
     /**
@@ -73,7 +90,7 @@ class Portal {
         if (typeof fromLocation !== 'object' || typeof toLocation !== 'object') {
             throw new Error('Both fromLocation and toLocation must be objects');
         }
-        this.linked = this.linked.filter(l => 
+        this.linked = this.linked.filter(l =>
             !(l.location.x === fromLocation.x && l.location.y === fromLocation.y && l.location.z === fromLocation.z &&
               l.linkedLocation.x === toLocation.x && l.linkedLocation.y === toLocation.y && l.linkedLocation.z === toLocation.z)
         );
@@ -82,8 +99,8 @@ class Portal {
 
     /**
      * Get the linked location from a given location.
-     * @param {Vec3} location - The location.
-     * @param {string} from - Whether the location is the start or end of the linked location.
+     * @param {string} from - 'start' or 'end'.
+     * @param {Vec3} location - The location to check.
      * @returns {Link|undefined} The linked object.
      */
     static getLink(from, location) {
@@ -95,9 +112,9 @@ class Portal {
 
     /**
      * Check if an entity is within the bounds of a linked portal.
+     * @param {string} from - 'start' or 'end'.
      * @param {Entity} entity - The entity to check.
-     * @param {string} from - Whether the entity is at the start or end of the linked location.
-     * @returns {Link|undefined} The link that the entity is in, or undefined if the entity is not in any linked portal.
+     * @returns {Link|undefined} The link if the entity is within a portal.
      */
     static isEntityInLinked(from, entity) {
         if (typeof entity !== 'object') {
@@ -122,7 +139,7 @@ class Portal {
                         y: link.location.y + this.PortalSizeY,
                         z: link.location.z + this.PortalSizeZ
                     });
-                    return volume.isInside(location); // Fixed the variable reference here
+                    return volume.isInside(location);
                 });
                 break;
             case 'end':
@@ -140,27 +157,39 @@ class Portal {
         }
         return link || undefined;
     }
+
+    /**
+     * Creates the portal structure by setting keystone blocks on the edges and portal blocks in the center.
+     * @param {Vec3} corner - The corner position of the portal.
+     * @param {Dimension} dimension - The dimension where the portal is.
+     * @param {boolean} x_oriented - Whether the portal is oriented along the x-axis.
+     */
     static lightPortal(corner, dimension, x_oriented) {
         for (let x = 0; x < 4; x++) {
             for (let y = 0; y < 5; y++) {
-                const is_edge = x === 0 || y === 0 || x === 3 || y === 4;
-                const block = dimension.getBlock(Vec3.add(corner, { x: x_oriented ? 0 : x, y, z: x_oriented ? x : 0 }))
-      
+                const is_edge = (x === 0 || y === 0 || x === 3 || y === 4);
+                const pos = Vec3.add(corner, { x: x_oriented ? 0 : x, y: y, z: x_oriented ? x : 0 });
+                const block = dimension.getBlock(pos);
                 if (block !== undefined) {
                     if (is_edge) {
-                      block.setType('gaia:keystone_block')
+                        block.setType('gaia:keystone_block');
                     } else {
-                      block.setPermutation(BlockPermutation.resolve("gaia:gaia_portal", { "gaia:x_oriented": x_oriented }));
+                        block.setPermutation(BlockPermutation.resolve("gaia:gaia_portal", { "gaia:x_oriented": x_oriented }));
                     }
                 }
             }
         }
-      }
+    }
+
+    /**
+     * Breaks a portal by unlinking it and setting adjacent portal blocks to air.
+     * @param {Block} block - A block that is part of the portal.
+     */
     static breakPortal(block) {
         const adjacent = this.getAdjacentBlocks(block, 'gaia:gaia_portal');
         adjacent.forEach(b => {
             this.LinkPositions.forEach(position => {
-                const link = this.getLink(position, block.location);
+                const link = this.getLink(position, b.location); // use the adjacent block's location
                 if (link) {
                     this.unlink(link.location, link.linkedLocation);
                 }
@@ -169,13 +198,21 @@ class Portal {
         });
     }
 
+    /**
+     * Checks if the structure starting at a corner is unlit.
+     * @param {Vec3} corner - The starting corner of the portal structure.
+     * @param {Dimension} dimension - The dimension.
+     * @param {boolean} x_oriented - Orientation flag.
+     * @returns {boolean} True if the structure is unlit.
+     */
     static isUnlit(corner, dimension, x_oriented) {
         let isValid = true;
         for (let x = 0; x < 4; x++) {
             for (let y = 0; y < 5; y++) {
-                let blockpos = Vec3.add(corner, { x: x_oriented ? 0 : x, y, z: x_oriented ? x : 0 });
-                let blocktype = dimension.getBlock(blockpos).typeId;
-                let is_edge = x === 0 || y === 0 || x === 3 || y === 4;
+                const blockpos = Vec3.add(corner, { x: x_oriented ? 0 : x, y: y, z: x_oriented ? x : 0 });
+                const block = dimension.getBlock(blockpos);
+                const blocktype = block ? block.typeId : "";
+                const is_edge = (x === 0 || y === 0 || x === 3 || y === 4);
                 if (is_edge && blocktype !== "gaia:keystone_block") {
                     isValid = false;
                     break;
@@ -185,14 +222,16 @@ class Portal {
                     break;
                 }
             }
+            if (!isValid) break;
         }
         return isValid;
     }
 
     /**
-     * Checks whether a portal can be lit and if so lights the portal.
-     * @param {Block} block
-     * @returns {boolean} Whether lighting this portal was a success or not.
+     * Checks whether a portal can be lit and, if so, lights it.
+     * Tries the default orientation first; if that fails, attempts the alternative.
+     * @param {Block} block - A block from which to attempt lighting the portal.
+     * @returns {boolean} Whether lighting the portal was successful.
      */
     static canLight(block) {
         let position = block.location;
@@ -200,14 +239,31 @@ class Portal {
         let offset = Vec3.zero;
         let light_success = false;
         let x_oriented = true;
+        // Try with initial orientation:
         for (let x = -2; x <= -1; x++) {
             for (let y = -3; y <= -1; y++) {
-                let test_offset = { x: x_oriented ? 0 : x, y, z: x_oriented ? x : 0 };
-                if (this.isUnlit(Vec3.add(position, test_offset), dimension, true)) {
+                let test_offset = { x: x_oriented ? 0 : x, y: y, z: x_oriented ? x : 0 };
+                if (this.isUnlit(Vec3.add(position, test_offset), dimension, x_oriented)) {
                     offset = test_offset;
                     light_success = true;
                     break;
                 }
+            }
+            if (light_success) break;
+        }
+        // If unsuccessful, try with alternative orientation:
+        if (!light_success) {
+            x_oriented = false;
+            for (let x = -2; x <= -1; x++) {
+                for (let y = -3; y <= -1; y++) {
+                    let test_offset = { x: x_oriented ? 0 : x, y: y, z: x_oriented ? x : 0 };
+                    if (this.isUnlit(Vec3.add(position, test_offset), dimension, x_oriented)) {
+                        offset = test_offset;
+                        light_success = true;
+                        break;
+                    }
+                }
+                if (light_success) break;
             }
         }
         if (light_success) {
@@ -218,5 +274,3 @@ class Portal {
 }
 
 export default Portal;
-
-
