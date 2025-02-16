@@ -60,7 +60,7 @@ class PortalManager {
     // Dynamically import the Portal class so that it is loaded only when needed.
     const { default: Portal } = await import("./world/Portal.js");
     // For this example, assume Portal has a static property "targetDimension".
-    const targetDimension = Portal.targetDimension || level.getDimension("gaia");
+    const targetDimension = Portal.targetDimension || level.getDimension("gaia_dimension");
 
     // Teleport the entity to the target dimension at the target location.
     entity.teleport(targetLoc, { dimension: targetDimension });
