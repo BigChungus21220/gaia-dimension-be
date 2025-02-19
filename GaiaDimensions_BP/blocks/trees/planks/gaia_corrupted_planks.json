@@ -1,30 +1,30 @@
 {
-	"format_version": "1.20.80",
-	"minecraft:block": {
-		"description": {
-			"identifier": "gaia:corrupted_tiles",
-			"menu_category": {
-				"category": "construction",
-				"group": "itemGroup.name.planks"
-			}
-		},
-		"components": {
-			"tag:wood": {},
-			"tag:is_axeable": {},
-			"minecraft:loot": "loot_tables/blocks/gaia/corrupted_tiles.json",
-			"minecraft:destructible_by_mining": {
-				"seconds_to_destroy": 1
-			},
-      "minecraft:material_instances": {
-        "*": {
-          "texture": "gaia_corrupted_planks",
-          "render_method": "opaque"
+    "format_version": "1.20.80",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaia:corrupted_tiles",
+            "menu_category": {
+                "category": "construction",
+                "group": "itemGroup.name.planks"
+            }
+        },
+        "components": {
+            "tag:wood": {},
+            "tag:is_axeable": {},
+            "minecraft:loot": "loot_tables/blocks/trees/planks/corrupted_tiles.json",
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 1
+            },
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "gaia_corrupted_planks",
+                    "render_method": "opaque"
+                }
+            },
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 1
+            },
+            "minecraft:map_color": "#ffffff"
         }
-      },
-			"minecraft:destructible_by_explosion": {
-				"explosion_resistance": 1
-			},
-			"minecraft:map_color": "#ffffff"
-		}
-	}
+    }
 }

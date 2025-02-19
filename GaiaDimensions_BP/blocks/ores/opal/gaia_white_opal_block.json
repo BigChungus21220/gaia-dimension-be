@@ -1,38 +1,37 @@
 {
-	"format_version": "1.20.80",
-	"minecraft:block": {
-		"description": {
-			"identifier": "gaia:white_opal_block",
-			"menu_category": {
-				"category": "nature",
-				"group": "itemGroup.name.gaia_block"
-			}
-		},
-		"components": {
-			"tag:ore": {},
-			"tag:metal": {},
-			"minecraft:loot": "loot_tables/blocks/empty.json",
-			"minecraft:destructible_by_mining": {
-				"seconds_to_destroy": 2
-			},
-		
-			"minecraft:destructible_by_explosion": {
-				"explosion_resistance": 1
-			},
-      "minecraft:material_instances": {
-        "*": {
-          "texture": "white_opal_block",
-          "render_method": "opaque",
-			"minecraft:map_color": "#ffffff"
-		},
-		"events": {
-			"destroy": {
-				"spawn_loot": {
-					"table": "loot_tables/blocks/gaia/white_opal_block.json"
-				}
-			}
-		}
-	}
-}
-  }
+    "format_version": "1.20.80",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaia:white_opal_block",
+            "menu_category": {
+                "category": "nature",
+                "group": "itemGroup.name.gaia_block"
+            }
+        },
+        "components": {
+            "tag:ore": {},
+            "tag:metal": {},
+            "minecraft:loot": "loot_tables/blocks/ores/opal/white_opal_block.json",
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 2
+            },
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 1
+            },
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "white_opal_block",
+                    "render_method": "opaque",
+                    "minecraft:map_color": "#ffffff"
+                },
+                "events": {
+                    "destroy": {
+                        "spawn_loot": {
+                            "table": "loot_tables/blocks/gaia/white_opal_block.json"
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

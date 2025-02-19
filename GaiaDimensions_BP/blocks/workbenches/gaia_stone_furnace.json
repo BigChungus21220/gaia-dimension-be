@@ -9,9 +9,23 @@
                 "is_hidden_in_commands": false
             },
             "states": {
-                "gaiadimension:direction": [0, 1, 2, 3, 4, 5, 6],
-                "gaiadimension:lit": [false, true],
-                "gaiadimension:entity": [false, true]
+                "gaiadimension:direction": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ],
+                "gaiadimension:lit": [
+                    false,
+                    true
+                ],
+                "gaiadimension:entity": [
+                    false,
+                    true
+                ]
             }
         },
         "components": {
@@ -40,7 +54,7 @@
             "minecraft:on_player_placing": {
                 "event": "setDirection"
             },
-            "tag:furnace":{},
+            "tag:furnace": {},
             "minecraft:queued_ticking": {
                 "looping": true,
                 "on_tick": {
@@ -50,12 +64,15 @@
                     1,
                     1
                 ]
-            }
+            },
+            "minecraft:loot": "loot_tables/blocks/workbenches/gaia_stone_furnace.json"
         },
         "events": {
             "runFurnace": {
                 "run_command": {
-                    "command": ["execute as @e[r=0] at @s run scriptevent forge:furnaceLoad gaiaf 200 forge:flame forge:arrow"]
+                    "command": [
+                        "execute as @e[r=0] at @s run scriptevent forge:furnaceLoad gaiaf 200 forge:flame forge:arrow"
+                    ]
                 }
             },
             "setDirection": {
@@ -91,25 +108,41 @@
             {
                 "condition": "q.block_state('gaiadimension:direction') == 0",
                 "components": {
-                    "minecraft:rotation": [0, 0, 0]
+                    "minecraft:rotation": [
+                        0,
+                        0,
+                        0
+                    ]
                 }
             },
             {
                 "condition": "q.block_state('gaiadimension:direction') == 1",
                 "components": {
-                    "minecraft:rotation": [0, 180, 0]
+                    "minecraft:rotation": [
+                        0,
+                        180,
+                        0
+                    ]
                 }
             },
             {
                 "condition": "q.block_state('gaiadimension:direction') == 2",
                 "components": {
-                    "minecraft:rotation": [0, 90, 0]
+                    "minecraft:rotation": [
+                        0,
+                        90,
+                        0
+                    ]
                 }
             },
             {
                 "condition": "q.block_state('gaiadimension:direction') == 3",
                 "components": {
-                    "minecraft:rotation": [0, 270, 0]
+                    "minecraft:rotation": [
+                        0,
+                        270,
+                        0
+                    ]
                 }
             }
         ]

@@ -1,13 +1,13 @@
 i//mport './asm/mixins.js';
 //import "./Vec3.js";
 import './registration/ModBlocks.js';
-//import './GaiaTeleporter.js';
+import './GaiaTeleporter.js';
 //import './tickEvents.js'
-//import './Ignition.js';
+import './Ignition.js';
 //import "./fluids/fluids.js";
 //import "./world/Biome.js";
 //import "./world/Fog.js";
-//import "./world/TerrainPatching.js";
+import "./world/TerrainPatching.js";
 //import './client/GaiaSkyRenderer.js';
 import "./entity/MalachiteGuard.js"
 import "./world/DimensionRegistry.js"

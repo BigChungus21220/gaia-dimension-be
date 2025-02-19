@@ -1,38 +1,37 @@
 {
-	"format_version": "1.20.80",
-	"minecraft:block": {
-		"description": {
-			"identifier": "gaia:block_of_aura_crystal",
-			"menu_category": {
-				"category": "nature",
-				"group": "itemGroup.name.gaia_block"
-			}
-		},
-		"components": {
-			"tag:ore": {},
-			"tag:metal": {},
-			"minecraft:loot": "loot_tables/blocks/empty.json",
-			"minecraft:destructible_by_mining": {
-				"seconds_to_destroy": 2
-			},
-		
-			"minecraft:destructible_by_explosion": {
-				"explosion_resistance": 1
-			},
-      "minecraft:material_instances": {
-        "*": {
-          "texture": "aura_block",
-          "render_method": "opaque",
-			"minecraft:map_color": "#ffffff"
-		},
-		"events": {
-			"destroy": {
-				"spawn_loot": {
-					"table": "loot_tables/blocks/gaia/block_of_aura.json"
-				}
-			}
-		}
-	}
-}
-  }
+    "format_version": "1.20.80",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaia:block_of_aura_crystal",
+            "menu_category": {
+                "category": "nature",
+                "group": "itemGroup.name.gaia_block"
+            }
+        },
+        "components": {
+            "tag:ore": {},
+            "tag:metal": {},
+            "minecraft:loot": "loot_tables/blocks/block_of_aura_crystal.json",
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 2
+            },
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 1
+            },
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "aura_block",
+                    "render_method": "opaque",
+                    "minecraft:map_color": "#ffffff"
+                },
+                "events": {
+                    "destroy": {
+                        "spawn_loot": {
+                            "table": "loot_tables/blocks/gaia/block_of_aura.json"
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

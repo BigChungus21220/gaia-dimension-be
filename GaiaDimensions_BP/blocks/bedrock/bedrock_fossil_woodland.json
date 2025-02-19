@@ -1,24 +1,24 @@
 {
-  "format_version": "1.20.80",
-  "minecraft:block": {
-    "description": {
-      "identifier": "gaia:bedrock_fossil_woodland"
-    },
-    "components": {
-      "minecraft:loot": "loot_tables/blocks/empty.json",
-      "minecraft:destructible_by_mining": {
-        "seconds_to_destroy": 99999
-      },
-      "minecraft:destructible_by_explosion": {
-        "explosion_resistance": 999999
-      },
-      "minecraft:map_color": "#ffffff",
-      "minecraft:material_instances": {
-        "*": {
-          "texture": "gaia_bedrock",
-          "render_method": "opaque"
+    "format_version": "1.20.80",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaia:bedrock_fossil_woodland"
+        },
+        "components": {
+            "minecraft:loot": "loot_tables/blocks/bedrock/bedrock_fossil_woodland.json",
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 99999
+            },
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 999999
+            },
+            "minecraft:map_color": "#ffffff",
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "gaia_bedrock",
+                    "render_method": "opaque"
+                }
+            }
         }
-      }
     }
-  }
 }

@@ -1,38 +1,37 @@
 {
-	"format_version": "1.20.80",
-	"minecraft:block": {
-		"description": {
-			"identifier": "gaia:raw_jet",
-			"menu_category": {
-				"category": "nature",
-				"group": "itemGroup.name.ore"
-			}
-		},
-		"components": {
-			"tag:ore": {},
-			"tag:metal": {},
-			"minecraft:loot": "loot_tables/blocks/empty.json",
-			"minecraft:destructible_by_mining": {
-				"seconds_to_destroy": 1.5
-			},
-		
-			"minecraft:destructible_by_explosion": {
-				"explosion_resistance": 1
-			},
-      "minecraft:material_instances": {
-        "*": {
-          "texture": "raw_jet",
-          "render_method": "opaque",
-			"minecraft:map_color": "#ffffff"
-		},
-		"events": {
-			"destroy": {
-				"spawn_loot": {
-					"table": "loot_tables/blocks/gaia/raw_jet.json"
-				}
-			}
-		}
-	}
-}
-  }
+    "format_version": "1.20.80",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaia:raw_jet",
+            "menu_category": {
+                "category": "nature",
+                "group": "itemGroup.name.ore"
+            }
+        },
+        "components": {
+            "tag:ore": {},
+            "tag:metal": {},
+            "minecraft:loot": "loot_tables/blocks/ores/jet/raw_jet.json",
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 1.5
+            },
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 1
+            },
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "raw_jet",
+                    "render_method": "opaque",
+                    "minecraft:map_color": "#ffffff"
+                },
+                "events": {
+                    "destroy": {
+                        "spawn_loot": {
+                            "table": "loot_tables/blocks/gaia/raw_jet.json"
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
