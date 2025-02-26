@@ -8,6 +8,8 @@ const ALL_MOD_DIMENSIONS = {};
 class ModDimension {
     constructor({ type, range, inheritance }) {
         this.type = type;
+        this.world = world;
+        this.bounds = bounds;
         this.range = range;
         this.center = {
             x: (this.range.start.x + this.range.end.x) / 2,
@@ -70,6 +72,30 @@ class ModDimension {
         });
         return ModDimension.get(id);
     }
+    /**
+   * Checks if a position is within the bounds of this custom dimension.
+   * @param {object} pos - The position to check with properties x, y, z.
+   * @returns {boolean} True if the position is within bounds; otherwise, false.
+   */
+   isWithinBounds(pos) {
+    return pos.x >= this.bounds.min.x && pos.x <= this.bounds.max.x &&
+           pos.y >= this.bounds.min.y && pos.y <= this.bounds.max.y &&
+            pos.z >= this.bounds.min.z && pos.z <= this.bounds.max.z;}
+   /**
+   * Retrieves the block at the specified position within this dimension.
+   * Mimics the native scripting API’s getBlock method.
+   * @param {object} pos - The position with properties x, y, z.
+   * @returns {Block} The block object at the given position.
+   * @throws {Error} If the position is outside the bounds of this dimension.
+   */
+  getBlock(pos) {
+    if (!this._isWithinBounds(pos)) {
+      throw new Error("Position is outside the custom dimension bounds.");
+    }
+    // Delegate to the underlying world's getBlock method.
+    // This assumes your world object has a getBlock method that accepts a position object.
+    return this.world.getBlock(pos);
+  }
 
     static get(id) {
         return ALL_MOD_DIMENSIONS[id];
