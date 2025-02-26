@@ -1,22 +1,18 @@
 import {system} from "@minecraft/server"
-import Gaia from './world/Gaia'
+import { level, ModDimension  } from "./world/ModDimension";
 import {Vec3} from './Vec3'
 import * as Events from "./world/Events"
 import SkyboxRenderer from "./renderers/Skybox";
 
-//event triggers
-system.runInterval(() => Events.tick1.trigger(), 1);
-system.runInterval(() => Events.tick2.trigger(), 2);
-system.runInterval(() => Events.tick8.trigger(), 8);
-system.runInterval(() => Events.tick30.trigger(), 30);
-system.runJob(() => Events.tick100.trigger(), 100);
+
 
 //clear entities
 Events.tick8.subscribe(() => {
-    const players = Gaia.getPlayers();
+    const gaia = level.getDimension("gaia_dimension");
+    const players = gaia.getPlayers()
     for (const player of players) {
         if (player) {
-            Gaia.getEntities({
+            gaia.getEntities({
                 location: player.location,
                 maxDistance: 500,
                 type: "minecraft:shulker"
