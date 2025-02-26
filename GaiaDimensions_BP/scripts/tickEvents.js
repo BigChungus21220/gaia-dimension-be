@@ -25,7 +25,8 @@ Events.tick8.subscribe(() => {
 let playerLocations = {};
 
 Events.tick2.subscribe(() => {
-    const players = Gaia.getPlayers();
+    const gaia = level.getDimension{"gaia_dimension"};
+    const players = gaia.getPlayers();
     for (const player of players) {
         // Account for only x and z
         const floorpos = Vec3.from({...player.location, y: 0}).floor();

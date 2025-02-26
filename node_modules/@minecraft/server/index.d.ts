@@ -15,7 +15,7 @@
  * ```json
  * {
  *   "module_name": "@minecraft/server",
- *   "version": "1.16.0"
+ *   "version": "1.17.0"
  * }
  * ```
  *
@@ -1488,6 +1488,36 @@ export enum HudVisibility {
 }
 
 /**
+ * Describes the type of input of a device.
+ */
+export enum InputMode {
+    /**
+     * @remarks
+     * Gamepad input.
+     *
+     */
+    Gamepad = 'Gamepad',
+    /**
+     * @remarks
+     * Keyboard and mouse input.
+     *
+     */
+    KeyboardAndMouse = 'KeyboardAndMouse',
+    /**
+     * @remarks
+     * Motion controller input.
+     *
+     */
+    MotionController = 'MotionController',
+    /**
+     * @remarks
+     * Touch input.
+     *
+     */
+    Touch = 'Touch',
+}
+
+/**
  * Input permission categories. Used by {@link
  * PlayerInputPermissionCategoryChangeAfterEvent} to specify
  * which category was changed and {@link
@@ -1508,6 +1538,67 @@ export enum InputPermissionCategory {
      *
      */
     Movement = 2,
+    /**
+     * @remarks
+     * Player input for moving laterally in the world. This would
+     * be WASD on a keyboard or the movement joystick on gamepad or
+     * touch.
+     *
+     */
+    LateralMovement = 4,
+    /**
+     * @remarks
+     * Player input relating to sneak. This also affects flying
+     * down.
+     *
+     */
+    Sneak = 5,
+    /**
+     * @remarks
+     * Player input relating to jumping. This also affects flying
+     * up.
+     *
+     */
+    Jump = 6,
+    /**
+     * @remarks
+     * Player input relating to mounting vehicles.
+     *
+     */
+    Mount = 7,
+    /**
+     * @remarks
+     * Player input relating to dismounting. When disabled, the
+     * player can still dismount vehicles by other means, for
+     * example on horses players can still jump off and in boats
+     * players can go into another boat.
+     *
+     */
+    Dismount = 8,
+    /**
+     * @remarks
+     * Player input relating to moving the player forward.
+     *
+     */
+    MoveForward = 9,
+    /**
+     * @remarks
+     * Player input relating to moving the player backward.
+     *
+     */
+    MoveBackward = 10,
+    /**
+     * @remarks
+     * Player input relating to moving the player left.
+     *
+     */
+    MoveLeft = 11,
+    /**
+     * @remarks
+     * Player input relating to moving the player right.
+     *
+     */
+    MoveRight = 12,
 }
 
 /**
@@ -1515,6 +1606,7 @@ export enum InputPermissionCategory {
  * function ItemStack.getComponent.
  */
 export enum ItemComponentTypes {
+    Compostable = 'minecraft:compostable',
     /**
      * @remarks
      * The minecraft:cooldown component.
@@ -2117,6 +2209,17 @@ export class Block {
     readonly isLiquid: boolean;
     /**
      * @remarks
+     * Returns or sets whether this block has water on it.
+     *
+     * @throws This property can throw when used.
+     *
+     * {@link LocationInUnloadedChunkError}
+     *
+     * {@link LocationOutOfWorldBoundariesError}
+     */
+    readonly isWaterlogged: boolean;
+    /**
+     * @remarks
      * Coordinates of the specified block.
      *
      * @throws This property can throw when used.
@@ -2430,6 +2533,24 @@ export class Block {
     setType(blockType: BlockType | string): void;
     /**
      * @remarks
+     * Sets whether this block has a water logged state - for
+     * example, whether stairs are submerged within water.
+     *
+     * This function can't be called in read-only mode.
+     *
+     * @param isWaterlogged
+     * true if the block should have water within it.
+     * @throws This function can throw errors.
+     *
+     * {@link Error}
+     *
+     * {@link LocationInUnloadedChunkError}
+     *
+     * {@link LocationOutOfWorldBoundariesError}
+     */
+    setWaterlogged(isWaterlogged: boolean): void;
+    /**
+     * @remarks
      * Returns the {@link Block} to the south of this block
      * (positive in the Z direction).
      *
@@ -2720,7 +2841,7 @@ export class BlockExplodeAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: BlockExplodeAfterEvent) => void): (arg: BlockExplodeAfterEvent) => void;
+    subscribe(callback: (arg0: BlockExplodeAfterEvent) => void): (arg0: BlockExplodeAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when an explosion
@@ -2731,7 +2852,7 @@ export class BlockExplodeAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: BlockExplodeAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: BlockExplodeAfterEvent) => void): void;
 }
 
 /**
@@ -3761,7 +3882,8 @@ export class Camera {
             | CameraSetFacingOptions
             | CameraSetLocationOptions
             | CameraSetPosOptions
-            | CameraSetRotOptions,
+            | CameraSetRotOptions
+            | CameraTargetOptions,
     ): void;
 }
 
@@ -4540,9 +4662,9 @@ export class DataDrivenEntityTriggerAfterEventSignal {
      *
      */
     subscribe(
-        callback: (arg: DataDrivenEntityTriggerAfterEvent) => void,
+        callback: (arg0: DataDrivenEntityTriggerAfterEvent) => void,
         options?: EntityDataDrivenTriggerEventOptions,
-    ): (arg: DataDrivenEntityTriggerAfterEvent) => void;
+    ): (arg0: DataDrivenEntityTriggerAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback that will be called after a data driven
@@ -4553,7 +4675,7 @@ export class DataDrivenEntityTriggerAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: DataDrivenEntityTriggerAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: DataDrivenEntityTriggerAfterEvent) => void): void;
 }
 
 /**
@@ -5194,11 +5316,15 @@ export class DimensionTypes {
      * @remarks
      * Retrieves a dimension type using a string-based identifier.
      *
+     * This function can be called in early-execution mode.
+     *
      */
     static get(dimensionTypeId: string): DimensionType | undefined;
     /**
      * @remarks
      * Retrieves an array of all dimension types.
+     *
+     * This function can be called in early-execution mode.
      *
      */
     static getAll(): DimensionType[];
@@ -5289,9 +5415,9 @@ export class EffectAddAfterEventSignal {
      *
      */
     subscribe(
-        callback: (arg: EffectAddAfterEvent) => void,
+        callback: (arg0: EffectAddAfterEvent) => void,
         options?: EntityEventOptions,
-    ): (arg: EffectAddAfterEvent) => void;
+    ): (arg0: EffectAddAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when an effect is added
@@ -5302,7 +5428,7 @@ export class EffectAddAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: EffectAddAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: EffectAddAfterEvent) => void): void;
 }
 
 /**
@@ -5353,7 +5479,7 @@ export class EffectAddBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: EffectAddBeforeEvent) => void): (arg: EffectAddBeforeEvent) => void;
+    subscribe(callback: (arg0: EffectAddBeforeEvent) => void): (arg0: EffectAddBeforeEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when an effect is added
@@ -5364,7 +5490,7 @@ export class EffectAddBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: EffectAddBeforeEvent) => void): void;
+    unsubscribe(callback: (arg0: EffectAddBeforeEvent) => void): void;
 }
 
 /**
@@ -6854,9 +6980,9 @@ export class EntityDieAfterEventSignal {
      * calls to unsubscribe.
      */
     subscribe(
-        callback: (arg: EntityDieAfterEvent) => void,
+        callback: (arg0: EntityDieAfterEvent) => void,
         options?: EntityEventOptions,
-    ): (arg: EntityDieAfterEvent) => void;
+    ): (arg0: EntityDieAfterEvent) => void;
     /**
      * @remarks
      * Stops this event from calling your function when an entity
@@ -6867,7 +6993,7 @@ export class EntityDieAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: EntityDieAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: EntityDieAfterEvent) => void): void;
 }
 
 /**
@@ -7076,9 +7202,9 @@ export class EntityHealthChangedAfterEventSignal {
      *
      */
     subscribe(
-        callback: (arg: EntityHealthChangedAfterEvent) => void,
+        callback: (arg0: EntityHealthChangedAfterEvent) => void,
         options?: EntityEventOptions,
-    ): (arg: EntityHealthChangedAfterEvent) => void;
+    ): (arg0: EntityHealthChangedAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when the health of an
@@ -7089,7 +7215,7 @@ export class EntityHealthChangedAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: EntityHealthChangedAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: EntityHealthChangedAfterEvent) => void): void;
 }
 
 /**
@@ -7170,9 +7296,9 @@ export class EntityHitBlockAfterEventSignal {
      *
      */
     subscribe(
-        callback: (arg: EntityHitBlockAfterEvent) => void,
+        callback: (arg0: EntityHitBlockAfterEvent) => void,
         options?: EntityEventOptions,
-    ): (arg: EntityHitBlockAfterEvent) => void;
+    ): (arg0: EntityHitBlockAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when an entity hits a
@@ -7183,7 +7309,7 @@ export class EntityHitBlockAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: EntityHitBlockAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: EntityHitBlockAfterEvent) => void): void;
 }
 
 /**
@@ -7223,9 +7349,9 @@ export class EntityHitEntityAfterEventSignal {
      *
      */
     subscribe(
-        callback: (arg: EntityHitEntityAfterEvent) => void,
+        callback: (arg0: EntityHitEntityAfterEvent) => void,
         options?: EntityEventOptions,
-    ): (arg: EntityHitEntityAfterEvent) => void;
+    ): (arg0: EntityHitEntityAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when an entity makes a
@@ -7236,7 +7362,7 @@ export class EntityHitEntityAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: EntityHitEntityAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: EntityHitEntityAfterEvent) => void): void;
 }
 
 /**
@@ -7281,9 +7407,9 @@ export class EntityHurtAfterEventSignal {
      *
      */
     subscribe(
-        callback: (arg: EntityHurtAfterEvent) => void,
+        callback: (arg0: EntityHurtAfterEvent) => void,
         options?: EntityEventOptions,
-    ): (arg: EntityHurtAfterEvent) => void;
+    ): (arg0: EntityHurtAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when an entity is hurt.
@@ -7293,7 +7419,7 @@ export class EntityHurtAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: EntityHurtAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: EntityHurtAfterEvent) => void): void;
 }
 
 /**
@@ -7660,7 +7786,7 @@ export class EntityLoadAfterEventSignal {
      * @param callback
      * Function that handles the load event.
      */
-    subscribe(callback: (arg: EntityLoadAfterEvent) => void): (arg: EntityLoadAfterEvent) => void;
+    subscribe(callback: (arg0: EntityLoadAfterEvent) => void): (arg0: EntityLoadAfterEvent) => void;
     /**
      * @remarks
      * Unregisters a method that was previously subscribed to the
@@ -7674,7 +7800,7 @@ export class EntityLoadAfterEventSignal {
      * Original function that was passed into the subscribe event,
      * that is to be unregistered.
      */
-    unsubscribe(callback: (arg: EntityLoadAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: EntityLoadAfterEvent) => void): void;
 }
 
 /**
@@ -8314,9 +8440,9 @@ export class EntityRemoveAfterEventSignal {
      * operations.
      */
     subscribe(
-        callback: (arg: EntityRemoveAfterEvent) => void,
+        callback: (arg0: EntityRemoveAfterEvent) => void,
         options?: EntityEventOptions,
-    ): (arg: EntityRemoveAfterEvent) => void;
+    ): (arg0: EntityRemoveAfterEvent) => void;
     /**
      * @remarks
      * Unsubscribes your function from subsequent calls when an
@@ -8327,7 +8453,7 @@ export class EntityRemoveAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: EntityRemoveAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: EntityRemoveAfterEvent) => void): void;
 }
 
 /**
@@ -8367,7 +8493,7 @@ export class EntityRemoveBeforeEventSignal {
      * Returns a closure that can be used in subsequent unsubscribe
      * operations.
      */
-    subscribe(callback: (arg: EntityRemoveBeforeEvent) => void): (arg: EntityRemoveBeforeEvent) => void;
+    subscribe(callback: (arg0: EntityRemoveBeforeEvent) => void): (arg0: EntityRemoveBeforeEvent) => void;
     /**
      * @remarks
      * Unsubscribes your function from subsequent calls when an
@@ -8378,7 +8504,7 @@ export class EntityRemoveBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: EntityRemoveBeforeEvent) => void): void;
+    unsubscribe(callback: (arg0: EntityRemoveBeforeEvent) => void): void;
 }
 
 /**
@@ -8687,7 +8813,7 @@ export class EntitySpawnAfterEventSignal {
      * }
      * ```
      */
-    subscribe(callback: (arg: EntitySpawnAfterEvent) => void): (arg: EntitySpawnAfterEvent) => void;
+    subscribe(callback: (arg0: EntitySpawnAfterEvent) => void): (arg0: EntitySpawnAfterEvent) => void;
     /**
      * @remarks
      * Unregisters a method that was previously subscribed to the
@@ -8701,7 +8827,7 @@ export class EntitySpawnAfterEventSignal {
      * Original function that was passed into the subscribe event,
      * that is to be unregistered.
      */
-    unsubscribe(callback: (arg: EntitySpawnAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: EntitySpawnAfterEvent) => void): void;
 }
 
 /**
@@ -8985,7 +9111,7 @@ export class ExplosionAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: ExplosionAfterEvent) => void): (arg: ExplosionAfterEvent) => void;
+    subscribe(callback: (arg0: ExplosionAfterEvent) => void): (arg0: ExplosionAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when an explosion
@@ -8996,7 +9122,7 @@ export class ExplosionAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: ExplosionAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: ExplosionAfterEvent) => void): void;
 }
 
 /**
@@ -9040,7 +9166,7 @@ export class ExplosionBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: ExplosionBeforeEvent) => void): (arg: ExplosionBeforeEvent) => void;
+    subscribe(callback: (arg0: ExplosionBeforeEvent) => void): (arg0: ExplosionBeforeEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called from before when an
@@ -9051,7 +9177,7 @@ export class ExplosionBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: ExplosionBeforeEvent) => void): void;
+    unsubscribe(callback: (arg0: ExplosionBeforeEvent) => void): void;
 }
 
 /**
@@ -9180,7 +9306,7 @@ export class GameRuleChangeAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: GameRuleChangeAfterEvent) => void): (arg: GameRuleChangeAfterEvent) => void;
+    subscribe(callback: (arg0: GameRuleChangeAfterEvent) => void): (arg0: GameRuleChangeAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when a world.gameRules
@@ -9191,7 +9317,7 @@ export class GameRuleChangeAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: GameRuleChangeAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: GameRuleChangeAfterEvent) => void): void;
 }
 
 /**
@@ -9436,7 +9562,7 @@ export class IButtonPushAfterEventSignal {
      * This function can't be called in read-only mode.
      *
      */
-    subscribe(callback: (arg: ButtonPushAfterEvent) => void): (arg: ButtonPushAfterEvent) => void;
+    subscribe(callback: (arg0: ButtonPushAfterEvent) => void): (arg0: ButtonPushAfterEvent) => void;
     /**
      * @remarks
      * Unsubscribes from the event.
@@ -9444,7 +9570,7 @@ export class IButtonPushAfterEventSignal {
      * This function can't be called in read-only mode.
      *
      */
-    unsubscribe(callback: (arg: ButtonPushAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: ButtonPushAfterEvent) => void): void;
 }
 
 /**
@@ -9460,7 +9586,7 @@ export class ILeverActionAfterEventSignal {
      * This function can't be called in read-only mode.
      *
      */
-    subscribe(callback: (arg: LeverActionAfterEvent) => void): (arg: LeverActionAfterEvent) => void;
+    subscribe(callback: (arg0: LeverActionAfterEvent) => void): (arg0: LeverActionAfterEvent) => void;
     /**
      * @remarks
      * Unsubscribes from the event.
@@ -9468,7 +9594,35 @@ export class ILeverActionAfterEventSignal {
      * This function can't be called in read-only mode.
      *
      */
-    unsubscribe(callback: (arg: LeverActionAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: LeverActionAfterEvent) => void): void;
+}
+
+/**
+ * Contains the input information for a client instance.
+ */
+export class InputInfo {
+    private constructor();
+    /**
+     * @remarks
+     * The last input mode used by the player.
+     *
+     * @throws This property can throw when used.
+     *
+     * {@link minecraftcommon.EngineError}
+     *
+     * {@link InvalidEntityError}
+     */
+    readonly lastInputModeUsed: InputMode;
+    /**
+     * @remarks
+     * Whether the player touch input only affects the touchbar or
+     * not.
+     *
+     * @throws This property can throw when used.
+     *
+     * {@link InvalidEntityError}
+     */
+    readonly touchOnlyAffectsHotbar: boolean;
 }
 
 /**
@@ -9484,7 +9638,7 @@ export class IPlayerJoinAfterEventSignal {
      * This function can't be called in read-only mode.
      *
      */
-    subscribe(callback: (arg: PlayerJoinAfterEvent) => void): (arg: PlayerJoinAfterEvent) => void;
+    subscribe(callback: (arg0: PlayerJoinAfterEvent) => void): (arg0: PlayerJoinAfterEvent) => void;
     /**
      * @remarks
      * Unsubscribes from the event.
@@ -9492,7 +9646,7 @@ export class IPlayerJoinAfterEventSignal {
      * This function can't be called in read-only mode.
      *
      */
-    unsubscribe(callback: (arg: PlayerJoinAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: PlayerJoinAfterEvent) => void): void;
 }
 
 /**
@@ -9508,7 +9662,7 @@ export class IPlayerLeaveAfterEventSignal {
      * This function can't be called in read-only mode.
      *
      */
-    subscribe(callback: (arg: PlayerLeaveAfterEvent) => void): (arg: PlayerLeaveAfterEvent) => void;
+    subscribe(callback: (arg0: PlayerLeaveAfterEvent) => void): (arg0: PlayerLeaveAfterEvent) => void;
     /**
      * @remarks
      * Unsubscribes from the event.
@@ -9516,7 +9670,7 @@ export class IPlayerLeaveAfterEventSignal {
      * This function can't be called in read-only mode.
      *
      */
-    unsubscribe(callback: (arg: PlayerLeaveAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: PlayerLeaveAfterEvent) => void): void;
 }
 
 /**
@@ -9532,7 +9686,7 @@ export class IPlayerSpawnAfterEventSignal {
      * This function can't be called in read-only mode.
      *
      */
-    subscribe(callback: (arg: PlayerSpawnAfterEvent) => void): (arg: PlayerSpawnAfterEvent) => void;
+    subscribe(callback: (arg0: PlayerSpawnAfterEvent) => void): (arg0: PlayerSpawnAfterEvent) => void;
     /**
      * @remarks
      * Unsubscribes from the event.
@@ -9540,7 +9694,7 @@ export class IPlayerSpawnAfterEventSignal {
      * This function can't be called in read-only mode.
      *
      */
-    unsubscribe(callback: (arg: PlayerSpawnAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: PlayerSpawnAfterEvent) => void): void;
 }
 
 /**
@@ -9586,7 +9740,7 @@ export class ItemCompleteUseAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: ItemCompleteUseAfterEvent) => void): (arg: ItemCompleteUseAfterEvent) => void;
+    subscribe(callback: (arg0: ItemCompleteUseAfterEvent) => void): (arg0: ItemCompleteUseAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when a chargeable item
@@ -9597,7 +9751,7 @@ export class ItemCompleteUseAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: ItemCompleteUseAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: ItemCompleteUseAfterEvent) => void): void;
 }
 
 /**
@@ -9829,6 +9983,30 @@ export class ItemComponentUseOnEvent extends ItemUseOnEvent {
      *
      */
     readonly usedOnBlockPermutation: BlockPermutation;
+}
+
+/**
+ * When present, the item can be composted in the composter
+ * block if the composting chance is in the range [1 - 100].
+ */
+// @ts-ignore Class inheritance allowed for native defined classes
+export class ItemCompostableComponent extends ItemComponent {
+    private constructor();
+    /**
+     * @remarks
+     * This is the percent chance of the item composting in the
+     * composter block and generating a compost layer. Note this
+     * api will also return the composting chance for vanilla items
+     * that are compostable but do not use the compostable item
+     * component.
+     *
+     * @throws
+     * Throws if value outside the range [1 - 100]
+     *
+     * {@link Error}
+     */
+    readonly compostingChance: number;
+    static readonly componentId = 'minecraft:compostable';
 }
 
 /**
@@ -10219,7 +10397,7 @@ export class ItemReleaseUseAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: ItemReleaseUseAfterEvent) => void): (arg: ItemReleaseUseAfterEvent) => void;
+    subscribe(callback: (arg0: ItemReleaseUseAfterEvent) => void): (arg0: ItemReleaseUseAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when a chargeable item
@@ -10230,7 +10408,7 @@ export class ItemReleaseUseAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: ItemReleaseUseAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: ItemReleaseUseAfterEvent) => void): void;
 }
 
 /**
@@ -10742,7 +10920,7 @@ export class ItemStartUseAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: ItemStartUseAfterEvent) => void): (arg: ItemStartUseAfterEvent) => void;
+    subscribe(callback: (arg0: ItemStartUseAfterEvent) => void): (arg0: ItemStartUseAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when a chargeable item
@@ -10753,7 +10931,7 @@ export class ItemStartUseAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: ItemStartUseAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: ItemStartUseAfterEvent) => void): void;
 }
 
 /**
@@ -10810,7 +10988,7 @@ export class ItemStartUseOnAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: ItemStartUseOnAfterEvent) => void): (arg: ItemStartUseOnAfterEvent) => void;
+    subscribe(callback: (arg0: ItemStartUseOnAfterEvent) => void): (arg0: ItemStartUseOnAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when an item is used on
@@ -10821,7 +10999,7 @@ export class ItemStartUseOnAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: ItemStartUseOnAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: ItemStartUseOnAfterEvent) => void): void;
 }
 
 /**
@@ -10871,7 +11049,7 @@ export class ItemStopUseAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: ItemStopUseAfterEvent) => void): (arg: ItemStopUseAfterEvent) => void;
+    subscribe(callback: (arg0: ItemStopUseAfterEvent) => void): (arg0: ItemStopUseAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when a chargeable item
@@ -10882,7 +11060,7 @@ export class ItemStopUseAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: ItemStopUseAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: ItemStopUseAfterEvent) => void): void;
 }
 
 /**
@@ -10932,7 +11110,7 @@ export class ItemStopUseOnAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: ItemStopUseOnAfterEvent) => void): (arg: ItemStopUseOnAfterEvent) => void;
+    subscribe(callback: (arg0: ItemStopUseOnAfterEvent) => void): (arg0: ItemStopUseOnAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when an item is used on
@@ -10943,7 +11121,7 @@ export class ItemStopUseOnAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: ItemStopUseOnAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: ItemStopUseOnAfterEvent) => void): void;
 }
 
 /**
@@ -11015,7 +11193,7 @@ export class ItemUseAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: ItemUseAfterEvent) => void): (arg: ItemUseAfterEvent) => void;
+    subscribe(callback: (arg0: ItemUseAfterEvent) => void): (arg0: ItemUseAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when an item is used.
@@ -11025,7 +11203,7 @@ export class ItemUseAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: ItemUseAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: ItemUseAfterEvent) => void): void;
 }
 
 /**
@@ -11056,7 +11234,7 @@ export class ItemUseBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: ItemUseBeforeEvent) => void): (arg: ItemUseBeforeEvent) => void;
+    subscribe(callback: (arg0: ItemUseBeforeEvent) => void): (arg0: ItemUseBeforeEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called before an item is used.
@@ -11066,7 +11244,7 @@ export class ItemUseBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: ItemUseBeforeEvent) => void): void;
+    unsubscribe(callback: (arg0: ItemUseBeforeEvent) => void): void;
 }
 
 /**
@@ -11133,7 +11311,7 @@ export class ItemUseOnAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: ItemUseOnAfterEvent) => void): (arg: ItemUseOnAfterEvent) => void;
+    subscribe(callback: (arg0: ItemUseOnAfterEvent) => void): (arg0: ItemUseOnAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when an item is used on
@@ -11144,7 +11322,7 @@ export class ItemUseOnAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: ItemUseOnAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: ItemUseOnAfterEvent) => void): void;
 }
 
 /**
@@ -11178,7 +11356,7 @@ export class ItemUseOnBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: ItemUseOnBeforeEvent) => void): (arg: ItemUseOnBeforeEvent) => void;
+    subscribe(callback: (arg0: ItemUseOnBeforeEvent) => void): (arg0: ItemUseOnBeforeEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called before an item is used
@@ -11189,7 +11367,7 @@ export class ItemUseOnBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: ItemUseOnBeforeEvent) => void): void;
+    unsubscribe(callback: (arg0: ItemUseOnBeforeEvent) => void): void;
 }
 
 /**
@@ -11578,7 +11756,7 @@ export class PistonActivateAfterEventSignal {
      * }
      * ```
      */
-    subscribe(callback: (arg: PistonActivateAfterEvent) => void): (arg: PistonActivateAfterEvent) => void;
+    subscribe(callback: (arg0: PistonActivateAfterEvent) => void): (arg0: PistonActivateAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when a piston expands
@@ -11589,7 +11767,7 @@ export class PistonActivateAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: PistonActivateAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: PistonActivateAfterEvent) => void): void;
 }
 
 /**
@@ -11614,6 +11792,12 @@ export class Player extends Entity {
      * {@link Error}
      */
     readonly clientSystemInfo: ClientSystemInfo;
+    /**
+     * @remarks
+     * Contains the player's input information.
+     *
+     */
+    readonly inputInfo: InputInfo;
     /**
      * @remarks
      * Input permissions of the player.
@@ -12026,9 +12210,9 @@ export class PlayerBreakBlockAfterEventSignal {
      *
      */
     subscribe(
-        callback: (arg: PlayerBreakBlockAfterEvent) => void,
+        callback: (arg0: PlayerBreakBlockAfterEvent) => void,
         options?: BlockEventOptions,
-    ): (arg: PlayerBreakBlockAfterEvent) => void;
+    ): (arg0: PlayerBreakBlockAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when a player breaks a
@@ -12039,7 +12223,7 @@ export class PlayerBreakBlockAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: PlayerBreakBlockAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: PlayerBreakBlockAfterEvent) => void): void;
 }
 
 /**
@@ -12087,9 +12271,9 @@ export class PlayerBreakBlockBeforeEventSignal {
      *
      */
     subscribe(
-        callback: (arg: PlayerBreakBlockBeforeEvent) => void,
+        callback: (arg0: PlayerBreakBlockBeforeEvent) => void,
         options?: BlockEventOptions,
-    ): (arg: PlayerBreakBlockBeforeEvent) => void;
+    ): (arg0: PlayerBreakBlockBeforeEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called before a player breaks
@@ -12100,7 +12284,7 @@ export class PlayerBreakBlockBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: PlayerBreakBlockBeforeEvent) => void): void;
+    unsubscribe(callback: (arg0: PlayerBreakBlockBeforeEvent) => void): void;
 }
 
 /**
@@ -12185,7 +12369,9 @@ export class PlayerDimensionChangeAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: PlayerDimensionChangeAfterEvent) => void): (arg: PlayerDimensionChangeAfterEvent) => void;
+    subscribe(
+        callback: (arg0: PlayerDimensionChangeAfterEvent) => void,
+    ): (arg0: PlayerDimensionChangeAfterEvent) => void;
     /**
      * @remarks
      * Removes the specified callback from a player dimension
@@ -12196,7 +12382,7 @@ export class PlayerDimensionChangeAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: PlayerDimensionChangeAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: PlayerDimensionChangeAfterEvent) => void): void;
 }
 
 export class PlayerEmoteAfterEvent {
@@ -12214,7 +12400,7 @@ export class PlayerEmoteAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: PlayerEmoteAfterEvent) => void): (arg: PlayerEmoteAfterEvent) => void;
+    subscribe(callback: (arg0: PlayerEmoteAfterEvent) => void): (arg0: PlayerEmoteAfterEvent) => void;
     /**
      * @remarks
      * This function can't be called in read-only mode.
@@ -12222,7 +12408,7 @@ export class PlayerEmoteAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: PlayerEmoteAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: PlayerEmoteAfterEvent) => void): void;
 }
 
 /**
@@ -12267,7 +12453,7 @@ export class PlayerGameModeChangeAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: PlayerGameModeChangeAfterEvent) => void): (arg: PlayerGameModeChangeAfterEvent) => void;
+    subscribe(callback: (arg0: PlayerGameModeChangeAfterEvent) => void): (arg0: PlayerGameModeChangeAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called after a players game
@@ -12278,7 +12464,7 @@ export class PlayerGameModeChangeAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: PlayerGameModeChangeAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: PlayerGameModeChangeAfterEvent) => void): void;
 }
 
 /**
@@ -12329,7 +12515,9 @@ export class PlayerGameModeChangeBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: PlayerGameModeChangeBeforeEvent) => void): (arg: PlayerGameModeChangeBeforeEvent) => void;
+    subscribe(
+        callback: (arg0: PlayerGameModeChangeBeforeEvent) => void,
+    ): (arg0: PlayerGameModeChangeBeforeEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called before a players game
@@ -12340,7 +12528,63 @@ export class PlayerGameModeChangeBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: PlayerGameModeChangeBeforeEvent) => void): void;
+    unsubscribe(callback: (arg0: PlayerGameModeChangeBeforeEvent) => void): void;
+}
+
+/**
+ * Event data for when a player input mode changes.
+ */
+export class PlayerInputModeChangeAfterEvent {
+    private constructor();
+    /**
+     * @remarks
+     * The new input mode used by the player.
+     *
+     */
+    readonly newInputModeUsed: InputMode;
+    /**
+     * @remarks
+     * The player that had an input mode change.
+     *
+     */
+    readonly player: Player;
+    /**
+     * @remarks
+     * The previous input mode used by the player.
+     *
+     */
+    readonly previousInputModeUsed: InputMode;
+}
+
+/**
+ * Manages callbacks that are connected to player input mode.
+ */
+export class PlayerInputModeChangeAfterEventSignal {
+    private constructor();
+    /**
+     * @remarks
+     * Adds a callback that will be called after the player input
+     * mode changes.
+     *
+     * This function can't be called in read-only mode.
+     *
+     * This function can be called in early-execution mode.
+     *
+     */
+    subscribe(
+        callback: (arg0: PlayerInputModeChangeAfterEvent) => void,
+    ): (arg0: PlayerInputModeChangeAfterEvent) => void;
+    /**
+     * @remarks
+     * Removes a callback from being called after the player input
+     * mode changes.
+     *
+     * This function can't be called in read-only mode.
+     *
+     * This function can be called in early-execution mode.
+     *
+     */
+    unsubscribe(callback: (arg0: PlayerInputModeChangeAfterEvent) => void): void;
 }
 
 /**
@@ -12386,8 +12630,8 @@ export class PlayerInputPermissionCategoryChangeAfterEventSignal {
      *
      */
     subscribe(
-        callback: (arg: PlayerInputPermissionCategoryChangeAfterEvent) => void,
-    ): (arg: PlayerInputPermissionCategoryChangeAfterEvent) => void;
+        callback: (arg0: PlayerInputPermissionCategoryChangeAfterEvent) => void,
+    ): (arg0: PlayerInputPermissionCategoryChangeAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called after a players input
@@ -12398,7 +12642,7 @@ export class PlayerInputPermissionCategoryChangeAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: PlayerInputPermissionCategoryChangeAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: PlayerInputPermissionCategoryChangeAfterEvent) => void): void;
 }
 
 /**
@@ -12420,6 +12664,27 @@ export class PlayerInputPermissions {
      *
      */
     movementEnabled: boolean;
+    /**
+     * @remarks
+     * Returns true if an input permission is enabled.
+     *
+     * This function can't be called in read-only mode.
+     *
+     * @throws This function can throw errors.
+     *
+     * {@link Error}
+     */
+    isPermissionCategoryEnabled(permissionCategory: InputPermissionCategory): boolean;
+    /**
+     * @remarks
+     * Enable or disable an input permission. When enabled the
+     * input will work, when disabled will not work.
+     *
+     * This function can't be called in read-only mode.
+     *
+     * @throws This function can throw errors.
+     */
+    setPermissionCategory(permissionCategory: InputPermissionCategory, isEnabled: boolean): void;
 }
 
 /**
@@ -12494,8 +12759,8 @@ export class PlayerInteractWithBlockAfterEventSignal {
      *
      */
     subscribe(
-        callback: (arg: PlayerInteractWithBlockAfterEvent) => void,
-    ): (arg: PlayerInteractWithBlockAfterEvent) => void;
+        callback: (arg0: PlayerInteractWithBlockAfterEvent) => void,
+    ): (arg0: PlayerInteractWithBlockAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called after a player
@@ -12506,7 +12771,7 @@ export class PlayerInteractWithBlockAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: PlayerInteractWithBlockAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: PlayerInteractWithBlockAfterEvent) => void): void;
 }
 
 /**
@@ -12580,8 +12845,8 @@ export class PlayerInteractWithBlockBeforeEventSignal {
      *
      */
     subscribe(
-        callback: (arg: PlayerInteractWithBlockBeforeEvent) => void,
-    ): (arg: PlayerInteractWithBlockBeforeEvent) => void;
+        callback: (arg0: PlayerInteractWithBlockBeforeEvent) => void,
+    ): (arg0: PlayerInteractWithBlockBeforeEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called before a player
@@ -12592,7 +12857,7 @@ export class PlayerInteractWithBlockBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: PlayerInteractWithBlockBeforeEvent) => void): void;
+    unsubscribe(callback: (arg0: PlayerInteractWithBlockBeforeEvent) => void): void;
 }
 
 /**
@@ -12646,8 +12911,8 @@ export class PlayerInteractWithEntityAfterEventSignal {
      *
      */
     subscribe(
-        callback: (arg: PlayerInteractWithEntityAfterEvent) => void,
-    ): (arg: PlayerInteractWithEntityAfterEvent) => void;
+        callback: (arg0: PlayerInteractWithEntityAfterEvent) => void,
+    ): (arg0: PlayerInteractWithEntityAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called after a player
@@ -12658,7 +12923,7 @@ export class PlayerInteractWithEntityAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: PlayerInteractWithEntityAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: PlayerInteractWithEntityAfterEvent) => void): void;
 }
 
 /**
@@ -12711,8 +12976,8 @@ export class PlayerInteractWithEntityBeforeEventSignal {
      *
      */
     subscribe(
-        callback: (arg: PlayerInteractWithEntityBeforeEvent) => void,
-    ): (arg: PlayerInteractWithEntityBeforeEvent) => void;
+        callback: (arg0: PlayerInteractWithEntityBeforeEvent) => void,
+    ): (arg0: PlayerInteractWithEntityBeforeEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called before a player
@@ -12723,7 +12988,7 @@ export class PlayerInteractWithEntityBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: PlayerInteractWithEntityBeforeEvent) => void): void;
+    unsubscribe(callback: (arg0: PlayerInteractWithEntityBeforeEvent) => void): void;
 }
 
 /**
@@ -12817,7 +13082,7 @@ export class PlayerLeaveBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: PlayerLeaveBeforeEvent) => void): (arg: PlayerLeaveBeforeEvent) => void;
+    subscribe(callback: (arg0: PlayerLeaveBeforeEvent) => void): (arg0: PlayerLeaveBeforeEvent) => void;
     /**
      * @remarks
      * Removes a callback that will be called when a player leaves
@@ -12828,7 +13093,7 @@ export class PlayerLeaveBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: PlayerLeaveBeforeEvent) => void): void;
+    unsubscribe(callback: (arg0: PlayerLeaveBeforeEvent) => void): void;
 }
 
 /**
@@ -12863,9 +13128,9 @@ export class PlayerPlaceBlockAfterEventSignal {
      *
      */
     subscribe(
-        callback: (arg: PlayerPlaceBlockAfterEvent) => void,
+        callback: (arg0: PlayerPlaceBlockAfterEvent) => void,
         options?: BlockEventOptions,
-    ): (arg: PlayerPlaceBlockAfterEvent) => void;
+    ): (arg0: PlayerPlaceBlockAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when an block is placed
@@ -12876,7 +13141,7 @@ export class PlayerPlaceBlockAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: PlayerPlaceBlockAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: PlayerPlaceBlockAfterEvent) => void): void;
 }
 
 /**
@@ -12952,7 +13217,7 @@ export class PressurePlatePopAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: PressurePlatePopAfterEvent) => void): (arg: PressurePlatePopAfterEvent) => void;
+    subscribe(callback: (arg0: PressurePlatePopAfterEvent) => void): (arg0: PressurePlatePopAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when a pressure plate
@@ -12963,7 +13228,7 @@ export class PressurePlatePopAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: PressurePlatePopAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: PressurePlatePopAfterEvent) => void): void;
 }
 
 /**
@@ -13011,7 +13276,7 @@ export class PressurePlatePushAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: PressurePlatePushAfterEvent) => void): (arg: PressurePlatePushAfterEvent) => void;
+    subscribe(callback: (arg0: PressurePlatePushAfterEvent) => void): (arg0: PressurePlatePushAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when a pressure plate
@@ -13022,7 +13287,7 @@ export class PressurePlatePushAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: PressurePlatePushAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: PressurePlatePushAfterEvent) => void): void;
 }
 
 /**
@@ -13088,7 +13353,7 @@ export class ProjectileHitBlockAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: ProjectileHitBlockAfterEvent) => void): (arg: ProjectileHitBlockAfterEvent) => void;
+    subscribe(callback: (arg0: ProjectileHitBlockAfterEvent) => void): (arg0: ProjectileHitBlockAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when a projectile hits
@@ -13099,7 +13364,7 @@ export class ProjectileHitBlockAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: ProjectileHitBlockAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: ProjectileHitBlockAfterEvent) => void): void;
 }
 
 /**
@@ -13165,7 +13430,7 @@ export class ProjectileHitEntityAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: ProjectileHitEntityAfterEvent) => void): (arg: ProjectileHitEntityAfterEvent) => void;
+    subscribe(callback: (arg0: ProjectileHitEntityAfterEvent) => void): (arg0: ProjectileHitEntityAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when a projectile hits
@@ -13176,7 +13441,7 @@ export class ProjectileHitEntityAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: ProjectileHitEntityAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: ProjectileHitEntityAfterEvent) => void): void;
 }
 
 /**
@@ -13783,9 +14048,9 @@ export class ScriptEventCommandMessageAfterEventSignal {
      *
      */
     subscribe(
-        callback: (arg: ScriptEventCommandMessageAfterEvent) => void,
+        callback: (arg0: ScriptEventCommandMessageAfterEvent) => void,
         options?: ScriptEventMessageFilterOptions,
-    ): (arg: ScriptEventCommandMessageAfterEvent) => void;
+    ): (arg0: ScriptEventCommandMessageAfterEvent) => void;
     /**
      * @remarks
      * Unsubscribes a particular handler for a ScriptEvent event.
@@ -13795,7 +14060,7 @@ export class ScriptEventCommandMessageAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: ScriptEventCommandMessageAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: ScriptEventCommandMessageAfterEvent) => void): void;
 }
 
 /**
@@ -13960,6 +14225,9 @@ export class Structure {
      * The block location relative to the Structure's origin.
      * @param blockPermutation
      * The BlockPermutation to set.
+     * @param waterlogged
+     * Specifies whether the block should be waterlogged. Air and
+     * undefined blocks cannot be waterlogged.
      * @throws
      * Throws if the type of block is StructureVoid.
      * Throws if the block is undefined and waterlogged is set to
@@ -13972,7 +14240,7 @@ export class Structure {
      *
      * {@link InvalidStructureError}
      */
-    setBlockPermutation(location: Vector3, blockPermutation?: BlockPermutation): void;
+    setBlockPermutation(location: Vector3, blockPermutation?: BlockPermutation, waterlogged?: boolean): void;
 }
 
 /**
@@ -14282,8 +14550,16 @@ export class System {
     runTimeout(callback: () => void, tickDelay?: number): number;
     /**
      * @remarks
+     * waitTicks returns a promise that resolves after the
+     * requested number of ticks.
+     *
      * This function can be called in early-execution mode.
      *
+     * @param ticks
+     * The amount of ticks to wait. Minimum value is 1.
+     * @returns
+     * A promise that is resolved when the specified amount of
+     * ticks have occurred.
      * @throws This function can throw errors.
      *
      * {@link minecraftcommon.EngineError}
@@ -14369,7 +14645,7 @@ export class TargetBlockHitAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: TargetBlockHitAfterEvent) => void): (arg: TargetBlockHitAfterEvent) => void;
+    subscribe(callback: (arg0: TargetBlockHitAfterEvent) => void): (arg0: TargetBlockHitAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when a target block is
@@ -14380,7 +14656,7 @@ export class TargetBlockHitAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: TargetBlockHitAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: TargetBlockHitAfterEvent) => void): void;
 }
 
 /**
@@ -14507,7 +14783,7 @@ export class TripWireTripAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: TripWireTripAfterEvent) => void): (arg: TripWireTripAfterEvent) => void;
+    subscribe(callback: (arg0: TripWireTripAfterEvent) => void): (arg0: TripWireTripAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when a trip wire is
@@ -14518,7 +14794,7 @@ export class TripWireTripAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: TripWireTripAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: TripWireTripAfterEvent) => void): void;
 }
 
 /**
@@ -14561,7 +14837,7 @@ export class WeatherChangeAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: WeatherChangeAfterEvent) => void): (arg: WeatherChangeAfterEvent) => void;
+    subscribe(callback: (arg0: WeatherChangeAfterEvent) => void): (arg0: WeatherChangeAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called when weather changes.
@@ -14571,7 +14847,7 @@ export class WeatherChangeAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: WeatherChangeAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: WeatherChangeAfterEvent) => void): void;
 }
 
 /**
@@ -14622,7 +14898,7 @@ export class WeatherChangeBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: WeatherChangeBeforeEvent) => void): (arg: WeatherChangeBeforeEvent) => void;
+    subscribe(callback: (arg0: WeatherChangeBeforeEvent) => void): (arg0: WeatherChangeBeforeEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called before weather changes.
@@ -14632,7 +14908,7 @@ export class WeatherChangeBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: WeatherChangeBeforeEvent) => void): void;
+    unsubscribe(callback: (arg0: WeatherChangeBeforeEvent) => void): void;
 }
 
 /**
@@ -15314,6 +15590,13 @@ export class WorldAfterEvents {
     readonly playerGameModeChange: PlayerGameModeChangeAfterEventSignal;
     /**
      * @remarks
+     * This event fires when a player's {@link
+     * @minecraft/Server.InputMode} changes.
+     *
+     */
+    readonly playerInputModeChange: PlayerInputModeChangeAfterEventSignal;
+    /**
+     * @remarks
      * This event fires when a players input permissions change.
      *
      */
@@ -15517,7 +15800,7 @@ export class WorldInitializeAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: WorldInitializeAfterEvent) => void): (arg: WorldInitializeAfterEvent) => void;
+    subscribe(callback: (arg0: WorldInitializeAfterEvent) => void): (arg0: WorldInitializeAfterEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called the scripting
@@ -15528,7 +15811,7 @@ export class WorldInitializeAfterEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: WorldInitializeAfterEvent) => void): void;
+    unsubscribe(callback: (arg0: WorldInitializeAfterEvent) => void): void;
 }
 
 /**
@@ -15568,7 +15851,7 @@ export class WorldInitializeBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    subscribe(callback: (arg: WorldInitializeBeforeEvent) => void): (arg: WorldInitializeBeforeEvent) => void;
+    subscribe(callback: (arg0: WorldInitializeBeforeEvent) => void): (arg0: WorldInitializeBeforeEvent) => void;
     /**
      * @remarks
      * Removes a callback from being called the scripting
@@ -15579,7 +15862,7 @@ export class WorldInitializeBeforeEventSignal {
      * This function can be called in early-execution mode.
      *
      */
-    unsubscribe(callback: (arg: WorldInitializeBeforeEvent) => void): void;
+    unsubscribe(callback: (arg0: WorldInitializeBeforeEvent) => void): void;
 }
 
 /**
@@ -15593,28 +15876,28 @@ export interface BlockCustomComponent {
      * block.
      *
      */
-    beforeOnPlayerPlace?: (arg: BlockComponentPlayerPlaceBeforeEvent) => void;
+    beforeOnPlayerPlace?: (arg0: BlockComponentPlayerPlaceBeforeEvent) => void;
     /**
      * @remarks
      * This function will be called when an entity falls onto the
      * block that this custom component is bound to.
      *
      */
-    onEntityFallOn?: (arg: BlockComponentEntityFallOnEvent) => void;
+    onEntityFallOn?: (arg0: BlockComponentEntityFallOnEvent) => void;
     /**
      * @remarks
      * This function will be called when the block that this custom
      * component is bound to is placed.
      *
      */
-    onPlace?: (arg: BlockComponentOnPlaceEvent) => void;
+    onPlace?: (arg0: BlockComponentOnPlaceEvent) => void;
     /**
      * @remarks
      * This function will be called when a player destroys a
      * specific block.
      *
      */
-    onPlayerDestroy?: (arg: BlockComponentPlayerDestroyEvent) => void;
+    onPlayerDestroy?: (arg0: BlockComponentPlayerDestroyEvent) => void;
     /**
      * @remarks
      * This function will be called when a player sucessfully
@@ -15622,33 +15905,33 @@ export interface BlockCustomComponent {
      * to.
      *
      */
-    onPlayerInteract?: (arg: BlockComponentPlayerInteractEvent) => void;
+    onPlayerInteract?: (arg0: BlockComponentPlayerInteractEvent) => void;
     /**
      * @remarks
      * This function will be called when a block randomly ticks.
      *
      */
-    onRandomTick?: (arg: BlockComponentRandomTickEvent) => void;
+    onRandomTick?: (arg0: BlockComponentRandomTickEvent) => void;
     /**
      * @remarks
      * This function will be called when an entity steps off the
      * block that this custom component is bound to.
      *
      */
-    onStepOff?: (arg: BlockComponentStepOffEvent) => void;
+    onStepOff?: (arg0: BlockComponentStepOffEvent) => void;
     /**
      * @remarks
      * This function will be called when an entity steps onto the
      * block that this custom component is bound to.
      *
      */
-    onStepOn?: (arg: BlockComponentStepOnEvent) => void;
+    onStepOn?: (arg0: BlockComponentStepOnEvent) => void;
     /**
      * @remarks
      * This function will be called when a block ticks.
      *
      */
-    onTick?: (arg: BlockComponentTickEvent) => void;
+    onTick?: (arg0: BlockComponentTickEvent) => void;
 }
 
 /**
@@ -15913,6 +16196,24 @@ export interface CameraSetRotOptions {
     easeOptions?: CameraEaseOptions;
     location?: Vector3;
     rotation: Vector2;
+}
+
+/**
+ * Used to target an entity with a free camera.
+ */
+export interface CameraTargetOptions {
+    /**
+     * @remarks
+     * Set an <x, y, z> offset from the target entity's center.
+     *
+     */
+    offsetFromTargetCenter?: Vector3;
+    /**
+     * @remarks
+     * The singular entity you want to target.
+     *
+     */
+    targetEntity: Entity;
 }
 
 /**
@@ -16690,49 +16991,49 @@ export interface ItemCustomComponent {
      * damage.
      *
      */
-    onBeforeDurabilityDamage?: (arg: ItemComponentBeforeDurabilityDamageEvent) => void;
+    onBeforeDurabilityDamage?: (arg0: ItemComponentBeforeDurabilityDamageEvent) => void;
     /**
      * @remarks
      * This function will be called when an item containing this
      * component's use duration was completed.
      *
      */
-    onCompleteUse?: (arg: ItemComponentCompleteUseEvent) => void;
+    onCompleteUse?: (arg0: ItemComponentCompleteUseEvent) => void;
     /**
      * @remarks
      * This function will be called when an item containing this
      * component is eaten by an entity.
      *
      */
-    onConsume?: (arg: ItemComponentConsumeEvent) => void;
+    onConsume?: (arg0: ItemComponentConsumeEvent) => void;
     /**
      * @remarks
      * This function will be called when an item containing this
      * component is used to hit another entity.
      *
      */
-    onHitEntity?: (arg: ItemComponentHitEntityEvent) => void;
+    onHitEntity?: (arg0: ItemComponentHitEntityEvent) => void;
     /**
      * @remarks
      * This function will be called when an item containing this
      * component is used to mine a block.
      *
      */
-    onMineBlock?: (arg: ItemComponentMineBlockEvent) => void;
+    onMineBlock?: (arg0: ItemComponentMineBlockEvent) => void;
     /**
      * @remarks
      * This function will be called when an item containing this
      * component is used by a player.
      *
      */
-    onUse?: (arg: ItemComponentUseEvent) => void;
+    onUse?: (arg0: ItemComponentUseEvent) => void;
     /**
      * @remarks
      * This function will be called when an item containing this
      * component is used on a block.
      *
      */
-    onUseOn?: (arg: ItemComponentUseOnEvent) => void;
+    onUseOn?: (arg0: ItemComponentUseOnEvent) => void;
 }
 
 /**
@@ -17473,6 +17774,27 @@ export class EnchantmentTypeUnknownIdError extends Error {
 // @ts-ignore Class inheritance allowed for native defined classes
 export class InvalidContainerSlotError extends Error {
     private constructor();
+}
+
+/**
+ * The error called when an entity is invalid. This can occur
+ * when accessing components on a removed entity.
+ */
+// @ts-ignore Class inheritance allowed for native defined classes
+export class InvalidEntityError extends Error {
+    private constructor();
+    /**
+     * @remarks
+     * The id of the entity that is now invalid.
+     *
+     */
+    id: string;
+    /**
+     * @remarks
+     * The type of the entity that is now invalid.
+     *
+     */
+    type: string;
 }
 
 // @ts-ignore Class inheritance allowed for native defined classes
