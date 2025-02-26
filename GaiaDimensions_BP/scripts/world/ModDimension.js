@@ -1,4 +1,4 @@
-import { world, system } from "@minecraft/server";
+import {Dimension, world, system } from "@minecraft/server";
 export { level, ModDimension };
 const ALL_MOD_DIMENSIONS = {};
 
@@ -8,7 +8,7 @@ const ALL_MOD_DIMENSIONS = {};
 class ModDimension {
     constructor({ type, range, inheritance }) {
         this.type = type;
-        this.world = world;
+        this.dimension = Dimension;
         this.bounds = bounds;
         this.range = range;
         this.center = {
@@ -90,11 +90,9 @@ class ModDimension {
    */
   getBlock(pos) {
     if (!this._isWithinBounds(pos)) {
-      throw new Error("Position is outside the custom dimension bounds.");
+      throw new Error("Position is outside the dimension bounds.");
     }
-    // Delegate to the underlying world's getBlock method.
-    // This assumes your world object has a getBlock method that accepts a position object.
-    return this.world.getBlock(pos);
+    return this.dimension.getBlock(pos);
   }
 
     static get(id) {
