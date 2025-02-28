@@ -6,7 +6,7 @@ const ALL_MOD_DIMENSIONS = {};
  * Class representing a ModDimension
  */
 class ModDimension {
-    constructor({ type, range, inheritance }) {
+    constructor({ type, range, inheritance, dimension, center }) {
         this.type = type;
         this.dimension = Dimension;
         this.bounds = bounds;
@@ -89,10 +89,10 @@ class ModDimension {
    * @throws {Error} If the position is outside the bounds of this dimension.
    */
   getBlock(pos) {
-    if (!this._isWithinBounds(pos)) {
+    if (!this.isWithinBounds(pos)) {
       throw new Error("Position is outside the dimension bounds.");
     }
-    return this.dimension.getBlock(pos);
+    return this,dimension.getBlock(pos);
   }
 
     static get(id) {

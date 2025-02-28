@@ -1,4 +1,4 @@
-import {  world  } from "@minecraft/server";
+import {  world, Player  } from "@minecraft/server";
 import { level } from "./ModDimension";
 
 // Cache the Gaia dimension once.
