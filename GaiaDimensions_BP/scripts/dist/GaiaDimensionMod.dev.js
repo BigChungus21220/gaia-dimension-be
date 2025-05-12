@@ -2,10 +2,6 @@
 
 require("./asm/mixins.js");
 
-require("./Vec3.js");
-
-require("./registration/ModBlocks.js");
-
 require("/world/DimensionRegistry.js");
 
 require("./GaiaTeleporter.js");

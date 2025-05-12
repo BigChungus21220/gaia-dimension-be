@@ -1,5 +1,5 @@
 import { system, world } from "@minecraft/server";
-import { delay } from '../utils.js';
+import { delay } from '../GaiaMapping.js';
 import { Vec3 } from '../Vec3.js';
 
 //applies velocity to entities that stand on an active geyser for duration ticks

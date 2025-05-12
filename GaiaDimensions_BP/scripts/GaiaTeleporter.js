@@ -1,119 +1,57 @@
-import { world, system, Player, Entity } from "@minecraft/server";
+import { world, system, Entity } from "@minecraft/server";
 import { Vec3 } from "./Vec3.js";
-import { level } from "./world/ModDimension.js";
+import { level } from "./ModDimension.js";
+import Portal from "./world/Portal.js";
 
-// A WeakMap to store each entity’s portal state.
+const gaiaMod = level.getDimension("gaia_dimension");
+const OVERWORLD = world.getDimension("overworld");
 const portalState = new WeakMap();
 
-/**
- * PortalManager handles teleportation using only the Portal class.
- * It uses a WeakMap to store per-entity state and dynamically links
- * portal transitions.
- */
 class PortalManager {
-  /**
-   * Processes an entity for portal transitions.
-   * @param {Entity} entity 
-   */
-  static async processEntity(entity) {
-    // We only handle Player instances.
-    if (!(entity instanceof Player)) return;
+  static delay(ticks) {
+    return new Promise(res => system.runTimeout(res, ticks));
+  }
 
-    // Determine if the entity is “in a portal”
-    const currentlyInPortal = entity.isInPortal();
-
-    // Retrieve state or initialize new state.
-    let state = portalState.get(entity);
-    if (!state) {
-      state = { inPortal: false, backupLocation: null };
-      portalState.set(entity, state);
-    }
-
-    // When the entity has just entered a portal…
-    if (currentlyInPortal && !state.inPortal) {
-      // Save the backup location (rounded)
-      state.backupLocation = Vec3.round(entity.location);
+  static processEntity(entity) {
+    if (!(entity instanceof Entity)) return;
+    const now = system.currentTick;
+    let state = portalState.get(entity) || { inPortal: false, backup: null, cooldown: 0 };
+    if (now < state.cooldown) return;
+    const inPortal = entity.isInPortal();
+    if (inPortal && !state.inPortal) {
       state.inPortal = true;
+      state.backup = Vec3.from(entity.location).round();
+      state.cooldown = now + 10;
       portalState.set(entity, state);
-      await PortalManager.tpToTarget(entity, state.backupLocation);
-    }
-    // When the entity has just exited a portal…
-    if (!currentlyInPortal && state.inPortal) {
+      PortalManager.tp(entity, state.backup);
+    } else if (!inPortal && state.inPortal) {
       state.inPortal = false;
+      state.cooldown = now + 10;
       portalState.set(entity, state);
-      await PortalManager.backToOverworld(entity, state.backupLocation);
+      PortalManager.back(entity, state.backup);
     }
   }
 
-  /**
-   * Teleports the entity to the target dimension using portal logic.
-   * @param {Player} entity 
-   * @param {object} backupLocation 
-   */
-  static async tpToTarget(entity, backupLocation) {
-    // Mark that the entity has been processed.
+  static async tp(entity, backup) {
     entity.setDynamicProperty("enteredByPortal", true);
-    
-    // For simplicity, assume the target location equals the backup.
-    const targetLoc = backupLocation;
-    
-    // Dynamically import the Portal class so that it is loaded only when needed.
-    const { default: Portal } = await import("./world/Portal.js");
-    // For this example, assume Portal has a static property "targetDimension".
-    const targetDimension = Portal.targetDimension || level.getDimension("gaia_dimension");
-
-    // Teleport the entity to the target dimension at the target location.
-    entity.teleport(targetLoc, { dimension: targetDimension });
-    await PortalManager.delay(0.8);
-    
-    // Light the portal structure at the new location.
-    Portal.lightPortal(entity.location, targetDimension, true);
-    await PortalManager.delay(0.8);
-    
-    // For simplicity, assume the top block is the entity's current location.
-    const finalLoc = entity.location;
-    entity.teleport(finalLoc, { dimension: targetDimension });
-    
-    // If no link exists from the backup location, then link it.
-    if (!Portal.getLink("start", backupLocation)) {
-      Portal.link(backupLocation, finalLoc);
-    }
+    const from = OVERWORLD;
+    const toDim = gaiaMod.dimension;
+    const offset = Vec3.from(backup).subtract(Vec3(gaiaMod.center.x, backup.y, gaiaMod.center.z));
+    const dest = Vec3(gaiaMod.center.x, backup.y, gaiaMod.center.z).add(offset);
+    entity.teleport(dest, { dimension: toDim });
+    await PortalManager.delay(10);
+    Portal.lightPortal(dest, toDim, true);
+    await PortalManager.delay(10);
+    if (!Portal.getLink("start", backup)) Portal.link(backup, Vec3.from(entity.location), Vec3(4,5,1));
   }
 
-  /**
-   * Teleports the entity back to the overworld.
-   * @param {Player} entity 
-   * @param {object} backupLocation 
-   */
-  static async backToOverworld(entity, backupLocation) {
-    // Clear the portal entry marker.
+  static async back(entity, backup) {
     entity.setDynamicProperty("enteredByPortal", false);
-    // For simplicity, use the backup location as the destination.
-    const dest = backupLocation || entity.location;
-    // Assume the overworld dimension is available as Portal.overworldDimension.
-    const overworldDim = Portal.overworldDimension || world.getDimension("overworld");
-    // Teleport the entity back.
-    entity.teleport(dest, { dimension: overworldDim });
-  }
-
-  /**
-   * Returns a Promise that resolves after the given seconds.
-   * @param {number} seconds 
-   * @returns {Promise<void>}
-   */
-  static delay(seconds) {
-    return new Promise(resolve => setTimeout(resolve, seconds * 50));
+    const toDim = OVERWORLD;
+    entity.teleport(backup, { dimension: toDim });
   }
 }
 
-// Run an interval (every 5 ticks) to process all players.
-system.runInterval(async () => {
-  // Use dynamic import to get Portal in case its properties have changed.
-  const { default: Portal } = await import("./world/Portal.js");
-  // Process each player.
-  for (const player of world.getAllPlayers()) {
-    await PortalManager.processEntity(player);
-  }
+system.runInterval(() => {
+  for (const p of world.getAllPlayers()) PortalManager.processEntity(p);
 }, 5);
-
-export default PortalManager;

@@ -105,11 +105,11 @@ class MalachiteGuard {
 }
 
 // Run an interval that processes all players every 5 ticks.
-system.runInterval(() => {
+system.runJob(() => {
     world.getAllPlayers().forEach(player => {
         MalachiteGuard.activate(player);
     });
-}, 5);
+});
 
 export default MalachiteGuard;
 

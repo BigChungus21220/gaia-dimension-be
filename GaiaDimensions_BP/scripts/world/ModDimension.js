@@ -1,252 +1,269 @@
-import {Dimension, world, system } from "@minecraft/server";
-export { level, ModDimension };
+import { world, system } from "@minecraft/server";
+
+// Storage for registered virtual dimensions
 const ALL_MOD_DIMENSIONS = {};
 
 /**
- * Class representing a ModDimension
+ * Represents a virtual mod dimension, bounded by a box within an existing world dimension.
+ * Allows for interactions with entities, players, and blocks within this virtual dimension.
  */
-class ModDimension {
-    constructor({ type, range, inheritance, dimension, center }) {
-        this.type = type;
-        this.dimension = Dimension;
-        this.bounds = bounds;
-        this.range = range;
-        this.center = {
-            x: (this.range.start.x + this.range.end.x) / 2,
-            z: (this.range.start.z + this.range.end.z) / 2
-        };
-        this.inheritance = world.getDimension(inheritance);
-        this.eventsHandler = new DimensionEvents(this);
-    }
-
-    getCenter() {
-        return {
-            x: this.center.x,
-            z: this.center.z
-        };
-    }
-
-    getEvents() {
-        return this.eventsHandler;
-    }
-
-    isInDimension(location) {
-        return (
-            this.range.start.x <= location.x && location.x <= this.range.end.x &&
-            this.range.start.z <= location.z && location.z <= this.range.end.z
-        );
-    }
-
-    getEntities(entityQueryOptions) {
-        return this.inheritance.getEntities(entityQueryOptions).filter(entity => 
-            this.isInDimension(entity.location)
-        );
-    }
-
-    getPlayers(entityQueryOptions) {
-        return this.inheritance.getPlayers(entityQueryOptions).filter(entity => 
-            this.isInDimension(entity.location)
-        );
-    }
-
-    offset(location) {
-        return {
-            x: location.x - this.getCenter().x,
-            y: location.y, 
-            z: location.z - this.getCenter().z
-        };
-    }
-
-    static register(id, options) {
-        if (ModDimension.get(id) !== undefined) {
-            throw new Error('Dimension with id "' + id + '" is already registered');
-        }
-        options = {
-            range: options.range || { start: { x: -1, z: -1 }, end: { x: 1, z: 1 } },
-            inheritance: options.inheritance || 'the_end'
-        };
-        ALL_MOD_DIMENSIONS[id] = new ModDimension({
-            type: id,
-            range: options.range,
-            inheritance: options.inheritance
-        });
-        return ModDimension.get(id);
-    }
-    /**
-   * Checks if a position is within the bounds of this custom dimension.
-   * @param {object} pos - The position to check with properties x, y, z.
-   * @returns {boolean} True if the position is within bounds; otherwise, false.
+export class ModDimension {
+  /**
+   * Creates an instance of a ModDimension.
+   * @param {Object} opts - The options for the dimension.
+   * @param {string} opts.id - The unique identifier for this dimension.
+   * @param {Object} opts.range - The bounding range of the dimension with `start` and `end` points.
+   * @param {string} opts.inheritance - The parent dimension that this virtual dimension inherits from.
    */
-   isWithinBounds(pos) {
-    return pos.x >= this.bounds.min.x && pos.x <= this.bounds.max.x &&
-           pos.y >= this.bounds.min.y && pos.y <= this.bounds.max.y &&
-            pos.z >= this.bounds.min.z && pos.z <= this.bounds.max.z;}
-   /**
-   * Retrieves the block at the specified position within this dimension.
-   * Mimics the native scripting API’s getBlock method.
-   * @param {object} pos - The position with properties x, y, z.
-   * @returns {Block} The block object at the given position.
-   * @throws {Error} If the position is outside the bounds of this dimension.
+  constructor({ id, range, inheritance }) {
+    this.id = id;
+    this.range = range;
+    this.bounds = { min: range.start, max: range.end };
+    this.center = {
+      x: (range.start.x + range.end.x) / 2,
+      z: (range.start.z + range.end.z) / 2
+    };
+    // Get the world dimension from which this virtual dimension is derived
+    this.dimension = world.getDimension(inheritance);
+    this.eventsHandler = new DimensionEvents(this);
+  }
+
+  /**
+   * Gets the center coordinates of the dimension.
+   * @returns {Object} The center of the dimension with `x` and `z` coordinates.
+   */
+  getCenter() {
+    return { ...this.center };
+  }
+
+  /**
+   * Checks if a given location is inside the bounds of this dimension.
+   * @param {Object} loc - The location to check.
+   * @param {number} loc.x - The x-coordinate.
+   * @param {number} loc.z - The z-coordinate.
+   * @returns {boolean} True if the location is within bounds, otherwise false.
+   */
+  isInDimension(loc) {
+    return (
+      loc.x >= this.range.start.x && loc.x <= this.range.end.x &&
+      loc.z >= this.range.start.z && loc.z <= this.range.end.z
+    );
+  }
+
+  /**
+   * Retrieves all entities within the dimension that satisfy a given query.
+   * @param {Object} query - The query to filter entities.
+   * @returns {Array} A list of entities that satisfy the query.
+   */
+  getEntities(query) {
+    return this.dimension.getEntities(query)
+      .filter(e => this.isInDimension(e.location));
+  }
+
+  /**
+   * Retrieves all players within the dimension that satisfy a given query.
+   * @param {Object} query - The query to filter players.
+   * @returns {Array} A list of players that satisfy the query.
+   */
+  getPlayers(query) {
+    return this.dimension.getPlayers(query)
+      .filter(p => this.isInDimension(p.location));
+  }
+
+  /**
+   * Checks if a position is within the defined bounds of the dimension.
+   * @param {Object} pos - The position to check.
+   * @param {number} pos.x - The x-coordinate.
+   * @param {number} pos.y - The y-coordinate.
+   * @param {number} pos.z - The z-coordinate.
+   * @returns {boolean} True if the position is within bounds, otherwise false.
+   */
+  isWithinBounds(pos) {
+    return (
+      pos.x >= this.bounds.min.x && pos.x <= this.bounds.max.x &&
+      pos.y >= this.bounds.min.y && pos.y <= this.bounds.max.y &&
+      pos.z >= this.bounds.min.z && pos.z <= this.bounds.max.z
+    );
+  }
+
+  /**
+   * Gets the block at a specified position within the dimension.
+   * Throws an error if the position is out of bounds.
+   * @param {Object} pos - The position of the block to retrieve.
+   * @returns {Block} The block at the given position.
    */
   getBlock(pos) {
     if (!this.isWithinBounds(pos)) {
-      throw new Error("Position is outside the dimension bounds.");
+      throw new Error(`Position ${JSON.stringify(pos)} outside bounds of virtual dimension '${this.id}'`);
     }
-    return this,dimension.getBlock(pos);
+    return this.dimension.getBlock(pos);
   }
 
-    static get(id) {
-        return ALL_MOD_DIMENSIONS[id];
-    }
+  /**
+   * Offsets a location relative to the center of this dimension.
+   * @param {Object} loc - The location to offset.
+   * @returns {Object} The offset location with `x`, `y`, and `z` coordinates.
+   */
+  offset(loc) {
+    return {
+      x: loc.x - this.center.x,
+      y: loc.y,
+      z: loc.z - this.center.z
+    };
+  }
 
-    static getAll() {
-        return Object.keys(ALL_MOD_DIMENSIONS).map(id => this.get(id));
+  /**
+   * Registers a new virtual dimension.
+   * @param {string} id - The unique identifier for the virtual dimension.
+   * @param {Object} opts - Options for the virtual dimension.
+   * @param {Object} opts.range - The bounding range of the dimension.
+   * @param {string} opts.inheritance - The parent dimension this virtual dimension inherits from.
+   * @returns {ModDimension} The created ModDimension instance.
+   */
+  static register(id, opts = {}) {
+    if (ALL_MOD_DIMENSIONS[id]) {
+      throw new Error(`Virtual dimension '${id}' is already registered`);
     }
+    const range = opts.range || { start: { x: -1, y: 0, z: -1 }, end: { x: 1, y: 256, z: 1 } };
+    const inheritance = opts.inheritance || "the_end";
+    ALL_MOD_DIMENSIONS[id] = new ModDimension({ id, range, inheritance });
+    return ALL_MOD_DIMENSIONS[id];
+  }
+
+  /**
+   * Retrieves a registered virtual dimension by its ID.
+   * @param {string} id - The unique identifier of the dimension.
+   * @returns {ModDimension} The ModDimension instance.
+   */
+  static get(id) {
+    return ALL_MOD_DIMENSIONS[id];
+  }
+
+  /**
+   * Retrieves all registered virtual dimensions.
+   * @returns {Array} An array of all registered ModDimension instances.
+   */
+  static getAll() {
+    return Object.values(ALL_MOD_DIMENSIONS);
+  }
 }
 
 /**
- * Class to handle events related to dimensions
+ * Handles onJoin/onLeave events for a ModDimension, allowing for event registration and triggers.
  */
 class DimensionEvents {
-    constructor(dimension) {
-        this.dimension = dimension;
-        this.players = {};
-        this.events = {};
-
-        system.runInterval(() => {
-            let currentPlayers = this.dimension.getPlayers();
-            let newPlayers = currentPlayers.filter(player => !this.players[player.id]);
-            let leavingPlayers = Object.keys(this.players).filter(id => !currentPlayers.some(player => player.id === id));
-
-            // Handle player leaves
-            leavingPlayers.forEach((id, index) => {
-                let player = world.getEntity(id);
-                if (player && player.isValid()) {
-                    delete this.players[id];
-                    system.runTimeout(() => {
-                        this.triggerEvent('onLeave', player);
-                    }, index + 1);
-                }
-            });
-
-            // Handle new players
-            newPlayers.forEach((player, index) => {
-                this.players[player.id] = player;
-                system.runTimeout(() => {
-                    this.triggerEvent('onJoin', player);
-                }, leavingPlayers.length + index + 1);
-            });
-        }, 20);
-    }
-
-    addEvent(id, type, callback) {
-        if (this.events[id]) throw new Error('Event with ID ' + id + ' has already been registered');
-        this.events[id] = new DimensionEvent(id, type, callback, this);
-        return this.events[id];
-    }
-
-    removeEvent(eventId) {
-        delete this.events[eventId];
-    }
-
-    getEvent(id) {
-        return this.events[id];
-    }
-
-    getAllEvents() {
-        return Object.values(this.events);
-    }
-
-    onJoin(id, callback) {
-        return this.addEvent(id, 'onJoin', callback);
-    }
-
-    onLeave(id, callback) {
-        return this.addEvent(id, 'onLeave', callback);
-    }
-
-    triggerEvent(type, player) {
-        for (let event of this.getAllEvents()) {
-            if (event.type === type) {
-                event.callback(event, player);
-            }
-        }
-    }
-}
-
-/**
- * Class representing an individual dimension event
- */
-class DimensionEvent {
-    constructor(id, type, callback, handler) {
-        this.id = id;
-        this.type = type;
-        this.callback = callback;
-        this.handler = handler;
-    }
-
-    remove() {
-        this.handler.removeEvent(this.id);
-    }
-}
-
-/**
- * Level class to manage dimensions
- */
-class Level {
-    constructor() {
-        this.dimensions = ALL_MOD_DIMENSIONS;
-    }
-
-    /**
-     * Gets a specific dimension by ID
-     * @param {string} id - The ID of the dimension to retrieve
-     * @returns {ModDimension|undefined} The dimension if found, otherwise undefined
-     */
-    getDimension(id) {
-        return ModDimension.get(id);
-    }
-}
-
-const level = new Level
-
-// Coordinate display
-
-// Returns the coordinates that should be displayed on the screen
-function planet_coords(entity) {
-    if (entity.dimension.id != 'minecraft:the_end') return entity.location;
-    let planet = Planet.getAll().find(pl => pl.isOnPlanet(entity.location))
-    return planet?.offset(entity.location) || entity.location
+  /**
+   * Creates an event handler for ModDimension.
+   * @param {ModDimension} modDim - The ModDimension instance.
+   */
+  constructor(modDim) {
+    this.modDim = modDim;
+    this.players = {};
+    this.events = {};
+    system.runInterval(() => this._tick(), 20);
   }
-  
-  world.afterEvents.gameRuleChange.subscribe(({rule, value}) => {
-      if (rule == "showCoordinates" && value == false)
-          world.getAllPlayers().forEach(player =>
-              player.onScreenDisplay.setActionBar(`§.`)
-          )
+
+  /**
+   * Periodically checks for player joins and leaves in the dimension.
+   */
+  _tick() {
+    const current = this.modDim.getPlayers();
+    const currentIds = new Set(current.map(p => p.id));
+    // Detect players who have left
+    for (const id in this.players) {
+      if (!currentIds.has(id)) {
+        const player = this.players[id];
+        delete this.players[id];
+        system.runTimeout(() => this.triggerEvent('onLeave', player), 1);
       }
-  )
-  
-  system.runInterval(() => {
-      if (!world.gameRules.showCoordinates) return
-      world.getAllPlayers().forEach(player => {
-          let {x, y, z} = planet_coords(player)
-          x = Math.floor(x)
-          y = Math.floor(y)
-          z = Math.floor(z)
-          player.onScreenDisplay.setActionBar(`Position: ${x}, ${y}, ${z}`)
-      })
-  })
-  
-  // Adding Gravity
-  system.runTimeout(() => {
-      for (let planet of Planet.getAll()) {
-          planet.events.onJoin('addGravity', ((event, player) => {
-              new Gravity(player).setTemp(planet.gravity)
-          }))
-  
-          planet.events.onLeave('removeGravity', ((event, player) => {
-              new Gravity(player).setTemp(9.8)
-          }))
+    }
+    // Detect players who have joined
+    for (const player of current) {
+      if (!this.players[player.id]) {
+        this.players[player.id] = player;
+        system.runTimeout(() => this.triggerEvent('onJoin', player), 1);
       }
-  })
+    }
+  }
+
+  /**
+   * Adds an event listener to the event handler.
+   * @param {string} id - The unique event ID.
+   * @param {string} type - The event type (`onJoin` or `onLeave`).
+   * @param {function} callback - The callback function to invoke when the event occurs.
+   * @returns {Object} The registered event object.
+   */
+  addEvent(id, type, callback) {
+    if (this.events[id]) {
+      throw new Error(`Event id '${id}' already registered`);
+    }
+    this.events[id] = { type, callback };
+    return this.events[id];
+  }
+
+  /**
+   * Removes an event listener by its event ID.
+   * @param {string} id - The event ID to remove.
+   */
+  removeEvent(id) {
+    delete this.events[id];
+  }
+
+  /**
+   * Registers a `onJoin` event for when a player enters the dimension.
+   * @param {string} id - The event ID.
+   * @param {function} callback - The callback to run when the event occurs.
+   * @returns {Object} The registered event object.
+   */
+  onJoin(id, callback) {
+    return this.addEvent(id, 'onJoin', callback);
+  }
+
+  /**
+   * Registers a `onLeave` event for when a player leaves the dimension.
+   * @param {string} id - The event ID.
+   * @param {function} callback - The callback to run when the event occurs.
+   * @returns {Object} The registered event object.
+   */
+  onLeave(id, callback) {
+    return this.addEvent(id, 'onLeave', callback);
+  }
+
+  /**
+   * Triggers the registered event callbacks for a given event type.
+   * @param {string} type - The event type (`onJoin` or `onLeave`).
+   * @param {Player} player - The player who triggered the event.
+   */
+  triggerEvent(type, player) {
+    for (const ev of Object.values(this.events)) {
+      if (ev.type === type) {
+        ev.callback(player);
+      }
+    }
+  }
+}
+
+/**
+ * Provides a simple interface to retrieve virtual dimensions
+ */
+export class Level {
+  /**
+   * Retrieves a ModDimension by its ID.
+   * @param {string} id - The ID of the dimension.
+   * @returns {ModDimension} The requested ModDimension instance.
+   */
+  getDimension(id) {
+    return ModDimension.get(id);
+  }
+
+  /**
+   * Retrieves all registered ModDimensions.
+   * @returns {Array} An array of all registered ModDimension instances.
+   */
+  getAllDimensions() {
+    return ModDimension.getAll();
+  }
+}
+
+// Export a singleton level manager for easy access
+export const level = new Level();
