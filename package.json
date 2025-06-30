@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@minecraft/server": "^1.19.0",
+    "@minecraft/server": "^2.0.0",
     "@minecraft/server-ui": "^1.3.0",
     "npm": "^11.3.2"
   }
