@@ -3,6 +3,7 @@ import Gaia from './world/Gaia'
 import { vec3 } from './Vec3'
 import * as Events from "./world/Events"
 import SkyboxRenderer from "./renderers/Skybox";
+import { runMalachiteGuardLogic } from "./malachiteGuardLogic";
 
 //event triggers
 system.runInterval(() => Events.tick1.trigger(), 1);
@@ -10,6 +11,9 @@ system.runInterval(() => Events.tick2.trigger(), 2);
 system.runInterval(() => Events.tick8.trigger(), 8);
 system.runInterval(() => Events.tick30.trigger(), 30);
 system.runInterval(() => Events.tick100.trigger(), 100);
+
+// Malachite Guard Logic
+system.runInterval(() => runMalachiteGuardLogic(), 8);
 
 //clear entities
 Events.tick8.subscribe(() => {
@@ -19,8 +23,7 @@ Events.tick8.subscribe(() => {
             Gaia.getEntities({ location: player.location, maxDistance: 500, type: "minecraft:shulker" }).forEach((entity) => entity?.remove())
         }
     }
-})
-
+});
 
 let playerLocations = {};
 
