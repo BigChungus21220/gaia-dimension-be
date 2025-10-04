@@ -4,9 +4,7 @@
     "description": {
       "identifier": "gaiadimension:keystone_block",
       "menu_category": {
-        "category": "nature",
-        "group": "itemGroup.name.gaia_portal"
-      }
+        "category": "nature"      }
     },
     "components": {
       "minecraft:loot": "loot_tables/blocks/keystone_block.json",

@@ -3,15 +3,16 @@
   "minecraft:block": {
     "description": {
       "identifier": "gaiadimension:gaia_portal",
-      "states": {
-        "gaiadimension:x_oriented": [
-          false,
-          true
-        ]
+       "traits": {
+                "minecraft:placement_direction": {
+                    "enabled_states": [
+                        "minecraft:cardinal_direction"
+                    ],
+                    "y_rotation_offset": 180
+                }
       }
     },
     "components": {
-      "minecraft:loot": "loot_tables/blocks/gaia_portal.json",
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 0
       },
@@ -41,40 +42,58 @@
       "minecraft:light_emission": 10,
       "minecraft:custom_components": [
         "gaiadimension:gaia_portal"
-      ],
-      "minecraft:tick": {
-        "looping": true,
-        "interval_range": [
-          20,
-          20
         ]
       }
     },
     "permutations": [
-      {
-        "condition": "query.block_state('gaia:x_oriented')",
-        "components": {
-          "minecraft:transformation": {
-            "rotation": [
-              0,
-              90,
-              0
-            ]
-          }
-        }
-      },
-      {
-        "condition": "!query.block_state('gaia:x_oriented')",
-        "components": {
-          "minecraft:transformation": {
-            "rotation": [
-              0,
-              0,
-              0
-            ]
-          }
-        }
+       {
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'north'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            0,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'west'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            90,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'south'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            180,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'east'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            -90,
+                            0
+                        ]
+                    }
+                }
+            }
+        ]
       }
-    ]
-  }
-}
+    }
