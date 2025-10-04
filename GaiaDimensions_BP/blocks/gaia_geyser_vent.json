@@ -29,14 +29,6 @@
       "minecraft:map_color": "#81f53d",
       "minecraft:loot": "loot_tables/blocks/geyser_vent.json"
     },
-    "events": {
-      "gaiadimension:erupt": {
-        "run_command": {
-          "command": [
-            "scriptevent gaiadimension:geyser.erupt"
-          ]
-        }
-      }
-    }
+    "events": {}
   }
 }

@@ -47,28 +47,7 @@
       },
       "minecraft:loot": "loot_tables/blocks/crate.json"
     },
-    "events": {
-      "setEntity": {
-        "sequence": [
-          {
-            "condition": "q.block_property('gaiadimension:entity') == false",
-            "set_block_state": {
-              "gaiadimension:entity": true
-            },
-            "run_command": {
-              "command": [
-                "summon gaiadimension:crate_container crate_ui ~~~"
-              ]
-            }
-          }
-        ]
-      },
-      "setDirection": {
-        "set_block_state": {
-          "gaiadimension:direction": "(q.cardinal_facing_2d-2)"
-        }
-      }
-    },
+    "events": {},
     "permutations": [
       {
         "condition": "q.block_property('gaiadimension:lit') == true",

@@ -41,13 +41,7 @@
       },
       "minecraft:loot": "loot_tables/blocks/ores/malachite/malachite_pillar.json"
     },
-    "events": {
-      "gaiadimension:rotate": {
-        "set_block_state": {
-          "gaiadimension:rotation": "Math.floor(query.block_face / 2)"
-        }
-      }
-    },
+    "events": {},
     "permutations": [
       {
         "condition": "query.block_state('gaia:rotation') == 0",

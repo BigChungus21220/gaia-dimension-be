@@ -238,10 +238,8 @@
           "minecraft:conditional_bandwidth_optimization": {}
       },
 
-      "events": {
+      "events": {{}}
 
-
-				}
       }
   }
 }

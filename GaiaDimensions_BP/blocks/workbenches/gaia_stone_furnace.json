@@ -67,20 +67,7 @@
       },
       "minecraft:loot": "loot_tables/blocks/workbenches/gaia_stone_furnace.json"
     },
-    "events": {
-      "runFurnace": {
-        "run_command": {
-          "command": [
-            "execute as @e[r=0] at @s run scriptevent forge:furnaceLoad gaiaf 200 forge:flame forge:arrow"
-          ]
-        }
-      },
-      "setDirection": {
-        "set_block_state": {
-          "gaiadimension:direction": "(q.cardinal_facing_2d-2)"
-        }
-      }
-    },
+    "events": {},
     "permutations": [
       {
         "condition": "q.block_state('gaiadimension:lit') == true",

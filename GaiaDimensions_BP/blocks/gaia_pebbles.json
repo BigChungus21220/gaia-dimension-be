@@ -29,12 +29,6 @@
         }
       }
     },
-    "events": {
-      "destroy": {
-        "spawn_loot": {
-          "table": "loot_tables/blocks/gaia/pebbles.json"
-        }
-      }
-    }
+    "events": {}
   }
 }

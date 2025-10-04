@@ -1,4 +1,3 @@
-//rewrite: use custom item componants
 {
 	"format_version": "1.20.50",
 	"minecraft:item": {
@@ -22,8 +21,7 @@
 				}
 			}*/
 		},
-		"events": {
-			"gaiadimension:nothing": {}
-		}
+		"events": {{}}
+
 	}
 }
