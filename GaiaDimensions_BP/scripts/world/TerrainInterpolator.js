@@ -8,7 +8,7 @@
 // The stars will remember your name
 // Code was made by Error404
 import { BlockPermutation, system, world } from "@minecraft/server";
-import Gaia from "./Gaia";
+import { GaiaDimension } from "./GaiaDimension";
 import { the_end } from "../utils";
 const air = BlockPermutation.resolve("minecraft:air");
 const endstone = BlockPermutation.resolve("minecraft:end_stone");
@@ -176,7 +176,7 @@ Q.run(30);
 
 console.warn("Terrain Interpolator loaded sucessfully")
 const main = () => {
-  for (const p of Gaia.getPlayers()) {
+  for (const p of GaiaDimension.getPlayers()) {
     //feel free to change
     let range = 8;
     // try{

@@ -1,442 +1,281 @@
 {
-  "format_version": [1, 1, 0],
+  "format_version": [
+    1,
+    1,
+    0
+  ],
   "gaiadimension:blue_crystal_growth": {
-    "textures": "blue_crystal_growth",
     "sound": "glass"
   },
   "gaiadimension:black_crystal_growth": {
-    "textures": "black_crystal_growth",
     "sound": "glass"
   },
   "gaiadimension:pink_crystal_growth": {
-    "textures": "pink_crystal_growth",
     "sound": "glass"
   },
   "gaiadimension:peach_crystal_growth": {
-    "textures": "peach_crystal_growth",
     "sound": "glass"
   },
   "gaiadimension:green_crystal_growth": {
-    "textures": "green_crystal_growth",
     "sound": "glass"
   },
   "gaiadimension:purple_crystal_growth": {
-    "textures": "purple_crystal_growth",
     "sound": "glass"
   },
   "gaiadimension:red_crystal_growth": {
-    "textures": "red_crystal_growth",
     "sound": "glass"
   },
   "gaiadimension:yellow_crystal_growth": {
-    "textures": "yellow_crystal_growth",
     "sound": "glass"
   },
   "gaiadimension:singed_crystal_growth": {
-    "textures": "singed_crystal_growth",
     "sound": "glass"
   },
   "gaiadimension:aura_crystal_growth": {
-    "textures": "aura_crystal_growth",
     "sound": "glass"
   },
   "gaiadimension:mutant_crystal_growth": {
-    "textures": "mutant_crystal_growth",
     "sound": "glass"
   },
   "gaiadimension:thiscus": {
-    "textures": "thiscus",
     "sound": "grass"
   },
   "gaiadimension:ouzium": {
-    "textures": "ouzium",
     "sound": "grass"
   },
   "gaiadimension:spotted_kersei": {
-    "textures": "spotted_kersei",
     "sound": "grass"
   },
   "gaiadimension:bulbous_hobina": {
-    "textures": "bulbous_hobina",
     "sound": "grass"
   },
   "gaiadimension:thorny_wiltha": {
-    "textures": "thorny_wiltha",
     "sound": "grass"
   },
   "gaiadimension:stickly_cupsir": {
-    "textures": "stickly_cupsir",
     "sound": "grass"
   },
   "gaiadimension:corrupt_varloom": {
-    "textures": "corrupt_varloom",
     "sound": "grass"
   },
   "gaiadimension:roofed_agaric": {
-    "textures": "roofed_agaric",
     "sound": "grass"
   },
   "gaiadimension:gold_orb_tucher": {
-    "textures": "gold_orb_tucher",
     "sound": "grass"
   },
   "gaiadimension:corrupted_gaia_eye": {
-    "textures": "corrupted_gaia_eye",
     "sound": "grass"
   },
   "gaiadimension:mystical_murgni": {
-    "textures": "mystical_murgni",
     "sound": "grass"
   },
-  "gaiadimension:agathum":{
-    "textures": "agathum",
+  "gaiadimension:agathum": {
     "sound": "grass"
   },
-  "gaiadimension:pink_agate_slab":{
+  "gaiadimension:pink_agate_slab": {
     "sound": "wood"
   },
-  "gaiadimension:fossilized_leaves":{
-    "textures": "fossilized_leaves_opaque",
+  "gaiadimension:fossilized_leaves": {
     "sound": "grass"
   },
   "gaiadimension:fossilized_wood": {
-    "textures": "fossilized_log_side",
     "sound": "wood"
   },
   "gaiadimension:stripped_fossilized_wood": {
-    "textures": "stripped_fossilized_log_side",
     "sound": "wood"
   },
   "gaiadimension:fossilized_log": {
-    "textures": {
-      "up": "fossilized_log_end",
-      "side": "fossilized_log_side",
-      "down": "fossilized_log_end"
-    },
     "sound": "wood"
   },
   "gaiadimension:stripped_fossilized_log": {
-    "textures": {
-      "up": "stripped_fossilized_log_end",
-      "side": "stripped_fossilized_log_side",
-      "down": "stripped_fossilized_log_end"
-    },
     "sound": "wood"
   },
-  "gaiadimension:pink_agate_leaves":{
-    "textures": "pink_agate_leaves_opaque",
+  "gaiadimension:pink_agate_leaves": {
     "sound": "grass"
   },
   "gaiadimension:pink_agate_wood": {
-    "textures": "pink_agate_log_side",
     "sound": "wood"
   },
   "gaiadimension:stripped_pink_agate_wood": {
-    "textures": "stripped_pink_agate_log_side",
     "sound": "wood"
   },
   "gaiadimension:pink_agate_log": {
-    "textures": {
-      "up": "pink_agate_log_end",
-      "side": "pink_agate_log_side",
-      "down": "pink_agate_log_end"
-    },
     "sound": "wood"
   },
   "gaiadimension:stripped_pink_agate_log": {
-    "textures": {
-      "up": "stripped_pink_agate_log_end",
-      "side": "stripped_pink_agate_log_side",
-      "down": "stripped_pink_agate_log_end"
-    },
     "sound": "wood"
   },
-  "gaiadimension:purple_agate_leaves":{
-    "textures": "purple_agate_leaves_opaque",
+  "gaiadimension:purple_agate_leaves": {
     "sound": "grass"
   },
   "gaiadimension:purple_agate_wood": {
-    "textures": "purple_agate_log_side",
     "sound": "wood"
   },
   "gaiadimension:stripped_purple_agate_wood": {
-    "textures": "stripped_purple_agate_log_side",
     "sound": "wood"
   },
   "gaiadimension:purple_agate_log": {
-    "textures": {
-      "up": "purple_agate_log_end",
-      "side": "purple_agate_log_side",
-      "down": "purple_agate_log_end"
-    },
     "sound": "wood"
   },
   "gaiadimension:stripped_purple_agate_log": {
-    "textures": {
-      "up": "stripped_purple_agate_log_end",
-      "side": "stripped_purple_agate_log_side",
-      "down": "stripped_purple_agate_log_end"
-    },
     "sound": "wood"
   },
-  "gaiadimension:blue_agate_leaves":{
-    "textures": "blue_agate_leaves_opaque",
+  "gaiadimension:blue_agate_leaves": {
     "sound": "grass"
   },
   "gaiadimension:blue_agate_wood": {
-    "textures": "blue_agate_log_side",
     "sound": "wood"
   },
   "gaiadimension:stripped_blue_agate_wood": {
-    "textures": "stripped_blue_agate_log_side",
     "sound": "wood"
   },
   "gaiadimension:blue_agate_log": {
-    "textures": {
-      "up": "blue_agate_log_end",
-      "side": "blue_agate_log_side",
-      "down": "blue_agate_log_end"
-    },
     "sound": "wood"
   },
   "gaiadimension:stripped_blue_agate_log": {
-    "textures": {
-      "up": "stripped_blue_agate_log_end",
-      "side": "stripped_blue_agate_log_side",
-      "down": "stripped_blue_agate_log_end"
-    },
     "sound": "wood"
   },
-  "gaiadimension:green_agate_leaves":{
-    "textures": "green_agate_leaves_opaque",
+  "gaiadimension:green_agate_leaves": {
     "sound": "grass"
   },
   "gaiadimension:green_agate_wood": {
-    "textures": "green_agate_log_side",
     "sound": "wood"
   },
   "gaiadimension:stripped_green_agate_wood": {
-    "textures": "stripped_green_agate_log_side",
     "sound": "wood"
   },
   "gaiadimension:green_agate_log": {
-    "textures": {
-      "up": "green_agate_log_end",
-      "side": "green_agate_log_side",
-      "down": "green_agate_log_end"
-    },
     "sound": "wood"
   },
   "gaiadimension:stripped_green_agate_log": {
-    "textures": {
-      "up": "stripped_green_agate_log_end",
-      "side": "stripped_green_agate_log_side",
-      "down": "stripped_green_agate_log_end"
-    },
     "sound": "wood"
   },
-  "gaiadimension:burned_leaves":{
-    "textures": "burned_leaves_opaque",
+  "gaiadimension:burned_leaves": {
     "sound": "grass"
   },
   "gaiadimension:burned_wood": {
-    "textures": "burned_log_side",
     "sound": "wood"
   },
   "gaiadimension:stripped_burned_wood": {
-    "textures": "stripped_burned_log_side",
     "sound": "wood"
   },
   "gaiadimension:burned_log": {
-    "textures": {
-      "up": "burned_log_end",
-      "side": "burned_log_side",
-      "down": "burned_log_end"
-    },
     "sound": "wood"
   },
   "gaiadimension:stripped_burned_log": {
-    "textures": {
-      "up": "stripped_burned_log_end",
-      "side": "stripped_burned_log_side",
-      "down": "stripped_burned_log_end"
-    },
     "sound": "wood"
   },
-  "gaiadimension:corrupted_leaves":{
-    "textures": "corrupted_leaves_opaque",
+  "gaiadimension:corrupted_leaves": {
     "sound": "grass"
   },
   "gaiadimension:corrupted_wood": {
-    "textures": "corrupted_log_side",
     "sound": "wood"
   },
   "gaiadimension:stripped_corrupted_wood": {
-    "textures": "stripped_corrupted_log_side",
     "sound": "wood"
   },
   "gaiadimension:corrupted_log": {
-    "textures": {
-      "up": "corrupted_log_end",
-      "side": "corrupted_log_side",
-      "down": "corrupted_log_end"
-    },
     "sound": "wood"
   },
   "gaiadimension:stripped_corrupted_log": {
-    "textures": {
-      "up": "stripped_corrupted_log_end",
-      "side": "stripped_corrupted_log_side",
-      "down": "stripped_corrupted_log_end"
-    },
     "sound": "wood"
   },
-  "gaiadimension:burning_leaves":{
-    "textures": "burning_leaves_opaque",
+  "gaiadimension:burning_leaves": {
     "sound": "grass"
   },
   "gaiadimension:burning_wood": {
-    "textures": "burning_log_side",
     "sound": "wood"
   },
   "gaiadimension:burning_log": {
-    "textures": {
-      "up": "burning_log_end",
-      "side": "burning_log_side",
-      "down": "burning_log_end"
-    },
     "sound": "wood"
   },
   "gaiadimension:stripped_burning_log": {
-    "textures": {
-      "up": "stripped_burning_log_end",
-      "side": "stripped_burning_log_side",
-      "down": "stripped_burning_log_end"
-    },
     "sound": "wood"
   },
   "gaiadimension:stripped_burning_wood": {
-    "textures": "stripped_burning_log_side",
     "sound": "wood"
   },
-  "gaiadimension:aura_leaves":{
-    "textures": "aura_leaves_opaque",
+  "gaiadimension:aura_leaves": {
     "sound": "grass"
   },
   "gaiadimension:aura_wood": {
-    "textures": "aura_log_side",
     "sound": "wood"
   },
   "gaiadimension:stripped_aura_wood": {
-    "textures": "stripped_aura_log_side",
     "sound": "wood"
   },
   "gaiadimension:aura_log": {
-    "textures": {
-      "up": "aura_log_end",
-      "side": "aura_log_side",
-      "down": "aura_log_end"
-    },
     "sound": "wood"
   },
   "gaiadimension:stripped_aura_log": {
-    "textures": {
-      "up": "stripped_aura_log_end",
-      "side": "stripped_aura_log_side",
-      "down": "stripped_aura_log_end"
-    },
     "sound": "wood"
   },
   "gaiadimension:sparkling_rock": {
-    "textures": "sparkling_rock",
     "sound": "stone"
   },
   "gaiadimension:primal_mass": {
-    "textures": "primal_mass",
     "sound": "stone"
   },
   "gaiadimension:gummy_glitter_block": {
-    "textures": "gummy_glitter_block",
     "sound": "slime"
   },
   "gaiadimension:frail_glitter_block": {
-    "textures": "frail_glitter_block",
     "sound": "glass"
   },
   "gaiadimension:thick_glitter_block": {
-    "textures": "thick_glitter_block",
     "sound": "stone"
   },
   "gaiadimension:static_stone": {
-    "textures": "static_stone",
     "sound": "stone"
   },
   "gaiadimension:charged_mineral": {
-    "textures": "charged_mineral",
     "sound": "glass"
   },
   "gaiadimension:pebbles": {
-    "textures": "pebbles",
     "sound": "gravel",
     "isotropic": true
   },
   "gaiadimension:impure_sludge": {
-    "textures": "impure_sludge",
     "sound": "slime"
   },
   "gaiadimension:impure_rock": {
-    "textures": "impure_rock",
     "sound": "stone"
   },
   "gaiadimension:active_rock": {
-    "textures": "active_rock",
     "sound": "stone"
   },
   "gaiadimension:heavy_soil": {
-    "textures": "heavy_soil",
     "sound": "soul_soil"
   },
   "gaiadimension:salt": {
-    "textures": "salt",
     "sound": "sand",
     "isotropic": true
   },
   "gaiadimension:boggy_soil": {
-    "textures": "boggy_soil",
     "sound": "mud"
   },
   "gaiadimension:light_soil": {
-    "textures": "light_soil",
     "sound": "light_soil",
     "isotropic": true
   },
   "gaiadimension:corrupt_soil": {
-    "textures": "corrupt_soil",
     "sound": "soul_soil"
   },
   "gaiadimension:cinder": {
-    "textures": "cinder",
     "sound": "gravel",
     "isotropic": true
   },
   "gaiadimension:gaia_stone": {
-    "textures": "gaia_stone",
     "sound": "stone"
   },
   "gaiadimension:volcanic_rock": {
-    "textures": "volcanic_rock",
     "sound": "basalt"
   },
   "gaiadimension:wasteland_stone": {
-    "textures": "wasteland_stone",
     "sound": "stone"
   },
   "gaiadimension:salt_rock": {
-    "textures": {
-      "up": "salt_rock_top",
-      "side": "salt_rock_side",
-      "down": "salt_rock_bottom"
-    },
     "isotropic": {
       "down": true,
       "up": true
@@ -444,11 +283,6 @@
     "sound": "stone"
   },
   "gaiadimension:geyser_vent": {
-    "textures": {
-      "up": "geyser_vent_top",
-      "side": "geyser_vent_side",
-      "down": "geyser_vent_bottom"
-    },
     "isotropic": {
       "down": true,
       "up": true
@@ -456,11 +290,6 @@
     "sound": "stone"
   },
   "gaiadimension:pink_glitter_grass": {
-    "textures": {
-      "up": "pink_glitter_grass_top",
-      "side": "pink_glitter_grass_side",
-      "down": "heavy_soil"
-    },
     "isotropic": {
       "down": true,
       "up": true
@@ -468,11 +297,6 @@
     "sound": "grass"
   },
   "gaiadimension:blue_glitter_grass": {
-    "textures": {
-      "up": "blue_glitter_grass_top",
-      "side": "blue_glitter_grass_side",
-      "down": "heavy_soil"
-    },
     "isotropic": {
       "down": true,
       "up": true
@@ -480,11 +304,6 @@
     "sound": "grass"
   },
   "gaiadimension:orange_glitter_grass": {
-    "textures": {
-      "up": "orange_glitter_grass_top",
-      "side": "orange_glitter_grass_side",
-      "down": "heavy_soil"
-    },
     "isotropic": {
       "down": true,
       "up": true
@@ -492,47 +311,13 @@
     "sound": "grass"
   },
   "gaiadimension:green_glitter_grass": {
-    "textures": {
-      "up": "green_glitter_grass_top",
-      "side": "green_glitter_grass_side",
-      "down": "heavy_soil"
-    },
-    "isotropic": {
-      "down": true,
-      "up": true
-    },
-    "sound": "grass"
-  },/* unused
-  "gaiadimension:yellow_glitter_grass": {
-    "textures": {
-      "up": "yellow_glitter_grass_top",
-      "side": "yellow_glitter_grass_side",
-      "down": "heavy_soil"
-    },
     "isotropic": {
       "down": true,
       "up": true
     },
     "sound": "grass"
   },
-  "gaiadimension:black_glitter_grass": {
-    "textures": {
-      "up": "black_glitter_grass_top",
-      "side": "black_glitter_grass_side",
-      "down": "heavy_soil"
-    },
-    "isotropic": {
-      "down": true,
-      "up": true
-    },
-    "sound": "grass"
-  },*/
   "gaiadimension:peach_glitter_grass": {
-    "textures": {
-      "up": "peach_glitter_grass_top",
-      "side": "peach_glitter_grass_side",
-      "down": "heavy_soil"
-    },
     "isotropic": {
       "down": true,
       "up": true
@@ -540,11 +325,6 @@
     "sound": "grass"
   },
   "gaiadimension:pale_green_glitter_grass": {
-    "textures": {
-      "up": "pale_green_glitter_grass_top",
-      "side": "pale_green_glitter_grass_side",
-      "down": "heavy_soil"
-    },
     "isotropic": {
       "down": true,
       "up": true
@@ -552,11 +332,6 @@
     "sound": "grass"
   },
   "gaiadimension:purple_glitter_grass": {
-    "textures": {
-      "up": "purple_glitter_grass_top",
-      "side": "purple_glitter_grass_side",
-      "down": "heavy_soil"
-    },
     "isotropic": {
       "down": true,
       "up": true
@@ -564,11 +339,6 @@
     "sound": "grass"
   },
   "gaiadimension:murky_grass": {
-    "textures": {
-      "up": "murky_grass_top",
-      "side": "murky_grass_side",
-      "down": "boggy_soil"
-    },
     "isotropic": {
       "down": true,
       "up": true
@@ -576,11 +346,6 @@
     "sound": "grass"
   },
   "gaiadimension:soft_grass": {
-    "textures": {
-      "up": "soft_grass_top",
-      "side": "soft_grass_side",
-      "down": "light_soil"
-    },
     "isotropic": {
       "down": true,
       "up": true
@@ -588,11 +353,6 @@
     "sound": "grass"
   },
   "gaiadimension:corrupt_grass": {
-    "textures": {
-      "up": "corrupt_grass_top",
-      "side": "corrupt_grass_side",
-      "down": "corrupt_soil"
-    },
     "isotropic": {
       "down": true,
       "up": true
@@ -600,639 +360,494 @@
     "sound": "grass"
   },
   "gaiadimension:charred_grass": {
-    "textures": {
-      "up": "charred_grass_top",
-      "side": "charred_grass_side",
-      "down": "cinder"
-    },
     "isotropic": {
       "down": true,
       "up": true
     },
     "sound": "grass"
   },
-"gaiadimension:agate_crafting_table": {
-  "textures": {
-    "up": "agate_table_top",
-    "down": "agate_table_bottom",
-    "north": "agate_table_front",
-    "south": "agate_table_side",
-    "east": "agate_table_side",
-    "west": "agate_table_side"
+  "gaiadimension:agate_crafting_table": {
+    "sound": "wood"
   },
-  "sound": "wood"
-},
-"gaiadimension:bolstered_bricks": {
-  "textures": "bolstered_bricks",
-  "sound": "stone"
-},
-"gaiadimension:benitoite_block": {
-  "textures": "benitoite_block",
-  "sound": "stone"
-},
-"gaiadimension:aura_planks": {
-  "textures": "aura_planks",
-  "sound": "wood"
-},
-"gaiadimension:block_of_aura_crystal": {
-  "textures": "aura_block",
-  "sound": "stone"
-},
-"gaiadimension:bismuth_block": {
-  "textures": "bismuth_block",
-  "sound": "normal"
-},
-"gaiadimension:coarse_rock": {
-  "textures": "coarse_rock",
-  "sound": "stone"
-},
-"gaiadimension:chalcedony_block": {
-  "textures": "chalcedony_block",
-  "sound": "metal"
-},
-"gaiadimension:blue_agate_planks": {
-  "textures": "blue_agate_planks",
-  "sound": "wood"
-},
-"gaiadimension:cinnabar_block": {
-  "textures": "cinnabar_block",
-  "sound": "metal"
-},
-"gaiadimension:green_agate_planks": {
-  "textures": "green_agate_planks",
-  "sound": "wood"
-},
-"gaiadimension:cinnabar_ore": {
-  "textures": "cinnabar_ore",
-  "sound": "normal"
-},
-"gaiadimension:green_agate_stair": {
-  "sound": "wood"
-},
-"gaiadimension:purple_agate_planks": {
-  "textures": "purple_agate_planks",
-  "sound": "grass"
-},
-"gaiadimension:raw_copal": {
-  "textures": "raw_copal",
-  "sound": "normal"
-},
-"gaiadimension:copal_bricks": {
-  "textures": "copal_bricks",
-  "sound": "stone"
-},
-"gaiadimension:burned_agate_planks": {
-  "textures": "burned_agate_planks",
-  "sound": "wood"
-},
-"gaiadimension:burned_agate": {
-  "textures": "burned_agate",
-  "sound": "wood"
-},
-"gaiadimension:carnelian_block": {
-  "textures": "carnelian_block",
-  "sound": "metal"
-},
-"gaiadimension:blue_agate_stair": {
-  "sound": "wood"
-},
-"gaiadimension:green_agate_slab": {
-  "sound": "normal"
-},
-"gaiadimension:aura_stair": {
-  "sound": "wood"
-},
-"gaiadimension:purple_agate_stair": {
-  "sound": "wood"
-},
-"gaiadimension:blue_agate_slab": {
-  "sound": "normal"
-},
-"gaiadimension:pink_agate_stair": {
-  "sound": "wood"
-},
-"gaiadimension:aura_slab": {
-  "sound": "normal"
-},
-"gaiadimension:purple_agate_slab": {
-  "sound": "normal"
-},
-"gaiadimension:corrupted_tiles": {
-  "sound": "normal"
-},
-"gaiadimension:corrupted_slab": {
-  "sound": "normal"
-},
-"gaiadimension:corrupted_stair": {
-  "sound": "wood"
-},
-"gaiadimension:fossilized_stair": {
-  "sound": "wood"
-},
-"gaiadimension:fossilized_slab": {
-  "sound": "normal"
-},
-"gaiadimension:burning_stair": {
-  "sound": "wood"
-},
-"gaiadimension:fossilized_planks": {
-  "textures": "fossilized_planks",
-  "sound": "normal"
-},
-"gaiadimension:burning_slab": {
-  "sound": "normal"
-},
-"gaiadimension:jade_bricks": {
-  "textures": "jade_bricks",
-  "sound": "normal"
-},
-"gaiadimension:cracked_gaia_stone_bricks": {
-  "textures": "cracked_gaia_stone_bricks",
-  "sound": "normal"
-},
-"gaiadimension:gaia_cobblestone": {
-  "textures": "gaia_cobblestone",
-  "sound": "normal"
-},
-"gaiadimension:raw_jade": {
-  "textures": "raw_jade",
-  "sound": "normal"
-},
-"gaiadimension:cloudy_glass": {
-  "textures": "cloudy_glass",
-  "sound": "glass"
-},
-"gaiadimension:cracked_jade_bricks": {
-  "textures": "cracked_jade_bricks",
-  "sound": "normal"
-},
-"gaiadimension:gaia_cobblestone_slab": {
-  "sound": "normal"
-},
-"gaiadimension:gaia_cobblestone_stair": {
-  "sound": "stone"
-},
-"gaiadimension:foggy_glass": {
-  "textures": "foggy_glass",
-  "sound": "glass"
-},
-"gaiadimension:brick2": {
-  "textures": "malachite_bricks",
-  "sound": "normal"
-},
-"gaiadimension:amethyst_slab": {
-  "sound": "stone",
-  "textures": "amethyst_slab"
-},
-"gaiadimension:pink_agate_planks": {
-  "textures": "pink_agate_planks",
-  "sound": "wood"
-},
-"gaiadimension:gaia_stone_slab": {
-  "sound": "stone"
-},
-"gaiadimension:amethyst_brick": {
-  "textures": "amethyst_bricks",
-  "sound": "normal"
-},
-"gaiadimension:gaia_stone_stair": {
-  "sound": "stone"
-},
-"gaiadimension:amethyst_stair": {
-  "sound": "stone"
-},
-"gaiadimension:diopside_block": {
-  "textures": "diopside_block",
-  "sound": "normal"
-},/*
-"gaiadimension:cracked_gaia_stone_brick_stair": {
-  "sound": "stone"
-},*/
-"gaiadimension:malachite_tiles": {
-  "textures": "malachite_tiles",
-  "sound": "normal"
-},
-"gaiadimension:burned_agate_log": {
-  "textures": "burned_agate_wood",
-  "sound": "wood"
-},
-"gaiadimension:burned_agate_wood": {
-  "textures": "burned_agate_wood",
-  "sound": "wood"
-},
-"gaiadimension:precious_rock": {
-  "textures": "precious_rock",
-  "sound": "stone"
-},
-"gaiadimension:jade_brick_stair": {
-  "sound": "normal"
-},
-"gaiadimension:pyrite_block": {
-  "textures": "pyrite_block",
-  "sound": "normal"
-},
-"gaiadimension:cracked_jade_brick_stair": {
-  "sound": "normal"
-},
-"gaiadimension:malachite_tiles_slab": {
-  "sound": "normal"
-},
-"gaiadimension:cracked_jade_brick_slab": {
-  "sound": "normal"
-},
-"gaiadimension:jade_brick_slab": {
-  "sound": "normal"
-},
-"gaiadimension:stripped_burned_agate_log": {
-  "textures": "stripped_burned_log_side",
-  "sound": "wood"
-},
-"gaiadimension:hematite_block": {
-  "textures": "hematite_block",
-  "sound": "metal"
-},
-"gaiadimension:burned_agate_tile_slab": {
-  "sound": "wood"
-},
-"gaiadimension:burned_agate_stair": {
-  "sound": "wood"
-},
-"gaiadimension:hematite_ore": {
-  "textures": "hematite_ore",
-  "sound": "stone"
-},
-"gaiadimension:raw_jet": {
-  "textures": "raw_jet",
-  "sound": "normal"
-},
-"gaiadimension:ixiolite_block": {
-  "textures": "ixiolite_block",
-  "sound": "metal"
-},
-"gaiadimension:raw_amethyst": {
-  "textures": "raw_amethyst",
-  "sound": "normal"
-},
-"gaiadimension:sugilite_ore": {
-  "textures": "sugilite_ore",
-  "sound": "stone"
-
-},
-"gaiadimension:jet_brick_stair": {
-  "sound": "stone"
-},
-"gaiadimension:pyrite_ore": {
-  "textures": "pyrite_ore",
-  "sound": "stone"
-},
-"gaiadimension:jet_brick": {
-  "textures": "jet_brick",
-  "sound": "normal"
-},
-"gaiadimension:jet_brick_slab": {
-  "sound": "stone"
-},
-"gaiadimension:white_opal_ore": {
-  "textures": "white_opal_ore",
-  "sound": "stone"
-},
-"gaiadimension:green_opal_ore": {
-  "textures": "green_opal_ore",
-  "sound": "stone"
-},
-"gaiadimension:searing_rock": {
-  "textures": "searing_rock",
-  "sound": "stone"
-},
-"gaiadimension:red_opal_ore": {
-  "textures": "red_opal_ore",
-  "sound": "stone"
-},
-"gaiadimension:blue_opal_ore": {
-  "textures": "blue_opal_ore",
-  "sound": "stone"
-},
-"gaiadimension:green_opal_block": {
-  "textures": "green_opal_block",
-  "sound": "stone"
-},
-"gaiadimension:white_opal_block": {
-  "textures": "white_opal_block",
-  "sound": "stone"
-},
-"gaiadimension:blue_opal_block": {
-  "textures": "blue_opal_block",
-  "sound": "stone"
-},
-"gaiadimension:red_opal_block": {
-  "textures": "red_opal_block",
-  "sound": "stone"
-},
-"gaiadimension:copal_brick_stair": {
-  "sound": "stone"
-},
-"gaiadimension:cracked_copal_bricks": {
-  "textures": "cracked_copal_bricks",
-  "sound": "stone"
-},
-"gaiadimension:copal_brick_slab": {
-  "sound": "stone"
-},
-"gaiadimension:cracked_copal_brick_slab": {
-  "sound": "stone"
-},
-"gaiadimension:cracked_copal_brick_stair": {
-  "sound": "stone"
-},
-"gaiadimension:cracked_jet_bricks": {
-  "textures": "cracked_jet_bricks",
-  "sound": "normal"
-},
-"gaiadimension:cracked_jet_brick_stair": {
-  "sound": "stone"
-},
-"gaiadimension:cracked_jet_brick_slab": {
-  "sound": "stone"
-},
-"gaiadimension:crusted_jet_brick_stair": {
-  "sound": "stone"
-},
-"gaiadimension:crusted_copal_brick_stair": {
-  "sound": "stone"
-},
-"gaiadimension:crusted_jade_bricks": {
-  "textures": "crusted_jade_brick",
-  "sound": "normal"
-},/* unsued
-"gaiadimension:cracked_gaia_stone_brick_slab": {
-  "sound": "stone"
-},*/
-"gaiadimension:crusted_jet_brick_slab": {
-  "sound": "stone"
-},
-"gaiadimension:crusted_malachite_bricks": {
-  "textures": "malachite_crusted_bricks",
-  "sound": "normal"
-},
-"gaiadimension:crusted_jade_brick_stair": {
-  "sound": "stone"
-},
-"gaiadimension:crusted_jade_brick_slab": {
-  "sound": "stone"
-},
-"gaiadimension:crusted_jet_bricks": {
-  "textures": "crusted_jet_brick",
-  "sound": "normal"
-},
-"gaiadimension:crusted_copal_bricks": {
-  "textures": "crusted_copal_brick",
-  "sound": "normal"
-},
-"gaiadimension:crusted_amethyst_bricks": {
-  "textures": "crusted_amethyst_brick",
-  "sound": "normal"
-},
-"gaiadimension:crusted_copal_brick_slab": {
-  "sound": "stone",
-  "textures": "crusted_copal_brick"
-},
-"gaiadimension:crusted_amethyst_brick_stair": {
-  "sound": "stone"
-},
-"gaiadimension:crusted_malachite_brick_stair": {
-  "sound": "stone"
-},
-"gaiadimension:crusted_amethyst_brick_slab": {
-  "sound": "stone"
-},
-"gaiadimension:crusted_malachite_brick_slab": {
-  "sound": "stone"
-},
-"gaiadimension:crusted_gaia_brick_slab": {
-  "sound": "stone"
-},
-"gaiadimension:crusted_gaia_brick_stair": {
-  "sound": "stone"
-},
-"gaiadimension:gaia_brick_slab": {
-  "sound": "stone"
-},
-"gaiadimension:crusted_gaia_brick": {
-  "textures": "crusted_gaia_stone_bricks",
-  "sound": "normal"
-},
-"gaiadimension:gaia_stone_bricks": {
-  "textures": "gaia_stone_bricks",
-  "sound": "normal"
-},
-"gaiadimension:gaia_brick_stair": {
-  "sound": "stone"
-},
-"gaiadimension:tektite_block": {
-  "textures": "tektite_block",
-  "sound": "metal"
-},
-"gaiadimension:sugilite_block": {
-  "textures": "sugilite_block",
-  "sound": "metal"
-},
-"gaiadimension:tektite_ore": {
-  "textures": "tektite_ore",
-  "sound": "stone"
-},
-"gaiadimension:moonstone_ore": {
-  "textures": "moonstone_ore",
-  "sound": "stone"
-},
-"gaiadimension:speckled_rock": {
-  "textures": "speckled_rock",
-  "sound": "stone"
-},
-"gaiadimension:moonstone_block": {
-  "textures": "moonstone_block",
-  "sound": "metal"
-},
-"gaiadimension:euclase_block": {
-  "textures": "euclase_block",
-  "sound": "metal"
-},
-"gaiadimension:labradorite_block": {
-  "textures": "labradorite_block",
-  "sound": "metal"
-},
-"gaiadimension:labradorite_ore": {
-  "textures": "labradorite_ore",
-  "sound": "stone"
-},
-"gaiadimension:leucite_block": {
-  "textures": "leucite_block",
-  "sound": "metal"
-},
-"gaiadimension:pink_sludge_block": {
-  "textures": "pink_sludge_block",
-  "sound": "slime"
-},
-"gaiadimension:proustite_block": {
-  "textures": "proustite_block",
-  "sound": "metal"
-},
-"gaiadimension:goldstone_block": {
-  "textures": "goldstone_block",
-  "sound": "normal"
-},
-"gaiadimension:brick2_stairs": {
-  "sound": "stone"
-},
-"gaiadimension:malachite_tiles_stairs": {
-  "sound": "stone"
-},
-"gaiadimension:brick1_slab": {
-  "sound": "stone"
-},
-"gaiadimension:brick2_slab": {
-  "sound": "stone"
-},
-"gaiadimension:cracked_malachite_brick_slab": {
-  "sound": "stone"
-},
-"gaiadimension:cracked_malachite_bricks": {
-  "textures": "malachite_cracked_bricks",
-  "sound": "normal"
-},
-"gaiadimension:brick1_stairs": {
-  "sound": "stone"
-},
-"gaiadimension:pulsing_malachite_bricks": {
-  "textures": "pulsing_malachite_bricks",
-  "sound": "stone"
-},
-"gaiadimension:cracked_malachite_brick_stair": {
-  "sound": "stone"
-},
-"gaiadimension:brick1": {
-  "textures": "malachite_chisel_bricks",
-  "sound": "normal"
-},
-"gaiadimension:brick3_slab": {
-  "sound": "stone"
-},
-"gaiadimension:brick3": {
-  "textures": "pulsing_chiseled_malachite_brick",
-  "sound": "normal"
-},
-"gaiadimension:green_stairs": {
-  "sound": "stone"
-},
-"gaiadimension:pulsing_malachite_tiles": {
-  "textures": "pulsing_malachite_tiles",
-  "sound": "normal"
-},
-"gaiadimension:pillar1_stairs": {
-  "sound": "normal"
-},
-"gaiadimension:brick3_stairs": {
-  "sound": "stone"
-},/* unused
-"gaiadimension:pulsing_malachite_tile_stair": {
-  "sound": "stone"
-},*/
-"gaiadimension:pillar1": {
-  "textures": {
-    "up": "malachite_pillar_end",
-    "down": "malachite_pillar_end",
-    "side": "malachite_pillar_side"
+  "gaiadimension:bolstered_bricks": {
+    "sound": "stone"
   },
-  "sound": "stone"
-},
-"gaiadimension:cracked_amethyst_bricks": {
-  "textures": "cracked_amethyst_bricks",
-  "sound": "stone"
-},
-"gaiadimension:gaia_portal" : {
-  "sound" : "glass",
-  "textures" : "gaia_portal"
- },/* unused
- "gaiadimension:gaia_portal2" : {
-    "sound" : "glass",
-    "textures" : "gaia_portal"
- },
- "gaiadimension:gaia_portal_e" : {
-    "sound" : "glass",
-    "textures" : "gaia_portal"
- },
- "gaiadimension:gaia_portal2_e" : {
-    "sound" : "glass",
-    "textures" : "gaia_portal"
- },
- "gaiadimension:gaia_keystone" : {
-    "sound" : "stone",
-    "textures" : "gaia_keystone"
- },*/
- "gaiadimension:pyrite_torch": {
-  "sound": "ladder"
-},
-"gaiadimension:keystone_block": {
-  "textures": "keystone_block",
-  "sound": "basalt"
-},/* unused
-"gaiadimension:malachite_tiles3": {
-  "textures":"pulsing_chiselled_malachite_tiles"
-},*/
-"gaiadimension:pulsing_malachite_tile_stair":{"textures":"pulsing_chiselled_malachite_tiles"
-},
-"gaiadimension:burning_planks" : {
-  "sound" : "glass",
-  "textures" : "burning_planks"
-},
-"gaiadimension:crate" : {
-  "sound" : "normal",
-  "textures" : "crate"
-},
-"gaiadimension:large_crate" : {
-  "sound" : "normal",
-  "textures" : "mega_storage_crate"
-},
-"gaiadimension:blue_agate_sapling": {
-  "textures": "blue_agate_sapling",
-  "sound": "normal"
-},
-"gaiadimension:burning_sapling": {
-  "textures": "burning_sapling",
-  "sound": "normal"
-},
-"gaiadimension:burned_sapling": {
-  "textures": "burned_sapling",
-  "sound": "normal"
-},
-"gaiadimension:aura_sapling": {
-  "textures": "aura_sapling",
-  "sound": "normal"
-},
-"gaiadimension:corrupted_sapling": {
-  "textures": "corrupted_sapling",
-  "sound": "normal"
-},
-"gaiadimension:green_agate_sapling": {
-  "textures": "green_agate_sapling",
-  "sound": "normal"
-},
-"gaiadimension:pink_agate_sapling": {
-  "textures": "pink_agate_sapling",
-  "sound": "normal"
-},
-"gaiadimension:fossilized_sapling": {
-  "textures": "fossilized_sapling",
-  "sound": "normal"
-},
-"gaiadimension:purple_agate_sapling": {
-  "textures": "purple_agate_sapling",
-  "sound": "normal"
-},
-"gaiadimension:reinforced_bricks": {
-  "textures": "reinforced_bricks",
-  "sound": "normal"
-},
-"gaiadimension:gold_fire": {
-  "textures": "gold_fire",
-  "sound": "normal"
-}}
+  "gaiadimension:benitoite_block": {
+    "sound": "stone"
+  },
+  "gaiadimension:aura_planks": {
+    "sound": "wood"
+  },
+  "gaiadimension:block_of_aura_crystal": {
+    "sound": "stone"
+  },
+  "gaiadimension:bismuth_block": {
+    "sound": "normal"
+  },
+  "gaiadimension:coarse_rock": {
+    "sound": "stone"
+  },
+  "gaiadimension:chalcedony_block": {
+    "sound": "metal"
+  },
+  "gaiadimension:blue_agate_planks": {
+    "sound": "wood"
+  },
+  "gaiadimension:cinnabar_block": {
+    "sound": "metal"
+  },
+  "gaiadimension:green_agate_planks": {
+    "sound": "wood"
+  },
+  "gaiadimension:cinnabar_ore": {
+    "sound": "normal"
+  },
+  "gaiadimension:green_agate_stair": {
+    "sound": "wood"
+  },
+  "gaiadimension:purple_agate_planks": {
+    "sound": "grass"
+  },
+  "gaiadimension:raw_copal": {
+    "sound": "normal"
+  },
+  "gaiadimension:copal_bricks": {
+    "sound": "stone"
+  },
+  "gaiadimension:burned_agate_planks": {
+    "sound": "wood"
+  },
+  "gaiadimension:burned_agate": {
+    "sound": "wood"
+  },
+  "gaiadimension:carnelian_block": {
+    "sound": "metal"
+  },
+  "gaiadimension:blue_agate_stair": {
+    "sound": "wood"
+  },
+  "gaiadimension:green_agate_slab": {
+    "sound": "normal"
+  },
+  "gaiadimension:aura_stair": {
+    "sound": "wood"
+  },
+  "gaiadimension:purple_agate_stair": {
+    "sound": "wood"
+  },
+  "gaiadimension:blue_agate_slab": {
+    "sound": "normal"
+  },
+  "gaiadimension:pink_agate_stair": {
+    "sound": "wood"
+  },
+  "gaiadimension:aura_slab": {
+    "sound": "normal"
+  },
+  "gaiadimension:purple_agate_slab": {
+    "sound": "normal"
+  },
+  "gaiadimension:corrupted_tiles": {
+    "sound": "normal"
+  },
+  "gaiadimension:corrupted_slab": {
+    "sound": "normal"
+  },
+  "gaiadimension:corrupted_stair": {
+    "sound": "wood"
+  },
+  "gaiadimension:fossilized_stair": {
+    "sound": "wood"
+  },
+  "gaiadimension:fossilized_slab": {
+    "sound": "normal"
+  },
+  "gaiadimension:burning_stair": {
+    "sound": "wood"
+  },
+  "gaiadimension:fossilized_planks": {
+    "sound": "normal"
+  },
+  "gaiadimension:burning_slab": {
+    "sound": "normal"
+  },
+  "gaiadimension:jade_bricks": {
+    "sound": "normal"
+  },
+  "gaiadimension:cracked_gaia_stone_bricks": {
+    "sound": "normal"
+  },
+  "gaiadimension:gaia_cobblestone": {
+    "sound": "normal"
+  },
+  "gaiadimension:raw_jade": {
+    "sound": "normal"
+  },
+  "gaiadimension:cloudy_glass": {
+    "sound": "glass"
+  },
+  "gaiadimension:cracked_jade_bricks": {
+    "sound": "normal"
+  },
+  "gaiadimension:gaia_cobblestone_slab": {
+    "sound": "normal"
+  },
+  "gaiadimension:gaia_cobblestone_stair": {
+    "sound": "stone"
+  },
+  "gaiadimension:foggy_glass": {
+    "sound": "glass"
+  },
+  "gaiadimension:brick2": {
+    "sound": "normal"
+  },
+  "gaiadimension:amethyst_slab": {
+    "sound": "stone"
+  },
+  "gaiadimension:pink_agate_planks": {
+    "sound": "wood"
+  },
+  "gaiadimension:gaia_stone_slab": {
+    "sound": "stone"
+  },
+  "gaiadimension:amethyst_brick": {
+    "sound": "normal"
+  },
+  "gaiadimension:gaia_stone_stair": {
+    "sound": "stone"
+  },
+  "gaiadimension:amethyst_stair": {
+    "sound": "stone"
+  },
+  "gaiadimension:diopside_block": {
+    "sound": "normal"
+  },
+  "gaiadimension:malachite_tiles": {
+    "sound": "normal"
+  },
+  "gaiadimension:burned_agate_log": {
+    "sound": "wood"
+  },
+  "gaiadimension:burned_agate_wood": {
+    "sound": "wood"
+  },
+  "gaiadimension:precious_rock": {
+    "sound": "stone"
+  },
+  "gaiadimension:jade_brick_stair": {
+    "sound": "normal"
+  },
+  "gaiadimension:pyrite_block": {
+    "sound": "normal"
+  },
+  "gaiadimension:cracked_jade_brick_stair": {
+    "sound": "normal"
+  },
+  "gaiadimension:malachite_tiles_slab": {
+    "sound": "normal"
+  },
+  "gaiadimension:cracked_jade_brick_slab": {
+    "sound": "normal"
+  },
+  "gaiadimension:jade_brick_slab": {
+    "sound": "normal"
+  },
+  "gaiadimension:stripped_burned_agate_log": {
+    "sound": "wood"
+  },
+  "gaiadimension:hematite_block": {
+    "sound": "metal"
+  },
+  "gaiadimension:burned_agate_tile_slab": {
+    "sound": "wood"
+  },
+  "gaiadimension:burned_agate_stair": {
+    "sound": "wood"
+  },
+  "gaiadimension:hematite_ore": {
+    "sound": "stone"
+  },
+  "gaiadimension:raw_jet": {
+    "sound": "normal"
+  },
+  "gaiadimension:ixiolite_block": {
+    "sound": "metal"
+  },
+  "gaiadimension:raw_amethyst": {
+    "sound": "normal"
+  },
+  "gaiadimension:sugilite_ore": {
+    "sound": "stone"
+  },
+  "gaiadimension:jet_brick_stair": {
+    "sound": "stone"
+  },
+  "gaiadimension:pyrite_ore": {
+    "sound": "stone"
+  },
+  "gaiadimension:jet_brick": {
+    "sound": "normal"
+  },
+  "gaiadimension:jet_brick_slab": {
+    "sound": "stone"
+  },
+  "gaiadimension:white_opal_ore": {
+    "sound": "stone"
+  },
+  "gaiadimension:green_opal_ore": {
+    "sound": "stone"
+  },
+  "gaiadimension:searing_rock": {
+    "sound": "stone"
+  },
+  "gaiadimension:red_opal_ore": {
+    "sound": "stone"
+  },
+  "gaiadimension:blue_opal_ore": {
+    "sound": "stone"
+  },
+  "gaiadimension:green_opal_block": {
+    "sound": "stone"
+  },
+  "gaiadimension:white_opal_block": {
+    "sound": "stone"
+  },
+  "gaiadimension:blue_opal_block": {
+    "sound": "stone"
+  },
+  "gaiadimension:red_opal_block": {
+    "sound": "stone"
+  },
+  "gaiadimension:copal_brick_stair": {
+    "sound": "stone"
+  },
+  "gaiadimension:cracked_copal_bricks": {
+    "sound": "stone"
+  },
+  "gaiadimension:copal_brick_slab": {
+    "sound": "stone"
+  },
+  "gaiadimension:cracked_copal_brick_slab": {
+    "sound": "stone"
+  },
+  "gaiadimension:cracked_copal_brick_stair": {
+    "sound": "stone"
+  },
+  "gaiadimension:cracked_jet_bricks": {
+    "sound": "normal"
+  },
+  "gaiadimension:cracked_jet_brick_stair": {
+    "sound": "stone"
+  },
+  "gaiadimension:cracked_jet_brick_slab": {
+    "sound": "stone"
+  },
+  "gaiadimension:crusted_jet_brick_stair": {
+    "sound": "stone"
+  },
+  "gaiadimension:crusted_copal_brick_stair": {
+    "sound": "stone"
+  },
+  "gaiadimension:crusted_jade_bricks": {
+    "sound": "normal"
+  },
+  "gaiadimension:crusted_jet_brick_slab": {
+    "sound": "stone"
+  },
+  "gaiadimension:crusted_malachite_bricks": {
+    "sound": "normal"
+  },
+  "gaiadimension:crusted_jade_brick_stair": {
+    "sound": "stone"
+  },
+  "gaiadimension:crusted_jade_brick_slab": {
+    "sound": "stone"
+  },
+  "gaiadimension:crusted_jet_bricks": {
+    "sound": "normal"
+  },
+  "gaiadimension:crusted_copal_bricks": {
+    "sound": "normal"
+  },
+  "gaiadimension:crusted_amethyst_bricks": {
+    "sound": "normal"
+  },
+  "gaiadimension:crusted_copal_brick_slab": {
+    "sound": "stone"
+  },
+  "gaiadimension:crusted_amethyst_brick_stair": {
+    "sound": "stone"
+  },
+  "gaiadimension:crusted_malachite_brick_stair": {
+    "sound": "stone"
+  },
+  "gaiadimension:crusted_amethyst_brick_slab": {
+    "sound": "stone"
+  },
+  "gaiadimension:crusted_malachite_brick_slab": {
+    "sound": "stone"
+  },
+  "gaiadimension:crusted_gaia_brick_slab": {
+    "sound": "stone"
+  },
+  "gaiadimension:crusted_gaia_brick_stair": {
+    "sound": "stone"
+  },
+  "gaiadimension:gaia_brick_slab": {
+    "sound": "stone"
+  },
+  "gaiadimension:crusted_gaia_brick": {
+    "sound": "normal"
+  },
+  "gaiadimension:gaia_stone_bricks": {
+    "sound": "normal"
+  },
+  "gaiadimension:gaia_brick_stair": {
+    "sound": "stone"
+  },
+  "gaiadimension:tektite_block": {
+    "sound": "metal"
+  },
+  "gaiadimension:sugilite_block": {
+    "sound": "metal"
+  },
+  "gaiadimension:tektite_ore": {
+    "sound": "stone"
+  },
+  "gaiadimension:moonstone_ore": {
+    "sound": "stone"
+  },
+  "gaiadimension:speckled_rock": {
+    "sound": "stone"
+  },
+  "gaiadimension:moonstone_block": {
+    "sound": "metal"
+  },
+  "gaiadimension:euclase_block": {
+    "sound": "metal"
+  },
+  "gaiadimension:labradorite_block": {
+    "sound": "metal"
+  },
+  "gaiadimension:labradorite_ore": {
+    "sound": "stone"
+  },
+  "gaiadimension:leucite_block": {
+    "sound": "metal"
+  },
+  "gaiadimension:pink_sludge_block": {
+    "sound": "slime"
+  },
+  "gaiadimension:proustite_block": {
+    "sound": "metal"
+  },
+  "gaiadimension:goldstone_block": {
+    "sound": "normal"
+  },
+  "gaiadimension:brick2_stairs": {
+    "sound": "stone"
+  },
+  "gaiadimension:malachite_tiles_stairs": {
+    "sound": "stone"
+  },
+  "gaiadimension:brick1_slab": {
+    "sound": "stone"
+  },
+  "gaiadimension:brick2_slab": {
+    "sound": "stone"
+  },
+  "gaiadimension:cracked_malachite_brick_slab": {
+    "sound": "stone"
+  },
+  "gaiadimension:cracked_malachite_bricks": {
+    "sound": "normal"
+  },
+  "gaiadimension:brick1_stairs": {
+    "sound": "stone"
+  },
+  "gaiadimension:pulsing_malachite_bricks": {
+    "sound": "stone"
+  },
+  "gaiadimension:cracked_malachite_brick_stair": {
+    "sound": "stone"
+  },
+  "gaiadimension:brick1": {
+    "sound": "normal"
+  },
+  "gaiadimension:brick3_slab": {
+    "sound": "stone"
+  },
+  "gaiadimension:brick3": {
+    "sound": "normal"
+  },
+  "gaiadimension:green_stairs": {
+    "sound": "stone"
+  },
+  "gaiadimension:pulsing_malachite_tiles": {
+    "sound": "normal"
+  },
+  "gaiadimension:pillar1_stairs": {
+    "sound": "normal"
+  },
+  "gaiadimension:brick3_stairs": {
+    "sound": "stone"
+  },
+  "gaiadimension:pillar1": {
+    "sound": "stone"
+  },
+  "gaiadimension:cracked_amethyst_bricks": {
+    "sound": "stone"
+  },
+  "gaiadimension:gaia_portal": {
+    "sound": "glass"
+  },
+  "gaiadimension:pyrite_torch": {
+    "sound": "ladder"
+  },
+  "gaiadimension:keystone_block": {
+    "sound": "basalt"
+  },
+  "gaiadimension:pulsing_malachite_tile_stair": {},
+  "gaiadimension:burning_planks": {
+    "sound": "glass"
+  },
+  "gaiadimension:crate": {
+    "sound": "normal"
+  },
+  "gaiadimension:large_crate": {
+    "sound": "normal"
+  },
+  "gaiadimension:blue_agate_sapling": {
+    "sound": "normal"
+  },
+  "gaiadimension:burning_sapling": {
+    "sound": "normal"
+  },
+  "gaiadimension:burned_sapling": {
+    "sound": "normal"
+  },
+  "gaiadimension:aura_sapling": {
+    "sound": "normal"
+  },
+  "gaiadimension:corrupted_sapling": {
+    "sound": "normal"
+  },
+  "gaiadimension:green_agate_sapling": {
+    "sound": "normal"
+  },
+  "gaiadimension:pink_agate_sapling": {
+    "sound": "normal"
+  },
+  "gaiadimension:fossilized_sapling": {
+    "sound": "normal"
+  },
+  "gaiadimension:purple_agate_sapling": {
+    "sound": "normal"
+  },
+  "gaiadimension:reinforced_bricks": {
+    "sound": "normal"
+  },
+  "gaiadimension:gold_fire": {
+    "sound": "normal"
+  }
+}

@@ -1,6 +1,6 @@
 import { world, system } from "@minecraft/server";
-import Portal from "./world/Portal";
-import { Vec3, vec3 } from "./Vec3";
+import Portal from "../world/Portal";
+import { Vec3, vec3 } from "../utils/Vec3";
 
 world.afterEvents.itemUseOn.subscribe(
   ({ source, itemStack, block, blockFace }) => {

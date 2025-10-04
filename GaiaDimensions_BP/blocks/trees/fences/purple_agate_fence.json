@@ -1,0 +1,590 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaiadimension:purple_agate_fence",
+      "menu_category": {
+        "category": "construction",
+        "group": "itemGroup.name.fence"
+      },
+      "states": {
+        "gaiadimension:north": [
+          false,
+          true
+        ],
+        "gaiadimension:east": [
+          false,
+          true
+        ],
+        "gaiadimension:west": [
+          false,
+          true
+        ],
+        "gaiadimension:south": [
+          false,
+          true
+        ]
+      }
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('gaiadimension:north') == true && q.block_state('gaiadimension:south') == true && q.block_state('gaiadimension:east') == true && q.block_state('gaiadimension:west') == true",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              16,
+              16
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              16,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:north') == true && q.block_state('gaiadimension:south') == true && q.block_state('gaiadimension:east') == true && q.block_state('gaiadimension:west') == false",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              10,
+              16,
+              16
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              10,
+              16,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:north') == true && q.block_state('gaiadimension:south') == true && q.block_state('gaiadimension:east') == false && q.block_state('gaiadimension:west') == true",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -2,
+              0,
+              -8
+            ],
+            "size": [
+              10,
+              16,
+              16
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -2,
+              0,
+              -8
+            ],
+            "size": [
+              10,
+              16,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:north') == false && q.block_state('gaiadimension:south') == true && q.block_state('gaiadimension:east') == true && q.block_state('gaiadimension:west') == true",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -2
+            ],
+            "size": [
+              16,
+              16,
+              10
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -8,
+              0,
+              -2
+            ],
+            "size": [
+              16,
+              16,
+              10
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:north') == true && q.block_state('gaiadimension:south') == false && q.block_state('gaiadimension:east') == true && q.block_state('gaiadimension:west') == true",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              16,
+              10
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              16,
+              10
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:north') == true && q.block_state('gaiadimension:south') == true && q.block_state('gaiadimension:east') == false && q.block_state('gaiadimension:west') == false",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -2,
+              0,
+              -8
+            ],
+            "size": [
+              4,
+              16,
+              16
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -2,
+              0,
+              -8
+            ],
+            "size": [
+              4,
+              16,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:north') == false && q.block_state('gaiadimension:south') == false && q.block_state('gaiadimension:east') == true && q.block_state('gaiadimension:west') == true",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -2
+            ],
+            "size": [
+              16,
+              16,
+              4
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -8,
+              0,
+              -2
+            ],
+            "size": [
+              16,
+              16,
+              4
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:north') == true && q.block_state('gaiadimension:south') == false && q.block_state('gaiadimension:east') == true && q.block_state('gaiadimension:west') == false",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              10,
+              16,
+              10
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -2,
+              0,
+              -2
+            ],
+            "size": [
+              4,
+              16,
+              4
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:north') == true && q.block_state('gaiadimension:south') == false && q.block_state('gaiadimension:east') == false && q.block_state('gaiadimension:west') == true",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -2,
+              0,
+              -8
+            ],
+            "size": [
+              10,
+              16,
+              10
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -2,
+              0,
+              -2
+            ],
+            "size": [
+              4,
+              16,
+              4
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:north') == false && q.block_state('gaiadimension:south') == true && q.block_state('gaiadimension:east') == true && q.block_state('gaiadimension:west') == false",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -2
+            ],
+            "size": [
+              10,
+              16,
+              10
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -2,
+              0,
+              -2
+            ],
+            "size": [
+              4,
+              16,
+              4
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:north') == false && q.block_state('gaiadimension:south') == true && q.block_state('gaiadimension:east') == false && q.block_state('gaiadimension:west') == true",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -2,
+              0,
+              -2
+            ],
+            "size": [
+              10,
+              16,
+              10
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -2,
+              0,
+              -2
+            ],
+            "size": [
+              4,
+              16,
+              4
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:north') == true && q.block_state('gaiadimension:south') == false && q.block_state('gaiadimension:east') == false && q.block_state('gaiadimension:west') == false",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -2,
+              0,
+              -8
+            ],
+            "size": [
+              4,
+              16,
+              10
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -2,
+              0,
+              -8
+            ],
+            "size": [
+              4,
+              16,
+              10
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:north') == false && q.block_state('gaiadimension:south') == true && q.block_state('gaiadimension:east') == false && q.block_state('gaiadimension:west') == false",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -2,
+              0,
+              -2
+            ],
+            "size": [
+              4,
+              16,
+              10
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -2,
+              0,
+              -2
+            ],
+            "size": [
+              4,
+              16,
+              10
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:north') == false && q.block_state('gaiadimension:south') == false && q.block_state('gaiadimension:east') == true && q.block_state('gaiadimension:west') == false",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -2
+            ],
+            "size": [
+              10,
+              16,
+              4
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -8,
+              0,
+              -2
+            ],
+            "size": [
+              10,
+              16,
+              4
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:north') == false && q.block_state('gaiadimension:south') == false && q.block_state('gaiadimension:east') == false && q.block_state('gaiadimension:west') == true",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -2,
+              0,
+              -2
+            ],
+            "size": [
+              10,
+              16,
+              4
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -2,
+              0,
+              -2
+            ],
+            "size": [
+              10,
+              16,
+              4
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:north') == false && q.block_state('gaiadimension:south') == false && q.block_state('gaiadimension:east') == false && q.block_state('gaiadimension:west') == false",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -2,
+              0,
+              -2
+            ],
+            "size": [
+              4,
+              16,
+              4
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -2,
+              0,
+              -2
+            ],
+            "size": [
+              4,
+              16,
+              4
+            ]
+          }
+        }
+      }
+    ],
+    "components": {
+      "minecraft:item_visual": {
+        "geometry": "geometry.cc_wild.fence_icon",
+        "material_instances": {
+          "*": {
+            "texture": "purple_agate_planks",
+            "render_method": "alpha_test"
+          }
+        }
+      },
+      "minecraft:display_name": "Alder Fence",
+      "minecraft:geometry": {
+        "identifier": "geometry.cc_wild.fence",
+        "bone_visibility": {
+          "north_picket": "q.block_state('gaiadimension:north') == true",
+          "east_picket": "q.block_state('gaiadimension:east') == true",
+          "west_picket": "q.block_state('gaiadimension:west') == true",
+          "south_picket": "q.block_state('gaiadimension:south') == true"
+        }
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "purple_agate_planks",
+          "render_method": "alpha_test"
+        }
+      },
+      "minecraft:custom_components": [
+        "gaiadimension:fence"
+      ],
+      "minecraft:tick": {
+        "interval_range": [
+          1,
+          1
+        ],
+        "looping": true
+      },
+      "minecraft:selection_box": {
+        "origin": [
+          -2,
+          0,
+          -2
+        ],
+        "size": [
+          4,
+          16,
+          4
+        ]
+      },
+      "minecraft:collision_box": {
+        "origin": [
+          -2,
+          0,
+          -2
+        ],
+        "size": [
+          4,
+          16,
+          4
+        ]
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 3,
+        "item_specific_speeds": [
+          {
+            "item": "minecraft:wooden_axe",
+            "destroy_speed": 1.5
+          },
+          {
+            "item": "minecraft:stone_axe",
+            "destroy_speed": 0.75
+          },
+          {
+            "item": "minecraft:iron_axe",
+            "destroy_speed": 0.5
+          },
+          {
+            "item": "minecraft:diamond_axe",
+            "destroy_speed": 0.4
+          },
+          {
+            "item": "minecraft:netherite_axe",
+            "destroy_speed": 0.35
+          },
+          {
+            "item": "minecraft:golden_axe",
+            "destroy_speed": 0.25
+          }
+        ]
+      },
+      "minecraft:flammable": {
+        "destroy_chance_modifier": 50,
+        "catch_chance_modifier": 10
+      }
+    }
+  }
+}

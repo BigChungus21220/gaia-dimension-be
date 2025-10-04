@@ -8,6 +8,8 @@ import { registerPressurePlateComponent } from './blocks/gaia_pressure_plate.js'
 import { registerWoodComponent } from './blocks/gaia_wood.js';
 import { registerStairsComponent } from './blocks/gaia_stairs.js';
 import { registerGeyserComponent } from './blocks/geyser.js';
+import { initializeBiomeChecker } from './world/BiomeSystem.js';
+import './items/Ignition.js';
 
 /**
  * This is the main entry point for the Gaia Dimension mod.
@@ -30,6 +32,10 @@ function registerAllComponents() {
         registerGeyserComponent(context);
 
         console.log("[GaiaDimension] All custom block components registered.");
+        
+        // Initialize the biome checker system
+        initializeBiomeChecker();
+        console.log("[GaiaDimension] Biome checker system initialized.");
     });
 }
 

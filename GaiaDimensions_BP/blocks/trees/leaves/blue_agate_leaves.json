@@ -1,0 +1,80 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaiadimension:blue_agate_leaves",
+      "menu_category": {
+        "category": "nature",
+        "group": "itemGroup.name.leaves"
+      },
+      "traits": {
+        "minecraft:placement_direction": {
+          "enabled_states": [
+            "minecraft:cardinal_direction"
+          ],
+          "y_rotation_offset": 180
+        }
+      }
+    },
+    "components": {
+      "minecraft:display_name": "Alder Leaves",
+      "minecraft:geometry": "geometry.cc_wild.leaves",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "blue_agate_leaves",
+          "render_method": "alpha_test",
+          "face_dimming": true,
+          "ambient_occlusion": true,
+          "render_faces": "opaque"
+        }
+      },
+      "minecraft:custom_components": [
+        "gaiadimension:leaves"
+      ],
+      "minecraft:tick": {
+        "interval_range": [
+          100,
+          140
+        ],
+        "looping": true
+      },
+      "minecraft:selection_box": {
+        "origin": [
+          -8,
+          0,
+          -8
+        ],
+        "size": [
+          16,
+          16,
+          16
+        ]
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 0.2,
+        "item_specific_speeds": [
+          {
+            "item": "minecraft:shears",
+            "destroy_speed": 0.05
+          }
+        ]
+      },
+      "minecraft:collision_box": {
+        "origin": [
+          -8,
+          0,
+          -8
+        ],
+        "size": [
+          16,
+          16,
+          16
+        ]
+      },
+      "minecraft:flammable": {
+        "destroy_chance_modifier": 50,
+        "catch_chance_modifier": 10
+      }
+    }
+  }
+}

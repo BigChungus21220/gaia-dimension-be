@@ -1,18 +1,10 @@
-//--------------template by Provedule, download on https://www.provedule.com/---------
 {
   "format_version": "1.20.80",
   "minecraft:block": {
     "description": {
-      "identifier": "gaiadimension:liquid_aura1"
+      "identifier": "gaia:liquidaura1"
     },
     "components": {
-      "minecraft:queued_ticking": {
-        "looping": true,
-        "interval_range": [ 0.2, 0.2 ],
-        "on_tick": {
-          "event": "gaiadimension:flow"
-        }
-      },
       "minecraft:material_instances": {
         "*": {
           "texture": "liquid_aura_still",
@@ -20,66 +12,13 @@
         }
       },
       "minecraft:loot": "loot_tables/blocks/null.json",
-      "tag:template1": {},
-      "tag:template": {},
       "tag:fluid": {},
-      "minecraft:geometry": "geometry.fluid1",
+      "minecraft:geometry": "geometry.fluid",
       "minecraft:light_dampening": 0.0,
       "minecraft:selection_box": false,
-      "minecraft:light_emission": 15,
-      "minecraft:destructible_by_mining": false,
       "minecraft:collision_box": false,
-      "minecraft:destructible_by_explosion": false,
-      "minecraft:flammable": false
-    },
-    "events": {
-      "gaiadimension:flow": {
-        "sequence": [
-          {
-            "condition": "query.block_neighbor_has_any_tag(1, 0, 0, 'template_full') || query.block_neighbor_has_any_tag(0, 0, 1, 'template_full') || query.block_neighbor_has_any_tag(-1, 0, 0, 'template_full') || query.block_neighbor_has_any_tag(0, 0, -1, 'template_full')",
-            "run_command": {
-              "target": "self",
-              "command": [ "execute if block ~ ~-1 ~ air run setblock ~ ~-1 ~ gaiadimension:liquid_aura_down" ]
-            }
-          },
-          {
-            "condition": "query.block_neighbor_has_any_tag(1, 0, 0, 'template_full') || query.block_neighbor_has_any_tag(0, 0, 1, 'template_full') || query.block_neighbor_has_any_tag(-1, 0, 0, 'template_full') || query.block_neighbor_has_any_tag(0, 0, -1, 'template_full')",
-            "run_command": {
-              "target": "self",
-              "command": [ "execute if block ~ ~ ~1 air unless block ~ ~-1 ~ gaiadimension:liquid_aura_down run setblock ~ ~ ~1 gaiadimension:liquid_aura2" ]
-            }
-          },
-          {
-            "condition": "query.block_neighbor_has_any_tag(1, 0, 0, 'template_full') || query.block_neighbor_has_any_tag(0, 0, 1, 'template_full') || query.block_neighbor_has_any_tag(-1, 0, 0, 'template_full') || query.block_neighbor_has_any_tag(0, 0, -1, 'template_full')",
-            "run_command": {
-              "target": "self",
-              "command": [ "execute if block ~ ~ ~-1 air unless block ~ ~-1 ~ gaiadimension:liquid_aura_down run setblock ~ ~ ~-1 gaiadimension:liquid_aura2" ]
-            }
-          },
-          {
-            "condition": "query.block_neighbor_has_any_tag(1, 0, 0, 'template_full') || query.block_neighbor_has_any_tag(0, 0, 1, 'template_full') || query.block_neighbor_has_any_tag(-1, 0, 0, 'template_full') || query.block_neighbor_has_any_tag(0, 0, -1, 'template_full')",
-            "run_command": {
-              "target": "self",
-              "command": [ "execute if block ~1 ~ ~ air unless block ~ ~-1 ~ gaiadimension:liquid_aura_down run setblock ~1 ~ ~ gaiadimension:liquid_aura2" ]
-            }
-          },
-          {
-            "condition": "query.block_neighbor_has_any_tag(1, 0, 0, 'template_full') || query.block_neighbor_has_any_tag(0, 0, 1, 'template_full') || query.block_neighbor_has_any_tag(-1, 0, 0, 'template_full') || query.block_neighbor_has_any_tag(0, 0, -1, 'template_full')",
-            "run_command": {
-              "target": "self",
-              "command": [ "execute if block ~-1 ~ ~ air unless block ~ ~-1 ~ gaiadimension:liquid_aura_down run setblock ~-1 ~ ~ gaiadimension:liquid_aura2" ]
-            }
-          },
-
-          {
-            "condition": "!query.block_neighbor_has_any_tag(1, 0, 0, 'template_full') && !query.block_neighbor_has_any_tag(0, 0, 1, 'template_full') && !query.block_neighbor_has_any_tag(-1, 0, 0, 'template_full') && !query.block_neighbor_has_any_tag(0, 0, -1, 'template_full')",
-            "run_command": {
-              "target": "self",
-              "command": [ "setblock ~ ~ ~ air" ]
-            }
-          }
-        ]
-      }
+      "minecraft:destructible_by_mining": false,
+      "minecraft:destructible_by_explosion": false
     }
   }
 }

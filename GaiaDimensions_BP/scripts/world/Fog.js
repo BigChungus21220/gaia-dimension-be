@@ -1,4 +1,4 @@
-import Gaia from "./Gaia";
+import { GaiaDimension } from "./GaiaDimension";
 import * as Events from "./Events";
 
 
@@ -17,7 +17,7 @@ class FogSystem {
      * @param {Player} player Player to update fogs of
      */
     static updateFog(player, biome) {
-        if (Gaia.isInGaia(player.location)) {
+        if (GaiaDimension.isInGaia(player.location)) {
             this.setFog(player, biome);
         } else {
             this.clearFogs(player);
