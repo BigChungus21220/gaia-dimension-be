@@ -1,0 +1,52 @@
+# Material List for Stair Generation
+
+Here is the complete list of 48 unique base materials found by scanning the texture files. Please review this list. If it is correct, I will use it to generate the new stair files.
+
+- `amethyst_bricks`
+- `aura_planks`
+- `blue_agate_planks`
+- `bolstered_bricks`
+- `brilliant_stone`
+- `burned_planks`
+- `burning_planks`
+- `copal_bricks`
+- `corrupted_planks`
+- `cracked_amethyst_bricks`
+- `cracked_copal_bricks`
+- `cracked_gaia_stone_bricks`
+- `cracked_jade_bricks`
+- `cracked_jet_bricks`
+- `crusted_amethyst_bricks`
+- `crusted_copal_bricks`
+- `crusted_gaia_stone_bricks`
+- `crusted_jade_bricks`
+- `crusted_jet_bricks`
+- `fossilized_planks`
+- `gaia_cobblestone`
+- `gaia_corrupted_planks`
+- `gaia_crystalized_cracked_bricks`
+- `gaia_keystone`
+- `gaia_stone`
+- `gaia_stone_bricks`
+- `gilded_brilliant_stone`
+- `golden_stone`
+- `goldstone_planks`
+- `green_agate_planks`
+- `jade_bricks`
+- `jet_bricks`
+- `malachite_bricks`
+- `malachite_chisel_bricks`
+- `malachite_cracked_bricks`
+- `malachite_crusted_bricks`
+- `malachite_crystalized_cracked_bricks`
+- `moonstone`
+- `nexustone`
+- `pink_agate_planks`
+- `pulsing_chiselled_malachite_planks`
+- `pulsing_malachite_bricks`
+- `pulsing_malachite_planks`
+- `purple_agate_planks`
+- `reinforced_bricks`
+- `static_stone`
+- `tough_golden_stone`
+- `wasteland_stone`
