@@ -141,7 +141,7 @@
       },
       "minecraft:display_name": "Alder Slab",
       "minecraft:geometry": {
-        "identifier": "geometry.cc_wild.slab",
+        "identifier": "geometry.gaiadimension.slab",
         "bone_visibility": {
           "down": "q.block_state('minecraft:vertical_half') == 'bottom'",
           "up": "q.block_state('minecraft:vertical_half') == 'top'"
