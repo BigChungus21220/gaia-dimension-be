@@ -134,27 +134,27 @@
                 "geometry": "geometry.cc_wild.cc_wild_gold_sandstone_slab_icon",
                 "material_instances": {
                     "up": {
-                        "texture": "gaiadimension:atlas_sandstone_dark",
+                        "texture": "malachite_crystalized_cracked_bricks",
                         "render_method": "opaque"
                     },
                     "down": {
-                        "texture": "gaiadimension:atlas_sandstone_dark",
+                        "texture": "malachite_crystalized_cracked_bricks",
                         "render_method": "opaque"
                     },
                     "south": {
-                        "texture": "gaiadimension:atlas_sandstone_dark",
+                        "texture": "malachite_crystalized_cracked_bricks",
                         "render_method": "opaque"
                     },
                     "east": {
-                        "texture": "gaiadimension:atlas_sandstone_dark",
+                        "texture": "malachite_crystalized_cracked_bricks",
                         "render_method": "opaque"
                     },
                     "west": {
-                        "texture": "gaiadimension:atlas_sandstone_dark",
+                        "texture": "malachite_crystalized_cracked_bricks",
                         "render_method": "opaque"
                     },
                     "north": {
-                        "texture": "gaiadimension:atlas_sandstone_dark",
+                        "texture": "malachite_crystalized_cracked_bricks",
                         "render_method": "opaque"
                     }
                 }
@@ -168,27 +168,27 @@
             },
             "minecraft:material_instances": {
                 "up": {
-                    "texture": "gaiadimension:atlas_sandstone_dark",
+                    "texture": "malachite_crystalized_cracked_bricks",
                     "render_method": "opaque"
                 },
                 "down": {
-                    "texture": "gaiadimension:atlas_sandstone_dark",
+                    "texture": "malachite_crystalized_cracked_bricks",
                     "render_method": "opaque"
                 },
                 "south": {
-                    "texture": "gaiadimension:atlas_sandstone_dark",
+                    "texture": "malachite_crystalized_cracked_bricks",
                     "render_method": "opaque"
                 },
                 "east": {
-                    "texture": "gaiadimension:atlas_sandstone_dark",
+                    "texture": "malachite_crystalized_cracked_bricks",
                     "render_method": "opaque"
                 },
                 "west": {
-                    "texture": "gaiadimension:atlas_sandstone_dark",
+                    "texture": "malachite_crystalized_cracked_bricks",
                     "render_method": "opaque"
                 },
                 "north": {
-                    "texture": "gaiadimension:atlas_sandstone_dark",
+                    "texture": "malachite_crystalized_cracked_bricks",
                     "render_method": "opaque"
                 }
             },

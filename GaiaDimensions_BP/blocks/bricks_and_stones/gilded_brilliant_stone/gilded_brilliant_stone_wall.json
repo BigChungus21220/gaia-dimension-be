@@ -501,7 +501,7 @@
                 "geometry": "geometry.cc_wild.wall_icon",
                 "material_instances": {
                     "*": {
-                        "texture": "gaiadimension:atlas_sandstone_dark",
+                        "texture": "gilded_brilliant_stone",
                         "render_method": "opaque"
                     }
                 }
@@ -522,7 +522,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "gaiadimension:atlas_sandstone_dark",
+                    "texture": "gilded_brilliant_stone",
                     "render_method": "opaque"
                 }
             },

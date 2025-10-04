@@ -41,27 +41,27 @@
             },
             "minecraft:material_instances": {
                 "up": {
-                    "texture": "gaiadimension:atlas_sandstone_dark",
+                    "texture": "crusted_jet_bricks",
                     "render_method": "opaque"
                 },
                 "down": {
-                    "texture": "gaiadimension:atlas_sandstone_dark",
+                    "texture": "crusted_jet_bricks",
                     "render_method": "opaque"
                 },
                 "south": {
-                    "texture": "gaiadimension:atlas_sandstone_dark",
+                    "texture": "crusted_jet_bricks",
                     "render_method": "opaque"
                 },
                 "east": {
-                    "texture": "gaiadimension:atlas_sandstone_dark",
+                    "texture": "crusted_jet_bricks",
                     "render_method": "opaque"
                 },
                 "west": {
-                    "texture": "gaiadimension:atlas_sandstone_dark",
+                    "texture": "crusted_jet_bricks",
                     "render_method": "opaque"
                 },
                 "north": {
-                    "texture": "gaiadimension:atlas_sandstone_dark",
+                    "texture": "crusted_jet_bricks",
                     "render_method": "opaque"
                 }
             }
