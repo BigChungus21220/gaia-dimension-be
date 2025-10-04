@@ -157,7 +157,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'north' && q.block_state('gaiadimension:type') == 1",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -187,7 +187,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'south' && q.block_state('gaiadimension:type') == 1",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -217,7 +217,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'east' && q.block_state('gaiadimension:type') == 1",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -247,7 +247,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'west' && q.block_state('gaiadimension:type') == 1",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -277,7 +277,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'north' && q.block_state('gaiadimension:type') == 2",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -308,7 +308,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'south' && q.block_state('gaiadimension:type') == 2",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -339,7 +339,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'east' && q.block_state('gaiadimension:type') == 2",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -370,7 +370,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'west' && q.block_state('gaiadimension:type') == 2",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -401,7 +401,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'north' && q.block_state('gaiadimension:type') == 3",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -432,7 +432,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'south' && q.block_state('gaiadimension:type') == 3",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -463,7 +463,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'east' && q.block_state('gaiadimension:type') == 3",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -494,7 +494,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'west' && q.block_state('gaiadimension:type') == 3",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -525,7 +525,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'north' && q.block_state('gaiadimension:type') == 4",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -554,7 +554,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'south' && q.block_state('gaiadimension:type') == 4",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -583,7 +583,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'east' && q.block_state('gaiadimension:type') == 4",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -612,7 +612,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'west' && q.block_state('gaiadimension:type') == 4",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -641,7 +641,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'north' && q.block_state('gaiadimension:type') == 5",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -670,7 +670,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'south' && q.block_state('gaiadimension:type') == 5",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -699,7 +699,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'east' && q.block_state('gaiadimension:type') == 5",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -728,7 +728,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'bottom' && q.block_state('minecraft:cardinal_direction') == 'west' && q.block_state('gaiadimension:type') == 5",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -757,7 +757,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'north' && q.block_state('gaiadimension:type') == 1",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -787,7 +787,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'south' && q.block_state('gaiadimension:type') == 1",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": false,
               "bot_nw": false,
@@ -817,7 +817,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'east' && q.block_state('gaiadimension:type') == 1",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": false,
@@ -847,7 +847,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'west' && q.block_state('gaiadimension:type') == 1",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": false,
               "bot_nw": true,
@@ -877,7 +877,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'north' && q.block_state('gaiadimension:type') == 2",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -908,7 +908,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'south' && q.block_state('gaiadimension:type') == 2",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": false,
@@ -939,7 +939,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'east' && q.block_state('gaiadimension:type') == 2",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -970,7 +970,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'west' && q.block_state('gaiadimension:type') == 2",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": false,
               "bot_nw": true,
@@ -1001,7 +1001,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'north' && q.block_state('gaiadimension:type') == 3",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -1032,7 +1032,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'south' && q.block_state('gaiadimension:type') == 3",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": false,
               "bot_nw": true,
@@ -1063,7 +1063,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'east' && q.block_state('gaiadimension:type') == 3",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": false,
@@ -1094,7 +1094,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'west' && q.block_state('gaiadimension:type') == 3",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": true,
@@ -1125,7 +1125,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'north' && q.block_state('gaiadimension:type') == 4",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": false,
               "bot_nw": true,
@@ -1154,7 +1154,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'south' && q.block_state('gaiadimension:type') == 4",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": false,
               "bot_nw": false,
@@ -1183,7 +1183,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'east' && q.block_state('gaiadimension:type') == 4",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": false,
               "bot_nw": false,
@@ -1212,7 +1212,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'west' && q.block_state('gaiadimension:type') == 4",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": false,
               "bot_nw": false,
@@ -1241,7 +1241,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'north' && q.block_state('gaiadimension:type') == 5",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": false,
@@ -1270,7 +1270,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'south' && q.block_state('gaiadimension:type') == 5",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": false,
               "bot_nw": false,
@@ -1299,7 +1299,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'east' && q.block_state('gaiadimension:type') == 5",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": true,
               "bot_nw": false,
@@ -1328,7 +1328,7 @@
         "condition": "q.block_state('minecraft:vertical_half') == 'top' && q.block_state('minecraft:cardinal_direction') == 'west' && q.block_state('gaiadimension:type') == 5",
         "components": {
           "minecraft:geometry": {
-            "identifier": "geometry.stairs",
+            "identifier": "geometry.gaiadimension.slab",
             "bone_visibility": {
               "bot_ne": false,
               "bot_nw": true,
