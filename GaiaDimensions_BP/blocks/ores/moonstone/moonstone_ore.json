@@ -1,0 +1,20 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaiadimension:moonstone_ore"
+    },
+    "components": {
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 3
+      },
+      "minecraft:map_color": "#000000",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "moonstone_ore",
+          "render_method": "opaque"
+        }
+      }
+    }
+  }
+}

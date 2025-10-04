@@ -1,0 +1,608 @@
+{
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:malachite_wall",
+            "menu_category": {
+                "category": "construction",
+                "group": "minecraft:itemGroup.name.fence"
+            },
+            "states": {
+                "gaiadimension:north": [
+                    false,
+                    true
+                ],
+                "gaiadimension:east": [
+                    false,
+                    true
+                ],
+                "gaiadimension:west": [
+                    false,
+                    true
+                ],
+                "gaiadimension:south": [
+                    false,
+                    true
+                ],
+                "gaiadimension:above": [
+                    false,
+                    true
+                ]
+            }
+        },
+        "permutations": [
+            {
+                "condition": "q.block_state('cc_wild:north') == true && q.block_state('cc_wild:south') == true && q.block_state('cc_wild:east') == true && q.block_state('cc_wild:west') == true",
+                "components": {
+                    "minecraft:selection_box": {
+                        "origin": [
+                            -8,
+                            0,
+                            -8
+                        ],
+                        "size": [
+                            16,
+                            16,
+                            16
+                        ]
+                    },
+                    "minecraft:collision_box": {
+                        "origin": [
+                            -8,
+                            0,
+                            -8
+                        ],
+                        "size": [
+                            16,
+                            16,
+                            16
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('cc_wild:north') == true && q.block_state('cc_wild:south') == true && q.block_state('cc_wild:east') == true && q.block_state('cc_wild:west') == false",
+                "components": {
+                    "minecraft:selection_box": {
+                        "origin": [
+                            -8,
+                            0,
+                            -8
+                        ],
+                        "size": [
+                            10,
+                            16,
+                            16
+                        ]
+                    },
+                    "minecraft:collision_box": {
+                        "origin": [
+                            -8,
+                            0,
+                            -8
+                        ],
+                        "size": [
+                            10,
+                            16,
+                            16
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('cc_wild:north') == true && q.block_state('cc_wild:south') == true && q.block_state('cc_wild:east') == false && q.block_state('cc_wild:west') == true",
+                "components": {
+                    "minecraft:selection_box": {
+                        "origin": [
+                            -2,
+                            0,
+                            -8
+                        ],
+                        "size": [
+                            10,
+                            16,
+                            16
+                        ]
+                    },
+                    "minecraft:collision_box": {
+                        "origin": [
+                            -2,
+                            0,
+                            -8
+                        ],
+                        "size": [
+                            10,
+                            16,
+                            16
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('cc_wild:north') == false && q.block_state('cc_wild:south') == true && q.block_state('cc_wild:east') == true && q.block_state('cc_wild:west') == true",
+                "components": {
+                    "minecraft:selection_box": {
+                        "origin": [
+                            -8,
+                            0,
+                            -2
+                        ],
+                        "size": [
+                            16,
+                            16,
+                            10
+                        ]
+                    },
+                    "minecraft:collision_box": {
+                        "origin": [
+                            -8,
+                            0,
+                            -2
+                        ],
+                        "size": [
+                            16,
+                            16,
+                            10
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('cc_wild:north') == true && q.block_state('cc_wild:south') == false && q.block_state('cc_wild:east') == true && q.block_state('cc_wild:west') == true",
+                "components": {
+                    "minecraft:selection_box": {
+                        "origin": [
+                            -8,
+                            0,
+                            -8
+                        ],
+                        "size": [
+                            16,
+                            16,
+                            10
+                        ]
+                    },
+                    "minecraft:collision_box": {
+                        "origin": [
+                            -8,
+                            0,
+                            -8
+                        ],
+                        "size": [
+                            16,
+                            16,
+                            10
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('cc_wild:north') == true && q.block_state('cc_wild:south') == true && q.block_state('cc_wild:east') == false && q.block_state('cc_wild:west') == false",
+                "components": {
+                    "minecraft:selection_box": {
+                        "origin": [
+                            -2,
+                            0,
+                            -8
+                        ],
+                        "size": [
+                            4,
+                            16,
+                            16
+                        ]
+                    },
+                    "minecraft:collision_box": {
+                        "origin": [
+                            -2,
+                            0,
+                            -8
+                        ],
+                        "size": [
+                            4,
+                            16,
+                            16
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('cc_wild:north') == false && q.block_state('cc_wild:south') == false && q.block_state('cc_wild:east') == true && q.block_state('cc_wild:west') == true",
+                "components": {
+                    "minecraft:selection_box": {
+                        "origin": [
+                            -8,
+                            0,
+                            -2
+                        ],
+                        "size": [
+                            16,
+                            16,
+                            4
+                        ]
+                    },
+                    "minecraft:collision_box": {
+                        "origin": [
+                            -8,
+                            0,
+                            -2
+                        ],
+                        "size": [
+                            16,
+                            16,
+                            4
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('cc_wild:north') == true && q.block_state('cc_wild:south') == false && q.block_state('cc_wild:east') == true && q.block_state('cc_wild:west') == false",
+                "components": {
+                    "minecraft:selection_box": {
+                        "origin": [
+                            -8,
+                            0,
+                            -8
+                        ],
+                        "size": [
+                            10,
+                            16,
+                            10
+                        ]
+                    },
+                    "minecraft:collision_box": {
+                        "origin": [
+                            -2,
+                            0,
+                            -2
+                        ],
+                        "size": [
+                            4,
+                            16,
+                            4
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('cc_wild:north') == true && q.block_state('cc_wild:south') == false && q.block_state('cc_wild:east') == false && q.block_state('cc_wild:west') == true",
+                "components": {
+                    "minecraft:selection_box": {
+                        "origin": [
+                            -2,
+                            0,
+                            -8
+                        ],
+                        "size": [
+                            10,
+                            16,
+                            10
+                        ]
+                    },
+                    "minecraft:collision_box": {
+                        "origin": [
+                            -2,
+                            0,
+                            -2
+                        ],
+                        "size": [
+                            4,
+                            16,
+                            4
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('cc_wild:north') == false && q.block_state('cc_wild:south') == true && q.block_state('cc_wild:east') == true && q.block_state('cc_wild:west') == false",
+                "components": {
+                    "minecraft:selection_box": {
+                        "origin": [
+                            -8,
+                            0,
+                            -2
+                        ],
+                        "size": [
+                            10,
+                            16,
+                            10
+                        ]
+                    },
+                    "minecraft:collision_box": {
+                        "origin": [
+                            -2,
+                            0,
+                            -2
+                        ],
+                        "size": [
+                            4,
+                            16,
+                            4
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('cc_wild:north') == false && q.block_state('cc_wild:south') == true && q.block_state('cc_wild:east') == false && q.block_state('cc_wild:west') == true",
+                "components": {
+                    "minecraft:selection_box": {
+                        "origin": [
+                            -2,
+                            0,
+                            -2
+                        ],
+                        "size": [
+                            10,
+                            16,
+                            10
+                        ]
+                    },
+                    "minecraft:collision_box": {
+                        "origin": [
+                            -2,
+                            0,
+                            -2
+                        ],
+                        "size": [
+                            4,
+                            16,
+                            4
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('cc_wild:north') == true && q.block_state('cc_wild:south') == false && q.block_state('cc_wild:east') == false && q.block_state('cc_wild:west') == false",
+                "components": {
+                    "minecraft:selection_box": {
+                        "origin": [
+                            -2,
+                            0,
+                            -8
+                        ],
+                        "size": [
+                            4,
+                            16,
+                            10
+                        ]
+                    },
+                    "minecraft:collision_box": {
+                        "origin": [
+                            -2,
+                            0,
+                            -8
+                        ],
+                        "size": [
+                            4,
+                            16,
+                            10
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('cc_wild:north') == false && q.block_state('cc_wild:south') == true && q.block_state('cc_wild:east') == false && q.block_state('cc_wild:west') == false",
+                "components": {
+                    "minecraft:selection_box": {
+                        "origin": [
+                            -2,
+                            0,
+                            -2
+                        ],
+                        "size": [
+                            4,
+                            16,
+                            10
+                        ]
+                    },
+                    "minecraft:collision_box": {
+                        "origin": [
+                            -2,
+                            0,
+                            -2
+                        ],
+                        "size": [
+                            4,
+                            16,
+                            10
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('cc_wild:north') == false && q.block_state('cc_wild:south') == false && q.block_state('cc_wild:east') == true && q.block_state('cc_wild:west') == false",
+                "components": {
+                    "minecraft:selection_box": {
+                        "origin": [
+                            -8,
+                            0,
+                            -2
+                        ],
+                        "size": [
+                            10,
+                            16,
+                            4
+                        ]
+                    },
+                    "minecraft:collision_box": {
+                        "origin": [
+                            -8,
+                            0,
+                            -2
+                        ],
+                        "size": [
+                            10,
+                            16,
+                            4
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('cc_wild:north') == false && q.block_state('cc_wild:south') == false && q.block_state('cc_wild:east') == false && q.block_state('cc_wild:west') == true",
+                "components": {
+                    "minecraft:selection_box": {
+                        "origin": [
+                            -2,
+                            0,
+                            -2
+                        ],
+                        "size": [
+                            10,
+                            16,
+                            4
+                        ]
+                    },
+                    "minecraft:collision_box": {
+                        "origin": [
+                            -2,
+                            0,
+                            -2
+                        ],
+                        "size": [
+                            10,
+                            16,
+                            4
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('cc_wild:north') == false && q.block_state('cc_wild:south') == false && q.block_state('cc_wild:east') == false && q.block_state('cc_wild:west') == false",
+                "components": {
+                    "minecraft:selection_box": {
+                        "origin": [
+                            -2,
+                            0,
+                            -2
+                        ],
+                        "size": [
+                            4,
+                            16,
+                            4
+                        ]
+                    },
+                    "minecraft:collision_box": {
+                        "origin": [
+                            -2,
+                            0,
+                            -2
+                        ],
+                        "size": [
+                            4,
+                            16,
+                            4
+                        ]
+                    }
+                }
+            }
+        ],
+        "components": {
+            "minecraft:item_visual": {
+                "geometry": "geometry.cc_wild.wall_icon",
+                "material_instances": {
+                    "*": {
+                        "texture": "gaiadimension:atlas_sandstone_dark",
+                        "render_method": "opaque"
+                    }
+                }
+            },
+            "minecraft:geometry": {
+                "identifier": "geometry.cc_wild.wall",
+                "bone_visibility": {
+                    "post": "!((q.block_state('cc_wild:north') && q.block_state('cc_wild:south') && !q.block_state('cc_wild:east') && !q.block_state('cc_wild:west')) || (q.block_state('cc_wild:east') && q.block_state('cc_wild:west') && !q.block_state('cc_wild:north') && !q.block_state('cc_wild:south')))",
+                    "north_picket": "q.block_state('cc_wild:north') && !q.block_state('cc_wild:above')",
+                    "south_picket": "q.block_state('cc_wild:south') && !q.block_state('cc_wild:above')",
+                    "east_picket": "q.block_state('cc_wild:east') && !q.block_state('cc_wild:above')",
+                    "west_picket": "q.block_state('cc_wild:west') && !q.block_state('cc_wild:above')",
+                    "north_above": "q.block_state('cc_wild:north') && q.block_state('cc_wild:above')",
+                    "south_above": "q.block_state('cc_wild:south') && q.block_state('cc_wild:above')",
+                    "east_above": "q.block_state('cc_wild:east') && q.block_state('cc_wild:above')",
+                    "west_above": "q.block_state('cc_wild:west') && q.block_state('cc_wild:above')"
+                }
+            },
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "gaiadimension:atlas_sandstone_dark",
+                    "render_method": "opaque"
+                }
+            },
+            "minecraft:custom_components": [
+                "gaiadimension:fence"
+            ],
+            "minecraft:liquid_detection": {
+                "detection_rules": [
+                    {
+                        "liquid_type": "water",
+                        "can_contain_liquid": true,
+                        "stops_liquid_flowing_from_direction": [
+                            "up"
+                        ]
+                    }
+                ]
+            },
+            "minecraft:tick": {
+                "interval_range": [
+                    1,
+                    1
+                ],
+                "looping": true
+            },
+            "minecraft:selection_box": {
+                "origin": [
+                    -2,
+                    0,
+                    -2
+                ],
+                "size": [
+                    4,
+                    16,
+                    4
+                ]
+            },
+            "minecraft:collision_box": {
+                "origin": [
+                    -2,
+                    0,
+                    -2
+                ],
+                "size": [
+                    4,
+                    16,
+                    4
+                ]
+            },
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 2,
+                "item_specific_speeds": [
+                    {
+                        "item": "minecraft:wooden_axe",
+                        "destroy_speed": 1.5
+                    },
+                    {
+                        "item": "minecraft:stone_axe",
+                        "destroy_speed": 0.75
+                    },
+                    {
+                        "item": "minecraft:copper_axe",
+                        "destroy_speed": 0.6
+                    },
+                    { "item": "minecraft:iron_axe",
+                        "destroy_speed": 0.5
+                    },
+                    {
+                        "item": "minecraft:diamond_axe",
+                        "destroy_speed": 0.4
+                    },
+                    {
+                        "item": "minecraft:netherite_axe",
+                        "destroy_speed": 0.35
+                    },
+                    {
+                        "item": "minecraft:golden_axe",
+                        "destroy_speed": 0.25
+                    }
+                ]
+            }
+        }
+    }
+}
