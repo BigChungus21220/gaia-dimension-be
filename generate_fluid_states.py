@@ -14,7 +14,11 @@ FLUID_DATA = {
 BEHAVIOR_PACK_ROOT = os.path.abspath("C:/Users/ADMIN/OneDrive/Documents/GitHub/gaia-dimension-be/GaiaDimensions_BP")
 FLUIDS_DIR = os.path.join(BEHAVIOR_PACK_ROOT, "blocks", "fluids")
 
-def generate_minimal_fluid_json(identifier, texture):
+def generate_minimal_fluid_json(identifier, texture, state):
+    geometry = "geometry.fluid"
+    if state in ["1", "2", "3"]:
+        geometry = f"geometry.fluid{state}"
+
     return {
         "format_version": "1.20.80",
         "minecraft:block": {
@@ -30,9 +34,8 @@ def generate_minimal_fluid_json(identifier, texture):
                 },
                 "minecraft:loot": "loot_tables/blocks/null.json",
                 "tag:fluid": {},
-                "minecraft:geometry": "geometry.fluid",
-                "minecraft:light_dampening": 0.0,
-                "minecraft:selection_box": False,
+                "minecraft:geometry": geometry,
+                "minecraft:light_dampening": 0,                "minecraft:selection_box": False,
                 "minecraft:collision_box": False,
                 "minecraft:destructible_by_mining": False,
                 "minecraft:destructible_by_explosion": False
@@ -48,10 +51,11 @@ for base_id, info in FLUID_DATA.items():
 
     # State files 1, 2, 3
     for i in range(1, 4):
-        identifier = f"gaia:liquid{info['suffix']}{i}"
-        filename = f"liquid_{info['suffix']}{i}.json" # Corrected filename
+        state_str = str(i)
+        identifier = f"gaia:liquid{info['suffix']}{state_str}"
+        filename = f"liquid_{info['suffix']}{state_str}.json"
         file_path = os.path.join(folder_path, filename)
-        json_content = generate_minimal_fluid_json(identifier, info["texture"])
+        json_content = generate_minimal_fluid_json(identifier, info["texture"], state_str)
         with open(file_path, 'w') as f: json.dump(json_content, f, indent=2)
         print(f"Generated: {file_path}")
 
@@ -59,7 +63,7 @@ for base_id, info in FLUID_DATA.items():
     down_identifier = f"gaia:{base_id}_down"
     down_filename = f"{base_id}_down.json"
     down_file_path = os.path.join(folder_path, down_filename)
-    down_json_content = generate_minimal_fluid_json(down_identifier, info["texture"])
+    down_json_content = generate_minimal_fluid_json(down_identifier, info["texture"], "down")
     with open(down_file_path, 'w') as f: json.dump(down_json_content, f, indent=2)
     print(f"Generated: {down_file_path}")
 

@@ -919,6 +919,366 @@
     },
     "missingno_fungus": {
       "textures": "textures/blocks/missingno_fungus"
+    },
+    "aura_curtain_bottom": {
+      "textures": "textures/block/aura_curtain_bottom"
+    },
+    "aura_curtain_bottom_left": {
+      "textures": "textures/block/aura_curtain_bottom_left"
+    },
+    "aura_curtain_bottom_left_open": {
+      "textures": "textures/block/aura_curtain_bottom_left_open"
+    },
+    "aura_curtain_bottom_open": {
+      "textures": "textures/block/aura_curtain_bottom_open"
+    },
+    "aura_curtain_bottom_right": {
+      "textures": "textures/block/aura_curtain_bottom_right"
+    },
+    "aura_curtain_bottom_right_open": {
+      "textures": "textures/block/aura_curtain_bottom_right_open"
+    },
+    "aura_curtain_top": {
+      "textures": "textures/block/aura_curtain_top"
+    },
+    "aura_curtain_top_left": {
+      "textures": "textures/block/aura_curtain_top_left"
+    },
+    "aura_curtain_top_left_open": {
+      "textures": "textures/block/aura_curtain_top_left_open"
+    },
+    "aura_curtain_top_open": {
+      "textures": "textures/block/aura_curtain_top_open"
+    },
+    "aura_curtain_top_right": {
+      "textures": "textures/block/aura_curtain_top_right"
+    },
+    "aura_curtain_top_right_open": {
+      "textures": "textures/block/aura_curtain_top_right_open"
+    },
+    "blue_agate_curtain_bottom": {
+      "textures": "textures/block/blue_agate_curtain_bottom"
+    },
+    "blue_agate_curtain_bottom_left": {
+      "textures": "textures/block/blue_agate_curtain_bottom_left"
+    },
+    "blue_agate_curtain_bottom_left_open": {
+      "textures": "textures/block/blue_agate_curtain_bottom_left_open"
+    },
+    "blue_agate_curtain_bottom_open": {
+      "textures": "textures/block/blue_agate_curtain_bottom_open"
+    },
+    "blue_agate_curtain_bottom_right": {
+      "textures": "textures/block/blue_agate_curtain_bottom_right"
+    },
+    "blue_agate_curtain_bottom_right_open": {
+      "textures": "textures/block/blue_agate_curtain_bottom_right_open"
+    },
+    "blue_agate_curtain_top": {
+      "textures": "textures/block/blue_agate_curtain_top"
+    },
+    "blue_agate_curtain_top_left": {
+      "textures": "textures/block/blue_agate_curtain_top_left"
+    },
+    "blue_agate_curtain_top_left_open": {
+      "textures": "textures/block/blue_agate_curtain_top_left_open"
+    },
+    "blue_agate_curtain_top_open": {
+      "textures": "textures/block/blue_agate_curtain_top_open"
+    },
+    "blue_agate_curtain_top_right": {
+      "textures": "textures/block/blue_agate_curtain_top_right"
+    },
+    "blue_agate_curtain_top_right_open": {
+      "textures": "textures/block/blue_agate_curtain_top_right_open"
+    },
+    "burnt_agate_curtain_bottom": {
+      "textures": "textures/block/burnt_agate_curtain_bottom"
+    },
+    "burnt_agate_curtain_bottom_left": {
+      "textures": "textures/block/burnt_agate_curtain_bottom_left"
+    },
+    "burnt_agate_curtain_bottom_left_open": {
+      "textures": "textures/block/burnt_agate_curtain_bottom_left_open"
+    },
+    "burnt_agate_curtain_bottom_open": {
+      "textures": "textures/block/burnt_agate_curtain_bottom_open"
+    },
+    "burnt_agate_curtain_bottom_right": {
+      "textures": "textures/block/burnt_agate_curtain_bottom_right"
+    },
+    "burnt_agate_curtain_bottom_right_open": {
+      "textures": "textures/block/burnt_agate_curtain_bottom_right_open"
+    },
+    "burnt_agate_curtain_top": {
+      "textures": "textures/block/burnt_agate_curtain_top"
+    },
+    "burnt_agate_curtain_top_left": {
+      "textures": "textures/block/burnt_agate_curtain_top_left"
+    },
+    "burnt_agate_curtain_top_left_open": {
+      "textures": "textures/block/burnt_agate_curtain_top_left_open"
+    },
+    "burnt_agate_curtain_top_open": {
+      "textures": "textures/block/burnt_agate_curtain_top_open"
+    },
+    "burnt_agate_curtain_top_right": {
+      "textures": "textures/block/burnt_agate_curtain_top_right"
+    },
+    "burnt_agate_curtain_top_right_open": {
+      "textures": "textures/block/burnt_agate_curtain_top_right_open"
+    },
+    "corrupted_curtain_bottom": {
+      "textures": "textures/block/corrupted_curtain_bottom"
+    },
+    "corrupted_curtain_bottom_left": {
+      "textures": "textures/block/corrupted_curtain_bottom_left"
+    },
+    "corrupted_curtain_bottom_left_open": {
+      "textures": "textures/block/corrupted_curtain_bottom_left_open"
+    },
+    "corrupted_curtain_bottom_open": {
+      "textures": "textures/block/corrupted_curtain_bottom_open"
+    },
+    "corrupted_curtain_bottom_right": {
+      "textures": "textures/block/corrupted_curtain_bottom_right"
+    },
+    "corrupted_curtain_bottom_right_open": {
+      "textures": "textures/block/corrupted_curtain_bottom_right_open"
+    },
+    "corrupted_curtain_top": {
+      "textures": "textures/block/corrupted_curtain_top"
+    },
+    "corrupted_curtain_top_left": {
+      "textures": "textures/block/corrupted_curtain_top_left"
+    },
+    "corrupted_curtain_top_left_open": {
+      "textures": "textures/block/corrupted_curtain_top_left_open"
+    },
+    "corrupted_curtain_top_open": {
+      "textures": "textures/block/corrupted_curtain_top_open"
+    },
+    "corrupted_curtain_top_right": {
+      "textures": "textures/block/corrupted_curtain_top_right"
+    },
+    "corrupted_curtain_top_right_open": {
+      "textures": "textures/block/corrupted_curtain_top_right_open"
+    },
+    "fire_agate_curtain_bottom": {
+      "textures": "textures/block/fire_agate_curtain_bottom"
+    },
+    "fire_agate_curtain_bottom_left": {
+      "textures": "textures/block/fire_agate_curtain_bottom_left"
+    },
+    "fire_agate_curtain_bottom_left_open": {
+      "textures": "textures/block/fire_agate_curtain_bottom_left_open"
+    },
+    "fire_agate_curtain_bottom_open": {
+      "textures": "textures/block/fire_agate_curtain_bottom_open"
+    },
+    "fire_agate_curtain_bottom_right": {
+      "textures": "textures/block/fire_agate_curtain_bottom_right"
+    },
+    "fire_agate_curtain_bottom_right_open": {
+      "textures": "textures/block/fire_agate_curtain_bottom_right_open"
+    },
+    "fire_agate_curtain_top": {
+      "textures": "textures/block/fire_agate_curtain_top"
+    },
+    "fire_agate_curtain_top_left": {
+      "textures": "textures/block/fire_agate_curtain_top_left"
+    },
+    "fire_agate_curtain_top_left_open": {
+      "textures": "textures/block/fire_agate_curtain_top_left_open"
+    },
+    "fire_agate_curtain_top_open": {
+      "textures": "textures/block/fire_agate_curtain_top_open"
+    },
+    "fire_agate_curtain_top_right": {
+      "textures": "textures/block/fire_agate_curtain_top_right"
+    },
+    "fire_agate_curtain_top_right_open": {
+      "textures": "textures/block/fire_agate_curtain_top_right_open"
+    },
+    "fossilized_curtain_bottom": {
+      "textures": "textures/block/fossilized_curtain_bottom"
+    },
+    "fossilized_curtain_bottom_left": {
+      "textures": "textures/block/fossilized_curtain_bottom_left"
+    },
+    "fossilized_curtain_bottom_left_open": {
+      "textures": "textures/block/fossilized_curtain_bottom_left_open"
+    },
+    "fossilized_curtain_bottom_open": {
+      "textures": "textures/block/fossilized_curtain_bottom_open"
+    },
+    "fossilized_curtain_bottom_right": {
+      "textures": "textures/block/fossilized_curtain_bottom_right"
+    },
+    "fossilized_curtain_bottom_right_open": {
+      "textures": "textures/block/fossilized_curtain_bottom_right_open"
+    },
+    "fossilized_curtain_top": {
+      "textures": "textures/block/fossilized_curtain_top"
+    },
+    "fossilized_curtain_top_left": {
+      "textures": "textures/block/fossilized_curtain_top_left"
+    },
+    "fossilized_curtain_top_left_open": {
+      "textures": "textures/block/fossilized_curtain_top_left_open"
+    },
+    "fossilized_curtain_top_open": {
+      "textures": "textures/block/fossilized_curtain_top_open"
+    },
+    "fossilized_curtain_top_right": {
+      "textures": "textures/block/fossilized_curtain_top_right"
+    },
+    "fossilized_curtain_top_right_open": {
+      "textures": "textures/block/fossilized_curtain_top_right_open"
+    },
+    "golden_curtain_bottom": {
+      "textures": "textures/block/golden_curtain_bottom"
+    },
+    "golden_curtain_bottom_left": {
+      "textures": "textures/block/golden_curtain_bottom_left"
+    },
+    "golden_curtain_bottom_left_open": {
+      "textures": "textures/block/golden_curtain_bottom_left_open"
+    },
+    "golden_curtain_bottom_open": {
+      "textures": "textures/block/golden_curtain_bottom_open"
+    },
+    "golden_curtain_bottom_right": {
+      "textures": "textures/block/golden_curtain_bottom_right"
+    },
+    "golden_curtain_bottom_right_open": {
+      "textures": "textures/block/golden_curtain_bottom_right_open"
+    },
+    "golden_curtain_top": {
+      "textures": "textures/block/golden_curtain_top"
+    },
+    "golden_curtain_top_left": {
+      "textures": "textures/block/golden_curtain_top_left"
+    },
+    "golden_curtain_top_left_open": {
+      "textures": "textures/block/golden_curtain_top_left_open"
+    },
+    "golden_curtain_top_open": {
+      "textures": "textures/block/golden_curtain_top_open"
+    },
+    "golden_curtain_top_right": {
+      "textures": "textures/block/golden_curtain_top_right"
+    },
+    "golden_curtain_top_right_open": {
+      "textures": "textures/block/golden_curtain_top_right_open"
+    },
+    "green_agate_curtain_bottom": {
+      "textures": "textures/block/green_agate_curtain_bottom"
+    },
+    "green_agate_curtain_bottom_left": {
+      "textures": "textures/block/green_agate_curtain_bottom_left"
+    },
+    "green_agate_curtain_bottom_left_open": {
+      "textures": "textures/block/green_agate_curtain_bottom_left_open"
+    },
+    "green_agate_curtain_bottom_open": {
+      "textures": "textures/block/green_agate_curtain_bottom_open"
+    },
+    "green_agate_curtain_bottom_right": {
+      "textures": "textures/block/green_agate_curtain_bottom_right"
+    },
+    "green_agate_curtain_bottom_right_open": {
+      "textures": "textures/block/green_agate_curtain_bottom_right_open"
+    },
+    "green_agate_curtain_top": {
+      "textures": "textures/block/green_agate_curtain_top"
+    },
+    "green_agate_curtain_top_left": {
+      "textures": "textures/block/green_agate_curtain_top_left"
+    },
+    "green_agate_curtain_top_left_open": {
+      "textures": "textures/block/green_agate_curtain_top_left_open"
+    },
+    "green_agate_curtain_top_open": {
+      "textures": "textures/block/green_agate_curtain_top_open"
+    },
+    "green_agate_curtain_top_right": {
+      "textures": "textures/block/green_agate_curtain_top_right"
+    },
+    "green_agate_curtain_top_right_open": {
+      "textures": "textures/block/green_agate_curtain_top_right_open"
+    },
+    "pink_agate_curtain_bottom": {
+      "textures": "textures/block/pink_agate_curtain_bottom"
+    },
+    "pink_agate_curtain_bottom_left": {
+      "textures": "textures/block/pink_agate_curtain_bottom_left"
+    },
+    "pink_agate_curtain_bottom_left_open": {
+      "textures": "textures/block/pink_agate_curtain_bottom_left_open"
+    },
+    "pink_agate_curtain_bottom_open": {
+      "textures": "textures/block/pink_agate_curtain_bottom_open"
+    },
+    "pink_agate_curtain_bottom_right": {
+      "textures": "textures/block/pink_agate_curtain_bottom_right"
+    },
+    "pink_agate_curtain_bottom_right_open": {
+      "textures": "textures/block/pink_agate_curtain_bottom_right_open"
+    },
+    "pink_agate_curtain_top": {
+      "textures": "textures/block/pink_agate_curtain_top"
+    },
+    "pink_agate_curtain_top_left": {
+      "textures": "textures/block/pink_agate_curtain_top_left"
+    },
+    "pink_agate_curtain_top_left_open": {
+      "textures": "textures/block/pink_agate_curtain_top_left_open"
+    },
+    "pink_agate_curtain_top_open": {
+      "textures": "textures/block/pink_agate_curtain_top_open"
+    },
+    "pink_agate_curtain_top_right": {
+      "textures": "textures/block/pink_agate_curtain_top_right"
+    },
+    "pink_agate_curtain_top_right_open": {
+      "textures": "textures/block/pink_agate_curtain_top_right_open"
+    },
+    "purple_agate_curtain_bottom": {
+      "textures": "textures/block/purple_agate_curtain_bottom"
+    },
+    "purple_agate_curtain_bottom_left": {
+      "textures": "textures/block/purple_agate_curtain_bottom_left"
+    },
+    "purple_agate_curtain_bottom_left_open": {
+      "textures": "textures/block/purple_agate_curtain_bottom_left_open"
+    },
+    "purple_agate_curtain_bottom_open": {
+      "textures": "textures/block/purple_agate_curtain_bottom_open"
+    },
+    "purple_agate_curtain_bottom_right": {
+      "textures": "textures/block/purple_agate_curtain_bottom_right"
+    },
+    "purple_agate_curtain_bottom_right_open": {
+      "textures": "textures/block/purple_agate_curtain_bottom_right_open"
+    },
+    "purple_agate_curtain_top": {
+      "textures": "textures/block/purple_agate_curtain_top"
+    },
+    "purple_agate_curtain_top_left": {
+      "textures": "textures/block/purple_agate_curtain_top_left"
+    },
+    "purple_agate_curtain_top_left_open": {
+      "textures": "textures/block/purple_agate_curtain_top_left_open"
+    },
+    "purple_agate_curtain_top_open": {
+      "textures": "textures/block/purple_agate_curtain_top_open"
+    },
+    "purple_agate_curtain_top_right": {
+      "textures": "textures/block/purple_agate_curtain_top_right"
+    },
+    "purple_agate_curtain_top_right_open": {
+      "textures": "textures/block/purple_agate_curtain_top_right_open"
     }
   }
 }

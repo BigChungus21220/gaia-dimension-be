@@ -1,0 +1,191 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaiadimension:fossilized_fence_gate",
+      "menu_category": {
+        "category": "construction",
+        "group": "itemGroup.name.fenceGate"
+      },
+      "states": {
+        "gaiadimension:open": [
+          false,
+          true
+        ],
+        "gaiadimension:inverse": [
+          false,
+          true
+        ]
+      },
+      "traits": {
+        "minecraft:placement_direction": {
+          "enabled_states": [
+            "minecraft:cardinal_direction"
+          ],
+          "y_rotation_offset": 180
+        }
+      }
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('gaiadimension:open') == true",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -1
+            ],
+            "size": [
+              16,
+              16,
+              2
+            ]
+          },
+          "minecraft:collision_box": false
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'north'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'west'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              90,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'south'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              180,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'east'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              -90,
+              0
+            ]
+          }
+        }
+      }
+    ],
+    "components": {
+      "minecraft:item_visual": {
+        "geometry": "geometry.cc_wild.fence_gate_icon",
+        "material_instances": {
+          "*": {
+            "texture": "fossilized_planks",
+            "render_method": "alpha_test"
+          }
+        }
+      },
+      "minecraft:display_name": "Alder Fence Gate",
+      "minecraft:geometry": {
+        "identifier": "geometry.cc_wild.fence_gate",
+        "bone_visibility": {
+          "fence_gate_closed": "q.block_state('gaiadimension:open') == false",
+          "fence_gate_open": "q.block_state('gaiadimension:open') == true && q.block_state('gaiadimension:inverse') == false",
+          "fence_gate_open_inverted": "q.block_state('gaiadimension:open') == true && q.block_state('gaiadimension:inverse') == true"
+        }
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "fossilized_planks",
+          "render_method": "alpha_test"
+        }
+      },
+      "minecraft:custom_components": [
+        "gaiadimension:fence"
+      ],
+      "minecraft:tick": {
+        "interval_range": [
+          1,
+          1
+        ],
+        "looping": true
+      },
+      "minecraft:selection_box": {
+        "origin": [
+          -8,
+          0,
+          -1
+        ],
+        "size": [
+          16,
+          16,
+          2
+        ]
+      },
+      "minecraft:collision_box": {
+        "origin": [
+          -8,
+          0,
+          -1
+        ],
+        "size": [
+          16,
+          16,
+          2
+        ]
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 3,
+        "item_specific_speeds": [
+          {
+            "item": "minecraft:wooden_axe",
+            "destroy_speed": 1.5
+          },
+          {
+            "item": "minecraft:stone_axe",
+            "destroy_speed": 0.75
+          },
+          {
+            "item": "minecraft:iron_axe",
+            "destroy_speed": 0.5
+          },
+          {
+            "item": "minecraft:diamond_axe",
+            "destroy_speed": 0.4
+          },
+          {
+            "item": "minecraft:netherite_axe",
+            "destroy_speed": 0.35
+          },
+          {
+            "item": "minecraft:golden_axe",
+            "destroy_speed": 0.25
+          }
+        ]
+      },
+      "minecraft:flammable": {
+        "destroy_chance_modifier": 50,
+        "catch_chance_modifier": 10
+      }
+    }
+  }
+}

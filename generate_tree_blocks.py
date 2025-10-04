@@ -7,7 +7,11 @@ WOOD_TYPES = [
     "fire_agate",
     "green_agate",
     "pink_agate",
-    "purple_agate"
+    "purple_agate",
+    "aura",
+    "corrupted",
+    "fossilized",
+    "golden"
 ]
 BEHAVIOR_PACK_ROOT = os.path.abspath("C:/Users/ADMIN/OneDrive/Documents/GitHub/gaia-dimension-be/GaiaDimensions_BP")
 TEMPLATE_DIR = os.path.join(BEHAVIOR_PACK_ROOT, "blocks", "template")
