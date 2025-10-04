@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:leucite_block",
+          "name": "gaiadimension:leucite_block",
           "functions": [
             {
               "function": "set_count",

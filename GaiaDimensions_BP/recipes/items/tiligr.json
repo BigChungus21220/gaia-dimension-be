@@ -9,14 +9,14 @@
     ],
     "ingredients": [
       {
-        "item": "gaia:roofed_agaric"
+        "item": "gaiadimension:roofed_agaric"
       },
       {
-        "item": "gaia:thiscus"
+        "item": "gaiadimension:thiscus"
       }
     ],
     "result": {
-      "item": "gaia:tiligr"
+      "item": "gaiadimension:tiligr"
     }
   }
 }

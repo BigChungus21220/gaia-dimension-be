@@ -10,7 +10,7 @@
       "campfire",
       "soul_campfire"
     ],
-    "input": "gaia:luggeroth_chop",
-    "output": "gaia:cooked_luggeroth_chop"
+    "input": "gaiadimension:luggeroth_chop",
+    "output": "gaiadimension:cooked_luggeroth_chop"
   }
 }

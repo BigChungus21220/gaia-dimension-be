@@ -2,7 +2,7 @@
   "format_version": "1.10",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:pink_essence",
+      "identifier": "gaiadimension:pink_essence",
       "category": "Items"
     },
     "components": {

@@ -9,11 +9,11 @@
     ],
     "ingredients": [
       {
-        "item": "gaia:pink_geode"
+        "item": "gaiadimension:pink_geode"
       }
     ],
     "result": {
-      "item": "gaia:pink_geode_slice",
+      "item": "gaiadimension:pink_geode_slice",
       "count": 4
     }
   }

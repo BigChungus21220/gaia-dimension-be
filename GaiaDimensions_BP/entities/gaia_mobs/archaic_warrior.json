@@ -2,12 +2,11 @@
   "format_version": "1.16.0",
   "minecraft:entity": {
     "description": {
-      "identifier": "gaia:archaic_warrior",
+      "identifier": "gaiadimension:archaic_warrior",
       "is_spawnable": true,
       "is_summonable": true,
       "is_experimental": false
     },
-
     "components": {
       "minecraft:is_hidden_when_invisible": {},
       "minecraft:experience_reward": {
@@ -135,7 +134,13 @@
         "priority": 8
       },
       "minecraft:type_family": {
-        "family": ["wither", "monster", "undead", "skeleton", "mob"]
+        "family": [
+          "wither",
+          "monster",
+          "undead",
+          "skeleton",
+          "mob"
+        ]
       },
       "minecraft:physics": {},
       "minecraft:pushable": {
@@ -144,7 +149,6 @@
       },
       "minecraft:conditional_bandwidth_optimization": {}
     },
-
     "events": {
       "minecraft:entity_spawned": {}
     }

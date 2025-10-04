@@ -1,0 +1,31 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaiadimension:static_stone",
+      "menu_category": {
+        "category": "nature",
+        "group": "itemGroup.name.stone"
+      }
+    },
+    "components": {
+      "tag:ore": {},
+      "tag:stone": {},
+      "minecraft:loot": "loot_tables/blocks/stones/static_stone.json",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 1
+      },
+      "minecraft:light_emission": 8,
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "static_stone",
+          "render_method": "opaque",
+          "minecraft:map_color": "#ffffff"
+        }
+      }
+    }
+  }
+}

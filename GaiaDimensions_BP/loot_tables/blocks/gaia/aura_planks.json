@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:aura_planks",
+          "name": "gaiadimension:aura_planks",
           "functions": [
             {
               "function": "set_count",

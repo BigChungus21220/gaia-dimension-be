@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:spinel_princess_boots",
+      "identifier": "gaiadimension:spinel_princess_boots",
       "category": "Equipment"
     },
     "components": {
@@ -33,7 +33,7 @@
         "repair_items": [
           {
             "items": [
-              "gaia:spinel_princess_boots"
+              "gaiadimension:spinel_princess_boots"
             ],
             "repair_amount": 1280
           }

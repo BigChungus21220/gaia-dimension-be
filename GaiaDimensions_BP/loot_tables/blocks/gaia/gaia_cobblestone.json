@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:gaia_cobblestone",
+          "name": "gaiadimension:gaia_cobblestone",
           "functions": [
             {
               "function": "set_count",

@@ -13,12 +13,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:raw_jade",
+        "item": "gaiadimension:raw_jade",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:jade_bricks",
+      "item": "gaiadimension:jade_bricks",
       "count": 4
     }
   }

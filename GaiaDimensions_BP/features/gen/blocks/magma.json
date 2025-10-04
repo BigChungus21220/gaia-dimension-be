@@ -1,16 +1,14 @@
 {
-	"format_version": "1.20.20",
-
-	"minecraft:single_block_feature": {
-		"description": {
-			"identifier": "gaia:gen/blocks/magma"
-		},
-
-		"places_block": "gaia:superhot_magma",
-
-		"enforce_placement_rules": false,
-		"enforce_survivability_rules": false,
-		"may_replace": ["minecraft:air"]
-	}
-
+  "format_version": "1.20.20",
+  "minecraft:single_block_feature": {
+    "description": {
+      "identifier": "gaiadimension:gen/blocks/magma"
+    },
+    "places_block": "gaiadimension:superhot_magma",
+    "enforce_placement_rules": false,
+    "enforce_survivability_rules": false,
+    "may_replace": [
+      "minecraft:air"
+    ]
+  }
 }

@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:cinnabar_ore",
+          "name": "gaiadimension:cinnabar_ore",
           "functions": [
             {
               "function": "set_count",

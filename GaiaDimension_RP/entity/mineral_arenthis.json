@@ -2,7 +2,7 @@
   "format_version": "1.10.0",
   "minecraft:client_entity": {
     "description": {
-      "identifier": "gaia:mineral_arenthis",
+      "identifier": "gaiadimension:mineral_arenthis",
       "materials": { "default": "iron_golem" },
       "textures": {
         "default": "textures/entity/mineral_arenthis"

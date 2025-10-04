@@ -2,7 +2,7 @@
   "format_version": "1.10.0",
   "minecraft:client_entity": {
     "description": {
-      "identifier": "gaia:malachite_guard",
+      "identifier": "gaiadimension:malachite_guard",
       "materials": { "default": "iron_golem","armor": "wither_boss_armor" },
       "textures": {
         "default": "textures/entity/malachite_guard",

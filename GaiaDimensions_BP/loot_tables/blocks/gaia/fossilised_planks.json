@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:fossilsed_planks",
+          "name": "gaiadimension:fossilsed_planks",
           "functions": [
             {
               "function": "set_count",

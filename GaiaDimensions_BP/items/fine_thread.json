@@ -1,16 +1,16 @@
 {
-	"format_version": "1.20.50",
-	"minecraft:item": {
-		"description": {
-			"identifier": "gaia:fine_thread",
-			"menu_category": {
-				"category": "Items"
-			}
-		},
-		"components": {
-			"minecraft:icon": {
-				"texture": "fine_thread"
-			}
-		}
-	}
+  "format_version": "1.20.50",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaiadimension:fine_thread",
+      "menu_category": {
+        "category": "Items"
+      }
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "fine_thread"
+      }
+    }
+  }
 }

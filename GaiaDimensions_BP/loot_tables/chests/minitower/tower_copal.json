@@ -21,7 +21,7 @@
               }
             }
           ],
-          "name": "gaia:pink_geode_slice"
+          "name": "gaiadimension:pink_geode_slice"
         },
         {
           "type": "minecraft:item",
@@ -36,7 +36,7 @@
               }
             }
           ],
-          "name": "gaia:pyrite"
+          "name": "gaiadimension:pyrite"
         },
         {
           "type": "minecraft:item",
@@ -51,12 +51,12 @@
               }
             }
           ],
-          "name": "gaia:scaynyx_ingot"
+          "name": "gaiadimension:scaynyx_ingot"
         },
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "gaia:sugilite_axe"
+          "name": "gaiadimension:sugilite_axe"
         },
         {
           "type": "minecraft:item",
@@ -71,7 +71,7 @@
               }
             }
           ],
-          "name": "gaia:leucite"
+          "name": "gaiadimension:leucite"
         },
         {
           "type": "minecraft:item",
@@ -86,12 +86,12 @@
               }
             }
           ],
-          "name": "gaia:copal_brick"
+          "name": "gaiadimension:copal_brick"
         },
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "gaia:old_bow"
+          "name": "gaiadimension:old_bow"
         },
         {
           "type": "minecraft:item",
@@ -106,7 +106,7 @@
               }
             }
           ],
-          "name": "gaia:agate_arrow"
+          "name": "gaiadimension:agate_arrow"
         }
       ]
     },
@@ -115,7 +115,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "gaia:white_opal"
+          "name": "gaiadimension:white_opal"
         }
       ]
     }

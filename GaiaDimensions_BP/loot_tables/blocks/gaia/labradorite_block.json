@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:labradorite_block",
+          "name": "gaiadimension:labradorite_block",
           "functions": [
             {
               "function": "set_count",

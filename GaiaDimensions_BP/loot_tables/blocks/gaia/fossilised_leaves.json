@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:fossilized_leaves",
+          "name": "gaiadimension:fossilized_leaves",
           "functions": [
             {
               "function": "set_count",

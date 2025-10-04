@@ -12,12 +12,12 @@
     ],
     "key": {
       "B": {
-        "item": "gaia:benitoite_block",
+        "item": "gaiadimension:benitoite_block",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:benitoite",
+      "item": "gaiadimension:benitoite",
       "count": 9
     }
   }

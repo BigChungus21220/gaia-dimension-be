@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:sugilite_ore",
+          "name": "gaiadimension:sugilite_ore",
           "functions": [
             {
               "function": "set_count",

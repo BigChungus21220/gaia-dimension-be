@@ -1,16 +1,16 @@
 {
-	"format_version": "1.20.50",
-	"minecraft:item": {
-		"description": {
-			"identifier": "gaia:crystal_shard",
-			"menu_category": {
-				"category": "Items"
-			}
-		},
-		"components": {
-			"minecraft:icon": {
-				"texture": "crystal_shard"
-			}
-		}
-	}
+  "format_version": "1.20.50",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaiadimension:crystal_shard",
+      "menu_category": {
+        "category": "Items"
+      }
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "crystal_shard"
+      }
+    }
+  }
 }

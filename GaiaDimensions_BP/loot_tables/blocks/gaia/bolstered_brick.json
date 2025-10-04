@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:bolstered_brick",
+          "name": "gaiadimension:bolstered_brick",
           "functions": [
             {
               "function": "set_count",

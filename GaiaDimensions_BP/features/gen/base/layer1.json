@@ -1,26 +1,26 @@
 {
-    "format_version": "1.20.20",
-    "minecraft:aggregate_feature": {
-        "description": {
-            "identifier": "gaia:gen/base/layer1"
-        },
-        "features": [
-            "gaia:conditions/condition_2718315850",
-            "gaia:conditions/condition_7051034994",
-            "gaia:conditions/condition_1734596463",
-            "gaia:conditions/condition_7068653192",
-            "gaia:conditions/condition_5926997601",
-            "gaia:conditions/condition_4724898847",
-            "gaia:conditions/condition_8943006311",
-            "gaia:conditions/condition_5224893885",
-            "gaia:conditions/condition_4730238246",
-            "gaia:conditions/condition_4821538671",
-            "gaia:conditions/condition_7992249715",
-            "gaia:conditions/condition_7556536803",
-            "gaia:conditions/condition_7366164315",
-            "gaia:conditions/condition_8159690931",
-            "gaia:conditions/condition_2040768119"
-        ],
-        "early_out": "first_success"
-    }
+  "format_version": "1.20.20",
+  "minecraft:aggregate_feature": {
+    "description": {
+      "identifier": "gaiadimension:gen/base/layer1"
+    },
+    "features": [
+      "gaiadimension:conditions/condition_2718315850",
+      "gaiadimension:conditions/condition_7051034994",
+      "gaiadimension:conditions/condition_1734596463",
+      "gaiadimension:conditions/condition_7068653192",
+      "gaiadimension:conditions/condition_5926997601",
+      "gaiadimension:conditions/condition_4724898847",
+      "gaiadimension:conditions/condition_8943006311",
+      "gaiadimension:conditions/condition_5224893885",
+      "gaiadimension:conditions/condition_4730238246",
+      "gaiadimension:conditions/condition_4821538671",
+      "gaiadimension:conditions/condition_7992249715",
+      "gaiadimension:conditions/condition_7556536803",
+      "gaiadimension:conditions/condition_7366164315",
+      "gaiadimension:conditions/condition_8159690931",
+      "gaiadimension:conditions/condition_2040768119"
+    ],
+    "early_out": "first_success"
+  }
 }

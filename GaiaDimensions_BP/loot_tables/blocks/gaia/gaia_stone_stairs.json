@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:gaia_stone_stair",
+          "name": "gaiadimension:gaia_stone_stair",
           "functions": [
             {
               "function": "set_count",

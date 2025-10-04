@@ -14,12 +14,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:brick1",
+        "item": "gaiadimension:brick1",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:brick1_stairs",
+      "item": "gaiadimension:brick1_stairs",
       "count": 8
     }
   }

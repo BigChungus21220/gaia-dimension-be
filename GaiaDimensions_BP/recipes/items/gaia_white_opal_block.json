@@ -12,12 +12,14 @@
       "AAA",
       "AAA"
     ],
-    "key": { "A": {
-      "item": "gaia:white_opal",
-      "data": 0
-    }},
+    "key": {
+      "A": {
+        "item": "gaiadimension:white_opal",
+        "data": 0
+      }
+    },
     "result": {
-      "item": "gaia:white_opal_block",
+      "item": "gaiadimension:white_opal_block",
       "count": 1
     }
   }

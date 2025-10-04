@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:impure_sludge",
+          "name": "gaiadimension:impure_sludge",
           "functions": [
             {
               "function": "set_count",

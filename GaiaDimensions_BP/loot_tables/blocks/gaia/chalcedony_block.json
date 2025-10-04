@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:chalcedony_block",
+          "name": "gaiadimension:chalcedony_block",
           "functions": [
             {
               "function": "set_count",

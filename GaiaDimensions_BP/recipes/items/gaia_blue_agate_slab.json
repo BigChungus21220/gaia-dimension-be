@@ -12,12 +12,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:blue_agate_slab",
+        "item": "gaiadimension:blue_agate_slab",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:blue_agate_slab",
+      "item": "gaiadimension:blue_agate_slab",
       "count": 6
     }
   }

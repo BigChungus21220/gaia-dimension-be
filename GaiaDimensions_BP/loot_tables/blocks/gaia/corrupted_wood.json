@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:corrupted_wood",
+          "name": "gaiadimension:corrupted_wood",
           "functions": [
             {
               "function": "set_count",

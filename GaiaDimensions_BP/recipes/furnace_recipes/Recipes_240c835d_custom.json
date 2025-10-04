@@ -13,12 +13,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:green_agate_planks",
+        "item": "gaiadimension:green_agate_planks",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:agate_crafting_table",
+      "item": "gaiadimension:agate_crafting_table",
       "count": 1
     }
   }

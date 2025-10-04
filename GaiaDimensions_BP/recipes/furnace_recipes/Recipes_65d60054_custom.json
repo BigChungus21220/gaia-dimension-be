@@ -12,12 +12,12 @@
     ],
     "key": {
       "B": {
-        "item": "gaia:cinnabar_block",
+        "item": "gaiadimension:cinnabar_block",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:cinnabar",
+      "item": "gaiadimension:cinnabar",
       "count": 9
     }
   }

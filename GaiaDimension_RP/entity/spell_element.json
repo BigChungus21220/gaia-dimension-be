@@ -2,7 +2,7 @@
   "format_version": "1.8.0",
   "minecraft:client_entity": {
     "description": {
-      "identifier": "gaia:spell_element",
+      "identifier": "gaiadimension:spell_element",
       "materials": { "default": "skeleton" },
       "textures": {
         "default": "textures/entity/spell_element"

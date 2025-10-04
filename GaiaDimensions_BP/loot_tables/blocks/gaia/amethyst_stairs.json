@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:amethyst_stair",
+          "name": "gaiadimension:amethyst_stair",
           "functions": [
             {
               "function": "set_count",

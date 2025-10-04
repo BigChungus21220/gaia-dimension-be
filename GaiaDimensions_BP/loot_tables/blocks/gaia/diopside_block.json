@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:diopside_block",
+          "name": "gaiadimension:diopside_block",
           "functions": [
             {
               "function": "set_count",

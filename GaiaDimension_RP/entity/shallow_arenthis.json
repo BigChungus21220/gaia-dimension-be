@@ -2,7 +2,7 @@
   "format_version": "1.10.0",
   "minecraft:client_entity": {
     "description": {
-      "identifier": "gaia:shallow_arenthis",
+      "identifier": "gaiadimension:shallow_arenthis",
       "materials": { "default": "iron_golem" },
       "textures": {
         "default": "textures/entity/shallow_arenthis"

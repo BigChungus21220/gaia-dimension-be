@@ -3,7 +3,7 @@
   "minecraft:item": {
     "description": {
       "category": "equipment",
-      "identifier": "gaia:gaia_champion_sword"
+      "identifier": "gaiadimension:gaia_champion_sword"
     },
     "components": {
       "minecraft:icon": {
@@ -27,7 +27,7 @@
         "repair_items": [
           {
             "items": [
-              "gaia:gaia_champion_sword"
+              "gaiadimension:gaia_champion_sword"
             ],
             "repair_amount": "context.other->query.remaining_durability + 0.2 * context.other->query.max_durability"
           }

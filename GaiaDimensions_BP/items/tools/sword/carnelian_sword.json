@@ -3,7 +3,7 @@
   "minecraft:item": {
     "description": {
       "category": "equipment",
-      "identifier": "gaia:carnelian_sword"
+      "identifier": "gaiadimension:carnelian_sword"
     },
     "components": {
       "minecraft:icon": {
@@ -27,8 +27,8 @@
         "repair_items": [
           {
             "items": [
-              "gaia:carnelian",
-              "gaia:carnelian_sword"
+              "gaiadimension:carnelian",
+              "gaiadimension:carnelian_sword"
             ],
             "repair_amount": "context.other->query.remaining_durability + 0.2 * context.other->query.max_durability"
           }

@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:striped_pink_agate_wood",
+          "name": "gaiadimension:striped_pink_agate_wood",
           "functions": [
             {
               "function": "set_count",

@@ -2,7 +2,7 @@
     "format_version": "1.16.100",
     "minecraft:fog_settings": {
       "description": {
-        "identifier": "gaia:shining_grove_fog"
+        "identifier": "gaiadimension:shining_grove_fog"
       },
       "distance": {
         "air": {

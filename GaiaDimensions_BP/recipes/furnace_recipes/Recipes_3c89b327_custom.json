@@ -5,11 +5,11 @@
       "furnace"
     ],
     "output": {
-      "item": "gaia:gaia_stone",
+      "item": "gaiadimension:gaia_stone",
       "data": 0
     },
     "input": {
-      "item": "gaia:gaia_cobblestone_stair",
+      "item": "gaiadimension:gaia_cobblestone_stair",
       "data": 0
     },
     "description": {

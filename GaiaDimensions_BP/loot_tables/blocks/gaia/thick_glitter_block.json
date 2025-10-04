@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:thick_glitter_block",
+          "name": "gaiadimension:thick_glitter_block",
           "functions": [
             {
               "function": "set_count",

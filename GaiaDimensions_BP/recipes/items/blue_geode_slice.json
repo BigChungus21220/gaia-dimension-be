@@ -9,11 +9,11 @@
     ],
     "ingredients": [
       {
-        "item": "gaia:blue_geode"
+        "item": "gaiadimension:blue_geode"
       }
     ],
     "result": {
-      "item": "gaia:blue_geode_slice",
+      "item": "gaiadimension:blue_geode_slice",
       "count": 4
     }
   }

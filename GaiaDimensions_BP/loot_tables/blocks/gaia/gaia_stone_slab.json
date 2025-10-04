@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:gaia_stone_slab",
+          "name": "gaiadimension:gaia_stone_slab",
           "functions": [
             {
               "function": "set_count",

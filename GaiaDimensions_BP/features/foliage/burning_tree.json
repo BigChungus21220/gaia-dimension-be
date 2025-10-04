@@ -2,16 +2,18 @@
   "format_version": "1.20.20",
   "minecraft:tree_feature": {
     "description": {
-      "identifier": "gaia:foliage/burning_tree"
+      "identifier": "gaiadimension:foliage/burning_tree"
     },
     "acacia_trunk": {
       "trunk_width": 1,
       "trunk_height": {
         "base": 3,
-        "intervals": [ 2 ],
+        "intervals": [
+          2
+        ],
         "min_height_for_canopy": 3
       },
-      "trunk_block": "gaia:burning_log",
+      "trunk_block": "gaiadimension:burning_log",
       "trunk_lean": {
         "allow_diagonal_growth": true,
         "lean_height": {
@@ -33,47 +35,50 @@
       "canopy_radius": 3,
       "leaf_placement_attempts": 50,
       "leaf_blocks": [
-        ["gaia:burning_leaves", 3]
+        [
+          "gaiadimension:burning_leaves",
+          3
+        ]
       ]
     },
     "base_block": [
-      "gaia:cinder"
+      "gaiadimension:cinder"
     ],
     "may_grow_on": [
-      "gaia:charred_grass"
+      "gaiadimension:charred_grass"
     ],
     "may_replace": [
       "minecraft:air",
-      "gaia:aura_leaves",
-      "gaia:burning_leaves",
-      "gaia:burned_leaves",
-      "gaia:corrupted_leaves",
-      "gaia:fossilized_leaves",
-      "gaia:green_agate_leaves",
-      "gaia:blue_agate_leaves",
-      "gaia:pink_agate_leaves",
-      "gaia:purple_agate_leaves"
+      "gaiadimension:aura_leaves",
+      "gaiadimension:burning_leaves",
+      "gaiadimension:burned_leaves",
+      "gaiadimension:corrupted_leaves",
+      "gaiadimension:fossilized_leaves",
+      "gaiadimension:green_agate_leaves",
+      "gaiadimension:blue_agate_leaves",
+      "gaiadimension:pink_agate_leaves",
+      "gaiadimension:purple_agate_leaves"
     ],
     "may_grow_through": [
-      "gaia:orange_glitter_grass",
-      "gaia:blue_glitter_grass",
-      "gaia:green_glitter_grass",
-      "gaia:charred_grass",
-      "gaia:pale_green_glitter_grass",
-      "gaia:purple_glitter_grass",
-      "gaia:orange_glitter_grass",
-      "gaia:soft_grass",
-      "gaia:murky_grass",
-      "gaia:corrupt_grass",
-      "gaia:pink_glitter_grass",
-      "gaia:peach_glitter_grass",
-      "gaia:orange_glitter_grass",
-      "gaia:light_soil",
-      "gaia:heavy_soil",
-      "gaia:cinder",
-      "gaia:corrupt_soil",
-      "gaia:boggy_soil",
-      "gaia:light_soil"
+      "gaiadimension:orange_glitter_grass",
+      "gaiadimension:blue_glitter_grass",
+      "gaiadimension:green_glitter_grass",
+      "gaiadimension:charred_grass",
+      "gaiadimension:pale_green_glitter_grass",
+      "gaiadimension:purple_glitter_grass",
+      "gaiadimension:orange_glitter_grass",
+      "gaiadimension:soft_grass",
+      "gaiadimension:murky_grass",
+      "gaiadimension:corrupt_grass",
+      "gaiadimension:pink_glitter_grass",
+      "gaiadimension:peach_glitter_grass",
+      "gaiadimension:orange_glitter_grass",
+      "gaiadimension:light_soil",
+      "gaiadimension:heavy_soil",
+      "gaiadimension:cinder",
+      "gaiadimension:corrupt_soil",
+      "gaiadimension:boggy_soil",
+      "gaiadimension:light_soil"
     ]
   }
 }

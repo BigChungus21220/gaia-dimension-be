@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:agate_crafting_table",
+          "name": "gaiadimension:agate_crafting_table",
           "functions": [
             {
               "function": "set_count",

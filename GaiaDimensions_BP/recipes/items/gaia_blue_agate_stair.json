@@ -14,12 +14,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:blue_agate_planks",
+        "item": "gaiadimension:blue_agate_planks",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:blue_agate_stair",
+      "item": "gaiadimension:blue_agate_stair",
       "count": 8
     }
   }

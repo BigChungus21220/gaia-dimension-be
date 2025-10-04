@@ -12,12 +12,12 @@
     ],
     "key": {
       "B": {
-        "item": "gaia:purple_agate_log",
+        "item": "gaiadimension:purple_agate_log",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:purple_agate_planks",
+      "item": "gaiadimension:purple_agate_planks",
       "count": 4
     }
   }

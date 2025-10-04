@@ -2,7 +2,7 @@
   "format_version": "1.10",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:agate_fabric",
+      "identifier": "gaiadimension:agate_fabric",
       "category": "Items"
     },
     "components": {

@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:tektite_block",
+          "name": "gaiadimension:tektite_block",
           "functions": [
             {
               "function": "set_count",

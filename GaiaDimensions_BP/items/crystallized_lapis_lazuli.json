@@ -1,16 +1,16 @@
 {
-	"format_version": "1.20.50",
-	"minecraft:item": {
-		"description": {
-			"identifier": "gaia:crystallized_lapis_lazuli",
-			"menu_category": {
-				"category": "Items"
-			}
-		},
-		"components": {
-			"minecraft:icon": {
-				"texture": "crystallized_lapis_lazuli"
-			}
-		}
-	}
+  "format_version": "1.20.50",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaiadimension:crystallized_lapis_lazuli",
+      "menu_category": {
+        "category": "Items"
+      }
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "crystallized_lapis_lazuli"
+      }
+    }
+  }
 }

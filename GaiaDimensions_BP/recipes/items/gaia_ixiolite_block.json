@@ -12,12 +12,14 @@
       "AAA",
       "AAA"
     ],
-    "key": {"A": {
-      "item": "gaia:ixiolite",
-      "data": 0
-    }},
+    "key": {
+      "A": {
+        "item": "gaiadimension:ixiolite",
+        "data": 0
+      }
+    },
     "result": {
-      "item": "gaia:ixiolite_block",
+      "item": "gaiadimension:ixiolite_block",
       "count": 1
     }
   }

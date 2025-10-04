@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:liquid_bismuth_bucket",
+      "identifier": "gaiadimension:liquid_bismuth_bucket",
       "category": "items"
     },
     "components": {
@@ -14,7 +14,7 @@
       },
       "minecraft:max_stack_size": 1,
       "minecraft:block_placer": {
-        "block": "gaia:liquid_bismuth"
+        "block": "gaiadimension:liquid_bismuth"
       }
     }
   }

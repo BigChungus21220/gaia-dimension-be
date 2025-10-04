@@ -1,15 +1,17 @@
 {
-	"format_version": "1.20.20",
-	"minecraft:ore_feature": {
-		"description": {
-			"identifier": "gaia:gen/caves/primal_mass_feature"
-		},
-		"count": 30,
-		"replace_rules": [
-			{
-				"places_block": "gaia:primal_mass",
-				"may_replace": ["gaia:gaia_stone"]
-			}
-		]
-	}
+  "format_version": "1.20.20",
+  "minecraft:ore_feature": {
+    "description": {
+      "identifier": "gaiadimension:gen/caves/primal_mass_feature"
+    },
+    "count": 30,
+    "replace_rules": [
+      {
+        "places_block": "gaiadimension:primal_mass",
+        "may_replace": [
+          "gaiadimension:gaia_stone"
+        ]
+      }
+    ]
+  }
 }

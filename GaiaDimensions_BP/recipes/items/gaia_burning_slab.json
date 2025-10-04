@@ -12,12 +12,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:burning_slab",
+        "item": "gaiadimension:burning_slab",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:burning_slab",
+      "item": "gaiadimension:burning_slab",
       "count": 6
     }
   }

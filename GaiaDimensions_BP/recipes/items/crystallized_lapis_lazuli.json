@@ -12,6 +12,6 @@
       "item": "minecraft:dye",
       "data": 4
     },
-    "output": "gaia:crystallized_lapis_lazuli"
+    "output": "gaiadimension:crystallized_lapis_lazuli"
   }
 }

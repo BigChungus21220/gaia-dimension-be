@@ -12,12 +12,14 @@
       "AAA",
       "AAA"
     ],
-    "key": {"A": {
-      "item": "gaia:proustite",
-      "data": 0
-    }},
+    "key": {
+      "A": {
+        "item": "gaiadimension:proustite",
+        "data": 0
+      }
+    },
     "result": {
-      "item": "gaia:proustite_block",
+      "item": "gaiadimension:proustite_block",
       "count": 1
     }
   }

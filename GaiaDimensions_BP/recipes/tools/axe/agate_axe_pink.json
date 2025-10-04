@@ -14,14 +14,14 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:pink_agate_planks"
+        "item": "gaiadimension:pink_agate_planks"
       },
       "B": {
-        "item": "gaia:agate_stick"
+        "item": "gaiadimension:agate_stick"
       }
     },
     "result": {
-      "item": "gaia:agate_axe"
+      "item": "gaiadimension:agate_axe"
     }
   }
 }

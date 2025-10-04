@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:gaia_cobblestone_slab",
+          "name": "gaiadimension:gaia_cobblestone_slab",
           "functions": [
             {
               "function": "set_count",

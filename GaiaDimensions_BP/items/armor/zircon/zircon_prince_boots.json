@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:zircon_prince_boots",
+      "identifier": "gaiadimension:zircon_prince_boots",
       "category": "Equipment"
     },
     "components": {
@@ -33,7 +33,7 @@
         "repair_items": [
           {
             "items": [
-              "gaia:zircon_prince_boots"
+              "gaiadimension:zircon_prince_boots"
             ],
             "repair_amount": 1534
           }

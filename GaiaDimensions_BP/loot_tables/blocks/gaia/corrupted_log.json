@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:corrupted_log",
+          "name": "gaiadimension:corrupted_log",
           "functions": [
             {
               "function": "set_count",

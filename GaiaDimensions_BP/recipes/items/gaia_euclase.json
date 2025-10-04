@@ -12,12 +12,12 @@
     ],
     "key": {
       "B": {
-        "item": "gaia:euclase_block",
+        "item": "gaiadimension:euclase_block",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:euclase",
+      "item": "gaiadimension:euclase",
       "count": 9
     }
   }

@@ -1,49 +1,49 @@
 import { system, world } from "@minecraft/server";
 
 const fluids = [
-"gaia:liquid_bismuth",
-"gaia:liquid_bismuth_down",
-"gaia:liquid_bismuth1",
-"gaia:liquid_bismuth2",
-"gaia:liquid_bismuth3",
+"gaiadimension:liquid_bismuth",
+"gaiadimension:liquid_bismuth_down",
+"gaiadimension:liquid_bismuth1",
+"gaiadimension:liquid_bismuth2",
+"gaiadimension:liquid_bismuth3",
 
-"gaia:liquid_aura",
-"gaia:liquid_aura_down",
-"gaia:liquid_aura1",
-"gaia:liquid_aura2",
-"gaia:liquid_aura3",
+"gaiadimension:liquid_aura",
+"gaiadimension:liquid_aura_down",
+"gaiadimension:liquid_aura1",
+"gaiadimension:liquid_aura2",
+"gaiadimension:liquid_aura3",
 
-"gaia:mineral_water",
-"gaia:mineral_water_down",
-"gaia:mineral_water1",
-"gaia:mineral_water2",
-"gaia:mineral_water3",
+"gaiadimension:mineral_water",
+"gaiadimension:mineral_water_down",
+"gaiadimension:mineral_water1",
+"gaiadimension:mineral_water2",
+"gaiadimension:mineral_water3",
 
-"gaia:superhot_magma",
-"gaia:superhot_magma_down",
-"gaia:superhot_magma1",
-"gaia:superhot_magma2",
-"gaia:superhot_magma3",
+"gaiadimension:superhot_magma",
+"gaiadimension:superhot_magma_down",
+"gaiadimension:superhot_magma1",
+"gaiadimension:superhot_magma2",
+"gaiadimension:superhot_magma3",
 
-"gaia:sweet_muck",
-"gaia:sweet_muck_down",
-"gaia:sweet_muck1",
-"gaia:sweet_muck2",
-"gaia:sweet_muck3"
+"gaiadimension:sweet_muck",
+"gaiadimension:sweet_muck_down",
+"gaiadimension:sweet_muck1",
+"gaiadimension:sweet_muck2",
+"gaiadimension:sweet_muck3"
 ]
 
 const hot_fluids = [
-    "gaia:superhot_magma",
-    "gaia:superhot_magma_down",
-    "gaia:superhot_magma1",
-    "gaia:superhot_magma2",
-    "gaia:superhot_magma3",
+    "gaiadimension:superhot_magma",
+    "gaiadimension:superhot_magma_down",
+    "gaiadimension:superhot_magma1",
+    "gaiadimension:superhot_magma2",
+    "gaiadimension:superhot_magma3",
 
-    "gaia:liquid_bismuth",
-    "gaia:liquid_bismuth_down",
-    "gaia:liquid_bismuth1",
-    "gaia:liquid_bismuth2",
-    "gaia:liquid_bismuth3",
+    "gaiadimension:liquid_bismuth",
+    "gaiadimension:liquid_bismuth_down",
+    "gaiadimension:liquid_bismuth1",
+    "gaiadimension:liquid_bismuth2",
+    "gaiadimension:liquid_bismuth3",
 ]
 
 system.runInterval(() => {

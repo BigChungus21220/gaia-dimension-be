@@ -9,14 +9,14 @@
     ],
     "ingredients": [
       {
-        "item": "gaia:bulbous_hobina"
+        "item": "gaiadimension:bulbous_hobina"
       },
       {
-        "item": "gaia:thiscus"
+        "item": "gaiadimension:thiscus"
       }
     ],
     "result": {
-      "item": "gaia:tilipu"
+      "item": "gaiadimension:tilipu"
     }
   }
 }

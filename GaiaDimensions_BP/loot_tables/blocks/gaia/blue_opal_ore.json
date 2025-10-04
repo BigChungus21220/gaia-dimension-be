@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:blue_opal_ore",
+          "name": "gaiadimension:blue_opal_ore",
           "functions": [
             {
               "function": "set_count",

@@ -5,11 +5,11 @@
       "furnace"
     ],
     "output": {
-      "item": "gaia:goldstone_residue",
+      "item": "gaiadimension:goldstone_residue",
       "data": 0
     },
     "input": {
-      "item": "gaia:goldstone_dust",
+      "item": "gaiadimension:goldstone_dust",
       "data": 0
     },
     "description": {

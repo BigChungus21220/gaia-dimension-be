@@ -1,16 +1,16 @@
 {
-	"format_version": "1.20.50",
-	"minecraft:item": {
-		"description": {
-			"identifier": "gaia:aura_cluster",
-			"menu_category": {
-				"category": "Items"
-			}
-		},
-		"components": {
-			"minecraft:icon": {
-				"texture": "aura_cluster"
-			}
-		}
-	}
+  "format_version": "1.20.50",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaiadimension:aura_cluster",
+      "menu_category": {
+        "category": "Items"
+      }
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "aura_cluster"
+      }
+    }
+  }
 }

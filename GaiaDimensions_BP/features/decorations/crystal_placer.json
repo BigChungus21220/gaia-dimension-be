@@ -1,14 +1,14 @@
 {
-    "format_version": "1.20.20",
-    "minecraft:aggregate_feature": {
-        "description": {
-            "identifier": "gaia:decorations/crystal_placer"
-        },
-        "features": [
-			"gaia:decorations/crystal_placement_test",
-			"gaia:decorations/crystal_air",
-            "gaia:decorations/crystal_x"
-        ],
-        "early_out": "first_failure"
-    }
+  "format_version": "1.20.20",
+  "minecraft:aggregate_feature": {
+    "description": {
+      "identifier": "gaiadimension:decorations/crystal_placer"
+    },
+    "features": [
+      "gaiadimension:decorations/crystal_placement_test",
+      "gaiadimension:decorations/crystal_air",
+      "gaiadimension:decorations/crystal_x"
+    ],
+    "early_out": "first_failure"
+  }
 }

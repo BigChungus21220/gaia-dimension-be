@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:burned_agate_log",
+          "name": "gaiadimension:burned_agate_log",
           "functions": [
             {
               "function": "set_count",

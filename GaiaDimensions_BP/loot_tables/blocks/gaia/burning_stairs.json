@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:burning_stair",
+          "name": "gaiadimension:burning_stair",
           "functions": [
             {
               "function": "set_count",

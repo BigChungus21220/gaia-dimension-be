@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:burned_agate_wood",
+          "name": "gaiadimension:burned_agate_wood",
           "functions": [
             {
               "function": "set_count",

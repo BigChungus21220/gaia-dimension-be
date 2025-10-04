@@ -12,12 +12,14 @@
       "AA ",
       "AAA"
     ],
-    "key": {"A": {
-      "item": "gaia:crusted_jet_bricks",
-      "data": 0
-    }},
+    "key": {
+      "A": {
+        "item": "gaiadimension:crusted_jet_bricks",
+        "data": 0
+      }
+    },
     "result": {
-      "item": "gaia:crusted_jet_brick_stair",
+      "item": "gaiadimension:crusted_jet_brick_stair",
       "count": 8
     }
   }

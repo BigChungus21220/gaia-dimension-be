@@ -14,14 +14,14 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:chalcedony"
+        "item": "gaiadimension:chalcedony"
       },
       "B": {
-        "item": "gaia:agate_stick"
+        "item": "gaiadimension:agate_stick"
       }
     },
     "result": {
-      "item": "gaia:chalcedony_axe"
+      "item": "gaiadimension:chalcedony_axe"
     }
   }
 }

@@ -3,15 +3,15 @@
   "minecraft:item": {
     "description": {
       "category": "Nature",
-      "identifier": "gaia:missing_pixel_plant_placer"
+      "identifier": "gaiadimension:missing_pixel_plant_placer"
     },
     "components": {
       "minecraft:block_placer": {
-        "block": "gaia:missing_pixel_plant"
+        "block": "gaiadimension:missing_pixel_plant"
       },
-    "minecraft:display_name": {
-      "value": "Pixel Plant\n§7A RIP Pixel (2009-2023)"
-    },
+      "minecraft:display_name": {
+        "value": "Pixel Plant\n§7A RIP Pixel (2009-2023)"
+      },
       "minecraft:icon": {
         "texture": "missingno_plant"
       }

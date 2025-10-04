@@ -12,12 +12,14 @@
       "AA ",
       "AAA"
     ],
-    "key": {"A": {
-      "item": "gaia:copal_bricks",
-      "data": 0
-    }},
+    "key": {
+      "A": {
+        "item": "gaiadimension:copal_bricks",
+        "data": 0
+      }
+    },
     "result": {
-      "item": "gaia:copal_brick_stair",
+      "item": "gaiadimension:copal_brick_stair",
       "count": 8
     }
   }

@@ -2,7 +2,7 @@
   "format_version": "1.10",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:aura_cluster",
+      "identifier": "gaiadimension:aura_cluster",
       "category": "Items"
     },
     "components": {

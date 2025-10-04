@@ -2,7 +2,7 @@
     "format_version": "1.16.100",
     "minecraft:fog_settings": {
       "description": {
-        "identifier": "gaia:smoldering_bog_fog"
+        "identifier": "gaiadimension:smoldering_bog_fog"
       },
       "distance": {
         "air": {

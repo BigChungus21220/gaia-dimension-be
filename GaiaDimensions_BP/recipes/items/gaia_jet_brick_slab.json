@@ -12,12 +12,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:jet_brick",
+        "item": "gaiadimension:jet_brick",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:jet_brick_slab",
+      "item": "gaiadimension:jet_brick_slab",
       "count": 6
     }
   }

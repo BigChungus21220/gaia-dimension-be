@@ -9,14 +9,14 @@
     ],
     "ingredients": [
       {
-        "item": "gaia:thorny_wiltha"
+        "item": "gaiadimension:thorny_wiltha"
       },
       {
-        "item": "gaia:thiscus"
+        "item": "gaiadimension:thiscus"
       }
     ],
     "result": {
-      "item": "gaia:tilibl"
+      "item": "gaiadimension:tilibl"
     }
   }
 }

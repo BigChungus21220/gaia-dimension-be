@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:impure_rock",
+          "name": "gaiadimension:impure_rock",
           "functions": [
             {
               "function": "set_count",

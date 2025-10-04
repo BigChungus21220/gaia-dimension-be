@@ -5,11 +5,11 @@
       "furnace"
     ],
     "output": {
-      "item": "gaia:tektite",
+      "item": "gaiadimension:tektite",
       "data": 0
     },
     "input": {
-      "item": "gaia:tektite_ore",
+      "item": "gaiadimension:tektite_ore",
       "data": 0
     },
     "description": {

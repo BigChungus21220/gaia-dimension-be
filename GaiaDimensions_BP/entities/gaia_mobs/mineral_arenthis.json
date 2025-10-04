@@ -2,13 +2,12 @@
   "format_version": "1.18.10",
   "minecraft:entity": {
     "description": {
-      "identifier": "gaia:mineral_arenthis",
+      "identifier": "gaiadimension:mineral_arenthis",
       "is_spawnable": true,
       "is_summonable": true,
       "is_experimental": false,
       "runtime_identifier": "minecraft:squid"
     },
-
     "component_groups": {
       "minecraft:squid_baby": {
         "minecraft:is_baby": {},
@@ -17,7 +16,6 @@
         }
       }
     },
-
     "components": {
       "minecraft:is_hidden_when_invisible": {},
       "minecraft:experience_reward": {
@@ -25,7 +23,10 @@
       },
       "minecraft:nameable": {},
       "minecraft:type_family": {
-        "family": ["squid", "mob"]
+        "family": [
+          "squid",
+          "mob"
+        ]
       },
       "minecraft:collision_box": {
         "width": 0.95,
@@ -68,7 +69,6 @@
       "minecraft:movement.basic": {},
       "minecraft:jump.static": {},
       "minecraft:can_climb": {},
-
       "minecraft:leashable": {
         "soft_distance": 4.0,
         "hard_distance": 6.0,
@@ -102,7 +102,6 @@
       },
       "minecraft:conditional_bandwidth_optimization": {}
     },
-
     "events": {
       "minecraft:entity_spawned": {
         "randomize": [
@@ -115,7 +114,9 @@
             "weight": 5,
             "remove": {},
             "add": {
-              "component_groups": ["minecraft:squid_baby"]
+              "component_groups": [
+                "minecraft:squid_baby"
+              ]
             }
           }
         ]

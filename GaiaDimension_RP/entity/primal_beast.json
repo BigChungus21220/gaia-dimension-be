@@ -2,7 +2,7 @@
   "format_version": "1.10.0",
   "minecraft:client_entity": {
     "description": {
-      "identifier": "gaia:primal_beast",
+      "identifier": "gaiadimension:primal_beast",
       "materials": { "default": "iron_golem" },
       "textures": {
         "default": "textures/entity/primal_beast"

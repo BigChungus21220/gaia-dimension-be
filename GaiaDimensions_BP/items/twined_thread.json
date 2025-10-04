@@ -1,16 +1,16 @@
 {
-	"format_version": "1.20.50",
-	"minecraft:item": {
-		"description": {
-			"identifier": "gaia:twined_thread",
-			"menu_category": {
-				"category": "Items"
-			}
-		},
-		"components": {
-			"minecraft:icon": {
-				"texture": "twined_thread"
-			}
-		}
-	}
+  "format_version": "1.20.50",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaiadimension:twined_thread",
+      "menu_category": {
+        "category": "Items"
+      }
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "twined_thread"
+      }
+    }
+  }
 }

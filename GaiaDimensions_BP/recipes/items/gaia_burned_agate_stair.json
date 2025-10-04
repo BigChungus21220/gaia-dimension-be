@@ -12,12 +12,14 @@
       "AA ",
       "AAA"
     ],
-    "key": {  "A": {
-      "item": "gaia:burned_agate_planks",
-      "data": 0
-    }},
+    "key": {
+      "A": {
+        "item": "gaiadimension:burned_agate_planks",
+        "data": 0
+      }
+    },
     "result": {
-      "item": "gaia:burned_agate_stair",
+      "item": "gaiadimension:burned_agate_stair",
       "count": 8
     }
   }

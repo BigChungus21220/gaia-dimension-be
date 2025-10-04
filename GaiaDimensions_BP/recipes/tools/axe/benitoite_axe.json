@@ -14,14 +14,14 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:benitoite"
+        "item": "gaiadimension:benitoite"
       },
       "B": {
-        "item": "gaia:agate_stick"
+        "item": "gaiadimension:agate_stick"
       }
     },
     "result": {
-      "item": "gaia:benitoite_axe"
+      "item": "gaiadimension:benitoite_axe"
     }
   }
 }

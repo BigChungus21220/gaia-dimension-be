@@ -2,7 +2,7 @@
   "format_version": "1.10",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:large_calamari",
+      "identifier": "gaiadimension:large_calamari",
       "category": "Equipment"
     },
     "components": {

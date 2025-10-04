@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:raw_copal",
+          "name": "gaiadimension:raw_copal",
           "functions": [
             {
               "function": "set_count",

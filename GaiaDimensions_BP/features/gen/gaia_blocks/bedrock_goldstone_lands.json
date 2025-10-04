@@ -1,11 +1,11 @@
 {
-	"format_version": "1.20.20",
-	"minecraft:single_block_feature": {
-		"description": {
-			"identifier": "gaia:gen/gaia_blocks/bedrock_goldstone_lands"
-		},
-		"places_block": "gaia:bedrock_goldstone_lands",
-		"enforce_placement_rules": false,
-		"enforce_survivability_rules": false
-	}
+  "format_version": "1.20.20",
+  "minecraft:single_block_feature": {
+    "description": {
+      "identifier": "gaiadimension:gen/gaia_blocks/bedrock_goldstone_lands"
+    },
+    "places_block": "gaiadimension:bedrock_goldstone_lands",
+    "enforce_placement_rules": false,
+    "enforce_survivability_rules": false
+  }
 }

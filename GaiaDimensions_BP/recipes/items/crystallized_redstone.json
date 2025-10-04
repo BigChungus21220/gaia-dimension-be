@@ -9,6 +9,6 @@
       "blast_furnace"
     ],
     "input": "minecraft:redstone",
-    "output": "gaia:crystallized_redstone"
+    "output": "gaiadimension:crystallized_redstone"
   }
 }

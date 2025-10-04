@@ -2,13 +2,13 @@
   "format_version": "1.8.0",
   "minecraft:spawn_rules": {
     "description": {
-      "identifier": "gaia:cavern_tick",
+      "identifier": "gaiadimension:cavern_tick",
       "population_control": "monster"
     },
     "conditions": [
       {
         "minecraft:spawns_underground": {},
-        "minecraft:spawns_on_block_filter": "gaia:gaia_stone",
+        "minecraft:spawns_on_block_filter": "gaiadimension:gaia_stone",
         "minecraft:brightness_filter": {
           "min": 0,
           "max": 10,
@@ -26,7 +26,9 @@
           "max_size": 1
         },
         "minecraft:biome_filter": {
-          "test": "has_biome_tag", "operator": "==", "value": "underground_bits"
+          "test": "has_biome_tag",
+          "operator": "==",
+          "value": "underground_bits"
         }
       }
     ]

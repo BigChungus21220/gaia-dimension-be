@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:benitoite_block",
+          "name": "gaiadimension:benitoite_block",
           "functions": [
             {
               "function": "set_count",

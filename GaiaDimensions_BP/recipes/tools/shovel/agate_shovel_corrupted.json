@@ -14,14 +14,14 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:corrupted_tiles"
+        "item": "gaiadimension:corrupted_tiles"
       },
       "B": {
-        "item": "gaia:agate_stick"
+        "item": "gaiadimension:agate_stick"
       }
     },
     "result": {
-      "item": "gaia:agate_shovel"
+      "item": "gaiadimension:agate_shovel"
     }
   }
 }

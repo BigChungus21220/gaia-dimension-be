@@ -1,12 +1,11 @@
 {
-  "pools": 
-  {
+  "pools": {
     "rolls": 1,
     "entries": [
       {
         "type": "item",
         "weight": 1,
-        "name": "gaia:missing_pixel_plant_placer",
+        "name": "gaiadimension:missing_pixel_plant_placer",
         "functions": [
           {
             "function": "set_count",

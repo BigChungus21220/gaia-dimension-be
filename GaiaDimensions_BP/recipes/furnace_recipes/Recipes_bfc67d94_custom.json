@@ -5,11 +5,11 @@
       "furnace"
     ],
     "output": {
-      "item": "gaia:foggy_glass",
+      "item": "gaiadimension:foggy_glass",
       "data": 0
     },
     "input": {
-      "item": "gaia:salt",
+      "item": "gaiadimension:salt",
       "data": 0
     },
     "description": {

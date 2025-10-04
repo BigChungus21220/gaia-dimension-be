@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:zircon_prince_leggings",
+      "identifier": "gaiadimension:zircon_prince_leggings",
       "category": "Equipment"
     },
     "components": {
@@ -33,7 +33,7 @@
         "repair_items": [
           {
             "items": [
-              "gaia:zircon_prince_leggings"
+              "gaiadimension:zircon_prince_leggings"
             ],
             "repair_amount": 1770
           }

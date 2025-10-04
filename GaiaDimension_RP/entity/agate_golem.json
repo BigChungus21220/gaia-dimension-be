@@ -2,7 +2,7 @@
   "format_version": "1.10.0",
   "minecraft:client_entity": {
     "description": {
-      "identifier": "gaia:agate_golem",
+      "identifier": "gaiadimension:agate_golem",
       "materials": { "default": "iron_golem" },
       "textures": {
         "default": "textures/entity/agate_golem"

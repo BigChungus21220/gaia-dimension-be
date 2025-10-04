@@ -12,12 +12,12 @@
     ],
     "key": {
       "B": {
-        "item": "gaia:moonstone_block",
+        "item": "gaiadimension:moonstone_block",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:moonstone",
+      "item": "gaiadimension:moonstone",
       "count": 9
     }
   }

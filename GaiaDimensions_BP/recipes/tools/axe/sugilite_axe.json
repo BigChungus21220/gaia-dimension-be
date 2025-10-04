@@ -14,14 +14,14 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:sugilite"
+        "item": "gaiadimension:sugilite"
       },
       "B": {
-        "item": "gaia:agate_stick"
+        "item": "gaiadimension:agate_stick"
       }
     },
     "result": {
-      "item": "gaia:sugilite_axe"
+      "item": "gaiadimension:sugilite_axe"
     }
   }
 }

@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:jade_brick_stair",
+          "name": "gaiadimension:jade_brick_stair",
           "functions": [
             {
               "function": "set_count",

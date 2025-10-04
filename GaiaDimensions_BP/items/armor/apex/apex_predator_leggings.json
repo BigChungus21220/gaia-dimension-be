@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:apex_predator_leggings",
+      "identifier": "gaiadimension:apex_predator_leggings",
       "category": "Equipment"
     },
     "components": {
@@ -33,7 +33,7 @@
         "repair_items": [
           {
             "items": [
-              "gaia:apex_predator_leggings"
+              "gaiadimension:apex_predator_leggings"
             ],
             "repair_amount": 1181
           }

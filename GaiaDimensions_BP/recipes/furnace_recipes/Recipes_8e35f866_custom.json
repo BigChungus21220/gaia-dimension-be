@@ -5,11 +5,11 @@
       "furnace"
     ],
     "output": {
-      "item": "gaia:cloudy_shard",
+      "item": "gaiadimension:cloudy_shard",
       "data": 0
     },
     "input": {
-      "item": "gaia:fine_dust",
+      "item": "gaiadimension:fine_dust",
       "data": 0
     },
     "description": {

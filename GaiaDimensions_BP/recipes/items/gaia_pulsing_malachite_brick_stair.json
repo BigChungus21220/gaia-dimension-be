@@ -14,12 +14,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:pulsing_malachite_bricks",
+        "item": "gaiadimension:pulsing_malachite_bricks",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:green_stairs",
+      "item": "gaiadimension:green_stairs",
       "count": 8
     }
   }

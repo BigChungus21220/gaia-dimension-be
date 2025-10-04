@@ -2,19 +2,20 @@
   "format_version": "1.13.0",
   "minecraft:entity": {
     "description": {
-      "identifier": "gaia:malachite_guard",
+      "identifier": "gaiadimension:malachite_guard",
       "is_spawnable": true,
       "is_summonable": true,
       "is_experimental": false,
       "runtime_identifier": "minecraft:iron_golem",
       "scripts": {
-        "animate": ["skyrim5"]
+        "animate": [
+          "skyrim5"
+        ]
       },
       "animations": {
         "skyrim5": "controller.animation.malachite_guard"
       }
     },
-
     "component_groups": {
       "roaring": {
         "minecraft:behavior.knockback_roar": {
@@ -68,7 +69,6 @@
         }
       }
     },
-
     "components": {
       "minecraft:underwater_movement": {
         "value": 5.0
@@ -123,7 +123,9 @@
       },
       "minecraft:is_hidden_when_invisible": {},
       "minecraft:type_family": {
-        "family": ["mob"]
+        "family": [
+          "mob"
+        ]
       },
       "minecraft:nameable": {},
       "minecraft:collision_box": {
@@ -275,7 +277,6 @@
         "priority": 3,
         "must_reach": true,
         "must_see": true,
-
         "entity_types": [
           {
             "filters": {
@@ -313,33 +314,40 @@
       },
       "minecraft:conditional_bandwidth_optimization": {}
     },
-
     "events": {
       "minecraft:entity_spawned": {
         "run_command": {
           "command": [
-            "summon gaia:malachite_drone MG_MINION ~ ~ ~4",
-            "summon gaia:malachite_drone MG_MINION ~ ~ ~-4",
-            "summon gaia:malachite_drone MG_MINION ~4 ~ ~",
-            "summon gaia:malachite_drone MG_MINION ~-4 ~ ~"
+            "summon gaiadimension:malachite_drone MG_MINION ~ ~ ~4",
+            "summon gaiadimension:malachite_drone MG_MINION ~ ~ ~-4",
+            "summon gaiadimension:malachite_drone MG_MINION ~4 ~ ~",
+            "summon gaiadimension:malachite_drone MG_MINION ~-4 ~ ~"
           ]
         }
       },
       "dead": {},
       "no_mg_defend": {
         "run_command": {
-          "command": ["tag @s add mg_defend"]
+          "command": [
+            "tag @s add mg_defend"
+          ]
         },
         "remove": {
-          "component_groups": ["defend"]
+          "component_groups": [
+            "defend"
+          ]
         },
         "add": {
-          "component_groups": ["normal"]
+          "component_groups": [
+            "normal"
+          ]
         }
       },
       "no_mg_slam": {
         "remove": {
-          "component_groups": ["slam"]
+          "component_groups": [
+            "slam"
+          ]
         }
       },
       "mg_slam": {
@@ -349,25 +357,35 @@
               "test": "has_target"
             },
             "add": {
-              "component_groups": ["slam"]
+              "component_groups": [
+                "slam"
+              ]
             }
           }
         ]
       },
       "mg_defend": {
         "run_command": {
-          "command": ["tag @s remove mg_defend"]
+          "command": [
+            "tag @s remove mg_defend"
+          ]
         },
         "remove": {
-          "component_groups": ["normal"]
+          "component_groups": [
+            "normal"
+          ]
         },
         "add": {
-          "component_groups": ["defend"]
+          "component_groups": [
+            "defend"
+          ]
         }
       },
       "resist": {
         "add": {
-          "component_groups": ["resist"]
+          "component_groups": [
+            "resist"
+          ]
         }
       }
     }

@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:burning_planks",
+          "name": "gaiadimension:burning_planks",
           "functions": [
             {
               "function": "set_count",

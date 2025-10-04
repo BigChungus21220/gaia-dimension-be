@@ -3,7 +3,7 @@
   "minecraft:item": {
     "description": {
       "category": "equipment",
-      "identifier": "gaia:gaia_baron_dagger"
+      "identifier": "gaiadimension:gaia_baron_dagger"
     },
     "components": {
       "minecraft:icon": {
@@ -27,7 +27,7 @@
         "repair_items": [
           {
             "items": [
-              "gaia:gaia_baron_dagger"
+              "gaiadimension:gaia_baron_dagger"
             ],
             "repair_amount": "context.other->query.remaining_durability + 0.2 * context.other->query.max_durability"
           }

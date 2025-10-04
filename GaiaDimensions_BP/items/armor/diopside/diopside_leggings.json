@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:diopside_leggings",
+      "identifier": "gaiadimension:diopside_leggings",
       "category": "Equipment"
     },
     "components": {
@@ -33,8 +33,8 @@
         "repair_items": [
           {
             "items": [
-              "gaia:diopside",
-              "gaia:diopside_leggings"
+              "gaiadimension:diopside",
+              "gaiadimension:diopside_leggings"
             ],
             "repair_amount": 664
           }

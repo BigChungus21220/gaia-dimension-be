@@ -1,22 +1,23 @@
 {
-	"format_version": "1.16.100",
-	"minecraft:item": {
-		"description": {
-			"identifier": "gaia:green_crystal_growth_item",
-			"category": "nature"
-		},
-		"components": {
-			"minecraft:icon": {
-				"texture":  "green_crystal_growth"
-			},
-			"minecraft:display_name": {
-				"value": "Green Crystal Growth" },
-			"minecraft:creative_category": {
-				"parent": "itemGroup.name.flower"
-			},
-			"minecraft:block_placer": {
-				"block": "gaia:green_crystal_growth"
-			}
-		}
-	}
+  "format_version": "1.16.100",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaiadimension:green_crystal_growth_item",
+      "category": "nature"
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "green_crystal_growth"
+      },
+      "minecraft:display_name": {
+        "value": "Green Crystal Growth"
+      },
+      "minecraft:creative_category": {
+        "parent": "itemGroup.name.flower"
+      },
+      "minecraft:block_placer": {
+        "block": "gaiadimension:green_crystal_growth"
+      }
+    }
+  }
 }

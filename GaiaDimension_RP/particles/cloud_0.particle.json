@@ -2,7 +2,7 @@
 	"format_version": "1.10.0",
 	"particle_effect": {
 		"description": {
-			"identifier": "gaia:cloud_0",
+			"identifier": "gaiadimension:cloud_0",
 			"basic_render_parameters": {
 				"material": "particles_alpha",
 				"texture": "textures/particle/gaia_cloud_0"

@@ -1,22 +1,23 @@
 {
-	"format_version": "1.16.100",
-	"minecraft:item": {
-		"description": {
-			"identifier": "gaia:ouzium_item",
-			"category": "nature"
-		},
-		"components": {
-			"minecraft:icon": {
-				"texture":  "ouzium"
-			},
-			"minecraft:display_name": {
-				"value": "Ouzium" },
-			"minecraft:creative_category": {
-				"parent": "itemGroup.name.flower"
-			},
-			"minecraft:block_placer": {
-				"block": "gaia:ouzium"
-			}
-		}
-	}
+  "format_version": "1.16.100",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaiadimension:ouzium_item",
+      "category": "nature"
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "ouzium"
+      },
+      "minecraft:display_name": {
+        "value": "Ouzium"
+      },
+      "minecraft:creative_category": {
+        "parent": "itemGroup.name.flower"
+      },
+      "minecraft:block_placer": {
+        "block": "gaiadimension:ouzium"
+      }
+    }
+  }
 }

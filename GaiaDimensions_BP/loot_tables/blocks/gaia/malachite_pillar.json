@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:pillar1",
+          "name": "gaiadimension:pillar1",
           "functions": [
             {
               "function": "set_count",

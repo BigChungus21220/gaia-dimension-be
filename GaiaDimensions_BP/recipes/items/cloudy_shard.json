@@ -8,7 +8,7 @@
       "furnace",
       "blast_furnace"
     ],
-    "input": "gaia:fine_dust",
-    "output": "gaia:cloudy_shard"
+    "input": "gaiadimension:fine_dust",
+    "output": "gaiadimension:cloudy_shard"
   }
 }

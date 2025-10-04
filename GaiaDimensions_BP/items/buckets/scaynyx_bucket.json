@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:scaynyx_bucket",
+      "identifier": "gaiadimension:scaynyx_bucket",
       "category": "items"
     },
     "components": {

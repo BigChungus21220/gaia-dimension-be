@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:pink_glitter_grass",
+          "name": "gaiadimension:pink_glitter_grass",
           "functions": [
             {
               "function": "set_count",

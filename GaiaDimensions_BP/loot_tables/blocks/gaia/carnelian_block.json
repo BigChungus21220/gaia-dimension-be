@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:carnelian_block",
+          "name": "gaiadimension:carnelian_block",
           "functions": [
             {
               "function": "set_count",

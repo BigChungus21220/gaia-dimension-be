@@ -14,12 +14,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:goldstone",
+        "item": "gaiadimension:goldstone",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:goldstone_block",
+      "item": "gaiadimension:goldstone_block",
       "count": 1
     }
   }

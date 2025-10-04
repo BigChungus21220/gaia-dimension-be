@@ -14,12 +14,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:aura_cluster",
+        "item": "gaiadimension:aura_cluster",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:block_of_aura_crystal",
+      "item": "gaiadimension:block_of_aura_crystal",
       "count": 1
     }
   }

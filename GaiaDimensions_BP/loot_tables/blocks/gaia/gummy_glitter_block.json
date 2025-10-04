@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:gummy_glitter_block",
+          "name": "gaiadimension:gummy_glitter_block",
           "functions": [
             {
               "function": "set_count",

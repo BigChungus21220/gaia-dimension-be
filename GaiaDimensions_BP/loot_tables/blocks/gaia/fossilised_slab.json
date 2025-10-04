@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:fossilized_slab",
+          "name": "gaiadimension:fossilized_slab",
           "functions": [
             {
               "function": "set_count",

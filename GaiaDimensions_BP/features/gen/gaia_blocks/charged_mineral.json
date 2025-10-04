@@ -1,11 +1,11 @@
 {
-	"format_version": "1.20.20",
-	"minecraft:single_block_feature": {
-		"description": {
-			"identifier": "gaia:gen/gaia_blocks/charged_mineral"
-		},
-		"places_block": "gaia:charged_mineral",
-		"enforce_placement_rules": false,
-		"enforce_survivability_rules": false
-	}
+  "format_version": "1.20.20",
+  "minecraft:single_block_feature": {
+    "description": {
+      "identifier": "gaiadimension:gen/gaia_blocks/charged_mineral"
+    },
+    "places_block": "gaiadimension:charged_mineral",
+    "enforce_placement_rules": false,
+    "enforce_survivability_rules": false
+  }
 }

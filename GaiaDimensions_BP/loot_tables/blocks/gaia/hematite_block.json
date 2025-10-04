@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:hematite_block",
+          "name": "gaiadimension:hematite_block",
           "functions": [
             {
               "function": "set_count",

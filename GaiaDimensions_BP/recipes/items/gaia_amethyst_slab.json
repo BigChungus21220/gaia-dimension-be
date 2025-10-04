@@ -12,12 +12,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:amethyst_brick",
+        "item": "gaiadimension:amethyst_brick",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:amethyst_slab",
+      "item": "gaiadimension:amethyst_slab",
       "count": 6
     }
   }

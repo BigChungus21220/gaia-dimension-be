@@ -2,7 +2,7 @@
   "format_version": "1.13.0",
   "minecraft:entity": {
       "description": {
-          "identifier": "gaia:crystal_golem",
+          "identifier": "gaiadimension:crystal_golem",
           "is_spawnable": true,
           "is_summonable": true,
           "is_experimental": false,

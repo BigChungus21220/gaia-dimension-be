@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:gaia_champion_chestplate",
+      "identifier": "gaiadimension:gaia_champion_chestplate",
       "category": "Equipment"
     },
     "components": {
@@ -33,7 +33,7 @@
         "repair_items": [
           {
             "items": [
-              "gaia:gaia_champion_chestplate"
+              "gaiadimension:gaia_champion_chestplate"
             ],
             "repair_amount": 4000
           }

@@ -5,11 +5,11 @@
       "furnace"
     ],
     "output": {
-      "item": "gaia:hematite",
+      "item": "gaiadimension:hematite",
       "data": 0
     },
     "input": {
-      "item": "gaia:hematite_ore",
+      "item": "gaiadimension:hematite_ore",
       "data": 0
     },
     "description": {

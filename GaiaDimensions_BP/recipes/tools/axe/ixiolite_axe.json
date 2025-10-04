@@ -14,14 +14,14 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:ixiolite"
+        "item": "gaiadimension:ixiolite"
       },
       "B": {
-        "item": "gaia:agate_stick"
+        "item": "gaiadimension:agate_stick"
       }
     },
     "result": {
-      "item": "gaia:ixiolite_axe"
+      "item": "gaiadimension:ixiolite_axe"
     }
   }
 }

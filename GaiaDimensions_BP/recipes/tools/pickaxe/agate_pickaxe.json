@@ -14,14 +14,14 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:malachite_tiles"
+        "item": "gaiadimension:malachite_tiles"
       },
       "B": {
-        "item": "gaia:agate_stick"
+        "item": "gaiadimension:agate_stick"
       }
     },
     "result": {
-      "item": "gaia:agate_pickaxe"
+      "item": "gaiadimension:agate_pickaxe"
     }
   }
 }

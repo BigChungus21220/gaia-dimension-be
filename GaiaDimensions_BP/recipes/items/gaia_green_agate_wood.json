@@ -13,12 +13,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:green_agate_log",
+        "item": "gaiadimension:green_agate_log",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:green_agate_wood",
+      "item": "gaiadimension:green_agate_wood",
       "count": 3
     }
   }

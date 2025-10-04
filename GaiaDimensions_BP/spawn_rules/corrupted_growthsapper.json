@@ -2,13 +2,13 @@
   "format_version": "1.8.0",
   "minecraft:spawn_rules": {
     "description": {
-      "identifier": "gaia:corrupted_growthsapper",
+      "identifier": "gaiadimension:corrupted_growthsapper",
       "population_control": "monster"
     },
     "conditions": [
       {
         "minecraft:spawns_on_surface": {},
-        "minecraft:spawns_on_block_filter": "gaia:corrupt_grass",
+        "minecraft:spawns_on_block_filter": "gaiadimension:corrupt_grass",
         "minecraft:brightness_filter": {
           "min": 0,
           "max": 10,

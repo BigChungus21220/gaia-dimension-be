@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:crusted_copal_bricks",
+          "name": "gaiadimension:crusted_copal_bricks",
           "functions": [
             {
               "function": "set_count",

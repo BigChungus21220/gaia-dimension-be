@@ -2,7 +2,7 @@
   "format_version": "1.10.0",
   "minecraft:client_entity": {
     "description": {
-      "identifier": "gaia:malachite_drone",
+      "identifier": "gaiadimension:malachite_drone",
       "materials": { "default": "iron_golem" },
       "textures": {
         "default": "textures/entity/malachite_drone_normal"

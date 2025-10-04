@@ -2,7 +2,7 @@
   "format_version": "1.16.0",
   "minecraft:entity": {
     "description": {
-      "identifier": "gaia:spell_element",
+      "identifier": "gaiadimension:spell_element",
       "is_spawnable": true,
       "is_summonable": true,
       "is_experimental": false
@@ -130,7 +130,11 @@
         "priority": 5
       },
       "minecraft:type_family": {
-        "family": ["blaze", "monster", "mob"]
+        "family": [
+          "blaze",
+          "monster",
+          "mob"
+        ]
       },
       "minecraft:physics": {},
       "minecraft:pushable": {
@@ -150,28 +154,40 @@
     "events": {
       "minecraft:entity_spawned": {
         "add": {
-          "component_groups": ["mode_switcher"]
+          "component_groups": [
+            "mode_switcher"
+          ]
         }
       },
       "switch_to_melee": {
         "remove": {
-          "component_groups": ["ranged_mode"]
+          "component_groups": [
+            "ranged_mode"
+          ]
         },
         "add": {
-          "component_groups": ["melee_mode"]
+          "component_groups": [
+            "melee_mode"
+          ]
         }
       },
       "switch_to_ranged": {
         "remove": {
-          "component_groups": ["melee_mode"]
+          "component_groups": [
+            "melee_mode"
+          ]
         },
         "add": {
-          "component_groups": ["ranged_mode"]
+          "component_groups": [
+            "ranged_mode"
+          ]
         }
       },
       "minecraft:on_hurt_event": {
         "add": {
-          "component_groups": ["mode_switcher"]
+          "component_groups": [
+            "mode_switcher"
+          ]
         }
       }
     }

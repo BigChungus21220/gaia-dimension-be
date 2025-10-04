@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:cinnabar_block",
+          "name": "gaiadimension:cinnabar_block",
           "functions": [
             {
               "function": "set_count",

@@ -2,13 +2,13 @@
   "format_version": "1.8.0",
   "minecraft:spawn_rules": {
     "description": {
-      "identifier": "gaia:volcanic_nomadic_lagrahk",
+      "identifier": "gaiadimension:volcanic_nomadic_lagrahk",
       "population_control": "monster"
     },
     "conditions": [
       {
         "minecraft:spawns_on_surface": {},
-        "minecraft:spawns_on_block_filter": "gaia:black_glitter_grass",
+        "minecraft:spawns_on_block_filter": "gaiadimension:black_glitter_grass",
         "minecraft:brightness_filter": {
           "min": 0,
           "max": 10,

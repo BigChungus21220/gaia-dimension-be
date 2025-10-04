@@ -12,12 +12,12 @@
     ],
     "key": {
       "B": {
-        "item": "gaia:labradorite_block",
+        "item": "gaiadimension:labradorite_block",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:labradorite",
+      "item": "gaiadimension:labradorite",
       "count": 9
     }
   }

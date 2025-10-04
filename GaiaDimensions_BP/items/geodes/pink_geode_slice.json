@@ -2,7 +2,7 @@
   "format_version": "1.10",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:pink_geode_slice",
+      "identifier": "gaiadimension:pink_geode_slice",
       "category": "equipment"
     },
     "components": {

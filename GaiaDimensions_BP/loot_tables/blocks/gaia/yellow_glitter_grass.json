@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:yellow_glitter_grass",
+          "name": "gaiadimension:yellow_glitter_grass",
           "functions": [
             {
               "function": "set_count",

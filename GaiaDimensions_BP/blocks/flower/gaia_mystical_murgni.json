@@ -1,0 +1,80 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaiadimension:mystical_murgni",
+      "menu_category": {
+        "category": "none"
+      },
+      "states": {
+        "block:rotation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      }
+    },
+    "components": {
+      "minecraft:loot": "loot_tables/blocks/flower/mystical_murgni.json",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 0
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 0
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "mystical_murgni",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        }
+      },
+      "minecraft:geometry": "geometry.offset_cross_plant",
+      "minecraft:placement_filter": {
+        "conditions": [
+          {
+            "block_filter": [
+              "gaiadimension:orange_glitter_grass",
+              "gaiadimension:blue_glitter_grass",
+              "gaiadimension:green_glitter_grass",
+              "gaiadimension:charred_grass",
+              "gaiadimension:pale_green_glitter_grass",
+              "gaiadimension:purple_glitter_grass",
+              "gaiadimension:corrupt_grass",
+              "gaiadimension:soft_grass",
+              "gaiadimension:murky_grass",
+              "gaiadimension:corrupt_grass",
+              "gaiadimension:peach_glitter_grass",
+              "gaiadimension:peach_glitter_grass",
+              "gaiadimension:orange_glitter_grass",
+              "gaiadimension:light_soil",
+              "gaiadimension:heavy_soil",
+              "gaiadimension:cinder",
+              "gaiadimension:corrupt_soil",
+              "gaiadimension:boggy_soil",
+              "gaiadimension:light_soil"
+            ],
+            "allowed_faces": [
+              "up"
+            ]
+          }
+        ]
+      },
+      "minecraft:selection_box": {
+        "origin": [
+          -6.5,
+          0,
+          -5
+        ],
+        "size": [
+          6,
+          10,
+          6
+        ]
+      },
+      "minecraft:collision_box": false
+    }
+  }
+}

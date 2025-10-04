@@ -13,12 +13,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:aura_log",
+        "item": "gaiadimension:aura_log",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:aura_wood",
+      "item": "gaiadimension:aura_wood",
       "count": 3
     }
   }

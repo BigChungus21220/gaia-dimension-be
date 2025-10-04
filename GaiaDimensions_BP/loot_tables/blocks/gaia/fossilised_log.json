@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:fossilized_log",
+          "name": "gaiadimension:fossilized_log",
           "functions": [
             {
               "function": "set_count",

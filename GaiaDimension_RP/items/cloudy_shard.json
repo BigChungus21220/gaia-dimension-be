@@ -2,7 +2,7 @@
   "format_version": "1.10",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:cloudy_shard",
+      "identifier": "gaiadimension:cloudy_shard",
       "category": "Items"
     },
     "components": {

@@ -2,7 +2,7 @@
   "format_version": "1.10.0",
   "minecraft:client_entity": {
     "description": {
-      "identifier": "gaia:ancient_lagrahk",
+      "identifier": "gaiadimension:ancient_lagrahk",
       "textures": {
         "default": "textures/entity/ancient_lagrahk"
       },

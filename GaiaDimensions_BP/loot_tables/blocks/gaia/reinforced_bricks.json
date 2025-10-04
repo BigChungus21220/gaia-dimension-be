@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:reinforced_bricks",
+          "name": "gaiadimension:reinforced_bricks",
           "functions": [
             {
               "function": "set_count",

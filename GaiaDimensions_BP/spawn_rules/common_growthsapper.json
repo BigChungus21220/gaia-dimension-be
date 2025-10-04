@@ -2,7 +2,7 @@
   "format_version": "1.8.0",
   "minecraft:spawn_rules": {
     "description": {
-      "identifier": "gaia:common_growthsapper",
+      "identifier": "gaiadimension:common_growthsapper",
       "population_control": "monster"
     },
     "conditions": [

@@ -1,0 +1,30 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaiadimension:amethyst_brick",
+      "menu_category": {
+        "category": "nature",
+        "group": "itemGroup.name.stoneBrick"
+      }
+    },
+    "components": {
+      "tag:brick": {},
+      "tag:stone": {},
+      "minecraft:loot": "loot_tables/blocks/amethyst/amethyst_brick.json",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 2
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 3
+      },
+      "minecraft:friction": 0.4,
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "amethyst_bricks",
+          "render_method": "opaque"
+        }
+      }
+    }
+  }
+}

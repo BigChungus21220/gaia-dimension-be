@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:brick3_stairs",
+          "name": "gaiadimension:brick3_stairs",
           "functions": [
             {
               "function": "set_count",

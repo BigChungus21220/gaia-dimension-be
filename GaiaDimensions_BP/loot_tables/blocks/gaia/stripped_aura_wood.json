@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:stripped_aura_wood",
+          "name": "gaiadimension:stripped_aura_wood",
           "functions": [
             {
               "function": "set_count",

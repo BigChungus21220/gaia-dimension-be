@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:copal_bricks",
+          "name": "gaiadimension:copal_bricks",
           "functions": [
             {
               "function": "set_count",

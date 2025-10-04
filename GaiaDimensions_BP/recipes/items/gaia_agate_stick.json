@@ -12,12 +12,12 @@
     ],
     "key": {
       "B": {
-        "item": "gaia:burning_planks",
+        "item": "gaiadimension:burning_planks",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:agate_stick",
+      "item": "gaiadimension:agate_stick",
       "count": 4
     }
   }

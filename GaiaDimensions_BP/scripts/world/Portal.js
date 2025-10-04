@@ -164,9 +164,9 @@ class Portal {
                 let is_edge = x == 0 || y == 0 || x == 3 || y == 4
                 const block = await new Promise((resolve) => { const block = dimension.getBlock(blockpos); if (block !== undefined) { resolve(block) } })
                 if (is_edge) {
-                    block.setPermutation(BlockPermutation.resolve("gaia:keystone_block"))
+                    block.setPermutation(BlockPermutation.resolve("gaiadimension:keystone_block"))
                 } else {
-                    block.setPermutation(BlockPermutation.resolve("gaia:gaia_portal", { "gaia:x_oriented": x_oriented }))
+                    block.setPermutation(BlockPermutation.resolve("gaiadimension:gaia_portal", { "gaiadimension:x_oriented": x_oriented }))
                 }
             }
         }
@@ -192,11 +192,11 @@ class Portal {
                 let blockpos = vec3(corner).add(vec3(x_oriented ? 0 : x, y, x_oriented ? x : 0));
                 let blocktype = dimension.getBlock(blockpos).typeId
                 let is_edge = x == 0 || y == 0 || x == 3 || y == 4
-                if (is_edge && blocktype != "gaia:keystone_block") {
+                if (is_edge && blocktype != "gaiadimension:keystone_block") {
                     isValid = false
                     break
                 }
-                if (!is_edge && blocktype != "gaia:gaia_portal") {
+                if (!is_edge && blocktype != "gaiadimension:gaia_portal") {
                     isValid = false
                     break
                 }
@@ -212,7 +212,7 @@ class Portal {
                 let blockpos = vec3(corner).add(vec3(x_oriented ? 0 : x, y, x_oriented ? x : 0));
                 let blocktype = dimension.getBlock(blockpos).typeId
                 let is_edge = x == 0 || y == 0 || x == 3 || y == 4
-                if (is_edge && blocktype != "gaia:keystone_block") {
+                if (is_edge && blocktype != "gaiadimension:keystone_block") {
                     isValid = false
                     break
                 }

@@ -5,11 +5,11 @@
       "furnace"
     ],
     "output": {
-      "item": "gaia:labradorite",
+      "item": "gaiadimension:labradorite",
       "data": 0
     },
     "input": {
-      "item": "gaia:labradorite_ore",
+      "item": "gaiadimension:labradorite_ore",
       "data": 0
     },
     "description": {

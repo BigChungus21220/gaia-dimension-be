@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:pink_agate_leaves",
+          "name": "gaiadimension:pink_agate_leaves",
           "functions": [
             {
               "function": "set_count",

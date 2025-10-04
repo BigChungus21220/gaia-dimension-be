@@ -2,13 +2,13 @@
   "format_version": "1.8.0",
   "minecraft:spawn_rules": {
     "description": {
-      "identifier": "gaia:rocky_luggeroth",
+      "identifier": "gaiadimension:rocky_luggeroth",
       "population_control": "monster"
     },
     "conditions": [
       {
         "minecraft:spawns_on_surface": {},
-        "minecraft:spawns_on_block_filter": "gaia:light_green_glitter_grass",
+        "minecraft:spawns_on_block_filter": "gaiadimension:light_green_glitter_grass",
         "minecraft:brightness_filter": {
           "min": 0,
           "max": 10,

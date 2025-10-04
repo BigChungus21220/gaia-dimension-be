@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:corrupted_slab",
+          "name": "gaiadimension:corrupted_slab",
           "functions": [
             {
               "function": "set_count",

@@ -164,10 +164,10 @@ This is the most important step. You must go into the behavior pack JSON file fo
       "format_version": "1.19.50",
       "minecraft:block": {
         "description": {
-          "identifier": "gaia:jade_brick_slab"
+          "identifier": "gaiadimension:jade_brick_slab"
         },
         "components": {
-          "gaia:jade_brick_slab": {} // <-- OLD, SPECIFIC COMPONENT
+          "gaiadimension:jade_brick_slab": {} // <-- OLD, SPECIFIC COMPONENT
         }
       }
     }
@@ -179,10 +179,10 @@ This is the most important step. You must go into the behavior pack JSON file fo
       "format_version": "1.19.50",
       "minecraft:block": {
         "description": {
-          "identifier": "gaia:jade_brick_slab"
+          "identifier": "gaiadimension:jade_brick_slab"
         },
         "components": {
-          "gaia:interaction_handler": {} // <-- NEW, UNIFIED COMPONENT
+          "gaiadimension:interaction_handler": {} // <-- NEW, UNIFIED COMPONENT
         }
       }
     }

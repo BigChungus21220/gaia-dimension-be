@@ -3,7 +3,7 @@
   "minecraft:item": {
     "description": {
       "category": "equipment",
-      "identifier": "gaia:gaia_duke_blade"
+      "identifier": "gaiadimension:gaia_duke_blade"
     },
     "components": {
       "minecraft:icon": {
@@ -27,7 +27,7 @@
         "repair_items": [
           {
             "items": [
-              "gaia:gaia_duke_blade"
+              "gaiadimension:gaia_duke_blade"
             ],
             "repair_amount": "context.other->query.remaining_durability + 0.2 * context.other->query.max_durability"
           }

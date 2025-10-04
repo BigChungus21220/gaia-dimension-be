@@ -12,12 +12,14 @@
       "AAA",
       "AAA"
     ],
-    "key": {"A": {
-      "item": "gaia:hematite",
-      "data": 0
-    }},
+    "key": {
+      "A": {
+        "item": "gaiadimension:hematite",
+        "data": 0
+      }
+    },
     "result": {
-      "item": "gaia:hematite_block",
+      "item": "gaiadimension:hematite_block",
       "count": 1
     }
   }

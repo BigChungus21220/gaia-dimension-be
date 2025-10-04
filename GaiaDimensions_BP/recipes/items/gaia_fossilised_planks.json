@@ -12,12 +12,12 @@
     ],
     "key": {
       "B": {
-        "item": "gaia:fossilized_log",
+        "item": "gaiadimension:fossilized_log",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:fossilized_planks",
+      "item": "gaiadimension:fossilized_planks",
       "count": 4
     }
   }

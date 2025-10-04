@@ -13,13 +13,13 @@
       "AAA"
     ],
     "key": {
-     "A": {
-      "item": "gaia:amethyst_brick",
-      "data": 0
-    }
-  },
+      "A": {
+        "item": "gaiadimension:amethyst_brick",
+        "data": 0
+      }
+    },
     "result": {
-      "item": "gaia:amethyst_stair",
+      "item": "gaiadimension:amethyst_stair",
       "count": 8
     }
   }

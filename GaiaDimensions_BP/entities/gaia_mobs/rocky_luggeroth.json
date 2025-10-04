@@ -2,7 +2,7 @@
   "format_version": "1.18.10",
   "minecraft:entity": {
     "description": {
-      "identifier": "gaia:rocky_luggeroth",
+      "identifier": "gaiadimension:rocky_luggeroth",
       "is_spawnable": true,
       "is_summonable": true,
       "is_experimental": false
@@ -15,26 +15,27 @@
         },
         "minecraft:ageable": {
           "duration": 1200,
-          "feed_items": ["carrot", "beetroot", "potato"],
+          "feed_items": [
+            "carrot",
+            "beetroot",
+            "potato"
+          ],
           "grow_up": {
             "event": "minecraft:ageable_grow_up",
             "target": "self"
           }
         },
-
         "minecraft:behavior.follow_parent": {
           "priority": 6,
           "speed_multiplier": 1.1
         }
       },
-
       "minecraft:pig_transform": {
         "minecraft:transformation": {
           "into": "minecraft:pig_zombie",
           "delay": 0.5
         }
       },
-
       "minecraft:pig_adult": {
         "minecraft:experience_reward": {
           "on_bred": "Math.Random(1,7)",
@@ -57,10 +58,13 @@
               "target": "baby"
             }
           },
-          "breed_items": ["carrot", "beetroot", "potato"]
+          "breed_items": [
+            "carrot",
+            "beetroot",
+            "potato"
+          ]
         }
       },
-
       "minecraft:pig_unsaddled": {
         "minecraft:interact": {
           "interactions": [
@@ -82,13 +86,18 @@
         },
         "minecraft:rideable": {
           "seat_count": 1,
-          "family_types": ["zombie"],
+          "family_types": [
+            "zombie"
+          ],
           "seats": {
-            "position": [0.0, 0.63, 0.0]
+            "position": [
+              0.0,
+              0.63,
+              0.0
+            ]
           }
         }
       },
-
       "minecraft:pig_saddled": {
         "minecraft:is_saddled": {},
         "minecraft:boostable": {
@@ -105,9 +114,15 @@
         "minecraft:rideable": {
           "seat_count": 1,
           "interact_text": "action.interact.ride.horse",
-          "family_types": ["player"],
+          "family_types": [
+            "player"
+          ],
           "seats": {
-            "position": [0.0, 0.63, 0.0]
+            "position": [
+              0.0,
+              0.63,
+              0.0
+            ]
           }
         },
         "minecraft:item_controllable": {
@@ -118,7 +133,6 @@
         }
       }
     },
-
     "components": {
       "minecraft:is_hidden_when_invisible": {},
       "minecraft:damage_sensor": {
@@ -142,7 +156,10 @@
         }
       },
       "minecraft:type_family": {
-        "family": ["pig", "mob"]
+        "family": [
+          "pig",
+          "mob"
+        ]
       },
       "minecraft:breathable": {
         "total_supply": 15,
@@ -209,7 +226,12 @@
       "minecraft:behavior.tempt": {
         "priority": 5,
         "speed_multiplier": 1.2,
-        "items": ["potato", "carrot", "beetroot", "carrotOnAStick"]
+        "items": [
+          "potato",
+          "carrot",
+          "beetroot",
+          "carrotOnAStick"
+        ]
       },
       "minecraft:behavior.random_stroll": {
         "priority": 7,
@@ -230,12 +252,13 @@
       },
       "minecraft:conditional_bandwidth_optimization": {}
     },
-
     "events": {
       "become_zombie": {
         "remove": {},
         "add": {
-          "component_groups": ["minecraft:pig_transform"]
+          "component_groups": [
+            "minecraft:pig_transform"
+          ]
         }
       },
       "minecraft:entity_spawned": {
@@ -248,39 +271,52 @@
             "weight": 0,
             "remove": {},
             "add": {
-              "component_groups": ["minecraft:pig_baby"]
+              "component_groups": [
+                "minecraft:pig_baby"
+              ]
             }
           }
         ]
       },
-
       "minecraft:entity_born": {
         "remove": {},
         "add": {
-          "component_groups": ["minecraft:pig_baby"]
+          "component_groups": [
+            "minecraft:pig_baby"
+          ]
         }
       },
-
       "minecraft:ageable_grow_up": {
         "remove": {
-          "component_groups": ["minecraft:pig_baby"]
+          "component_groups": [
+            "minecraft:pig_baby"
+          ]
         },
         "add": {
-          "component_groups": ["minecraft:pig_adult", "minecraft:pig_unsaddled"]
+          "component_groups": [
+            "minecraft:pig_adult",
+            "minecraft:pig_unsaddled"
+          ]
         }
       },
-
       "minecraft:on_saddled": {
         "remove": {
-          "component_groups": ["minecraft:pig_unsaddled"]
+          "component_groups": [
+            "minecraft:pig_unsaddled"
+          ]
         },
         "add": {
-          "component_groups": ["minecraft:pig_saddled"]
+          "component_groups": [
+            "minecraft:pig_saddled"
+          ]
         }
       },
       "minecraft:spawn_adult": {
         "add": {
-          "component_groups": ["minecraft:pig_adult", "minecraft:pig_unsaddled"]
+          "component_groups": [
+            "minecraft:pig_adult",
+            "minecraft:pig_unsaddled"
+          ]
         }
       }
     }

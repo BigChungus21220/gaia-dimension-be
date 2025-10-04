@@ -12,12 +12,14 @@
       "AAA",
       "AAA"
     ],
-    "key": {"A": {
-      "item": "gaia:pink_sludge_block",
-      "data": 0
-    }},
+    "key": {
+      "A": {
+        "item": "gaiadimension:pink_sludge_block",
+        "data": 0
+      }
+    },
     "result": {
-      "item": "gaia:pink_goo",
+      "item": "gaiadimension:pink_goo",
       "count": 1
     }
   }

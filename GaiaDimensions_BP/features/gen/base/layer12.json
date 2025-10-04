@@ -1,26 +1,26 @@
 {
-    "format_version": "1.20.20",
-    "minecraft:aggregate_feature": {
-        "description": {
-            "identifier": "gaia:gen/base/layer12"
-        },
-        "features": [
-            "gaia:conditions/condition_2655740703",
-            "gaia:conditions/condition_5540742309",
-            "gaia:conditions/condition_7713761223",
-            "gaia:conditions/condition_7927415547",
-            "gaia:conditions/condition_5070748106",
-            "gaia:conditions/condition_2769460461",
-            "gaia:conditions/condition_1154683460",
-            "gaia:conditions/condition_7874247593",
-            "gaia:conditions/condition_4545463896",
-            "gaia:conditions/condition_3618903486",
-            "gaia:conditions/condition_6693462268",
-            "gaia:conditions/condition_5041478525",
-            "gaia:conditions/condition_4826322541",
-            "gaia:conditions/condition_5565223436",
-            "gaia:conditions/condition_3574951134"
-        ],
-        "early_out": "first_success"
-    }
+  "format_version": "1.20.20",
+  "minecraft:aggregate_feature": {
+    "description": {
+      "identifier": "gaiadimension:gen/base/layer12"
+    },
+    "features": [
+      "gaiadimension:conditions/condition_2655740703",
+      "gaiadimension:conditions/condition_5540742309",
+      "gaiadimension:conditions/condition_7713761223",
+      "gaiadimension:conditions/condition_7927415547",
+      "gaiadimension:conditions/condition_5070748106",
+      "gaiadimension:conditions/condition_2769460461",
+      "gaiadimension:conditions/condition_1154683460",
+      "gaiadimension:conditions/condition_7874247593",
+      "gaiadimension:conditions/condition_4545463896",
+      "gaiadimension:conditions/condition_3618903486",
+      "gaiadimension:conditions/condition_6693462268",
+      "gaiadimension:conditions/condition_5041478525",
+      "gaiadimension:conditions/condition_4826322541",
+      "gaiadimension:conditions/condition_5565223436",
+      "gaiadimension:conditions/condition_3574951134"
+    ],
+    "early_out": "first_success"
+  }
 }

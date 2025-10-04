@@ -2,7 +2,7 @@
   "format_version": "1.10",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:agate_cup",
+      "identifier": "gaiadimension:agate_cup",
       "category": "Items"
     },
     "components": {

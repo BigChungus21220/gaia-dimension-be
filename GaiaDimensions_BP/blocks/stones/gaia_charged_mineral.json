@@ -1,0 +1,30 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaiadimension:charged_mineral",
+      "menu_category": {
+        "category": "nature",
+        "group": "itemGroup.name.stone"
+      }
+    },
+    "components": {
+      "tag:ore": {},
+      "tag:stone": {},
+      "minecraft:loot": "loot_tables/blocks/stones/charged_mineral.json",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1
+      },
+      "minecraft:light_emission": 10,
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 1
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "charged_mineral",
+          "render_method": "opaque"
+        }
+      }
+    }
+  }
+}

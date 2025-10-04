@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:light_soil",
+          "name": "gaiadimension:light_soil",
           "functions": [
             {
               "function": "set_count",

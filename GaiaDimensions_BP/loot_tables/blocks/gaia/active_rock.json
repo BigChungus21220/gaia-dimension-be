@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:active_rock",
+          "name": "gaiadimension:active_rock",
           "functions": [
             {
               "function": "set_count",

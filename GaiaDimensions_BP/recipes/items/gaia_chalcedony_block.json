@@ -14,12 +14,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:chalcedony",
+        "item": "gaiadimension:chalcedony",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:chalcedony_block",
+      "item": "gaiadimension:chalcedony_block",
       "count": 1
     }
   }

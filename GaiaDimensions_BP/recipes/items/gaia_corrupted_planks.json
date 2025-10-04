@@ -12,12 +12,12 @@
     ],
     "key": {
       "B": {
-        "item": "gaia:corrupted_log",
+        "item": "gaiadimension:corrupted_log",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:corrupted_tiles",
+      "item": "gaiadimension:corrupted_tiles",
       "count": 4
     }
   }

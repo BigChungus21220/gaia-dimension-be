@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:stripped_burning_log",
+          "name": "gaiadimension:stripped_burning_log",
           "functions": [
             {
               "function": "set_count",

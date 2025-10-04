@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:cracked_gaia_stone_brick_slab",
+          "name": "gaiadimension:cracked_gaia_stone_brick_slab",
           "functions": [
             {
               "function": "set_count",

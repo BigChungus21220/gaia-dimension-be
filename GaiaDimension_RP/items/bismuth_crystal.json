@@ -2,7 +2,7 @@
   "format_version": "1.10",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:bismuth_crystal",
+      "identifier": "gaiadimension:bismuth_crystal",
       "category": "Items"
     },
     "components": {

@@ -12,12 +12,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:brick3",
+        "item": "gaiadimension:brick3",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:brick3_slab",
+      "item": "gaiadimension:brick3_slab",
       "count": 1
     }
   }

@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:gaia_duchess_leggings",
+      "identifier": "gaiadimension:gaia_duchess_leggings",
       "category": "Equipment"
     },
     "components": {
@@ -33,7 +33,7 @@
         "repair_items": [
           {
             "items": [
-              "gaia:gaia_duchess_leggings"
+              "gaiadimension:gaia_duchess_leggings"
             ],
             "repair_amount": 2362
           }

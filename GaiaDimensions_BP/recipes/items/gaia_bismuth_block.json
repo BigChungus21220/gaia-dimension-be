@@ -14,12 +14,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:bismuth_crystal",
+        "item": "gaiadimension:bismuth_crystal",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:bismuth_block",
+      "item": "gaiadimension:bismuth_block",
       "count": 1
     }
   }

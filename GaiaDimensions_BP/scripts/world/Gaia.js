@@ -53,7 +53,7 @@ class Gaia {
      */
     static getBiome(location) {
         if (this.isInGaia(location)) {
-            const block = this.getBlock(vec3(location.x, 0, location.z)).typeId.replace("gaia:bedrock_", "");
+            const block = this.getBlock(vec3(location.x, 0, location.z)).typeId.replace("gaiadimension:bedrock_", "");
             if (block == null) {
                 return false;
             } else {

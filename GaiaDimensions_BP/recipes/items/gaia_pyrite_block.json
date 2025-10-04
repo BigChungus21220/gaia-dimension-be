@@ -14,12 +14,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:pyrite",
+        "item": "gaiadimension:pyrite",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:pyrite_block",
+      "item": "gaiadimension:pyrite_block",
       "count": 1
     }
   }

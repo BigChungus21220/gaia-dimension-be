@@ -2,7 +2,7 @@
   "format_version": "1.16.0",
   "minecraft:entity": {
     "description": {
-      "identifier": "gaia:agate_arrow",
+      "identifier": "gaiadimension:agate_arrow",
       "is_spawnable": false,
       "is_summonable": true,
       "is_experimental": false,
@@ -30,17 +30,16 @@
             "subject": "other",
             "value": "player"
           },
-          "event": "gaia:spawn_item"
+          "event": "gaiadimension:spawn_item"
         }
       },
-
       "minecraft:player_arrow": {
         "minecraft:projectile": {
           "on_hit": {
             "definition_event": {
               "affect_projectile": true,
               "event_trigger": {
-                "event": "gaia:pickup_item",
+                "event": "gaiadimension:pickup_item",
                 "target": "self"
               }
             },
@@ -65,18 +64,23 @@
           "uncertainty_multiplier": 0,
           "anchor": 1,
           "should_bounce": true,
-          "offset": [0, -0.1, 0]
+          "offset": [
+            0,
+            -0.1,
+            0
+          ]
         }
       }
     },
-
     "components": {
       "minecraft:collision_box": {
         "width": 0.25,
         "height": 0.25
       },
       "minecraft:type_family": {
-        "family": ["arrow"]
+        "family": [
+          "arrow"
+        ]
       },
       "minecraft:scale": {
         "value": 0.5
@@ -87,34 +91,41 @@
         "is_pushable_by_piston": true
       }
     },
-
     "events": {
-      "gaia:particle": {
-        "run_command": {
-          "command": ["particle minecraft:basic_crit_particle ~~~"]
-        }
-      },
-      "gaia:pickup_item": {
-        "add": {
-          "component_groups": ["pickup_item"]
-        }
-      },
-      "gaia:spawn_item": {
+      "gaiadimension:particle": {
         "run_command": {
           "command": [
-            "give @p[r=3] gaia:agate_arrow 1 0",
+            "particle minecraft:basic_crit_particle ~~~"
+          ]
+        }
+      },
+      "gaiadimension:pickup_item": {
+        "add": {
+          "component_groups": [
+            "pickup_item"
+          ]
+        }
+      },
+      "gaiadimension:spawn_item": {
+        "run_command": {
+          "command": [
+            "give @p[r=3] gaiadimension:agate_arrow 1 0",
             "playsound random.pop @p[r=3]"
           ]
         },
         "add": {
-          "component_groups": ["spawn_item"]
+          "component_groups": [
+            "spawn_item"
+          ]
         }
       },
       "minecraft:entity_spawned": {
         "sequence": [
           {
             "add": {
-              "component_groups": ["minecraft:player_arrow"]
+              "component_groups": [
+                "minecraft:player_arrow"
+              ]
             }
           }
         ]

@@ -2,15 +2,13 @@
   "format_version": "1.13.0",
   "minecraft:entity": {
     "description": {
-      "identifier": "gaia:agate_golem",
+      "identifier": "gaiadimension:agate_golem",
       "is_spawnable": true,
       "is_summonable": true,
       "is_experimental": false,
       "runtime_identifier": "minecraft:iron_golem"
     },
-
     "component_groups": {},
-
     "components": {
       "minecraft:underwater_movement": {
         "value": 5.0
@@ -60,7 +58,9 @@
       },
       "minecraft:is_hidden_when_invisible": {},
       "minecraft:type_family": {
-        "family": ["mob"]
+        "family": [
+          "mob"
+        ]
       },
       "minecraft:nameable": {},
       "minecraft:collision_box": {
@@ -166,7 +166,6 @@
         "priority": 3,
         "must_reach": true,
         "must_see": true,
-
         "entity_types": [
           {
             "filters": {
@@ -244,7 +243,6 @@
       },
       "minecraft:conditional_bandwidth_optimization": {}
     },
-
     "events": {
       "dead": {}
     }

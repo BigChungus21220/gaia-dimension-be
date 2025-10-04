@@ -2,7 +2,7 @@
   "format_version": "1.10",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:tektite",
+      "identifier": "gaiadimension:tektite",
       "category": "Items"
     },
     "components": {

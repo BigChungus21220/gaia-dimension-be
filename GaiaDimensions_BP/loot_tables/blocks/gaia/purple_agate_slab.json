@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:purple_agate_slab",
+          "name": "gaiadimension:purple_agate_slab",
           "functions": [
             {
               "function": "set_count",

@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:static_stone",
+          "name": "gaiadimension:static_stone",
           "functions": [
             {
               "function": "set_count",

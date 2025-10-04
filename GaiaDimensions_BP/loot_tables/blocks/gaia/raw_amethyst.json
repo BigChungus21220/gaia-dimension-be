@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:raw_amethyst",
+          "name": "gaiadimension:raw_amethyst",
           "functions": [
             {
               "function": "set_count",

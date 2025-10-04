@@ -2,22 +2,25 @@
   "format_version": "1.16.100",
   "minecraft:entity": {
     "description": {
-      "identifier": "gaia:gem_pouch_container",
+      "identifier": "gaiadimension:gem_pouch_container",
       "is_spawnable": false,
       "is_summonable": true,
       "is_experimental": false
     },
     "component_groups": {
-      "gaia:despawning_entity": {
+      "gaiadimension:despawning_entity": {
         "minecraft:transformation": {
           "drop_inventory": true,
-          "into": "gaia:despawn"
+          "into": "gaiadimension:despawn"
         }
       }
     },
     "components": {
       "minecraft:type_family": {
-        "family": ["pouch", "inanimate"]
+        "family": [
+          "pouch",
+          "inanimate"
+        ]
       },
       "minecraft:collision_box": {
         "height": 0,
@@ -28,7 +31,11 @@
           {
             "width": 1,
             "height": 0.3,
-            "pivot": [0, 0.5, 0]
+            "pivot": [
+              0,
+              0.5,
+              0
+            ]
           }
         ]
       },
@@ -62,7 +69,7 @@
       "minecraft:inside_block_notifier": {
         "block_list": [
           {
-            "block": "gaia:purifier",
+            "block": "gaiadimension:purifier",
             "exited_block_event": {
               "event": "destroy",
               "target": "self"
@@ -74,7 +81,9 @@
     "events": {
       "destroy": {
         "add": {
-          "component_groups": ["gaia:despawning_entity"]
+          "component_groups": [
+            "gaiadimension:despawning_entity"
+          ]
         }
       }
     }

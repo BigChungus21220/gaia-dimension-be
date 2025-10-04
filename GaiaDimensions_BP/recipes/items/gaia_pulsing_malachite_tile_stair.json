@@ -14,12 +14,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:pulsing_malachite_tiles",
+        "item": "gaiadimension:pulsing_malachite_tiles",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:pulsing_malachite_tile_stair",
+      "item": "gaiadimension:pulsing_malachite_tile_stair",
       "count": 8
     }
   }

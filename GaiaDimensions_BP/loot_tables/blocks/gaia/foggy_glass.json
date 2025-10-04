@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:foggy_glass",
+          "name": "gaiadimension:foggy_glass",
           "functions": [
             {
               "function": "set_count",

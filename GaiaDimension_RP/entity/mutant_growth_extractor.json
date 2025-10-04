@@ -2,7 +2,7 @@
   "format_version": "1.8.0",
   "minecraft:client_entity": {
     "description": {
-      "identifier": "gaia:mutant_growth_extractor",
+      "identifier": "gaiadimension:mutant_growth_extractor",
       "materials": { "default": "skeleton" },
       "textures": {
         "default": "textures/entity/mutant_growth_extractor"

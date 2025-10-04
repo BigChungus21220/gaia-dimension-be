@@ -2,7 +2,7 @@
   "format_version": "1.16.0",
   "minecraft:entity": {
     "description": {
-      "identifier": "gaia:nomadic_lagrahk_none",
+      "identifier": "gaiadimension:nomadic_lagrahk_none",
       "is_spawnable": true,
       "is_summonable": true,
       "is_experimental": false,
@@ -292,38 +292,56 @@
         }
       },
       "minecraft:type_family": {
-        "family": ["monster", "ravager", "mob"]
+        "family": [
+          "monster",
+          "ravager",
+          "mob"
+        ]
       }
     },
     "events": {
       "dead": {},
       "start": {
         "add": {
-          "component_groups": ["minecraft:hostile"]
+          "component_groups": [
+            "minecraft:hostile"
+          ]
         }
       },
       "minecraft:become_stunned": {
         "add": {
-          "component_groups": ["stunned"]
+          "component_groups": [
+            "stunned"
+          ]
         },
         "remove": {
-          "component_groups": ["minecraft:hostile"]
+          "component_groups": [
+            "minecraft:hostile"
+          ]
         }
       },
       "minecraft:start_roar": {
         "add": {
-          "component_groups": ["roaring"]
+          "component_groups": [
+            "roaring"
+          ]
         },
         "remove": {
-          "component_groups": ["stunned"]
+          "component_groups": [
+            "stunned"
+          ]
         }
       },
       "minecraft:end_roar": {
         "add": {
-          "component_groups": ["minecraft:hostile"]
+          "component_groups": [
+            "minecraft:hostile"
+          ]
         },
         "remove": {
-          "component_groups": ["roaring"]
+          "component_groups": [
+            "roaring"
+          ]
         }
       }
     }

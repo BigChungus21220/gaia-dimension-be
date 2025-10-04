@@ -2,7 +2,7 @@
   "format_version": "1.10.0",
   "minecraft:client_entity": {
     "description": {
-      "identifier": "gaia:bismuth_ulterus",
+      "identifier": "gaiadimension:bismuth_ulterus",
       "textures": {
         "default": "textures/entity/bismuth_ulterus"
       },

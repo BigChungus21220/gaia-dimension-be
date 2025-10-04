@@ -5,11 +5,11 @@
       "furnace"
     ],
     "output": {
-      "item": "gaia:pyrite",
+      "item": "gaiadimension:pyrite",
       "data": 0
     },
     "input": {
-      "item": "gaia:pyrite_ore",
+      "item": "gaiadimension:pyrite_ore",
       "data": 0
     },
     "description": {

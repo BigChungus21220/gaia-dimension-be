@@ -12,12 +12,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:fossilized_planks",
+        "item": "gaiadimension:fossilized_planks",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:fossilized_slab",
+      "item": "gaiadimension:fossilized_slab",
       "count": 6
     }
   }

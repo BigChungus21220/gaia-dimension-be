@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:blue_opal_block",
+          "name": "gaiadimension:blue_opal_block",
           "functions": [
             {
               "function": "set_count",

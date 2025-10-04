@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:cracked_copal_brick_stair",
+          "name": "gaiadimension:cracked_copal_brick_stair",
           "functions": [
             {
               "function": "set_count",

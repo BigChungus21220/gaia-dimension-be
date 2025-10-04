@@ -14,11 +14,11 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:bismuth_residue"
+        "item": "gaiadimension:bismuth_residue"
       }
     },
     "result": {
-      "item": "gaia:bismuth_crystal"
+      "item": "gaiadimension:bismuth_crystal"
     }
   }
 }

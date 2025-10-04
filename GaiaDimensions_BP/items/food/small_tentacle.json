@@ -2,7 +2,7 @@
   "format_version": "1.10",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:small_tentacle",
+      "identifier": "gaiadimension:small_tentacle",
       "category": "equipment"
     },
     "components": {

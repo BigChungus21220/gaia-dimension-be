@@ -11,12 +11,14 @@
       "AA ",
       "AA "
     ],
-    "key": { "A": {
-      "item": "gaia:jet_brick",
-      "data": 0
-    }},
+    "key": {
+      "A": {
+        "item": "gaiadimension:jet_brick",
+        "data": 0
+      }
+    },
     "result": {
-      "item": "gaia:jet_brick",
+      "item": "gaiadimension:jet_brick",
       "count": 1
     }
   }

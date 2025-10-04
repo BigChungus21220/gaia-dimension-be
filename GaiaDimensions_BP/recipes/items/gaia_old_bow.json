@@ -2,7 +2,7 @@
   "format_version": "1.18.0",
   "minecraft:recipe_shaped": {
     "description": {
-      "identifier": "gaia:old_bow"
+      "identifier": "gaiadimension:old_bow"
     },
     "tags": [
       "crafting_table"
@@ -14,26 +14,26 @@
     ],
     "key": {
       "b": {
-        "item": "gaia:shiny_bone"
+        "item": "gaiadimension:shiny_bone"
       },
       "c": {
         "item": "minecraft:string"
       },
       "d": {
-        "item": "gaia:shiny_bone"
+        "item": "gaiadimension:shiny_bone"
       },
       "f": {
         "item": "minecraft:string"
       },
       "h": {
-        "item": "gaia:shiny_bone"
+        "item": "gaiadimension:shiny_bone"
       },
       "i": {
         "item": "minecraft:string"
       }
     },
     "result": {
-      "item": "gaia:old_bow",
+      "item": "gaiadimension:old_bow",
       "count": "1"
     }
   }

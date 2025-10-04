@@ -5,11 +5,11 @@
       "furnace"
     ],
     "output": {
-      "item": "gaia:white_opal",
+      "item": "gaiadimension:white_opal",
       "data": 0
     },
     "input": {
-      "item": "gaia:white_opal_ore",
+      "item": "gaiadimension:white_opal_ore",
       "data": 0
     },
     "description": {

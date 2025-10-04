@@ -9,14 +9,14 @@
     ],
     "ingredients": [
       {
-        "item": "gaia:spotted_kersei"
+        "item": "gaiadimension:spotted_kersei"
       },
       {
-        "item": "gaia:thiscus"
+        "item": "gaiadimension:thiscus"
       }
     ],
     "result": {
-      "item": "gaia:tilipi"
+      "item": "gaiadimension:tilipi"
     }
   }
 }

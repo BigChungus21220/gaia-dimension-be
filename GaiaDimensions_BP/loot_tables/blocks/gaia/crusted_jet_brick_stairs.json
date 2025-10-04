@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:crusted_jet_brick_stair",
+          "name": "gaiadimension:crusted_jet_brick_stair",
           "functions": [
             {
               "function": "set_count",

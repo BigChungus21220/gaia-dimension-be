@@ -2,13 +2,13 @@
   "format_version": "1.8.0",
   "minecraft:spawn_rules": {
     "description": {
-      "identifier": "gaia:shalurker",
+      "identifier": "gaiadimension:shalurker",
       "population_control": "monster"
     },
     "conditions": [
       {
         "minecraft:spawns_underground": {},
-        "minecraft:spawns_on_block_filter": "gaia:gaia_stone",
+        "minecraft:spawns_on_block_filter": "gaiadimension:gaia_stone",
         "minecraft:brightness_filter": {
           "min": 0,
           "max": 10,

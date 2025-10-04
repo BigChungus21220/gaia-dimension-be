@@ -2,7 +2,7 @@
   "format_version": "1.8.0",
   "minecraft:client_entity": {
     "description": {
-      "identifier": "gaia:lesser_shock_shooter",
+      "identifier": "gaiadimension:lesser_shock_shooter",
       "materials": { "default": "skeleton" },
       "textures": {
         "default": "textures/entity/lesser_shock_shooter"

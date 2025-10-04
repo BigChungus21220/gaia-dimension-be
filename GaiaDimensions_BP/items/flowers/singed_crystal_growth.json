@@ -1,22 +1,23 @@
 {
-	"format_version": "1.16.100",
-	"minecraft:item": {
-		"description": {
-			"identifier": "gaia:singed_crystal_growth_item",
-			"category": "nature"
-		},
-		"components": {
-			"minecraft:icon": {
-				"texture":  "singed_crystal_growth"
-			},
-			"minecraft:display_name": {
-				"value": "Singed Crystal Growth" },
-			"minecraft:creative_category": {
-				"parent": "itemGroup.name.flower"
-			},
-			"minecraft:block_placer": {
-				"block": "gaia:singed_crystal_growth"
-			}
-		}
-	}
+  "format_version": "1.16.100",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaiadimension:singed_crystal_growth_item",
+      "category": "nature"
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "singed_crystal_growth"
+      },
+      "minecraft:display_name": {
+        "value": "Singed Crystal Growth"
+      },
+      "minecraft:creative_category": {
+        "parent": "itemGroup.name.flower"
+      },
+      "minecraft:block_placer": {
+        "block": "gaiadimension:singed_crystal_growth"
+      }
+    }
+  }
 }

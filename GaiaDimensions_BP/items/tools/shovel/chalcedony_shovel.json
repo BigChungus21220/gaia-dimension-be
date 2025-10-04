@@ -3,7 +3,7 @@
   "minecraft:item": {
     "description": {
       "category": "equipment",
-      "identifier": "gaia:chalcedony_shovel"
+      "identifier": "gaiadimension:chalcedony_shovel"
     },
     "components": {
       "minecraft:icon": {
@@ -27,8 +27,8 @@
         "repair_items": [
           {
             "items": [
-              "gaia:chalcedony",
-              "gaia:chalcedony_shovel"
+              "gaiadimension:chalcedony",
+              "gaiadimension:chalcedony_shovel"
             ],
             "repair_amount": "context.other->query.remaining_durability + 0.2 * context.other->query.max_durability"
           }
@@ -45,84 +45,84 @@
         "use_efficiency": true,
         "destroy_speeds": [
           {
-            "block": "gaia:soft_grass",
+            "block": "gaiadimension:soft_grass",
             "speed": 7,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:purple_glitter_grass",
+            "block": "gaiadimension:purple_glitter_grass",
             "speed": 7,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:corrupt_grass",
+            "block": "gaiadimension:corrupt_grass",
             "speed": 7,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:murky_grass",
+            "block": "gaiadimension:murky_grass",
             "speed": 7,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:corrupt_soil",
+            "block": "gaiadimension:corrupt_soil",
             "speed": 7,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:light_soil",
+            "block": "gaiadimension:light_soil",
             "speed": 7,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:boggy_soil",
+            "block": "gaiadimension:boggy_soil",
             "speed": 7,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:green_glitter_grass",
+            "block": "gaiadimension:green_glitter_grass",
             "speed": 7,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:yellow_glitter_grass",
+            "block": "gaiadimension:yellow_glitter_grass",
             "speed": 7,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:blue_glitter_grass",
+            "block": "gaiadimension:blue_glitter_grass",
             "speed": 7,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:pink_glitter_grass",
+            "block": "gaiadimension:pink_glitter_grass",
             "speed": 7,
             "on_dig": {
               "event": "reduce_durability"
             }
           },
           {
-            "block": "gaia:heavy_soil",
+            "block": "gaiadimension:heavy_soil",
             "speed": 7,
             "on_dig": {
               "event": "reduce_durability"

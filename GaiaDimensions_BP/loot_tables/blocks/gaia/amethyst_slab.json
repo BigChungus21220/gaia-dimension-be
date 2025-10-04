@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:amethyst_slab",
+          "name": "gaiadimension:amethyst_slab",
           "functions": [
             {
               "function": "set_count",

@@ -2,7 +2,7 @@
   "format_version": "1.10",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:luggeroth_chop",
+      "identifier": "gaiadimension:luggeroth_chop",
       "category": "equipment"
     },
     "components": {

@@ -14,11 +14,11 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:goldstone_residue"
+        "item": "gaiadimension:goldstone_residue"
       }
     },
     "result": {
-      "item": "gaia:goldstone"
+      "item": "gaiadimension:goldstone"
     }
   }
 }

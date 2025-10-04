@@ -14,11 +14,11 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:aura_residue"
+        "item": "gaiadimension:aura_residue"
       }
     },
     "result": {
-      "item": "gaia:aura_cluster"
+      "item": "gaiadimension:aura_cluster"
     }
   }
 }

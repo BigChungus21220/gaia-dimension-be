@@ -13,12 +13,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:burning_log",
+        "item": "gaiadimension:burning_log",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:burning_wood",
+      "item": "gaiadimension:burning_wood",
       "count": 3
     }
   }

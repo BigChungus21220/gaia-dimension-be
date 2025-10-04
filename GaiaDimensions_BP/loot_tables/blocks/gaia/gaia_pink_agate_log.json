@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:pink_agate_log",
+          "name": "gaiadimension:pink_agate_log",
           "functions": [
             {
               "function": "set_count",

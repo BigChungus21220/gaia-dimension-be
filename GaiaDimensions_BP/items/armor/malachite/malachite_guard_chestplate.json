@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:malachite_guard_chestplate",
+      "identifier": "gaiadimension:malachite_guard_chestplate",
       "category": "Equipment"
     },
     "components": {
@@ -33,7 +33,7 @@
         "repair_items": [
           {
             "items": [
-              "gaia:malachite_guard_chestplate"
+              "gaiadimension:malachite_guard_chestplate"
             ],
             "repair_amount": 1576
           }

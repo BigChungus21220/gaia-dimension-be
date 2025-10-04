@@ -3,7 +3,7 @@
 	"format_version": "1.20.50",
 	"minecraft:item": {
 		"description": {
-			"identifier": "gaia:old_bow",
+			"identifier": "gaiadimension:old_bow",
 			"menu_category": {
 				"category": "Items"
 			}
@@ -19,7 +19,7 @@
   "format_version": "1.20.80",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:old_bow",
+      "identifier": "gaiadimension:old_bow",
       "category": "Equipment"
     },
     "components": {
@@ -35,7 +35,7 @@
       },
       "minecraft:tags": {
         "tags": [
-          "gaia:old_bow"
+          "gaiadimension:old_bow"
         ]
       },
       "minecraft:repairable": {
@@ -48,13 +48,13 @@
           },
           {
             "items": [
-              "gaia:agate_stick"
+              "gaiadimension:agate_stick"
             ],
             "repair_amount": "q.max_durability / 0.3"
           },
           {
             "items": [
-              "gaia:old_bow"
+              "gaiadimension:old_bow"
             ],
             "repair_amount": "c.other->q.remaining_durability * 0.8"
           }
@@ -76,7 +76,7 @@
         "scale_power_by_draw_duration": true,
         "ammunition": [
           {
-            "item": "gaia:agate_arrow",
+            "item": "gaiadimension:agate_arrow",
             "use_offhand": true,
             "search_inventory": true,
             "use_in_creative": true

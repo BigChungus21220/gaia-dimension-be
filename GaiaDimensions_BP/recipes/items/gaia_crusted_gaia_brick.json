@@ -12,16 +12,16 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:gaia_brick",
+        "item": "gaiadimension:gaia_brick",
         "data": 0
       },
       "B": {
-        "item": "gaia:crystal_shard",
+        "item": "gaiadimension:crystal_shard",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:crusted_gaia_brick",
+      "item": "gaiadimension:crusted_gaia_brick",
       "count": 1
     }
   }

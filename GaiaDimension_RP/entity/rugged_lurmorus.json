@@ -2,7 +2,7 @@
   "format_version": "1.10.0",
   "minecraft:client_entity": {
     "description": {
-      "identifier": "gaia:rugged_lurmorus",
+      "identifier": "gaiadimension:rugged_lurmorus",
       "materials": { "default": "iron_golem" },
       "textures": {
         "default": "textures/entity/rugged_lurmorus"

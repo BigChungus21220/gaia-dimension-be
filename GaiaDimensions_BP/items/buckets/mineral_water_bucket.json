@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:mineral_water_bucket",
+      "identifier": "gaiadimension:mineral_water_bucket",
       "category": "items"
     },
     "components": {
@@ -14,7 +14,7 @@
       },
       "minecraft:max_stack_size": 1,
       "minecraft:block_placer": {
-        "block": "gaia:mineral_water"
+        "block": "gaiadimension:mineral_water"
       }
     }
   }

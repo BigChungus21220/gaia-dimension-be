@@ -12,12 +12,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:aura_planks",
+        "item": "gaiadimension:aura_planks",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:aura_slab",
+      "item": "gaiadimension:aura_slab",
       "count": 6
     }
   }

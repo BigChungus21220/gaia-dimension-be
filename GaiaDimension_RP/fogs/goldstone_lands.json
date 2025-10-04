@@ -2,7 +2,7 @@
     "format_version": "1.16.100",
     "minecraft:fog_settings": {
       "description": {
-        "identifier": "gaia:goldstone_lands_fog"
+        "identifier": "gaiadimension:goldstone_lands_fog"
       },
       "distance": {
         "air": {

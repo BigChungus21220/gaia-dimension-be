@@ -2,7 +2,7 @@
   "format_version": "1.10",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:crystallized_redstone",
+      "identifier": "gaiadimension:crystallized_redstone",
       "category": "Items"
     },
     "components": {

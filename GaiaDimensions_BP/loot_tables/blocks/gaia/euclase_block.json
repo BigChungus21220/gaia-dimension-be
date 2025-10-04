@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:euclase_block",
+          "name": "gaiadimension:euclase_block",
           "functions": [
             {
               "function": "set_count",

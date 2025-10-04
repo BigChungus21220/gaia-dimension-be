@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:corrupt_warrior_chestplate",
+      "identifier": "gaiadimension:corrupt_warrior_chestplate",
       "category": "Equipment"
     },
     "components": {
@@ -33,7 +33,7 @@
         "repair_items": [
           {
             "items": [
-              "gaia:corrupt_warrior_chestplate"
+              "gaiadimension:corrupt_warrior_chestplate"
             ],
             "repair_amount": 4000
           }

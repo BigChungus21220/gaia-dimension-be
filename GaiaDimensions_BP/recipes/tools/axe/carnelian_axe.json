@@ -14,14 +14,14 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:carnelian"
+        "item": "gaiadimension:carnelian"
       },
       "B": {
-        "item": "gaia:agate_stick"
+        "item": "gaiadimension:agate_stick"
       }
     },
     "result": {
-      "item": "gaia:carnelian_axe"
+      "item": "gaiadimension:carnelian_axe"
     }
   }
 }

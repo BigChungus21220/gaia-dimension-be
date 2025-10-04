@@ -16,7 +16,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "gaia:scaynyx_ingot"
+          "name": "gaiadimension:scaynyx_ingot"
         }
       ],
       "rolls": 1.0

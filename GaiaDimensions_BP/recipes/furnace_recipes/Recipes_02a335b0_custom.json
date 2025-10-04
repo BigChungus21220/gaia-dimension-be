@@ -5,11 +5,11 @@
       "furnace"
     ],
     "output": {
-      "item": "gaia:pink_essence",
+      "item": "gaiadimension:pink_essence",
       "data": 0
     },
     "input": {
-      "item": "gaia:gaia_stone",
+      "item": "gaiadimension:gaia_stone",
       "data": 0
     },
     "description": {

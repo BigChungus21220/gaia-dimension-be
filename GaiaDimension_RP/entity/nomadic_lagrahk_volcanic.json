@@ -2,7 +2,7 @@
   "format_version": "1.10.0",
   "minecraft:client_entity": {
     "description": {
-      "identifier": "gaia:nomadic_lagrahk_volcanic",
+      "identifier": "gaiadimension:nomadic_lagrahk_volcanic",
       "textures": {
         "default": "textures/entity/nomadic_lagrahk_volcanic"
       },

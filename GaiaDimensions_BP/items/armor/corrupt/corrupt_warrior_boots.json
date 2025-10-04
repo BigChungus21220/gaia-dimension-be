@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:corrupt_warrior_boots",
+      "identifier": "gaiadimension:corrupt_warrior_boots",
       "category": "Equipment"
     },
     "components": {
@@ -33,7 +33,7 @@
         "repair_items": [
           {
             "items": [
-              "gaia:corrupt_warrior_boots"
+              "gaiadimension:corrupt_warrior_boots"
             ],
             "repair_amount": 3250
           }

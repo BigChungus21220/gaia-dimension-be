@@ -1,11 +1,11 @@
 {
-	"format_version": "1.20.20",
-	"minecraft:snap_to_surface_feature": {
-		"description": {
-			"identifier": "gaia:decorations/spike_floor"
-		},
-		"feature_to_snap": "gaia:decorations/spike_column",
-		"vertical_search_range":  12,
-		"surface": "floor"
-	}
+  "format_version": "1.20.20",
+  "minecraft:snap_to_surface_feature": {
+    "description": {
+      "identifier": "gaiadimension:decorations/spike_floor"
+    },
+    "feature_to_snap": "gaiadimension:decorations/spike_column",
+    "vertical_search_range": 12,
+    "surface": "floor"
+  }
 }

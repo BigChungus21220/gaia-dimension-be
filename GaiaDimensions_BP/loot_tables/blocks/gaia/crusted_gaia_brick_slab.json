@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:crusted_gaia_brick_slab",
+          "name": "gaiadimension:crusted_gaia_brick_slab",
           "functions": [
             {
               "function": "set_count",

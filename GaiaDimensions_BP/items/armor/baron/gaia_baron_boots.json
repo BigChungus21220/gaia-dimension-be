@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:gaia_baron_boots",
+      "identifier": "gaiadimension:gaia_baron_boots",
       "category": "Equipment"
     },
     "components": {
@@ -33,7 +33,7 @@
         "repair_items": [
           {
             "items": [
-              "gaia:gaia_baron_boots"
+              "gaiadimension:gaia_baron_boots"
             ],
             "repair_amount": 2304
           }

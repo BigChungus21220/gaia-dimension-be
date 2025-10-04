@@ -5,7 +5,7 @@
       "entries": [
         {
           "type": "item",
-          "name": "gaia:aura_crystal_growth_item"
+          "name": "gaiadimension:aura_crystal_growth_item"
         }
       ]
     }

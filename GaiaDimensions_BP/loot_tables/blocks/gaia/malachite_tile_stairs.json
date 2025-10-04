@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:malachite_tiles_stairs",
+          "name": "gaiadimension:malachite_tiles_stairs",
           "functions": [
             {
               "function": "set_count",

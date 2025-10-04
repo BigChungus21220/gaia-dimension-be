@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:chalcedony_boots",
+      "identifier": "gaiadimension:chalcedony_boots",
       "category": "Equipment"
     },
     "components": {
@@ -33,8 +33,8 @@
         "repair_items": [
           {
             "items": [
-              "gaia:chalcedony",
-              "gaia:chalcedony_boots"
+              "gaiadimension:chalcedony",
+              "gaiadimension:chalcedony_boots"
             ],
             "repair_amount": 747
           }

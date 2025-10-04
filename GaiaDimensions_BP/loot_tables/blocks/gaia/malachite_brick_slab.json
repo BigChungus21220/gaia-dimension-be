@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:brick2_slab",
+          "name": "gaiadimension:brick2_slab",
           "functions": [
             {
               "function": "set_count",

@@ -2,13 +2,13 @@
   "format_version": "1.8.0",
   "minecraft:spawn_rules": {
     "description": {
-      "identifier": "gaia:muckling",
+      "identifier": "gaiadimension:muckling",
       "population_control": "monster"
     },
     "conditions": [
       {
         "minecraft:spawns_on_surface": {},
-        "minecraft:spawns_on_block_filter": "gaia:purple_glitter_grass",
+        "minecraft:spawns_on_block_filter": "gaiadimension:purple_glitter_grass",
         "minecraft:brightness_filter": {
           "min": 0,
           "max": 10,
@@ -28,7 +28,7 @@
       },
       {
         "minecraft:spawns_underground": {},
-        "minecraft:spawns_on_block_filter": "gaia:gaia_stone",
+        "minecraft:spawns_on_block_filter": "gaiadimension:gaia_stone",
         "minecraft:brightness_filter": {
           "min": 0,
           "max": 10,

@@ -12,7 +12,7 @@ World.prototype.getAllDimensions = function () {
  */
 Entity.prototype.isInPortal = function () {
   try {
-    return this.dimension.getBlock(this.location).typeId === "gaia:gaia_portal";
+    return this.dimension.getBlock(this.location).typeId === "gaiadimension:gaia_portal";
   } catch (e) { }
 };
 

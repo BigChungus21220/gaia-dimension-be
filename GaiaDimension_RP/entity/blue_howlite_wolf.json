@@ -2,7 +2,7 @@
   "format_version": "1.10.0",
   "minecraft:client_entity": {
     "description": {
-      "identifier": "gaia:blue_howlite_wolf",
+      "identifier": "gaiadimension:blue_howlite_wolf",
       "materials": { "default": "iron_golem" },
       "textures": {
         "default": "textures/entity/blue_howlite_wolf"

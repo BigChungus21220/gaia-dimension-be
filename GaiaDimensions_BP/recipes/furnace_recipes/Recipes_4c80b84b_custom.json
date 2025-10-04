@@ -5,11 +5,11 @@
       "furnace"
     ],
     "output": {
-      "item": "gaia:scaynyx_ingot",
+      "item": "gaiadimension:scaynyx_ingot",
       "data": 0
     },
     "input": {
-      "item": "gaia:precious_rock",
+      "item": "gaiadimension:precious_rock",
       "data": 0
     },
     "description": {

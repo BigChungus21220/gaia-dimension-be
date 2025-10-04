@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:volcanic_rock",
+          "name": "gaiadimension:volcanic_rock",
           "functions": [
             {
               "function": "set_count",

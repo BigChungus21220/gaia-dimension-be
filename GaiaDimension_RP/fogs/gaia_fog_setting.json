@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:fog_settings": {
     "description": {
-      "identifier": "gaia:fog_gaia"
+      "identifier": "gaiadimension:fog_gaia"
     },
     "distance": {
       "air": {

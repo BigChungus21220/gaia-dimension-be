@@ -25,11 +25,11 @@
               "function": "minecraft:looting_enchant"
             }
           ],
-          "name": "gaia:fine_thread"
+          "name": "gaiadimension:fine_thread"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "gaia:entities/cavern_tick"
+  "random_sequence": "gaiadimension:entities/cavern_tick"
 }

@@ -1,0 +1,30 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaiadimension:searing_rock",
+      "menu_category": {
+        "category": "nature",
+        "group": "itemGroup.name.stone"
+      }
+    },
+    "components": {
+      "tag:ore": {},
+      "tag:stone": {},
+      "minecraft:loot": "loot_tables/blocks/stones/searing_rock.json",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 2
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 1
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "searing_rock",
+          "render_method": "opaque",
+          "minecraft:map_color": "#ffffff"
+        }
+      }
+    }
+  }
+}

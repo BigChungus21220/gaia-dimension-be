@@ -9,14 +9,14 @@
     ],
     "ingredients": [
       {
-        "item": "gaia:mystical_murgni"
+        "item": "gaiadimension:mystical_murgni"
       },
       {
-        "item": "gaia:thiscus"
+        "item": "gaiadimension:thiscus"
       }
     ],
     "result": {
-      "item": "gaia:tilimy"
+      "item": "gaiadimension:tilimy"
     }
   }
 }

@@ -12,12 +12,12 @@
     ],
     "key": {
       "B": {
-        "item": "gaia:carnelian_block",
+        "item": "gaiadimension:carnelian_block",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:carnelian",
+      "item": "gaiadimension:carnelian",
       "count": 9
     }
   }

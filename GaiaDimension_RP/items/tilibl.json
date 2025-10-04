@@ -2,7 +2,7 @@
   "format_version": "1.10",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:tilibl",
+      "identifier": "gaiadimension:tilibl",
       "category": "Items"
     },
     "components": {

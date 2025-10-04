@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:bismuth_block",
+          "name": "gaiadimension:bismuth_block",
           "functions": [
             {
               "function": "set_count",

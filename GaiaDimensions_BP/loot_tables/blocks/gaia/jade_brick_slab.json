@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:jade_brick_slab",
+          "name": "gaiadimension:jade_brick_slab",
           "functions": [
             {
               "function": "set_count",

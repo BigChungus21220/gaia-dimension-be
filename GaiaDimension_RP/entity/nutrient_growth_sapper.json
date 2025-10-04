@@ -2,7 +2,7 @@
   "format_version": "1.8.0",
   "minecraft:client_entity": {
     "description": {
-      "identifier": "gaia:nutrient_growth_sapper",
+      "identifier": "gaiadimension:nutrient_growth_sapper",
       "materials": { "default": "skeleton" },
       "textures": {
         "default": "textures/entity/nutrient_growth_sapper"

@@ -9,14 +9,14 @@
     ],
     "ingredients": [
       {
-        "item": "gaia:ouzium"
+        "item": "gaiadimension:ouzium"
       },
       {
-        "item": "gaia:thiscus"
+        "item": "gaiadimension:thiscus"
       }
     ],
     "result": {
-      "item": "gaia:tiliou"
+      "item": "gaiadimension:tiliou"
     }
   }
 }

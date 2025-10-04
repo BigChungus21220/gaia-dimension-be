@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:pyrite_block",
+          "name": "gaiadimension:pyrite_block",
           "functions": [
             {
               "function": "set_count",

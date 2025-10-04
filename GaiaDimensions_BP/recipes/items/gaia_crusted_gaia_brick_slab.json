@@ -12,12 +12,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:crusted_gaia_brick",
+        "item": "gaiadimension:crusted_gaia_brick",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:crusted_gaia_brick_slab",
+      "item": "gaiadimension:crusted_gaia_brick_slab",
       "count": 6
     }
   }

@@ -14,14 +14,14 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:euclase"
+        "item": "gaiadimension:euclase"
       },
       "B": {
-        "item": "gaia:agate_stick"
+        "item": "gaiadimension:agate_stick"
       }
     },
     "result": {
-      "item": "gaia:euclase_pickaxe"
+      "item": "gaiadimension:euclase_pickaxe"
     }
   }
 }

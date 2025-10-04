@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:block_of_aura_crystal",
+          "name": "gaiadimension:block_of_aura_crystal",
           "functions": [
             {
               "function": "set_count",

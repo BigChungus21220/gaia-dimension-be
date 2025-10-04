@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:gaia_baron_leggings",
+      "identifier": "gaiadimension:gaia_baron_leggings",
       "category": "Equipment"
     },
     "components": {
@@ -33,7 +33,7 @@
         "repair_items": [
           {
             "items": [
-              "gaia:gaia_baron_leggings"
+              "gaiadimension:gaia_baron_leggings"
             ],
             "repair_amount": 2659
           }

@@ -2,7 +2,7 @@
   "format_version": "1.10",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:sugar_cluster",
+      "identifier": "gaiadimension:sugar_cluster",
       "category": "Items"
     },
     "components": {

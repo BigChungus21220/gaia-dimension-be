@@ -2,7 +2,7 @@
   "format_version": "1.10.0",
   "minecraft:client_entity": {
     "description": {
-      "identifier": "gaia:crystal_golem",
+      "identifier": "gaiadimension:crystal_golem",
       "materials": { "default": "iron_golem" },
       "textures": {
         "default": "textures/entity/crystal_golem"

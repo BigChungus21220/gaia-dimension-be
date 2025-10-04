@@ -14,12 +14,12 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:diopside",
+        "item": "gaiadimension:diopside",
         "data": 0
       }
     },
     "result": {
-      "item": "gaia:diopside_block",
+      "item": "gaiadimension:diopside_block",
       "count": 1
     }
   }

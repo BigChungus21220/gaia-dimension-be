@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:entity": {
     "description": {
-      "identifier": "gaia:despawn",
+      "identifier": "gaiadimension:despawn",
       "is_spawnable": false,
       "is_summonable": true,
       "is_experimental": false
@@ -10,7 +10,10 @@
     "component_groups": {},
     "components": {
       "minecraft:type_family": {
-        "family": ["chest", "inanimate"]
+        "family": [
+          "chest",
+          "inanimate"
+        ]
       },
       "minecraft:collision_box": {
         "height": 0,
@@ -21,7 +24,11 @@
           {
             "width": 1,
             "height": 0.1,
-            "pivot": [0, 0.5, 0]
+            "pivot": [
+              0,
+              0.5,
+              0
+            ]
           }
         ]
       },

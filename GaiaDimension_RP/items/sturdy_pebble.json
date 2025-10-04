@@ -2,7 +2,7 @@
   "format_version": "1.10",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:sturdy_pebble",
+      "identifier": "gaiadimension:sturdy_pebble",
       "category": "Items"
     },
     "components": {

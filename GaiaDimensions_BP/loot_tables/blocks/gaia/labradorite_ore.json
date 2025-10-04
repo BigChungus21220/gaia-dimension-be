@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:labradorite_ore",
+          "name": "gaiadimension:labradorite_ore",
           "functions": [
             {
               "function": "set_count",

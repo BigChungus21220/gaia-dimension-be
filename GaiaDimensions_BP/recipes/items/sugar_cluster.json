@@ -13,11 +13,11 @@
     ],
     "key": {
       "A": {
-        "item": "gaia:sugar_crystals"
+        "item": "gaiadimension:sugar_crystals"
       }
     },
     "result": {
-      "item": "gaia:sugar_cluster"
+      "item": "gaiadimension:sugar_cluster"
     }
   }
 }

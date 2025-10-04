@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:stripped_burning_wood",
+          "name": "gaiadimension:stripped_burning_wood",
           "functions": [
             {
               "function": "set_count",

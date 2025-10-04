@@ -2,7 +2,7 @@
   "format_version": "1.10",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:euclase",
+      "identifier": "gaiadimension:euclase",
       "category": "Items"
     },
     "components": {

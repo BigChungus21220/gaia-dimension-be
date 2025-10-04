@@ -6,7 +6,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "gaia:heavy_soil",
+          "name": "gaiadimension:heavy_soil",
           "functions": [
             {
               "function": "set_count",

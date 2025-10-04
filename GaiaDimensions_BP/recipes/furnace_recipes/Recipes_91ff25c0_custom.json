@@ -5,11 +5,11 @@
       "furnace"
     ],
     "output": {
-      "item": "gaia:moonstone",
+      "item": "gaiadimension:moonstone",
       "data": 0
     },
     "input": {
-      "item": "gaia:moonstone_ore",
+      "item": "gaiadimension:moonstone_ore",
       "data": 0
     },
     "description": {

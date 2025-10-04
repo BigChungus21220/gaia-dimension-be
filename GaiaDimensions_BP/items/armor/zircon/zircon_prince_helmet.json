@@ -2,7 +2,7 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:zircon_prince_helmet",
+      "identifier": "gaiadimension:zircon_prince_helmet",
       "category": "Equipment"
     },
     "components": {
@@ -33,7 +33,7 @@
         "repair_items": [
           {
             "items": [
-              "gaia:zircon_prince_helmet"
+              "gaiadimension:zircon_prince_helmet"
             ],
             "repair_amount": 1298
           }

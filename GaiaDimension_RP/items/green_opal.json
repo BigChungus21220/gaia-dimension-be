@@ -2,7 +2,7 @@
   "format_version": "1.10",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:green_opal",
+      "identifier": "gaiadimension:green_opal",
       "category": "Items"
     },
     "components": {

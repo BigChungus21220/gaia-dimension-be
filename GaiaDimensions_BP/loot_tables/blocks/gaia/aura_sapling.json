@@ -1,12 +1,11 @@
 {
-  "pools": 
-  {
+  "pools": {
     "rolls": 1,
     "entries": [
       {
         "type": "item",
         "weight": 1,
-        "name": "gaia:aura_sapling",
+        "name": "gaiadimension:aura_sapling",
         "functions": [
           {
             "function": "set_count",

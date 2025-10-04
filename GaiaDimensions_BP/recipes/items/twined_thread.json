@@ -9,20 +9,20 @@
     ],
     "ingredients": [
       {
-        "item": "gaia:fine_thread"
+        "item": "gaiadimension:fine_thread"
       },
       {
-        "item": "gaia:fine_thread"
+        "item": "gaiadimension:fine_thread"
       },
       {
-        "item": "gaia:fine_thread"
+        "item": "gaiadimension:fine_thread"
       },
       {
-        "item": "gaia:fine_thread"
+        "item": "gaiadimension:fine_thread"
       }
     ],
     "result": {
-      "item": "gaia:twined_thread"
+      "item": "gaiadimension:twined_thread"
     }
   }
 }

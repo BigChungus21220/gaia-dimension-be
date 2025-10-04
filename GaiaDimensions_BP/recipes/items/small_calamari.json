@@ -10,7 +10,7 @@
       "campfire",
       "soul_campfire"
     ],
-    "input": "gaia:small_tentacle",
-    "output": "gaia:small_calamari"
+    "input": "gaiadimension:small_tentacle",
+    "output": "gaiadimension:small_calamari"
   }
 }

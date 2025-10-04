@@ -5,11 +5,11 @@
       "furnace"
     ],
     "output": {
-      "item": "gaia:cinnabar",
+      "item": "gaiadimension:cinnabar",
       "data": 0
     },
     "input": {
-      "item": "gaia:cinnabar_ore",
+      "item": "gaiadimension:cinnabar_ore",
       "data": 0
     },
     "description": {

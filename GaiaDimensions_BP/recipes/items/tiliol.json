@@ -9,14 +9,14 @@
     ],
     "ingredients": [
       {
-        "item": "gaia:stickly_cupsir"
+        "item": "gaiadimension:stickly_cupsir"
       },
       {
-        "item": "gaia:thiscus"
+        "item": "gaiadimension:thiscus"
       }
     ],
     "result": {
-      "item": "gaia:tiliol"
+      "item": "gaiadimension:tiliol"
     }
   }
 }

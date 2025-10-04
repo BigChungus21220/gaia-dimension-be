@@ -2,7 +2,7 @@
   "format_version": "1.10",
   "minecraft:item": {
     "description": {
-      "identifier": "gaia:fine_dust",
+      "identifier": "gaiadimension:fine_dust",
       "category": "Items"
     },
     "components": {
