@@ -1,0 +1,52 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaiadimension:pink_agate_sapling",
+      "traits": {
+        "minecraft:placement_position": {
+          "enabled_states": [
+            "minecraft:block_face"
+          ]
+        }
+      }
+    },
+    "components": {
+      "minecraft:display_name": "Alder Sapling",
+      "minecraft:geometry": "geometry.gaia_dimension.sapling",
+      "minecraft:custom_components": [
+        "gaiadimension:sapling"
+      ],
+      "minecraft:tick": {
+        "interval_range": [
+          12000,
+          18000
+        ],
+        "looping": true
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "pink_agate_sapling",
+          "render_method": "alpha_test"
+        }
+      },
+      "minecraft:selection_box": {
+        "origin": [
+          -6,
+          0,
+          -6
+        ],
+        "size": [
+          12,
+          16,
+          12
+        ]
+      },
+      "minecraft:collision_box": false,
+      "minecraft:flammable": {
+        "destroy_chance_modifier": 50,
+        "catch_chance_modifier": 10
+      }
+    }
+  }
+}

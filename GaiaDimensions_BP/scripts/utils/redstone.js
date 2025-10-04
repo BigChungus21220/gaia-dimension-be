@@ -98,11 +98,11 @@ export const RedstoneControl = {
                         this.PistonController.retract(adjacentBlock);
                     }
                 }
-                // Handle custom doors (cc_wild: namespace)
-                else if (adjacentBlock.typeId.includes("cc_wild:") && adjacentBlock.typeId.includes("door")) {
+                // Handle custom doors (gaiadimension: namespace)
+                else if (adjacentBlock.typeId.includes("gaiadimension:") && adjacentBlock.typeId.includes("door")) {
                     const perm = adjacentBlock.permutation;
-                    if (perm.getState("cc_wild:open") !== undefined && perm.getState("cc_wild:open") !== powered) {
-                        adjacentBlock.setPermutation(perm.withState("cc_wild:open", powered));
+                    if (perm.getState("gaiadimension:open") !== undefined && perm.getState("gaiadimension:open") !== powered) {
+                        adjacentBlock.setPermutation(perm.withState("gaiadimension:open", powered));
                     }
                     
                     // Special handling for custom doors - update both upper and lower halves
@@ -112,8 +112,8 @@ export const RedstoneControl = {
                             const upperBlock = adjacentBlock.above();
                             if (upperBlock && !upperBlock.isAir && upperBlock.typeId.includes("_upper")) {
                                 const upperPerm = upperBlock.permutation;
-                                if (upperPerm.getState("cc_wild:open") !== undefined && upperPerm.getState("cc_wild:open") !== powered) {
-                                    upperBlock.setPermutation(upperPerm.withState("cc_wild:open", powered));
+                                if (upperPerm.getState("gaiadimension:open") !== undefined && upperPerm.getState("gaiadimension:open") !== powered) {
+                                    upperBlock.setPermutation(upperPerm.withState("gaiadimension:open", powered));
                                 }
                             }
                         }
@@ -122,8 +122,8 @@ export const RedstoneControl = {
                             const lowerBlock = adjacentBlock.below();
                             if (lowerBlock && !lowerBlock.isAir && lowerBlock.typeId.includes("_lower")) {
                                 const lowerPerm = lowerBlock.permutation;
-                                if (lowerPerm.getState("cc_wild:open") !== undefined && lowerPerm.getState("cc_wild:open") !== powered) {
-                                    lowerBlock.setPermutation(lowerPerm.withState("cc_wild:open", powered));
+                                if (lowerPerm.getState("gaiadimension:open") !== undefined && lowerPerm.getState("gaiadimension:open") !== powered) {
+                                    lowerBlock.setPermutation(lowerPerm.withState("gaiadimension:open", powered));
                                 }
                             }
                         }
@@ -538,8 +538,8 @@ recalculateAllNetworks() {
         for (const pos of adjacentPositions) {
             const adjacentBlock = dimension.getBlock(pos);
             if (adjacentBlock && !adjacentBlock.isAir) {
-                // Handle custom doors (cc_wild: namespace)
-                if (adjacentBlock.typeId.includes("cc_wild:") && adjacentBlock.typeId.includes("door")) {
+                // Handle custom doors (gaiadimension: namespace)
+                if (adjacentBlock.typeId.includes("gaiadimension:") && adjacentBlock.typeId.includes("door")) {
                     const doorKey = `${dimension.id},${adjacentBlock.location.x},${adjacentBlock.location.y},${adjacentBlock.location.z}`;
                     doorsToOpen.add(doorKey);
                 }
@@ -570,10 +570,10 @@ recalculateAllNetworks() {
                 
                 if (doorBlock && !doorBlock.isAir) {
                     // Handle custom doors
-                    if (doorBlock.typeId.includes("cc_wild:") && doorBlock.typeId.includes("door")) {
+                    if (doorBlock.typeId.includes("gaiadimension:") && doorBlock.typeId.includes("door")) {
                         const perm = doorBlock.permutation;
-                        if (perm.getState("cc_wild:open") !== undefined && perm.getState("cc_wild:open") !== true) {
-                            doorBlock.setPermutation(perm.withState("cc_wild:open", true));
+                        if (perm.getState("gaiadimension:open") !== undefined && perm.getState("gaiadimension:open") !== true) {
+                            doorBlock.setPermutation(perm.withState("gaiadimension:open", true));
                         }
                         
                         // Special handling for custom doors - update both upper and lower halves
@@ -583,8 +583,8 @@ recalculateAllNetworks() {
                                 const upperBlock = doorBlock.above();
                                 if (upperBlock && !upperBlock.isAir && upperBlock.typeId.includes("_upper")) {
                                     const upperPerm = upperBlock.permutation;
-                                    if (upperPerm.getState("cc_wild:open") !== undefined && upperPerm.getState("cc_wild:open") !== true) {
-                                        upperBlock.setPermutation(upperPerm.withState("cc_wild:open", true));
+                                    if (upperPerm.getState("gaiadimension:open") !== undefined && upperPerm.getState("gaiadimension:open") !== true) {
+                                        upperBlock.setPermutation(upperPerm.withState("gaiadimension:open", true));
                                     }
                                 }
                             }
@@ -593,8 +593,8 @@ recalculateAllNetworks() {
                                 const lowerBlock = doorBlock.below();
                                 if (lowerBlock && !lowerBlock.isAir && lowerBlock.typeId.includes("_lower")) {
                                     const lowerPerm = lowerBlock.permutation;
-                                    if (lowerPerm.getState("cc_wild:open") !== undefined && lowerPerm.getState("cc_wild:open") !== true) {
-                                        lowerBlock.setPermutation(lowerPerm.withState("cc_wild:open", true));
+                                    if (lowerPerm.getState("gaiadimension:open") !== undefined && lowerPerm.getState("gaiadimension:open") !== true) {
+                                        lowerBlock.setPermutation(lowerPerm.withState("gaiadimension:open", true));
                                     }
                                 }
                             }
@@ -649,7 +649,7 @@ recalculateAllNetworks() {
                 const neighborBlock = dimension.getBlock(neighborLoc);
                 if (neighborBlock && !neighborBlock.isAir) {
                     // Check if this block is a custom door
-                    if (neighborBlock.typeId.includes("cc_wild:") && neighborBlock.typeId.includes("door")) {
+                    if (neighborBlock.typeId.includes("gaiadimension:") && neighborBlock.typeId.includes("door")) {
                         // Check if we've already found this door
                         const doorExists = foundDoors.some(door => 
                             door.location.x === neighborLoc.x && 
@@ -814,7 +814,7 @@ recalculateAllNetworks() {
                         // Special case: Check if the block is a pressure plate
                         if (checkBlock && (checkBlock.typeId.includes("pressure_plate") || checkBlock.typeId.includes("pressureplate"))) {
                             // Check if the pressure plate is pressed/active
-                            const isPressed = checkBlock.permutation.getState("cc_wild:pressed") === true || 
+                            const isPressed = checkBlock.permutation.getState("gaiadimension:pressed") === true || 
                                               checkBlock.permutation.getState("minecraft:pressed") === true;
                             if (isPressed) {
                                 hasActiveSignal = true;
@@ -853,20 +853,20 @@ recalculateAllNetworks() {
                 // Check if this is a double door (lower half)
                 if (lowerDoorBlock.typeId.includes("_lower")) {
                     const perm = lowerDoorBlock.permutation;
-                    const isOpen = perm.getState("cc_wild:open") || false;
+                    const isOpen = perm.getState("gaiadimension:open") || false;
                     
                     if (isOpen) {
-                        lowerDoorBlock.setPermutation(perm.withState("cc_wild:open", false));
+                        lowerDoorBlock.setPermutation(perm.withState("gaiadimension:open", false));
                         anyDoorClosed = true;
                     }
                     
                     // Also close upper half if it exists
                     if (upperDoorBlock && !upperDoorBlock.isAir && upperDoorBlock.typeId.includes("_upper")) {
                         const upperPerm = upperDoorBlock.permutation;
-                        const upperIsOpen = upperPerm.getState("cc_wild:open") || false;
+                        const upperIsOpen = upperPerm.getState("gaiadimension:open") || false;
                         
                         if (upperIsOpen) {
-                            upperDoorBlock.setPermutation(upperPerm.withState("cc_wild:open", false));
+                            upperDoorBlock.setPermutation(upperPerm.withState("gaiadimension:open", false));
                             // Don't play sound again if we already played it for lower door
                             if (!anyDoorClosed) {
                                 anyDoorClosed = true;
@@ -877,10 +877,10 @@ recalculateAllNetworks() {
                 // Single door or upper half
                 else {
                     const perm = lowerDoorBlock.permutation;
-                    const isOpen = perm.getState("cc_wild:open") || false;
+                    const isOpen = perm.getState("gaiadimension:open") || false;
                     
                     if (isOpen) {
-                        lowerDoorBlock.setPermutation(perm.withState("cc_wild:open", false));
+                        lowerDoorBlock.setPermutation(perm.withState("gaiadimension:open", false));
                         anyDoorClosed = true;
                     }
                 }
@@ -969,11 +969,11 @@ recalculateAllNetworks() {
             
             for (const block of blocksToOpen) {
                 const perm = block.permutation;
-                const isOpen = perm.getState("cc_wild:open") || false;
+                const isOpen = perm.getState("gaiadimension:open") || false;
                 
                 // Only open if not already open
                 if (!isOpen) {
-                    block.setPermutation(perm.withState("cc_wild:open", true));
+                    block.setPermutation(perm.withState("gaiadimension:open", true));
                     // Play open sound (only once for the pair)
                     if (!anyDoorOpened) {
                         block.dimension.playSound("open.wooden_trapdoor", block.location, { volume: 1, pitch: 1 });

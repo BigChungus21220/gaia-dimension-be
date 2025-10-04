@@ -1,7 +1,7 @@
 import { world, system } from "@minecraft/server";
 
 // --- Constants ---
-const STAIRS_TAG = "cc_wild:stairs";
+const STAIRS_TAG = "gaiadimension:stairs";
 
 
 // --- State Management (inspired by door.js) ---

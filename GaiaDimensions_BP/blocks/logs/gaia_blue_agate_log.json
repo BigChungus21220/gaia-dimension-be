@@ -5,7 +5,7 @@
       "identifier": "gaiadimension:blue_agate_log",
       "menu_category": {
         "category": "nature",
-        "group": "itemGroup.name.wood"
+        "group": "minecraft:itemGroup.name.wood"
       },
       "traits": {
         "minecraft:placement_position": {

@@ -1,0 +1,446 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaiadimension:green_agate_button",
+      "menu_category": {
+        "category": "items",
+        "group": "minecraft:itemGroup.name.buttons"
+      },
+      "traits": {
+        "minecraft:placement_position": {
+          "enabled_states": [
+            "minecraft:block_face"
+          ]
+        }
+      },
+      "states": {
+        "gaiadimension:pressed": [
+          false,
+          true
+        ]
+      }
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('minecraft:block_face') == 'down' && q.block_state('gaiadimension:pressed') == false",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -3,
+              14,
+              -2
+            ],
+            "size": [
+              6,
+              2,
+              4
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -3,
+              14,
+              -2
+            ],
+            "size": [
+              6,
+              2,
+              4
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:block_face') == 'up' && q.block_state('gaiadimension:pressed') == false",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -3,
+              0,
+              -2
+            ],
+            "size": [
+              6,
+              2,
+              4
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -3,
+              0,
+              -2
+            ],
+            "size": [
+              6,
+              2,
+              4
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:block_face') == 'south' && q.block_state('gaiadimension:pressed') == false",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -3,
+              6,
+              -8
+            ],
+            "size": [
+              6,
+              4,
+              2
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -3,
+              6,
+              -8
+            ],
+            "size": [
+              6,
+              4,
+              2
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:block_face') == 'north' && q.block_state('gaiadimension:pressed') == false",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -3,
+              6,
+              6
+            ],
+            "size": [
+              6,
+              4,
+              2
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -3,
+              6,
+              6
+            ],
+            "size": [
+              6,
+              4,
+              2
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:block_face') == 'east' && q.block_state('gaiadimension:pressed') == false",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              6,
+              6,
+              -3
+            ],
+            "size": [
+              2,
+              4,
+              6
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              6,
+              6,
+              -3
+            ],
+            "size": [
+              2,
+              4,
+              6
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:block_face') == 'west' && q.block_state('gaiadimension:pressed') == false",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              6,
+              -3
+            ],
+            "size": [
+              2,
+              4,
+              6
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -8,
+              6,
+              -3
+            ],
+            "size": [
+              2,
+              4,
+              6
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:block_face') == 'down' && q.block_state('gaiadimension:pressed') == true",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -3,
+              15,
+              -2
+            ],
+            "size": [
+              6,
+              1,
+              4
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -3,
+              15,
+              -2
+            ],
+            "size": [
+              6,
+              1,
+              4
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:block_face') == 'up' && q.block_state('gaiadimension:pressed') == true",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -3,
+              0,
+              -2
+            ],
+            "size": [
+              6,
+              1,
+              4
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -3,
+              0,
+              -2
+            ],
+            "size": [
+              6,
+              1,
+              4
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:block_face') == 'south' && q.block_state('gaiadimension:pressed') == true",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -3,
+              6,
+              -8
+            ],
+            "size": [
+              6,
+              4,
+              1
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -3,
+              6,
+              -8
+            ],
+            "size": [
+              6,
+              4,
+              1
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:block_face') == 'north' && q.block_state('gaiadimension:pressed') == true",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -3,
+              6,
+              7
+            ],
+            "size": [
+              6,
+              4,
+              1
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -3,
+              6,
+              7
+            ],
+            "size": [
+              6,
+              4,
+              1
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:block_face') == 'east' && q.block_state('gaiadimension:pressed') == true",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              7,
+              6,
+              -3
+            ],
+            "size": [
+              1,
+              4,
+              6
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              7,
+              6,
+              -3
+            ],
+            "size": [
+              1,
+              4,
+              6
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:block_face') == 'west' && q.block_state('gaiadimension:pressed') == true",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              6,
+              -3
+            ],
+            "size": [
+              1,
+              4,
+              6
+            ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -8,
+              6,
+              -3
+            ],
+            "size": [
+              1,
+              4,
+              6
+            ]
+          }
+        }
+      }
+    ],
+    "components": {
+      "minecraft:display_name": "Alder Button",
+      "minecraft:item_visual": {
+        "geometry": "geometry.cc_wild.button_icon",
+        "material_instances": {
+          "*": {
+            "texture": "green_agate_planks",
+            "render_method": "alpha_test"
+          }
+        }
+      },
+      "minecraft:geometry": {
+        "identifier": "geometry.cc_wild.button",
+        "bone_visibility": {
+          "bottom": "q.block_state('minecraft:block_face') == 'up' && q.block_state('gaiadimension:pressed') == false",
+          "bottom_pressed": "q.block_state('minecraft:block_face') == 'up' && q.block_state('gaiadimension:pressed') == true",
+          "up": "q.block_state('minecraft:block_face') == 'down' && q.block_state('gaiadimension:pressed') == false",
+          "up_pressed": "q.block_state('minecraft:block_face') == 'down' && q.block_state('gaiadimension:pressed') == true",
+          "north": "q.block_state('minecraft:block_face') == 'south' && q.block_state('gaiadimension:pressed') == false",
+          "north_pressed": "q.block_state('minecraft:block_face') == 'south' && q.block_state('gaiadimension:pressed') == true",
+          "south": "q.block_state('minecraft:block_face') == 'north' && q.block_state('gaiadimension:pressed') == false",
+          "south_pressed": "q.block_state('minecraft:block_face') == 'north' && q.block_state('gaiadimension:pressed') == true",
+          "west": "q.block_state('minecraft:block_face') == 'east' && q.block_state('gaiadimension:pressed') == false",
+          "west_pressed": "q.block_state('minecraft:block_face') == 'east' && q.block_state('gaiadimension:pressed') == true",
+          "east": "q.block_state('minecraft:block_face') == 'west' && q.block_state('gaiadimension:pressed') == false",
+          "east_pressed": "q.block_state('minecraft:block_face') == 'west' && q.block_state('gaiadimension:pressed') == true"
+        }
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "green_agate_planks",
+          "render_method": "alpha_test"
+        }
+      },
+      "minecraft:custom_components": [
+        "gaiadimension:button"
+      ],
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 3,
+        "item_specific_speeds": [
+          {
+            "item": "minecraft:wooden_axe",
+            "destroy_speed": 1.5
+          },
+          {
+            "item": "minecraft:stone_axe",
+            "destroy_speed": 0.75
+          },
+          {
+            "item": "minecraft:iron_axe",
+            "destroy_speed": 0.5
+          },
+          {
+            "item": "minecraft:diamond_axe",
+            "destroy_speed": 0.4
+          },
+          {
+            "item": "minecraft:netherite_axe",
+            "destroy_speed": 0.35
+          },
+          {
+            "item": "minecraft:golden_axe",
+            "destroy_speed": 0.25
+          }
+        ]
+      },
+      "minecraft:flammable": {
+        "destroy_chance_modifier": 50,
+        "catch_chance_modifier": 10
+      }
+    }
+  }
+}
