@@ -8,10 +8,8 @@ import sys
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Source Project Paths
-# BP path is the directory containing this script
-PROJECT_BP_PATH = SCRIPT_DIR
-# RP path is assumed to be in the same parent directory as the BP
-PROJECT_RP_PATH = os.path.abspath(os.path.join(SCRIPT_DIR, '..', 'GaiaDimension_RP'))
+PROJECT_BP_PATH = os.path.join(SCRIPT_DIR, 'GaiaDimensions_BP')
+PROJECT_RP_PATH = os.path.join(SCRIPT_DIR, 'GaiaDimension_RP')
 
 # Minecraft Game Data Path (com.mojang)
 # This uses the %LOCALAPPDATA% environment variable to be more robust
