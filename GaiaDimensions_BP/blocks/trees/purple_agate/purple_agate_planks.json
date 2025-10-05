@@ -20,7 +20,7 @@
       "minecraft:geometry": "geometry.block",
       "minecraft:material_instances": {
         "*": {
-          "texture": "purple_agate_planks",
+          "texture": "purple_agate_tiles",
           "render_method": "alpha_test"
         }
       },

@@ -20,7 +20,7 @@
       "minecraft:geometry": "geometry.block",
       "minecraft:material_instances": {
         "*": {
-          "texture": "fossilized_planks",
+          "texture": "fossilized_tiles",
           "render_method": "alpha_test"
         }
       },

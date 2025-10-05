@@ -20,7 +20,7 @@
       "minecraft:geometry": "geometry.block",
       "minecraft:material_instances": {
         "*": {
-          "texture": "golden_planks",
+          "texture": "golden_tiles",
           "render_method": "alpha_test"
         }
       },
