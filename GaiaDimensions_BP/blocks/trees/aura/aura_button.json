@@ -391,7 +391,7 @@
       },
       "minecraft:material_instances": {
         "*": {
-          "texture": "aura_planks",
+          "texture": "aura_tiles",
           "render_method": "alpha_test"
         }
       },

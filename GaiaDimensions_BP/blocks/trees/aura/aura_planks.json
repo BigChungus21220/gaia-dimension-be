@@ -2,7 +2,7 @@
   "format_version": "1.21.70",
   "minecraft:block": {
     "description": {
-      "identifier": "gaiadimension:aura_planks",
+      "identifier": "gaiadimension:aura_tiles",
       "menu_category": {
         "category": "construction",
         "group": "minecraft:itemGroup.name.planks"

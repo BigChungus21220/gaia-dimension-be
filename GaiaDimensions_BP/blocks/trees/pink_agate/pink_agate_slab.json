@@ -139,7 +139,7 @@
       },
       "minecraft:material_instances": {
         "*": {
-          "texture": "pink_agate_planks",
+          "texture": "pink_agate_tiles",
           "render_method": "alpha_test"
         }
       },

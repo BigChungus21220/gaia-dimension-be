@@ -32,7 +32,7 @@
       "gaiadimension:stairs": {},
       "minecraft:material_instances": {
         "*": {
-          "texture": "fossilized_planks"
+          "texture": "fossilized_tiles"
         }
       },
       "tag:gaiadimension:stairs": {},

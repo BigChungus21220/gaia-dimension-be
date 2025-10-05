@@ -504,7 +504,7 @@
       },
       "minecraft:material_instances": {
         "*": {
-          "texture": "corrupted_planks",
+          "texture": "corrupted_tiles",
           "render_method": "alpha_test"
         }
       },

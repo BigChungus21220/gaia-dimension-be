@@ -32,7 +32,7 @@
       "gaiadimension:stairs": {},
       "minecraft:material_instances": {
         "*": {
-          "texture": "blue_agate_planks"
+          "texture": "blue_agate_tiles"
         }
       },
       "tag:gaiadimension:stairs": {},

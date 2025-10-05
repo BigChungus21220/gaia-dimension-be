@@ -32,7 +32,7 @@
       "gaiadimension:stairs": {},
       "minecraft:material_instances": {
         "*": {
-          "texture": "aura_planks"
+          "texture": "aura_tiles"
         }
       },
       "tag:gaiadimension:stairs": {},

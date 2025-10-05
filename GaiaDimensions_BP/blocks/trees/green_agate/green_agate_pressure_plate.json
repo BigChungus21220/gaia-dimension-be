@@ -111,7 +111,7 @@
       },
       "minecraft:material_instances": {
         "*": {
-          "texture": "green_agate_planks",
+          "texture": "green_agate_tiles",
           "render_method": "alpha_test"
         }
       },
