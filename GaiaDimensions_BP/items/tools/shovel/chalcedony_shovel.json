@@ -10,7 +10,7 @@
         "texture": "chalcedony_shovel"
       },
       "minecraft:creative_category": {
-        "parent": "itemGroup.name.shovel"
+        "parent": "minecraft:itemGroup.name.shovel"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:hand_equipped": true,

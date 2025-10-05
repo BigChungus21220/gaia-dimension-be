@@ -10,7 +10,7 @@
         "texture": "benitoite_axe"
       },
       "minecraft:creative_category": {
-        "parent": "itemGroup.name.axe"
+        "parent": "minecraft:itemGroup.name.axe"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:hand_equipped": true,

@@ -10,7 +10,7 @@
         "texture": "gaia_baron_dagger"
       },
       "minecraft:creative_category": {
-        "parent": "itemGroup.name.sword"
+        "parent": "minecraft:itemGroup.name.sword"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:hand_equipped": true,

@@ -10,7 +10,7 @@
         "texture": "black_crystal_growth"
       },
       "minecraft:creative_category": {
-        "parent": "itemGroup.name.flower"
+        "parent": "minecraft:itemGroup.name.flower"
       },
       "minecraft:display_name": {
         "value": "Black Crystal Growth"

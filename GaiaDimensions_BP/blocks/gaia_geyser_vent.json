@@ -5,7 +5,7 @@
       "identifier": "gaiadimension:geyser_vent",
       "menu_category": {
         "category": "nature",
-        "group": "itemGroup.name.geyser_vent"
+        "group": "minecraft:itemGroup.name.geyser_vent"
       }
     },
     "components": {

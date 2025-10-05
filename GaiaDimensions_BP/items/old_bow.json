@@ -25,7 +25,7 @@
     "components": {
       "minecraft:creative_category": {
         "category": "Equipment",
-        "parent": "itemGroup.name.shield"
+        "parent": "minecraft:itemGroup.name.shield"
       },
       "minecraft:icon": {
         "texture": "old_bow"

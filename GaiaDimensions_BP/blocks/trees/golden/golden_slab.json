@@ -5,7 +5,7 @@
       "identifier": "gaiadimension:golden_slab",
       "menu_category": {
         "category": "construction",
-        "group": "itemGroup.name.slab"
+        "group": "minecraft:itemGroup.name.slab"
       },
       "traits": {
         "minecraft:placement_direction": {

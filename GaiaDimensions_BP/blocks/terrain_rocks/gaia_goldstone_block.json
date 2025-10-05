@@ -5,7 +5,7 @@
       "identifier": "gaiadimension:goldstone_block",
       "menu_category": {
         "category": "nature",
-        "group": "itemGroup.name.gaia_block"
+        "group": "minecraft:itemGroup.name.gaia_block"
       }
     },
     "components": {

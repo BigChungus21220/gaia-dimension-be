@@ -13,7 +13,7 @@
         "value": "Ouzium"
       },
       "minecraft:creative_category": {
-        "parent": "itemGroup.name.flower"
+        "parent": "minecraft:itemGroup.name.flower"
       },
       "minecraft:block_placer": {
         "block": "gaiadimension:ouzium"

@@ -5,7 +5,7 @@
       "identifier": "gaiadimension:large_crate",
       "menu_category": {
         "category": "items",
-        "group": "itemGroup.name.furnaces",
+        "group": "minecraft:itemGroup.name.furnaces",
         "is_hidden_in_commands": false
       },
       "states": {

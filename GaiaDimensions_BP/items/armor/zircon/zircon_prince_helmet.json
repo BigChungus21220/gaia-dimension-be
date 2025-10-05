@@ -10,7 +10,7 @@
         "texture": "zircon_prince_helmet"
       },
       "minecraft:creative_category": {
-        "parent": "itemGroup.name.helmet"
+        "parent": "minecraft:itemGroup.name.helmet"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:enchantable": {

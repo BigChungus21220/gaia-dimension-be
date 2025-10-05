@@ -13,7 +13,7 @@
         "value": "Yellow Crystal Growth"
       },
       "minecraft:creative_category": {
-        "parent": "itemGroup.name.flower"
+        "parent": "minecraft:itemGroup.name.flower"
       },
       "minecraft:block_placer": {
         "block": "gaiadimension:yellow_crystal_growth"

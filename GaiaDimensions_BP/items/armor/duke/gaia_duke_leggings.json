@@ -10,7 +10,7 @@
         "texture": "gaia_duke_leggings"
       },
       "minecraft:creative_category": {
-        "parent": "itemGroup.name.leggings"
+        "parent": "minecraft:itemGroup.name.leggings"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:enchantable": {

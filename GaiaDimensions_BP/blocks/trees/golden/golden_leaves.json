@@ -5,7 +5,7 @@
       "identifier": "gaiadimension:golden_leaves",
       "menu_category": {
         "category": "nature",
-        "group": "itemGroup.name.leaves"
+        "group": "minecraft:itemGroup.name.leaves"
       },
       "traits": {
         "minecraft:placement_direction": {
