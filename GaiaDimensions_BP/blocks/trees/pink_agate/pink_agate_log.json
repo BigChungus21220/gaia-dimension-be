@@ -90,7 +90,6 @@
       }
     ],
     "components": {
-      "minecraft:display_name": "Alder Log",
       "minecraft:geometry": "geometry.block",
       "minecraft:custom_components": [
         "gaiadimension:wood"

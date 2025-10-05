@@ -30,7 +30,6 @@
     },
     "components": {
       "gaiadimension:stairs": {},
-      "minecraft:display_name": "Alder Stairs",
       "minecraft:material_instances": {
         "*": {
           "texture": "burnt_agate_planks"

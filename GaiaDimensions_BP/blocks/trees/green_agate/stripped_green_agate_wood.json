@@ -96,7 +96,6 @@
       }
     ],
     "components": {
-      "minecraft:display_name": "Stripped Alder Wood",
       "minecraft:geometry": "geometry.block",
       "minecraft:material_instances": {
         "up": {

@@ -194,7 +194,6 @@
       }
     ],
     "components": {
-      "minecraft:display_name": "Alder Trapcurtain",
       "minecraft:geometry": {
         "identifier": "geometry.trapcurtain",
         "bone_visibility": {

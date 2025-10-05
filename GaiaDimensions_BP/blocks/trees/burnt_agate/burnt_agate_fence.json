@@ -493,7 +493,6 @@
       }
     ],
     "components": {
-      "minecraft:display_name": "Alder Fence",
       "minecraft:geometry": {
         "identifier": "geometry.cc_wild.fence",
         "bone_visibility": {

@@ -12,7 +12,6 @@
       }
     },
     "components": {
-      "minecraft:display_name": "Alder Sapling",
       "minecraft:geometry": "geometry.gaia_dimension.sapling",
       "minecraft:custom_components": [
         "gaiadimension:sapling"

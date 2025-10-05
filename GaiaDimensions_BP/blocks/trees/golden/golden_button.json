@@ -372,7 +372,6 @@
       }
     ],
     "components": {
-      "minecraft:display_name": "Alder Button",
       "minecraft:geometry": {
         "identifier": "geometry.cc_wild.button",
         "bone_visibility": {

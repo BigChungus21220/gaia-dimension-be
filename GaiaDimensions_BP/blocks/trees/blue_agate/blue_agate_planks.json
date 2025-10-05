@@ -17,7 +17,6 @@
       }
     },
     "components": {
-      "minecraft:display_name": "Alder Planks",
       "minecraft:geometry": "geometry.block",
       "minecraft:material_instances": {
         "*": {

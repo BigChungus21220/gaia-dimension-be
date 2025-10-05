@@ -30,7 +30,6 @@
     },
     "components": {
       "gaiadimension:stairs": {},
-      "minecraft:display_name": "Alder Stairs",
       "minecraft:material_instances": {
         "*": {
           "texture": "corrupted_planks"

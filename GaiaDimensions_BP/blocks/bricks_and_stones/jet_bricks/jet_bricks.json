@@ -1,70 +1,70 @@
 {
-    "format_version": "1.20.80",
-    "minecraft:block": {
-        "description": {
-            "identifier": "gaiadimension:jet_bricks",
-            "menu_category": {
-                "category": "nature"
-            }
+  "format_version": "1.20.80",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaiadimension:jet_bricks",
+      "menu_category": {
+        "category": "nature"
+      }
+    },
+    "components": {
+      "minecraft:map_color": "#4f4f4f",
+      "minecraft:geometry": "geometry.gaiadimension_jet_bricks",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1.5,
+        "item_specific_speeds": [
+          {
+            "item": "minecraft:wooden_pickaxe",
+            "destroy_speed": 0.8
+          },
+          {
+            "item": "minecraft:stone_pickaxe",
+            "destroy_speed": 0.4
+          },
+          {
+            "item": "minecraft:iron_pickaxe",
+            "destroy_speed": 0.25
+          },
+          {
+            "item": "minecraft:diamond_pickaxe",
+            "destroy_speed": 0.2
+          },
+          {
+            "item": "minecraft:netherite_pickaxe",
+            "destroy_speed": 0.15
+          },
+          {
+            "item": "minecraft:golden_pickaxe",
+            "destroy_speed": 0.1
+          }
+        ]
+      },
+      "minecraft:material_instances": {
+        "up": {
+          "texture": "jet_bricks",
+          "render_method": "opaque"
         },
-        "components": {
-            "minecraft:map_color": "#4f4f4f",
-            "minecraft:geometry": "geometry.gaiadimension_jet_bricks",
-            "minecraft:destructible_by_mining": {
-                 "seconds_to_destroy": 1.5,
-                "item_specific_speeds": [
-                    {
-                        "item": "minecraft:wooden_pickaxe",
-                        "destroy_speed": 0.8
-                    },
-                    {
-                        "item": "minecraft:stone_pickaxe",
-                        "destroy_speed": 0.4
-                    },
-                    {
-                        "item": "minecraft:iron_pickaxe",
-                        "destroy_speed": 0.25
-                    },
-                    {
-                        "item": "minecraft:diamond_pickaxe",
-                        "destroy_speed": 0.2
-                    },
-                    {
-                        "item": "minecraft:netherite_pickaxe",
-                        "destroy_speed": 0.15
-                    },
-                    {
-                        "item": "minecraft:golden_pickaxe",
-                        "destroy_speed": 0.1
-                    }
-                ]
-            },
-            "minecraft:material_instances": {
-                "up": {
-                    "texture": "jet_bricks",
-                    "render_method": "opaque"
-                },
-                "down": {
-                    "texture": "jet_bricks",
-                    "render_method": "opaque"
-                },
-                "south": {
-                    "texture": "jet_bricks",
-                    "render_method": "opaque"
-                },
-                "east": {
-                    "texture": "jet_bricks",
-                    "render_method": "opaque"
-                },
-                "west": {
-                    "texture": "jet_bricks",
-                    "render_method": "opaque"
-                },
-                "north": {
-                    "texture": "jet_bricks",
-                    "render_method": "opaque"
-                }
-            }
+        "down": {
+          "texture": "jet_bricks",
+          "render_method": "opaque"
+        },
+        "south": {
+          "texture": "jet_bricks",
+          "render_method": "opaque"
+        },
+        "east": {
+          "texture": "jet_bricks",
+          "render_method": "opaque"
+        },
+        "west": {
+          "texture": "jet_bricks",
+          "render_method": "opaque"
+        },
+        "north": {
+          "texture": "jet_bricks",
+          "render_method": "opaque"
         }
+      }
     }
+  }
 }

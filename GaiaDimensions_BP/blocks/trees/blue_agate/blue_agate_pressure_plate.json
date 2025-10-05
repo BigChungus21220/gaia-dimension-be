@@ -102,7 +102,6 @@
       }
     ],
     "components": {
-      "minecraft:display_name": "Alder Pressure Plate",
       "minecraft:geometry": {
         "identifier": "geometry.cc_wild.pressure_plate",
         "bone_visibility": {

@@ -31,7 +31,6 @@
     "components": {
       "minecraft:collision_box": true,
       "minecraft:selection_box": true,
-      "minecraft:display_name": "Restructurer",
       "minecraft:geometry": "geometry.full_block",
       "minecraft:material_instances": {
         "up": {

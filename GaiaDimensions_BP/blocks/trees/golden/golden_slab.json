@@ -130,7 +130,6 @@
       }
     ],
     "components": {
-      "minecraft:display_name": "Alder Slab",
       "minecraft:geometry": {
         "identifier": "geometry.gaiadimension.slab",
         "bone_visibility": {
