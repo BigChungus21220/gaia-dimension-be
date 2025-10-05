@@ -15,19 +15,14 @@
       "minecraft:destructible_by_explosion": {
         "explosion_resistance": 1
       },
-      "minecraft:queued_ticking": {
+      "minecraft:ticking": {
         "looping": true,
         "interval_range": [
           300,
           500
-        ],
-        "on_tick": {
-          "event": "gaiadimension:erupt",
-          "target": "self"
-        }
+        ]
       },
       "minecraft:map_color": "#81f53d"
-    },
-    "events": {}
+    }
   }
 }
