@@ -103,7 +103,7 @@
     ],
     "components": {
       "minecraft:geometry": {
-        "identifier": "geometry.cc_wild.pressure_plate",
+        "identifier": "geometry.gaiadimension.pressure_plate",
         "bone_visibility": {
           "block": "q.block_state('gaiadimension:pressed') == false",
           "pressed": "q.block_state('gaiadimension:pressed') == true"

@@ -17,7 +17,7 @@
       }
     },
     "components": {
-      "minecraft:geometry": "geometry.cc_wild.leaves",
+      "minecraft:geometry": "geometry.gaiadimension.leaves",
       "minecraft:material_instances": {
         "*": {
           "texture": "fossilized_leaves",

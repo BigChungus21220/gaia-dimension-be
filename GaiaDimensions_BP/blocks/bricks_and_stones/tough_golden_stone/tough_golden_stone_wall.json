@@ -32,7 +32,7 @@
     },
     "permutations": [
       {
-        "condition": "q.block_state('cc_wild:north') == true && q.block_state('cc_wild:south') == true && q.block_state('cc_wild:east') == true && q.block_state('cc_wild:west') == true",
+        "condition": "q.block_state('gaiadimension:north') == true && q.block_state('gaiadimension:south') == true && q.block_state('gaiadimension:east') == true && q.block_state('gaiadimension:west') == true",
         "components": {
           "minecraft:selection_box": {
             "origin": [
@@ -61,7 +61,7 @@
         }
       },
       {
-        "condition": "q.block_state('cc_wild:north') == true && q.block_state('cc_wild:south') == true && q.block_state('cc_wild:east') == true && q.block_state('cc_wild:west') == false",
+        "condition": "q.block_state('gaiadimension:north') == true && q.block_state('gaiadimension:south') == true && q.block_state('gaiadimension:east') == true && q.block_state('gaiadimension:west') == false",
         "components": {
           "minecraft:selection_box": {
             "origin": [
@@ -90,7 +90,7 @@
         }
       },
       {
-        "condition": "q.block_state('cc_wild:north') == true && q.block_state('cc_wild:south') == true && q.block_state('cc_wild:east') == false && q.block_state('cc_wild:west') == true",
+        "condition": "q.block_state('gaiadimension:north') == true && q.block_state('gaiadimension:south') == true && q.block_state('gaiadimension:east') == false && q.block_state('gaiadimension:west') == true",
         "components": {
           "minecraft:selection_box": {
             "origin": [
@@ -119,7 +119,7 @@
         }
       },
       {
-        "condition": "q.block_state('cc_wild:north') == false && q.block_state('cc_wild:south') == true && q.block_state('cc_wild:east') == true && q.block_state('cc_wild:west') == true",
+        "condition": "q.block_state('gaiadimension:north') == false && q.block_state('gaiadimension:south') == true && q.block_state('gaiadimension:east') == true && q.block_state('gaiadimension:west') == true",
         "components": {
           "minecraft:selection_box": {
             "origin": [
@@ -148,7 +148,7 @@
         }
       },
       {
-        "condition": "q.block_state('cc_wild:north') == true && q.block_state('cc_wild:south') == false && q.block_state('cc_wild:east') == true && q.block_state('cc_wild:west') == true",
+        "condition": "q.block_state('gaiadimension:north') == true && q.block_state('gaiadimension:south') == false && q.block_state('gaiadimension:east') == true && q.block_state('gaiadimension:west') == true",
         "components": {
           "minecraft:selection_box": {
             "origin": [
@@ -177,21 +177,9 @@
         }
       },
       {
-        "condition": "q.block_state('cc_wild:north') == true && q.block_state('cc_wild:south') == true && q.block_state('cc_wild:east') == false && q.block_state('cc_wild:west') == false",
+        "condition": "q.block_state('gaiadimension:north') == true && q.block_state('gaiadimension:south') == true && q.block_state('gaiadimension:east') == false && q.block_state('gaiadimension:west') == false",
         "components": {
           "minecraft:selection_box": {
-            "origin": [
-              -2,
-              0,
-              -8
-            ],
-            "size": [
-              4,
-              16,
-              16
-            ]
-          },
-          "minecraft:collision_box": {
             "origin": [
               -2,
               0,
@@ -202,11 +190,23 @@
               16,
               16
             ]
+          },
+          "minecraft:collision_box": {
+            "origin": [
+              -2,
+              0,
+              -8
+            ],
+            "size": [
+              4,
+              16,
+              16
+            ]
           }
         }
       },
       {
-        "condition": "q.block_state('cc_wild:north') == false && q.block_state('cc_wild:south') == false && q.block_state('cc_wild:east') == true && q.block_state('cc_wild:west') == true",
+        "condition": "q.block_state('gaiadimension:north') == false && q.block_state('gaiadimension:south') == false && q.block_state('gaiadimension:east') == true && q.block_state('gaiadimension:west') == true",
         "components": {
           "minecraft:selection_box": {
             "origin": [
@@ -235,7 +235,7 @@
         }
       },
       {
-        "condition": "q.block_state('cc_wild:north') == true && q.block_state('cc_wild:south') == false && q.block_state('cc_wild:east') == true && q.block_state('cc_wild:west') == false",
+        "condition": "q.block_state('gaiadimension:north') == true && q.block_state('gaiadimension:south') == false && q.block_state('gaiadimension:east') == true && q.block_state('gaiadimension:west') == false",
         "components": {
           "minecraft:selection_box": {
             "origin": [
@@ -264,7 +264,7 @@
         }
       },
       {
-        "condition": "q.block_state('cc_wild:north') == true && q.block_state('cc_wild:south') == false && q.block_state('cc_wild:east') == false && q.block_state('cc_wild:west') == true",
+        "condition": "q.block_state('gaiadimension:north') == true && q.block_state('gaiadimension:south') == false && q.block_state('gaiadimension:east') == false && q.block_state('gaiadimension:west') == true",
         "components": {
           "minecraft:selection_box": {
             "origin": [
@@ -293,7 +293,7 @@
         }
       },
       {
-        "condition": "q.block_state('cc_wild:north') == false && q.block_state('cc_wild:south') == true && q.block_state('cc_wild:east') == true && q.block_state('cc_wild:west') == false",
+        "condition": "q.block_state('gaiadimension:north') == false && q.block_state('gaiadimension:south') == true && q.block_state('gaiadimension:east') == true && q.block_state('gaiadimension:west') == false",
         "components": {
           "minecraft:selection_box": {
             "origin": [
@@ -322,7 +322,7 @@
         }
       },
       {
-        "condition": "q.block_state('cc_wild:north') == false && q.block_state('cc_wild:south') == true && q.block_state('cc_wild:east') == false && q.block_state('cc_wild:west') == true",
+        "condition": "q.block_state('gaiadimension:north') == false && q.block_state('gaiadimension:south') == true && q.block_state('gaiadimension:east') == false && q.block_state('gaiadimension:west') == true",
         "components": {
           "minecraft:selection_box": {
             "origin": [
@@ -351,7 +351,7 @@
         }
       },
       {
-        "condition": "q.block_state('cc_wild:north') == true && q.block_state('cc_wild:south') == false && q.block_state('cc_wild:east') == false && q.block_state('cc_wild:west') == false",
+        "condition": "q.block_state('gaiadimension:north') == true && q.block_state('gaiadimension:south') == false && q.block_state('gaiadimension:east') == false && q.block_state('gaiadimension:west') == false",
         "components": {
           "minecraft:selection_box": {
             "origin": [
@@ -380,7 +380,7 @@
         }
       },
       {
-        "condition": "q.block_state('cc_wild:north') == false && q.block_state('cc_wild:south') == true && q.block_state('cc_wild:east') == false && q.block_state('cc_wild:west') == false",
+        "condition": "q.block_state('gaiadimension:north') == false && q.block_state('gaiadimension:south') == true && q.block_state('gaiadimension:east') == false && q.block_state('gaiadimension:west') == false",
         "components": {
           "minecraft:selection_box": {
             "origin": [
@@ -409,7 +409,7 @@
         }
       },
       {
-        "condition": "q.block_state('cc_wild:north') == false && q.block_state('cc_wild:south') == false && q.block_state('cc_wild:east') == true && q.block_state('cc_wild:west') == false",
+        "condition": "q.block_state('gaiadimension:north') == false && q.block_state('gaiadimension:south') == false && q.block_state('gaiadimension:east') == true && q.block_state('gaiadimension:west') == false",
         "components": {
           "minecraft:selection_box": {
             "origin": [
@@ -438,7 +438,7 @@
         }
       },
       {
-        "condition": "q.block_state('cc_wild:north') == false && q.block_state('cc_wild:south') == false && q.block_state('cc_wild:east') == false && q.block_state('cc_wild:west') == true",
+        "condition": "q.block_state('gaiadimension:north') == false && q.block_state('gaiadimension:south') == false && q.block_state('gaiadimension:east') == false && q.block_state('gaiadimension:west') == true",
         "components": {
           "minecraft:selection_box": {
             "origin": [
@@ -467,7 +467,7 @@
         }
       },
       {
-        "condition": "q.block_state('cc_wild:north') == false && q.block_state('cc_wild:south') == false && q.block_state('cc_wild:east') == false && q.block_state('cc_wild:west') == false",
+        "condition": "q.block_state('gaiadimension:north') == false && q.block_state('gaiadimension:south') == false && q.block_state('gaiadimension:east') == false && q.block_state('gaiadimension:west') == false",
         "components": {
           "minecraft:selection_box": {
             "origin": [
@@ -498,7 +498,7 @@
     ],
     "components": {
       "minecraft:item_visual": {
-        "geometry": "geometry.cc_wild.wall_icon",
+        "geometry": "geometry.gaiadimension.wall_icon",
         "material_instances": {
           "*": {
             "texture": "tough_golden_stone",
@@ -507,17 +507,17 @@
         }
       },
       "minecraft:geometry": {
-        "identifier": "geometry.cc_wild.wall",
+        "identifier": "geometry.gaiadimension.wall",
         "bone_visibility": {
-          "post": "!((q.block_state('cc_wild:north') && q.block_state('cc_wild:south') && !q.block_state('cc_wild:east') && !q.block_state('cc_wild:west')) || (q.block_state('cc_wild:east') && q.block_state('cc_wild:west') && !q.block_state('cc_wild:north') && !q.block_state('cc_wild:south')))",
-          "north_picket": "q.block_state('cc_wild:north') && !q.block_state('cc_wild:above')",
-          "south_picket": "q.block_state('cc_wild:south') && !q.block_state('cc_wild:above')",
-          "east_picket": "q.block_state('cc_wild:east') && !q.block_state('cc_wild:above')",
-          "west_picket": "q.block_state('cc_wild:west') && !q.block_state('cc_wild:above')",
-          "north_above": "q.block_state('cc_wild:north') && q.block_state('cc_wild:above')",
-          "south_above": "q.block_state('cc_wild:south') && q.block_state('cc_wild:above')",
-          "east_above": "q.block_state('cc_wild:east') && q.block_state('cc_wild:above')",
-          "west_above": "q.block_state('cc_wild:west') && q.block_state('cc_wild:above')"
+          "post": "!((q.block_state('gaiadimension:north') && q.block_state('gaiadimension:south') && !q.block_state('gaiadimension:east') && !q.block_state('gaiadimension:west')) || (q.block_state('gaiadimension:east') && q.block_state('gaiadimension:west') && !q.block_state('gaiadimension:north') && !q.block_state('gaiadimension:south')))",
+          "north_picket": "q.block_state('gaiadimension:north') && !q.block_state('gaiadimension:above')",
+          "south_picket": "q.block_state('gaiadimension:south') && !q.block_state('gaiadimension:above')",
+          "east_picket": "q.block_state('gaiadimension:east') && !q.block_state('gaiadimension:above')",
+          "west_picket": "q.block_state('gaiadimension:west') && !q.block_state('gaiadimension:above')",
+          "north_above": "q.block_state('gaiadimension:north') && q.block_state('gaiadimension:above')",
+          "south_above": "q.block_state('gaiadimension:south') && q.block_state('gaiadimension:above')",
+          "east_above": "q.block_state('gaiadimension:east') && q.block_state('gaiadimension:above')",
+          "west_above": "q.block_state('gaiadimension:west') && q.block_state('gaiadimension:above')"
         }
       },
       "minecraft:material_instances": {

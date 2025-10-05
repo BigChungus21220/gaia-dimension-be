@@ -96,7 +96,7 @@
     ],
     "components": {
       "minecraft:geometry": {
-        "identifier": "geometry.cc_wild.fence_gate",
+        "identifier": "geometry.gaiadimension.fence_gate",
         "bone_visibility": {
           "fence_gate_closed": "q.block_state('gaiadimension:open') == false",
           "fence_gate_open": "q.block_state('gaiadimension:open') == true && q.block_state('gaiadimension:inverse') == false",

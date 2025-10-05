@@ -494,7 +494,7 @@
     ],
     "components": {
       "minecraft:geometry": {
-        "identifier": "geometry.cc_wild.fence",
+        "identifier": "geometry.gaiadimension.fence",
         "bone_visibility": {
           "north_picket": "q.block_state('gaiadimension:north') == true",
           "east_picket": "q.block_state('gaiadimension:east') == true",
