@@ -32,7 +32,7 @@
     "components": {
       "minecraft:item_visual": {
         "geometry": {
-          "identifier": "geometry.cc_wild.cc_wild_crusted_jet_bricks_stairs_icon",
+          "identifier": "geometry.gaiadimension_crusted_jet_bricks_stairs_icon",
           "bone_visibility": {
             "bot_ne": true,
             "bot_nw": true,

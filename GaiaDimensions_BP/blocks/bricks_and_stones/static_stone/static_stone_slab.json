@@ -131,7 +131,7 @@
     ],
     "components": {
       "minecraft:item_visual": {
-        "geometry": "geometry.cc_wild.cc_wild_gold_sandstone_slab_icon",
+        "geometry": "geometry.gaiadimension_gold_sandstone_slab_icon",
         "material_instances": {
           "up": {
             "texture": "static_stone",

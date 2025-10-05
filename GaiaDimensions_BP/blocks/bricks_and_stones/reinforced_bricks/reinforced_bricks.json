@@ -9,7 +9,7 @@
         },
         "components": {
             "minecraft:map_color": "#4f4f4f",
-            "minecraft:geometry": "geometry.cc_wild.cc_wild_reinforced_bricks",
+            "minecraft:geometry": "geometry.gaiadimension_reinforced_bricks",
             "minecraft:destructible_by_mining": {
                  "seconds_to_destroy": 1.5,
                 "item_specific_speeds": [
