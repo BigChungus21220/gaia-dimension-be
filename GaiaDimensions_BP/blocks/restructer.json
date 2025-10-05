@@ -49,22 +49,8 @@
           "texture": "restructurer_side",
           "render_method": "opaque"
         }
-      },
-      "minecraft:on_player_placing": {
-        "event": "setDirection"
-      },
-      "minecraft:queued_ticking": {
-        "looping": true,
-        "on_tick": {
-          "event": "runrestructurer"
-        },
-        "interval_range": [
-          1,
-          1
-        ]
       }
     },
-    "events": {},
     "permutations": [
       {
         "condition": "q.block_property('gaiadimension:lit') == true",
