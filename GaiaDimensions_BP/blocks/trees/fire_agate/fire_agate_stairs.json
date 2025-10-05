@@ -32,7 +32,7 @@
       "gaiadimension:stairs": {},
       "minecraft:material_instances": {
         "*": {
-          "texture": "fire_agate_planks"
+          "texture": "fire_agate_tiles"
         }
       },
       "tag:gaiadimension:stairs": {},

@@ -17,7 +17,7 @@
       }
     },
     "components": {
-      "minecraft:geometry": "geometry.gaiadimension.leaves",
+      "minecraft:geometry": "geometry.full_block",
       "minecraft:material_instances": {
         "*": {
           "texture": "fire_agate_leaves",

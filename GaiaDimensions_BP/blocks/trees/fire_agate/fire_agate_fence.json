@@ -504,7 +504,7 @@
       },
       "minecraft:material_instances": {
         "*": {
-          "texture": "fire_agate_planks",
+          "texture": "fire_agate_tiles",
           "render_method": "alpha_test"
         }
       },

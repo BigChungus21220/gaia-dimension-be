@@ -14,10 +14,6 @@
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 1
       },
-      "minecraft:on_player_destroyed": {
-        "event": "destroy",
-        "condition": "(query.equipped_item_any_tag('slot.weapon.mainhand','minecraft:is_pickaxe'))"
-      },
       "minecraft:destructible_by_explosion": {
         "explosion_resistance": 1
       },
@@ -27,7 +23,6 @@
           "render_method": "opaque"
         }
       }
-    },
-    "events": {}
+    }
   }
 }

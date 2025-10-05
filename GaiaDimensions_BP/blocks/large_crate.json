@@ -31,21 +31,14 @@
     "components": {
       "minecraft:collision_box": true,
       "minecraft:selection_box": true,
+      "minecraft:map_color": "#ffffff"
       "minecraft:material_instances": {
         "*": {
           "texture": "large_crate",
-          "render_method": "opaque",
-          "minecraft:map_color": "#ffffff"
+          "render_method": "opaque"
         }
-      },
-      "minecraft:on_placed": {
-        "event": "setEntity"
-      },
-      "minecraft:on_player_placing": {
-        "event": "setDirection"
       }
     },
-    "events": {},
     "permutations": [
       {
         "condition": "q.block_property('gaiadimension:lit') == true",
@@ -53,8 +46,7 @@
           "minecraft:material_instances": {
             "*": {
               "texture": "large_crate",
-              "render_method": "opaque",
-              "minecraft:map_color": "#ffffff"
+              "render_method": "opaque"
             }
           }
         }
@@ -62,7 +54,7 @@
       {
         "condition": "q.block_property('gaiadimension:direction') == 0",
         "components": {
-          "minecraft:rotation": [
+          "minecraft:transformation": [
             0,
             0,
             0
@@ -72,7 +64,7 @@
       {
         "condition": "q.block_property('gaiadimension:direction') == 1",
         "components": {
-          "minecraft:rotation": [
+          "minecraft:transformation": [
             0,
             180,
             0
@@ -82,7 +74,7 @@
       {
         "condition": "q.block_property('gaiadimension:direction') == 2",
         "components": {
-          "minecraft:rotation": [
+          "minecraft:transformation": [
             0,
             90,
             0
@@ -92,7 +84,7 @@
       {
         "condition": "q.block_property('gaiadimension:direction') == 3",
         "components": {
-          "minecraft:rotation": [
+          "minecraft:transformation": [
             0,
             270,
             0

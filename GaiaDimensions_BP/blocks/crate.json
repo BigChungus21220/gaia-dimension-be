@@ -62,7 +62,7 @@
       {
         "condition": "q.block_property('gaiadimension:direction') == 0",
         "components": {
-          "minecraft:rotation": [
+          "minecraft:transformation": [
             0,
             0,
             0
@@ -72,7 +72,7 @@
       {
         "condition": "q.block_property('gaiadimension:direction') == 1",
         "components": {
-          "minecraft:rotation": [
+          "minecraft:transformation": [
             0,
             180,
             0
@@ -82,7 +82,7 @@
       {
         "condition": "q.block_property('gaiadimension:direction') == 2",
         "components": {
-          "minecraft:rotation": [
+          "minecraft:transformation": [
             0,
             90,
             0
@@ -92,7 +92,7 @@
       {
         "condition": "q.block_property('gaiadimension:direction') == 3",
         "components": {
-          "minecraft:rotation": [
+          "minecraft:transformation": [
             0,
             270,
             0

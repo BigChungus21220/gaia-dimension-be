@@ -1,0 +1,93 @@
+{
+	"format_version": "1.21.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.gaiadimension.trapdoor",
+				"texture_width": 16,
+				"texture_height": 16,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "trapdoor_closed",
+					"pivot": [0, 0, 0],
+					"rotation": [0, 90, 0],
+					"cubes": [
+						{
+							"origin": [-8, 0, -8],
+							"size": [16, 3, 16],
+							"uv": {
+								"north": {"uv": [9, 8], "uv_size": [0.6, 8], "uv_rotation": 90},
+								"east": {"uv": [9, 8], "uv_size": [0.6, 8], "uv_rotation": 90},
+								"south": {"uv": [9, 8], "uv_size": [0.6, 8], "uv_rotation": 90},
+								"west": {"uv": [9, 8], "uv_size": [0.6, 8], "uv_rotation": 90},
+								"up": {"uv": [9.6, 16], "uv_size": [-3.2, -8]},
+								"down": {"uv": [9.6, 16], "uv_size": [-3.2, -8]}
+							}
+						}
+					]
+				},
+				{
+					"name": "trapdoor_open",
+					"pivot": [0, 0, 5],
+					"rotation": [-90, 0, -90],
+					"cubes": [
+						{
+							"origin": [0, 0, -3],
+							"size": [16, 3, 16],
+							"uv": {
+								"north": {"uv": [9, 8], "uv_size": [0.6, 8], "uv_rotation": 90},
+								"east": {"uv": [9, 8], "uv_size": [0.6, 8], "uv_rotation": 90},
+								"south": {"uv": [9, 8], "uv_size": [0.6, 8], "uv_rotation": 90},
+								"west": {"uv": [9, 8], "uv_size": [0.6, 8], "uv_rotation": 90},
+								"up": {"uv": [9.6, 16], "uv_size": [-3.2, -8]},
+								"down": {"uv": [9.6, 16], "uv_size": [-3.2, -8]}
+							}
+						}
+					]
+				},
+				{
+					"name": "trapdoor_open2",
+					"pivot": [0, 8, 6.5],
+					"rotation": [90, 0, 90],
+					"cubes": [
+						{
+							"origin": [-8, 6.5, -1.5],
+							"size": [16, 3, 16],
+							"uv": {
+								"north": {"uv": [9, 8], "uv_size": [0.6, 8], "uv_rotation": 90},
+								"east": {"uv": [9, 8], "uv_size": [0.6, 8], "uv_rotation": 90},
+								"south": {"uv": [9.6, 8], "uv_size": [-0.6, 8], "uv_rotation": 90},
+								"west": {"uv": [9, 8], "uv_size": [0.6, 8], "uv_rotation": 90},
+								"up": {"uv": [9.6, 16], "uv_size": [-3.2, -8]},
+								"down": {"uv": [9.6, 16], "uv_size": [-3.2, -8]}
+							}
+						}
+					]
+				},
+				{
+					"name": "trapdoor_closed2",
+					"pivot": [0, 13, 0],
+					"rotation": [0, 90, 0],
+					"cubes": [
+						{
+							"origin": [-8, 13, -8],
+							"size": [16, 3, 16],
+							"uv": {
+								"north": {"uv": [9, 8], "uv_size": [0.6, 8], "uv_rotation": 90},
+								"east": {"uv": [9, 8], "uv_size": [0.6, 8], "uv_rotation": 90},
+								"south": {"uv": [9, 8], "uv_size": [0.6, 8], "uv_rotation": 90},
+								"west": {"uv": [9, 8], "uv_size": [0.6, 8], "uv_rotation": 90},
+								"up": {"uv": [9.6, 16], "uv_size": [-3.2, -8]},
+								"down": {"uv": [9.6, 16], "uv_size": [-3.2, -8]}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

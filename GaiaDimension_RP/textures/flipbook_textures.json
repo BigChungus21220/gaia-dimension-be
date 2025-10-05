@@ -10,37 +10,37 @@
     "ticks_per_frame": 40
   },
   {
-    "flipbook_texture": "textures/blocks/burning_log_end",
-    "atlas_tile": "burning_log_end",
+    "flipbook_texture": "textures/block/fire_agate_log_end",
+    "atlas_tile": "fire_agate_log_end",
     "ticks_per_frame": 30
   },
   {
-    "flipbook_texture": "textures/blocks/burning_log_side",
-    "atlas_tile": "burning_log_side",
+    "flipbook_texture": "textures/block/fire_agate_log_side",
+    "atlas_tile": "fire_agate_log_side",
     "ticks_per_frame": 30
   },
   {
-    "flipbook_texture": "textures/blocks/stripped_burning_log_end",
-    "atlas_tile": "stripped_burning_log_end",
+    "flipbook_texture": "textures/block/stripped_fire_agate_log_end",
+    "atlas_tile": "stripped_fire_agate_log_end",
     "ticks_per_frame": 30
   },
   {
-    "flipbook_texture": "textures/blocks/stripped_burning_log_side",
-    "atlas_tile": "stripped_burning_log_side",
+    "flipbook_texture": "textures/block/stripped_fire_agate_log_side",
+    "atlas_tile": "stripped_fire_agate_log_side",
     "ticks_per_frame": 30
   },
   {
-    "flipbook_texture": "textures/blocks/burning_leaves",
-    "atlas_tile": "burning_leaves",
+    "flipbook_texture": "textures/block/fire_agate_leaves",
+    "atlas_tile": "fire_agate_leaves",
     "ticks_per_frame": 30
   },
   {
-    "flipbook_texture": "textures/blocks/burning_leaves_opaque",
-    "atlas_tile": "burning_leaves_opaque",
+    "flipbook_texture": "textures/block/fire_agate_tiles",
+    "atlas_tile": "fire_agate_tiles",
     "ticks_per_frame": 30
   },
   {
-      "flipbook_texture": "textures/blocks/active_rock",
+      "flipbook_texture": "textures/block/active_rock",
       "atlas_tile": "active_rock",
       "ticks_per_frame": 40
     },

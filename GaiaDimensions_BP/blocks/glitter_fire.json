@@ -12,7 +12,7 @@
       "minecraft:collision_box": false,
       "minecraft:light_emission": 15,
       "minecraft:selection_box": false,
-      "minecraft:geometry": "geometry.gaia_fire",
+      "minecraft:geometry": "geometry.gaiadimension.glittering_fire",
       "minecraft:destructible_by_explosion": false,
       "minecraft:material_instances": {
         "*": {
