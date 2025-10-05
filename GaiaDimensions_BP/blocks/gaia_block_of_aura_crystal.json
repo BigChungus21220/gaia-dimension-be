@@ -20,8 +20,7 @@
       "minecraft:material_instances": {
         "*": {
           "texture": "aura_block",
-          "render_method": "opaque",
-          "minecraft:map_color": "#ffffff"
+          "render_method": "opaque"
         }
       }
     }
