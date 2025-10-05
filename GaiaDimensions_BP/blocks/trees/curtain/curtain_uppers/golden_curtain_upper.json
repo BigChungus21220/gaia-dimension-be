@@ -128,62 +128,9 @@
       }
     ],
     "components": {
-      "minecraft:item_visual": {
-        "geometry": "geometry.cc_wild.curtain_icon",
-        "material_instances": {
-          "up_up": {
-            "texture": "golden_upper_curtain",
-            "render_method": "alpha_test"
-          },
-          "up_down": {
-            "texture": "golden_upper_curtain",
-            "render_method": "alpha_test"
-          },
-          "up_south": {
-            "texture": "golden_upper_curtain",
-            "render_method": "alpha_test"
-          },
-          "up_east": {
-            "texture": "golden_upper_curtain",
-            "render_method": "alpha_test"
-          },
-          "up_west": {
-            "texture": "golden_upper_curtain",
-            "render_method": "alpha_test"
-          },
-          "up_north": {
-            "texture": "golden_upper_curtain",
-            "render_method": "alpha_test"
-          },
-          "down_up": {
-            "texture": "golden_lower_curtain",
-            "render_method": "alpha_test"
-          },
-          "down_down": {
-            "texture": "golden_lower_curtain",
-            "render_method": "alpha_test"
-          },
-          "down_south": {
-            "texture": "golden_lower_curtain",
-            "render_method": "alpha_test"
-          },
-          "down_east": {
-            "texture": "golden_lower_curtain",
-            "render_method": "alpha_test"
-          },
-          "down_west": {
-            "texture": "golden_lower_curtain",
-            "render_method": "alpha_test"
-          },
-          "down_north": {
-            "texture": "golden_lower_curtain",
-            "render_method": "alpha_test"
-          }
-        }
-      },
       "minecraft:display_name": "Alder Door",
       "minecraft:geometry": {
-        "identifier": "geometry.cc_wild.curtain_upper",
+        "identifier": "geometry.gaiadimension.curtain_upper",
         "bone_visibility": {
           "up": "q.block_state('gaiadimension:open') == false",
           "up2": "q.block_state('gaiadimension:open') == true"

@@ -31,26 +31,6 @@
     "components": {
       "gaiadimension:stairs": {},
       "minecraft:display_name": "Alder Stairs",
-      "minecraft:item_visual": {
-        "geometry": {
-          "identifier": "geometry.stairs",
-          "bone_visibility": {
-            "bot_ne": true,
-            "bot_nw": true,
-            "bot_se": true,
-            "bot_sw": true,
-            "top_ne": true,
-            "top_nw": true,
-            "top_se": false,
-            "top_sw": false
-          }
-        },
-        "material_instances": {
-          "*": {
-            "texture": "golden_planks"
-          }
-        }
-      },
       "minecraft:material_instances": {
         "*": {
           "texture": "golden_planks"

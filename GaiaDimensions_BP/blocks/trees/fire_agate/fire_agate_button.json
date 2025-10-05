@@ -373,15 +373,6 @@
     ],
     "components": {
       "minecraft:display_name": "Alder Button",
-      "minecraft:item_visual": {
-        "geometry": "geometry.cc_wild.button_icon",
-        "material_instances": {
-          "*": {
-            "texture": "fire_agate_planks",
-            "render_method": "alpha_test"
-          }
-        }
-      },
       "minecraft:geometry": {
         "identifier": "geometry.cc_wild.button",
         "bone_visibility": {

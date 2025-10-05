@@ -130,15 +130,6 @@
       }
     ],
     "components": {
-      "minecraft:item_visual": {
-        "geometry": "geometry.cc_wild.slab_icon",
-        "material_instances": {
-          "*": {
-            "texture": "green_agate_planks",
-            "render_method": "alpha_test"
-          }
-        }
-      },
       "minecraft:display_name": "Alder Slab",
       "minecraft:geometry": {
         "identifier": "geometry.gaiadimension.slab",

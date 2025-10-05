@@ -194,15 +194,6 @@
       }
     ],
     "components": {
-      "minecraft:item_visual": {
-        "geometry": "geometry.trapcurtain_icon",
-        "material_instances": {
-          "*": {
-            "texture": "golden_trapcurtain",
-            "render_method": "alpha_test"
-          }
-        }
-      },
       "minecraft:display_name": "Alder Trapcurtain",
       "minecraft:geometry": {
         "identifier": "geometry.trapcurtain",

@@ -128,62 +128,9 @@
       }
     ],
     "components": {
-      "minecraft:item_visual": {
-        "geometry": "geometry.cc_wild.curtain_icon",
-        "material_instances": {
-          "up_up": {
-            "texture": "pink_agate_upper_curtain",
-            "render_method": "alpha_test"
-          },
-          "up_down": {
-            "texture": "pink_agate_upper_curtain",
-            "render_method": "alpha_test"
-          },
-          "up_south": {
-            "texture": "pink_agate_upper_curtain",
-            "render_method": "alpha_test"
-          },
-          "up_east": {
-            "texture": "pink_agate_upper_curtain",
-            "render_method": "alpha_test"
-          },
-          "up_west": {
-            "texture": "pink_agate_upper_curtain",
-            "render_method": "alpha_test"
-          },
-          "up_north": {
-            "texture": "pink_agate_upper_curtain",
-            "render_method": "alpha_test"
-          },
-          "down_up": {
-            "texture": "pink_agate_lower_curtain",
-            "render_method": "alpha_test"
-          },
-          "down_down": {
-            "texture": "pink_agate_lower_curtain",
-            "render_method": "alpha_test"
-          },
-          "down_south": {
-            "texture": "pink_agate_lower_curtain",
-            "render_method": "alpha_test"
-          },
-          "down_east": {
-            "texture": "pink_agate_lower_curtain",
-            "render_method": "alpha_test"
-          },
-          "down_west": {
-            "texture": "pink_agate_lower_curtain",
-            "render_method": "alpha_test"
-          },
-          "down_north": {
-            "texture": "pink_agate_lower_curtain",
-            "render_method": "alpha_test"
-          }
-        }
-      },
       "minecraft:display_name": "Alder Door",
       "minecraft:geometry": {
-        "identifier": "geometry.cc_wild.curtain_lower",
+        "identifier": "geometry.gaiadimension.curtain_lower",
         "bone_visibility": {
           "down": "q.block_state('gaiadimension:open') == false",
           "down2": "q.block_state('gaiadimension:open') == true"
