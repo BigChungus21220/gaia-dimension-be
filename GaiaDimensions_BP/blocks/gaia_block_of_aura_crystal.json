@@ -22,13 +22,6 @@
           "texture": "aura_block",
           "render_method": "opaque",
           "minecraft:map_color": "#ffffff"
-        },
-        "events": {
-          "destroy": {
-            "spawn_loot": {
-              "table": "loot_tables/blocks/gaia/block_of_aura.json"
-            }
-          }
         }
       }
     }
