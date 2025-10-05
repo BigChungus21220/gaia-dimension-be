@@ -9,7 +9,7 @@ import { registerWoodComponent } from './blocks/gaia_wood.js';
 import { registerStairsComponent } from './blocks/gaia_stairs.js';
 import { registerGeyserComponent } from './blocks/geyser.js';
 import { initializeBiomeChecker } from './world/BiomeSystem.js';
-import './items/Ignition.js';
+import './items/Ignition';
 
 /**
  * This is the main entry point for the Gaia Dimension mod.
@@ -17,9 +17,6 @@ import './items/Ignition.js';
  */
 function registerAllComponents() {
     system.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
-        console.log("[GaiaDimension] Registering custom block components...");
-
-        // Create a context object to pass to each registration function
         const context = { blockComponentRegistry };
 
         // Call each registration function
@@ -30,13 +27,9 @@ function registerAllComponents() {
         registerWoodComponent(context);
         registerStairsComponent(context);
         registerGeyserComponent(context);
-
-        console.log("[GaiaDimension] All custom block components registered.");
-        
         // Initialize the biome checker system
         initializeBiomeChecker();
-        console.log("[GaiaDimension] Biome checker system initialized.");
-    });
+        });
 }
 
 // Run the registration

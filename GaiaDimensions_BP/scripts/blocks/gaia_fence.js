@@ -18,5 +18,5 @@ export function registerFenceComponent({ blockComponentRegistry }) {
     // The original script had a separate registration for the invisible block.
     // This is now handled implicitly by the main fence logic.
     // We just need to register a component for it so it's recognized.
-    blockComponentRegistry.registerCustomComponent(`${GAIA_NAMESPACE}:invisible`, {});
+    blockComponentRegistry.registerCustomComponent(`gaiadimension:invisible`, {});
 }

@@ -95,7 +95,7 @@ export function registerButtonComponent({ blockComponentRegistry }) {
         });
     });
 
-    blockComponentRegistry.registerCustomComponent(`${GAIA_NAMESPACE}:button`, {});
+    blockComponentRegistry.registerCustomComponent(`gaiadimension:button`, {});
 
     registerBreakHandler({
         event: "before",

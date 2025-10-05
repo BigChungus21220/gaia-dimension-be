@@ -9,7 +9,7 @@ const GAIA_NAMESPACE = "gaiadimension";
 export function registerStairsComponent({ blockComponentRegistry }) {
     // Register a custom component for identification purposes.
     // The tag is what's primarily used by the helper.
-    blockComponentRegistry.registerCustomComponent(`${GAIA_NAMESPACE}:stairs`, {});
+    blockComponentRegistry.registerCustomComponent(`gaiadimension:stairs`, {});
 
     // --- Register Event Handlers ---
     world.afterEvents.playerPlaceBlock.subscribe(StairsHelper.handlePlace.bind(StairsHelper));

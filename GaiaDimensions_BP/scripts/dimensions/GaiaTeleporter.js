@@ -2,7 +2,7 @@ import { world, system, Player } from "@minecraft/server";
 import { delay, convertCoords, overworld, the_end } from './utils.js';
 import Gaia from './world/Gaia.js';
 import Portal from "./world/Portal.js";
-import { vec3 } from "./Vec3.js";
+import { vec3 } from "../utils/Vec3";
 
 const dimensions = world.getAllDimensions();
 
@@ -102,7 +102,7 @@ function parseCoords(coord) {
     }
 }
 
-import { Vec3 } from "./Vec3.js";
+import { Vec3 } from "../utils/Vec3";
 import { level } from "./ModDimension.js";
 import Portal from "./world/Portal.js";
 

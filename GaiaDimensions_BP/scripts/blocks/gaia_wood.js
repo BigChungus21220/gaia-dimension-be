@@ -105,7 +105,7 @@ class WoodHelper {
  */
 export function registerWoodComponent({ blockComponentRegistry }) {
     // Register a custom component for identification if needed by other systems.
-    blockComponentRegistry.registerCustomComponent(`${GAIA_NAMESPACE}:wood`, {});
+    blockComponentRegistry.registerCustomComponent(`gaiadimension:wood`, {});
 
     // Subscribe to the player interaction event.
     world.beforeEvents.playerInteractWithBlock.subscribe(WoodHelper.handleInteract.bind(WoodHelper));

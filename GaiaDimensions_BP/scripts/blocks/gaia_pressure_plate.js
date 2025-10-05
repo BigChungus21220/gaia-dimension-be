@@ -9,7 +9,7 @@ const GAIA_NAMESPACE = "gaiadimension";
  */
 export function registerPressurePlateComponent({ blockComponentRegistry }) {
     // Register a custom component for identification purposes.
-    blockComponentRegistry.registerCustomComponent(`${GAIA_NAMESPACE}:pressure_plate`, {});
+    blockComponentRegistry.registerCustomComponent(`gaiadimension:pressure_plate`, {});
 
     // Initialize the helper's loop
     PressurePlateHelper.initialize();

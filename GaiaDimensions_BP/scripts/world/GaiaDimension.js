@@ -1,5 +1,5 @@
 import { Player, Entity, world } from "@minecraft/server";
-import { Vec3, vec3 } from "../Vec3";
+import { Vec3, vec3 } from "../utils/Vec3";
 
 export { GaiaDimension };
 

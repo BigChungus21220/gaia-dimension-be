@@ -34,6 +34,6 @@ export function registerToggleableBlocks() {
 }
 
 export function registerCurtainComponent({ blockComponentRegistry }) {
-    blockComponentRegistry.registerCustomComponent(`${GAIA_NAMESPACE}:curtain`, {});
+    blockComponentRegistry.registerCustomComponent(`gaiadimension:curtain`, {});
     registerToggleableBlocks();
 }
