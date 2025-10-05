@@ -1,0 +1,24 @@
+{
+  "format_version": "1.20.50",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaiadimension:green_agate_curtain",
+      "menu_category": {
+        "category": "construction",
+        "group": "itemGroup.name.door"
+      }
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "green_agate_curtain"
+      },
+      "minecraft:display_name": {
+        "value": "Green Agate Curtain"
+      },
+      "minecraft:block_placer": {
+        "block": "gaiadimension:green_agate_curtain_lower"
+      },
+      "minecraft:max_stack_size": 64
+    }
+  }
+}

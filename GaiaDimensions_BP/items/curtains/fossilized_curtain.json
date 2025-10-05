@@ -1,0 +1,24 @@
+{
+  "format_version": "1.20.50",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaiadimension:fossilized_curtain",
+      "menu_category": {
+        "category": "construction",
+        "group": "itemGroup.name.door"
+      }
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "fossilized_curtain"
+      },
+      "minecraft:display_name": {
+        "value": "Fossilized Curtain"
+      },
+      "minecraft:block_placer": {
+        "block": "gaiadimension:fossilized_curtain_lower"
+      },
+      "minecraft:max_stack_size": 64
+    }
+  }
+}
