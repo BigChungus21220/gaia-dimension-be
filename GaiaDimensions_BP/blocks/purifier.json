@@ -8,21 +8,15 @@
         "group": "minecraft:itemGroup.name.furnaces",
         "is_hidden_in_commands": false
       },
+       "traits": {
+                "minecraft:placement_position": {
+                    "enabled_states": [
+                        "minecraft:block_face"
+                    ]
+                  }
+       },
       "states": {
-        "gaiadimension:direction": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-        ],
         "gaiadimension:lit": [
-          false,
-          true
-        ],
-        "gaiadimension:entity": [
           false,
           true
         ]
@@ -75,46 +69,78 @@
           }
         }
       },
-      {
-        "condition": "q.block_property('gaiadimension:direction') == 0",
-        "components": {
-          "minecraft:transformation": [
-            0,
-            0,
-            0
-          ]
-        }
-      },
-      {
-        "condition": "q.block_property('gaiadimension:direction') == 1",
-        "components": {
-          "minecraft:transformation": [
-            0,
-            180,
-            0
-          ]
-        }
-      },
-      {
-        "condition": "q.block_property('gaiadimension:direction') == 2",
-        "components": {
-          "minecraft:transformation": [
-            0,
-            90,
-            0
-          ]
-        }
-      },
-      {
-        "condition": "q.block_property('gaiadimension:direction') == 3",
-        "components": {
-          "minecraft:transformation": [
-            0,
-            270,
-            0
-          ]
-        }
-      }
-    ]
+     {
+                "condition": "q.block_state('minecraft:block_face') == 'up'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            0,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'down'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            0,
+                            180
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'north'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            90,
+                            0,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'south'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            90,
+                            180,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'west'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            90,
+                            90,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'east'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            90,
+                            -90,
+                            0
+                        ]
+                    }
+                }
+            }
+        ]
+    }
   }
-}
