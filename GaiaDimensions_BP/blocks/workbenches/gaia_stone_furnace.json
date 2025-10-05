@@ -63,8 +63,7 @@
           1,
           1
         ]
-      },
-      "minecraft:loot": "loot_tables/blocks/workbenches/gaia_stone_furnace.json"
+      }
     },
     "events": {},
     "permutations": [

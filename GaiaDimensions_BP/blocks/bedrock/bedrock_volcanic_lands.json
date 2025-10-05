@@ -5,7 +5,6 @@
       "identifier": "gaiadimension:bedrock_volcanic_lands"
     },
     "components": {
-      "minecraft:loot": "loot_tables/blocks/bedrock/bedrock_volcanic_lands.json",
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 99999
       },

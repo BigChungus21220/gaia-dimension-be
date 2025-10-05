@@ -8,7 +8,6 @@
       }
     },
     "components": {
-      "minecraft:loot": "loot_tables/blocks/keystone_block.json",
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 13
       },

@@ -47,7 +47,6 @@
       "minecraft:destruction_particles": {
         "texture": "empty"
       },
-      "minecraft:loot": "loot_tables/empty.json",
       "minecraft:selection_box": false,
       "minecraft:destructible_by_explosion": false,
       "minecraft:destructible_by_mining": {

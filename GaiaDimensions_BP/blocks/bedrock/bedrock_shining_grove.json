@@ -5,7 +5,6 @@
       "identifier": "gaiadimension:bedrock_shining_grove"
     },
     "components": {
-      "minecraft:loot": "loot_tables/blocks/bedrock/bedrock_shining_grove.json",
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 99999
       },

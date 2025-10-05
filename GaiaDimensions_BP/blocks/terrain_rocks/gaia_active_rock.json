@@ -12,7 +12,6 @@
       "tag:ore": {},
       "tag:stone": {},
       "minecraft:light_emission": 3,
-      "minecraft:loot": "loot_tables/blocks/stones/active_rock.json",
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 1
       },

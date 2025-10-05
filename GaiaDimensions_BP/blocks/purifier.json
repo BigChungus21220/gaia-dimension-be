@@ -55,8 +55,7 @@
       },
       "minecraft:on_player_placing": {
         "event": "setDirection"
-      },
-      "minecraft:loot": "loot_tables/blocks/purifier.json"
+      }
     },
     "events": {},
     "permutations": [

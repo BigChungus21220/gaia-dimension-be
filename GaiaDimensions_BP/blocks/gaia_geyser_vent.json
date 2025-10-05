@@ -26,8 +26,7 @@
           "target": "self"
         }
       },
-      "minecraft:map_color": "#81f53d",
-      "minecraft:loot": "loot_tables/blocks/geyser_vent.json"
+      "minecraft:map_color": "#81f53d"
     },
     "events": {}
   }

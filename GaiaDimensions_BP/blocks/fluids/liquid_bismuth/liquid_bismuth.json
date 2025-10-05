@@ -31,7 +31,6 @@
       }
     },
     "components": {
-      "minecraft:loot": "loot_tables/blocks/null.json",
       "minecraft:material_instances": {
         "*": {
           "texture": "liquid_bismuth_still",

@@ -8,7 +8,6 @@
       }
     },
     "components": {
-      "minecraft:loot": "loot_tables/blocks/flower/aura_crystal_growth.json",
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 0
       },

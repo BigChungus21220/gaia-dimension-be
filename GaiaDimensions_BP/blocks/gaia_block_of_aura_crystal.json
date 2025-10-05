@@ -11,7 +11,6 @@
     "components": {
       "tag:ore": {},
       "tag:metal": {},
-      "minecraft:loot": "loot_tables/blocks/block_of_aura_crystal.json",
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 2
       },

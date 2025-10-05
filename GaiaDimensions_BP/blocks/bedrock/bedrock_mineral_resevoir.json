@@ -5,7 +5,6 @@
       "identifier": "gaiadimension:bedrock_mineral_resevoir"
     },
     "components": {
-      "minecraft:loot": "loot_tables/blocks/bedrock/bedrock_mineral_resevoir.json",
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 99999
       },

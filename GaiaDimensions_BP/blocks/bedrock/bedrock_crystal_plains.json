@@ -5,7 +5,6 @@
       "identifier": "gaiadimension:bedrock_crystal_plains"
     },
     "components": {
-      "minecraft:loot": "loot_tables/blocks/bedrock/bedrock_crystal_plains.json",
       "minecraft:destructible_by_mining": false,
       "minecraft:destructible_by_explosion": false,
       "minecraft:map_color": "#ffffff",

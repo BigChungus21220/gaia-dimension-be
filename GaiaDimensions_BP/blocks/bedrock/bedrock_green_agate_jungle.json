@@ -5,7 +5,6 @@
       "identifier": "gaiadimension:bedrock_green_agate_jungle"
     },
     "components": {
-      "minecraft:loot": "loot_tables/blocks/bedrock/bedrock_green_agate_jungle.json",
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 99999
       },

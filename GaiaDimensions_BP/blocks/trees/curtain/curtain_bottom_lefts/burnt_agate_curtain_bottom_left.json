@@ -134,7 +134,6 @@
       "minecraft:custom_components": [
         "gaiadimension:curtain"
       ],
-      "minecraft:loot": "loot_tables/msc/empty.json",
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 3,
         "item_specific_speeds": [

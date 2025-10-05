@@ -11,7 +11,6 @@
     "components": {
       "tag:is_shovelable": {},
       "tag:dirt": {},
-      "minecraft:loot": "loot_tables/blocks/grass/soft_grass.json",
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 1
       },

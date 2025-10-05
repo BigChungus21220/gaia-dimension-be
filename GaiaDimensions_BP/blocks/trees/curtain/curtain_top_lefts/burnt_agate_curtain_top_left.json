@@ -134,7 +134,6 @@
       "minecraft:custom_components": [
         "gaiadimension:curtain"
       ],
-      "minecraft:loot": "loot_tables/msc/empty.json",
       "minecraft:tick": {
         "interval_range": [
           0,

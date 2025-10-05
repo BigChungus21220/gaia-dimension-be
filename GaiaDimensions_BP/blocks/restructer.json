@@ -62,8 +62,7 @@
           1,
           1
         ]
-      },
-      "minecraft:loot": "loot_tables/blocks/restructurer.json"
+      }
     },
     "events": {},
     "permutations": [

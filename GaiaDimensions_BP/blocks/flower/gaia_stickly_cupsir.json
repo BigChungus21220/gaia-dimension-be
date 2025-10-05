@@ -16,7 +16,6 @@
       }
     },
     "components": {
-      "minecraft:loot": "loot_tables/blocks/flower/stickly_cupsir.json",
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 0
       },

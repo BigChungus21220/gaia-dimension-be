@@ -11,7 +11,6 @@
     "components": {
       "tag:ore": {},
       "tag:stone": {},
-      "minecraft:loot": "loot_tables/blocks/stones/charged_mineral.json",
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 1
       },

@@ -10,7 +10,6 @@
     },
     "components": {
       "minecraft:map_color": "#636566",
-      "minecraft:loot": "loot_tables/blocks/workbenches/agate_crafting_table.json",
       "minecraft:geometry": "geometry.full_block",
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 1
