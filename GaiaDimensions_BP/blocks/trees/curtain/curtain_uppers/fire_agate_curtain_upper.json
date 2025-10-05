@@ -128,7 +128,6 @@
       }
     ],
     "components": {
-      "minecraft:display_name": "Alder Door",
       "minecraft:geometry": {
         "identifier": "geometry.gaiadimension.curtain_upper",
         "bone_visibility": {
