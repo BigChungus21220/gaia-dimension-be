@@ -3,7 +3,8 @@
   "minecraft:item": {
     "description": {
       "identifier": "forge:purifier_arrow_11",
-      "category": "commands"
+      "menu_category": {
+                "category": "none"}
     },
     "components": {
       "minecraft:icon": {
