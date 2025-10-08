@@ -1711,8 +1711,8 @@
     "f": {
       "textures": "textures/ui/gaia/Background/f"
     },
-    "g": {
-      "textures": "textures/ui/gaia/Background/g"
+    "gaia_bedrock": {
+      "textures": "textures/bedrock"
     },
     "s": {
       "textures": "textures/ui/gaia/Background/s"
