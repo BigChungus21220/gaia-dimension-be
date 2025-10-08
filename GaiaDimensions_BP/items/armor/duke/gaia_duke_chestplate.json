@@ -3,14 +3,12 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:gaia_duke_chestplate",
-      "category": "Equipment"
+  "menu_category": {
+                "category": "equipment"}
     },
     "components": {
       "minecraft:icon": {
         "texture": "gaia_duke_chestplate"
-      },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.chestplate"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:enchantable": {
@@ -24,7 +22,7 @@
           "max": 100
         }
       },
-      "minecraft:foil": false,
+      "minecraft:glint": false,
       "minecraft:hand_equipped": false,
       "minecraft:wearable": {
         "slot": "slot.armor.chest"
@@ -38,9 +36,6 @@
             "repair_amount": 3152
           }
         ]
-      },
-      "minecraft:armor": {
-        "protection": 8
       },
       "minecraft:display_name": {
         "value": "Larvikite Guard\n§7It looks like it went through some intense battles"

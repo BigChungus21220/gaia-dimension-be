@@ -10,7 +10,7 @@
     },
     "components": {
       "minecraft:map_color": "#636566",
-      "minecraft:geometry": "geometry.full_block",
+      "minecraft:geometry": "minecraft:geometry.full_block",
       "minecraft:destructible_by_mining": {
         "seconds_to_destroy": 1
       },

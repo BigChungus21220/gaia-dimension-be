@@ -27,8 +27,10 @@
       }
     },
     "components": {
-      "gaiadimension:stairs": {},
-      "minecraft:geometry": "geometry.block",
+      "minecraft:custom_components": [
+        "gaiadimension:stairs"
+      ],
+      "minecraft:geometry": "minecraft:geometry.full_block",
       "minecraft:liquid_detection": {
         "detection_rules": [
           {

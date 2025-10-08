@@ -9,9 +9,7 @@
       "minecraft:icon": {
         "texture": "purifier_arrow_23"
       },
-      "minecraft:creative_category": {
-        "parent": "itemGroup.creativity"
-      },
+      
       "minecraft:display_name": {
         "value": "purifier_arrow_ui"
       },

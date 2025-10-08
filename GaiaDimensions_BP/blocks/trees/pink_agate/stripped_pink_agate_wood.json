@@ -96,7 +96,7 @@
       }
     ],
     "components": {
-      "minecraft:geometry": "geometry.block",
+      "minecraft:geometry": "minecraft:geometry.full_block",
       "minecraft:material_instances": {
         "up": {
           "texture": "pink_agate_log_stripped",

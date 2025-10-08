@@ -6,7 +6,7 @@ import { trackBlock, untrackBlock } from "../systems/destruction_handler.js";
 const type = "gaiadimension:type";
 const tag = "gaiadimension:stairs";
 const componentName = "gaiadimension:stairs";
-const blocker = "gaiadimension:alder_stairs_collision";
+const blocker = "gaiadimension:stairs_collision";
 
 /**
  * Triggers an update for any neighboring blocks that are custom stairs.

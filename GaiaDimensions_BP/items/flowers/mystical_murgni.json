@@ -12,9 +12,6 @@
       "minecraft:display_name": {
         "value": "Mystical Murgni"
       },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.flower"
-      },
       "minecraft:block_placer": {
         "block": "gaiadimension:mystical_murgni"
       }

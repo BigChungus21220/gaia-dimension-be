@@ -12,9 +12,6 @@
       "minecraft:display_name": {
         "value": "Gold Orb Tucher"
       },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.flower"
-      },
       "minecraft:block_placer": {
         "block": "gaiadimension:gold_orb_tucher"
       }

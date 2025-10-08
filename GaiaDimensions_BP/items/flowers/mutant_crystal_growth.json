@@ -12,9 +12,6 @@
       "minecraft:display_name": {
         "value": "Mutant Crystal Growth"
       },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.flower"
-      },
       "minecraft:block_placer": {
         "block": "gaiadimension:mutant_crystal_growth"
       }

@@ -22,7 +22,8 @@
         "value": 20,
         "max": 20
       },
-      "minecraft:equip_item": {},
+"minecraft:equip_item": {},
+      "minecraft:behavior.equip_item": {},
       "minecraft:collision_box": {
         "width": 0.72,
         "height": 2.01

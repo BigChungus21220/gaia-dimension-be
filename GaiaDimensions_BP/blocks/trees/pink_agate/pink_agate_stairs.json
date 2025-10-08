@@ -29,7 +29,9 @@
       }
     },
     "components": {
-      "gaiadimension:stairs": {},
+      "minecraft:custom_components": [
+        "gaiadimension:stairs"
+      ],
       "minecraft:material_instances": {
         "*": {
           "texture": "pink_agate_tiles"

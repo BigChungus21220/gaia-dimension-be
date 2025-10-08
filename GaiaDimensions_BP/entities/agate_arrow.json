@@ -93,7 +93,7 @@
     },
     "events": {
       "gaiadimension:particle": {
-        "run_command": {
+        "queue_command": {
           "command": [
             "particle minecraft:basic_crit_particle ~~~"
           ]
@@ -107,7 +107,7 @@
         }
       },
       "gaiadimension:spawn_item": {
-        "run_command": {
+        "queue_command": {
           "command": [
             "give @p[r=3] gaiadimension:agate_arrow 1 0",
             "playsound random.pop @p[r=3]"

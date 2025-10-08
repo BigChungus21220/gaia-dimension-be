@@ -12,9 +12,6 @@
       "minecraft:display_name": {
         "value": "Roofed Agaric"
       },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.flower"
-      },
       "minecraft:block_placer": {
         "block": "gaiadimension:roofed_agaric"
       }

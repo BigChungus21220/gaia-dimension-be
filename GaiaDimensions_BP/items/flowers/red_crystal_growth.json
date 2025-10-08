@@ -12,9 +12,6 @@
       "minecraft:display_name": {
         "value": "Red Crystal Growth"
       },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.flower"
-      },
       "minecraft:block_placer": {
         "block": "gaiadimension:red_crystal_growth"
       }

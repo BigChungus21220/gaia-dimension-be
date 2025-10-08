@@ -12,9 +12,6 @@
       "minecraft:display_name": {
         "value": "Corrupted Gaia Eye"
       },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.flower"
-      },
       "minecraft:block_placer": {
         "block": "gaiadimension:corrupted_gaia_eye"
       }

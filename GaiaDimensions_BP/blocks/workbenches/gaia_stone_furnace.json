@@ -4,25 +4,19 @@
     "description": {
       "identifier": "gaiadimension:gaia_stone_furnace",
       "menu_category": {
-        "category": "items",
+        "category": "nature",
         "group": "minecraft:itemGroup.name.furnaces",
         "is_hidden_in_commands": false
       },
+       "traits": {
+                "minecraft:placement_position": {
+                    "enabled_states": [
+                        "minecraft:block_face"
+                    ]
+                }
+            },
       "states": {
-        "gaiadimension:direction": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-        ],
         "gaiadimension:lit": [
-          false,
-          true
-        ],
-        "gaiadimension:entity": [
           false,
           true
         ]
@@ -31,7 +25,7 @@
     "components": {
       "minecraft:collision_box": true,
       "minecraft:selection_box": true,
-      "minecraft:geometry": "geometry.full_block",
+      "minecraft:geometry": "minecraft:geometry.full_block",
       "minecraft:material_instances": {
         "up": {
           "texture": "gaia_stone_furnace_top",
@@ -50,22 +44,9 @@
           "render_method": "opaque"
         }
       },
-      "minecraft:on_player_placing": {
-        "event": "setDirection"
-      },
-      "tag:furnace": {},
-      "minecraft:queued_ticking": {
-        "looping": true,
-        "on_tick": {
-          "event": "runFurnace"
-        },
-        "interval_range": [
-          1,
-          1
-        ]
-      }
-    },
-    "events": {},
+      "tag:furnace": {
+
+      }},
     "permutations": [
       {
         "condition": "q.block_state('gaiadimension:lit') == true",
@@ -90,46 +71,80 @@
           }
         }
       },
-      {
-        "condition": "q.block_state('gaiadimension:direction') == 0",
-        "components": {
-          "minecraft:transformation": [
-            0,
-            0,
-            0
-          ]
-        }
-      },
-      {
-        "condition": "q.block_state('gaiadimension:direction') == 1",
-        "components": {
-          "minecraft:transformation": [
-            0,
-            180,
-            0
-          ]
-        }
-      },
-      {
-        "condition": "q.block_state('gaiadimension:direction') == 2",
-        "components": {
-          "minecraft:transformation": [
-            0,
-            90,
-            0
-          ]
-        }
-      },
-      {
-        "condition": "q.block_state('gaiadimension:direction') == 3",
-        "components": {
-          "minecraft:transformation": [
-            0,
-            270,
-            0
-          ]
-        }
-      }
-    ]
+        {
+                "condition": "q.block_state('minecraft:block_face') == 'up'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            0,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'down'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            0,
+                            180
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'north'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            90,
+                            0,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'south'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            90,
+                            180,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'west'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            90,
+                            90,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'east'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            90,
+                            -90,
+                            0
+                        ]
+                    }
+                }
+            }
+        ]
+    }
   }
-}
+
+      

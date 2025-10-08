@@ -9,9 +9,7 @@
       "minecraft:icon": {
         "texture": "restructurer_flame_9"
       },
-      "minecraft:creative_category": {
-        "parent": "itemGroup.creativity"
-      },
+      
       "minecraft:display_name": {
         "value": "flame_ui"
       },

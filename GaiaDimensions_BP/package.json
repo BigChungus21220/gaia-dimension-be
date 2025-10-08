@@ -9,7 +9,7 @@
   "author": "Lum Studios",
   "license": "ISC",
   "dependencies": {
-    "@minecraft/server": "^2.0.0",
-    "@minecraft/server-ui": "^1.1.0"
+    "@minecraft/server": "^2.2.0",
+    "@minecraft/server-ui": "^2.0.0"
   }
 }

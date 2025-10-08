@@ -3,7 +3,8 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:green_geode_slice",
-      "category": "Equipment"
+  "menu_category": {
+                "category": "equipment"}
     },
     "components": {
       "minecraft:icon": "green_geode_slice",

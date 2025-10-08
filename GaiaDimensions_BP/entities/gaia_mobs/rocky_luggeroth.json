@@ -152,7 +152,7 @@
             ],
             "event": "become_zombie"
           },
-          "deals_damage": false
+          "deals_damage": "no"
         }
       },
       "minecraft:type_family": {

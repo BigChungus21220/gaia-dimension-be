@@ -3,7 +3,8 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:sugilite_chestplate",
-      "category": "Equipment"
+  "menu_category": {
+                "category": "equipment"}
     },
     "components": {
       "minecraft:icon": {
@@ -24,7 +25,7 @@
           "max": 100
         }
       },
-      "minecraft:foil": false,
+      "minecraft:glint": false,
       "minecraft:hand_equipped": false,
       "minecraft:wearable": {
         "slot": "slot.armor.chest"

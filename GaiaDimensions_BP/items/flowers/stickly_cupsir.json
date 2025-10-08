@@ -12,9 +12,6 @@
       "minecraft:display_name": {
         "value": "Stick Cupsir"
       },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.flower"
-      },
       "minecraft:block_placer": {
         "block": "gaiadimension:stickly_cupsir"
       }

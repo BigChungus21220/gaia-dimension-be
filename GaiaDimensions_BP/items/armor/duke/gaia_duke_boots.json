@@ -3,7 +3,8 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:gaia_duke_boots",
-      "category": "Equipment"
+  "menu_category": {
+                "category": "equipment"}
     },
     "components": {
       "minecraft:icon": {
@@ -24,7 +25,7 @@
           "max": 100
         }
       },
-      "minecraft:foil": false,
+      "minecraft:glint": false,
       "minecraft:hand_equipped": false,
       "minecraft:wearable": {
         "slot": "slot.armor.feet"
@@ -38,9 +39,6 @@
             "repair_amount": 2561
           }
         ]
-      },
-      "minecraft:armor": {
-        "protection": 3
       },
       "minecraft:display_name": {
         "value": "Larvikite Boots\n§7It looks like it went through some intense battles"

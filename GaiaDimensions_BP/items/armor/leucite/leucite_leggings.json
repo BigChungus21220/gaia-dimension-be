@@ -3,14 +3,12 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:leucite_leggings",
-      "category": "Equipment"
+  "menu_category": {
+                "category": "equipment"}
     },
     "components": {
       "minecraft:icon": {
         "texture": "leucite_leggings"
-      },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.leggings"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:enchantable": {
@@ -24,7 +22,7 @@
           "max": 100
         }
       },
-      "minecraft:foil": false,
+      "minecraft:glint": false,
       "minecraft:hand_equipped": false,
       "minecraft:wearable": {
         "slot": "slot.armor.legs"
@@ -40,10 +38,7 @@
           }
         ]
       },
-      "minecraft:armor": {
-        "protection": 4
-      },
-      "minecraft:display_name": {}
+      "minecraft:display_name": {"value": "Leucite Boots\n§7Glittering in Battle !"}
     }
   }
 }

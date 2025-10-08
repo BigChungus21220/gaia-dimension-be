@@ -9,9 +9,7 @@
       "minecraft:icon": {
         "texture": "arrow_0"
       },
-      "minecraft:creative_category": {
-        "parent": "itemGroup.creativity"
-      },
+      
       "minecraft:display_name": {
         "value": "arrow_ui"
       },

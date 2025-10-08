@@ -12,9 +12,6 @@
       "minecraft:display_name": {
         "value": "Purple Crystal Growth"
       },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.flower"
-      },
       "minecraft:block_placer": {
         "block": "gaiadimension:purple_crystal_growth"
       }

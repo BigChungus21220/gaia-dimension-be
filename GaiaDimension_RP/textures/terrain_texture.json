@@ -1714,8 +1714,8 @@
     "gaia_bedrock": {
       "textures": "textures/bedrock"
     },
-    "s": {
-      "textures": "textures/ui/gaia/Background/s"
+    "gaiadimension:empty": {
+      "textures": "textures/absolute_void"
     }
   }
 }

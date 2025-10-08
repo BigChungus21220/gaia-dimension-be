@@ -3,14 +3,12 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:malachite_guard_chestplate",
-      "category": "Equipment"
+  "menu_category": {
+                "category": "equipment"}
     },
     "components": {
       "minecraft:icon": {
         "texture": "malachite_guard_chestplate"
-      },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.chestplate"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:enchantable": {
@@ -24,7 +22,7 @@
           "max": 100
         }
       },
-      "minecraft:foil": false,
+      "minecraft:glint": false,
       "minecraft:hand_equipped": false,
       "minecraft:wearable": {
         "slot": "slot.armor.chest"
@@ -39,15 +37,9 @@
           }
         ]
       },
-      "minecraft:armor": {
-        "protection": 7
-      },
       "minecraft:display_name": {
         "value": "Malachite Brace\n§7Sturdy, heavy, and eerily polished"
-      },
-      "minecraft:knockback_resistance": {
-        "protection": 0.5
+      }
       }
     }
   }
-}

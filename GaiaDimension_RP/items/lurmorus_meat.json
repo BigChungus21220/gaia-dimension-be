@@ -3,7 +3,8 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:lurmorus_meat",
-      "category": "Equipment"
+  "menu_category": {
+                "category": "equipment"}
     },
     "components": {
       "minecraft:icon": "lurmorus_meat",

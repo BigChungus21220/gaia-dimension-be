@@ -3,7 +3,8 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:large_calamari",
-      "category": "Equipment"
+  "menu_category": {
+                "category": "equipment"}
     },
     "components": {
       "minecraft:icon": "large_calamari",

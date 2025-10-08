@@ -9,9 +9,7 @@
       "minecraft:icon": {
         "texture": "radiator_8"
       },
-      "minecraft:creative_category": {
-        "parent": "itemGroup.creativity"
-      },
+      
       "minecraft:display_name": {
         "value": "purifier_radiator_ui"
       },

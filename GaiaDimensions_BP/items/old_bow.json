@@ -20,11 +20,13 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:old_bow",
-      "category": "Equipment"
+  "menu_category": {
+                "category": "equipment"}
     },
     "components": {
       "minecraft:creative_category": {
-        "category": "Equipment",
+    "menu_category": {
+                "category": "equipment"},
         "parent": "minecraft:itemGroup.name.shield"
       },
       "minecraft:icon": {

@@ -1,53 +1,59 @@
 {
-  "format_version": 2,
-  "metadata": {
-    "license": "GNU",
-    "url": "https://github.com/BigChungus21220/gaia-dimension-be"
-  },
-  "header": {
-    "name": "Gaia Dimension BP",
-    "description": "Bedrock port of the Gaia Dimension Mod by Androsa",
-    "uuid": "6b0938dc-c34f-4010-91d7-76156860a9a4",
-    "version": [
-      1,
-      0,
-      0
-    ],
-    "min_engine_version": [
-      1,
-      21,
-      0
-    ]
-  },
-  "modules": [
-    {
-      "description": "JS",
-      "type": "script",
-      "language": "javascript",
-      "uuid": "1eee9b4c-0dce-41ce-869f-0de89fa98c6a",
-      "version": [
-        1,
-        1,
-        0
-      ],
-      "entry": "scripts/GaiaDimensionMod.js"
-    }
-  ],
-  "capabilities": [
-    "script_eval"
-  ],
-  "dependencies": [
-    {
-      "uuid": "40be5674-757f-4633-8284-4bf164c65808",
-      "version": [
-        1,
-        0,
-        0
-      ]
-    },
-    {
-      "module_name": "@minecraft/server",
-      "version": "2.1.0"
-    }
-  ]
+	"format_version": 2,
+	"header": {
+		"name": "pack.name",
+		"description": "pack.description",
+		"uuid": "f1e6856d-a344-4aa4-a60d-2947a07aac10",
+		"pack_scope": "world",
+		"version": [
+			1,
+			0,
+			0
+		],
+		"min_engine_version": [
+			1,
+			21,
+			20
+		]
+	},
+	"metadata": {
+		"authors": [ "Sen" ],
+		"product_type": "addon"
+	},
+	"modules": [
+		{
+			"type": "data",
+			"uuid": "1bfae86f-aee4-4405-8ce5-6e73ac391e95",
+			"version": [
+				1,
+				0,
+				0
+			]
+		},
+		{
+			"entry": "scripts/GaiaDimensionMod.js",
+			"type": "script",
+			"language": "javascript",
+			"uuid": "04f47e00-af39-42e7-9327-60af6c9e9aff",
+			"version": [ 1, 0, 0 ]
+		}
+	],
+	"dependencies": [
+		{
+			"version": [
+				1,
+				0,
+				0
+			],
+			"uuid": "bb41e6e7-b693-4caf-afe8-d24fc998ab5c"
+		},
+		{
+			"module_name": "@minecraft/server",
+			"version": "2.1.0"
+		},
+		{
+			"module_name": "@minecraft/server-ui",
+			"version": "2.0.0"
+		}
+	]
 }

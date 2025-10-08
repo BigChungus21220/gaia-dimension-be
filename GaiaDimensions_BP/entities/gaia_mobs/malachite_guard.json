@@ -183,7 +183,7 @@
                 "value": "lightning"
               }
             },
-            "deals_damage": false
+            "deals_damage": "no"
           },
           {
             "on_damage": {
@@ -193,43 +193,43 @@
                 "value": "undead"
               }
             },
-            "deals_damage": false
+            "deals_damage": "no"
           },
           {
             "cause": "fall",
-            "deals_damage": false
+            "deals_damage": "no"
           },
           {
             "cause": "fire_tick",
-            "deals_damage": false
+            "deals_damage": "no"
           },
           {
             "cause": "block_explosion",
-            "deals_damage": false
+            "deals_damage": "no"
           },
           {
             "cause": "entity_explosion",
-            "deals_damage": false
+            "deals_damage": "no"
           },
           {
             "cause": "void",
-            "deals_damage": false
+            "deals_damage": "no"
           },
           {
             "cause": "wither",
-            "deals_damage": false
+            "deals_damage": "no"
           },
           {
             "cause": "projectile",
-            "deals_damage": false
+            "deals_damage": "no"
           },
           {
             "cause": "magic",
-            "deals_damage": false
+            "deals_damage": "no"
           },
           {
             "cause": "fire",
-            "deals_damage": false
+            "deals_damage": "no"
           },
           {
             "on_damage": {
@@ -244,7 +244,7 @@
                 ]
               }
             },
-            "deals_damage": false
+            "deals_damage": "no"
           }
         ]
       },
@@ -316,7 +316,7 @@
     },
     "events": {
       "minecraft:entity_spawned": {
-        "run_command": {
+        "queue_command": {
           "command": [
             "summon gaiadimension:malachite_drone MG_MINION ~ ~ ~4",
             "summon gaiadimension:malachite_drone MG_MINION ~ ~ ~-4",
@@ -327,7 +327,7 @@
       },
       "dead": {},
       "no_mg_defend": {
-        "run_command": {
+        "queue_command": {
           "command": [
             "tag @s add mg_defend"
           ]
@@ -365,7 +365,7 @@
         ]
       },
       "mg_defend": {
-        "run_command": {
+        "queue_command": {
           "command": [
             "tag @s remove mg_defend"
           ]

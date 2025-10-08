@@ -23,7 +23,7 @@
           "ambient_occlusion": false
         }
       },
-      "minecraft:geometry": "geometry.offset_cross_plant",
+      "minecraft:geometry": "minecraft:geometry.cross",
       "minecraft:placement_filter": {
         "conditions": [
           {

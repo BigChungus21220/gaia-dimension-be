@@ -9,9 +9,6 @@
       "minecraft:icon": {
         "texture": "blue_crystal_growth"
       },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.flower"
-      },
       "minecraft:display_name": {
         "value": "Blue Crystal Growth"
       },

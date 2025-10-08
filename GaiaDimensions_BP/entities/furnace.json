@@ -58,7 +58,7 @@
       "minecraft:damage_sensor": {
         "triggers": {
           "cause": "all",
-          "deals_damage": false
+          "deals_damage": "no"
         }
       },
       "minecraft:physics": {
@@ -107,7 +107,7 @@
             "despawn_block"
           ]
         },
-        "run_command": {
+        "queue_command": {
           "command": [
             "replaceitem entity @s slot.inventory 3 air",
             "replaceitem entity @s slot.inventory 4 air"

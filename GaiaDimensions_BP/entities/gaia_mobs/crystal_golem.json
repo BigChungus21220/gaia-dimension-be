@@ -8,17 +8,10 @@
           "is_experimental": false,
           "runtime_identifier": "minecraft:iron_golem"
       },
-
-      "component_groups": {},
-
       "components": {
         "minecraft:underwater_movement": {
           "value": 5.0
       },
-          "minecraft:on_death": {
-            "event": "dead",
-            "target": "self"
-        },
         "minecraft:break_blocks": {
             "breakable_blocks": [
                 "bamboo",
@@ -111,7 +104,7 @@
           "minecraft:damage_sensor": {
               "triggers": {
                   "cause": "fall",
-                  "deals_damage": false
+                  "deals_damage": "no"
               }
           },
           "minecraft:knockback_resistance": {
@@ -236,10 +229,9 @@
               "value": 64
           },
           "minecraft:conditional_bandwidth_optimization": {}
-      },
-
-      "events": {{}}
-
-      }
+        },
+           "events": {
+      "minecraft:entity_spawned": {}
+           }
   }
 }

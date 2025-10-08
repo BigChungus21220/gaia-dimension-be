@@ -12,9 +12,6 @@
       "minecraft:display_name": {
         "value": "Corrupt Varloom"
       },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.flower"
-      },
       "minecraft:block_placer": {
         "block": "gaiadimension:corrupt_varloom"
       }

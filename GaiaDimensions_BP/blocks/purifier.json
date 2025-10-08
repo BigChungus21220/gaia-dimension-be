@@ -4,7 +4,7 @@
     "description": {
       "identifier": "gaiadimension:purifier",
       "menu_category": {
-        "category": "items",
+        "category": "nature",
         "group": "minecraft:itemGroup.name.furnaces",
         "is_hidden_in_commands": false
       },
@@ -25,7 +25,7 @@
     "components": {
       "minecraft:collision_box": true,
       "minecraft:selection_box": true,
-      "minecraft:geometry": "geometry.full_block",
+      "minecraft:geometry": "minecraft:geometry.full_block",
       "minecraft:material_instances": {
         "up": {
           "texture": "purifier_top",
@@ -47,7 +47,7 @@
     },
     "permutations": [
       {
-        "condition": "q.block_property('gaiadimension:lit') == true",
+        "condition": "q.block_state('gaiadimension:lit') == true",
         "components": {
           "minecraft:material_instances": {
             "up": {

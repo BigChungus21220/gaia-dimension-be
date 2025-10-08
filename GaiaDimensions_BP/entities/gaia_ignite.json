@@ -63,13 +63,13 @@
       "minecraft:damage_sensor": [
         {
           "cause": "all",
-          "deals_damage": false
+          "deals_damage": "no"
         }
       ]
     },
     "events": {
       "burn": {
-        "run_command": {
+        "queue_command": {
           "command": [
             "fill ~~~ ~~~ gaiadimension:gold_fire replace air"
           ]

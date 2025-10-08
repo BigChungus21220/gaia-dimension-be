@@ -34,7 +34,6 @@ export function untrackBlock(location) {
  * Initializes the cleanup interval.
  */
 export function initializeDestructionHandlers() {
-    console.warn("[OrphanCleanup] Initializing tracker-based cleanup script.");
 
     system.runInterval(() => {
         // Iterate over a copy of the values, as the map can be modified during the loop.
