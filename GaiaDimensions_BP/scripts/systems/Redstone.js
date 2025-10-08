@@ -539,7 +539,7 @@ recalculateAllNetworks() {
             const adjacentBlock = dimension.getBlock(pos);
             if (adjacentBlock && !adjacentBlock.isAir) {
                 // Handle custom doors (gaiadimension: namespace)
-                if (adjacentBlock.typeId.includes("gaiadimension:") && adjacentBlock.typeId.includes("door")) {
+                if (adjacentBlock.typeId.includes("gaiadimension:") && adjacentBlock.typeId.includes("curtain")) {
                     const doorKey = `${dimension.id},${adjacentBlock.location.x},${adjacentBlock.location.y},${adjacentBlock.location.z}`;
                     doorsToOpen.add(doorKey);
                 }
@@ -570,14 +570,14 @@ recalculateAllNetworks() {
                 
                 if (doorBlock && !doorBlock.isAir) {
                     // Handle custom doors
-                    if (doorBlock.typeId.includes("gaiadimension:") && doorBlock.typeId.includes("door")) {
+                    if (doorBlock.typeId.includes("gaiadimension:") && doorBlock.typeId.includes("curtain")) {
                         const perm = doorBlock.permutation;
                         if (perm.getState("gaiadimension:open") !== undefined && perm.getState("gaiadimension:open") !== true) {
                             doorBlock.setPermutation(perm.withState("gaiadimension:open", true));
                         }
                         
                         // Special handling for custom doors - update both upper and lower halves
-                        if (doorBlock.typeId.includes("door")) {
+                        if (doorBlock.typeId.includes("curtain")) {
                             // If this is the lower half of a door, also update the upper half
                             if (doorBlock.typeId.includes("_lower")) {
                                 const upperBlock = doorBlock.above();
@@ -602,7 +602,7 @@ recalculateAllNetworks() {
                     }
                     // Handle vanilla doors
                     else if (doorBlock.typeId.startsWith("minecraft:") && 
-                             (doorBlock.typeId.includes("door") || 
+                             (doorBlock.typeId.includes("curtain") || 
                               doorBlock.typeId.includes("trapdoor") ||
                               doorBlock.typeId.includes("fence_gate"))) {
                         let perm = doorBlock.permutation;
@@ -649,7 +649,7 @@ recalculateAllNetworks() {
                 const neighborBlock = dimension.getBlock(neighborLoc);
                 if (neighborBlock && !neighborBlock.isAir) {
                     // Check if this block is a custom door
-                    if (neighborBlock.typeId.includes("gaiadimension:") && neighborBlock.typeId.includes("door")) {
+                    if (neighborBlock.typeId.includes("gaiadimension:") && neighborBlock.typeId.includes("curtain")) {
                         // Check if we've already found this door
                         const doorExists = foundDoors.some(door => 
                             door.location.x === neighborLoc.x && 
@@ -743,7 +743,7 @@ recalculateAllNetworks() {
         
         // For double doors, we always track the lower half as the primary door
         let primaryDoorBlock = doorBlock;
-        if (doorBlock.typeId.includes("door") && doorBlock.typeId.includes("_upper")) {
+        if (doorBlock.typeId.includes("curtain") && doorBlock.typeId.includes("_upper")) {
             const lowerBlock = doorBlock.below();
             if (lowerBlock && !lowerBlock.isAir && lowerBlock.typeId.includes("_lower")) {
                 primaryDoorBlock = lowerBlock;
@@ -939,7 +939,7 @@ recalculateAllNetworks() {
             let upperDoorBlock = null;
             
             // Determine which blocks are the lower and upper halves
-            if (doorBlock.typeId.includes("door")) {
+            if (doorBlock.typeId.includes("curtain")) {
                 if (doorBlock.typeId.includes("_lower")) {
                     lowerDoorBlock = doorBlock;
                     const upperBlock = doorBlock.above();

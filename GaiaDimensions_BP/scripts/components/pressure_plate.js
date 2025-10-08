@@ -46,7 +46,7 @@ function updateNeighbors(block, newState, sourceId) {
             let perm = neighborBlock.permutation;
             
             // Handle custom doors (gaiadimension: namespace)
-                if (neighborBlock.typeId.startsWith("gaiadimension:") && neighborBlock.typeId.includes("door")) {
+                if (neighborBlock.typeId.startsWith("gaiadimension:") && neighborBlock.typeId.includes("curtain")) {
                     if (perm.getState("gaiadimension:open") !== undefined) {
                         const oldState = perm.getState("gaiadimension:open");
                         // Generate unique key for this door
@@ -180,7 +180,7 @@ function checkAdjacentCustomDoors(block, open) {
     for (const pos of adjacentPositions) {
         const adjacentBlock = dimension.getBlock(pos);
         // Only process custom doors (gaiadimension: namespace)
-        if (adjacentBlock && adjacentBlock.typeId.startsWith("gaiadimension:") && adjacentBlock.typeId.includes("door")) {
+        if (adjacentBlock && adjacentBlock.typeId.startsWith("gaiadimension:") && adjacentBlock.typeId.includes("curtain")) {
             // Generate unique key for this door
             const doorKey = `${adjacentBlock.dimension.id},${adjacentBlock.location.x},${adjacentBlock.location.y},${adjacentBlock.location.z}`;
             
@@ -231,7 +231,7 @@ function checkAdjacentCustomDoors(block, open) {
                 }
                 
                                     // Special handling for custom doors - update both upper and lower halves
-                                if (adjacentBlock.typeId.includes("door")) {
+                                if (adjacentBlock.typeId.includes("curtain")) {
                                     // If this is the lower half of a door, also update the upper half
                                     if (adjacentBlock.typeId.includes("_lower")) {
                                         const upperBlock = adjacentBlock.above();
@@ -310,7 +310,7 @@ function cleanupDoorStates() {
             const block = dimension.getBlock({ x, y, z });
             
             // If the block is no longer a custom door, mark it for deletion
-            if (!block || !block.typeId.startsWith("gaiadimension:") || !block.typeId.includes("door")) {
+            if (!block || !block.typeId.startsWith("gaiadimension:") || !block.typeId.includes("curtain")) {
                 keysToDelete.push(doorKey);
                 // Also delete the activator tracking key
                 keysToDelete.push(`${doorKey}_activators`);

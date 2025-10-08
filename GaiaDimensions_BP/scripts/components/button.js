@@ -55,7 +55,7 @@ class ButtonComponent {
                 }
                 
                 // Special handling for custom doors - update both upper and lower halves
-                if (neighborBlock.typeId.includes("gaiadimension:") && neighborBlock.typeId.includes("door")) {
+                if (neighborBlock.typeId.includes("gaiadimension:") && neighborBlock.typeId.includes("curtain")) {
                     let perm = neighborBlock.permutation;
                     if (perm.getState("gaiadimension:open") !== undefined) {
                         neighborBlock.setPermutation(perm.withState("gaiadimension:open", newState));
@@ -107,7 +107,7 @@ class ButtonComponent {
             const neighborBlock = solidBlock[dir]();
             if (neighborBlock && !neighborBlock.isAir) {
                 // Check if it's a custom door
-                if (neighborBlock.typeId.includes("gaiadimension:") && neighborBlock.typeId.includes("door")) {
+                if (neighborBlock.typeId.includes("gaiadimension:") && neighborBlock.typeId.includes("curtain")) {
                     // Handle custom doors with upper/lower halves
                     if (neighborBlock.typeId.includes("_upper")) {
                         // Found upper door half, now update it and the lower half below it
@@ -231,7 +231,7 @@ class ButtonComponent {
                     const checkLocation = { x: center.x + x, y: center.y + y, z: center.z + z };
                     const block = dimension.getBlock(checkLocation);
 
-                    if (block && block.typeId.includes("door") && !block.typeId.includes("trapdoor")) {
+                    if (block && block.typeId.includes("curtain") && !block.typeId.includes("trapdoor")) {
                         
                         let lowerHalf, upperHalf;
                         if (block.typeId.includes("_lower")) {
@@ -284,7 +284,7 @@ class ButtonComponent {
             const neighborBlock = solidBlock[dir]();
             if (neighborBlock && !neighborBlock.isAir) {
                 // Check if it's a custom door
-                if (neighborBlock.typeId.includes("gaiadimension:") && neighborBlock.typeId.includes("door")) {
+                if (neighborBlock.typeId.includes("gaiadimension:") && neighborBlock.typeId.includes("curtain")) {
                     // Handle custom doors with upper/lower halves
                     if (neighborBlock.typeId.includes("_upper")) {
                         // Found upper door half, now update it and the lower half below it

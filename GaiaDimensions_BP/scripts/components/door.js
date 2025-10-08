@@ -105,7 +105,7 @@ class DoorComponent {
                         const checkBlock = leverBlock.dimension.getBlock(checkLocation);
                         if (checkBlock && !checkBlock.isAir) {
                             // Check if it's a custom door
-                            if (checkBlock.typeId.includes("gaiadimension:") && checkBlock.typeId.includes("door")) {
+                            if (checkBlock.typeId.includes("gaiadimension:") && checkBlock.typeId.includes("curtain")) {
                                 let perm = checkBlock.permutation;
                                 if (perm.getState("gaiadimension:open") !== undefined) {
                                     // Always update the door state to match the lever's new state
@@ -159,7 +159,7 @@ class DoorComponent {
         const directions = ["north", "south", "east", "west", "above", "below"];
         for (const dir of directions) {
             const neighborBlock = block[dir]();
-            if (neighborBlock && neighborBlock.typeId.includes("gaiadimension:") && neighborBlock.typeId.includes("door")) {
+            if (neighborBlock && neighborBlock.typeId.includes("gaiadimension:") && neighborBlock.typeId.includes("curtain")) {
                 // Using a short delay with system.run to ensure block state changes are applied properly.
                 system.run(() => this.toggleCustomDoor(neighborBlock));
             }
@@ -203,7 +203,7 @@ class DoorComponent {
         const isLower = block.typeId.includes("_lower");
         const otherBlock = isLower ? block.above() : block.below();
 
-        if (otherBlock && otherBlock.typeId.includes("door")) {
+        if (otherBlock && otherBlock.typeId.includes("curtain")) {
             const expectedOtherBlockId = isLower 
                 ? block.typeId.replace("_lower", "_upper") 
                 : block.typeId.replace("_upper", "_lower");
@@ -263,7 +263,7 @@ class DoorComponent {
         const { player, block } = event;
         if (block.typeId.includes("trapdoor")) {
             this.toggleTrapdoor(block, player);
-        } else if (block.typeId.includes("door")) {
+        } else if (block.typeId.includes("curtain")) {
             this.toggleDoor(block, player);
         }
     }
@@ -307,7 +307,7 @@ export function registerDoorComponent({ blockComponentRegistry }) {
             }
 
             const otherBlock = dimension.getBlock(otherBlockLocation);
-            if (otherBlock && otherBlock.typeId.includes("door")) {
+            if (otherBlock && otherBlock.typeId.includes("curtain")) {
                 const expectedOtherBlockId = isLower
                     ? brokenBlockTypeId.replace("_lower", "_upper")
                     : brokenBlockTypeId.replace("_upper", "_lower");
