@@ -3,15 +3,13 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:diopside_helmet",
-  "menu_category": {
-                "category": "equipment"}
+      "menu_category": {
+        "category": "equipment"
+      }
     },
     "components": {
       "minecraft:icon": {
         "texture": "diopside_helmet"
-      },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.helmet"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:enchantable": {
@@ -40,9 +38,6 @@
             "repair_amount": 487
           }
         ]
-      },
-      "minecraft:armor": {
-        "protection": 2
       },
       "minecraft:display_name": {}
     }

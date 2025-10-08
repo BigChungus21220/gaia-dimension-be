@@ -4,13 +4,13 @@
     "description": {
       "identifier": "forge:purifier_arrow_15",
       "menu_category": {
-                "category": "none"}
+        "category": "none"
+      }
     },
     "components": {
       "minecraft:icon": {
         "texture": "purifier_arrow_15"
       },
-      
       "minecraft:display_name": {
         "value": "purifier_arrow_ui"
       },

@@ -3,7 +3,8 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:white_opal_powder",
-      "category": "Items"
+      "menu_category": {
+                "category": "equipment"}
     },
     "components": {
       "minecraft:icon": "white_opal_powder",

@@ -3,7 +3,8 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:tiliol",
-      "category": "Items"
+      "menu_category": {
+                "category": "equipment"}
     },
     "components": {
       "minecraft:icon": "tiliol",

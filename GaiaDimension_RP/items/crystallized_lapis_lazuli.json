@@ -3,7 +3,8 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:crystallized_lapis_lazuli",
-      "category": "Items"
+      "menu_category": {
+                "category": "equipment"}
     },
     "components": {
       "minecraft:icon": "crystallized_lapis_lazuli",

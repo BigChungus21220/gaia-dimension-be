@@ -3,15 +3,13 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:gaia_duchess_chestplate",
-  "menu_category": {
-                "category": "equipment"}
+      "menu_category": {
+        "category": "equipment"
+      }
     },
     "components": {
       "minecraft:icon": {
         "texture": "gaia_duchess_chestplate"
-      },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.chestplate"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:enchantable": {
@@ -39,9 +37,6 @@
             "repair_amount": 2520
           }
         ]
-      },
-      "minecraft:armor": {
-        "protection": 8
       },
       "minecraft:display_name": {
         "value": "Bixbite Guard\n§7Nothing about it looks remotely like Gaia"

@@ -2,16 +2,14 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-  "menu_category": {
-                "category": "equipment"},
+      "menu_category": {
+        "category": "equipment"
+      },
       "identifier": "gaiadimension:spinel_princess_flamberge"
     },
     "components": {
       "minecraft:icon": {
         "texture": "spinel_princess_flamberge"
-      },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.sword"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:hand_equipped": true,
@@ -69,7 +67,7 @@
         }
       },
       "minecraft:display_name": {
-        "value": "Spinel Princess Flamberge\n§7Every swing leaves an entrail of fire"
+        "value": "Spinel Princess Flamberge\n\u00c2\u00a77Every swing leaves an entrail of fire"
       },
       "tag:minecraft:is_sword": {}
     }

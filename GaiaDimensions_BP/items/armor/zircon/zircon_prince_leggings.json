@@ -3,15 +3,13 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:zircon_prince_leggings",
-  "menu_category": {
-                "category": "equipment"}
+      "menu_category": {
+        "category": "equipment"
+      }
     },
     "components": {
       "minecraft:icon": {
         "texture": "zircon_prince_leggings"
-      },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.leggings"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:enchantable": {
@@ -39,9 +37,6 @@
             "repair_amount": 1770
           }
         ]
-      },
-      "minecraft:armor": {
-        "protection": 6
       },
       "minecraft:display_name": {
         "value": "Zircon Gear\n§7The armor is humming, and it zaps when you touch it"

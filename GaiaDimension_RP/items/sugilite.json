@@ -3,7 +3,8 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:sugilite",
-      "category": "Items"
+      "menu_category": {
+                "category": "equipment"}
     },
     "components": {
       "minecraft:icon": "sugilite",

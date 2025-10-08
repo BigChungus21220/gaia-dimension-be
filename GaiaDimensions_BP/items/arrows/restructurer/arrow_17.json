@@ -4,13 +4,13 @@
     "description": {
       "identifier": "forge:restructurer_arrow_17",
       "menu_category": {
-                "category": "none"}
+        "category": "none"
+      }
     },
     "components": {
       "minecraft:icon": {
         "texture": "restructurer_arrow_17"
       },
-      
       "minecraft:display_name": {
         "value": "restructurer_arrow_ui"
       },

@@ -4,13 +4,13 @@
     "description": {
       "identifier": "forge:flame_12",
       "menu_category": {
-                "category": "none"}
+        "category": "none"
+      }
     },
     "components": {
       "minecraft:icon": {
         "texture": "flame_12"
       },
-      
       "minecraft:display_name": {
         "value": "flame_ui"
       },

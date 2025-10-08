@@ -3,7 +3,9 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:diopside",
-      "category": "items"
+      "menu_category": {
+        "category": "equipment"
+      }
     },
     "components": {
       "minecraft:hand_equipped": false,

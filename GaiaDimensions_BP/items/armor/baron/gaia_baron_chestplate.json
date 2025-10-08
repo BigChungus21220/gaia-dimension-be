@@ -3,15 +3,13 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:gaia_baron_chestplate",
-  "menu_category": {
-                "category": "equipment"}
+      "menu_category": {
+        "category": "equipment"
+      }
     },
     "components": {
       "minecraft:icon": {
         "texture": "gaia_baron_chestplate"
-      },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.chestplate"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:enchantable": {
@@ -39,9 +37,6 @@
             "repair_amount": 2836
           }
         ]
-      },
-      "minecraft:armor": {
-        "protection": 8
       },
       "minecraft:display_name": {
         "value": "Tsavorite Tuxedo\n§7So stylish, yet so mysterious"

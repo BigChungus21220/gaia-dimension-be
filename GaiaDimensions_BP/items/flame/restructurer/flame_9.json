@@ -4,13 +4,13 @@
     "description": {
       "identifier": "forge:restructurer_flame_9",
       "menu_category": {
-                "category": "none"}
+        "category": "none"
+      }
     },
     "components": {
       "minecraft:icon": {
         "texture": "restructurer_flame_9"
       },
-      
       "minecraft:display_name": {
         "value": "flame_ui"
       },

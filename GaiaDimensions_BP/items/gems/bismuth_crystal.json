@@ -3,7 +3,9 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:bismuth_crystal",
-      "category": "items"
+      "menu_category": {
+        "category": "equipment"
+      }
     },
     "components": {
       "minecraft:hand_equipped": false,

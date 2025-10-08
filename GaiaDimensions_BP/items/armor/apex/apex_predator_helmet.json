@@ -3,15 +3,13 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:apex_predator_helmet",
-  "menu_category": {
-                "category": "equipment"}
+      "menu_category": {
+        "category": "equipment"
+      }
     },
     "components": {
       "minecraft:icon": {
         "texture": "apex_predator_helmet"
-      },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.helmet"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:enchantable": {
@@ -39,9 +37,6 @@
             "repair_amount": 866
           }
         ]
-      },
-      "minecraft:armor": {
-        "protection": 2
       },
       "minecraft:display_name": {
         "value": "Tiger's Eye Hood\n§7Who knew something old was still this dangerous?"

@@ -4,7 +4,9 @@
     "description": {
       "identifier": "gaiadimension:agate_stick",
       "menu_category": {
-        "category": "Items"
+        "menu_category": {
+          "category": "equipment"
+        }
       }
     },
     "components": {

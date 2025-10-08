@@ -3,15 +3,13 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:proustite_helmet",
-  "menu_category": {
-                "category": "equipment"}
+      "menu_category": {
+        "category": "equipment"
+      }
     },
     "components": {
       "minecraft:icon": {
         "texture": "proustite_helmet"
-      },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.helmet"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:enchantable": {
@@ -40,9 +38,6 @@
             "repair_amount": 316
           }
         ]
-      },
-      "minecraft:armor": {
-        "protection": 1
       },
       "minecraft:display_name": {}
     }

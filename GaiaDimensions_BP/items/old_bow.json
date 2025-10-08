@@ -5,7 +5,8 @@
 		"description": {
 			"identifier": "gaiadimension:old_bow",
 			"menu_category": {
-				"category": "Items"
+				"menu_category": {
+                "category": "equipment"}
 			}
 		},
 		"components": {

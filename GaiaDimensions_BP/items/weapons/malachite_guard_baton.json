@@ -2,16 +2,14 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-  "menu_category": {
-                "category": "equipment"},
+      "menu_category": {
+        "category": "equipment"
+      },
       "identifier": "gaiadimension:malachite_guard_baton"
     },
     "components": {
       "minecraft:icon": {
         "texture": "malachite_guard_baton"
-      },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.sword"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:hand_equipped": true,
@@ -69,7 +67,7 @@
         }
       },
       "minecraft:display_name": {
-        "value": "Malachite Guard Baton\n§7A good swing could knock targets away"
+        "value": "Malachite Guard Baton\n\u00c2\u00a77A good swing could knock targets away"
       },
       "tag:minecraft:is_sword": {}
     }

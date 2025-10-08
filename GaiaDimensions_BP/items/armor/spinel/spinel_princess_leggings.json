@@ -3,15 +3,13 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:spinel_princess_leggings",
-  "menu_category": {
-                "category": "equipment"}
+      "menu_category": {
+        "category": "equipment"
+      }
     },
     "components": {
       "minecraft:icon": {
         "texture": "spinel_princess_leggings"
-      },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.leggings"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:enchantable": {
@@ -39,9 +37,6 @@
             "repair_amount": 1477
           }
         ]
-      },
-      "minecraft:armor": {
-        "protection": 6
       },
       "minecraft:display_name": {
         "value": "Spinel Dress\n§7It looks thin, but it's warm to wear"

@@ -3,15 +3,13 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:sugilite_boots",
-  "menu_category": {
-                "category": "equipment"}
+      "menu_category": {
+        "category": "equipment"
+      }
     },
     "components": {
       "minecraft:icon": {
         "texture": "sugilite_boots"
-      },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.boots"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:enchantable": {
@@ -40,9 +38,6 @@
             "repair_amount": 250
           }
         ]
-      },
-      "minecraft:armor": {
-        "protection": 1
       },
       "minecraft:display_name": {}
     }

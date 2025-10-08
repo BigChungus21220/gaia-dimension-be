@@ -3,10 +3,10 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:pink_agate_curtain",
-			"menu_category": {
-				"category": "construction",
-				"group": "itemGroup.name.door"
-			}
+      "menu_category": {
+        "category": "construction",
+        "group": "itemGroup.name.door"
+      }
     },
     "components": {
       "minecraft:icon": {

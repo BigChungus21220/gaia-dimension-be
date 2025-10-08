@@ -3,8 +3,9 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:malachite_guard_helmet",
-  "menu_category": {
-                "category": "equipment"}
+      "menu_category": {
+        "category": "equipment"
+      }
     },
     "components": {
       "minecraft:icon": {
@@ -37,9 +38,6 @@
             "repair_amount": 1083
           }
         ]
-      },
-      "minecraft:armor": {
-        "protection": 2
       },
       "minecraft:display_name": {
         "value": "Malachite Headgear\n§7Sturdy, heavy, and eerily polished"

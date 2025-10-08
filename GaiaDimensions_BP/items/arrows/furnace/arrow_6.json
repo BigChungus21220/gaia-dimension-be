@@ -4,13 +4,13 @@
     "description": {
       "identifier": "forge:arrow_6",
       "menu_category": {
-                "category": "none"}
+        "category": "none"
+      }
     },
     "components": {
       "minecraft:icon": {
         "texture": "arrow_6"
       },
-      
       "minecraft:display_name": {
         "value": "arrow_ui"
       },

@@ -3,7 +3,9 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:liquid_aura_bucket",
-      "category": "items"
+      "menu_category": {
+        "category": "equipment"
+      }
     },
     "components": {
       "minecraft:icon": {

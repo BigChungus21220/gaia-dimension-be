@@ -3,15 +3,13 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:corrupt_warrior_helmet",
-  "menu_category": {
-                "category": "equipment"}
+      "menu_category": {
+        "category": "equipment"
+      }
     },
     "components": {
       "minecraft:icon": {
         "texture": "corrupt_warrior_helmet"
-      },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.helmet"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:enchantable": {
@@ -39,9 +37,6 @@
             "repair_amount": 2750
           }
         ]
-      },
-      "minecraft:armor": {
-        "protection": 4
       },
       "minecraft:display_name": {
         "value": "Corrupted Gaia Helmet\n§7It hurts to wear it, both mentally and physically"

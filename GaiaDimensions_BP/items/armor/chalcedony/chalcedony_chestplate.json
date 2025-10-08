@@ -3,15 +3,13 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:chalcedony_chestplate",
-  "menu_category": {
-                "category": "equipment"}
+      "menu_category": {
+        "category": "equipment"
+      }
     },
     "components": {
       "minecraft:icon": {
         "texture": "chalcedony_chestplate"
-      },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.chestplate"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:enchantable": {
@@ -40,9 +38,6 @@
             "repair_amount": 920
           }
         ]
-      },
-      "minecraft:armor": {
-        "protection": 8
       },
       "minecraft:display_name": {}
     }

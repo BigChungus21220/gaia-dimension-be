@@ -3,8 +3,9 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:luggeroth_chop",
-  "menu_category": {
-                "category": "equipment"}
+      "menu_category": {
+        "category": "equipment"
+      }
     },
     "components": {
       "minecraft:hand_equipped": false,

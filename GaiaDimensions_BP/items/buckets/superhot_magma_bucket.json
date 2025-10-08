@@ -3,7 +3,9 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:superhot_magma_bucket",
-      "category": "items"
+      "menu_category": {
+        "category": "equipment"
+      }
     },
     "components": {
       "minecraft:icon": {

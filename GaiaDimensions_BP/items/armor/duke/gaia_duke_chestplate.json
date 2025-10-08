@@ -3,8 +3,9 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:gaia_duke_chestplate",
-  "menu_category": {
-                "category": "equipment"}
+      "menu_category": {
+        "category": "equipment"
+      }
     },
     "components": {
       "minecraft:icon": {

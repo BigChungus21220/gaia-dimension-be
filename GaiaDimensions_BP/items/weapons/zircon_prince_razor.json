@@ -2,16 +2,14 @@
   "format_version": "1.16.100",
   "minecraft:item": {
     "description": {
-  "menu_category": {
-                "category": "equipment"},
+      "menu_category": {
+        "category": "equipment"
+      },
       "identifier": "gaiadimension:zircon_prince_razor"
     },
     "components": {
       "minecraft:icon": {
         "texture": "zircon_prince_razor"
-      },
-      "minecraft:creative_category": {
-        "parent": "minecraft:itemGroup.name.sword"
       },
       "minecraft:max_stack_size": 1,
       "minecraft:hand_equipped": true,
@@ -69,7 +67,7 @@
         }
       },
       "minecraft:display_name": {
-        "value": "Zircon Prince Razor\n§7Those two prongs channel electricity"
+        "value": "Zircon Prince Razor\n\u00c2\u00a77Those two prongs channel electricity"
       },
       "tag:minecraft:is_sword": {}
     }

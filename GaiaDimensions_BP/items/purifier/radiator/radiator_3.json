@@ -4,13 +4,13 @@
     "description": {
       "identifier": "forge:radiator_3",
       "menu_category": {
-                "category": "none"}
+        "category": "none"
+      }
     },
     "components": {
       "minecraft:icon": {
         "texture": "radiator_3"
       },
-      
       "minecraft:display_name": {
         "value": "purifier_radiator_ui"
       },

@@ -3,7 +3,9 @@
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:sweet_muck_bucket",
-      "category": "items"
+      "menu_category": {
+        "category": "equipment"
+      }
     },
     "components": {
       "minecraft:icon": {
