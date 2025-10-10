@@ -1,0 +1,45 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaiadimension:sugilite_chestplate",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "sugilite_chestplate"
+      },
+      "minecraft:max_stack_size": 1,
+      "minecraft:enchantable": {
+        "value": 15,
+        "slot": "armor_torso"
+      },
+      "minecraft:durability": {
+        "max_durability": 1232,
+        "damage_chance": {
+          "min": 60,
+          "max": 100
+        }
+      },
+      "minecraft:glint": false,
+      "minecraft:hand_equipped": false,
+      "minecraft:wearable": {
+        "slot": "slot.armor.chest"
+      },
+      "minecraft:repairable": {
+        "repair_items": [
+          {
+            "items": [
+              "gaiadimension:sugilite",
+              "gaiadimension:sugilite_chestplate"
+            ],
+            "repair_amount": 308
+          }
+        ]
+      },
+      "minecraft:display_name": {}
+    }
+  }
+}

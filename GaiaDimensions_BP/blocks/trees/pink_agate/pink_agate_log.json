@@ -104,19 +104,19 @@
           "render_method": "alpha_test"
         },
         "south": {
-          "texture": "pink_agate_log",
+          "texture": "pink_agate_log_side",
           "render_method": "alpha_test"
         },
         "east": {
-          "texture": "pink_agate_log",
+          "texture": "pink_agate_log_side",
           "render_method": "alpha_test"
         },
         "west": {
-          "texture": "pink_agate_log",
+          "texture": "pink_agate_log_side",
           "render_method": "alpha_test"
         },
         "north": {
-          "texture": "pink_agate_log",
+          "texture": "pink_agate_log_side",
           "render_method": "alpha_test"
         }
       },

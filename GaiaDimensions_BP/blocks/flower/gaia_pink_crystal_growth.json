@@ -31,36 +31,6 @@
         }
       },
       "minecraft:geometry": "minecraft:geometry.cross",
-      "minecraft:placement_filter": {
-        "conditions": [
-          {
-            "block_filter": [
-              "gaiadimension:orange_glitter_grass",
-              "gaiadimension:blue_glitter_grass",
-              "gaiadimension:green_glitter_grass",
-              "gaiadimension:charred_grass",
-              "gaiadimension:pale_green_glitter_grass",
-              "gaiadimension:purple_glitter_grass",
-              "gaiadimension:orange_glitter_grass",
-              "gaiadimension:soft_grass",
-              "gaiadimension:murky_grass",
-              "gaiadimension:corrupt_grass",
-              "gaiadimension:peach_glitter_grass",
-              "gaiadimension:peach_glitter_grass",
-              "gaiadimension:orange_glitter_grass",
-              "gaiadimension:light_soil",
-              "gaiadimension:heavy_soil",
-              "gaiadimension:cinder",
-              "gaiadimension:corrupt_soil",
-              "gaiadimension:boggy_soil",
-              "gaiadimension:light_soil"
-            ],
-            "allowed_faces": [
-              "up"
-            ]
-          }
-        ]
-      },
       "minecraft:selection_box": {
         "origin": [
           -6.5,

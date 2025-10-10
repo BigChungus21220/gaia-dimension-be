@@ -1,0 +1,20 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaiadimension:yellow_crystal_growth_item",
+      "category": "nature"
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "yellow_crystal_growth"
+      },
+      "minecraft:display_name": {
+        "value": "Yellow Crystal Growth"
+      },
+      "minecraft:block_placer": {
+        "block": "gaiadimension:yellow_crystal_growth"
+      }
+    }
+  }
+}

@@ -103,27 +103,27 @@
       },
       "minecraft:material_instances": {
         "up": {
-          "texture": "aura_log",
+          "texture": "aura_log_side",
           "render_method": "alpha_test"
         },
         "down": {
-          "texture": "aura_log",
+          "texture": "aura_log_side",
           "render_method": "alpha_test"
         },
         "south": {
-          "texture": "aura_log",
+          "texture": "aura_log_side",
           "render_method": "alpha_test"
         },
         "east": {
-          "texture": "aura_log",
+          "texture": "aura_log_side",
           "render_method": "alpha_test"
         },
         "west": {
-          "texture": "aura_log",
+          "texture": "aura_log_side",
           "render_method": "alpha_test"
         },
         "north": {
-          "texture": "aura_log",
+          "texture": "aura_log_side",
           "render_method": "alpha_test"
         }
       },

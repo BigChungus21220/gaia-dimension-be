@@ -1,0 +1,23 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaiadimension:mineral_water_bucket",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "mineral_water_bucket"
+      },
+      "minecraft:display_name": {
+        "value": "Mineral Water Bucket"
+      },
+      "minecraft:max_stack_size": 1,
+      "minecraft:block_placer": {
+        "block": "gaiadimension:mineral_water"
+      }
+    }
+  }
+}

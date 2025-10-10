@@ -178,15 +178,15 @@
       { "id": "golden_leaves", "class": "LeavesBlock", "properties": { "handler": "PropertiesHandler.leavesProps", "hardness": 0.3, "resistance": 0.0, "sound": "glass" } }
     ],
     "logs": [
-      { "id": "pink_agate_log", "class": "RotatedPillarBlock", "properties": { "handler": "PropertiesHandler.logProps", "hardness": 1.5, "resistance": 2.0, "sound": "stone" } },
-      { "id": "blue_agate_log", "class": "RotatedPillarBlock", "properties": { "handler": "PropertiesHandler.logProps", "hardness": 1.5, "resistance": 2.0, "sound": "stone" } },
-      { "id": "green_agate_log", "class": "RotatedPillarBlock", "properties": { "handler": "PropertiesHandler.logProps", "hardness": 1.5, "resistance": 2.0, "sound": "stone" } },
-      { "id": "purple_agate_log", "class": "RotatedPillarBlock", "properties": { "handler": "PropertiesHandler.logProps", "hardness": 1.5, "resistance": 2.0, "sound": "stone" } },
+      { "id": "pink_agate_log_side", "class": "RotatedPillarBlock", "properties": { "handler": "PropertiesHandler.logProps", "hardness": 1.5, "resistance": 2.0, "sound": "stone" } },
+      { "id": "blue_agate_log_side", "class": "RotatedPillarBlock", "properties": { "handler": "PropertiesHandler.logProps", "hardness": 1.5, "resistance": 2.0, "sound": "stone" } },
+      { "id": "green_agate_log_side", "class": "RotatedPillarBlock", "properties": { "handler": "PropertiesHandler.logProps", "hardness": 1.5, "resistance": 2.0, "sound": "stone" } },
+      { "id": "purple_agate_log_side", "class": "RotatedPillarBlock", "properties": { "handler": "PropertiesHandler.logProps", "hardness": 1.5, "resistance": 2.0, "sound": "stone" } },
       { "id": "fossilized_log", "class": "RotatedPillarBlock", "properties": { "handler": "PropertiesHandler.logProps", "hardness": 1.5, "resistance": 2.0, "sound": "stone" } },
       { "id": "corrupted_log", "class": "RotatedPillarBlock", "properties": { "handler": "PropertiesHandler.logProps", "hardness": 1.5, "resistance": 2.0, "sound": "stone" } },
-      { "id": "burnt_agate_log", "class": "RotatedPillarBlock", "properties": { "handler": "PropertiesHandler.logProps", "hardness": 1.5, "resistance": 2.0, "sound": "stone" } },
+      { "id": "burnt_agate_log_side", "class": "RotatedPillarBlock", "properties": { "handler": "PropertiesHandler.logProps", "hardness": 1.5, "resistance": 2.0, "sound": "stone" } },
       { "id": "fire_agate_log", "class": "RotatedPillarBlock", "properties": { "handler": "PropertiesHandler.logProps", "hardness": 1.5, "resistance": 2.0, "sound": "stone", "lightLevel": 3, "burnTime": 1600 } },
-      { "id": "aura_log", "class": "RotatedPillarBlock", "properties": { "handler": "PropertiesHandler.logProps", "hardness": 1.5, "resistance": 2.0, "sound": "stone" } },
+      { "id": "aura_log_side", "class": "RotatedPillarBlock", "properties": { "handler": "PropertiesHandler.logProps", "hardness": 1.5, "resistance": 2.0, "sound": "stone" } },
       { "id": "golden_log", "class": "RotatedPillarBlock", "properties": { "handler": "PropertiesHandler.logProps", "hardness": 1.5, "resistance": 2.0, "sound": "stone" } }
     ],
     "stripped_logs": [

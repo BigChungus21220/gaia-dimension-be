@@ -527,7 +527,7 @@
         }
       },
       "minecraft:custom_components": [
-        "gaiadimension:fence"
+        "gaiadimension:wall"
       ],
       "minecraft:liquid_detection": {
         "detection_rules": [

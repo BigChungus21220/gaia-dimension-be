@@ -103,27 +103,27 @@
       },
       "minecraft:material_instances": {
         "up": {
-          "texture": "burnt_agate_log",
+          "texture": "burnt_agate_log_side",
           "render_method": "alpha_test"
         },
         "down": {
-          "texture": "burnt_agate_log",
+          "texture": "burnt_agate_log_side",
           "render_method": "alpha_test"
         },
         "south": {
-          "texture": "burnt_agate_log",
+          "texture": "burnt_agate_log_side",
           "render_method": "alpha_test"
         },
         "east": {
-          "texture": "burnt_agate_log",
+          "texture": "burnt_agate_log_side",
           "render_method": "alpha_test"
         },
         "west": {
-          "texture": "burnt_agate_log",
+          "texture": "burnt_agate_log_side",
           "render_method": "alpha_test"
         },
         "north": {
-          "texture": "burnt_agate_log",
+          "texture": "burnt_agate_log_side",
           "render_method": "alpha_test"
         }
       },

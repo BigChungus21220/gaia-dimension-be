@@ -1,5 +1,5 @@
 {
-    "format_version": "1.16.100",
+    "format_version": "1.21.70",
     "minecraft:fog_settings": {
       "description": {
         "identifier": "gaiadimension:crystal_plains_fog"

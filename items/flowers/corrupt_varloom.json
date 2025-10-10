@@ -1,0 +1,20 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaiadimension:corrupt_varloom_item",
+      "category": "nature"
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "corrupt_varloom"
+      },
+      "minecraft:display_name": {
+        "value": "Corrupt Varloom"
+      },
+      "minecraft:block_placer": {
+        "block": "gaiadimension:corrupt_varloom"
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaiadimension:black_crystal_growth_item",
+      "category": "nature"
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "black_crystal_growth"
+      },
+      "minecraft:display_name": {
+        "value": "Black Crystal Growth"
+      },
+      "minecraft:block_placer": {
+        "block": "gaiadimension:black_crystal_growth"
+      }
+    }
+  }
+}

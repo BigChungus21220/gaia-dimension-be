@@ -1,0 +1,20 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaiadimension:bulbous_hobina_item",
+      "category": "nature"
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "bulbous_hobina"
+      },
+      "minecraft:display_name": {
+        "value": "Bulbous Hobina"
+      },
+      "minecraft:block_placer": {
+        "block": "gaiadimension:bulbous_hobina"
+      }
+    }
+  }
+}

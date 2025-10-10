@@ -1,0 +1,20 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaiadimension:pink_crystal_growth_item",
+      "category": "nature"
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "pink_crystal_growth"
+      },
+      "minecraft:display_name": {
+        "value": "Pink Crystal Growth"
+      },
+      "minecraft:block_placer": {
+        "block": "gaiadimension:pink_crystal_growth"
+      }
+    }
+  }
+}
