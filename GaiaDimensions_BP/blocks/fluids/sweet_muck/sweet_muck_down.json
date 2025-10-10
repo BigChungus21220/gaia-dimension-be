@@ -2,7 +2,7 @@
   "format_version": "1.20.80",
   "minecraft:block": {
     "description": {
-      "identifier": "gaia:sweet_muck_down"
+      "identifier": "gaiadimension:sweet_muck_down"
     },
     "components": {
       "minecraft:material_instances": {

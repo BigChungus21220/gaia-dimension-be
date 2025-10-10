@@ -2,7 +2,7 @@
   "format_version": "1.20.80",
   "minecraft:block": {
     "description": {
-      "identifier": "gaia:liquidsuperhot_magma2"
+      "identifier": "gaiadimension:liquidsuperhot_magma2"
     },
     "components": {
       "minecraft:material_instances": {

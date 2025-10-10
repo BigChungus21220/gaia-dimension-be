@@ -2,7 +2,7 @@
   "format_version": "1.20.80",
   "minecraft:block": {
     "description": {
-      "identifier": "gaia:liquid_bismuth_down"
+      "identifier": "gaiadimension:liquid_bismuth_down"
     },
     "components": {
       "minecraft:material_instances": {

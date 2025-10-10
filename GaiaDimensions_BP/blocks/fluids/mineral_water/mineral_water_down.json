@@ -2,7 +2,7 @@
   "format_version": "1.20.80",
   "minecraft:block": {
     "description": {
-      "identifier": "gaia:mineral_water_down"
+      "identifier": "gaiadimension:mineral_water_down"
     },
     "components": {
       "minecraft:material_instances": {

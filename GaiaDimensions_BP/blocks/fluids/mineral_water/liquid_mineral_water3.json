@@ -2,7 +2,7 @@
   "format_version": "1.20.80",
   "minecraft:block": {
     "description": {
-      "identifier": "gaia:liquidmineral_water3"
+      "identifier": "gaiadimension:liquidmineral_water3"
     },
     "components": {
       "minecraft:material_instances": {

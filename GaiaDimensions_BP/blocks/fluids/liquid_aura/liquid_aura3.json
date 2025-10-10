@@ -2,7 +2,7 @@
   "format_version": "1.20.80",
   "minecraft:block": {
     "description": {
-      "identifier": "gaia:liquidaura3"
+      "identifier": "gaiadimension:liquidaura3"
     },
     "components": {
       "minecraft:material_instances": {
