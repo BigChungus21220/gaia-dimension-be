@@ -1,0 +1,1721 @@
+{
+  "resource_pack_name": "GAIA DIMENSION",
+  "texture_name": "atlas.terrain",
+  "padding": 8,
+  "num_mip_levels": 4,
+  "texture_data": {
+    "active_rock": {
+      "textures": "textures/androsa/gaiadimension/block/active_rock"
+    },
+    "active_rock_overlay": {
+      "textures": "textures/androsa/gaiadimension/block/active_rock_overlay"
+    },
+    "agate_table_bottom": {
+      "textures": "textures/androsa/gaiadimension/block/agate_table_bottom"
+    },
+    "agate_table_front": {
+      "textures": "textures/androsa/gaiadimension/block/agate_table_front"
+    },
+    "agate_table_side": {
+      "textures": "textures/androsa/gaiadimension/block/agate_table_side"
+    },
+    "agate_table_top": {
+      "textures": "textures/androsa/gaiadimension/block/agate_table_top"
+    },
+    "agathum": {
+      "textures": "textures/androsa/gaiadimension/block/agathum"
+    },
+    "albite_block": {
+      "textures": "textures/androsa/gaiadimension/block/albite_block"
+    },
+    "amethyst_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/amethyst_bricks"
+    },
+    "auburn_mookaite": {
+      "textures": "textures/androsa/gaiadimension/block/auburn_mookaite"
+    },
+    "auburn_opalite_ore": {
+      "textures": "textures/androsa/gaiadimension/block/auburn_opalite_ore"
+    },
+    "aura_block": {
+      "textures": "textures/androsa/gaiadimension/block/aura_block"
+    },
+    "aura_curtain_bottom": {
+      "textures": "textures/androsa/gaiadimension/block/aura_curtain_bottom"
+    },
+    "aura_curtain_bottom_left": {
+      "textures": "textures/androsa/gaiadimension/block/aura_curtain_bottom_left"
+    },
+    "aura_curtain_bottom_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/aura_curtain_bottom_left_open"
+    },
+    "aura_curtain_bottom_open": {
+      "textures": "textures/androsa/gaiadimension/block/aura_curtain_bottom_open"
+    },
+    "aura_curtain_bottom_right": {
+      "textures": "textures/androsa/gaiadimension/block/aura_curtain_bottom_right"
+    },
+    "aura_curtain_bottom_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/aura_curtain_bottom_right_open"
+    },
+    "aura_curtain_top": {
+      "textures": "textures/androsa/gaiadimension/block/aura_curtain_top"
+    },
+    "aura_curtain_top_left": {
+      "textures": "textures/androsa/gaiadimension/block/aura_curtain_top_left"
+    },
+    "aura_curtain_top_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/aura_curtain_top_left_open"
+    },
+    "aura_curtain_top_open": {
+      "textures": "textures/androsa/gaiadimension/block/aura_curtain_top_open"
+    },
+    "aura_curtain_top_right": {
+      "textures": "textures/androsa/gaiadimension/block/aura_curtain_top_right"
+    },
+    "aura_curtain_top_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/aura_curtain_top_right_open"
+    },
+    "aura_leaves": {
+      "textures": "textures/androsa/gaiadimension/block/aura_leaves"
+    },
+    "aura_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/aura_log_end"
+    },
+    "aura_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/aura_log_side"
+    },
+    "aura_sapling": {
+      "textures": "textures/androsa/gaiadimension/block/aura_sapling"
+    },
+    "aura_shoot": {
+      "textures": "textures/androsa/gaiadimension/block/aura_shoot"
+    },
+    "aura_shoot_tip": {
+      "textures": "textures/androsa/gaiadimension/block/aura_shoot_tip"
+    },
+    "aura_tiles": {
+      "textures": "textures/androsa/gaiadimension/block/aura_tiles"
+    },
+    "aurum_mud": {
+      "textures": "textures/androsa/gaiadimension/block/aurum_mud"
+    },
+    "aurum_soil": {
+      "textures": "textures/androsa/gaiadimension/block/aurum_soil"
+    },
+    "beige_mookaite": {
+      "textures": "textures/androsa/gaiadimension/block/beige_mookaite"
+    },
+    "beige_opalite_ore": {
+      "textures": "textures/androsa/gaiadimension/block/beige_opalite_ore"
+    },
+    "benitoite_block": {
+      "textures": "textures/androsa/gaiadimension/block/benitoite_block"
+    },
+    "bismuth_block": {
+      "textures": "textures/androsa/gaiadimension/block/bismuth_block"
+    },
+    "blue_agate_curtain_bottom": {
+      "textures": "textures/androsa/gaiadimension/block/blue_agate_curtain_bottom"
+    },
+    "blue_agate_curtain_bottom_left": {
+      "textures": "textures/androsa/gaiadimension/block/blue_agate_curtain_bottom_left"
+    },
+    "blue_agate_curtain_bottom_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/blue_agate_curtain_bottom_left_open"
+    },
+    "blue_agate_curtain_bottom_open": {
+      "textures": "textures/androsa/gaiadimension/block/blue_agate_curtain_bottom_open"
+    },
+    "blue_agate_curtain_bottom_right": {
+      "textures": "textures/androsa/gaiadimension/block/blue_agate_curtain_bottom_right"
+    },
+    "blue_agate_curtain_bottom_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/blue_agate_curtain_bottom_right_open"
+    },
+    "blue_agate_curtain_top": {
+      "textures": "textures/androsa/gaiadimension/block/blue_agate_curtain_top"
+    },
+    "blue_agate_curtain_top_left": {
+      "textures": "textures/androsa/gaiadimension/block/blue_agate_curtain_top_left"
+    },
+    "blue_agate_curtain_top_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/blue_agate_curtain_top_left_open"
+    },
+    "blue_agate_curtain_top_open": {
+      "textures": "textures/androsa/gaiadimension/block/blue_agate_curtain_top_open"
+    },
+    "blue_agate_curtain_top_right": {
+      "textures": "textures/androsa/gaiadimension/block/blue_agate_curtain_top_right"
+    },
+    "blue_agate_curtain_top_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/blue_agate_curtain_top_right_open"
+    },
+    "blue_agate_leaves": {
+      "textures": "textures/androsa/gaiadimension/block/blue_agate_leaves"
+    },
+    "blue_agate_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/blue_agate_log_end"
+    },
+    "blue_agate_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/blue_agate_log_side"
+    },
+    "blue_agate_sapling": {
+      "textures": "textures/androsa/gaiadimension/block/blue_agate_sapling"
+    },
+    "blue_agate_tiles": {
+      "textures": "textures/androsa/gaiadimension/block/blue_agate_tiles"
+    },
+    "blue_opal_block": {
+      "textures": "textures/androsa/gaiadimension/block/blue_opal_block"
+    },
+    "blue_opal_ore": {
+      "textures": "textures/androsa/gaiadimension/block/blue_opal_ore"
+    },
+    "boggy_soil": {
+      "textures": "textures/androsa/gaiadimension/block/boggy_soil"
+    },
+    "bolstered_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/bolstered_bricks"
+    },
+    "brilliant_stone": {
+      "textures": "textures/androsa/gaiadimension/block/brilliant_stone"
+    },
+    "brilliant_stone_top": {
+      "textures": "textures/androsa/gaiadimension/block/brilliant_stone_top"
+    },
+    "bulbous_hobina": {
+      "textures": "textures/androsa/gaiadimension/block/bulbous_hobina"
+    },
+    "burnt_agate_curtain_bottom": {
+      "textures": "textures/androsa/gaiadimension/block/burnt_agate_curtain_bottom"
+    },
+    "burnt_agate_curtain_bottom_left": {
+      "textures": "textures/androsa/gaiadimension/block/burnt_agate_curtain_bottom_left"
+    },
+    "burnt_agate_curtain_bottom_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/burnt_agate_curtain_bottom_left_open"
+    },
+    "burnt_agate_curtain_bottom_open": {
+      "textures": "textures/androsa/gaiadimension/block/burnt_agate_curtain_bottom_open"
+    },
+    "burnt_agate_curtain_bottom_right": {
+      "textures": "textures/androsa/gaiadimension/block/burnt_agate_curtain_bottom_right"
+    },
+    "burnt_agate_curtain_bottom_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/burnt_agate_curtain_bottom_right_open"
+    },
+    "burnt_agate_curtain_top": {
+      "textures": "textures/androsa/gaiadimension/block/burnt_agate_curtain_top"
+    },
+    "burnt_agate_curtain_top_left": {
+      "textures": "textures/androsa/gaiadimension/block/burnt_agate_curtain_top_left"
+    },
+    "burnt_agate_curtain_top_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/burnt_agate_curtain_top_left_open"
+    },
+    "burnt_agate_curtain_top_open": {
+      "textures": "textures/androsa/gaiadimension/block/burnt_agate_curtain_top_open"
+    },
+    "burnt_agate_curtain_top_right": {
+      "textures": "textures/androsa/gaiadimension/block/burnt_agate_curtain_top_right"
+    },
+    "burnt_agate_curtain_top_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/burnt_agate_curtain_top_right_open"
+    },
+    "burnt_agate_leaves": {
+      "textures": "textures/androsa/gaiadimension/block/burnt_agate_leaves"
+    },
+    "burnt_agate_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/burnt_agate_log_end"
+    },
+    "burnt_agate_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/burnt_agate_log_side"
+    },
+    "burnt_agate_sapling": {
+      "textures": "textures/androsa/gaiadimension/block/burnt_agate_sapling"
+    },
+    "burnt_agate_tiles": {
+      "textures": "textures/androsa/gaiadimension/block/burnt_agate_tiles"
+    },
+    "carnelian_block": {
+      "textures": "textures/androsa/gaiadimension/block/carnelian_block"
+    },
+    "celestine_block": {
+      "textures": "textures/androsa/gaiadimension/block/celestine_block"
+    },
+    "celestine_ore": {
+      "textures": "textures/androsa/gaiadimension/block/celestine_ore"
+    },
+    "celestine_ore_overlay": {
+      "textures": "textures/androsa/gaiadimension/block/celestine_ore_overlay"
+    },
+    "charged_mineral": {
+      "textures": "textures/androsa/gaiadimension/block/charged_mineral"
+    },
+    "cinnabar_block": {
+      "textures": "textures/androsa/gaiadimension/block/cinnabar_block"
+    },
+    "cinnabar_ore": {
+      "textures": "textures/androsa/gaiadimension/block/cinnabar_ore"
+    },
+    "cloudy_glass": {
+      "textures": "textures/androsa/gaiadimension/block/cloudy_glass"
+    },
+    "coarse_rock": {
+      "textures": "textures/androsa/gaiadimension/block/coarse_rock"
+    },
+    "copal_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/copal_bricks"
+    },
+    "corrupted_curtain_bottom": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_curtain_bottom"
+    },
+    "corrupted_curtain_bottom_left": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_curtain_bottom_left"
+    },
+    "corrupted_curtain_bottom_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_curtain_bottom_left_open"
+    },
+    "corrupted_curtain_bottom_open": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_curtain_bottom_open"
+    },
+    "corrupted_curtain_bottom_right": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_curtain_bottom_right"
+    },
+    "corrupted_curtain_bottom_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_curtain_bottom_right_open"
+    },
+    "corrupted_curtain_top": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_curtain_top"
+    },
+    "corrupted_curtain_top_left": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_curtain_top_left"
+    },
+    "corrupted_curtain_top_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_curtain_top_left_open"
+    },
+    "corrupted_curtain_top_open": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_curtain_top_open"
+    },
+    "corrupted_curtain_top_right": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_curtain_top_right"
+    },
+    "corrupted_curtain_top_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_curtain_top_right_open"
+    },
+    "corrupted_gaia_eye": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_gaia_eye"
+    },
+    "corrupted_grass_overlay": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_grass_overlay"
+    },
+    "corrupted_grass_side": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_grass_side"
+    },
+    "corrupted_grass_top": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_grass_top"
+    },
+    "corrupted_leaves": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_leaves"
+    },
+    "corrupted_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_log_end"
+    },
+    "corrupted_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_log_side"
+    },
+    "corrupted_sapling": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_sapling"
+    },
+    "corrupted_soil": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_soil"
+    },
+    "corrupted_tiles": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_tiles"
+    },
+    "corrupted_varloom": {
+      "textures": "textures/androsa/gaiadimension/block/corrupted_varloom"
+    },
+    "cracked_amethyst_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/cracked_amethyst_bricks"
+    },
+    "cracked_copal_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/cracked_copal_bricks"
+    },
+    "cracked_gaia_stone_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/cracked_gaia_stone_bricks"
+    },
+    "cracked_jade_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/cracked_jade_bricks"
+    },
+    "cracked_jet_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/cracked_jet_bricks"
+    },
+    "crude_storage_crate": {
+      "textures": "textures/androsa/gaiadimension/block/crude_storage_crate"
+    },
+    "crusted_amethyst_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/crusted_amethyst_bricks"
+    },
+    "crusted_copal_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/crusted_copal_bricks"
+    },
+    "crusted_gaia_stone_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/crusted_gaia_stone_bricks"
+    },
+    "crusted_jade_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/crusted_jade_bricks"
+    },
+    "crusted_jet_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/crusted_jet_bricks"
+    },
+    "crystal_growth": {
+      "textures": "textures/androsa/gaiadimension/block/crystal_growth"
+    },
+    "crystal_growth_aura": {
+      "textures": "textures/androsa/gaiadimension/block/crystal_growth_aura"
+    },
+    "crystal_growth_black": {
+      "textures": "textures/androsa/gaiadimension/block/crystal_growth_black"
+    },
+    "crystal_growth_mutant": {
+      "textures": "textures/androsa/gaiadimension/block/crystal_growth_mutant"
+    },
+    "crystal_growth_red": {
+      "textures": "textures/androsa/gaiadimension/block/crystal_growth_red"
+    },
+    "crystal_growth_seared": {
+      "textures": "textures/androsa/gaiadimension/block/crystal_growth_seared"
+    },
+    "diopside_block": {
+      "textures": "textures/androsa/gaiadimension/block/diopside_block"
+    },
+    "elder_imklia": {
+      "textures": "textures/androsa/gaiadimension/block/elder_imklia"
+    },
+    "euclase_block": {
+      "textures": "textures/androsa/gaiadimension/block/euclase_block"
+    },
+    "fire_agate_curtain_bottom": {
+      "textures": "textures/androsa/gaiadimension/block/fire_agate_curtain_bottom"
+    },
+    "fire_agate_curtain_bottom_left": {
+      "textures": "textures/androsa/gaiadimension/block/fire_agate_curtain_bottom_left"
+    },
+    "fire_agate_curtain_bottom_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/fire_agate_curtain_bottom_left_open"
+    },
+    "fire_agate_curtain_bottom_open": {
+      "textures": "textures/androsa/gaiadimension/block/fire_agate_curtain_bottom_open"
+    },
+    "fire_agate_curtain_bottom_right": {
+      "textures": "textures/androsa/gaiadimension/block/fire_agate_curtain_bottom_right"
+    },
+    "fire_agate_curtain_bottom_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/fire_agate_curtain_bottom_right_open"
+    },
+    "fire_agate_curtain_top": {
+      "textures": "textures/androsa/gaiadimension/block/fire_agate_curtain_top"
+    },
+    "fire_agate_curtain_top_left": {
+      "textures": "textures/androsa/gaiadimension/block/fire_agate_curtain_top_left"
+    },
+    "fire_agate_curtain_top_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/fire_agate_curtain_top_left_open"
+    },
+    "fire_agate_curtain_top_open": {
+      "textures": "textures/androsa/gaiadimension/block/fire_agate_curtain_top_open"
+    },
+    "fire_agate_curtain_top_right": {
+      "textures": "textures/androsa/gaiadimension/block/fire_agate_curtain_top_right"
+    },
+    "fire_agate_curtain_top_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/fire_agate_curtain_top_right_open"
+    },
+    "fire_agate_leaves": {
+      "textures": "textures/androsa/gaiadimension/block/fire_agate_leaves"
+    },
+    "fire_agate_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/fire_agate_log_end"
+    },
+    "fire_agate_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/fire_agate_log_side"
+    },
+    "fire_agate_sapling": {
+      "textures": "textures/androsa/gaiadimension/block/fire_agate_sapling"
+    },
+    "fire_agate_tiles": {
+      "textures": "textures/androsa/gaiadimension/block/fire_agate_tiles"
+    },
+    "foggy_glass": {
+      "textures": "textures/androsa/gaiadimension/block/foggy_glass"
+    },
+    "fossilized_curtain_bottom": {
+      "textures": "textures/androsa/gaiadimension/block/fossilized_curtain_bottom"
+    },
+    "fossilized_curtain_bottom_left": {
+      "textures": "textures/androsa/gaiadimension/block/fossilized_curtain_bottom_left"
+    },
+    "fossilized_curtain_bottom_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/fossilized_curtain_bottom_left_open"
+    },
+    "fossilized_curtain_bottom_open": {
+      "textures": "textures/androsa/gaiadimension/block/fossilized_curtain_bottom_open"
+    },
+    "fossilized_curtain_bottom_right": {
+      "textures": "textures/androsa/gaiadimension/block/fossilized_curtain_bottom_right"
+    },
+    "fossilized_curtain_bottom_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/fossilized_curtain_bottom_right_open"
+    },
+    "fossilized_curtain_top": {
+      "textures": "textures/androsa/gaiadimension/block/fossilized_curtain_top"
+    },
+    "fossilized_curtain_top_left": {
+      "textures": "textures/androsa/gaiadimension/block/fossilized_curtain_top_left"
+    },
+    "fossilized_curtain_top_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/fossilized_curtain_top_left_open"
+    },
+    "fossilized_curtain_top_open": {
+      "textures": "textures/androsa/gaiadimension/block/fossilized_curtain_top_open"
+    },
+    "fossilized_curtain_top_right": {
+      "textures": "textures/androsa/gaiadimension/block/fossilized_curtain_top_right"
+    },
+    "fossilized_curtain_top_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/fossilized_curtain_top_right_open"
+    },
+    "fossilized_leaves": {
+      "textures": "textures/androsa/gaiadimension/block/fossilized_leaves"
+    },
+    "fossilized_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/fossilized_log_end"
+    },
+    "fossilized_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/fossilized_log_side"
+    },
+    "fossilized_sapling": {
+      "textures": "textures/androsa/gaiadimension/block/fossilized_sapling"
+    },
+    "fossilized_tiles": {
+      "textures": "textures/androsa/gaiadimension/block/fossilized_tiles"
+    },
+    "frail_glitter_block": {
+      "textures": "textures/androsa/gaiadimension/block/frail_glitter_block"
+    },
+    "fungus_pink": {
+      "textures": "textures/androsa/gaiadimension/block/fungus_pink"
+    },
+    "gaia_cobblestone": {
+      "textures": "textures/androsa/gaiadimension/block/gaia_cobblestone"
+    },
+    "gaia_crystalized_cracked_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/gaia_crystalized_cracked_bricks"
+    },
+    "gaia_portal": {
+      "textures": "textures/androsa/gaiadimension/block/gaia_portal"
+    },
+    "gaia_stone": {
+      "textures": "textures/androsa/gaiadimension/block/gaia_stone"
+    },
+    "gaia_stone_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/gaia_stone_bricks"
+    },
+    "gaia_stone_furnace_front": {
+      "textures": "textures/androsa/gaiadimension/block/gaia_stone_furnace_front"
+    },
+    "gaia_stone_furnace_front_lit": {
+      "textures": "textures/androsa/gaiadimension/block/gaia_stone_furnace_front_lit"
+    },
+    "gaia_stone_furnace_side": {
+      "textures": "textures/androsa/gaiadimension/block/gaia_stone_furnace_side"
+    },
+    "gaia_stone_furnace_top": {
+      "textures": "textures/androsa/gaiadimension/block/gaia_stone_furnace_top"
+    },
+    "geyser_block_side": {
+      "textures": "textures/androsa/gaiadimension/block/geyser_block_side"
+    },
+    "geyser_block_top": {
+      "textures": "textures/androsa/gaiadimension/block/geyser_block_top"
+    },
+    "gilded_brilliant_stone": {
+      "textures": "textures/androsa/gaiadimension/block/gilded_brilliant_stone"
+    },
+    "gilded_brilliant_stone_top": {
+      "textures": "textures/androsa/gaiadimension/block/gilded_brilliant_stone_top"
+    },
+    "gilded_grass_side": {
+      "textures": "textures/androsa/gaiadimension/block/gilded_grass_side"
+    },
+    "gilded_grass_top": {
+      "textures": "textures/androsa/gaiadimension/block/gilded_grass_top"
+    },
+    "glamelea": {
+      "textures": "textures/androsa/gaiadimension/block/glamelea"
+    },
+    "glitter_grass_overlay": {
+      "textures": "textures/androsa/gaiadimension/block/glitter_grass_overlay"
+    },
+    "glitter_grass_side": {
+      "textures": "textures/androsa/gaiadimension/block/glitter_grass_side"
+    },
+    "glitter_grass_top": {
+      "textures": "textures/androsa/gaiadimension/block/glitter_grass_top"
+    },
+    "golden_curtain_bottom": {
+      "textures": "textures/androsa/gaiadimension/block/golden_curtain_bottom"
+    },
+    "golden_curtain_bottom_left": {
+      "textures": "textures/androsa/gaiadimension/block/golden_curtain_bottom_left"
+    },
+    "golden_curtain_bottom_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/golden_curtain_bottom_left_open"
+    },
+    "golden_curtain_bottom_open": {
+      "textures": "textures/androsa/gaiadimension/block/golden_curtain_bottom_open"
+    },
+    "golden_curtain_bottom_right": {
+      "textures": "textures/androsa/gaiadimension/block/golden_curtain_bottom_right"
+    },
+    "golden_curtain_bottom_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/golden_curtain_bottom_right_open"
+    },
+    "golden_curtain_top": {
+      "textures": "textures/androsa/gaiadimension/block/golden_curtain_top"
+    },
+    "golden_curtain_top_left": {
+      "textures": "textures/androsa/gaiadimension/block/golden_curtain_top_left"
+    },
+    "golden_curtain_top_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/golden_curtain_top_left_open"
+    },
+    "golden_curtain_top_open": {
+      "textures": "textures/androsa/gaiadimension/block/golden_curtain_top_open"
+    },
+    "golden_curtain_top_right": {
+      "textures": "textures/androsa/gaiadimension/block/golden_curtain_top_right"
+    },
+    "golden_curtain_top_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/golden_curtain_top_right_open"
+    },
+    "golden_grass": {
+      "textures": "textures/androsa/gaiadimension/block/golden_grass"
+    },
+    "golden_leaves": {
+      "textures": "textures/androsa/gaiadimension/block/golden_leaves"
+    },
+    "golden_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/golden_log_end"
+    },
+    "golden_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/golden_log_side"
+    },
+    "golden_sand": {
+      "textures": "textures/androsa/gaiadimension/block/golden_sand"
+    },
+    "golden_sapling": {
+      "textures": "textures/androsa/gaiadimension/block/golden_sapling"
+    },
+    "golden_stone": {
+      "textures": "textures/androsa/gaiadimension/block/golden_stone"
+    },
+    "golden_tiles": {
+      "textures": "textures/androsa/gaiadimension/block/golden_tiles"
+    },
+    "golden_vine": {
+      "textures": "textures/androsa/gaiadimension/block/golden_vine"
+    },
+    "goldstone_block": {
+      "textures": "textures/androsa/gaiadimension/block/goldstone_block"
+    },
+    "gold_fire": {
+      "textures": "textures/androsa/gaiadimension/block/gold_fire"
+    },
+    "gold_mookaite": {
+      "textures": "textures/androsa/gaiadimension/block/gold_mookaite"
+    },
+    "gold_opalite_ore": {
+      "textures": "textures/androsa/gaiadimension/block/gold_opalite_ore"
+    },
+    "gold_orb_tucher": {
+      "textures": "textures/androsa/gaiadimension/block/gold_orb_tucher"
+    },
+    "goshenite_block": {
+      "textures": "textures/androsa/gaiadimension/block/goshenite_block"
+    },
+    "green_agate_curtain_bottom": {
+      "textures": "textures/androsa/gaiadimension/block/green_agate_curtain_bottom"
+    },
+    "green_agate_curtain_bottom_left": {
+      "textures": "textures/androsa/gaiadimension/block/green_agate_curtain_bottom_left"
+    },
+    "green_agate_curtain_bottom_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/green_agate_curtain_bottom_left_open"
+    },
+    "green_agate_curtain_bottom_open": {
+      "textures": "textures/androsa/gaiadimension/block/green_agate_curtain_bottom_open"
+    },
+    "green_agate_curtain_bottom_right": {
+      "textures": "textures/androsa/gaiadimension/block/green_agate_curtain_bottom_right"
+    },
+    "green_agate_curtain_bottom_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/green_agate_curtain_bottom_right_open"
+    },
+    "green_agate_curtain_top": {
+      "textures": "textures/androsa/gaiadimension/block/green_agate_curtain_top"
+    },
+    "green_agate_curtain_top_left": {
+      "textures": "textures/androsa/gaiadimension/block/green_agate_curtain_top_left"
+    },
+    "green_agate_curtain_top_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/green_agate_curtain_top_left_open"
+    },
+    "green_agate_curtain_top_open": {
+      "textures": "textures/androsa/gaiadimension/block/green_agate_curtain_top_open"
+    },
+    "green_agate_curtain_top_right": {
+      "textures": "textures/androsa/gaiadimension/block/green_agate_curtain_top_right"
+    },
+    "green_agate_curtain_top_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/green_agate_curtain_top_right_open"
+    },
+    "green_agate_leaves": {
+      "textures": "textures/androsa/gaiadimension/block/green_agate_leaves"
+    },
+    "green_agate_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/green_agate_log_end"
+    },
+    "green_agate_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/green_agate_log_side"
+    },
+    "green_agate_sapling": {
+      "textures": "textures/androsa/gaiadimension/block/green_agate_sapling"
+    },
+    "green_agate_tiles": {
+      "textures": "textures/androsa/gaiadimension/block/green_agate_tiles"
+    },
+    "green_opal_block": {
+      "textures": "textures/androsa/gaiadimension/block/green_opal_block"
+    },
+    "green_opal_ore": {
+      "textures": "textures/androsa/gaiadimension/block/green_opal_ore"
+    },
+    "gummy_glitter_block": {
+      "textures": "textures/androsa/gaiadimension/block/gummy_glitter_block"
+    },
+    "heavy_soil": {
+      "textures": "textures/androsa/gaiadimension/block/heavy_soil"
+    },
+    "hematite_block": {
+      "textures": "textures/androsa/gaiadimension/block/hematite_block"
+    },
+    "hematite_ore": {
+      "textures": "textures/androsa/gaiadimension/block/hematite_ore"
+    },
+    "impure_rock": {
+      "textures": "textures/androsa/gaiadimension/block/impure_rock"
+    },
+    "impure_sludge": {
+      "textures": "textures/androsa/gaiadimension/block/impure_sludge"
+    },
+    "ivory_mookaite": {
+      "textures": "textures/androsa/gaiadimension/block/ivory_mookaite"
+    },
+    "ivory_opalite_ore": {
+      "textures": "textures/androsa/gaiadimension/block/ivory_opalite_ore"
+    },
+    "jade_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/jade_bricks"
+    },
+    "jet_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/jet_bricks"
+    },
+    "keystone_block": {
+      "textures": "textures/androsa/gaiadimension/block/keystone_block"
+    },
+    "keystone_block_empty": {
+      "textures": "textures/androsa/gaiadimension/block/keystone_block_empty"
+    },
+    "keystone_block_full": {
+      "textures": "textures/androsa/gaiadimension/block/keystone_block_full"
+    },
+    "labradorite_block": {
+      "textures": "textures/androsa/gaiadimension/block/labradorite_block"
+    },
+    "labradorite_ore": {
+      "textures": "textures/androsa/gaiadimension/block/labradorite_ore"
+    },
+    "light_soil": {
+      "textures": "textures/androsa/gaiadimension/block/light_soil"
+    },
+    "malachite_blue_pulse": {
+      "textures": "textures/androsa/gaiadimension/block/malachite_blue_pulse"
+    },
+    "malachite_blue_pulse_corner": {
+      "textures": "textures/androsa/gaiadimension/block/malachite_blue_pulse_corner"
+    },
+    "malachite_blue_pulse_ctm": {
+      "textures": "textures/androsa/gaiadimension/block/malachite_blue_pulse_ctm"
+    },
+    "malachite_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/malachite_bricks"
+    },
+    "malachite_chisel_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/malachite_chisel_bricks"
+    },
+    "malachite_cracked_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/malachite_cracked_bricks"
+    },
+    "malachite_crusted_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/malachite_crusted_bricks"
+    },
+    "malachite_crystalized_cracked_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/malachite_crystalized_cracked_bricks"
+    },
+    "malachite_green_pulse": {
+      "textures": "textures/androsa/gaiadimension/block/malachite_green_pulse"
+    },
+    "malachite_green_pulse_corner": {
+      "textures": "textures/androsa/gaiadimension/block/malachite_green_pulse_corner"
+    },
+    "malachite_green_pulse_ctm": {
+      "textures": "textures/androsa/gaiadimension/block/malachite_green_pulse_ctm"
+    },
+    "malachite_lime_pulse": {
+      "textures": "textures/androsa/gaiadimension/block/malachite_lime_pulse"
+    },
+    "malachite_lime_pulse_corner": {
+      "textures": "textures/androsa/gaiadimension/block/malachite_lime_pulse_corner"
+    },
+    "malachite_lime_pulse_ctm": {
+      "textures": "textures/androsa/gaiadimension/block/malachite_lime_pulse_ctm"
+    },
+    "malachite_pillar_end": {
+      "textures": "textures/androsa/gaiadimension/block/malachite_pillar_end"
+    },
+    "malachite_pillar_side": {
+      "textures": "textures/androsa/gaiadimension/block/malachite_pillar_side"
+    },
+    "malachite_tiles": {
+      "textures": "textures/androsa/gaiadimension/block/malachite_tiles"
+    },
+    "mauve_mookaite": {
+      "textures": "textures/androsa/gaiadimension/block/mauve_mookaite"
+    },
+    "mauve_opalite_ore": {
+      "textures": "textures/androsa/gaiadimension/block/mauve_opalite_ore"
+    },
+    "mega_storage_crate": {
+      "textures": "textures/androsa/gaiadimension/block/mega_storage_crate"
+    },
+    "missingno_fungus": {
+      "textures": "textures/androsa/gaiadimension/block/missingno_fungus"
+    },
+    "missingno_plant": {
+      "textures": "textures/androsa/gaiadimension/block/missingno_plant"
+    },
+    "moonstone_block": {
+      "textures": "textures/androsa/gaiadimension/block/moonstone_block"
+    },
+    "moonstone_ore": {
+      "textures": "textures/androsa/gaiadimension/block/moonstone_ore"
+    },
+    "murky_grass_overlay": {
+      "textures": "textures/androsa/gaiadimension/block/murky_grass_overlay"
+    },
+    "murky_grass_side": {
+      "textures": "textures/androsa/gaiadimension/block/murky_grass_side"
+    },
+    "murky_grass_top": {
+      "textures": "textures/androsa/gaiadimension/block/murky_grass_top"
+    },
+    "mystical_murgni": {
+      "textures": "textures/androsa/gaiadimension/block/mystical_murgni"
+    },
+    "nexustone": {
+      "textures": "textures/androsa/gaiadimension/block/nexustone"
+    },
+    "opalite_block": {
+      "textures": "textures/androsa/gaiadimension/block/opalite_block"
+    },
+    "ouzium": {
+      "textures": "textures/androsa/gaiadimension/block/ouzium"
+    },
+    "pebbles": {
+      "textures": "textures/androsa/gaiadimension/block/pebbles"
+    },
+    "pink_agate_curtain_bottom": {
+      "textures": "textures/androsa/gaiadimension/block/pink_agate_curtain_bottom"
+    },
+    "pink_agate_curtain_bottom_left": {
+      "textures": "textures/androsa/gaiadimension/block/pink_agate_curtain_bottom_left"
+    },
+    "pink_agate_curtain_bottom_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/pink_agate_curtain_bottom_left_open"
+    },
+    "pink_agate_curtain_bottom_open": {
+      "textures": "textures/androsa/gaiadimension/block/pink_agate_curtain_bottom_open"
+    },
+    "pink_agate_curtain_bottom_right": {
+      "textures": "textures/androsa/gaiadimension/block/pink_agate_curtain_bottom_right"
+    },
+    "pink_agate_curtain_bottom_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/pink_agate_curtain_bottom_right_open"
+    },
+    "pink_agate_curtain_top": {
+      "textures": "textures/androsa/gaiadimension/block/pink_agate_curtain_top"
+    },
+    "pink_agate_curtain_top_left": {
+      "textures": "textures/androsa/gaiadimension/block/pink_agate_curtain_top_left"
+    },
+    "pink_agate_curtain_top_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/pink_agate_curtain_top_left_open"
+    },
+    "pink_agate_curtain_top_open": {
+      "textures": "textures/androsa/gaiadimension/block/pink_agate_curtain_top_open"
+    },
+    "pink_agate_curtain_top_right": {
+      "textures": "textures/androsa/gaiadimension/block/pink_agate_curtain_top_right"
+    },
+    "pink_agate_curtain_top_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/pink_agate_curtain_top_right_open"
+    },
+    "pink_agate_leaves": {
+      "textures": "textures/androsa/gaiadimension/block/pink_agate_leaves"
+    },
+    "pink_agate_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/pink_agate_log_end"
+    },
+    "pink_agate_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/pink_agate_log_side"
+    },
+    "pink_agate_sapling": {
+      "textures": "textures/androsa/gaiadimension/block/pink_agate_sapling"
+    },
+    "pink_agate_tiles": {
+      "textures": "textures/androsa/gaiadimension/block/pink_agate_tiles"
+    },
+    "pink_sludge_block": {
+      "textures": "textures/androsa/gaiadimension/block/pink_sludge_block"
+    },
+    "precious_rock": {
+      "textures": "textures/androsa/gaiadimension/block/precious_rock"
+    },
+    "primal_mass": {
+      "textures": "textures/androsa/gaiadimension/block/primal_mass"
+    },
+    "proustite_block": {
+      "textures": "textures/androsa/gaiadimension/block/proustite_block"
+    },
+    "purifier_front": {
+      "textures": "textures/androsa/gaiadimension/block/purifier_front"
+    },
+    "purifier_front_lit": {
+      "textures": "textures/androsa/gaiadimension/block/purifier_front_lit"
+    },
+    "purifier_side": {
+      "textures": "textures/androsa/gaiadimension/block/purifier_side"
+    },
+    "purple_agate_curtain_bottom": {
+      "textures": "textures/androsa/gaiadimension/block/purple_agate_curtain_bottom"
+    },
+    "purple_agate_curtain_bottom_left": {
+      "textures": "textures/androsa/gaiadimension/block/purple_agate_curtain_bottom_left"
+    },
+    "purple_agate_curtain_bottom_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/purple_agate_curtain_bottom_left_open"
+    },
+    "purple_agate_curtain_bottom_open": {
+      "textures": "textures/androsa/gaiadimension/block/purple_agate_curtain_bottom_open"
+    },
+    "purple_agate_curtain_bottom_right": {
+      "textures": "textures/androsa/gaiadimension/block/purple_agate_curtain_bottom_right"
+    },
+    "purple_agate_curtain_bottom_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/purple_agate_curtain_bottom_right_open"
+    },
+    "purple_agate_curtain_top": {
+      "textures": "textures/androsa/gaiadimension/block/purple_agate_curtain_top"
+    },
+    "purple_agate_curtain_top_left": {
+      "textures": "textures/androsa/gaiadimension/block/purple_agate_curtain_top_left"
+    },
+    "purple_agate_curtain_top_left_open": {
+      "textures": "textures/androsa/gaiadimension/block/purple_agate_curtain_top_left_open"
+    },
+    "purple_agate_curtain_top_open": {
+      "textures": "textures/androsa/gaiadimension/block/purple_agate_curtain_top_open"
+    },
+    "purple_agate_curtain_top_right": {
+      "textures": "textures/androsa/gaiadimension/block/purple_agate_curtain_top_right"
+    },
+    "purple_agate_curtain_top_right_open": {
+      "textures": "textures/androsa/gaiadimension/block/purple_agate_curtain_top_right_open"
+    },
+    "purple_agate_leaves": {
+      "textures": "textures/androsa/gaiadimension/block/purple_agate_leaves"
+    },
+    "purple_agate_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/purple_agate_log_end"
+    },
+    "purple_agate_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/purple_agate_log_side"
+    },
+    "purple_agate_sapling": {
+      "textures": "textures/androsa/gaiadimension/block/purple_agate_sapling"
+    },
+    "purple_agate_tiles": {
+      "textures": "textures/androsa/gaiadimension/block/purple_agate_tiles"
+    },
+    "pyrite_block": {
+      "textures": "textures/androsa/gaiadimension/block/pyrite_block"
+    },
+    "pyrite_ore": {
+      "textures": "textures/androsa/gaiadimension/block/pyrite_ore"
+    },
+    "pyrite_torch": {
+      "textures": "textures/androsa/gaiadimension/block/pyrite_torch"
+    },
+    "raw_amethyst": {
+      "textures": "textures/androsa/gaiadimension/block/raw_amethyst"
+    },
+    "raw_copal": {
+      "textures": "textures/androsa/gaiadimension/block/raw_copal"
+    },
+    "raw_jade": {
+      "textures": "textures/androsa/gaiadimension/block/raw_jade"
+    },
+    "raw_jet": {
+      "textures": "textures/androsa/gaiadimension/block/raw_jet"
+    },
+    "red_opal_block": {
+      "textures": "textures/androsa/gaiadimension/block/red_opal_block"
+    },
+    "red_opal_ore": {
+      "textures": "textures/androsa/gaiadimension/block/red_opal_ore"
+    },
+    "reinforced_bricks": {
+      "textures": "textures/androsa/gaiadimension/block/reinforced_bricks"
+    },
+    "restructurer_front": {
+      "textures": "textures/androsa/gaiadimension/block/restructurer_front"
+    },
+    "restructurer_front_lit": {
+      "textures": "textures/androsa/gaiadimension/block/restructurer_front_lit"
+    },
+    "restructurer_side": {
+      "textures": "textures/androsa/gaiadimension/block/restructurer_side"
+    },
+    "roofed_agaric": {
+      "textures": "textures/androsa/gaiadimension/block/roofed_agaric"
+    },
+    "salt": {
+      "textures": "textures/androsa/gaiadimension/block/salt"
+    },
+    "salt_rock_bottom": {
+      "textures": "textures/androsa/gaiadimension/block/salt_rock_bottom"
+    },
+    "salt_rock_side": {
+      "textures": "textures/androsa/gaiadimension/block/salt_rock_side"
+    },
+    "salt_rock_top": {
+      "textures": "textures/androsa/gaiadimension/block/salt_rock_top"
+    },
+    "scarlet_mookaite": {
+      "textures": "textures/androsa/gaiadimension/block/scarlet_mookaite"
+    },
+    "scarlet_opalite_ore": {
+      "textures": "textures/androsa/gaiadimension/block/scarlet_opalite_ore"
+    },
+    "searing_rock": {
+      "textures": "textures/androsa/gaiadimension/block/searing_rock"
+    },
+    "soft_grass_overlay": {
+      "textures": "textures/androsa/gaiadimension/block/soft_grass_overlay"
+    },
+    "soft_grass_side": {
+      "textures": "textures/androsa/gaiadimension/block/soft_grass_side"
+    },
+    "soft_grass_top": {
+      "textures": "textures/androsa/gaiadimension/block/soft_grass_top"
+    },
+    "sombre_cacti_side": {
+      "textures": "textures/androsa/gaiadimension/block/sombre_cacti_side"
+    },
+    "sombre_cacti_top": {
+      "textures": "textures/androsa/gaiadimension/block/sombre_cacti_top"
+    },
+    "sombre_shrub": {
+      "textures": "textures/androsa/gaiadimension/block/sombre_shrub"
+    },
+    "sparkling_rock": {
+      "textures": "textures/androsa/gaiadimension/block/sparkling_rock"
+    },
+    "spawner_cage": {
+      "textures": "textures/androsa/gaiadimension/block/spawner_cage"
+    },
+    "spawner_core": {
+      "textures": "textures/androsa/gaiadimension/block/spawner_core"
+    },
+    "spawner_shell": {
+      "textures": "textures/androsa/gaiadimension/block/spawner_shell"
+    },
+    "speckled_rock": {
+      "textures": "textures/androsa/gaiadimension/block/speckled_rock"
+    },
+    "spotted_kersei": {
+      "textures": "textures/androsa/gaiadimension/block/spotted_kersei"
+    },
+    "static_stone": {
+      "textures": "textures/androsa/gaiadimension/block/static_stone"
+    },
+    "stibnite_block": {
+      "textures": "textures/androsa/gaiadimension/block/stibnite_block"
+    },
+    "stickly_cupsir": {
+      "textures": "textures/androsa/gaiadimension/block/stickly_cupsir"
+    },
+    "stripped_aura_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_aura_log_end"
+    },
+    "stripped_aura_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_aura_log_side"
+    },
+    "stripped_blue_agate_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_blue_agate_log_end"
+    },
+    "stripped_blue_agate_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_blue_agate_log_side"
+    },
+    "stripped_burnt_agate_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_burnt_agate_log_end"
+    },
+    "stripped_burnt_agate_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_burnt_agate_log_side"
+    },
+    "stripped_corrupted_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_corrupted_log_end"
+    },
+    "stripped_corrupted_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_corrupted_log_side"
+    },
+    "stripped_fire_agate_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_fire_agate_log_end"
+    },
+    "stripped_fire_agate_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_fire_agate_log_side"
+    },
+    "stripped_fossilized_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_fossilized_log_end"
+    },
+    "stripped_fossilized_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_fossilized_log_side"
+    },
+    "stripped_golden_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_golden_log_end"
+    },
+    "stripped_golden_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_golden_log_side"
+    },
+    "stripped_green_agate_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_green_agate_log_end"
+    },
+    "stripped_green_agate_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_green_agate_log_side"
+    },
+    "stripped_pink_agate_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_pink_agate_log_end"
+    },
+    "stripped_pink_agate_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_pink_agate_log_side"
+    },
+    "stripped_purple_agate_log_end": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_purple_agate_log_end"
+    },
+    "stripped_purple_agate_log_side": {
+      "textures": "textures/androsa/gaiadimension/block/stripped_purple_agate_log_side"
+    },
+    "sugilite_block": {
+      "textures": "textures/androsa/gaiadimension/block/sugilite_block"
+    },
+    "sugilite_ore": {
+      "textures": "textures/androsa/gaiadimension/block/sugilite_ore"
+    },
+    "tall_golden_grass_bottom": {
+      "textures": "textures/androsa/gaiadimension/block/tall_golden_grass_bottom"
+    },
+    "tall_golden_grass_top": {
+      "textures": "textures/androsa/gaiadimension/block/tall_golden_grass_top"
+    },
+    "tektite_block": {
+      "textures": "textures/androsa/gaiadimension/block/tektite_block"
+    },
+    "test_block": {
+      "textures": "textures/androsa/gaiadimension/block/test_block"
+    },
+    "thick_glitter_block": {
+      "textures": "textures/androsa/gaiadimension/block/thick_glitter_block"
+    },
+    "thiscus": {
+      "textures": "textures/androsa/gaiadimension/block/thiscus"
+    },
+    "thorny_wiltha": {
+      "textures": "textures/androsa/gaiadimension/block/thorny_wiltha"
+    },
+    "tough_golden_stone": {
+      "textures": "textures/androsa/gaiadimension/block/tough_golden_stone"
+    },
+    "twinkling_gilsri": {
+      "textures": "textures/androsa/gaiadimension/block/twinkling_gilsri"
+    },
+    "varloom": {
+      "textures": "textures/androsa/gaiadimension/block/varloom"
+    },
+    "volcanic_rock": {
+      "textures": "textures/androsa/gaiadimension/block/volcanic_rock"
+    },
+    "wasteland_stone": {
+      "textures": "textures/androsa/gaiadimension/block/wasteland_stone"
+    },
+    "wasteland_stone_charged": {
+      "textures": "textures/androsa/gaiadimension/block/wasteland_stone_charged"
+    },
+    "wasteland_stone_new": {
+      "textures": "textures/androsa/gaiadimension/block/wasteland_stone_new"
+    },
+    "wasteland_stone_static": {
+      "textures": "textures/androsa/gaiadimension/block/wasteland_stone_static"
+    },
+    "white_opal_block": {
+      "textures": "textures/androsa/gaiadimension/block/white_opal_block"
+    },
+    "white_opal_ore": {
+      "textures": "textures/androsa/gaiadimension/block/white_opal_ore"
+    },
+    "liquid_aura_flow": {
+      "textures": "textures/androsa/gaiadimension/block/fluids/liquid_aura/liquid_aura_flow"
+    },
+    "liquid_aura_still": {
+      "textures": "textures/androsa/gaiadimension/block/fluids/liquid_aura/liquid_aura_still"
+    },
+    "liquid_bismuth_flow": {
+      "textures": "textures/androsa/gaiadimension/block/fluids/liquid_bismuth/liquid_bismuth_flow"
+    },
+    "liquid_bismuth_still": {
+      "textures": "textures/androsa/gaiadimension/block/fluids/liquid_bismuth/liquid_bismuth_still"
+    },
+    "mineral_water_flow": {
+      "textures": "textures/androsa/gaiadimension/block/fluids/mineral_water/mineral_water_flow"
+    },
+    "mineral_water_still": {
+      "textures": "textures/androsa/gaiadimension/block/fluids/mineral_water/mineral_water_still"
+    },
+    "superhot_magma_flow": {
+      "textures": "textures/androsa/gaiadimension/block/fluids/superhot_magma/superhot_magma_flow"
+    },
+    "superhot_magma_still": {
+      "textures": "textures/androsa/gaiadimension/block/fluids/superhot_magma/superhot_magma_still"
+    },
+    "sweet_muck_flow": {
+      "textures": "textures/androsa/gaiadimension/block/fluids/sweet_muck/sweet_muck_flow"
+    },
+    "sweet_muck_still": {
+      "textures": "textures/androsa/gaiadimension/block/fluids/sweet_muck/sweet_muck_still"
+    },
+    "agate_golem": {
+      "textures": "textures/androsa/gaiadimension/entity/agate_golem"
+    },
+    "ancient_lagrahk": {
+      "textures": "textures/androsa/gaiadimension/entity/ancient_lagrahk"
+    },
+    "archaic_warrior": {
+      "textures": "textures/androsa/gaiadimension/entity/archaic_warrior"
+    },
+    "bismuth_ulterus": {
+      "textures": "textures/androsa/gaiadimension/entity/bismuth_ulterus"
+    },
+    "blue_howlite_wolf": {
+      "textures": "textures/androsa/gaiadimension/entity/blue_howlite_wolf"
+    },
+    "cavern_tick": {
+      "textures": "textures/androsa/gaiadimension/entity/cavern_tick"
+    },
+    "chilled_growth_sapper": {
+      "textures": "textures/androsa/gaiadimension/entity/chilled_growth_sapper"
+    },
+    "common_growth_sapper": {
+      "textures": "textures/androsa/gaiadimension/entity/common_growth_sapper"
+    },
+    "contorted_naga": {
+      "textures": "textures/androsa/gaiadimension/entity/contorted_naga"
+    },
+    "corrupt_growth_sapper": {
+      "textures": "textures/androsa/gaiadimension/entity/corrupt_growth_sapper"
+    },
+    "crystal_golem": {
+      "textures": "textures/androsa/gaiadimension/entity/crystal_golem"
+    },
+    "howlite_wolf": {
+      "textures": "textures/androsa/gaiadimension/entity/howlite_wolf"
+    },
+    "lesser_shock_shooter": {
+      "textures": "textures/androsa/gaiadimension/entity/lesser_shock_shooter"
+    },
+    "lesser_spit_fire": {
+      "textures": "textures/androsa/gaiadimension/entity/lesser_spit_fire"
+    },
+    "malachite_drone_follow": {
+      "textures": "textures/androsa/gaiadimension/entity/malachite_drone_follow"
+    },
+    "malachite_drone_follow_glow": {
+      "textures": "textures/androsa/gaiadimension/entity/malachite_drone_follow_glow"
+    },
+    "malachite_drone_normal": {
+      "textures": "textures/androsa/gaiadimension/entity/malachite_drone_normal"
+    },
+    "malachite_drone_normal_glow": {
+      "textures": "textures/androsa/gaiadimension/entity/malachite_drone_normal_glow"
+    },
+    "malachite_guard": {
+      "textures": "textures/androsa/gaiadimension/entity/malachite_guard"
+    },
+    "malachite_guard_defense": {
+      "textures": "textures/androsa/gaiadimension/entity/malachite_guard_defense"
+    },
+    "malachite_guard_glow": {
+      "textures": "textures/androsa/gaiadimension/entity/malachite_guard_glow"
+    },
+    "malachite_guard_resist": {
+      "textures": "textures/androsa/gaiadimension/entity/malachite_guard_resist"
+    },
+    "markuzar_plant": {
+      "textures": "textures/androsa/gaiadimension/entity/markuzar_plant"
+    },
+    "mineral_arenthis": {
+      "textures": "textures/androsa/gaiadimension/entity/mineral_arenthis"
+    },
+    "mineral_arenthis_glow": {
+      "textures": "textures/androsa/gaiadimension/entity/mineral_arenthis_glow"
+    },
+    "muckling": {
+      "textures": "textures/androsa/gaiadimension/entity/muckling"
+    },
+    "mutant_growth_extractor": {
+      "textures": "textures/androsa/gaiadimension/entity/mutant_growth_extractor"
+    },
+    "mystified_growth_sapper": {
+      "textures": "textures/androsa/gaiadimension/entity/mystified_growth_sapper"
+    },
+    "nomadic_lagrahk_none": {
+      "textures": "textures/androsa/gaiadimension/entity/nomadic_lagrahk_none"
+    },
+    "nomadic_lagrahk_salty": {
+      "textures": "textures/androsa/gaiadimension/entity/nomadic_lagrahk_salty"
+    },
+    "nomadic_lagrahk_static": {
+      "textures": "textures/androsa/gaiadimension/entity/nomadic_lagrahk_static"
+    },
+    "nomadic_lagrahk_volcanic": {
+      "textures": "textures/androsa/gaiadimension/entity/nomadic_lagrahk_volcanic"
+    },
+    "nutrient_growth_sapper": {
+      "textures": "textures/androsa/gaiadimension/entity/nutrient_growth_sapper"
+    },
+    "primal_beast": {
+      "textures": "textures/androsa/gaiadimension/entity/primal_beast"
+    },
+    "rocky_luggeroth": {
+      "textures": "textures/androsa/gaiadimension/entity/rocky_luggeroth"
+    },
+    "rugged_lurmorus": {
+      "textures": "textures/androsa/gaiadimension/entity/rugged_lurmorus"
+    },
+    "saltion": {
+      "textures": "textures/androsa/gaiadimension/entity/saltion"
+    },
+    "shallow_arenthis": {
+      "textures": "textures/androsa/gaiadimension/entity/shallow_arenthis"
+    },
+    "shalurker": {
+      "textures": "textures/androsa/gaiadimension/entity/shalurker"
+    },
+    "skyblend": {
+      "textures": "textures/androsa/gaiadimension/entity/skyblend"
+    },
+    "spell_element": {
+      "textures": "textures/androsa/gaiadimension/entity/spell_element"
+    },
+    "agate_arrow": {
+      "textures": "textures/androsa/gaiadimension/entity/projectiles/agate_arrow"
+    },
+    "end_sky": {
+      "textures": "textures/environment/end_sky"
+    },
+    "gaia_sky": {
+      "textures": "textures/environment/gaia_sky"
+    },
+    "arrow_0": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_0"
+    },
+    "arrow_1": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_1"
+    },
+    "arrow_10": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_10"
+    },
+    "arrow_11": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_11"
+    },
+    "arrow_12": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_12"
+    },
+    "arrow_13": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_13"
+    },
+    "arrow_14": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_14"
+    },
+    "arrow_15": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_15"
+    },
+    "arrow_16": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_16"
+    },
+    "arrow_2": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_2"
+    },
+    "arrow_3": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_3"
+    },
+    "arrow_4": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_4"
+    },
+    "arrow_5": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_5"
+    },
+    "arrow_6": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_6"
+    },
+    "arrow_7": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_7"
+    },
+    "arrow_8": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_8"
+    },
+    "arrow_9": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_9"
+    },
+    "flame_0": {
+      "textures": "textures/forge_gui/restructurer_flame/flame_0"
+    },
+    "flame_1": {
+      "textures": "textures/forge_gui/restructurer_flame/flame_1"
+    },
+    "flame_10": {
+      "textures": "textures/forge_gui/restructurer_flame/flame_10"
+    },
+    "flame_11": {
+      "textures": "textures/forge_gui/restructurer_flame/flame_11"
+    },
+    "flame_12": {
+      "textures": "textures/forge_gui/restructurer_flame/flame_12"
+    },
+    "flame_13": {
+      "textures": "textures/forge_gui/flame/flame_13"
+    },
+    "flame_2": {
+      "textures": "textures/forge_gui/restructurer_flame/flame_2"
+    },
+    "flame_3": {
+      "textures": "textures/forge_gui/restructurer_flame/flame_3"
+    },
+    "flame_4": {
+      "textures": "textures/forge_gui/restructurer_flame/flame_4"
+    },
+    "flame_5": {
+      "textures": "textures/forge_gui/restructurer_flame/flame_5"
+    },
+    "flame_6": {
+      "textures": "textures/forge_gui/restructurer_flame/flame_6"
+    },
+    "flame_7": {
+      "textures": "textures/forge_gui/restructurer_flame/flame_7"
+    },
+    "flame_8": {
+      "textures": "textures/forge_gui/restructurer_flame/flame_8"
+    },
+    "flame_9": {
+      "textures": "textures/forge_gui/restructurer_flame/flame_9"
+    },
+    "arrow_17": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_17"
+    },
+    "arrow_18": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_18"
+    },
+    "arrow_19": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_19"
+    },
+    "arrow_20": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_20"
+    },
+    "arrow_21": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_21"
+    },
+    "arrow_22": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_22"
+    },
+    "arrow_23": {
+      "textures": "textures/forge_gui/restructurer_arrow/arrow_23"
+    },
+    "radiator_0": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_0"
+    },
+    "radiator_1": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_1"
+    },
+    "radiator_10": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_10"
+    },
+    "radiator_11": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_11"
+    },
+    "radiator_12": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_12"
+    },
+    "radiator_13": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_13"
+    },
+    "radiator_14": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_14"
+    },
+    "radiator_15": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_15"
+    },
+    "radiator_16": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_16"
+    },
+    "radiator_17": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_17"
+    },
+    "radiator_18": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_18"
+    },
+    "radiator_19": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_19"
+    },
+    "radiator_2": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_2"
+    },
+    "radiator_3": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_3"
+    },
+    "radiator_4": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_4"
+    },
+    "radiator_5": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_5"
+    },
+    "radiator_6": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_6"
+    },
+    "radiator_7": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_7"
+    },
+    "radiator_8": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_8"
+    },
+    "radiator_9": {
+      "textures": "textures/forge_gui/purifier_radiator/radiator_9"
+    },
+    "gaia_stone_furnace": {
+      "textures": "textures/gui/gaia_stone_furnace"
+    },
+    "gaia_stone_furnace_bg": {
+      "textures": "textures/gui/gaia_stone_furnace_bg"
+    },
+    "apex_predator_1": {
+      "textures": "textures/models/armor/apex_predator_1"
+    },
+    "apex_predator_2": {
+      "textures": "textures/models/armor/apex_predator_2"
+    },
+    "carnelian_1": {
+      "textures": "textures/models/armor/carnelian_1"
+    },
+    "carnelian_2": {
+      "textures": "textures/models/armor/carnelian_2"
+    },
+    "chalcedony_1": {
+      "textures": "textures/models/armor/chalcedony_1"
+    },
+    "chalcedony_2": {
+      "textures": "textures/models/armor/chalcedony_2"
+    },
+    "corrupt_warrior_1": {
+      "textures": "textures/models/armor/corrupt_warrior_1"
+    },
+    "corrupt_warrior_2": {
+      "textures": "textures/models/armor/corrupt_warrior_2"
+    },
+    "diopside_1": {
+      "textures": "textures/models/armor/diopside_1"
+    },
+    "diopside_2": {
+      "textures": "textures/models/armor/diopside_2"
+    },
+    "gaia_baron_1": {
+      "textures": "textures/models/armor/gaia_baron_1"
+    },
+    "gaia_baron_2": {
+      "textures": "textures/models/armor/gaia_baron_2"
+    },
+    "gaia_champion_1": {
+      "textures": "textures/models/armor/gaia_champion_1"
+    },
+    "gaia_champion_2": {
+      "textures": "textures/models/armor/gaia_champion_2"
+    },
+    "gaia_duchess_1": {
+      "textures": "textures/models/armor/gaia_duchess_1"
+    },
+    "gaia_duchess_2": {
+      "textures": "textures/models/armor/gaia_duchess_2"
+    },
+    "gaia_duke_1": {
+      "textures": "textures/models/armor/gaia_duke_1"
+    },
+    "gaia_duke_2": {
+      "textures": "textures/models/armor/gaia_duke_2"
+    },
+    "leucite_1": {
+      "textures": "textures/models/armor/leucite_1"
+    },
+    "leucite_2": {
+      "textures": "textures/models/armor/leucite_2"
+    },
+    "malachite_guard_1": {
+      "textures": "textures/models/armor/malachite_guard_1"
+    },
+    "malachite_guard_2": {
+      "textures": "textures/models/armor/malachite_guard_2"
+    },
+    "proustite_1": {
+      "textures": "textures/models/armor/proustite_1"
+    },
+    "proustite_2": {
+      "textures": "textures/models/armor/proustite_2"
+    },
+    "spinel_princess_1": {
+      "textures": "textures/models/armor/spinel_princess_1"
+    },
+    "spinel_princess_2": {
+      "textures": "textures/models/armor/spinel_princess_2"
+    },
+    "sugilite_1": {
+      "textures": "textures/models/armor/sugilite_1"
+    },
+    "sugilite_2": {
+      "textures": "textures/models/armor/sugilite_2"
+    },
+    "zircon_prince_1": {
+      "textures": "textures/models/armor/zircon_prince_1"
+    },
+    "zircon_prince_2": {
+      "textures": "textures/models/armor/zircon_prince_2"
+    },
+    "gaia_cloud_0": {
+      "textures": "textures/particle/gaia_cloud_0"
+    },
+    "gaia_cloud_1": {
+      "textures": "textures/particle/gaia_cloud_1"
+    },
+    "gaia_cloud_2": {
+      "textures": "textures/particle/gaia_cloud_2"
+    },
+    "gaia_cloud_3": {
+      "textures": "textures/particle/gaia_cloud_3"
+    },
+    "gaia_cloud_4": {
+      "textures": "textures/particle/gaia_cloud_4"
+    },
+    "gaia_cloud_5": {
+      "textures": "textures/particle/gaia_cloud_5"
+    },
+    "gaia_cloud_6": {
+      "textures": "textures/particle/gaia_cloud_6"
+    },
+    "gaia_planet": {
+      "textures": "textures/particle/gaia_planet"
+    },
+    "gaia_portal_particle": {
+      "textures": "textures/particle/gaia_portal_particle"
+    },
+    "gaia_rain": {
+      "textures": "textures/particle/gaia_rain"
+    },
+    "green_fire": {
+      "textures": "textures/particle/green_fire"
+    },
+    "malachite_magic": {
+      "textures": "textures/particle/malachite_magic"
+    },
+    "particle_add_test": {
+      "textures": "textures/particle/particle_add_test"
+    },
+    "yellow_fire": {
+      "textures": "textures/particle/yellow_fire"
+    },
+    "gaia_bottom": {
+      "textures": "textures/sky/gaia_bottom"
+    },
+    "gaia_side1": {
+      "textures": "textures/sky/gaia_side1"
+    },
+    "gaia_side2": {
+      "textures": "textures/sky/gaia_side2"
+    },
+    "gaia_side3": {
+      "textures": "textures/sky/gaia_side3"
+    },
+    "gaia_side4": {
+      "textures": "textures/sky/gaia_side4"
+    },
+    "gaia_top": {
+      "textures": "textures/sky/gaia_top"
+    },
+    "gaiafurnace_flame": {
+      "textures": "textures/templates/gaiafurnace_flame"
+    },
+    "gaiafurnace_result_arrow": {
+      "textures": "textures/templates/gaiafurnace_result_arrow"
+    },
+    "gaiafurnace_slot": {
+      "textures": "textures/ui/gaiafurnace_slot"
+    },
+    "invisible": {
+      "textures": "textures/ui/invisible"
+    },
+    "restructurer_background": {
+      "textures": "textures/ui/restructurer_background"
+    },
+    "a": {
+      "textures": "textures/ui/gaia/Background/a"
+    },
+    "d": {
+      "textures": "textures/ui/gaia/Background/d"
+    },
+    "f": {
+      "textures": "textures/ui/gaia/Background/f"
+    },
+    "gaia_bedrock": {
+      "textures": "textures/bedrock"
+    },
+    "gaiadimension:empty": {
+      "textures": "textures/absolute_void"
+    }
+  }
+}

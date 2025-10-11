@@ -8,8 +8,8 @@ import sys
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Source Project Paths
-PROJECT_BP_PATH = os.path.join(SCRIPT_DIR, 'GaiaDimensions_BP')
-PROJECT_RP_PATH = os.path.join(SCRIPT_DIR, 'GaiaDimension_RP')
+PROJECT_BP_PATH = os.path.join(SCRIPT_DIR, 'Gaia_BP')
+PROJECT_RP_PATH = os.path.join(SCRIPT_DIR, 'Gaia_RP')
 
 # Minecraft Game Data Path (com.mojang)
 # This uses the %LOCALAPPDATA% environment variable to be more robust
@@ -21,8 +21,8 @@ TARGET_BP_DIR = os.path.join(COM_MOJANG_PATH, 'development_behavior_packs')
 TARGET_RP_DIR = os.path.join(COM_MOJANG_PATH, 'development_resource_packs')
 
 # The final names for the deployed folders
-DEPLOY_BP_NAME = 'GaiaDimension_BP'
-DEPLOY_RP_NAME = 'GaiaDimension_RP'
+DEPLOY_BP_NAME = 'Gaia_BP'
+DEPLOY_RP_NAME = 'Gaia_RP'
 
 # --- DEPLOYMENT LOGIC ---
 
