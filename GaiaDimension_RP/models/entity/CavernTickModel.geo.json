@@ -3,7 +3,7 @@
 	"minecraft:geometry": [
 		{
 			"description": {
-				"identifier": "geometry.cavern_tick",
+				"identifier": "geometry.gaiadimension.cavern_tick",
 				"texture_width": 32,
 				"texture_height": 24,
 				"visible_bounds_width": 2,

@@ -3,7 +3,7 @@
 	"minecraft:geometry": [
 		{
 			"description": {
-				"identifier": "geometry.fluid2",
+				"identifier": "geometry.gaiadimension.fluid2",
 				"texture_width": 16,
 				"texture_height": 16,
 				"visible_bounds_width": 2,
