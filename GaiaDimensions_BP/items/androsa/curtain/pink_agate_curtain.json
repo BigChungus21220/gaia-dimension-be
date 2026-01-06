@@ -13,7 +13,7 @@
         "texture": "pink_agate_curtain"
       },
       "minecraft:block_placer": {
-        "block": "gaiadimension:pink_agate_curtain_lower"
+        "block": "gaiadimension:pink_agate_curtain_bottom"
       },
       "minecraft:max_stack_size": 64
     }

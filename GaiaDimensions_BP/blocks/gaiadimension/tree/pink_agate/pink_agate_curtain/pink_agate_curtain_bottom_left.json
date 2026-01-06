@@ -2,7 +2,7 @@
     "format_version": "1.21.70",
     "minecraft:block": {
         "description": {
-            "identifier": "gaiadimension:pink_agate_curtain_upper",
+            "identifier": "gaiadimension:pink_agate_curtain_bottom_left",
             "states": {
                 "gaiadimension:open": [
                     false,
@@ -65,7 +65,7 @@
                     },
                     "minecraft:collision_box": {
                         "origin": [
-                            0,
+                            -8,
                             0,
                             -8
                         ],
@@ -75,11 +75,12 @@
                             0
                         ]
                     },
-                     "minecraft:material_instances": {
-                "*": {
-                    "texture": "gaiadimension:pink_agate_curtain_top_open",
-                    "render_method": "blend"
-                }}
+                    "minecraft:material_instances": {
+                        "*": {
+                            "texture": "gaiadimension:pink_agate_curtain_bottom_left_open",
+                            "render_method": "blend"
+                        }
+                    }
                 }
             },
             {
@@ -136,51 +137,51 @@
                 "geometry": "geometry.rosa_gd.door_icon",
                 "material_instances": {
                     "up_up": {
-                        "texture": "gaiadimension:pink_agate_curtain_top",
+                        "texture": "gaiadimension:pink_agate_curtain_top_left",
                         "render_method": "blend"
                     },
                     "up_down": {
-                        "texture": "gaiadimension:pink_agate_curtain_top",
+                        "texture": "gaiadimension:pink_agate_curtain_top_left",
                         "render_method": "blend"
                     },
                     "up_south": {
-                        "texture": "gaiadimension:pink_agate_curtain_top",
+                        "texture": "gaiadimension:pink_agate_curtain_top_left",
                         "render_method": "blend"
                     },
                     "up_east": {
-                        "texture": "gaiadimension:pink_agate_curtain_top",
+                        "texture": "gaiadimension:pink_agate_curtain_top_left",
                         "render_method": "blend"
                     },
                     "up_west": {
-                        "texture": "gaiadimension:pink_agate_curtain_top",
+                        "texture": "gaiadimension:pink_agate_curtain_top_left",
                         "render_method": "blend"
                     },
                     "up_north": {
-                        "texture": "gaiadimension:pink_agate_curtain_top",
+                        "texture": "gaiadimension:pink_agate_curtain_top_left",
                         "render_method": "blend"
                     },
                     "down_up": {
-                        "texture": "gaiadimension:pink_agate_curtain_bottom",
+                        "texture": "gaiadimension:pink_agate_curtain_bottom_left",
                         "render_method": "blend"
                     },
                     "down_down": {
-                        "texture": "gaiadimension:pink_agate_curtain_bottom",
+                        "texture": "gaiadimension:pink_agate_curtain_bottom_left",
                         "render_method": "blend"
                     },
                     "down_south": {
-                        "texture": "gaiadimension:pink_agate_curtain_bottom",
+                        "texture": "gaiadimension:pink_agate_curtain_bottom_left",
                         "render_method": "blend"
                     },
                     "down_east": {
-                        "texture": "gaiadimension:pink_agate_curtain_bottom",
+                        "texture": "gaiadimension:pink_agate_curtain_bottom_left",
                         "render_method": "blend"
                     },
                     "down_west": {
-                        "texture": "gaiadimension:pink_agate_curtain_bottom",
+                        "texture": "gaiadimension:pink_agate_curtain_bottom_left",
                         "render_method": "blend"
                     },
                     "down_north": {
-                        "texture": "gaiadimension:pink_agate_curtain_bottom",
+                        "texture": "gaiadimension:pink_agate_curtain_bottom_left",
                         "render_method": "blend"
                     }
                 }
@@ -190,21 +191,11 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "gaiadimension:pink_agate_curtain_top",
+                    "texture": "gaiadimension:pink_agate_curtain_bottom_left",
                     "render_method": "blend"
                 }
             },
-            "minecraft:custom_components": [
-                "gaiadimension:door"
-            ],
             "minecraft:loot": "loot_tables/msc/empty.json",
-            "minecraft:tick": {
-                "interval_range": [
-                    0,
-                    0
-                ],
-                "looping": true
-            },
             "minecraft:selection_box": {
                 "origin": [
                     -8,
@@ -214,7 +205,7 @@
                 "size": [
                     16,
                     16,
-                    3
+                    16
                 ]
             },
             "minecraft:collision_box": {
@@ -226,7 +217,7 @@
                 "size": [
                     16,
                     16,
-                    3
+                    16
                 ]
             },
             "minecraft:destructible_by_mining": {
