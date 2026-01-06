@@ -1,4 +1,4 @@
-import { world, system, BlockPermutation } from "@minecraft/server";
+import { world, system, BlockPermutation, BlockVolume } from "@minecraft/server";
 
 /**
  * Portal Definition Library
@@ -44,6 +44,7 @@ export class PortalManager {
         const { x, y, z } = startBlock.location;
         const MAX_SIZE = 21;
         const MIN_SIZE = 2;
+        const fillerId = startBlock.typeId;
 
         const dx = axis === 'x' ? 1 : 0;
         const dz = axis === 'z' ? 1 : 0;
@@ -56,7 +57,7 @@ export class PortalManager {
             const block = dim.getBlock({ x, y: checkY, z });
             if (!block) return null;
 
-            if (block.isAir || block.typeId === "minecraft:fire") {
+            if (block.isAir || block.typeId === "minecraft:fire" || block.typeId === fillerId) {
                 bottomY = checkY;
             } else if (block.typeId === frameId) {
                 break;
@@ -72,7 +73,7 @@ export class PortalManager {
             const block = dim.getBlock({ x, y: topY + 1, z });
             if (!block) return null;
 
-            if (block.isAir || block.typeId === "minecraft:fire") {
+            if (block.isAir || block.typeId === "minecraft:fire" || block.typeId === fillerId) {
                 topY++;
             } else if (block.typeId === frameId) {
                 break;
@@ -90,7 +91,7 @@ export class PortalManager {
         for (let i = 1; i <= MAX_SIZE; i++) {
             const cx = x - (dx * i);
             const cz = z - (dz * i);
-            if (!this.checkColumn(dim, cx, cz, bottomY, topY, frameId)) {
+            if (!this.checkColumn(dim, cx, cz, bottomY, topY, frameId, fillerId)) {
                 if (this.checkFrameColumn(dim, cx, cz, bottomY, topY, frameId)) {
                     minSide = -i;
                     break;
@@ -103,7 +104,7 @@ export class PortalManager {
         for (let i = 1; i <= MAX_SIZE; i++) {
             const cx = x + (dx * i);
             const cz = z + (dz * i);
-            if (!this.checkColumn(dim, cx, cz, bottomY, topY, frameId)) {
+            if (!this.checkColumn(dim, cx, cz, bottomY, topY, frameId, fillerId)) {
                 if (this.checkFrameColumn(dim, cx, cz, bottomY, topY, frameId)) {
                     maxSide = i;
                     break;
@@ -142,10 +143,10 @@ export class PortalManager {
         };
     }
 
-    static checkColumn(dim, x, z, minY, maxY, frameId) {
+    static checkColumn(dim, x, z, minY, maxY, frameId, fillerId) {
         for (let y = minY; y <= maxY; y++) {
             const block = dim.getBlock({ x, y, z });
-            if (!block || (!block.isAir && block.typeId !== "minecraft:fire")) return false;
+            if (!block || (!block.isAir && block.typeId !== "minecraft:fire" && block.typeId !== fillerId)) return false;
         }
         return true;
     }
@@ -162,23 +163,56 @@ export class PortalManager {
         const { dimension, bounds } = shape;
         const { minX, maxX, minZ, maxZ, minY, maxY } = bounds;
 
-        const perm = BlockPermutation.resolve(portalId);
-        let blockPerm;
+        let blockPerm = null;
         try {
-             blockPerm = perm.withState("axis", axis); 
-        } catch (e) {
-             try {
-                 blockPerm = perm.withState("minecraft:cardinal_direction", axis === 'x' ? 'east' : 'south');
-             } catch (e2) {
+            const perm = BlockPermutation.resolve(portalId);
+            try {
+                 // Axis X -> Portal runs East-West -> Face North/South (flat on Z)
+                 // Axis Z -> Portal runs North-South -> Face East/West (flat on X)
+                 const dir = axis === 'x' ? 'north' : 'east';
+                 blockPerm = perm.withState("minecraft:cardinal_direction", dir);
+            } catch (e2) {
                  blockPerm = perm;
-             }
+            }
+        } catch (e) {
+            // Failed to resolve permutation, will fallback to setType loop
         }
 
-        for (let x = minX; x <= maxX; x++) {
-            for (let z = minZ; z <= maxZ; z++) {
-                for (let y = minY; y <= maxY; y++) {
-                    const block = dimension.getBlock({ x, y, z });
-                    if (block) block.setPermutation(blockPerm);
+        let filled = false;
+        if (blockPerm) {
+            try {
+                // Try to use fillBlocks for efficiency and forcefulness
+                const volume = new BlockVolume(
+                    { x: minX, y: minY, z: minZ },
+                    { x: maxX, y: maxY, z: maxZ }
+                );
+                
+                dimension.fillBlocks(volume, blockPerm, { matchingBlock: undefined });
+                filled = true;
+            } catch (e) {
+                console.warn("PortalLib: fillBlocks failed: " + e);
+            }
+        }
+
+        if (!filled) {
+            for (let x = minX; x <= maxX; x++) {
+                for (let z = minZ; z <= maxZ; z++) {
+                    for (let y = minY; y <= maxY; y++) {
+                        const block = dimension.getBlock({ x, y, z });
+                        if (block) {
+                            try {
+                                if (blockPerm) {
+                                    block.setPermutation(blockPerm);
+                                } else {
+                                    block.setType(portalId);
+                                }
+                            } catch (e) {
+                                try {
+                                    block.setType(portalId);
+                                } catch (e2) {}
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -188,7 +222,7 @@ export class PortalManager {
             y: (minY + maxY) / 2,
             z: (minZ + maxZ) / 2
         };
-        dimension.playSound("portal.trigger", center);
+        dimension.playSound("ambient.weather.lightning.impact", center);
     }
 
     static getExistingPortal(pos, dimension, portalBlockId, range = 128) {

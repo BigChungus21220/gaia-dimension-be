@@ -1,8 +1,11 @@
 {
-  "format_version": "1.21.120",
+  "format_version": "1.21.70",
   "minecraft:block": {
     "description": {
-      "identifier": "gaia:gaia_portal",
+      "identifier": "gaiadimension:gaia_dimension_portal",
+       "menu_category": {
+        "category": "nature"
+      },
 	    "traits": {
                 "minecraft:placement_direction": {
                     "enabled_states": [
@@ -21,7 +24,7 @@
         "explosion_resistance": 9999
       },
       "minecraft:selection_box": {
-        "origin": [-8, 0, -2],
+        "origin": [-8, 0, -8],
         "size": [16, 16, 4]
       },
       "minecraft:collision_box": false,
@@ -33,19 +36,11 @@
         }
       },
       "minecraft:light_emission": 10,
-      "minecraft:ticking": {
-        "looping": true,
-        "interval_range": [20, 20],
-        "on_tick": {
-          "event": "gaia:particle",
-          "target": "self"
-        }
-      },
       "minecraft:map_color": "#ffffff"
     },
  "permutations": [
             {
-                "condition": "q.block_state('minecraft:block_face') == 'up'",
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'north'",
                 "components": {
                     "minecraft:transformation": {
                         "rotation": [
@@ -57,35 +52,11 @@
                 }
             },
             {
-                "condition": "q.block_state('minecraft:block_face') == 'down'",
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'south'",
                 "components": {
                     "minecraft:transformation": {
                         "rotation": [
                             0,
-                            0,
-                            180
-                        ]
-                    }
-                }
-            },
-            {
-                "condition": "q.block_state('minecraft:block_face') == 'north'",
-                "components": {
-                    "minecraft:transformation": {
-                        "rotation": [
-                            90,
-                            0,
-                            0
-                        ]
-                    }
-                }
-            },
-            {
-                "condition": "q.block_state('minecraft:block_face') == 'south'",
-                "components": {
-                    "minecraft:transformation": {
-                        "rotation": [
-                            90,
                             180,
                             0
                         ]
@@ -93,11 +64,11 @@
                 }
             },
             {
-                "condition": "q.block_state('minecraft:block_face') == 'west'",
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'west'",
                 "components": {
                     "minecraft:transformation": {
                         "rotation": [
-                            90,
+                            0,
                             90,
                             0
                         ]
@@ -105,11 +76,11 @@
                 }
             },
             {
-                "condition": "q.block_state('minecraft:block_face') == 'east'",
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'east'",
                 "components": {
                     "minecraft:transformation": {
                         "rotation": [
-                            90,
+                            0,
                             -90,
                             0
                         ]

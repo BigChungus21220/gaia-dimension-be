@@ -1,15 +1,17 @@
 import { world, system } from "@minecraft/server";
-import { registerLeavesComponent } from "./components/leaves.js";
-import { registerInvisibleComponent } from "./components/invisible.js";
-import { registerCurtainComponent } from "./components/curtain.js";
-import { registerWoodComponent } from "./components/wood.js";
-import { registerFenceComponent } from "./components/fence.js";
-import { registerSaplingComponent } from "./components/sapling.js";
-import { registerWallComponent } from "./components/wall.js";
-import { registerButtonComponent } from "./components/button.js";
-import { registerPressurePlateComponent } from "./components/pressure_plate.js";
-import { registerStairsComponent } from "./components/stairs.js";
-import { registerSandstoneComponent } from "./components/sandstone_slab.js";
+import { registerLeavesComponent } from "./blocks/leaves.js";
+import { registerInvisibleComponent } from "./blocks/invisible.js";
+import { registerCurtainComponent } from "./blocks/curtain.js";
+import { registerWoodComponent } from "./blocks/wood.js";
+import { registerFenceComponent } from "./blocks/fence.js";
+import { registerSaplingComponent } from "./blocks/sapling.js";
+import { registerWallComponent } from "./blocks/wall.js";
+import { registerButtonComponent } from "./blocks/button.js";
+import { registerPressurePlateComponent } from "./blocks/pressure_plate.js";
+import { registerStairsComponent } from "./blocks/stairs.js";
+import { registerSandstoneComponent } from "./blocks/sandstone_slab.js";
+import { registerGlitteringFireComponent } from "./blocks/glittering_fire.js";
+import { PortalManager } from "./API/lib/PortalLib.js";
 import { initializeDestructionHandlers } from "./systems/destruction_handler.js";
 import { initializeEventManager } from "./systems/event_manager.js";
 
@@ -29,4 +31,5 @@ system.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
     registerPressurePlateComponent({ blockComponentRegistry });
     registerStairsComponent({ blockComponentRegistry });
     registerSandstoneComponent({ blockComponentRegistry });
+    registerGlitteringFireComponent();
 });
