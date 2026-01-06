@@ -116,6 +116,15 @@ function updateCustomCurtainsFromLever(leverBlock) {
 }
 
 function toggleCustomCurtain(curtainBlock, player) {
+    // Redirect lower/bottom interactions to the upper/top block
+    if (curtainBlock.typeId.includes("_lower") || curtainBlock.typeId.includes("_bottom")) {
+         const upperBlock = curtainBlock.above();
+         if (upperBlock && (upperBlock.typeId.includes("_upper") || upperBlock.typeId.includes("_top"))) {
+             toggleCustomCurtain(upperBlock, player);
+             return;
+         }
+    }
+
     const perm = curtainBlock.permutation;
     const openState = perm.getState("gaiadimension:open");
     if (openState === undefined) return;
@@ -226,7 +235,11 @@ function destroyPartner(block, dimension) {
          const isBottom = typeId.includes("_bottom") || typeId.includes("_lower");
          const otherVertical = isBottom ? block.above() : block.below();
          
-         if (otherVertical && (otherVertical.typeId.includes("_top") || otherVertical.typeId.includes("_upper"))) {
+         const isValidVertical = isBottom 
+            ? (otherVertical.typeId.includes("_top") || otherVertical.typeId.includes("_upper"))
+            : (otherVertical.typeId.includes("_bottom") || otherVertical.typeId.includes("_lower"));
+
+         if (otherVertical && isValidVertical) {
              otherVertical.setType("minecraft:air");
              removeFromActiveCurtains(otherVertical.location);
          }
@@ -274,7 +287,6 @@ export function registerCurtainComponent({ blockComponentRegistry }) {
                     blockAbove.setPermutation(upperPerm);
                     activeCurtains.push({ location: blockAbove.location, dimension: blockAbove.dimension, typeId: upperBlockId });
 
-                    // Double Curtain Logic
                     if ((block.typeId.includes("_bottom") || block.typeId.includes("_lower")) && 
                         !block.typeId.includes("_left") && !block.typeId.includes("_right")) {
 
@@ -296,24 +308,6 @@ export function registerCurtainComponent({ blockComponentRegistry }) {
                             }
                         }
                     }
-
-                    // Original neighbor check (legacy support?)
-                    // The previous code checked for 'gaiadimension:inverse' state. 
-                    // This might interfere or be redundant if we are using separate blocks.
-                    // But for non-double-curtain blocks, we might want to keep it?
-                    // The user's request is specific to double curtains (implied by file generation).
-                    // I'll leave it as fallback/legacy if not handled by above.
-                    // Actually, if we transformed the block, typeId changed, so neighbor checks below might fail if they rely on old typeId.
-                    // But below check uses 'block[dir]()' and checks 'neighbor.typeId === block.typeId'.
-                    // If block type changed, block object might be stale?
-                    // 'block' variable refers to the block object.
-                    // If I called setType, does the 'block' variable update or point to old info?
-                    // Usually in Script API, the Block object is a handle. It reflects current state.
-                    // So if setType changed it, block.typeId should be new type.
-                    // So the legacy loop might run on the new type.
-                    // But new type ends with _left/_right.
-                    // So it won't match standard neighbors.
-                    // That seems fine.
 
                     for (const dir of ["north", "south", "east", "west"]) {
                         const neighbor = block[dir]();

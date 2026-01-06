@@ -29,9 +29,9 @@
                             -8
                         ],
                         "size": [
-                            16,
-                            16,
-                            3
+                            0,
+                            0,
+                            0
                         ]
                     },
                     "minecraft:collision_box": {
@@ -58,9 +58,9 @@
                             -8
                         ],
                         "size": [
-                            16,
-                            16,
-                            3
+                            0,
+                            0,
+                            0
                         ]
                     },
                     "minecraft:collision_box": {
@@ -202,9 +202,9 @@
                     -8
                 ],
                 "size": [
-                    16,
-                    16,
-                    16
+                    0,
+                    0,
+                    0
                 ]
             },
             "minecraft:collision_box": {
