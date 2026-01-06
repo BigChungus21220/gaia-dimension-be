@@ -151,10 +151,9 @@ function updateNeighbors(block, newState, sourceId) {
     if (newState) {
         // When pressure plate is pressed, treat the plate's location as a power source.
         // Redstone.js will handle powering the adjacent wires.
-        RedstoneControl.setRedstonePower(block.location, 15, sourceId);
+        RedstoneControl.updateRedstonePower(block);
     } else {
-        // When pressure plate is released, remove the power source.
-        RedstoneControl.removeRedstonePower(sourceId);
+        // When pressure plate is released, the tracker handles it automatically.
     }
 }
 
@@ -353,7 +352,7 @@ system.runInterval(() => {
     const players = world.getPlayers();
     const newlyActivePlates = new Set();
 
-    // 1. Find all currently active plates by checking player locations
+    // Find all currently active plates by checking player locations
     for (const player of players) {
         try {
             // Check the block the player is standing on and the block they are in
@@ -374,7 +373,7 @@ system.runInterval(() => {
         }
     }
 
-    // 2. Detect plates that were just pressed
+    // Detect plates that were just pressed
     for (const plateKey of newlyActivePlates) {
         if (!activePlates.has(plateKey)) {
             try {
@@ -404,7 +403,7 @@ system.runInterval(() => {
         }
     }
 
-    // 3. Detect plates that were just released
+    // Detect plates that were just released
     for (const plateKey of activePlates) {
         if (!newlyActivePlates.has(plateKey)) {
             try {
@@ -432,16 +431,14 @@ system.runInterval(() => {
             }
         }
     }
-
-    // 4. Update the state for the next tick
     activePlates = newlyActivePlates;
 
-}, 2); // Run every 2 ticks for responsiveness
+}, 2); 
 
 // Periodically clean up door states to prevent memory leaks
 system.runInterval(() => {
     cleanupDoorStates();
-}, 1200); // Clean up every 60 seconds (1200 ticks)
+}, 1200); 
 
 class PressurePlateComponent {
     // This is a dummy component just for identification
@@ -450,14 +447,4 @@ class PressurePlateComponent {
 export function registerPressurePlateComponent({ blockComponentRegistry }) {
     const pressurePlateComponent = new PressurePlateComponent();
     blockComponentRegistry.registerCustomComponent("gaiadimension:pressure_plate", pressurePlateComponent);
-
-    registerBreakHandler({
-        event: "before",
-        check: (block) => isPressurePlate(block.typeId),
-        execute: (event) => {
-            const { block } = event;
-            const sourceId = `pressure_plate_${block.location.x}_${block.location.y}_${block.location.z}`;
-            RedstoneControl.removeRedstonePower(sourceId);
-        }
-    });
 }

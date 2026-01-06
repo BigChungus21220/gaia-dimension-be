@@ -1,11 +1,5 @@
 import { world, system, BlockPermutation, GameMode, Direction } from "@minecraft/server";
 
-/**
- * Handles the creation of double sandstone slabs.
- * @param {import("@minecraft/server").Player} player
- * @param {import("@minecraft/server").Block} block
- * @param {import("@minecraft/server").ItemStack | undefined} mainhandItem
- */
 function handleDoubleSandstoneSlab(player, block, mainhandItem) {
     const fullBlockId = block.typeId.replace("_slab", "");
     try {
@@ -26,25 +20,25 @@ function handleDoubleSandstoneSlab(player, block, mainhandItem) {
     }
 }
 
-export function registerSandstoneComponent({ blockComponentRegistry }) {
+system.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
     blockComponentRegistry.registerCustomComponent("gaiadimension:stone_slab", {});
+});
 
-    world.beforeEvents.playerInteractWithBlock.subscribe(event => {
-        const { player, block, itemStack, blockFace } = event;
+world.beforeEvents.playerInteractWithBlock.subscribe(event => {
+    const { player, block, itemStack, blockFace } = event;
 
-                if (block.typeId.includes("sandstone_slab") && itemStack?.typeId === block.typeId) {
-            const slabState = block.permutation.getState("minecraft:vertical_half");
-            const isPlacingOnTop = blockFace === Direction.Up && slabState === "bottom";
-            const isPlacingOnBottom = blockFace === Direction.Down && slabState === "top";
+    if (block.typeId.includes("sandstone_slab") && itemStack?.typeId === block.typeId) {
+        const slabState = block.permutation.getState("minecraft:vertical_half");
+        const isPlacingOnTop = blockFace === Direction.Up && slabState === "bottom";
+        const isPlacingOnBottom = blockFace === Direction.Down && slabState === "top";
 
-            if (isPlacingOnTop || isPlacingOnBottom) {
-                event.cancel = true;
-                system.run(() => {
-                    if (block.isValid) {
-                        handleDoubleSandstoneSlab(player, block, itemStack);
-                    }
-                });
-            }
+        if (isPlacingOnTop || isPlacingOnBottom) {
+            event.cancel = true;
+            system.run(() => {
+                if (block.isValid) {
+                    handleDoubleSandstoneSlab(player, block, itemStack);
+                }
+            });
         }
-    });
-}
+    }
+});

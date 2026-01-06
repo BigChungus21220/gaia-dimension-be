@@ -3,7 +3,7 @@
 	"minecraft:geometry": [
 		{
 			"description": {
-				"identifier": "geometry.gaiadimension.saltion",
+				"identifier": "geometry.rosa_gd.saltion",
 				"texture_width": 64,
 				"texture_height": 40,
 				"visible_bounds_width": 3,

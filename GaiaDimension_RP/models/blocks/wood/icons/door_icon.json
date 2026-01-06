@@ -1,0 +1,59 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.rosa_gd.door_icon",
+				"texture_width": 16,
+				"texture_height": 16,
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "door_closed",
+					"pivot": [0, 0, 0.5]
+				},
+				{
+					"name": "down",
+					"parent": "door_closed",
+					"pivot": [0, 0, 0.5],
+					"cubes": [
+						{
+							"origin": [-6.8, 0, -1.2],
+							"size": [13.6, 13.6, 2.55],
+							"uv": {
+								"north": {"uv": [0, 0], "uv_size": [16, 16], "material_instance": "down_north"},
+								"east": {"uv": [3, 0], "uv_size": [-3, 16], "material_instance": "down_east"},
+								"south": {"uv": [16, 0], "uv_size": [-16, 16], "material_instance": "down_south"},
+								"west": {"uv": [13, 0], "uv_size": [3, 16], "material_instance": "down_west"},
+								"up": {"uv": [0, 3], "uv_size": [16, -3], "material_instance": "down_up"},
+								"down": {"uv": [16, 16], "uv_size": [-16, -3], "material_instance": "down_down"}
+							}
+						}
+					]
+				},
+				{
+					"name": "up",
+					"parent": "door_closed",
+					"pivot": [0, 13.6, 0.5],
+					"cubes": [
+						{
+							"origin": [-6.8, 13.6, -1.2],
+							"size": [13.6, 13.6, 2.55],
+							"uv": {
+								"north": {"uv": [0, 0], "uv_size": [16, 16], "material_instance": "up_north"},
+								"east": {"uv": [3, 0], "uv_size": [-3, 16], "material_instance": "up_east"},
+								"south": {"uv": [16, 0], "uv_size": [-16, 16], "material_instance": "up_south"},
+								"west": {"uv": [13, 0], "uv_size": [3, 16], "material_instance": "up_west"},
+								"up": {"uv": [0, 3], "uv_size": [16, -3], "material_instance": "up_up"},
+								"down": {"uv": [16, 16], "uv_size": [-16, -3], "material_instance": "up_down"}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

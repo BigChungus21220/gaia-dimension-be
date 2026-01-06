@@ -3,7 +3,7 @@
 	"minecraft:geometry": [
 		{
 			"description": {
-				"identifier": "geometry.gaiadimension.crystal_golem",
+				"identifier": "geometry.rosa_gd.crystal_golem",
 				"texture_width": 138,
 				"texture_height": 64,
 				"visible_bounds_width": 3,

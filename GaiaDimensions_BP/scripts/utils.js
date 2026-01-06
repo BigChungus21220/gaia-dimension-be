@@ -135,3 +135,49 @@ export function getNeighbor(block, direction) {
 }
 
 
+
+const REDSTONE_COMPONENTS = ['redstone_wire', 'repeater', 'comparator', 'redstone_torch'];
+
+export function getRedstonePower(block) {
+    // Direct power check
+    let power = block.getRedstonePower() ?? 0;
+    if (power > 0) return power;
+
+    // Check surrounding blocks
+    const faces = ['north', 'south', 'east', 'west', 'below', 'above'];
+    
+    for (const face of faces) {
+        const neighbor = block[face](); // e.g. block.north()
+        if (!neighbor) continue;
+        
+        const neighborPower = neighbor.getRedstonePower() ?? 0;
+        
+        // If neighbor has power, we need to verify if it connects/transmits to us
+        if (neighborPower > 0) {
+            // Some blocks don't transmit power directly in all directions or are specifically ignored
+            const isSpecialComponent = REDSTONE_COMPONENTS.some(c => neighbor.typeId.includes(c));
+            
+            if (!isSpecialComponent) {
+                // Standard block transmitting power
+                return neighborPower;
+            }
+        }
+
+        // Specific check for redstone torches on walls
+        if (neighbor.typeId.includes('redstone_torch')) {
+            const torchFacing = neighbor.permutation.getState('torch_facing_direction');
+            // If torch is NOT facing the opposite of where we are looking (i.e. attached to the block), it might power it
+            if (torchFacing !== invertFace[face]) {
+                return neighborPower;
+            }
+        }
+    }
+
+    // Daylight detector check (specifically from above)
+    const above = block.above();
+    if (above?.typeId === 'minecraft:daylight_detector') {
+        return above.getRedstonePower() ?? 0;
+    }
+
+    return 0;
+}

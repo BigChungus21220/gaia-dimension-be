@@ -1,37 +1,59 @@
 {
-  "format_version": 2,
-  "metadata": {
-    "license": "GNU",
-    "url": "https://github.com/BigChungus21220/gaia-dimension-be"
-  },
-  "header": {
-    "name": "Gaia Dimension BP",
-    "description": "Bedrock port of the Gaia Dimension Mod by Androsa",
-    "uuid": "6b0938dc-c34f-4010-91d7-76156860a9a4",
-    "version": [1, 0, 0],
-    "min_engine_version": [1, 21, 20]
-   },
-   "modules": [
-        {
-            "type": "data",
-            "uuid": "a3c6109f-1534-4704-a108-4f611c9abfbc",
-            "version": [1, 0, 0]
-        },
-        {
-            "type": "script",
-            "uuid": "f8178752-ffcc-4fe3-9a80-5efa32e4ec3f",
-            "version": [1, 0, 0],
-            "entry": "scripts/main.js"
-        }
-   ],
-    "dependencies": [
+	"format_version": 2,
+	"header": {
+		"name": "pack.name",
+		"description": "pack.description",
+		"uuid": "11ace802-e738-4079-8b9d-25cccc9e09c8",
+		"pack_scope": "world",
+		"version": [
+			1,
+			0,
+			0
+		],
+		"min_engine_version": [
+			1,
+			21,
+			20
+		]
+	},
+	"metadata": {
+		"authors": [ "Sen" ],
+		"product_type": "addon"
+	},
+	"modules": [
 		{
-			"module_name":"@minecraft/server",
-			"version":"1.19.0"
+			"type": "data",
+			"uuid": "bcb6848a-824c-4f9c-b0bd-f364e2326cfc",
+			"version": [
+				1,
+				0,
+				0
+			]
 		},
 		{
-			"module_name":"@minecraft/server-ui",
-			"version":"1.1.0"
+			"entry": "scripts/GaiaDimensionAddon.js",
+			"type": "script",
+			"language": "javascript",
+			"uuid": "dbcdfb66-073d-40a0-9abe-a644b98d327c",
+			"version": [ 1, 0, 0 ]
 		}
-    ]
+	],
+	"dependencies": [
+		{
+			"version": [
+				1,
+				0,
+				0
+			],
+			"uuid": "cc4ac671-dc96-4f53-aeeb-2e5ea42fe322"
+		},
+		{
+			"module_name": "@minecraft/server",
+			"version": "2.3.0"
+		},
+		{
+			"module_name": "@minecraft/server-ui",
+			"version": "2.0.0"
+		}
+	]
 }

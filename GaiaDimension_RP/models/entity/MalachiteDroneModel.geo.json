@@ -3,7 +3,7 @@
 	"minecraft:geometry": [
 		{
 			"description": {
-				"identifier": "geometry.gaiadimension.malachite_drone",
+				"identifier": "geometry.rosa_gd.malachite_drone",
 				"texture_width": 86,
 				"texture_height": 64,
 				"visible_bounds_width": 3,

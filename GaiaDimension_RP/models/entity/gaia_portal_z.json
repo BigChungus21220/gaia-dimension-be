@@ -3,7 +3,7 @@
 	"minecraft:geometry": [
 		{
 			"description": {
-				"identifier": "geometry.gaiadimension.gaia_portal_z",
+				"identifier": "geometry.rosa_gd.gaia_portal_z",
 				"texture_width": 16,
 				"texture_height": 16,
 				"visible_bounds_width": 6,

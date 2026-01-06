@@ -7,9 +7,23 @@ import { world, system, BlockPermutation, GameMode, Direction } from "@minecraft
  * @param {import("@minecraft/server").ItemStack | undefined} mainhandItem
  */
 function handleDoubleSlab(player, block, mainhandItem) {
-    const plankId = block.typeId.replace("_slab", "_planks");
+    let plankId = block.typeId.replace("_slab", "_planks");
     try {
+        // Try setting to planks first
         block.setType(plankId);
+    } catch (e) {
+        // If planks don't exist, try tiles
+        try {
+            plankId = block.typeId.replace("_slab", "_tiles");
+            block.setType(plankId);
+        } catch (e2) {
+             console.warn(`Failed to find plank or tile type for ${block.typeId}`);
+             return; // Stop here if both fail
+        }
+    }
+
+    // Common logic after successful setType
+    try {
         player.playSound("dig.wood");
 
         if (player.getGameMode() !== "creative") {
@@ -22,7 +36,7 @@ function handleDoubleSlab(player, block, mainhandItem) {
             }
         }
     } catch (e) {
-        console.warn(`Failed to find plank type for ${block.typeId}`);
+        console.warn(`Error in handleDoubleSlab post-placement: ${e}`);
     }
 }
 

@@ -3,7 +3,7 @@
 	"minecraft:geometry": [
 		{
 			"description": {
-				"identifier": "geometry.gaiadimension.blue_howlite_wolf",
+				"identifier": "geometry.rosa_gd.blue_howlite_wolf",
 				"texture_width": 128,
 				"texture_height": 64,
 				"visible_bounds_width": 5,

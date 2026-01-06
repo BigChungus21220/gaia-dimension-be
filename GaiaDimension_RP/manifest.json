@@ -1,27 +1,40 @@
 {
-  "format_version": 2,
-  "metadata": {
-    "license": "GNU",
-    "url": "https://github.com/BigChungus21220/gaia-dimension-be"
-  },
-  "header": {
-    "name": "Gaia Dimension RP",
-    "description": "Bedrock port of the Gaia Dimension Mod by Androsa",
-    "uuid": "40be5674-757f-4633-8284-4bf164c65808",
-    "version": [1, 0, 0],
-    "min_engine_version": [1, 21, 20]
-  },
-  "modules": [
-    {
-      "type": "resources",
-      "uuid": "82a9793d-912a-4a1a-8414-6549d9bcd79c",
-      "version": [1, 0, 0]
+    "format_version": 2,
+    "header": {
+        "name": "pack.name",
+        "description": "pack.description",
+        "uuid": "cc4ac671-dc96-4f53-aeeb-2e5ea42fe322",
+        "pack_scope": "world",
+        "version": [
+            1,
+            0,
+            0
+        ],
+        "min_engine_version": [
+            1,
+            21,
+            20
+        ]
+    },
+    "modules": [
+        {
+            "version": [ 1, 0, 0 ],
+            "type": "resources",
+            "uuid": "d0e57684-89c1-44cc-8774-8b3e674fe285"
+        }
+    ],
+    "dependencies": [
+        {
+            "uuid": "11ace802-e738-4079-8b9d-25cccc9e09c8",
+            "version": [
+                1,
+                0,
+                0
+            ]
+        }
+    ],
+    "metadata": {
+        "authors": [ "Sen" ],
+        "product_type": "addon"
     }
-  ],
-  "dependencies": [
-    {
-      "uuid": "6b0938dc-c34f-4010-91d7-76156860a9a4",
-      "version": [1, 0, 0]
-    }
-	]
 }
