@@ -2,7 +2,7 @@
   "format_version": "1.20.50",
   "minecraft:item": {
     "description": {
-      "identifier": "cc_wild:alder_door",
+      "identifier": "gaiadimension:pink_agate_curtain",
 			"menu_category": {
 				"category": "construction",
 				"group": "itemGroup.name.door"
