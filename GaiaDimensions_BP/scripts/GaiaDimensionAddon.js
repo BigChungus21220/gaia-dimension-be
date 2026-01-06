@@ -1,7 +1,7 @@
 import { world, system } from "@minecraft/server";
 import { registerLeavesComponent } from "./components/leaves.js";
 import { registerInvisibleComponent } from "./components/invisible.js";
-import { registerDoorComponent } from "./components/door.js";
+import { registerCurtainComponent } from "./components/curtain.js";
 import { registerWoodComponent } from "./components/wood.js";
 import { registerFenceComponent } from "./components/fence.js";
 import { registerSaplingComponent } from "./components/sapling.js";
@@ -20,7 +20,7 @@ initializeEventManager();
 system.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
     registerLeavesComponent({ blockComponentRegistry });
     registerInvisibleComponent({ blockComponentRegistry });
-    registerDoorComponent({ blockComponentRegistry });
+    registerCurtainComponent({ blockComponentRegistry });
     registerWoodComponent({ blockComponentRegistry });
     registerFenceComponent({ blockComponentRegistry });
     registerSaplingComponent({ blockComponentRegistry });

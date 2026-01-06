@@ -1,51 +1,51 @@
 import { system, BlockPermutation, GameMode, ItemStack, world } from "@minecraft/server";
 import { registerBreakHandler, registerInteractHandler, registerPlaceHandler } from "../systems/event_manager.js";
 
-const activeDoors = [];
+const activeCurtains = [];
 
-function initializeFireDoorSystem() {
+function initializeCurtainSystem() {
     system.runInterval(() => {
-        for (let i = activeDoors.length - 1; i >= 0; i--) {
-            const doorInfo = activeDoors[i];
+        for (let i = activeCurtains.length - 1; i >= 0; i--) {
+            const curtainInfo = activeCurtains[i];
             try {
-                const block = doorInfo.dimension.getBlock(doorInfo.location);
+                const block = curtainInfo.dimension.getBlock(curtainInfo.location);
 
-                if (!block || block.typeId !== doorInfo.typeId) {
-                    // Door was destroyed or changed
-                    const isLower = doorInfo.typeId.includes("_lower");
+                if (!block || block.typeId !== curtainInfo.typeId) {
+                    // Curtain was destroyed or changed
+                    const isLower = curtainInfo.typeId.includes("_lower");
                     const otherBlockLocation = {
-                        x: doorInfo.location.x,
-                        y: doorInfo.location.y + (isLower ? 1 : -1),
-                        z: doorInfo.location.z
+                        x: curtainInfo.location.x,
+                        y: curtainInfo.location.y + (isLower ? 1 : -1),
+                        z: curtainInfo.location.z
                     };
-                    const otherBlock = doorInfo.dimension.getBlock(otherBlockLocation);
+                    const otherBlock = curtainInfo.dimension.getBlock(otherBlockLocation);
 
                     const expectedOtherTypeId = isLower
-                        ? doorInfo.typeId.replace("_lower", "_upper")
-                        : doorInfo.typeId.replace("_upper", "_lower");
+                        ? curtainInfo.typeId.replace("_lower", "_upper")
+                        : curtainInfo.typeId.replace("_upper", "_lower");
 
                     if (otherBlock && otherBlock.typeId === expectedOtherTypeId) {
                         otherBlock.setType("minecraft:air");
-                        const otherIndex = activeDoors.findIndex(d => d.location.x === otherBlockLocation.x && d.location.y === otherBlockLocation.y && d.location.z === otherBlockLocation.z);
+                        const otherIndex = activeCurtains.findIndex(d => d.location.x === otherBlockLocation.x && d.location.y === otherBlockLocation.y && d.location.z === otherBlockLocation.z);
                         if (otherIndex > -1) {
-                            activeDoors.splice(otherIndex, 1);
+                            activeCurtains.splice(otherIndex, 1);
                         }
                     }
 
-                    activeDoors.splice(i, 1); // Remove from list
+                    activeCurtains.splice(i, 1); // Remove from list
                 }
             } catch (error) {
                 if (error.message.includes("Could not find block")) {
-                    activeDoors.splice(i, 1);
+                    activeCurtains.splice(i, 1);
                 } else {
-                    console.error("Error checking door:", error);
+                    console.error("Error checking curtain:", error);
                 }
             }
         }
     }, 100); 
 }
 
-function updateCustomDoorsFromLever(leverBlock) {
+function updateCustomCurtainsFromLever(leverBlock) {
     const isLeverOn = leverBlock.permutation.getState("open_bit");
     const newState = isLeverOn; 
     
@@ -61,7 +61,7 @@ function updateCustomDoorsFromLever(leverBlock) {
                 try {
                     const checkBlock = leverBlock.dimension.getBlock(checkLocation);
                     if (checkBlock && !checkBlock.isAir) {
-                        if (checkBlock.typeId.includes("gaiadimension:") && checkBlock.typeId.includes("door")) {
+                        if (checkBlock.typeId.includes("gaiadimension:") && (checkBlock.typeId.includes("curtain") || checkBlock.typeId.includes("door"))) {
                             let perm = checkBlock.permutation;
                             if (perm.getState("gaiadimension:open") !== undefined) {
                                 checkBlock.setPermutation(perm.withState("gaiadimension:open", newState));
@@ -96,21 +96,21 @@ function updateCustomDoorsFromLever(leverBlock) {
     }
 }
 
-function toggleCustomDoor(doorBlock, player) {
-    const perm = doorBlock.permutation;
+function toggleCustomCurtain(curtainBlock, player) {
+    const perm = curtainBlock.permutation;
     const openState = perm.getState("gaiadimension:open");
     if (openState === undefined) return;
 
     const newState = !openState;
-    doorBlock.setPermutation(perm.withState("gaiadimension:open", newState));
-    player.playSound(newState ? "random.door_open" : "random.door_close", { location: doorBlock.location, volume: 1, pitch: 1 });
+    curtainBlock.setPermutation(perm.withState("gaiadimension:open", newState));
+    player.playSound(newState ? "random.door_open" : "random.door_close", { location: curtainBlock.location, volume: 1, pitch: 1 });
 
-    const isLower = doorBlock.typeId.includes("_lower");
-    const otherBlock = isLower ? doorBlock.above() : doorBlock.below();
+    const isLower = curtainBlock.typeId.includes("_lower");
+    const otherBlock = isLower ? curtainBlock.above() : curtainBlock.below();
     
     const expectedOtherTypeId = isLower 
-        ? doorBlock.typeId.replace("_lower", "_upper") 
-        : doorBlock.typeId.replace("_upper", "_lower");
+        ? curtainBlock.typeId.replace("_lower", "_upper") 
+        : curtainBlock.typeId.replace("_upper", "_lower");
 
     if (otherBlock && otherBlock.typeId === expectedOtherTypeId) {
         const otherPerm = otherBlock.permutation;
@@ -127,16 +127,16 @@ function toggleTrapdoor(block, player) {
     player.playSound(newState ? "open.wooden_trapdoor" : "close.wooden_trapdoor", { location: block.location, volume: 1, pitch: 1 });
 }
 
-export function registerDoorComponent({ blockComponentRegistry }) {
-    blockComponentRegistry.registerCustomComponent("gaiadimension:door", {});
+export function registerCurtainComponent({ blockComponentRegistry }) {
+    blockComponentRegistry.registerCustomComponent("gaiadimension:curtain", {});
 
-    initializeFireDoorSystem();
+    initializeCurtainSystem();
 
     registerPlaceHandler({
         check: (block) => block.typeId.includes("_lower"),
         execute: (event) => {
             const { block } = event;
-            activeDoors.push({ location: block.location, dimension: block.dimension, typeId: block.typeId });
+            activeCurtains.push({ location: block.location, dimension: block.dimension, typeId: block.typeId });
 
             const blockAbove = block.above();
             if (blockAbove?.isAir) {
@@ -149,7 +149,7 @@ export function registerDoorComponent({ blockComponentRegistry }) {
                         "minecraft:cardinal_direction": rotation
                     });
                     blockAbove.setPermutation(upperPerm);
-                    activeDoors.push({ location: blockAbove.location, dimension: blockAbove.dimension, typeId: upperBlockId });
+                    activeCurtains.push({ location: blockAbove.location, dimension: blockAbove.dimension, typeId: upperBlockId });
 
                     for (const dir of ["north", "south", "east", "west"]) {
                         const neighbor = block[dir]();
@@ -162,7 +162,7 @@ export function registerDoorComponent({ blockComponentRegistry }) {
                         }
                     }
                 } catch (e) {
-                    console.error(`Could not resolve upper door permutation for ${block.typeId}: ${e}`);
+                    console.error(`Could not resolve upper curtain permutation for ${block.typeId}: ${e}`);
                 }
             }
         }
@@ -170,7 +170,7 @@ export function registerDoorComponent({ blockComponentRegistry }) {
 
     registerBreakHandler({
         event: "before",
-        check: (block) => block.typeId.includes('door'),
+        check: (block) => block.typeId.includes('curtain') || block.typeId.includes('door'),
         execute: (event) => {
             const { block, player } = event;
             if (!block || !block.isValid) return;
@@ -179,9 +179,9 @@ export function registerDoorComponent({ blockComponentRegistry }) {
             const dimension = block.dimension;
             const brokenBlockTypeId = block.typeId;
 
-            const index = activeDoors.findIndex(d => d.location.x === location.x && d.location.y === location.y && d.location.z === location.z);
+            const index = activeCurtains.findIndex(d => d.location.x === location.x && d.location.y === location.y && d.location.z === location.z);
             if (index > -1) {
-                activeDoors.splice(index, 1);
+                activeCurtains.splice(index, 1);
             }
 
             const isLower = brokenBlockTypeId.includes("_lower");
@@ -191,13 +191,13 @@ export function registerDoorComponent({ blockComponentRegistry }) {
                 z: location.z
             };
 
-            const otherIndex = activeDoors.findIndex(d => d.location.x === otherBlockLocation.x && d.location.y === otherBlockLocation.y && d.location.z === otherBlockLocation.z);
+            const otherIndex = activeCurtains.findIndex(d => d.location.x === otherBlockLocation.x && d.location.y === otherBlockLocation.y && d.location.z === otherBlockLocation.z);
             if (otherIndex > -1) {
-                activeDoors.splice(otherIndex, 1);
+                activeCurtains.splice(otherIndex, 1);
             }
 
             const otherBlock = dimension.getBlock(otherBlockLocation);
-            if (otherBlock && otherBlock.typeId.includes("door")) {
+            if (otherBlock && (otherBlock.typeId.includes("curtain") || otherBlock.typeId.includes("door"))) {
                 const expectedOtherBlockId = isLower
                     ? brokenBlockTypeId.replace("_lower", "_upper")
                     : brokenBlockTypeId.replace("_upper", "_lower");
@@ -223,16 +223,16 @@ export function registerDoorComponent({ blockComponentRegistry }) {
         }
     });
 
-    // Interact Handler for Door/Trapdoor toggling
+    // Interact Handler for Curtain/Trapdoor toggling
     registerInteractHandler({
-        check: (block) => block.typeId.includes("door") || block.typeId.includes("trapdoor"),
+        check: (block) => block.typeId.includes("curtain") || block.typeId.includes("door") || block.typeId.includes("trapdoor"),
         execute: (event) => {
              const { block, player } = event;
              system.run(() => {
                  if (block.typeId.includes("trapdoor")) {
                      toggleTrapdoor(block, player);
                  } else {
-                     toggleCustomDoor(block, player);
+                     toggleCustomCurtain(block, player);
                  }
              });
         }
@@ -244,7 +244,7 @@ export function registerDoorComponent({ blockComponentRegistry }) {
         execute: (event) => {
             const { block } = event;
             system.run(() => {
-                updateCustomDoorsFromLever(block);
+                updateCustomCurtainsFromLever(block);
             });
         }
     });

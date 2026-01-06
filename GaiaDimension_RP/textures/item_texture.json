@@ -2,8 +2,8 @@
   "resource_pack_name": "WC",
   "texture_name": "atlas.items",
   "texture_data": {
-    "crystal_arow": {
-      "textures": "textures/gaiadimension/androsa/item/crystal_arrow"
+    "pink_agate_curtain": {
+      "textures": "textures/gaiadimension/androsa/item/pink_agate_curtain"
     }
   }
 }

@@ -58,9 +58,9 @@
                             -8
                         ],
                         "size": [
-                            3,
                             16,
-                            16
+                            16,
+                            3
                         ]
                     },
                     "minecraft:collision_box": {
@@ -74,7 +74,12 @@
                             0,
                             0
                         ]
-                    }
+                    },
+                     "minecraft:material_instances": {
+                "*": {
+                    "texture": "gaiadimension:pink_agate_curtain_top_open",
+                    "render_method": "blend"
+                }}
                 }
             },
             {
@@ -131,51 +136,51 @@
                 "geometry": "geometry.rosa_gd.door_icon",
                 "material_instances": {
                     "up_up": {
-                        "texture": "gaiadimension:pink_crystal_curtain_top",
+                        "texture": "gaiadimension:pink_agate_curtain_top",
                         "render_method": "blend"
                     },
                     "up_down": {
-                        "texture": "gaiadimension:pink_crystal_curtain_top",
+                        "texture": "gaiadimension:pink_agate_curtain_top",
                         "render_method": "blend"
                     },
                     "up_south": {
-                        "texture": "gaiadimension:pink_crystal_curtain_top",
+                        "texture": "gaiadimension:pink_agate_curtain_top",
                         "render_method": "blend"
                     },
                     "up_east": {
-                        "texture": "gaiadimension:pink_crystal_curtain_top",
+                        "texture": "gaiadimension:pink_agate_curtain_top",
                         "render_method": "blend"
                     },
                     "up_west": {
-                        "texture": "gaiadimension:pink_crystal_curtain_top",
+                        "texture": "gaiadimension:pink_agate_curtain_top",
                         "render_method": "blend"
                     },
                     "up_north": {
-                        "texture": "gaiadimension:pink_crystal_curtain_top",
+                        "texture": "gaiadimension:pink_agate_curtain_top",
                         "render_method": "blend"
                     },
                     "down_up": {
-                        "texture": "gaiadimension:pink_crystal_curtain_bottom",
+                        "texture": "gaiadimension:pink_agate_curtain_bottom",
                         "render_method": "blend"
                     },
                     "down_down": {
-                        "texture": "gaiadimension:pink_crystal_curtain_bottom",
+                        "texture": "gaiadimension:pink_agate_curtain_bottom",
                         "render_method": "blend"
                     },
                     "down_south": {
-                        "texture": "gaiadimension:pink_crystal_curtain_bottom",
+                        "texture": "gaiadimension:pink_agate_curtain_bottom",
                         "render_method": "blend"
                     },
                     "down_east": {
-                        "texture": "gaiadimension:pink_crystal_curtain_bottom",
+                        "texture": "gaiadimension:pink_agate_curtain_bottom",
                         "render_method": "blend"
                     },
                     "down_west": {
-                        "texture": "gaiadimension:pink_crystal_curtain_bottom",
+                        "texture": "gaiadimension:pink_agate_curtain_bottom",
                         "render_method": "blend"
                     },
                     "down_north": {
-                        "texture": "gaiadimension:pink_crystal_curtain_bottom",
+                        "texture": "gaiadimension:pink_agate_curtain_bottom",
                         "render_method": "blend"
                     }
                 }
@@ -185,7 +190,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "gaiadimension:pink_crystal_curtain_top",
+                    "texture": "gaiadimension:pink_agate_curtain_top",
                     "render_method": "blend"
                 }
             },

@@ -802,42 +802,6 @@
         "gaiadimension:pebbles": {
             "textures": "textures/gaiadimension/androsa/blocks/pebbles"
         },
-        "gaiadimension:pink_crystal_curtain_bottom": {
-            "textures": "textures/gaiadimension/androsa/blocks/pink_crystal_curtain_bottom"
-        },
-        "gaiadimension:pink_crystal_curtain_bottom_left": {
-            "textures": "textures/gaiadimension/androsa/blocks/pink_crystal_curtain_bottom_left"
-        },
-        "gaiadimension:pink_crystal_curtain_bottom_left_open": {
-            "textures": "textures/gaiadimension/androsa/blocks/pink_crystal_curtain_bottom_left_open"
-        },
-        "gaiadimension:pink_crystal_curtain_bottom_open": {
-            "textures": "textures/gaiadimension/androsa/blocks/pink_crystal_curtain_bottom_open"
-        },
-        "gaiadimension:pink_crystal_curtain_bottom_right": {
-            "textures": "textures/gaiadimension/androsa/blocks/pink_crystal_curtain_bottom_right"
-        },
-        "gaiadimension:pink_crystal_curtain_bottom_right_open": {
-            "textures": "textures/gaiadimension/androsa/blocks/pink_crystal_curtain_bottom_right_open"
-        },
-        "gaiadimension:pink_crystal_curtain_top": {
-            "textures": "textures/gaiadimension/androsa/blocks/pink_crystal_curtain_top"
-        },
-        "gaiadimension:pink_crystal_curtain_top_left": {
-            "textures": "textures/gaiadimension/androsa/blocks/pink_crystal_curtain_top_left"
-        },
-        "gaiadimension:pink_crystal_curtain_top_left_open": {
-            "textures": "textures/gaiadimension/androsa/blocks/pink_crystal_curtain_top_left_open"
-        },
-        "gaiadimension:pink_crystal_curtain_top_open": {
-            "textures": "textures/gaiadimension/androsa/blocks/pink_crystal_curtain_top_open"
-        },
-        "gaiadimension:pink_crystal_curtain_top_right": {
-            "textures": "textures/gaiadimension/androsa/blocks/pink_crystal_curtain_top_right"
-        },
-        "gaiadimension:pink_crystal_curtain_top_right_open": {
-            "textures": "textures/gaiadimension/androsa/blocks/pink_crystal_curtain_top_right_open"
-        },
         "gaiadimension:pink_crystal_leaves": {
             "textures": "textures/gaiadimension/androsa/blocks/pink_crystal_leaves"
         },
