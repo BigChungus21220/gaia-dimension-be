@@ -52,6 +52,9 @@
                 ]
             },
             "minecraft:weapon": {},
+            "minecraft:display_name": {
+                "value": "Apex Predator Mace\n\u00a77Those claws could dig deep into skin"
+            },
             "tag:minecraft:is_sword": {},
             "minecraft:custom_components": [
                 "luminiae:durability"

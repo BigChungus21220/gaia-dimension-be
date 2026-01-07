@@ -52,6 +52,9 @@
                 ]
             },
             "minecraft:weapon": {},
+            "minecraft:display_name": {
+                "value": "Gaia Baron Dagger\n\u00a77Though the blade is small, it could break armor"
+            },
             "tag:minecraft:is_sword": {},
             "minecraft:custom_components": [
                 "luminiae:durability"
