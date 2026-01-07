@@ -84,6 +84,7 @@ system.runInterval(() => {
 
 class FluidFlowComponent {
     constructor() {
+        this.onTick = this.onTick.bind(this);
         this.directions = [
             { x: 0, y: 0, z: -1 }, // North
             { x: 0, y: 0, z: 1 },  // South
@@ -98,11 +99,12 @@ class FluidFlowComponent {
         const typeId = block.typeId;
 
         // Determine fluid level/stage based on ID suffix
-        let currentStage = 0; // 0 = source
+        let currentStage = 0; // 0 = source, -1 = down
         let baseId = typeId;
         
         if (typeId.endsWith("_down")) {
-            return; 
+            currentStage = -1;
+            baseId = typeId.slice(0, -5); // Remove "_down"
         } else if (typeId.endsWith("3")) {
             currentStage = 3;
             baseId = typeId.slice(0, -1);
@@ -122,8 +124,9 @@ class FluidFlowComponent {
         else if (currentStage === 2) requiredParentTag = "template1";
         else if (currentStage === 3) requiredParentTag = "template2";
         
-        // 1. Survival Check (if not source)
+        // 1. Survival Check
         if (currentStage > 0) {
+            // Horizontal stages need a parent neighbor
             let hasParent = false;
             for (const dir of this.directions) {
                 const neighbor = dimension.getBlock({ x: block.location.x + dir.x, y: block.location.y, z: block.location.z + dir.z });
@@ -134,7 +137,34 @@ class FluidFlowComponent {
             }
             if (!hasParent) {
                 system.run(() => {
-                    if (block.isValid()) block.setType("minecraft:air");
+                    if (block.isValid) block.setType("minecraft:air");
+                });
+                return;
+            }
+        } else if (currentStage === -1) {
+            // Down blocks need source, down, or any stage above to survive?
+            // JSON logic for stages: "execute if block ~ ~-1 ~ air run setblock ..._down"
+            // So stages 1, 2, 3 CAN create down blocks.
+            // Thus down blocks should survive if above is Source, Down, 1, 2, or 3.
+            
+            const above = dimension.getBlock({ x: block.location.x, y: block.location.y + 1, z: block.location.z });
+            if (!above) {
+                 system.run(() => { if (block.isValid) block.setType("minecraft:air"); });
+                 return;
+            }
+            
+            const aboveId = above.typeId;
+            const validParents = [
+                baseId,
+                baseId + "_down",
+                baseId + "1",
+                baseId + "2",
+                baseId + "3"
+            ];
+            
+            if (!validParents.includes(aboveId)) {
+                system.run(() => {
+                    if (block.isValid) block.setType("minecraft:air");
                 });
                 return;
             }
@@ -142,40 +172,69 @@ class FluidFlowComponent {
 
         // 2. Flow Down
         const below = dimension.getBlock({ x: block.location.x, y: block.location.y - 1, z: block.location.z });
+        let flowedDown = false;
+        
         if (below && below.typeId === "minecraft:air") {
              const downId = baseId + "_down";
              system.run(() => {
-                 if (below.isValid()) below.setType(downId);
+                 if (below.isValid) below.setType(downId);
              });
-             return; 
-        } else if (below && below.typeId === baseId + "_down") {
-            return;
+             flowedDown = true;
+             // If we flowed down into air, we generally don't spread sideways from this block in the same tick 
+             // (simulating gravity priority), but _down blocks hitting ground IS the exception.
+             // If I am a source or _down, and I have air below, I just made a pillar.
+             // I don't necessarily spread sideways unless I am blocked.
+        } else if (below && (below.typeId === baseId + "_down" || below.typeId === baseId)) {
+            // Already flowing down or merging into source
+            flowedDown = true;
         }
 
         // 3. Flow Sideways (Next Stage)
-        if (currentStage < 3) {
-            const nextStageId = currentStage === 0 ? baseId + "1" : baseId + (currentStage + 1).toString();
+        // Occurs if:
+        // - I am Source (0) AND (NOT flowing down OR flowing down but maybe spread too? Vanilla water spreads even if falling, but less? No, water spreads only if supported or max depth?)
+        // - Actually, Bedrock water: If it can go down, it goes down. It only goes side if it CANNOT go down (or if it's a source block, it does both? No, source usually prioritizes down).
+        // - I am Down (-1) AND blocked below (not air/water).
+        // - I am Stage 1, 2 (currentStage < 3) AND supported below?
+        
+        const canSpread = (currentStage === 0) || 
+                          (currentStage === -1 && !flowedDown) || 
+                          (currentStage > 0 && currentStage < 3);
+
+        if (canSpread) {
+            const nextStageId = (currentStage === 0 || currentStage === -1) ? baseId + "1" : baseId + (currentStage + 1).toString();
             
             for (const dir of this.directions) {
                 const neighbor = dimension.getBlock({ x: block.location.x + dir.x, y: block.location.y, z: block.location.z + dir.z });
                 if (neighbor && neighbor.typeId === "minecraft:air") {
+                    // Also check if neighbor has support below? 
+                    // Real fluids need support to flow 'out' usually, unless it's a source.
+                    // But here, let's just spread to air.
                     system.run(() => {
-                        if (neighbor.isValid()) neighbor.setType(nextStageId);
+                        if (neighbor.isValid) neighbor.setType(nextStageId);
                     });
                 }
             }
         }
         
-        // 4. Update Source Visuals (Only for Source Stage 0)
-        if (currentStage === 0) {
+        // 4. Update Source Visuals (Only for Source Stage 0 or Down Stage -1 acting as source-like?)
+        // The visual properties (x, nx, z, nz) on 'mineral_water' (Stage 0) depend on neighbors.
+        // Down blocks usually don't have these properties or use a different model.
+        // Checking mineral_water_down.json: it HAS these states!
+        
+        if (currentStage === 0 || currentStage === -1) {
             const perms = block.permutation.getAllStates();
             let changed = false;
             
             const checkDir = (dx, dy, dz, stateName) => {
+                 // For _down blocks, do we connect to everything?
+                 // JSON said: neighbor has 'template_full'.
+                 // Source has template_full. Down has template_full (I saw it in the json earlier).
+                 // So they connect to each other.
+                 
                  const neighbor = dimension.getBlock({ x: block.location.x + dx, y: block.location.y + dy, z: block.location.z + dz });
                  const hasTag = neighbor && neighbor.hasTag("template_full");
                  const val = hasTag ? 1 : 0;
-                 if (perms[stateName] !== val) {
+                 if (perms[stateName] !== undefined && perms[stateName] !== val) {
                      perms[stateName] = val;
                      changed = true;
                  }
@@ -191,7 +250,7 @@ class FluidFlowComponent {
             if (changed) {
                 const newPerm = BlockPermutation.resolve(typeId, perms);
                 system.run(() => {
-                    if (block.isValid()) block.setPermutation(newPerm);
+                    if (block.isValid) block.setPermutation(newPerm);
                 });
             }
         }

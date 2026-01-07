@@ -7,7 +7,7 @@
 		"components": {
 			"minecraft:material_instances": {
 				"*": {
-					"texture": "mineral_water_still",
+					"texture": "gaiadimension:mineral_water_still",
 					"render_method": "blend"
 				}
 			},
@@ -15,7 +15,7 @@
 			"tag:template": {},
 			"tag:template2": {},
 			"tag:fluid": {},
-			"minecraft:geometry": "geometry.fluid2",
+			"minecraft:geometry": "geometry.rosa_gd.fluid2",
 			"minecraft:light_dampening": 0.0,
 			"minecraft:selection_box": false,
 			"minecraft:destructible_by_mining": false,

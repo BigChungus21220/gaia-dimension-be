@@ -1,5 +1,5 @@
 {
-	"format_version": "1.21.70",
+	"format_version": "1.21.120",
 	"minecraft:block": {
 		"description": {
 			"identifier": "gaiadimension:pink_agate_pressure_plate",

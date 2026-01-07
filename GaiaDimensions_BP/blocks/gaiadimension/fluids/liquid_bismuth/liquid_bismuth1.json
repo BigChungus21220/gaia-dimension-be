@@ -7,7 +7,7 @@
 		"components": {
 			"minecraft:material_instances": {
 				"*": {
-					"texture": "liquid_bismuth_still",
+					"texture": "gaiadimension:liquid_bismuth_still",
 					"render_method": "blend"
 				}
 			},
@@ -15,7 +15,7 @@
 			"tag:template1": {},
 			"tag:template": {},
 			"tag:fluid": {},
-			"minecraft:geometry": "geometry.fluid1",
+			"minecraft:geometry": "geometry.rosa_gd.fluid1",
 			"minecraft:light_dampening": 0.0,
 			"minecraft:light_emission": 15,
 			"minecraft:selection_box": false,

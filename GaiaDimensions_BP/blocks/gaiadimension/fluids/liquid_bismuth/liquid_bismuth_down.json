@@ -34,7 +34,7 @@
 			"minecraft:loot": "loot_tables/blocks/null.json",
 			"minecraft:material_instances": {
 				"*": {
-					"texture": "liquid_bismuth_flowing",
+					"texture": "gaiadimension:liquid_bismuth_flow",
 					"render_method": "blend"
 				}
 			},
@@ -43,7 +43,7 @@
 			"tag:template_down": {},
 			"tag:fluid": {},
 			"minecraft:geometry": {
-				"identifier": "geometry.fluid",
+				"identifier": "geometry.rosa_gd.fluid",
 				"bone_visibility": {
 					"x": "query.block_state('gaiadimension:x') == 0",
 					"nx": "query.block_state('gaiadimension:nx') == 0",

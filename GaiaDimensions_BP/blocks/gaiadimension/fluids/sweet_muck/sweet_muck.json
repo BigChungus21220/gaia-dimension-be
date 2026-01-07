@@ -34,7 +34,7 @@
 			"minecraft:loot": "loot_tables/blocks/null.json",
 			"minecraft:material_instances": {
 				"*": {
-					"texture": "sweet_muck_still",
+					"texture": "gaiadimension:sweet_muck_still",
 					"render_method": "blend"
 				}
 			},
@@ -42,7 +42,7 @@
 			"tag:template_full": {},
 			"tag:fluid": {},
 			"minecraft:geometry": {
-				"identifier": "geometry.fluid",
+				"identifier": "geometry.rosa_gd.fluid",
 				"bone_visibility": {
 					"x": "query.block_state('gaiadimension:x') == 0",
 					"nx": "query.block_state('gaiadimension:nx') == 0",

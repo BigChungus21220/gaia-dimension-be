@@ -97,7 +97,7 @@ class DimensionEvents {
             // Handle player leaves
             leavingPlayers.forEach((id, index) => {
                 let player = world.getEntity(id);
-                if (player && player.isValid()) {
+                if (player && player.isValid) {
                     delete this.players[id];
                     system.runTimeout(() => {
                         this.triggerEvent('onLeave', player);
