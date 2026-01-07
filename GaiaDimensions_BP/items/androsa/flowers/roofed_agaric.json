@@ -1,22 +1,24 @@
 {
-	"format_version": "1.16.100",
-	"minecraft:item": {
-		"description": {
-			"identifier": "gaia:roofed_agaric_item",
-			"category": "nature"
-		},
-		"components": {
-			"minecraft:icon": {
-				"texture":  "roofed_agaric"
-			},
-			"minecraft:display_name": {
-				"value": "Roofed Agaric" },
-			"minecraft:creative_category": {
-				"parent": "itemGroup.name.flower"
-			},
-			"minecraft:block_placer": {
-				"block": "gaia:roofed_agaric"
-			}
-		}
-	}
+    "format_version": "1.16.100",
+    "minecraft:item": {
+        "description": {
+            "identifier": "gaia:roofed_agaric_item",
+            "category": "nature",
+            "menu_category": {
+                "category": "items",
+                "group": "itemGroup.name.flower"
+            }
+        },
+        "components": {
+            "minecraft:icon": {
+                "texture": "roofed_agaric"
+            },
+            "minecraft:display_name": {
+                "value": "Roofed Agaric"
+            },
+            "minecraft:block_placer": {
+                "block": "gaia:roofed_agaric"
+            }
+        }
+    }
 }

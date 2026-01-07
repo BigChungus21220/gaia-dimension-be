@@ -1,22 +1,24 @@
 {
-	"format_version": "1.16.100",
-	"minecraft:item": {
-		"description": {
-			"identifier": "gaia:spotted_kersei_item",
-			"category": "nature"
-		},
-		"components": {
-			"minecraft:icon": {
-				"texture":  "spotted_kersei"
-			},
-			"minecraft:display_name": {
-				"value": "Spotted Kersei" },
-			"minecraft:creative_category": {
-				"parent": "itemGroup.name.flower"
-			},
-			"minecraft:block_placer": {
-				"block": "gaia:spotted_kersei"
-			}
-		}
-	}
+    "format_version": "1.16.100",
+    "minecraft:item": {
+        "description": {
+            "identifier": "gaia:spotted_kersei_item",
+            "category": "nature",
+            "menu_category": {
+                "category": "items",
+                "group": "itemGroup.name.flower"
+            }
+        },
+        "components": {
+            "minecraft:icon": {
+                "texture": "spotted_kersei"
+            },
+            "minecraft:display_name": {
+                "value": "Spotted Kersei"
+            },
+            "minecraft:block_placer": {
+                "block": "gaia:spotted_kersei"
+            }
+        }
+    }
 }

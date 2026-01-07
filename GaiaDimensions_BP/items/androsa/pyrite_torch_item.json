@@ -3,14 +3,15 @@
     "minecraft:item": {
         "description": {
             "identifier": "gaia:pyrite_torch_item",
-            "category": "items"
+            "category": "items",
+            "menu_category": {
+                "category": "items",
+                "group": "items"
+            }
         },
         "components": {
             "minecraft:block_placer": {
                 "block": "gaia:pyrite_torch"
-            },
-            "minecraft:creative_category": {
-                "parent": "items"
             },
             "minecraft:icon": {
                 "texture": "pyrite_torch"

@@ -3,18 +3,19 @@
     "minecraft:item": {
         "description": {
             "identifier": "forge:arrow_3",
-            "category": "commands"
+            "category": "commands",
+            "menu_category": {
+                "category": "items",
+                "group": "itemGroup.creativity"
+            }
         },
         "components": {
             "minecraft:icon": {
                 "texture": "arrow_3"
             },
-            "minecraft:creative_category": {
-                "parent": "itemGroup.creativity"
-               },
-               "minecraft:display_name": {
+            "minecraft:display_name": {
                 "value": "arrow_ui"
-               },
+            },
             "minecraft:hand_equipped": false
         }
     }

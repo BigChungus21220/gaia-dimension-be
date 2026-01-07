@@ -1,22 +1,24 @@
 {
-	"format_version": "1.16.100",
-	"minecraft:item": {
-		"description": {
-			"identifier": "gaia:stickly_cupsir_item",
-			"category": "nature"
-		},
-		"components": {
-			"minecraft:icon": {
-				"texture":  "stickly_cupsir"
-			},
-			"minecraft:display_name": {
-				"value": "Stick Cupsir" },
-			"minecraft:creative_category": {
-				"parent": "itemGroup.name.flower"
-			},
-			"minecraft:block_placer": {
-				"block": "gaia:stickly_cupsir"
-			}
-		}
-	}
+    "format_version": "1.16.100",
+    "minecraft:item": {
+        "description": {
+            "identifier": "gaia:stickly_cupsir_item",
+            "category": "nature",
+            "menu_category": {
+                "category": "items",
+                "group": "itemGroup.name.flower"
+            }
+        },
+        "components": {
+            "minecraft:icon": {
+                "texture": "stickly_cupsir"
+            },
+            "minecraft:display_name": {
+                "value": "Stick Cupsir"
+            },
+            "minecraft:block_placer": {
+                "block": "gaia:stickly_cupsir"
+            }
+        }
+    }
 }

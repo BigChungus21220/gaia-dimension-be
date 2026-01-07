@@ -3,15 +3,16 @@
     "minecraft:item": {
         "description": {
             "identifier": "forge:flame_4",
-            "category": "commands"
+            "category": "commands",
+            "menu_category": {
+                "category": "items",
+                "group": "itemGroup.creativity"
+            }
         },
         "components": {
             "minecraft:icon": {
                 "texture": "flame_4"
             },
-            "minecraft:creative_category": {
-                "parent": "itemGroup.creativity"
-               },
             "minecraft:display_name": {
                 "value": "flame_ui"
             },
