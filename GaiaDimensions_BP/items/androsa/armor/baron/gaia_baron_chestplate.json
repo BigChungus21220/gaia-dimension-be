@@ -1,5 +1,5 @@
 {
-    "format_version": "1.16.100",
+    "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
             "identifier": "gaia:gaia_baron_chestplate",
@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "gaia_baron_chestplate"
-            },
+            "minecraft:icon": "gaia_baron_chestplate",
             "minecraft:max_stack_size": 1,
             "minecraft:enchantable": {
                 "value": 15,
@@ -27,7 +25,8 @@
             "minecraft:foil": false,
             "minecraft:hand_equipped": false,
             "minecraft:wearable": {
-                "slot": "slot.armor.chest"
+                "slot": "slot.armor.chest",
+                "protection": 8
             },
             "minecraft:repairable": {
                 "repair_items": [
@@ -39,11 +38,15 @@
                     }
                 ]
             },
-            "minecraft:armor": {
-                "protection": 8
-            },
             "minecraft:display_name": {
                 "value": "Tsavorite Tuxedo\n\u00a77So stylish, yet so mysterious"
+            },
+            "minecraft:tags": {
+                "tags": [
+                    "minecraft:transformable_items",
+                    "minecraft:trimmable_armors",
+                    "minecraft:is_armor"
+                ]
             }
         }
     }
