@@ -4,8 +4,7 @@
         "description": {
             "identifier": "gaiadimension:cooked_luggeroth_chop",
             "menu_category": {
-                "category": "equipment",
-                "group": ""
+                "category": "equipment"
             }
         },
         "components": {
@@ -13,12 +12,13 @@
             "minecraft:max_stack_size": 64,
             "minecraft:glint": false,
             "minecraft:stack_by_data": true,
-            "minecraft:use_duration": 32,
+            "minecraft:use_modifiers": 32,
             "minecraft:food": {
                 "nutrition": 8,
-                "saturation_modifier": "good",
+                "saturation_modifier": 0.8,
                 "can_always_eat": false
-            }
+            },
+            "minecraft:icon": "cooked_luggeroth_chop"
         }
     }
 }
