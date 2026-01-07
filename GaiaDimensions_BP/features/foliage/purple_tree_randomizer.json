@@ -1,0 +1,14 @@
+{
+	"format_version": "1.20.20",
+	"minecraft:weighted_random_feature": {
+		"description": {
+			"identifier": "gaiadimension:foliage/purple_tree_randomizer"
+		},
+		"features": [
+			[ "gaiadimension:foliage/purple_tree_0", 1 ],
+			[ "gaiadimension:foliage/purple_tree_1", 1 ],
+			[ "gaiadimension:foliage/purple_tree_2", 1 ],
+			[ "gaiadimension:foliage/purple_tree_3", 1 ]
+		]
+	}
+}

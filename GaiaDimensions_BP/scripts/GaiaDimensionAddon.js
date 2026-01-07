@@ -14,6 +14,7 @@ import { registerGlitteringFireComponent } from "./blocks/glittering_fire.js";
 import { PortalManager } from "./API/lib/PortalLib.js";
 import { initializeDestructionHandlers } from "./systems/destruction_handler.js";
 import { initializeEventManager } from "./systems/event_manager.js";
+import { registerFluidComponent } from "./fluids/fluids.js";
 
 // Initialize systems
 initializeDestructionHandlers();
@@ -32,4 +33,5 @@ system.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
     registerStairsComponent({ blockComponentRegistry });
     registerSandstoneComponent({ blockComponentRegistry });
     registerGlitteringFireComponent();
+    registerFluidComponent({ blockComponentRegistry });
 });

@@ -16,7 +16,7 @@
 				"block": "gaiadimension:glittering_fire"
 			},
 	        "minecraft:tags": {
-				"tags": ["gaia:glint_and_gold"]
+				"tags": ["gaiadimension:glint_and_gold"]
 			}
 		}
 	}

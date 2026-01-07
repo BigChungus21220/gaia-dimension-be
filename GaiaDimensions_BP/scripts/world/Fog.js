@@ -44,7 +44,7 @@ class FogSystem {
      */
     static setFog(player, biome) {
         this.clearFogs(player);
-        player.runCommand("fog @s push gaia:" + biome + "_fog " + biome);
+        player.runCommand("fog @s push gaiadimension:" + biome + "_fog " + biome);
         this.playerFogs[player.id].push(biome);
     }
 }

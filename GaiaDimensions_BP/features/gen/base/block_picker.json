@@ -1,0 +1,26 @@
+{
+    "format_version": "1.20.20",
+    "minecraft:aggregate_feature": {
+        "description": {
+            "identifier": "gaiadimension:gen/base/block_picker"
+        },
+        "features": [
+            "flakey:conditions/condition_2095340167",
+            "gaiadimension:conditions/condition_6911230967",
+            "gaiadimension:conditions/condition_1619986877",
+            "gaiadimension:conditions/condition_5895826112",
+            "gaiadimension:conditions/condition_8654818204",
+            "gaiadimension:conditions/condition_7080430885",
+            "gaiadimension:conditions/condition_1913185435",
+            "gaiadimension:conditions/condition_9076589353",
+            "gaiadimension:conditions/condition_4909566429",
+            "gaiadimension:conditions/condition_4761954783",
+            "gaiadimension:conditions/condition_6971587869",
+            "gaiadimension:conditions/condition_3763385460",
+            "gaiadimension:conditions/condition_8459653235",
+            "gaiadimension:conditions/condition_3008778251",
+            "gaiadimension:conditions/condition_1025489111"
+        ],
+        "early_out": "first_success"
+    }
+}

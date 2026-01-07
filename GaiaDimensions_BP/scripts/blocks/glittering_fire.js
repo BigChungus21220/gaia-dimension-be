@@ -43,4 +43,12 @@ export function registerGlitteringFireComponent() {
             });
         }
     });
+
+    // Handle preventing breaking of fire
+    world.beforeEvents.playerBreakBlock.subscribe((event) => {
+        const { block } = event;
+        if (block.typeId === "gaiadimension:glittering_fire") {
+            event.cancel = true;
+        }
+    });
 }

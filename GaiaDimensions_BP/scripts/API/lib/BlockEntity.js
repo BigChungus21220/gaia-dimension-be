@@ -28,7 +28,7 @@ class BlockEntityManager {
             console.warn("[BlockEntity] Registration failed: machineClass must have a static NAME property.");
             return;
         }
-        const blockId = `bftr:${machineClass.NAME}`;
+        const blockId = `gaiadimension:${machineClass.NAME}`;
         this.registeredMachineClasses.set(blockId, machineClass);
         
         // Dynamically register UI items from this machine to be globally banned from drops
@@ -383,7 +383,7 @@ class BlockEntityManager {
                 try {
                     const dt = currentTick - machine.lastTickTime;
                     if (dt > 0) {
-                        if (machine.block && machine.block.typeId === `bftr:${machine.config.NAME}`) {
+                        if (machine.block && machine.block.typeId === `gaiadimension:${machine.config.NAME}`) {
                             machine.tick(dt);
                             machine.lastTickTime = currentTick;
                         }
@@ -424,12 +424,12 @@ class BlockEntityManager {
                          continue;
                      }
 
-                     if (machine.block && currentBlockTypeId === `bftr:${machine.config.NAME}`) {
+                     if (machine.block && currentBlockTypeId === `gaiadimension:${machine.config.NAME}`) {
                         machine.tick(dt);
                         machine.lastTickTime = currentTick;
                         processedCount++;
                     } else {
-                        // console.warn(`[BlockEntity] Removing ambient machine ${machine.entity.id} at ${machine.locKey}. Block mismatch. Expected: bftr:${machine.config.NAME}, Got: ${currentBlockTypeId}`);
+                        // console.warn(`[BlockEntity] Removing ambient machine ${machine.entity.id} at ${machine.locKey}. Block mismatch. Expected: gaiadimension:${machine.config.NAME}, Got: ${currentBlockTypeId}`);
                         this.removeMachine(machine.entity.id, machine);
                         this.lastProcessedIndex--;
                     }

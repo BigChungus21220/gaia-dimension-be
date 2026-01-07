@@ -4,6 +4,672 @@
   "texture_data": {
     "pink_agate_curtain": {
       "textures": "textures/gaiadimension/androsa/item/pink_agate_curtain"
+    },
+    "agate_arrow": {
+      "textures": "textures/gaiadimension/androsa/item/agate_arrow"
+    },
+    "agate_axe": {
+      "textures": "textures/gaiadimension/androsa/item/agate_axe"
+    },
+    "agate_cup": {
+      "textures": "textures/gaiadimension/androsa/item/agate_cup"
+    },
+    "agate_fabric": {
+      "textures": "textures/gaiadimension/androsa/item/agate_fabric"
+    },
+    "agate_pickaxe": {
+      "textures": "textures/gaiadimension/androsa/item/agate_pickaxe"
+    },
+    "agate_shovel": {
+      "textures": "textures/gaiadimension/androsa/item/agate_shovel"
+    },
+    "agate_stick": {
+      "textures": "textures/gaiadimension/androsa/item/agate_stick"
+    },
+    "agate_sword": {
+      "textures": "textures/gaiadimension/androsa/item/agate_sword"
+    },
+    "albite": {
+      "textures": "textures/gaiadimension/androsa/item/albite"
+    },
+    "albite_boots": {
+      "textures": "textures/gaiadimension/androsa/item/albite_boots"
+    },
+    "albite_chestplate": {
+      "textures": "textures/gaiadimension/androsa/item/albite_chestplate"
+    },
+    "albite_helmet": {
+      "textures": "textures/gaiadimension/androsa/item/albite_helmet"
+    },
+    "albite_legs": {
+      "textures": "textures/gaiadimension/androsa/item/albite_legs"
+    },
+    "apex_predator_boots": {
+      "textures": "textures/gaiadimension/androsa/item/apex_predator_boots"
+    },
+    "apex_predator_hood": {
+      "textures": "textures/gaiadimension/androsa/item/apex_predator_hood"
+    },
+    "apex_predator_jacket": {
+      "textures": "textures/gaiadimension/androsa/item/apex_predator_jacket"
+    },
+    "apex_predator_mace": {
+      "textures": "textures/gaiadimension/androsa/item/apex_predator_mace"
+    },
+    "apex_predator_trousers": {
+      "textures": "textures/gaiadimension/androsa/item/apex_predator_trousers"
+    },
+    "auburn_augment_kit": {
+      "textures": "textures/gaiadimension/androsa/item/auburn_augment_kit"
+    },
+    "auburn_replace_kit": {
+      "textures": "textures/gaiadimension/androsa/item/auburn_replace_kit"
+    },
+    "aura_cluster": {
+      "textures": "textures/gaiadimension/androsa/item/aura_cluster"
+    },
+    "aura_curtain": {
+      "textures": "textures/gaiadimension/androsa/item/aura_curtain"
+    },
+    "aura_residue": {
+      "textures": "textures/gaiadimension/androsa/item/aura_residue"
+    },
+    "beige_augment_kit": {
+      "textures": "textures/gaiadimension/androsa/item/beige_augment_kit"
+    },
+    "beige_replace_kit": {
+      "textures": "textures/gaiadimension/androsa/item/beige_replace_kit"
+    },
+    "benitoite": {
+      "textures": "textures/gaiadimension/androsa/item/benitoite"
+    },
+    "benitoite_axe": {
+      "textures": "textures/gaiadimension/androsa/item/benitoite_axe"
+    },
+    "benitoite_pickaxe": {
+      "textures": "textures/gaiadimension/androsa/item/benitoite_pickaxe"
+    },
+    "benitoite_shovel": {
+      "textures": "textures/gaiadimension/androsa/item/benitoite_shovel"
+    },
+    "benitoite_sword": {
+      "textures": "textures/gaiadimension/androsa/item/benitoite_sword"
+    },
+    "bismuth_crystal": {
+      "textures": "textures/gaiadimension/androsa/item/bismuth_crystal"
+    },
+    "bismuth_residue": {
+      "textures": "textures/gaiadimension/androsa/item/bismuth_residue"
+    },
+    "black_residue": {
+      "textures": "textures/gaiadimension/androsa/item/black_residue"
+    },
+    "blank_kit": {
+      "textures": "textures/gaiadimension/androsa/item/blank_kit"
+    },
+    "blue_agate_curtain": {
+      "textures": "textures/gaiadimension/androsa/item/blue_agate_curtain"
+    },
+    "blue_geode_slice": {
+      "textures": "textures/gaiadimension/androsa/item/blue_geode_slice"
+    },
+    "blue_geode_tea": {
+      "textures": "textures/gaiadimension/androsa/item/blue_geode_tea"
+    },
+    "blue_opal": {
+      "textures": "textures/gaiadimension/androsa/item/blue_opal"
+    },
+    "blue_opal_powder": {
+      "textures": "textures/gaiadimension/androsa/item/blue_opal_powder"
+    },
+    "burnt_agate_curtain": {
+      "textures": "textures/gaiadimension/androsa/item/burnt_agate_curtain"
+    },
+    "carnelian": {
+      "textures": "textures/gaiadimension/androsa/item/carnelian"
+    },
+    "carnelian_axe": {
+      "textures": "textures/gaiadimension/androsa/item/carnelian_axe"
+    },
+    "carnelian_boots": {
+      "textures": "textures/gaiadimension/androsa/item/carnelian_boots"
+    },
+    "carnelian_chestplate": {
+      "textures": "textures/gaiadimension/androsa/item/carnelian_chestplate"
+    },
+    "carnelian_helmet": {
+      "textures": "textures/gaiadimension/androsa/item/carnelian_helmet"
+    },
+    "carnelian_legs": {
+      "textures": "textures/gaiadimension/androsa/item/carnelian_legs"
+    },
+    "carnelian_pickaxe": {
+      "textures": "textures/gaiadimension/androsa/item/carnelian_pickaxe"
+    },
+    "carnelian_shovel": {
+      "textures": "textures/gaiadimension/androsa/item/carnelian_shovel"
+    },
+    "carnelian_sword": {
+      "textures": "textures/gaiadimension/androsa/item/carnelian_sword"
+    },
+    "celestine": {
+      "textures": "textures/gaiadimension/androsa/item/celestine"
+    },
+    "cinnabar": {
+      "textures": "textures/gaiadimension/androsa/item/cinnabar"
+    },
+    "cinnabar_powder": {
+      "textures": "textures/gaiadimension/androsa/item/cinnabar_powder"
+    },
+    "cloudy_shard": {
+      "textures": "textures/gaiadimension/androsa/item/cloudy_shard"
+    },
+    "construct_charm": {
+      "textures": "textures/gaiadimension/androsa/item/construct_charm"
+    },
+    "construct_charm_both": {
+      "textures": "textures/gaiadimension/androsa/item/construct_charm_both"
+    },
+    "construct_charm_mookaite": {
+      "textures": "textures/gaiadimension/androsa/item/construct_charm_mookaite"
+    },
+    "construct_charm_opalite": {
+      "textures": "textures/gaiadimension/androsa/item/construct_charm_opalite"
+    },
+    "cooked_luggeroth_chop": {
+      "textures": "textures/gaiadimension/androsa/item/cooked_luggeroth_chop"
+    },
+    "corrupted_curtain": {
+      "textures": "textures/gaiadimension/androsa/item/corrupted_curtain"
+    },
+    "corrupt_warrior_boots": {
+      "textures": "textures/gaiadimension/androsa/item/corrupt_warrior_boots"
+    },
+    "corrupt_warrior_greaves": {
+      "textures": "textures/gaiadimension/androsa/item/corrupt_warrior_greaves"
+    },
+    "corrupt_warrior_guard": {
+      "textures": "textures/gaiadimension/androsa/item/corrupt_warrior_guard"
+    },
+    "corrupt_warrior_helm": {
+      "textures": "textures/gaiadimension/androsa/item/corrupt_warrior_helm"
+    },
+    "corrupt_warrior_sword": {
+      "textures": "textures/gaiadimension/androsa/item/corrupt_warrior_sword"
+    },
+    "crystallized_lapis_lazuli": {
+      "textures": "textures/gaiadimension/androsa/item/crystallized_lapis_lazuli"
+    },
+    "crystallized_redstone": {
+      "textures": "textures/gaiadimension/androsa/item/crystallized_redstone"
+    },
+    "crystal_shard": {
+      "textures": "textures/gaiadimension/androsa/item/crystal_shard"
+    },
+    "diopside": {
+      "textures": "textures/gaiadimension/androsa/item/diopside"
+    },
+    "diopside_boots": {
+      "textures": "textures/gaiadimension/androsa/item/diopside_boots"
+    },
+    "diopside_chestplate": {
+      "textures": "textures/gaiadimension/androsa/item/diopside_chestplate"
+    },
+    "diopside_helmet": {
+      "textures": "textures/gaiadimension/androsa/item/diopside_helmet"
+    },
+    "diopside_legs": {
+      "textures": "textures/gaiadimension/androsa/item/diopside_legs"
+    },
+    "euclase": {
+      "textures": "textures/gaiadimension/androsa/item/euclase"
+    },
+    "euclase_axe": {
+      "textures": "textures/gaiadimension/androsa/item/euclase_axe"
+    },
+    "euclase_pickaxe": {
+      "textures": "textures/gaiadimension/androsa/item/euclase_pickaxe"
+    },
+    "euclase_shovel": {
+      "textures": "textures/gaiadimension/androsa/item/euclase_shovel"
+    },
+    "euclase_sword": {
+      "textures": "textures/gaiadimension/androsa/item/euclase_sword"
+    },
+    "fine_dust": {
+      "textures": "textures/gaiadimension/androsa/item/fine_dust"
+    },
+    "fine_thread": {
+      "textures": "textures/gaiadimension/androsa/item/fine_thread"
+    },
+    "fire_agate_curtain": {
+      "textures": "textures/gaiadimension/androsa/item/fire_agate_curtain"
+    },
+    "fossilized_curtain": {
+      "textures": "textures/gaiadimension/androsa/item/fossilized_curtain"
+    },
+    "gaia_baron_dagger": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_baron_dagger"
+    },
+    "gaia_baron_mask": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_baron_mask"
+    },
+    "gaia_baron_pants": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_baron_pants"
+    },
+    "gaia_baron_shoes": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_baron_shoes"
+    },
+    "gaia_baron_tuxedo": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_baron_tuxedo"
+    },
+    "gaia_champion_boots": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_champion_boots"
+    },
+    "gaia_champion_greaves": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_champion_greaves"
+    },
+    "gaia_champion_guard": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_champion_guard"
+    },
+    "gaia_champion_helm": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_champion_helm"
+    },
+    "gaia_champion_sword": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_champion_sword"
+    },
+    "gaia_duchess_boots": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_duchess_boots"
+    },
+    "gaia_duchess_greaves": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_duchess_greaves"
+    },
+    "gaia_duchess_guard": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_duchess_guard"
+    },
+    "gaia_duchess_helm": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_duchess_helm"
+    },
+    "gaia_duchess_khopesh": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_duchess_khopesh"
+    },
+    "gaia_duke_blade": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_duke_blade"
+    },
+    "gaia_duke_boots": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_duke_boots"
+    },
+    "gaia_duke_greaves": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_duke_greaves"
+    },
+    "gaia_duke_guard": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_duke_guard"
+    },
+    "gaia_duke_helm": {
+      "textures": "textures/gaiadimension/androsa/item/gaia_duke_helm"
+    },
+    "gemstone_pouch": {
+      "textures": "textures/gaiadimension/androsa/item/gemstone_pouch"
+    },
+    "geode": {
+      "textures": "textures/gaiadimension/androsa/item/geode"
+    },
+    "glint_and_gold": {
+      "textures": "textures/gaiadimension/androsa/item/glint_and_gold"
+    },
+    "golden_curtain": {
+      "textures": "textures/gaiadimension/androsa/item/golden_curtain"
+    },
+    "goldstone": {
+      "textures": "textures/gaiadimension/androsa/item/goldstone"
+    },
+    "goldstone_dust": {
+      "textures": "textures/gaiadimension/androsa/item/goldstone_dust"
+    },
+    "goldstone_residue": {
+      "textures": "textures/gaiadimension/androsa/item/goldstone_residue"
+    },
+    "gold_augment_kit": {
+      "textures": "textures/gaiadimension/androsa/item/gold_augment_kit"
+    },
+    "gold_replace_kit": {
+      "textures": "textures/gaiadimension/androsa/item/gold_replace_kit"
+    },
+    "goshenite": {
+      "textures": "textures/gaiadimension/androsa/item/goshenite"
+    },
+    "goshenite_axe": {
+      "textures": "textures/gaiadimension/androsa/item/goshenite_axe"
+    },
+    "goshenite_boots": {
+      "textures": "textures/gaiadimension/androsa/item/goshenite_boots"
+    },
+    "goshenite_chestplate": {
+      "textures": "textures/gaiadimension/androsa/item/goshenite_chestplate"
+    },
+    "goshenite_helmet": {
+      "textures": "textures/gaiadimension/androsa/item/goshenite_helmet"
+    },
+    "goshenite_legs": {
+      "textures": "textures/gaiadimension/androsa/item/goshenite_legs"
+    },
+    "goshenite_pickaxe": {
+      "textures": "textures/gaiadimension/androsa/item/goshenite_pickaxe"
+    },
+    "goshenite_shovel": {
+      "textures": "textures/gaiadimension/androsa/item/goshenite_shovel"
+    },
+    "goshenite_sword": {
+      "textures": "textures/gaiadimension/androsa/item/goshenite_sword"
+    },
+    "green_agate_curtain": {
+      "textures": "textures/gaiadimension/androsa/item/green_agate_curtain"
+    },
+    "green_geode_ale": {
+      "textures": "textures/gaiadimension/androsa/item/green_geode_ale"
+    },
+    "green_geode_slice": {
+      "textures": "textures/gaiadimension/androsa/item/green_geode_slice"
+    },
+    "green_opal": {
+      "textures": "textures/gaiadimension/androsa/item/green_opal"
+    },
+    "green_opal_powder": {
+      "textures": "textures/gaiadimension/androsa/item/green_opal_powder"
+    },
+    "hematite": {
+      "textures": "textures/gaiadimension/androsa/item/hematite"
+    },
+    "hematite_powder": {
+      "textures": "textures/gaiadimension/androsa/item/hematite_powder"
+    },
+    "hot_dust": {
+      "textures": "textures/gaiadimension/androsa/item/hot_dust"
+    },
+    "ivory_augment_kit": {
+      "textures": "textures/gaiadimension/androsa/item/ivory_augment_kit"
+    },
+    "ivory_replace_kit": {
+      "textures": "textures/gaiadimension/androsa/item/ivory_replace_kit"
+    },
+    "labradorite": {
+      "textures": "textures/gaiadimension/androsa/item/labradorite"
+    },
+    "labradorite_powder": {
+      "textures": "textures/gaiadimension/androsa/item/labradorite_powder"
+    },
+    "large_calamari": {
+      "textures": "textures/gaiadimension/androsa/item/large_calamari"
+    },
+    "large_tentacle": {
+      "textures": "textures/gaiadimension/androsa/item/large_tentacle"
+    },
+    "liquid_aura_bucket": {
+      "textures": "textures/gaiadimension/androsa/item/liquid_aura_bucket"
+    },
+    "liquid_bismuth_bucket": {
+      "textures": "textures/gaiadimension/androsa/item/liquid_bismuth_bucket"
+    },
+    "luggeroth_chop": {
+      "textures": "textures/gaiadimension/androsa/item/luggeroth_chop"
+    },
+    "lurmorus_meat": {
+      "textures": "textures/gaiadimension/androsa/item/lurmorus_meat"
+    },
+    "lurmorus_steak": {
+      "textures": "textures/gaiadimension/androsa/item/lurmorus_steak"
+    },
+    "malachite_guard_baton": {
+      "textures": "textures/gaiadimension/androsa/item/malachite_guard_baton"
+    },
+    "malachite_guard_boots": {
+      "textures": "textures/gaiadimension/androsa/item/malachite_guard_boots"
+    },
+    "malachite_guard_brace": {
+      "textures": "textures/gaiadimension/androsa/item/malachite_guard_brace"
+    },
+    "malachite_guard_gear": {
+      "textures": "textures/gaiadimension/androsa/item/malachite_guard_gear"
+    },
+    "malachite_guard_headgear": {
+      "textures": "textures/gaiadimension/androsa/item/malachite_guard_headgear"
+    },
+    "markuzar_mint": {
+      "textures": "textures/gaiadimension/androsa/item/markuzar_mint"
+    },
+    "mauve_augment_kit": {
+      "textures": "textures/gaiadimension/androsa/item/mauve_augment_kit"
+    },
+    "mauve_replace_kit": {
+      "textures": "textures/gaiadimension/androsa/item/mauve_replace_kit"
+    },
+    "mineral_water_bucket": {
+      "textures": "textures/gaiadimension/androsa/item/mineral_water_bucket"
+    },
+    "mock_malachite": {
+      "textures": "textures/gaiadimension/androsa/item/mock_malachite"
+    },
+    "moonstone": {
+      "textures": "textures/gaiadimension/androsa/item/moonstone"
+    },
+    "moonstone_powder": {
+      "textures": "textures/gaiadimension/androsa/item/moonstone_powder"
+    },
+    "old_bow_pull_0": {
+      "textures": "textures/gaiadimension/androsa/item/old_bow_pull_0"
+    },
+    "old_bow_pull_1": {
+      "textures": "textures/gaiadimension/androsa/item/old_bow_pull_1"
+    },
+    "old_bow_pull_2": {
+      "textures": "textures/gaiadimension/androsa/item/old_bow_pull_2"
+    },
+    "old_bow_standby": {
+      "textures": "textures/gaiadimension/androsa/item/old_bow_standby"
+    },
+    "opalite": {
+      "textures": "textures/gaiadimension/androsa/item/opalite"
+    },
+    "pearly_geode_elixir": {
+      "textures": "textures/gaiadimension/androsa/item/pearly_geode_elixir"
+    },
+    "pink_essence": {
+      "textures": "textures/gaiadimension/androsa/item/pink_essence"
+    },
+    "pink_geode_juice": {
+      "textures": "textures/gaiadimension/androsa/item/pink_geode_juice"
+    },
+    "pink_geode_slice": {
+      "textures": "textures/gaiadimension/androsa/item/pink_geode_slice"
+    },
+    "pink_goo": {
+      "textures": "textures/gaiadimension/androsa/item/pink_goo"
+    },
+    "plagued_tiliey": {
+      "textures": "textures/gaiadimension/androsa/item/plagued_tiliey"
+    },
+    "proustite": {
+      "textures": "textures/gaiadimension/androsa/item/proustite"
+    },
+    "proustite_boots": {
+      "textures": "textures/gaiadimension/androsa/item/proustite_boots"
+    },
+    "proustite_chestplate": {
+      "textures": "textures/gaiadimension/androsa/item/proustite_chestplate"
+    },
+    "proustite_helmet": {
+      "textures": "textures/gaiadimension/androsa/item/proustite_helmet"
+    },
+    "proustite_legs": {
+      "textures": "textures/gaiadimension/androsa/item/proustite_legs"
+    },
+    "purple_agate_curtain": {
+      "textures": "textures/gaiadimension/androsa/item/purple_agate_curtain"
+    },
+    "purple_geode_slice": {
+      "textures": "textures/gaiadimension/androsa/item/purple_geode_slice"
+    },
+    "purple_geode_soda": {
+      "textures": "textures/gaiadimension/androsa/item/purple_geode_soda"
+    },
+    "pyrite": {
+      "textures": "textures/gaiadimension/androsa/item/pyrite"
+    },
+    "pyrite_powder": {
+      "textures": "textures/gaiadimension/androsa/item/pyrite_powder"
+    },
+    "red_opal": {
+      "textures": "textures/gaiadimension/androsa/item/red_opal"
+    },
+    "red_opal_powder": {
+      "textures": "textures/gaiadimension/androsa/item/red_opal_powder"
+    },
+    "repair_kit": {
+      "textures": "textures/gaiadimension/androsa/item/repair_kit"
+    },
+    "scarlet_augment_kit": {
+      "textures": "textures/gaiadimension/androsa/item/scarlet_augment_kit"
+    },
+    "scarlet_replace_kit": {
+      "textures": "textures/gaiadimension/androsa/item/scarlet_replace_kit"
+    },
+    "scaynyx_bucket": {
+      "textures": "textures/gaiadimension/androsa/item/scaynyx_bucket"
+    },
+    "scaynyx_ingot": {
+      "textures": "textures/gaiadimension/androsa/item/scaynyx_ingot"
+    },
+    "shiny_bone": {
+      "textures": "textures/gaiadimension/androsa/item/shiny_bone"
+    },
+    "small_calamari": {
+      "textures": "textures/gaiadimension/androsa/item/small_calamari"
+    },
+    "small_tentacle": {
+      "textures": "textures/gaiadimension/androsa/item/small_tentacle"
+    },
+    "spinel_princess_cloak": {
+      "textures": "textures/gaiadimension/androsa/item/spinel_princess_cloak"
+    },
+    "spinel_princess_cowl": {
+      "textures": "textures/gaiadimension/androsa/item/spinel_princess_cowl"
+    },
+    "spinel_princess_dress": {
+      "textures": "textures/gaiadimension/androsa/item/spinel_princess_dress"
+    },
+    "spinel_princess_flamberge": {
+      "textures": "textures/gaiadimension/androsa/item/spinel_princess_flamberge"
+    },
+    "spinel_princess_heels": {
+      "textures": "textures/gaiadimension/androsa/item/spinel_princess_heels"
+    },
+    "stibnite": {
+      "textures": "textures/gaiadimension/androsa/item/stibnite"
+    },
+    "stibnite_axe": {
+      "textures": "textures/gaiadimension/androsa/item/stibnite_axe"
+    },
+    "stibnite_pickaxe": {
+      "textures": "textures/gaiadimension/androsa/item/stibnite_pickaxe"
+    },
+    "stibnite_shovel": {
+      "textures": "textures/gaiadimension/androsa/item/stibnite_shovel"
+    },
+    "stibnite_sword": {
+      "textures": "textures/gaiadimension/androsa/item/stibnite_sword"
+    },
+    "sturdy_pebble": {
+      "textures": "textures/gaiadimension/androsa/item/sturdy_pebble"
+    },
+    "sugar_cluster": {
+      "textures": "textures/gaiadimension/androsa/item/sugar_cluster"
+    },
+    "sugar_crystals": {
+      "textures": "textures/gaiadimension/androsa/item/sugar_crystals"
+    },
+    "sugilite": {
+      "textures": "textures/gaiadimension/androsa/item/sugilite"
+    },
+    "sugilite_axe": {
+      "textures": "textures/gaiadimension/androsa/item/sugilite_axe"
+    },
+    "sugilite_boots": {
+      "textures": "textures/gaiadimension/androsa/item/sugilite_boots"
+    },
+    "sugilite_chestplate": {
+      "textures": "textures/gaiadimension/androsa/item/sugilite_chestplate"
+    },
+    "sugilite_helmet": {
+      "textures": "textures/gaiadimension/androsa/item/sugilite_helmet"
+    },
+    "sugilite_legs": {
+      "textures": "textures/gaiadimension/androsa/item/sugilite_legs"
+    },
+    "sugilite_pickaxe": {
+      "textures": "textures/gaiadimension/androsa/item/sugilite_pickaxe"
+    },
+    "sugilite_shovel": {
+      "textures": "textures/gaiadimension/androsa/item/sugilite_shovel"
+    },
+    "sugilite_sword": {
+      "textures": "textures/gaiadimension/androsa/item/sugilite_sword"
+    },
+    "superhot_magma_bucket": {
+      "textures": "textures/gaiadimension/androsa/item/superhot_magma_bucket"
+    },
+    "sweet_muckball": {
+      "textures": "textures/gaiadimension/androsa/item/sweet_muckball"
+    },
+    "sweet_muck_bucket": {
+      "textures": "textures/gaiadimension/androsa/item/sweet_muck_bucket"
+    },
+    "tektite": {
+      "textures": "textures/gaiadimension/androsa/item/tektite"
+    },
+    "tilibl": {
+      "textures": "textures/gaiadimension/androsa/item/tilibl"
+    },
+    "tiligr": {
+      "textures": "textures/gaiadimension/androsa/item/tiligr"
+    },
+    "tilimy": {
+      "textures": "textures/gaiadimension/androsa/item/tilimy"
+    },
+    "tiliol": {
+      "textures": "textures/gaiadimension/androsa/item/tiliol"
+    },
+    "tiliou": {
+      "textures": "textures/gaiadimension/androsa/item/tiliou"
+    },
+    "tilipi": {
+      "textures": "textures/gaiadimension/androsa/item/tilipi"
+    },
+    "tilipu": {
+      "textures": "textures/gaiadimension/androsa/item/tilipu"
+    },
+    "twined_thread": {
+      "textures": "textures/gaiadimension/androsa/item/twined_thread"
+    },
+    "white_opal": {
+      "textures": "textures/gaiadimension/androsa/item/white_opal"
+    },
+    "white_opal_grit": {
+      "textures": "textures/gaiadimension/androsa/item/white_opal_grit"
+    },
+    "zircon_prince_boots": {
+      "textures": "textures/gaiadimension/androsa/item/zircon_prince_boots"
+    },
+    "zircon_prince_chestpiece": {
+      "textures": "textures/gaiadimension/androsa/item/zircon_prince_chestpiece"
+    },
+    "zircon_prince_crown": {
+      "textures": "textures/gaiadimension/androsa/item/zircon_prince_crown"
+    },
+    "zircon_prince_gear": {
+      "textures": "textures/gaiadimension/androsa/item/zircon_prince_gear"
+    },
+    "zircon_prince_razor": {
+      "textures": "textures/gaiadimension/androsa/item/zircon_prince_razor"
     }
   }
 }

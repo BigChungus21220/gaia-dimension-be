@@ -1,0 +1,42 @@
+{
+	"format_version": "1.20.20",
+	"minecraft:structure_template_feature": {
+		"description": {
+			"identifier": "gaiadimension:copal_tower_feature"
+		},
+		"structure_name": "mystructure:copal_tower",
+		"adjustment_radius": 4,
+		"facing_direction": "south",
+          "constraints": {
+			"grounded": {},
+	        "unburied": {},
+			"block_intersection": {
+				"block_whitelist": [
+	  "gaiadimension:orange_glitter_grass",
+      "gaiadimension:blue_glitter_grass",
+      "gaiadimension:green_glitter_grass",
+      "gaiadimension:charred_grass",
+      "gaiadimension:pale_green_glitter_grass",
+      "gaiadimension:purple_glitter_grass",
+      "gaiadimension:orange_glitter_grass",
+      "gaiadimension:soft_grass",
+      "gaiadimension:murky_grass",
+      "gaiadimension:corrupt_grass",
+      "gaiadimension:pink_glitter_grass",
+      "gaiadimension:peach_glitter_grass",
+      "gaiadimension:orange_glitter_grass",
+      "gaiadimension:light_soil",
+      "gaiadimension:heavy_soil",
+      "gaiadimension:cinder",
+      "gaiadimension:corrupt_soil",
+      "gaiadimension:boggy_soil",
+      "gaiadimension:light_soil"
+				]
+			}
+		}
+
+			
+	
+	}			
+}
+	

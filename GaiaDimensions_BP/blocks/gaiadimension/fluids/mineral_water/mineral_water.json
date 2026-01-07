@@ -1,0 +1,72 @@
+{
+	"format_version": "1.21.70",
+	"minecraft:block": {
+		"description": {
+			"identifier": "gaiadimension:mineral_water",
+			"states": {
+				"gaiadimension:x": [
+					0,
+					1
+				],
+				"gaiadimension:nx": [
+					0,
+					1
+				],
+				"gaiadimension:z": [
+					0,
+					1
+				],
+				"gaiadimension:nz": [
+					0,
+					1
+				],
+				"gaiadimension:top": [
+					0,
+					1
+				],
+				"gaiadimension:bottom": [
+					0,
+					1
+				]
+			}
+		},
+		"components": {
+			"minecraft:loot": "loot_tables/blocks/null.json",
+			"minecraft:material_instances": {
+				"*": {
+					"texture": "mineral_water_still",
+					"render_method": "blend"
+				}
+			},
+			"tag:template": {},
+			"tag:template_full": {},
+			"tag:fluid": {},
+			"minecraft:geometry": {
+				"identifier": "geometry.fluid",
+				"bone_visibility": {
+					"x": "query.block_state('gaiadimension:x') == 0",
+					"nx": "query.block_state('gaiadimension:nx') == 0",
+					"z": "query.block_state('gaiadimension:z') == 0",
+					"nz": "query.block_state('gaiadimension:nz') == 0",
+					"top": "query.block_state('gaiadimension:top') == 0",
+					"bottom": "query.block_state('gaiadimension:bottom') == 0"
+				}
+			},
+			"minecraft:light_dampening": 0.0,
+			"minecraft:destructible_by_mining": false,
+			"minecraft:collision_box": false,
+			"minecraft:destructible_by_explosion": false,
+			"minecraft:flammable": false,
+			"minecraft:custom_components": [
+				"gaiadimension:fluid_flow"
+			],
+			"minecraft:tick": {
+				"interval_range": [
+					4,
+					4
+				],
+				"looping": true
+			}
+		}
+	}
+}

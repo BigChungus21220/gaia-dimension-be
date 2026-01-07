@@ -33,7 +33,7 @@ class TimerManager {
         if (!timerConfig) return;
         
         for (const timerName in timerConfig) {
-            const scoreboardId = `bftr:${timerName}`;
+            const scoreboardId = `gaiadimension:${timerName}`;
             let objective = world.scoreboard.getObjective(scoreboardId);
             if (!objective) {
                 objective = world.scoreboard.addObjective(scoreboardId, timerName);
@@ -533,7 +533,7 @@ export class Machine {
         for (let slot = 0; slot < this.inventory.size; slot++) {
             if (userSlots.includes(slot)) continue;
 
-            let desiredId = 'bftr:placeholder_invisible';
+            let desiredId = 'gaiadimension:placeholder_invisible';
             
             if (uiProfile.staticUI && uiProfile.staticUI[slot]) {
                 desiredId = uiProfile.staticUI[slot];
@@ -628,7 +628,7 @@ export class Machine {
         const uiProfile = this.getCurrentUiProfile();
         if (!uiProfile) return false;
 
-        const bannedItems = new Set(['bftr:placeholder_invisible']);
+        const bannedItems = new Set(['gaiadimension:placeholder_invisible']);
         
         if (uiProfile.staticUI) {
             Object.values(uiProfile.staticUI).forEach(id => bannedItems.add(id));
@@ -688,7 +688,7 @@ export class Machine {
      * Retrieves the current UI configuration based on block state.
      */
     getCurrentUiProfile() {
-        const pocketUi = this.block.permutation.getState('bftr:pocket_ui');
+        const pocketUi = this.block.permutation.getState('gaiadimension:pocket_ui');
         return this.config.UI_CONFIG[pocketUi ? 'pocketProfile' : 'classicProfile'];
     }
 
@@ -896,7 +896,7 @@ export class Machine {
     static processUiConfig(config) {
         if (!config) return;
         
-        BANNED_ITEMS.add("bftr:placeholder_invisible");
+        BANNED_ITEMS.add("gaiadimension:placeholder_invisible");
 
         const profiles = [config.classicProfile, config.pocketProfile];
         for (const profile of profiles) {
@@ -915,7 +915,7 @@ export class Machine {
 }
 
 // --- Global UI Item Protection ---
-const BANNED_ITEMS = new Set(["bftr:placeholder_invisible"]);
+const BANNED_ITEMS = new Set(["gaiadimension:placeholder_invisible"]);
 const BANNED_PREFIXES = new Set();
 
 world.afterEvents.entitySpawn.subscribe((event) => {

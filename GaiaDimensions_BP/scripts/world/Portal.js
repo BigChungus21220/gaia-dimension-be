@@ -148,16 +148,16 @@ class Portal {
       
                 if (block !== undefined) {
                     if (is_edge) {
-                      block.setType('gaia:keystone_block')
+                      block.setType('gaiadimension:keystone_block')
                     } else {
-                      block.setPermutation(BlockPermutation.resolve("gaia:gaia_portal", { "gaia:x_oriented": x_oriented }));
+                      block.setPermutation(BlockPermutation.resolve("gaiadimension:gaia_portal", { "gaiadimension:x_oriented": x_oriented }));
                     }
                 }
             }
         }
       }
     static breakPortal(block) {
-        const adjacent = this.getAdjacentBlocks(block, 'gaia:gaia_portal');
+        const adjacent = this.getAdjacentBlocks(block, 'gaiadimension:gaia_portal');
         adjacent.forEach(b => {
             this.LinkPositions.forEach(position => {
                 const link = this.getLink(position, block.location);
@@ -176,7 +176,7 @@ class Portal {
                 let blockpos = Vec3.add(corner, { x: x_oriented ? 0 : x, y, z: x_oriented ? x : 0 });
                 let blocktype = dimension.getBlock(blockpos).typeId;
                 let is_edge = x === 0 || y === 0 || x === 3 || y === 4;
-                if (is_edge && blocktype !== "gaia:keystone_block") {
+                if (is_edge && blocktype !== "gaiadimension:keystone_block") {
                     isValid = false;
                     break;
                 }
