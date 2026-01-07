@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:proustite_helmet",
+            "identifier": "gaiadimension:proustite_helmet",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.helmet"
@@ -32,8 +32,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:proustite",
-                            "gaia:proustite_helmet"
+                            "gaiadimension:proustite",
+                            "gaiadimension:proustite_helmet"
                         ],
                         "repair_amount": 316
                     }

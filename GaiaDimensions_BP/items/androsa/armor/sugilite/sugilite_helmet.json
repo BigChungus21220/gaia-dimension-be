@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:sugilite_helmet",
+            "identifier": "gaiadimension:sugilite_helmet",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.helmet"
@@ -32,8 +32,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:sugilite",
-                            "gaia:sugilite_helmet"
+                            "gaiadimension:sugilite",
+                            "gaiadimension:sugilite_helmet"
                         ],
                         "repair_amount": 212
                     }

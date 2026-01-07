@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:spinel_princess_chestplate",
+            "identifier": "gaiadimension:spinel_princess_chestplate",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.chestplate"
@@ -32,7 +32,7 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:spinel_princess_chestplate"
+                            "gaiadimension:spinel_princess_chestplate"
                         ],
                         "repair_amount": 1576
                     }

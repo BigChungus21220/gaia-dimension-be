@@ -2,7 +2,7 @@
     "format_version": "1.16.100",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:agate_pickaxe",
+            "identifier": "gaiadimension:agate_pickaxe",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.pickaxe"
@@ -27,7 +27,7 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:agate_pickaxe"
+                            "gaiadimension:agate_pickaxe"
                         ],
                         "repair_amount": "context.other->query.remaining_durability + 0.2 * context.other->query.max_durability"
                     }
@@ -44,467 +44,467 @@
                 "use_efficiency": true,
                 "destroy_speeds": [
                     {
-                        "block": "gaia:pillar1_stairs",
+                        "block": "gaiadimension:pillar1_stairs",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:pillar1",
+                        "block": "gaiadimension:pillar1",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:pulsing_malachite_planks",
+                        "block": "gaiadimension:pulsing_malachite_planks",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:pulsing_malachite_tile_stair",
+                        "block": "gaiadimension:pulsing_malachite_tile_stair",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:green_stairs",
+                        "block": "gaiadimension:green_stairs",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:brick3_stairs",
+                        "block": "gaiadimension:brick3_stairs",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:brick3",
+                        "block": "gaiadimension:brick3",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:brick3_slab",
+                        "block": "gaiadimension:brick3_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:green_brick3",
+                        "block": "gaiadimension:green_brick3",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:brick1",
+                        "block": "gaiadimension:brick1",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:brick1_slab",
+                        "block": "gaiadimension:brick1_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:brick1_stairs",
+                        "block": "gaiadimension:brick1_stairs",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:cracked_malachite_brick",
+                        "block": "gaiadimension:cracked_malachite_brick",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:cracked_malachite_brick_slab",
+                        "block": "gaiadimension:cracked_malachite_brick_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:cracked_malachite_brick_stair",
+                        "block": "gaiadimension:cracked_malachite_brick_stair",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:brick2_slab",
+                        "block": "gaiadimension:brick2_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:brick2_stairs",
+                        "block": "gaiadimension:brick2_stairs",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:sparkling_rock",
+                        "block": "gaiadimension:sparkling_rock",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:green_planks_stairs",
+                        "block": "gaiadimension:green_planks_stairs",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:frail_glitter_block",
+                        "block": "gaiadimension:frail_glitter_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:thick_glitter_block",
+                        "block": "gaiadimension:thick_glitter_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:goldstone_block",
+                        "block": "gaiadimension:goldstone_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:gummy_glitter_block",
+                        "block": "gaiadimension:gummy_glitter_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:pink_sludge_block",
+                        "block": "gaiadimension:pink_sludge_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:proustite_block",
+                        "block": "gaiadimension:proustite_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:geyser_vent",
+                        "block": "gaiadimension:geyser_vent",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:leucite_block",
+                        "block": "gaiadimension:leucite_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:labradorite_block",
+                        "block": "gaiadimension:labradorite_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:labradorite_ore",
+                        "block": "gaiadimension:labradorite_ore",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:moonstone_ore",
+                        "block": "gaiadimension:moonstone_ore",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:moonstone_block",
+                        "block": "gaiadimension:moonstone_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:pebbles",
+                        "block": "gaiadimension:pebbles",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:speckled_rock",
+                        "block": "gaiadimension:speckled_rock",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:sugilite_block",
+                        "block": "gaiadimension:sugilite_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:tektite_ore",
+                        "block": "gaiadimension:tektite_ore",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:tektite_block",
+                        "block": "gaiadimension:tektite_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:gaia_brick_stair",
+                        "block": "gaiadimension:gaia_brick_stair",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:gaia_brick",
+                        "block": "gaiadimension:gaia_brick",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:gaia_brick_slab",
+                        "block": "gaiadimension:gaia_brick_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:crusted_gaia_brick_stair",
+                        "block": "gaiadimension:crusted_gaia_brick_stair",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:crusted_gaia_brick",
+                        "block": "gaiadimension:crusted_gaia_brick",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:crusted_gaia_brick_slab",
+                        "block": "gaiadimension:crusted_gaia_brick_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:crusted_malachite_brick_stair",
+                        "block": "gaiadimension:crusted_malachite_brick_stair",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:crusted_malachite_brick_slab",
+                        "block": "gaiadimension:crusted_malachite_brick_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:crusted_amethyst_brick_stair",
+                        "block": "gaiadimension:crusted_amethyst_brick_stair",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:crusted_amethyst_brick_slab",
+                        "block": "gaiadimension:crusted_amethyst_brick_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:crusted_amethyst_bricks",
+                        "block": "gaiadimension:crusted_amethyst_bricks",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:crusted_copal_bricks",
+                        "block": "gaiadimension:crusted_copal_bricks",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:crusted_copal_brick_slab",
+                        "block": "gaiadimension:crusted_copal_brick_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:crusted_copal_brick_stair",
+                        "block": "gaiadimension:crusted_copal_brick_stair",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:crusted_malachite_bricks",
+                        "block": "gaiadimension:crusted_malachite_bricks",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:crusted_jade_bricks",
+                        "block": "gaiadimension:crusted_jade_bricks",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:crusted_jade_brick_slab",
+                        "block": "gaiadimension:crusted_jade_brick_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:crusted_jade_brick_stair",
+                        "block": "gaiadimension:crusted_jade_brick_stair",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:cracked_gaia_stone_brick_slab",
+                        "block": "gaiadimension:cracked_gaia_stone_brick_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:crusted_jet_bricks",
+                        "block": "gaiadimension:crusted_jet_bricks",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:crusted_jet_brick_slab",
+                        "block": "gaiadimension:crusted_jet_brick_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:crusted_jet_brick_stair",
+                        "block": "gaiadimension:crusted_jet_brick_stair",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:cracked_jet_brick",
+                        "block": "gaiadimension:cracked_jet_brick",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:cracked_jet_brick_slab",
+                        "block": "gaiadimension:cracked_jet_brick_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:cracked_jet_brick_stair",
+                        "block": "gaiadimension:cracked_jet_brick_stair",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:cracked_copal_bricks",
+                        "block": "gaiadimension:cracked_copal_bricks",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:cracked_copal_brick_slab",
+                        "block": "gaiadimension:cracked_copal_brick_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:cracked_copal_brick_stair",
+                        "block": "gaiadimension:cracked_copal_brick_stair",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:copal_brick_slab",
+                        "block": "gaiadimension:copal_brick_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:copal_brick_stair",
+                        "block": "gaiadimension:copal_brick_stair",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:green_opal_block",
+                        "block": "gaiadimension:green_opal_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:blue_opal_block",
+                        "block": "gaiadimension:blue_opal_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:white_opal_block",
+                        "block": "gaiadimension:white_opal_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:red_opal_block",
+                        "block": "gaiadimension:red_opal_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:green_opal_ore",
+                        "block": "gaiadimension:green_opal_ore",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:white_opal_ore",
+                        "block": "gaiadimension:white_opal_ore",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:red_opal_ore",
+                        "block": "gaiadimension:red_opal_ore",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:blue_opal_ore",
+                        "block": "gaiadimension:blue_opal_ore",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:pyrite_ore",
+                        "block": "gaiadimension:pyrite_ore",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:jet_brick",
+                        "block": "gaiadimension:jet_brick",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:jet_brick_slab",
+                        "block": "gaiadimension:jet_brick_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:jet_brick_stair",
+                        "block": "gaiadimension:jet_brick_stair",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:raw_jet",
+                        "block": "gaiadimension:raw_jet",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:raw_amethyst",
+                        "block": "gaiadimension:raw_amethyst",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:sugilite_ore",
+                        "block": "gaiadimension:sugilite_ore",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:ixiolite_block",
+                        "block": "gaiadimension:ixiolite_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:hematite_ore",
+                        "block": "gaiadimension:hematite_ore",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:hematite_block",
+                        "block": "gaiadimension:hematite_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:cracked_jade_brick_stair",
+                        "block": "gaiadimension:cracked_jade_brick_stair",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:jade_brick_stair",
+                        "block": "gaiadimension:jade_brick_stair",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:jade_brick_slab",
+                        "block": "gaiadimension:jade_brick_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:cracked_jade_brick_slab",
+                        "block": "gaiadimension:cracked_jade_brick_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:pyrite_block",
+                        "block": "gaiadimension:pyrite_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:precious_rock",
+                        "block": "gaiadimension:precious_rock",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:diopside_block",
+                        "block": "gaiadimension:diopside_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:amethyst_brick",
+                        "block": "gaiadimension:amethyst_brick",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:amethyst_slab",
+                        "block": "gaiadimension:amethyst_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:amethyst_stair",
+                        "block": "gaiadimension:amethyst_stair",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:cracked_gaia_stone_brick_stairs",
+                        "block": "gaiadimension:cracked_gaia_stone_brick_stairs",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:gaia_stone_stair",
+                        "block": "gaiadimension:gaia_stone_stair",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:gaia_stone_slab",
+                        "block": "gaiadimension:gaia_stone_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:gaia_cobblestone_stair",
+                        "block": "gaiadimension:gaia_cobblestone_stair",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:gaia_stone",
+                        "block": "gaiadimension:gaia_stone",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:brick2",
+                        "block": "gaiadimension:brick2",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:cloudy_glass",
+                        "block": "gaiadimension:cloudy_glass",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:gaia_cobblestone_slab",
+                        "block": "gaiadimension:gaia_cobblestone_slab",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:cracked_jade_brick",
+                        "block": "gaiadimension:cracked_jade_brick",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:raw_jade",
+                        "block": "gaiadimension:raw_jade",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:gaia_cobblestone",
+                        "block": "gaiadimension:gaia_cobblestone",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:cracked_gaia_stone_brick",
+                        "block": "gaiadimension:cracked_gaia_stone_brick",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:jade_bricks",
+                        "block": "gaiadimension:jade_bricks",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:carnelian_block",
+                        "block": "gaiadimension:carnelian_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:raw_copal",
+                        "block": "gaiadimension:raw_copal",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:copal_bricks",
+                        "block": "gaiadimension:copal_bricks",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:volcanic_rock",
+                        "block": "gaiadimension:volcanic_rock",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:bolstered_brick",
+                        "block": "gaiadimension:bolstered_brick",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:bismuth_block",
+                        "block": "gaiadimension:bismuth_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:benitoite_block",
+                        "block": "gaiadimension:benitoite_block",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:block_of_aura_crystal",
+                        "block": "gaiadimension:block_of_aura_crystal",
                         "speed": 2
                     },
                     {
-                        "block": "gaia:active_rock",
+                        "block": "gaiadimension:active_rock",
                         "speed": 2
                     }
                 ]

@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:carnelian_leggings",
+            "identifier": "gaiadimension:carnelian_leggings",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.leggings"
@@ -32,8 +32,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:carnelian",
-                            "gaia:carnelian_leggings"
+                            "gaiadimension:carnelian",
+                            "gaiadimension:carnelian_leggings"
                         ],
                         "repair_amount": 720
                     }

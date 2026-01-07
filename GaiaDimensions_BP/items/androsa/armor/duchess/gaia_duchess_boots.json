@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:gaia_duchess_boots",
+            "identifier": "gaiadimension:gaia_duchess_boots",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.boots"
@@ -32,7 +32,7 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:gaia_duchess_boots"
+                            "gaiadimension:gaia_duchess_boots"
                         ],
                         "repair_amount": 2047
                     }

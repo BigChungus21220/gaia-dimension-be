@@ -2,7 +2,7 @@
   "format_version": "1.8.0",
   "minecraft:attachable": {
     "description": {
-      "identifier": "gaia:chalcedony_chestplate",
+      "identifier": "gaiadimension:chalcedony_chestplate",
       "materials": {
         "default": "armor",
         "enchanted": "armor_enchanted"

@@ -2,7 +2,7 @@
     "format_version": "1.16.100",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:apex_predator_mace",
+            "identifier": "gaiadimension:apex_predator_mace",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.sword"
@@ -27,7 +27,7 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:apex_predator_mace"
+                            "gaiadimension:apex_predator_mace"
                         ],
                         "repair_amount": "context.other->query.remaining_durability + 0.2 * context.other->query.max_durability"
                     }

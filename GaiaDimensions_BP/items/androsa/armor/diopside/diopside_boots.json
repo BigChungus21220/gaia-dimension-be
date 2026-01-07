@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:diopside_boots",
+            "identifier": "gaiadimension:diopside_boots",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.boots"
@@ -32,8 +32,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:diopside",
-                            "gaia:diopside_boots"
+                            "gaiadimension:diopside",
+                            "gaiadimension:diopside_boots"
                         ],
                         "repair_amount": 575
                     }

@@ -2,7 +2,7 @@
     "format_version": "1.16.100",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:gem_pouch",
+            "identifier": "gaiadimension:gem_pouch",
             "menu_category": {
                 "category": "equipment",
                 "group": ""

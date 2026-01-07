@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:lurmorus_meat",
+            "identifier": "gaiadimension:lurmorus_meat",
             "menu_category": {
                 "category": "equipment",
                 "group": ""

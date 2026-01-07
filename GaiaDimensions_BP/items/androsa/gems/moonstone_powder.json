@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:moonstone_powder",
+            "identifier": "gaiadimension:moonstone_powder",
             "menu_category": {
                 "category": "items",
                 "group": ""

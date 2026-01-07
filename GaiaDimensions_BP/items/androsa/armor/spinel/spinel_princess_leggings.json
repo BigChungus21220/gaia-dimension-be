@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:spinel_princess_leggings",
+            "identifier": "gaiadimension:spinel_princess_leggings",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.leggings"
@@ -32,7 +32,7 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:spinel_princess_leggings"
+                            "gaiadimension:spinel_princess_leggings"
                         ],
                         "repair_amount": 1477
                     }

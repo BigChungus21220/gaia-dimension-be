@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:proustite",
+            "identifier": "gaiadimension:proustite",
             "menu_category": {
                 "category": "items",
                 "group": ""

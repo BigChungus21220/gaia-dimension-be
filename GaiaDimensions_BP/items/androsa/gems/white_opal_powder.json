@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:white_opal_powder",
+            "identifier": "gaiadimension:white_opal_powder",
             "menu_category": {
                 "category": "items",
                 "group": ""

@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:diopside_helmet",
+            "identifier": "gaiadimension:diopside_helmet",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.helmet"
@@ -32,8 +32,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:diopside",
-                            "gaia:diopside_helmet"
+                            "gaiadimension:diopside",
+                            "gaiadimension:diopside_helmet"
                         ],
                         "repair_amount": 487
                     }

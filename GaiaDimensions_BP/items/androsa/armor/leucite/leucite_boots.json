@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:leucite_boots",
+            "identifier": "gaiadimension:leucite_boots",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.boots"
@@ -32,8 +32,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:leucite",
-                            "gaia:leucite_boots"
+                            "gaiadimension:leucite",
+                            "gaiadimension:leucite_boots"
                         ],
                         "repair_amount": 325
                     }

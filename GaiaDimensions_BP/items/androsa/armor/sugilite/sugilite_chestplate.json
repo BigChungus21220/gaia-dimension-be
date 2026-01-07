@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:sugilite_chestplate",
+            "identifier": "gaiadimension:sugilite_chestplate",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.chestplate"
@@ -32,8 +32,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:sugilite",
-                            "gaia:sugilite_chestplate"
+                            "gaiadimension:sugilite",
+                            "gaiadimension:sugilite_chestplate"
                         ],
                         "repair_amount": 308
                     }

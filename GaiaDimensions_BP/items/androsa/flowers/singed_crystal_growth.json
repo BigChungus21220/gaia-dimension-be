@@ -2,7 +2,7 @@
     "format_version": "1.16.100",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:singed_crystal_growth_item",
+            "identifier": "gaiadimension:singed_crystal_growth_item",
             "menu_category": {
                 "category": "nature",
                 "group": "itemGroup.name.flower"
@@ -16,7 +16,7 @@
                 "value": "Singed Crystal Growth"
             },
             "minecraft:block_placer": {
-                "block": "gaia:singed_crystal_growth"
+                "block": "gaiadimension:singed_crystal_growth"
             }
         }
     }

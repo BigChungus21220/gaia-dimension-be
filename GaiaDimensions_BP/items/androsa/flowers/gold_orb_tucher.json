@@ -2,7 +2,7 @@
     "format_version": "1.16.100",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:gold_orb_tucher_item",
+            "identifier": "gaiadimension:gold_orb_tucher_item",
             "menu_category": {
                 "category": "nature",
                 "group": "itemGroup.name.flower"
@@ -16,7 +16,7 @@
                 "value": "Gold Orb Tucher"
             },
             "minecraft:block_placer": {
-                "block": "gaia:gold_orb_tucher"
+                "block": "gaiadimension:gold_orb_tucher"
             }
         }
     }

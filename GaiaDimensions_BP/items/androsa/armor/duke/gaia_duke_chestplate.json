@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:gaia_duke_chestplate",
+            "identifier": "gaiadimension:gaia_duke_chestplate",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.chestplate"
@@ -32,7 +32,7 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:gaia_duke_chestplate"
+                            "gaiadimension:gaia_duke_chestplate"
                         ],
                         "repair_amount": 3152
                     }

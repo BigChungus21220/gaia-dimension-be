@@ -2,7 +2,7 @@
     "format_version": "1.16.100",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:ixiolite_shovel",
+            "identifier": "gaiadimension:ixiolite_shovel",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.shovel"
@@ -27,8 +27,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:ixiolite",
-                            "gaia:ixiolite_shovel"
+                            "gaiadimension:ixiolite",
+                            "gaiadimension:ixiolite_shovel"
                         ],
                         "repair_amount": "context.other->query.remaining_durability + 0.2 * context.other->query.max_durability"
                     }
@@ -45,55 +45,55 @@
                 "use_efficiency": true,
                 "destroy_speeds": [
                     {
-                        "block": "gaia:green_soft_grass",
+                        "block": "gaiadimension:green_soft_grass",
                         "speed": 3
                     },
                     {
-                        "block": "gaia:soft_grass",
+                        "block": "gaiadimension:soft_grass",
                         "speed": 3
                     },
                     {
-                        "block": "gaia:purple_glitter_grass",
+                        "block": "gaiadimension:purple_glitter_grass",
                         "speed": 3
                     },
                     {
-                        "block": "gaia:corrupted_grass",
+                        "block": "gaiadimension:corrupted_grass",
                         "speed": 3
                     },
                     {
-                        "block": "gaia:murky_grass",
+                        "block": "gaiadimension:murky_grass",
                         "speed": 3
                     },
                     {
-                        "block": "gaia:corrupted_soil",
+                        "block": "gaiadimension:corrupted_soil",
                         "speed": 3
                     },
                     {
-                        "block": "gaia:light_soil",
+                        "block": "gaiadimension:light_soil",
                         "speed": 3
                     },
                     {
-                        "block": "gaia:boggy_soil",
+                        "block": "gaiadimension:boggy_soil",
                         "speed": 3
                     },
                     {
-                        "block": "gaia:green_glitter_grass",
+                        "block": "gaiadimension:green_glitter_grass",
                         "speed": 3
                     },
                     {
-                        "block": "gaia:yellow_glitter_grass",
+                        "block": "gaiadimension:yellow_glitter_grass",
                         "speed": 3
                     },
                     {
-                        "block": "gaia:blue_glitter_grass",
+                        "block": "gaiadimension:blue_glitter_grass",
                         "speed": 3
                     },
                     {
-                        "block": "gaia:pink_glitter_grass",
+                        "block": "gaiadimension:pink_glitter_grass",
                         "speed": 3
                     },
                     {
-                        "block": "gaia:heavy_soil",
+                        "block": "gaiadimension:heavy_soil",
                         "speed": 3
                     }
                 ]

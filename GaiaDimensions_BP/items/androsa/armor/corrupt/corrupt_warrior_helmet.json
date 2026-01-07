@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:corrupt_warrior_helmet",
+            "identifier": "gaiadimension:corrupt_warrior_helmet",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.helmet"
@@ -32,7 +32,7 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:corrupt_warrior_helmet"
+                            "gaiadimension:corrupt_warrior_helmet"
                         ],
                         "repair_amount": 2750
                     }

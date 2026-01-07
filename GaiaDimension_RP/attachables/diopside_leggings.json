@@ -2,7 +2,7 @@
   "format_version": "1.8.0",
   "minecraft:attachable": {
     "description": {
-      "identifier": "gaia:diopside_leggings",
+      "identifier": "gaiadimension:diopside_leggings",
       "materials": {
         "default": "armor",
         "enchanted": "armor_enchanted"

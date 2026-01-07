@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:diopside_chestplate",
+            "identifier": "gaiadimension:diopside_chestplate",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.chestplate"
@@ -32,8 +32,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:diopside",
-                            "gaia:diopside_chestplate"
+                            "gaiadimension:diopside",
+                            "gaiadimension:diopside_chestplate"
                         ],
                         "repair_amount": 708
                     }

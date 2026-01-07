@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:chalcedony_leggings",
+            "identifier": "gaiadimension:chalcedony_leggings",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.leggings"
@@ -32,8 +32,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:chalcedony",
-                            "gaia:chalcedony_leggings"
+                            "gaiadimension:chalcedony",
+                            "gaiadimension:chalcedony_leggings"
                         ],
                         "repair_amount": 862
                     }

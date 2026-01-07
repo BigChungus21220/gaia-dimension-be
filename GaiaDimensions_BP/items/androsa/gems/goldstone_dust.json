@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:goldstone_dust",
+            "identifier": "gaiadimension:goldstone_dust",
             "menu_category": {
                 "category": "items",
                 "group": ""

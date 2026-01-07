@@ -2,7 +2,7 @@
   "format_version": "1.8.0",
   "minecraft:attachable": {
     "description": {
-      "identifier": "gaia:gaia_champion_leggings",
+      "identifier": "gaiadimension:gaia_champion_leggings",
       "materials": {
         "default": "armor",
         "enchanted": "armor_enchanted"

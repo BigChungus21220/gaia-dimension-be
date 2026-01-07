@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:cooked_luggeroth_chop",
+            "identifier": "gaiadimension:cooked_luggeroth_chop",
             "menu_category": {
                 "category": "equipment",
                 "group": ""

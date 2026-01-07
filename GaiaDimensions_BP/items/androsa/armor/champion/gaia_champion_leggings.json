@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:gaia_champion_leggings",
+            "identifier": "gaiadimension:gaia_champion_leggings",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.leggings"
@@ -32,7 +32,7 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:gaia_champion_leggings"
+                            "gaiadimension:gaia_champion_leggings"
                         ],
                         "repair_amount": 3750
                     }

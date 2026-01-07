@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:malachite_guard_boots",
+            "identifier": "gaiadimension:malachite_guard_boots",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.boots"
@@ -32,7 +32,7 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:malachite_guard_boots"
+                            "gaiadimension:malachite_guard_boots"
                         ],
                         "repair_amount": 1280
                     }

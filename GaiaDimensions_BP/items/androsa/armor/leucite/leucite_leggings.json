@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:leucite_leggings",
+            "identifier": "gaiadimension:leucite_leggings",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.leggings"
@@ -32,8 +32,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:leucite",
-                            "gaia:leucite_leggings"
+                            "gaiadimension:leucite",
+                            "gaiadimension:leucite_leggings"
                         ],
                         "repair_amount": 375
                     }

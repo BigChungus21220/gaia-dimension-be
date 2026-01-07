@@ -2,7 +2,7 @@
     "format_version": "1.16.100",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:corrupt_varloom_item",
+            "identifier": "gaiadimension:corrupt_varloom_item",
             "menu_category": {
                 "category": "nature",
                 "group": "itemGroup.name.flower"
@@ -16,7 +16,7 @@
                 "value": "Corrupt Varloom"
             },
             "minecraft:block_placer": {
-                "block": "gaia:corrupt_varloom"
+                "block": "gaiadimension:corrupt_varloom"
             }
         }
     }

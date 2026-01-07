@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:chalcedony_chestplate",
+            "identifier": "gaiadimension:chalcedony_chestplate",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.chestplate"
@@ -32,8 +32,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:chalcedony",
-                            "gaia:chalcedony_chestplate"
+                            "gaiadimension:chalcedony",
+                            "gaiadimension:chalcedony_chestplate"
                         ],
                         "repair_amount": 920
                     }

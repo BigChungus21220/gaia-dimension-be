@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:proustite_chestplate",
+            "identifier": "gaiadimension:proustite_chestplate",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.chestplate"
@@ -32,8 +32,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:proustite",
-                            "gaia:proustite_chestplate"
+                            "gaiadimension:proustite",
+                            "gaiadimension:proustite_chestplate"
                         ],
                         "repair_amount": 460
                     }

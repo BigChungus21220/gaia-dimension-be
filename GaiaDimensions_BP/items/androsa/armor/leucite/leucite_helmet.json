@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:leucite_helmet",
+            "identifier": "gaiadimension:leucite_helmet",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.helmet"
@@ -32,8 +32,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:leucite",
-                            "gaia:leucite_helmet"
+                            "gaiadimension:leucite",
+                            "gaiadimension:leucite_helmet"
                         ],
                         "repair_amount": 275
                     }

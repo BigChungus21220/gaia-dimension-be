@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:blue_geode_slice",
+            "identifier": "gaiadimension:blue_geode_slice",
             "menu_category": {
                 "category": "equipment",
                 "group": ""

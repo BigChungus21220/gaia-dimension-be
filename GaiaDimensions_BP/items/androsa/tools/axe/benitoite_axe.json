@@ -2,7 +2,7 @@
     "format_version": "1.16.100",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:benitoite_axe",
+            "identifier": "gaiadimension:benitoite_axe",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.axe"
@@ -27,8 +27,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:benitoite",
-                            "gaia:benitoite_axe"
+                            "gaiadimension:benitoite",
+                            "gaiadimension:benitoite_axe"
                         ],
                         "repair_amount": "context.other->query.remaining_durability + 0.2 * context.other->query.max_durability"
                     }
@@ -45,251 +45,251 @@
                 "use_efficiency": true,
                 "destroy_speeds": [
                     {
-                        "block": "gaia:burnt_agate_tile_slab",
+                        "block": "gaiadimension:burnt_agate_tile_slab",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:burnt_agate_stair",
+                        "block": "gaiadimension:burnt_agate_stair",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:stripped_aura_log",
+                        "block": "gaiadimension:stripped_aura_log",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:stripped_green_agate_log",
+                        "block": "gaiadimension:stripped_green_agate_log",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:stripped_purple_agate_log",
+                        "block": "gaiadimension:stripped_purple_agate_log",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:stripped_blue_agate_log",
+                        "block": "gaiadimension:stripped_blue_agate_log",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:stripped_pink_agate_log",
+                        "block": "gaiadimension:stripped_pink_agate_log",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:stripped_burning_log",
+                        "block": "gaiadimension:stripped_burning_log",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:stripped_burnt_agate_log",
+                        "block": "gaiadimension:stripped_burnt_agate_log",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:stripped_fossilized_log",
+                        "block": "gaiadimension:stripped_fossilized_log",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:stripped_corrupted_log",
+                        "block": "gaiadimension:stripped_corrupted_log",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:stripped_burnt_agate_wood",
+                        "block": "gaiadimension:stripped_burnt_agate_wood",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:stripped_corrupted_wood",
+                        "block": "gaiadimension:stripped_corrupted_wood",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:stripped_fossilized_wood",
+                        "block": "gaiadimension:stripped_fossilized_wood",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:stripped_burning_wood",
+                        "block": "gaiadimension:stripped_burning_wood",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:stripped_green_agate_wood",
+                        "block": "gaiadimension:stripped_green_agate_wood",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:stripped_pink_agate_wood",
+                        "block": "gaiadimension:stripped_pink_agate_wood",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:stripped_blue_agate_wood",
+                        "block": "gaiadimension:stripped_blue_agate_wood",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:stripped_purple_agate_wood",
+                        "block": "gaiadimension:stripped_purple_agate_wood",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:burnt_agate_wood",
+                        "block": "gaiadimension:burnt_agate_wood",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:fossilized_wood",
+                        "block": "gaiadimension:fossilized_wood",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:burning_wood",
+                        "block": "gaiadimension:burning_wood",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:green_agate_wood",
+                        "block": "gaiadimension:green_agate_wood",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:purple_agate_wood",
+                        "block": "gaiadimension:purple_agate_wood",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:blue_agate_wood",
+                        "block": "gaiadimension:blue_agate_wood",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:pink_agate_wood",
+                        "block": "gaiadimension:pink_agate_wood",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:stripped_aura_wood",
+                        "block": "gaiadimension:stripped_aura_wood",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:aura_wood",
+                        "block": "gaiadimension:aura_wood",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:pink_agate_planks",
+                        "block": "gaiadimension:pink_agate_planks",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:burning_slab",
+                        "block": "gaiadimension:burning_slab",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:burning_stair",
+                        "block": "gaiadimension:burning_stair",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:fossilized_planks",
+                        "block": "gaiadimension:fossilized_planks",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:fossilized_slab",
+                        "block": "gaiadimension:fossilized_slab",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:fossilized_log",
+                        "block": "gaiadimension:fossilized_log",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:corrupted_tiles",
+                        "block": "gaiadimension:corrupted_tiles",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:fossilized_stair",
+                        "block": "gaiadimension:fossilized_stair",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:corrupted_log",
+                        "block": "gaiadimension:corrupted_log",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:purple_agate_slab",
+                        "block": "gaiadimension:purple_agate_slab",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:green_agate_slab",
+                        "block": "gaiadimension:green_agate_slab",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:pink_agate_slab",
+                        "block": "gaiadimension:pink_agate_slab",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:aura_slab",
+                        "block": "gaiadimension:aura_slab",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:aura_stair",
+                        "block": "gaiadimension:aura_stair",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:blue_agate_slab",
+                        "block": "gaiadimension:blue_agate_slab",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:pink_agate_stair",
+                        "block": "gaiadimension:pink_agate_stair",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:purple_agate_stair",
+                        "block": "gaiadimension:purple_agate_stair",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:blue_agate_stair",
+                        "block": "gaiadimension:blue_agate_stair",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:purple_agate_planks",
+                        "block": "gaiadimension:purple_agate_planks",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:burnt_agate_planks",
+                        "block": "gaiadimension:burnt_agate_planks",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:burnt_agate_log",
+                        "block": "gaiadimension:burnt_agate_log",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:green_agate_stair",
+                        "block": "gaiadimension:green_agate_stair",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:green_agate_log",
+                        "block": "gaiadimension:green_agate_log",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:green_agate_planks",
+                        "block": "gaiadimension:green_agate_planks",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:purple_agate_log",
+                        "block": "gaiadimension:purple_agate_log",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:pink_agate_log",
+                        "block": "gaiadimension:pink_agate_log",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:burnt_agate",
+                        "block": "gaiadimension:burnt_agate",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:burning_log",
+                        "block": "gaiadimension:burning_log",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:burning_planks",
+                        "block": "gaiadimension:burning_planks",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:blue_agate_planks",
+                        "block": "gaiadimension:blue_agate_planks",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:blue_agate_log",
+                        "block": "gaiadimension:blue_agate_log",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:agate_crafting_table",
+                        "block": "gaiadimension:agate_crafting_table",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:aura_planks",
+                        "block": "gaiadimension:aura_planks",
                         "speed": 6
                     },
                     {
-                        "block": "gaia:aura_log",
+                        "block": "gaiadimension:aura_log",
                         "speed": 6
                     }
                 ]

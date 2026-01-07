@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:spinel_princess_helmet",
+            "identifier": "gaiadimension:spinel_princess_helmet",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.helmet"
@@ -32,7 +32,7 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:spinel_princess_helmet"
+                            "gaiadimension:spinel_princess_helmet"
                         ],
                         "repair_amount": 1083
                     }

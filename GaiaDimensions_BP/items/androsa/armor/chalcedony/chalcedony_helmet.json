@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:chalcedony_helmet",
+            "identifier": "gaiadimension:chalcedony_helmet",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.helmet"
@@ -32,8 +32,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:chalcedony",
-                            "gaia:chalcedony_helmet"
+                            "gaiadimension:chalcedony",
+                            "gaiadimension:chalcedony_helmet"
                         ],
                         "repair_amount": 632
                     }

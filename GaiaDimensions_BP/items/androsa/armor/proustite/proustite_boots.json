@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:proustite_boots",
+            "identifier": "gaiadimension:proustite_boots",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.boots"
@@ -32,8 +32,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:proustite",
-                            "gaia:proustite_boots"
+                            "gaiadimension:proustite",
+                            "gaiadimension:proustite_boots"
                         ],
                         "repair_amount": 374
                     }

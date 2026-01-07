@@ -2,7 +2,7 @@
     "format_version": "1.16.100",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:chalcedony_sword",
+            "identifier": "gaiadimension:chalcedony_sword",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.sword"
@@ -27,8 +27,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:chalcedony",
-                            "gaia:chalcedony_sword"
+                            "gaiadimension:chalcedony",
+                            "gaiadimension:chalcedony_sword"
                         ],
                         "repair_amount": "context.other->query.remaining_durability + 0.2 * context.other->query.max_durability"
                     }

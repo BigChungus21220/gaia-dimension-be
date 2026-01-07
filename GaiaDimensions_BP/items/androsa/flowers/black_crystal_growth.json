@@ -2,7 +2,7 @@
     "format_version": "1.16.100",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:black_crystal_growth_item",
+            "identifier": "gaiadimension:black_crystal_growth_item",
             "menu_category": {
                 "category": "nature",
                 "group": "itemGroup.name.flower"
@@ -16,7 +16,7 @@
                 "value": "Black Crystal Growth"
             },
             "minecraft:block_placer": {
-                "block": "gaia:black_crystal_growth"
+                "block": "gaiadimension:black_crystal_growth"
             }
         }
     }

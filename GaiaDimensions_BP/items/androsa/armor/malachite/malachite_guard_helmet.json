@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:malachite_guard_helmet",
+            "identifier": "gaiadimension:malachite_guard_helmet",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.helmet"
@@ -32,8 +32,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:malachite_guard",
-                            "gaia:malachite_guard_helmet"
+                            "gaiadimension:malachite_guard",
+                            "gaiadimension:malachite_guard_helmet"
                         ],
                         "repair_amount": 1083
                     }

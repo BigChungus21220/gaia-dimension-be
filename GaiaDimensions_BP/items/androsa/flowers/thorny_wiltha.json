@@ -2,7 +2,7 @@
     "format_version": "1.16.100",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:thorny_wiltha_item",
+            "identifier": "gaiadimension:thorny_wiltha_item",
             "menu_category": {
                 "category": "nature",
                 "group": "itemGroup.name.flower"
@@ -16,7 +16,7 @@
                 "value": "Thorny Witha"
             },
             "minecraft:block_placer": {
-                "block": "gaia:thorny_wiltha"
+                "block": "gaiadimension:thorny_wiltha"
             }
         }
     }

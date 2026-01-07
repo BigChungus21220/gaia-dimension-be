@@ -2,7 +2,7 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaia:zircon_prince_chestplate",
+            "identifier": "gaiadimension:zircon_prince_chestplate",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.chestplate"
@@ -32,7 +32,7 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaia:zircon_prince_chestplate"
+                            "gaiadimension:zircon_prince_chestplate"
                         ],
                         "repair_amount": 1888
                     }
