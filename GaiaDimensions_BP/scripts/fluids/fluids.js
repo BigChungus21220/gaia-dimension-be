@@ -332,7 +332,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
                     // Check validity again in run
                     if (targetBlock.isValid) {
                          targetBlock.setPermutation(perm);
-                         dimension.playSound("use.stone", targetLoc); // Generic sound
+                         dimension.playSound("random.place", targetLoc); // Standard place sound
                          
                          // Consume item (Creative check?)
                          const gameMode = player.getGameMode(); // Not directly available on player? 
