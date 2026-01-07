@@ -46,141 +46,61 @@
                 "destroy_speeds": [
                     {
                         "block": "gaia:green_soft_grass",
-                        "speed": 3,
-                        "on_dig": {
-                            "event": "reduce_durability"
-                        }
+                        "speed": 3
                     },
                     {
                         "block": "gaia:soft_grass",
-                        "speed": 3,
-                        "on_dig": {
-                            "event": "reduce_durability"
-                        }
+                        "speed": 3
                     },
                     {
                         "block": "gaia:purple_glitter_grass",
-                        "speed": 3,
-                        "on_dig": {
-                            "event": "reduce_durability"
-                        }
+                        "speed": 3
                     },
                     {
                         "block": "gaia:corrupted_grass",
-                        "speed": 3,
-                        "on_dig": {
-                            "event": "reduce_durability"
-                        }
+                        "speed": 3
                     },
                     {
                         "block": "gaia:murky_grass",
-                        "speed": 3,
-                        "on_dig": {
-                            "event": "reduce_durability"
-                        }
+                        "speed": 3
                     },
                     {
                         "block": "gaia:corrupted_soil",
-                        "speed": 3,
-                        "on_dig": {
-                            "event": "reduce_durability"
-                        }
+                        "speed": 3
                     },
                     {
                         "block": "gaia:light_soil",
-                        "speed": 3,
-                        "on_dig": {
-                            "event": "reduce_durability"
-                        }
+                        "speed": 3
                     },
                     {
                         "block": "gaia:boggy_soil",
-                        "speed": 3,
-                        "on_dig": {
-                            "event": "reduce_durability"
-                        }
+                        "speed": 3
                     },
                     {
                         "block": "gaia:green_glitter_grass",
-                        "speed": 3,
-                        "on_dig": {
-                            "event": "reduce_durability"
-                        }
+                        "speed": 3
                     },
                     {
                         "block": "gaia:yellow_glitter_grass",
-                        "speed": 3,
-                        "on_dig": {
-                            "event": "reduce_durability"
-                        }
+                        "speed": 3
                     },
                     {
                         "block": "gaia:blue_glitter_grass",
-                        "speed": 3,
-                        "on_dig": {
-                            "event": "reduce_durability"
-                        }
+                        "speed": 3
                     },
                     {
                         "block": "gaia:pink_glitter_grass",
-                        "speed": 3,
-                        "on_dig": {
-                            "event": "reduce_durability"
-                        }
+                        "speed": 3
                     },
                     {
                         "block": "gaia:heavy_soil",
-                        "speed": 3,
-                        "on_dig": {
-                            "event": "reduce_durability"
-                        }
-                    }
-                ],
-                "on_dig": {
-                    "event": "reduce_durability"
-                }
-            },
-            "minecraft:weapon": {
-                "on_hurt_entity": {
-                    "event": "reduce_durability2"
-                }
-            },
-            "minecraft:display_name": {},
-            "tag:minecraft:is_shovel": {}
-        },
-        "events": {
-            "on_use_event": {
-                "sequence": [
-                    {
-                        "damage": {
-                            "type": "durability",
-                            "amount": 1,
-                            "target": "self"
-                        }
+                        "speed": 3
                     }
                 ]
             },
-            "on_tool_used": {
-                "damage": {
-                    "type": "durability",
-                    "amount": 1,
-                    "target": "self"
-                }
-            },
-            "reduce_durability": {
-                "damage": {
-                    "type": "durability",
-                    "amount": 1,
-                    "target": "self"
-                }
-            },
-            "reduce_durability2": {
-                "damage": {
-                    "type": "durability",
-                    "amount": 2,
-                    "target": "self"
-                }
-            }
+            "minecraft:weapon": {},
+            "minecraft:display_name": {},
+            "tag:minecraft:is_shovel": {}
         }
     }
 }

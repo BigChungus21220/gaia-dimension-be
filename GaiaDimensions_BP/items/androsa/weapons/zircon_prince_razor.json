@@ -45,28 +45,15 @@
                 "destroy_speeds": [
                     {
                         "block": "minecraft:bamboo",
-                        "speed": 10,
-                        "on_dig": {
-                            "event": "reduce_durability"
-                        }
+                        "speed": 10
                     },
                     {
                         "block": "minecraft:web",
-                        "speed": 6,
-                        "on_dig": {
-                            "event": "reduce_durability"
-                        }
+                        "speed": 6
                     }
-                ],
-                "on_dig": {
-                    "event": "reduce_durability"
-                }
+                ]
             },
-            "minecraft:weapon": {
-                "on_hurt_entity": {
-                    "event": "reduce_durability"
-                }
-            },
+            "minecraft:weapon": {},
             "minecraft:display_name": {
                 "value": "Zircon Prince Razor\n\u00a77Those two prongs channel electricity"
             },

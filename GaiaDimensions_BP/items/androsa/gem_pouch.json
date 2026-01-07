@@ -16,7 +16,6 @@
             "minecraft:display_name": {
                 "value": "Gemstone Pouch"
             }
-        },
-        "events": {}
+        }
     }
 }
