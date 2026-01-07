@@ -1,5 +1,5 @@
 {
-    "format_version": "1.16.100",
+    "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
             "identifier": "gaiadimension:apex_predator_mace",
@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "apex_predator_mace"
-            },
+            "minecraft:icon": "apex_predator_mace",
             "minecraft:max_stack_size": 1,
             "minecraft:hand_equipped": true,
             "minecraft:allow_off_hand": false,
@@ -54,9 +52,6 @@
                 ]
             },
             "minecraft:weapon": {},
-            "minecraft:display_name": {
-                "value": "Apex Predator Mace\n\u00a77Those claws could dig deep into skin"
-            },
             "tag:minecraft:is_sword": {},
             "minecraft:custom_components": [
                 "luminiae:durability"

@@ -1,5 +1,5 @@
 {
-    "format_version": "1.16.100",
+    "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
             "identifier": "gaiadimension:gaia_duke_blade",
@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "gaia_duke_blade"
-            },
+            "minecraft:icon": "gaia_duke_blade",
             "minecraft:max_stack_size": 1,
             "minecraft:hand_equipped": true,
             "minecraft:allow_off_hand": false,
@@ -54,9 +52,6 @@
                 ]
             },
             "minecraft:weapon": {},
-            "minecraft:display_name": {
-                "value": "Gaia Duke Blade\n\u00a77That blade could hurt at high velocity"
-            },
             "tag:minecraft:is_sword": {},
             "minecraft:custom_components": [
                 "luminiae:durability"

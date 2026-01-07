@@ -1,5 +1,5 @@
 {
-    "format_version": "1.16.100",
+    "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
             "identifier": "gaiadimension:gaia_champion_sword",
@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "gaia_champion_sword"
-            },
+            "minecraft:icon": "gaia_champion_sword",
             "minecraft:max_stack_size": 1,
             "minecraft:hand_equipped": true,
             "minecraft:allow_off_hand": false,
@@ -54,9 +52,6 @@
                 ]
             },
             "minecraft:weapon": {},
-            "minecraft:display_name": {
-                "value": "Gaia Champion Sword\n\u00a77She bestowed it upon you"
-            },
             "tag:minecraft:is_sword": {},
             "minecraft:custom_components": [
                 "luminiae:durability"
