@@ -124,15 +124,21 @@ class FluidFlowComponent {
         else if (currentStage === 2) requiredParentTag = "template1";
         else if (currentStage === 3) requiredParentTag = "template2";
         
-        // Special Rule: If stage 1, 2, 3 has a _down block above it, it becomes _down (filling up/connecting)
+        // Special Rule: If stage 1, 2, 3 has a _down block above it, OR another stage 1, 2, 3 (half fluid) above it, it becomes _down (filling up/connecting)
         if (currentStage > 0) {
              const above = dimension.getBlock({ x: block.location.x, y: block.location.y + 1, z: block.location.z });
-             if (above && above.typeId === baseId + "_down") {
-                 const downId = baseId + "_down";
-                 system.run(() => {
-                     if (block.isValid) block.setType(downId);
-                 });
-                 return;
+             if (above) {
+                 const aboveId = above.typeId;
+                 const isAboveDown = (aboveId === baseId + "_down");
+                 const isAboveHalf = (aboveId === baseId + "1" || aboveId === baseId + "2" || aboveId === baseId + "3");
+                 
+                 if (isAboveDown || isAboveHalf) {
+                     const downId = baseId + "_down";
+                     system.run(() => {
+                         if (block.isValid) block.setType(downId);
+                     });
+                     return;
+                 }
              }
         }
         
@@ -332,7 +338,7 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
                     // Check validity again in run
                     if (targetBlock.isValid) {
                          targetBlock.setPermutation(perm);
-                         dimension.playSound("random.place", targetLoc); // Standard place sound
+                         dimension.playSound("dig.stone", targetLoc);
                          
                          // Consume item (Creative check?)
                          const gameMode = player.getGameMode(); // Not directly available on player? 
