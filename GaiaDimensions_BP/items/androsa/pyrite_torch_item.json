@@ -3,7 +3,6 @@
     "minecraft:item": {
         "description": {
             "identifier": "gaia:pyrite_torch_item",
-            "category": "items",
             "menu_category": {
                 "category": "items",
                 "group": "items"

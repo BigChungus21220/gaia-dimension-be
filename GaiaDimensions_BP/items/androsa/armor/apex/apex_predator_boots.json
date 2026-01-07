@@ -3,9 +3,8 @@
     "minecraft:item": {
         "description": {
             "identifier": "gaia:apex_predator_boots",
-            "category": "Equipment",
             "menu_category": {
-                "category": "items",
+                "category": "equipment",
                 "group": "itemGroup.name.boots"
             }
         },

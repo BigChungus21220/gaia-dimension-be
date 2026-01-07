@@ -2,10 +2,9 @@
     "format_version": "1.16.100",
     "minecraft:item": {
         "description": {
-            "category": "equipment",
             "identifier": "gaia:benitoite_shovel",
             "menu_category": {
-                "category": "items",
+                "category": "equipment",
                 "group": "itemGroup.name.shovel"
             }
         },

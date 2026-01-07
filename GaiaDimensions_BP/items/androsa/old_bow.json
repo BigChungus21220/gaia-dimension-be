@@ -3,7 +3,6 @@
     "minecraft:item": {
         "description": {
             "identifier": "gaia:old_bow",
-            "category": "Equipment",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.shield"

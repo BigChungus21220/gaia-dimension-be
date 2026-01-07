@@ -3,9 +3,8 @@
     "minecraft:item": {
         "description": {
             "identifier": "gaia:roofed_agaric_item",
-            "category": "nature",
             "menu_category": {
-                "category": "items",
+                "category": "nature",
                 "group": "itemGroup.name.flower"
             }
         },

@@ -3,9 +3,8 @@
     "minecraft:item": {
         "description": {
             "identifier": "gaia:corrupt_warrior_helmet",
-            "category": "Equipment",
             "menu_category": {
-                "category": "items",
+                "category": "equipment",
                 "group": "itemGroup.name.helmet"
             }
         },

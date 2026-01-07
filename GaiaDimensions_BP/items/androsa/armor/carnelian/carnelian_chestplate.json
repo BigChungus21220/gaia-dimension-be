@@ -3,9 +3,8 @@
     "minecraft:item": {
         "description": {
             "identifier": "gaia:carnelian_chestplate",
-            "category": "Equipment",
             "menu_category": {
-                "category": "items",
+                "category": "equipment",
                 "group": "itemGroup.name.chestplate"
             }
         },

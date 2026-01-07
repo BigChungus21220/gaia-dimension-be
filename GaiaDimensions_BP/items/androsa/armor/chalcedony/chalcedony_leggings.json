@@ -3,9 +3,8 @@
     "minecraft:item": {
         "description": {
             "identifier": "gaia:chalcedony_leggings",
-            "category": "Equipment",
             "menu_category": {
-                "category": "items",
+                "category": "equipment",
                 "group": "itemGroup.name.leggings"
             }
         },

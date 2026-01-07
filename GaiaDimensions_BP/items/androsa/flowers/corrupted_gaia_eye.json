@@ -3,9 +3,8 @@
     "minecraft:item": {
         "description": {
             "identifier": "gaia:corrupted_gaia_eye_item",
-            "category": "nature",
             "menu_category": {
-                "category": "items",
+                "category": "nature",
                 "group": "itemGroup.name.flower"
             }
         },

@@ -3,9 +3,8 @@
     "minecraft:item": {
         "description": {
             "identifier": "forge:restructurer_flame_0",
-            "category": "commands",
             "menu_category": {
-                "category": "items",
+                "category": "commands",
                 "group": "itemGroup.creativity"
             }
         },

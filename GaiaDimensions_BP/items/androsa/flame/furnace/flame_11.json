@@ -3,9 +3,8 @@
     "minecraft:item": {
         "description": {
             "identifier": "forge:flame_11",
-            "category": "commands",
             "menu_category": {
-                "category": "items",
+                "category": "commands",
                 "group": "itemGroup.creativity"
             }
         },

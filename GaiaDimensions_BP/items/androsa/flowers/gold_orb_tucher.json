@@ -3,9 +3,8 @@
     "minecraft:item": {
         "description": {
             "identifier": "gaia:gold_orb_tucher_item",
-            "category": "nature",
             "menu_category": {
-                "category": "items",
+                "category": "nature",
                 "group": "itemGroup.name.flower"
             }
         },

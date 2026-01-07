@@ -2,10 +2,9 @@
     "format_version": "1.16.100",
     "minecraft:item": {
         "description": {
-            "category": "equipment",
             "identifier": "gaia:euclase_axe",
             "menu_category": {
-                "category": "items",
+                "category": "equipment",
                 "group": "itemGroup.name.axe"
             }
         },
