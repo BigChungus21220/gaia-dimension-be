@@ -22,7 +22,7 @@
                     "max": 100
                 }
             },
-            "minecraft:foil": false,
+            "minecraft:glint": false,
             "minecraft:hand_equipped": false,
             "minecraft:wearable": {
                 "slot": "slot.armor.legs",
