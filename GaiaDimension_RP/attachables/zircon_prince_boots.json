@@ -8,7 +8,7 @@
         "enchanted": "armor_enchanted"
       },
       "textures": {
-        "default": "textures/models/armor/zircon_prince_1",
+        "default": "textures/gaiadimension/androsa/models/armor/zircon_prince_1",
         "enchanted": "textures/misc/enchanted_item_glint"
       },
       "geometry": {
