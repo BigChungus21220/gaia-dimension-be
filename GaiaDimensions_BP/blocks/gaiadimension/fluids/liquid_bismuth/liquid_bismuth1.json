@@ -18,7 +18,6 @@
 			"minecraft:geometry": "geometry.rosa_gd.fluid1",
 			"minecraft:light_dampening": 0.0,
 			"minecraft:light_emission": 15,
-			"minecraft:selection_box": false,
 			"minecraft:destructible_by_mining": false,
 			"minecraft:collision_box": false,
 			"minecraft:destructible_by_explosion": false,
