@@ -54,7 +54,6 @@
             },
             "minecraft:shooter": {
                 "max_draw_duration": 1,
-                "launch_power_scale": 5,
                 "scale_power_by_draw_duration": true,
                 "ammunition": [
                     {
