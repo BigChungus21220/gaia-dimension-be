@@ -57,7 +57,10 @@
             "minecraft:display_name": {
                 "value": "Malachite Guard Baton\n\u00a77A good swing could knock targets away"
             },
-            "tag:minecraft:is_sword": {}
+            "tag:minecraft:is_sword": {},
+            "minecraft:custom_components": [
+                "luminiae:durability"
+            ]
         }
     }
 }

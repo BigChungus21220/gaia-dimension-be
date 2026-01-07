@@ -2,7 +2,7 @@ import { system } from "@minecraft/server";
 
 export function registerCustomTool() {
     system.beforeEvents.startup.subscribe((event) => {
-        event.itemComponentRegistry.registerCustomComponent('compycraft_era:durability', {
+        event.itemComponentRegistry.registerCustomComponent('luminiae:durability', {
             onUseOn(e, params) {
                 const { source, itemStack, block } = e;
                 if (!itemStack.hasTag('minecraft:is_axe')) return;

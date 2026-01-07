@@ -57,7 +57,10 @@
             "minecraft:display_name": {
                 "value": "Gaia Duchess Khopesh\n\u00a77It looks like it could fly apart"
             },
-            "tag:minecraft:is_sword": {}
+            "tag:minecraft:is_sword": {},
+            "minecraft:custom_components": [
+                "luminiae:durability"
+            ]
         }
     }
 }

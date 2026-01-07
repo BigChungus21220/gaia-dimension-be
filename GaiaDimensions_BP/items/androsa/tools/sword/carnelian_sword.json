@@ -56,7 +56,10 @@
             },
             "minecraft:weapon": {},
             "tag:minecraft:is_sword": {},
-            "minecraft:display_name": {}
+            "minecraft:display_name": {},
+            "minecraft:custom_components": [
+                "luminiae:durability"
+            ]
         }
     }
 }

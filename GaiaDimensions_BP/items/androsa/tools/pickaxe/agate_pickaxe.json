@@ -509,7 +509,10 @@
                     }
                 ]
             },
-            "minecraft:weapon": {}
+            "minecraft:weapon": {},
+            "minecraft:custom_components": [
+                "luminiae:durability"
+            ]
         }
     }
 }

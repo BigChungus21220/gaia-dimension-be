@@ -295,7 +295,10 @@
             },
             "minecraft:weapon": {},
             "minecraft:display_name": {},
-            "tag:minecraft:is_axe": {}
+            "tag:minecraft:is_axe": {},
+            "minecraft:custom_components": [
+                "luminiae:durability"
+            ]
         }
     }
 }

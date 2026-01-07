@@ -512,7 +512,10 @@
             },
             "minecraft:weapon": {},
             "tag:minecraft:is_pickaxe": {},
-            "minecraft:display_name": {}
+            "minecraft:display_name": {},
+            "minecraft:custom_components": [
+                "luminiae:durability"
+            ]
         }
     }
 }

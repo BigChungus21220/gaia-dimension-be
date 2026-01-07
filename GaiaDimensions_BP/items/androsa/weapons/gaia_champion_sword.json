@@ -57,7 +57,10 @@
             "minecraft:display_name": {
                 "value": "Gaia Champion Sword\n\u00a77She bestowed it upon you"
             },
-            "tag:minecraft:is_sword": {}
+            "tag:minecraft:is_sword": {},
+            "minecraft:custom_components": [
+                "luminiae:durability"
+            ]
         }
     }
 }
