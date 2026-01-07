@@ -1,0 +1,50 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:gaia_champion_chestplate",
+      "category": "Equipment"
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "gaia_champion_chestplate"
+      },
+      "minecraft:creative_category": {
+        "parent": "itemGroup.name.chestplate"
+      },
+      "minecraft:max_stack_size": 1,
+      "minecraft:enchantable": {
+        "value": 15,
+        "slot": "armor_torso"
+      },
+      "minecraft:durability": {
+        "max_durability": 16000,
+        "damage_chance": {
+          "min": 60,
+          "max": 100
+        }
+      },
+      "minecraft:foil": false,
+      "minecraft:hand_equipped": false,
+      "minecraft:wearable": {
+        "slot": "slot.armor.chest"
+      },
+      "minecraft:repairable": {
+        "repair_items": [
+          {
+            "items": [
+              "gaia:gaia_champion_chestplate"
+            ],
+            "repair_amount": 4000
+          }
+        ]
+      },
+      "minecraft:armor": {
+        "protection": 9
+      },
+      "minecraft:display_name": {
+        "value": "Gaia Champion Guard\n§7Amazing! This armor feels so pure!"
+      }
+    }
+  }
+}

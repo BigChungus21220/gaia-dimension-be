@@ -51,4 +51,41 @@ export function registerGlitteringFireComponent() {
             event.cancel = true;
         }
     });
+
+    // Handle portal shattering
+    world.afterEvents.playerBreakBlock.subscribe((event) => {
+        const { block, brokenBlockPermutation, dimension } = event;
+        const brokenId = brokenBlockPermutation.type.id;
+
+        // Check if broken block was a portal
+        if (PortalManager.registeredPortals.has(brokenId)) {
+            // Check neighbors for remaining portal blocks to trigger chain reaction
+            const neighbors = [
+                block.above(), block.below(), block.north(), block.south(), block.east(), block.west()
+            ];
+            for (const neighbor of neighbors) {
+                if (neighbor && neighbor.typeId === brokenId) {
+                    PortalManager.breakPortal(dimension, neighbor.location, brokenId);
+                    break; 
+                }
+            }
+            return;
+        }
+
+        // Check if broken block was a frame
+        for (const [portalId, config] of PortalManager.registeredPortals) {
+            if (config.frameId === brokenId) {
+                // Frame broken, check for adjacent portal blocks
+                const neighbors = [
+                    block.above(), block.below(), block.north(), block.south(), block.east(), block.west()
+                ];
+                for (const neighbor of neighbors) {
+                    if (neighbor && neighbor.typeId === portalId) {
+                        PortalManager.breakPortal(dimension, neighbor.location, portalId);
+                        break;
+                    }
+                }
+            }
+        }
+    });
 }

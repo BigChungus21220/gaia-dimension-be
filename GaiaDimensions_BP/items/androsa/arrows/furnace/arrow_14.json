@@ -1,0 +1,21 @@
+{
+    "format_version": "1.19.10",
+    "minecraft:item": {
+        "description": {
+            "identifier": "forge:arrow_14",
+            "category": "commands"
+        },
+        "components": {
+            "minecraft:icon": {
+                "texture": "arrow_14"
+            },
+            "minecraft:creative_category": {
+                "parent": "itemGroup.creativity"
+               },
+               "minecraft:display_name": {
+                "value": "arrow_ui"
+               },
+            "minecraft:hand_equipped": false
+        }
+    }
+}

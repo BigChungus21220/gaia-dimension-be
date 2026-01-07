@@ -1,0 +1,49 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:diopside_boots",
+      "category": "Equipment"
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "diopside_boots"
+      },
+      "minecraft:creative_category": {
+        "parent": "itemGroup.name.boots"
+      },
+      "minecraft:max_stack_size": 1,
+      "minecraft:enchantable": {
+        "value": 15,
+        "slot": "armor_feet"
+      },
+      "minecraft:durability": {
+        "max_durability": 2301,
+        "damage_chance": {
+          "min": 60,
+          "max": 100
+        }
+      },
+      "minecraft:foil": false,
+      "minecraft:hand_equipped": false,
+      "minecraft:wearable": {
+        "slot": "slot.armor.feet"
+      },
+      "minecraft:repairable": {
+        "repair_items": [
+          {
+            "items": [
+              "gaia:diopside",
+              "gaia:diopside_boots"
+            ],
+            "repair_amount": 575
+          }
+        ]
+      },
+      "minecraft:armor": {
+        "protection": 2
+      },
+      "minecraft:display_name": {}
+    }
+  }
+}

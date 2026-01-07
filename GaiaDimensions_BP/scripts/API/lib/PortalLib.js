@@ -389,6 +389,55 @@ export class PortalManager {
         return blockpos;
     }
 
+    static breakPortal(dimension, startLoc, portalBlockId) {
+        const queue = [startLoc];
+        const visited = new Set();
+        const key = (l) => `${l.x},${l.y},${l.z}`;
+        visited.add(key(startLoc));
+        
+        const blocksToBreak = [];
+        const MAX_BLOCKS = 600; 
+
+        let head = 0;
+        while(head < queue.length && blocksToBreak.length < MAX_BLOCKS) {
+            const current = queue[head++];
+            
+            let block;
+            try { block = dimension.getBlock(current); } catch(e) { continue; }
+            if (!block) continue;
+
+            if (block.typeId === portalBlockId) {
+                blocksToBreak.push(block);
+                
+                const neighbors = [
+                    {x: current.x + 1, y: current.y, z: current.z},
+                    {x: current.x - 1, y: current.y, z: current.z},
+                    {x: current.x, y: current.y + 1, z: current.z},
+                    {x: current.x, y: current.y - 1, z: current.z},
+                    {x: current.x, y: current.y, z: current.z + 1},
+                    {x: current.x, y: current.y, z: current.z - 1}
+                ];
+
+                for (const n of neighbors) {
+                    const k = key(n);
+                    if (!visited.has(k)) {
+                        visited.add(k);
+                        queue.push(n);
+                    }
+                }
+            }
+        }
+
+        if (blocksToBreak.length > 0) {
+             dimension.playSound("break.amethyst_block", startLoc);
+             for(const b of blocksToBreak) {
+                 try {
+                     b.setType("minecraft:air"); 
+                 } catch(e) {}
+             }
+        }
+    }
+
     // --- Helpers ---
 
     static checkRegionForPlacement(dimension, originalPos, direction, crossDir, offsetScale) {

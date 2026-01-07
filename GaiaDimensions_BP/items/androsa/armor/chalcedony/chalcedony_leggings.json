@@ -1,0 +1,49 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:item": {
+    "description": {
+      "identifier": "gaia:chalcedony_leggings",
+      "category": "Equipment"
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "chalcedony_leggings"
+      },
+      "minecraft:creative_category": {
+        "parent": "itemGroup.name.leggings"
+      },
+      "minecraft:max_stack_size": 1,
+      "minecraft:enchantable": {
+        "value": 15,
+        "slot": "armor_legs"
+      },
+      "minecraft:durability": {
+        "max_durability": 3450,
+        "damage_chance": {
+          "min": 60,
+          "max": 100
+        }
+      },
+      "minecraft:foil": false,
+      "minecraft:hand_equipped": false,
+      "minecraft:wearable": {
+        "slot": "slot.armor.legs"
+      },
+      "minecraft:repairable": {
+        "repair_items": [
+          {
+            "items": [
+              "gaia:chalcedony",
+              "gaia:chalcedony_leggings"
+            ],
+            "repair_amount": 862
+          }
+        ]
+      },
+      "minecraft:armor": {
+        "protection": 6
+      },
+      "minecraft:display_name": {}
+    }
+  }
+}

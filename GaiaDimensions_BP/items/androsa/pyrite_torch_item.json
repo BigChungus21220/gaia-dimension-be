@@ -1,0 +1,20 @@
+{
+    "format_version": "1.16.100",
+    "minecraft:item": {
+        "description": {
+            "identifier": "gaia:pyrite_torch_item",
+            "category": "items"
+        },
+        "components": {
+            "minecraft:block_placer": {
+                "block": "gaia:pyrite_torch"
+            },
+            "minecraft:creative_category": {
+                "parent": "items"
+            },
+            "minecraft:icon": {
+                "texture": "pyrite_torch"
+            }
+        }
+    }
+}
