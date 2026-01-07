@@ -9,7 +9,7 @@
       },
       "textures": {
         "default": "textures/gaiadimension/androsa/models/armor/proustite_2",
-        "enchanted": "textures/misc/enchanted_item_glint"
+        "enchanted": "textures/gaiadimension/androsa/misc/enchanted_item_glint"
       },
       "geometry": {
         "default": "geometry.humanoid.armor.leggings"
