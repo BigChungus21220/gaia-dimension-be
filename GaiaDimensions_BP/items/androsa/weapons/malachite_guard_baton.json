@@ -59,14 +59,5 @@
             },
             "tag:minecraft:is_sword": {}
         }
-    },
-    "events": {
-        "reduce_durability": {
-            "damage": {
-                "type": "durability",
-                "amount": 1,
-                "target": "self"
-            }
-        }
     }
 }
