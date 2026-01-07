@@ -1,13 +1,11 @@
 {
-  "format_version": "1.20.50",
+  "format_version": "1.21.50",
   "minecraft:item": {
     "description": {
       "identifier": "gaiadimension:liquid_bismuth_bucket"
     },
     "components": {
-      "minecraft:icon": {
-        "texture": "liquid_bismuth_bucket"
-      },
+      "minecraft:icon": "liquid_bismuth_bucket",
       "minecraft:display_name": {
         "value": "Liquid Bismuth Bucket"
       },

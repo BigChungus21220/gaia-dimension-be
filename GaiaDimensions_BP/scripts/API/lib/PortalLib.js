@@ -222,7 +222,7 @@ export class PortalManager {
             y: (minY + maxY) / 2,
             z: (minZ + maxZ) / 2
         };
-        dimension.playSound("ambient.weather.lightning.impact", center);
+        dimension.playSound("block.end_portal.spawn", center);
     }
 
     static getExistingPortal(pos, dimension, portalBlockId, range = 128) {

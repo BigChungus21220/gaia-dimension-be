@@ -2,7 +2,11 @@
   "format_version": "1.20.50",
   "minecraft:item": {
     "description": {
-      "identifier": "gaiadimension:liquid_aura_bucket"
+      "identifier": "gaiadimension:liquid_aura_bucket",
+      "menu_category": {
+				"category": "construction",
+				"group": "itemGroup.name.door"
+			}
     },
     "components": {
       "minecraft:icon": {
