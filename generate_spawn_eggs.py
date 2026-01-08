@@ -1,5 +1,6 @@
 import os
 import json
+import re
 from PIL import Image, ImageChops
 import colorsys
 
@@ -9,6 +10,11 @@ TEXTURE_DIR = os.path.join(RP_ROOT, "textures")
 TEMPLATE_PATH = os.path.join(TEXTURE_DIR, "gaiadimension/androsa/item/spawn_gaia.png")
 OUTPUT_DIR = os.path.join(TEXTURE_DIR, "gaiadimension/androsa/item")
 ITEM_TEXTURE_PATH = os.path.join(TEXTURE_DIR, "item_texture.json")
+ENTITY_TEXTURE_ROOT = os.path.join(TEXTURE_DIR, "gaiadimension/androsa/entity")
+
+def strip_comments(json_str):
+    # Remove // comments
+    return re.sub(r"//.*", "", json_str)
 
 def get_dominant_color(image_path):
     try:
@@ -52,6 +58,38 @@ def apply_tint(template_path, color, output_path):
         print(f"Error applying tint: {e}")
         return False
 
+def resolve_texture_path(given_path, short_name):
+    # 1. Try exact path
+    full_path = os.path.join(RP_ROOT, given_path)
+    if not full_path.endswith(".png"):
+        full_path_png = full_path + ".png"
+    else:
+        full_path_png = full_path
+
+    if os.path.exists(full_path_png) and os.path.isfile(full_path_png):
+        return full_path_png
+        
+    # 2. Check if it's a directory
+    if os.path.isdir(full_path):
+        # Look for [short_name].png inside
+        candidate = os.path.join(full_path, f"{short_name}.png")
+        if os.path.exists(candidate):
+            return candidate
+        # Look for any png
+        for f in os.listdir(full_path):
+            if f.endswith(".png"):
+                return os.path.join(full_path, f)
+
+    # 3. Fallback: Check standard folder
+    candidate = os.path.join(ENTITY_TEXTURE_ROOT, f"{short_name}.png")
+    if os.path.exists(candidate):
+        return candidate
+    
+    # 4. Fallback: Check standard folder with spaces/underscores?
+    # (Not implementing complex fuzzy search yet)
+
+    return None
+
 def main():
     print("Starting spawn egg generation...")
     
@@ -73,7 +111,9 @@ def main():
         
         try:
             with open(file_path, 'r') as f:
-                entity_data = json.load(f)
+                content = f.read()
+                content = strip_comments(content)
+                entity_data = json.loads(content)
             
             client_entity = entity_data.get("minecraft:client_entity", {}).get("description", {})
             identifier = client_entity.get("identifier")
@@ -90,12 +130,14 @@ def main():
                 print(f"Skipping {short_name}: No default texture found.")
                 continue
                 
-            texture_full_path = os.path.join(RP_ROOT, default_texture)
-            if not os.path.exists(texture_full_path):
-                texture_full_path += ".png"
+            texture_full_path = resolve_texture_path(default_texture, short_name)
             
-            if not os.path.exists(texture_full_path):
-                print(f"Skipping {short_name}: Texture file not found at {texture_full_path}")
+            if not texture_full_path:
+                # Try fallback using short_name directly if default_texture failed
+                texture_full_path = resolve_texture_path("", short_name)
+
+            if not texture_full_path:
+                print(f"Skipping {short_name}: Could not resolve texture from '{default_texture}'")
                 continue
                 
             # Process
@@ -111,7 +153,6 @@ def main():
             
             if apply_tint(TEMPLATE_PATH, norm_color, egg_output_path):
                 # Update item_texture.json
-                # Format: textures/gaiadimension/androsa/item/spawn_egg_...
                 rel_path = os.path.relpath(egg_output_path, RP_ROOT).replace("\\", "/").replace(".png", "")
                 texture_defs[egg_name] = { "textures": rel_path }
                 

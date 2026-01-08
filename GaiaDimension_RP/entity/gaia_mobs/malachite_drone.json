@@ -3,7 +3,9 @@
   "minecraft:client_entity": {
     "description": {
       "identifier": "gaiadimension:malachite_drone",
-      "materials": { "default": "iron_golem" },
+      "materials": {
+        "default": "iron_golem"
+      },
       "textures": {
         "default": "textures/gaiadimension/androsa/entity/malachite_drone_normal"
       },
@@ -22,8 +24,7 @@
         "arm_controller": "controller.animation.iron_golem.arm_movement"
       },
       "spawn_egg": {
-        "texture": "spawn_gaia",
-        "texture_index": 0
+        "texture": "spawn_egg_malachite_drone"
       },
       "scripts": {
         "pre_animation": [
@@ -35,7 +36,9 @@
           "arm_controller"
         ]
       },
-      "render_controllers": [ "controller.render.iron_golem" ]
+      "render_controllers": [
+        "controller.render.iron_golem"
+      ]
     }
   }
 }

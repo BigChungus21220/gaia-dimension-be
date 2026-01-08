@@ -724,6 +724,51 @@
     },
     "spawn_egg_shalurker": {
       "textures": "textures/gaiadimension/androsa/item/spawn_egg_shalurker"
+    },
+    "spawn_egg_ancient_lagrahk": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_ancient_lagrahk"
+    },
+    "spawn_egg_bismuth_ulterus": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_bismuth_ulterus"
+    },
+    "spawn_egg_chilled_growth_sapper": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_chilled_growth_sapper"
+    },
+    "spawn_egg_common_growth_sapper": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_common_growth_sapper"
+    },
+    "spawn_egg_corrupt_growth_sapper": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_corrupt_growth_sapper"
+    },
+    "spawn_egg_malachite_drone": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_malachite_drone"
+    },
+    "spawn_egg_markuzar_plant": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_markuzar_plant"
+    },
+    "spawn_egg_mineral_arenthis": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_mineral_arenthis"
+    },
+    "spawn_egg_mutant_growth_extractor": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_mutant_growth_extractor"
+    },
+    "spawn_egg_mystified_growth_sapper": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_mystified_growth_sapper"
+    },
+    "spawn_egg_nomadic_lagrahk_none": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_nomadic_lagrahk_none"
+    },
+    "spawn_egg_nomadic_lagrahk_salty": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_nomadic_lagrahk_salty"
+    },
+    "spawn_egg_nomadic_lagrahk_static": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_nomadic_lagrahk_static"
+    },
+    "spawn_egg_nomadic_lagrahk_volcanic": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_nomadic_lagrahk_volcanic"
+    },
+    "spawn_egg_nutrient_growth_sapper": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_nutrient_growth_sapper"
     }
   }
 }
