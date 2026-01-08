@@ -292,7 +292,7 @@
                     }
                 ]
             },
-            "minecraft:weapon": {},
+            
             "minecraft:display_name": {},
             "tag:minecraft:is_axe": {},
             "minecraft:custom_components": [

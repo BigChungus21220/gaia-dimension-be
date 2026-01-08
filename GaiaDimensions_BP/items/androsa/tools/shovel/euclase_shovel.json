@@ -96,7 +96,7 @@
                     }
                 ]
             },
-            "minecraft:weapon": {},
+            
             "tag:minecraft:is_shovel": {},
             "minecraft:custom_components": [
                 "luminiae:durability"
