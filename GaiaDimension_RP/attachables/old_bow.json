@@ -8,10 +8,10 @@
         "enchanted": "entity_alphatest_glint"
       },
       "textures": {
-        "old_bow_standby": "textures/gaiadimension/androsa/item/bow/old_bow_standby",
-        "old_bow_pull_0": "textures/gaiadimension/androsa/item/bow/old_bow_pull_0",
-        "old_bow_pull_1": "textures/gaiadimension/androsa/item/bow/old_bow_pull_1",
-        "old_bow_pull_2": "textures/gaiadimension/androsa/item/bow/old_bow_pull_2",
+        "old_bow_standby": "textures/gaiadimension/androsa/item/old_bow_standby",
+        "old_bow_pull_0": "textures/gaiadimension/androsa/item/old_bow_pull_0",
+        "old_bow_pull_1": "textures/gaiadimension/androsa/item/old_bow_pull_1",
+        "old_bow_pull_2": "textures/gaiadimension/androsa/item/old_bow_pull_2",
         "enchanted": "textures/gaiadimension/androsa/misc/enchanted_item_glint"
       },
       "geometry": {

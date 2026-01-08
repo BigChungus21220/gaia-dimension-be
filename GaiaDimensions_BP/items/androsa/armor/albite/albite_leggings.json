@@ -9,7 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": "albite_leggings",
+            "minecraft:icon": "albite_legs",
             "minecraft:max_stack_size": 1,
             "minecraft:enchantable": {
                 "value": 15,

@@ -9,6 +9,7 @@
             }
         },
         "components": {
+            "minecraft:geometry": "minecraft:geometry.full_block",
             "tag:is_shovelable": {},
             "tag:dirt": {},
             "minecraft:destructible_by_mining": {
@@ -16,6 +17,30 @@
             },
             "minecraft:destructible_by_explosion": {
                 "explosion_resistance": 1
+            },
+             "minecraft:selection_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:collision_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
             },
             "minecraft:material_instances": {
 				"*": {

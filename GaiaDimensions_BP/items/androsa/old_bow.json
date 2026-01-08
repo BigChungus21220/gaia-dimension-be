@@ -5,13 +5,11 @@
             "identifier": "gaiadimension:old_bow",
             "menu_category": {
                 "category": "equipment",
-                "group": "itemGroup.name.shield"
+                "group": "minecraft:itemGroup.name.shield"
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "old_bow"
-            },
+            "minecraft:icon": "old_bow_standby",
             "minecraft:display_name": {
                 "value": "Old Bow"
             },
@@ -63,7 +61,9 @@
             },
             "minecraft:frame_count": 3,
             "minecraft:use_animation": "bow",
-            "minecraft:use_modifiers": 99999,
+            "minecraft:use_modifiers": {
+                "use_duration": 72000
+            },
             "minecraft:max_stack_size": 1,
             "minecraft:glint": false,
             "minecraft:hand_equipped": true
