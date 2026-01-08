@@ -2,14 +2,14 @@
     "format_version": "1.20.50",
     "minecraft:item": {
         "description": {
-            "identifier": "gaiadimension:ixiolite_axe",
+            "identifier": "gaiadimension:stibnite_axe",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.axe"
             }
         },
         "components": {
-            "minecraft:icon": "ixiolite_axe",
+            "minecraft:icon": "stibnite_axe",
             "minecraft:max_stack_size": 1,
             "minecraft:hand_equipped": true,
             "minecraft:allow_off_hand": false,
@@ -25,8 +25,8 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaiadimension:ixiolite",
-                            "gaiadimension:ixiolite_axe"
+                            "gaiadimension:stibnite",
+                            "gaiadimension:stibnite_axe"
                         ],
                         "repair_amount": "context.other->query.remaining_durability + 0.2 * context.other->query.max_durability"
                     }

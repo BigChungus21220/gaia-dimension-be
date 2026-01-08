@@ -41,9 +41,6 @@
             "minecraft:display_name": {
                 "value": "Malachite Boots\n\u00a77Sturdy, heavy, and eerily polished"
             },
-            "minecraft:knockback_resistance": {
-                "protection": 0.5
-            },
             "minecraft:tags": {
                 "tags": [
                     "minecraft:transformable_items",

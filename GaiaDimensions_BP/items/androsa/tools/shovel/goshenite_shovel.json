@@ -2,20 +2,20 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaiadimension:ixiolite_shovel",
+            "identifier": "gaiadimension:goshenite_shovel",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.shovel"
             }
         },
         "components": {
-            "minecraft:icon": "ixiolite_shovel",
+            "minecraft:icon": "goshenite_shovel",
             "minecraft:max_stack_size": 1,
             "minecraft:hand_equipped": true,
             "minecraft:allow_off_hand": false,
             "minecraft:glint": false,
             "minecraft:durability": {
-                "max_durability": 1500,
+                "max_durability": 4000,
                 "damage_chance": {
                     "min": 60,
                     "max": 100
@@ -25,15 +25,15 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaiadimension:ixiolite",
-                            "gaiadimension:ixiolite_shovel"
+                            "gaiadimension:goshenite",
+                            "gaiadimension:goshenite_shovel"
                         ],
                         "repair_amount": "context.other->query.remaining_durability + 0.2 * context.other->query.max_durability"
                     }
                 ]
             },
             "minecraft:mining_speed": 1,
-            "minecraft:damage": 4.5,
+            "minecraft:damage": 6.5,
             "minecraft:enchantable": {
                 "value": 15,
                 "slot": "shovel"
@@ -44,55 +44,55 @@
                 "destroy_speeds": [
                     {
                         "block": "gaiadimension:green_soft_grass",
-                        "speed": 3
+                        "speed": 7
                     },
                     {
                         "block": "gaiadimension:soft_grass",
-                        "speed": 3
+                        "speed": 7
                     },
                     {
                         "block": "gaiadimension:purple_glitter_grass",
-                        "speed": 3
+                        "speed": 7
                     },
                     {
                         "block": "gaiadimension:corrupted_grass",
-                        "speed": 3
+                        "speed": 7
                     },
                     {
                         "block": "gaiadimension:murky_grass",
-                        "speed": 3
+                        "speed": 7
                     },
                     {
                         "block": "gaiadimension:corrupted_soil",
-                        "speed": 3
+                        "speed": 7
                     },
                     {
                         "block": "gaiadimension:light_soil",
-                        "speed": 3
+                        "speed": 7
                     },
                     {
                         "block": "gaiadimension:boggy_soil",
-                        "speed": 3
+                        "speed": 7
                     },
                     {
                         "block": "gaiadimension:green_glitter_grass",
-                        "speed": 3
+                        "speed": 7
                     },
                     {
                         "block": "gaiadimension:yellow_glitter_grass",
-                        "speed": 3
+                        "speed": 7
                     },
                     {
                         "block": "gaiadimension:blue_glitter_grass",
-                        "speed": 3
+                        "speed": 7
                     },
                     {
                         "block": "gaiadimension:pink_glitter_grass",
-                        "speed": 3
+                        "speed": 7
                     },
                     {
                         "block": "gaiadimension:heavy_soil",
-                        "speed": 3
+                        "speed": 7
                     }
                 ]
             },

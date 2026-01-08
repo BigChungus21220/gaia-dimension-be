@@ -2,21 +2,21 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaiadimension:chalcedony_helmet",
+            "identifier": "gaiadimension:albite_chestplate",
             "menu_category": {
                 "category": "equipment",
-                "group": "itemGroup.name.helmet"
+                "group": "itemGroup.name.chestplate"
             }
         },
         "components": {
-            "minecraft:icon": "chalcedony_helmet",
+            "minecraft:icon": "albite_chestplate",
             "minecraft:max_stack_size": 1,
             "minecraft:enchantable": {
                 "value": 15,
-                "slot": "armor_head"
+                "slot": "armor_torso"
             },
             "minecraft:durability": {
-                "max_durability": 2530,
+                "max_durability": 1600,
                 "damage_chance": {
                     "min": 60,
                     "max": 100
@@ -25,17 +25,17 @@
             "minecraft:glint": false,
             "minecraft:hand_equipped": false,
             "minecraft:wearable": {
-                "slot": "slot.armor.head",
-                "protection": 3
+                "slot": "slot.armor.chest",
+                "protection": 6
             },
             "minecraft:repairable": {
                 "repair_items": [
                     {
                         "items": [
-                            "gaiadimension:chalcedony",
-                            "gaiadimension:chalcedony_helmet"
+                            "gaiadimension:albite",
+                            "gaiadimension:albite_chestplate"
                         ],
-                        "repair_amount": 632
+                        "repair_amount": 400
                     }
                 ]
             },

@@ -147,7 +147,7 @@
                         "speed": 5
                     },
                     {
-                        "block": "gaiadimension:leucite_block",
+                        "block": "gaiadimension:albite_block",
                         "speed": 5
                     },
                     {
@@ -367,7 +367,7 @@
                         "speed": 5
                     },
                     {
-                        "block": "gaiadimension:ixiolite_block",
+                        "block": "gaiadimension:stibnite_block",
                         "speed": 5
                     },
                     {

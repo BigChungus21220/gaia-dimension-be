@@ -2,21 +2,21 @@
     "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
-            "identifier": "gaiadimension:leucite_helmet",
+            "identifier": "gaiadimension:goshenite_helmet",
             "menu_category": {
                 "category": "equipment",
                 "group": "itemGroup.name.helmet"
             }
         },
         "components": {
-            "minecraft:icon": "leucite_helmet",
+            "minecraft:icon": "goshenite_helmet",
             "minecraft:max_stack_size": 1,
             "minecraft:enchantable": {
                 "value": 15,
                 "slot": "armor_head"
             },
             "minecraft:durability": {
-                "max_durability": 1100,
+                "max_durability": 2530,
                 "damage_chance": {
                     "min": 60,
                     "max": 100
@@ -26,16 +26,16 @@
             "minecraft:hand_equipped": false,
             "minecraft:wearable": {
                 "slot": "slot.armor.head",
-                "protection": 1
+                "protection": 3
             },
             "minecraft:repairable": {
                 "repair_items": [
                     {
                         "items": [
-                            "gaiadimension:leucite",
-                            "gaiadimension:leucite_helmet"
+                            "gaiadimension:goshenite",
+                            "gaiadimension:goshenite_helmet"
                         ],
-                        "repair_amount": 275
+                        "repair_amount": 632
                     }
                 ]
             },
