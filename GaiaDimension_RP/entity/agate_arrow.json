@@ -7,10 +7,10 @@
         "default": "arrow"
       },
       "textures": {
-        "default": "textures/items/bow/agate_arrow"
+        "default": "textures/gaiadimension/androsa/item/agate_arrow"
       },
       "geometry": {
-        "default": "geometry.arrow_img"
+        "default": "geometry.rosa_gd.arrow_img"
       },
       "animations": {
         "move": "animation.arrow.target_rotation"

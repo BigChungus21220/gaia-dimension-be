@@ -668,8 +668,62 @@
     "zircon_prince_gear": {
       "textures": "textures/gaiadimension/androsa/item/zircon_prince_gear"
     },
+    "spawn_gaia": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_gaia"
+    },
     "zircon_prince_razor": {
       "textures": "textures/gaiadimension/androsa/item/zircon_prince_razor"
+    },
+    "spawn_egg_agate_golem": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_agate_golem"
+    },
+    "spawn_egg_archaic_warrior": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_archaic_warrior"
+    },
+    "spawn_egg_blue_howlite_wolf": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_blue_howlite_wolf"
+    },
+    "spawn_egg_cavern_tick": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_cavern_tick"
+    },
+    "spawn_egg_contorted_naga": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_contorted_naga"
+    },
+    "spawn_egg_crystal_golem": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_crystal_golem"
+    },
+    "spawn_egg_howlite_wolf": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_howlite_wolf"
+    },
+    "spawn_egg_lesser_shock_shooter": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_lesser_shock_shooter"
+    },
+    "spawn_egg_lesser_spit_fire": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_lesser_spit_fire"
+    },
+    "spawn_egg_malachite_guard": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_malachite_guard"
+    },
+    "spawn_egg_muckling": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_muckling"
+    },
+    "spawn_egg_primal_beast": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_primal_beast"
+    },
+    "spawn_egg_rocky_luggeroth": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_rocky_luggeroth"
+    },
+    "spawn_egg_rugged_lurmorus": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_rugged_lurmorus"
+    },
+    "spawn_egg_saltion": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_saltion"
+    },
+    "spawn_egg_shallow_arenthis": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_shallow_arenthis"
+    },
+    "spawn_egg_shalurker": {
+      "textures": "textures/gaiadimension/androsa/item/spawn_egg_shalurker"
     }
   }
 }
