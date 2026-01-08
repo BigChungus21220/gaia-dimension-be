@@ -49,9 +49,6 @@
             "minecraft:durability": {
                 "max_durability": 500
             },
-            "minecraft:chargeable": {
-                "movement_modifier": 0.4
-            },
             "minecraft:shooter": {
                 "max_draw_duration": 1,
                 "scale_power_by_draw_duration": true,
@@ -66,7 +63,7 @@
             },
             "minecraft:frame_count": 3,
             "minecraft:use_animation": "bow",
-            "minecraft:use_duration": 99999,
+            "minecraft:use_modifiers": 99999,
             "minecraft:max_stack_size": 1,
             "minecraft:glint": false,
             "minecraft:hand_equipped": true

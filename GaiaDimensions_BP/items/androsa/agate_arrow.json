@@ -5,7 +5,7 @@
             "identifier": "gaiadimension:agate_arrow",
             "menu_category": {
                 "category": "equipment",
-                "group": "itemGroup.name.shield"
+                "group": "minecraft:itemGroup.name.shield"
             }
         },
         "components": {
