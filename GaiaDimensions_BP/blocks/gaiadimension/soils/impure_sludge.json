@@ -17,6 +17,12 @@
             "minecraft:destructible_by_explosion": {
                 "explosion_resistance": 1
             },
+            "minecraft:material_instances": {
+				"*": {
+					"texture": "gaiadimension:impure_sludge",
+					"render_method": "blend"
+				}
+			},
             "minecraft:map_color": "#ffffff"
         }
     }
