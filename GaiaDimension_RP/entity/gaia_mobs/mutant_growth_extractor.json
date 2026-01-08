@@ -10,7 +10,7 @@
         "default": "textures/entity/mutant_growth_extractor"
       },
       "geometry": {
-        "default": "geometry.growth_extractor"
+        "default": "geometry.rosa_gd.growth_extractor"
       },
       "scripts": {
         "pre_animation": [

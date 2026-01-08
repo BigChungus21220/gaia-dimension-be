@@ -11,8 +11,8 @@
         "default": "textures/gaiadimension/androsa/entity/muckling"
       },
       "geometry": {
-        "default": "geometry.rosa_gd.slime",
-        "armor": "geometry.rosa_gd.slime.armor"
+        "default": "geometry.slime",
+        "armor": "geometry.slime.armor"
       },
       "scripts": {
         "pre_animation": [
