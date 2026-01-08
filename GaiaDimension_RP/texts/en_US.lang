@@ -412,22 +412,22 @@ item.spawn_egg.entity.gaiadimension:shallow_arenthis.name=Shallow Arenthis Spawn
 item.spawn_egg.entity.gaiadimension:shalurker.name=Shalurker Spawn Egg
 
 ## Armor Translations
-item.gaiadimension:albite_boots.name=Albite Boots
-item.gaiadimension:albite_chestplate.name=Albite Chestplate
-item.gaiadimension:albite_helmet.name=Albite Helmet
-item.gaiadimension:albite_leggings.name=Albite Leggings
-item.gaiadimension:diopside_boots.name=Diopside Boots
-item.gaiadimension:diopside_chestplate.name=Diopside Chestplate
-item.gaiadimension:diopside_helmet.name=Diopside Helmet
-item.gaiadimension:diopside_leggings.name=Diopside Leggings
-item.gaiadimension:goshenite_boots.name=Goshenite Boots
-item.gaiadimension:goshenite_chestplate.name=Goshenite Chestplate
-item.gaiadimension:goshenite_helmet.name=Goshenite Helmet
-item.gaiadimension:goshenite_leggings.name=Goshenite Leggings
-item.gaiadimension:sugilite_boots.name=Sugilite Boots
-item.gaiadimension:sugilite_chestplate.name=Sugilite Chestplate
-item.gaiadimension:sugilite_helmet.name=Sugilite Helmet
-item.gaiadimension:sugilite_leggings.name=Sugilite Leggings
+item.gaiadimension:albite_boots=Albite Boots
+item.gaiadimension:albite_chestplate=Albite Chestplate
+item.gaiadimension:albite_helmet=Albite Helmet
+item.gaiadimension:albite_leggings=Albite Leggings
+item.gaiadimension:diopside_boots=Diopside Boots
+item.gaiadimension:diopside_chestplate=Diopside Chestplate
+item.gaiadimension:diopside_helmet=Diopside Helmet
+item.gaiadimension:diopside_leggings=Diopside Leggings
+item.gaiadimension:goshenite_boots=Goshenite Boots
+item.gaiadimension:goshenite_chestplate=Goshenite Chestplate
+item.gaiadimension:goshenite_helmet=Goshenite Helmet
+item.gaiadimension:goshenite_leggings=Goshenite Leggings
+item.gaiadimension:sugilite_boots=Sugilite Boots
+item.gaiadimension:sugilite_chestplate=Sugilite Chestplate
+item.gaiadimension:sugilite_helmet=Sugilite Helmet
+item.gaiadimension:sugilite_leggings=Sugilite Leggings
 
 ## Curtain Translations
 item.gaiadimension:blue_agate_curtain=Blue Agate Curtain
