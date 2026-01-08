@@ -1,0 +1,23 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:fog_settings": {
+    "description": {
+      "identifier": "gaiadimension:superhot_magma_fog"
+    },
+    "distance": {
+      "air": {
+		    "fog_start": 0,
+		    "fog_end": 0.001,
+		   "fog_color": "#3300ff",
+		    "render_distance_type": "render"
+	    },
+      "water":  { "fog_start": 0, "fog_end": 10,   "fog_color": "#6a00ff", "render_distance_type": "fixed" },
+	    "weather": {
+		    "fog_start": 0,
+		    "fog_end": 0.001,
+		    "fog_color": "#07137d",
+		    "render_distance_type": "render"
+      }
+    }
+  }
+}

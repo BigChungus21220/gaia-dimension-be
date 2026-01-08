@@ -58,6 +58,8 @@ const DIRECTIONS = [
     { x: -1, y: 0, z: 0, name: "West" }
 ];
 
+const playerFluidState = new Map(); // Key: player.id, Value: { head: boolean, feet: boolean }
+
 system.runInterval(() => {
     const start = Date.now();
     
@@ -95,14 +97,37 @@ function runPlayerEffects() {
     const players = world.getPlayers();
     for (const player of players) {
       const dimension = world.getDimension(player.dimension.id)
-      const blockAbove = dimension.getBlock({ ...player?.location, y: player?.location?.y + 1 });
-      const blockAt = dimension.getBlock(player?.location);
+      const location = player.location;
+      
+      const blockAt = dimension.getBlock(location);
+      const blockAbove = dimension.getBlock({ x: location.x, y: location.y + 1, z: location.z });
+      const blockHead = dimension.getBlock({ ...player?.location, y: player?.location?.y + 1.63 });
+      
+      const inFluidAt = blockAt && fluids.includes(blockAt.typeId);
+      const inFluidAbove = blockAbove && fluids.includes(blockAbove.typeId);
 
-      if (
-        (blockAbove && fluids.includes(blockAbove.typeId)) ||
-        (blockAt && fluids.includes(blockAt.typeId))
-      ) {
-        player.addEffect("slow_falling", 4, { amplifier: player.isSneaking ? 1 : 2, showParticles: false });
+      // --- 1. Viscosity Effects (Slow Falling + Levitation) ---
+      if (inFluidAt || inFluidAbove) {
+        let depth = 0;
+        if (inFluidAt) depth++;
+        if (inFluidAbove) depth++;
+        if (depth === 2) {
+             const blockWayAbove = dimension.getBlock({ x: location.x, y: location.y + 2, z: location.z });
+             if (blockWayAbove && fluids.includes(blockWayAbove.typeId)) {
+                 depth++;
+             }
+        }
+        
+        let amplifier = 0;
+        if (depth >= 3) amplifier = 2;
+        else if (depth === 2) amplifier = 1;
+        
+        if (player.isSneaking) {
+            amplifier = Math.min(2, amplifier + 1);
+        }
+
+        player.addEffect("slow_falling", 4, { amplifier: amplifier, showParticles: false });
+        
         if (player.isJumping) {
           player.addEffect("levitation", 3, { amplifier: 2, showParticles: false });
         }
@@ -117,11 +142,43 @@ function runPlayerEffects() {
         }
       }
 
-      const blockHead = dimension.getBlock({ ...player?.location, y: player?.location?.y + 1.63 });
-      if (blockHead && fluids.includes(blockHead.typeId)) {
-        player.runCommand("fog @s push fluid:water_fog fluid_fog");
-      } else {
-        player.runCommand("fog @s remove fluid_fog");
+      // --- 2. Fluid Sounds & Particles (Mineral Water) ---
+      const prevState = playerFluidState.get(player.id) || { head: false, feet: false };
+      const isHeadInMineralWater = blockHead && blockHead.typeId.includes("mineral_water");
+      const isFeetInMineralWater = blockAt && blockAt.typeId.includes("mineral_water");
+      
+      // Sound logic (Head)
+      if (isHeadInMineralWater && !prevState.head) {
+          // Enter
+          player.playSound("ambient.underwater.enter", { volume: 0.5, pitch: 1 });
+          player.playSound("ambient.underwater.loop", { volume: 1, pitch: 1 });
+      } else if (!isHeadInMineralWater && prevState.head) {
+          // Exit
+          player.playSound("ambient.underwater.exit", { volume: 0.5, pitch: 1 });
+          player.runCommand("stopsound @s ambient.underwater.loop");
+      }
+      
+      // Particle logic (Feet)
+      if (isFeetInMineralWater && !prevState.feet) {
+          dimension.spawnParticle("minecraft:water_splash_particle", { x: location.x, y: location.y, z: location.z });
+      }
+      
+      playerFluidState.set(player.id, { head: isHeadInMineralWater, feet: isFeetInMineralWater });
+
+      // --- 3. Fog Effect ---
+      if (blockHead) {
+          const typeId = blockHead.typeId;
+          if (typeId.includes("mineral_water")) {
+              player.runCommand("fog @s push gaiadimension:mineral_water_fog mineral_water_fog");
+          } else if (typeId.includes("superhot_magma")) {
+              player.runCommand("fog @s push gaiadimension:superhot_magma_fog superhot_magma_fog");
+          } else if (fluids.includes(typeId)) {
+              player.runCommand("fog @s push fluid:water_fog fluid_fog");
+          } else {
+              player.runCommand("fog @s remove mineral_water_fog");
+              player.runCommand("fog @s remove superhot_magma_fog");
+              player.runCommand("fog @s remove fluid_fog");
+          }
       }
     }
 }
