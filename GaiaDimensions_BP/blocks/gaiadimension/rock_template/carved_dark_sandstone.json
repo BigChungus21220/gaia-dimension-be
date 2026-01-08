@@ -2,14 +2,14 @@
     "format_version": "1.20.80",
     "minecraft:block": {
         "description": {
-            "identifier": "gaiadimension:cracked_amethyst_bricks",
+            "identifier": "cc_wild:carved_dark_sandstone",
             "menu_category": {
                 "category": "nature"
             }
         },
         "components": {
             "minecraft:map_color": "#4f4f4f",
-            "minecraft:geometry": "minecraft:geometry.full_block",
+            "minecraft:geometry": "geometry.cc_wild.cc_wild_carved_dark_sandstone",
             "minecraft:destructible_by_mining": {
                  "seconds_to_destroy": 1.5,
                 "item_specific_speeds": [
@@ -41,27 +41,27 @@
             },
             "minecraft:material_instances": {
                 "up": {
-                    "texture": "gaiadimension:cracked_amethyst_bricks",
+                    "texture": "cc_wild:atlas_sandstone_dark",
                     "render_method": "opaque"
                 },
                 "down": {
-                    "texture": "gaiadimension:cracked_amethyst_bricks",
+                    "texture": "cc_wild:atlas_sandstone_dark",
                     "render_method": "opaque"
                 },
                 "south": {
-                    "texture": "gaiadimension:cracked_amethyst_bricks",
+                    "texture": "cc_wild:atlas_sandstone_dark",
                     "render_method": "opaque"
                 },
                 "east": {
-                    "texture": "gaiadimension:cracked_amethyst_bricks",
+                    "texture": "cc_wild:atlas_sandstone_dark",
                     "render_method": "opaque"
                 },
                 "west": {
-                    "texture": "gaiadimension:cracked_amethyst_bricks",
+                    "texture": "cc_wild:atlas_sandstone_dark",
                     "render_method": "opaque"
                 },
                 "north": {
-                    "texture": "gaiadimension:cracked_amethyst_bricks",
+                    "texture": "cc_wild:atlas_sandstone_dark",
                     "render_method": "opaque"
                 }
             }

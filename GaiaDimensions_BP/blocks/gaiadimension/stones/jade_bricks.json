@@ -2,7 +2,7 @@
     "format_version": "1.20.80",
     "minecraft:block": {
         "description": {
-            "identifier": "gaiadimension:cracked_amethyst_bricks",
+            "identifier": "gaiadimension:jade_bricks",
             "menu_category": {
                 "category": "nature"
             }
@@ -41,27 +41,27 @@
             },
             "minecraft:material_instances": {
                 "up": {
-                    "texture": "gaiadimension:cracked_amethyst_bricks",
+                    "texture": "gaiadimension:jade_bricks",
                     "render_method": "opaque"
                 },
                 "down": {
-                    "texture": "gaiadimension:cracked_amethyst_bricks",
+                    "texture": "gaiadimension:jade_bricks",
                     "render_method": "opaque"
                 },
                 "south": {
-                    "texture": "gaiadimension:cracked_amethyst_bricks",
+                    "texture": "gaiadimension:jade_bricks",
                     "render_method": "opaque"
                 },
                 "east": {
-                    "texture": "gaiadimension:cracked_amethyst_bricks",
+                    "texture": "gaiadimension:jade_bricks",
                     "render_method": "opaque"
                 },
                 "west": {
-                    "texture": "gaiadimension:cracked_amethyst_bricks",
+                    "texture": "gaiadimension:jade_bricks",
                     "render_method": "opaque"
                 },
                 "north": {
-                    "texture": "gaiadimension:cracked_amethyst_bricks",
+                    "texture": "gaiadimension:jade_bricks",
                     "render_method": "opaque"
                 }
             }
