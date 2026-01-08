@@ -4,7 +4,8 @@
         "description": {
             "identifier": "gaiadimension:goldstone_dust",
             "menu_category": {
-                "category": "items"
+                "category": "items",
+                "group": "itemGroup.name.item"
             }
         },
         "components": {

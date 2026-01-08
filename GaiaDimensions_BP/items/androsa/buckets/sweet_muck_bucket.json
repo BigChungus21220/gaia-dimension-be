@@ -5,13 +5,11 @@
             "identifier": "gaiadimension:sweet_muck_bucket",
             "menu_category": {
                 "category": "items",
-                "group": ""
+                "group": "itemGroup.name.item"
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "sweet_muck_bucket"
-            },
+            "minecraft:icon": "sweet_muck_bucket",
             "minecraft:display_name": {
                 "value": "Sweet Muck Bucket"
             },

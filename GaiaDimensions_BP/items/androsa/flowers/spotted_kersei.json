@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "spotted_kersei"
-            },
+            "minecraft:icon": "spotted_kersei",
             "minecraft:display_name": {
                 "value": "Spotted Kersei"
             },

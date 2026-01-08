@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "blue_crystal_growth"
-            },
+            "minecraft:icon": "blue_crystal_growth",
             "minecraft:display_name": {
                 "value": "Blue Crystal Growth"
             },

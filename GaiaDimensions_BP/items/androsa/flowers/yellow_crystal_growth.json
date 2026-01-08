@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "yellow_crystal_growth"
-            },
+            "minecraft:icon": "yellow_crystal_growth",
             "minecraft:display_name": {
                 "value": "Yellow Crystal Growth"
             },

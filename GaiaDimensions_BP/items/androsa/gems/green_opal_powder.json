@@ -4,7 +4,8 @@
         "description": {
             "identifier": "gaiadimension:green_opal_powder",
             "menu_category": {
-                "category": "items"
+                "category": "items",
+                "group": "itemGroup.name.item"
             }
         },
         "components": {

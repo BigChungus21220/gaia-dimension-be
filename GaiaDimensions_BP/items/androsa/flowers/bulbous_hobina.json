@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "bulbous_hobina"
-            },
+            "minecraft:icon": "bulbous_hobina",
             "minecraft:display_name": {
                 "value": "Bulbous Hobina"
             },

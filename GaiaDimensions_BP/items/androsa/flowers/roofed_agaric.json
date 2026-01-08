@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "roofed_agaric"
-            },
+            "minecraft:icon": "roofed_agaric",
             "minecraft:display_name": {
                 "value": "Roofed Agaric"
             },

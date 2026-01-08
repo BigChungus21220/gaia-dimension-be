@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "mystical_murgni"
-            },
+            "minecraft:icon": "mystical_murgni",
             "minecraft:display_name": {
                 "value": "Mystical Murgni"
             },

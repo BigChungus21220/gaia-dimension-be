@@ -5,13 +5,11 @@
             "identifier": "gaiadimension:superhot_magma_bucket",
             "menu_category": {
                 "category": "items",
-                "group": ""
+                "group": "itemGroup.name.item"
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "superhot_magma_bucket"
-            },
+            "minecraft:icon": "superhot_magma_bucket",
             "minecraft:display_name": {
                 "value": "Superhot Magma Bucket"
             },

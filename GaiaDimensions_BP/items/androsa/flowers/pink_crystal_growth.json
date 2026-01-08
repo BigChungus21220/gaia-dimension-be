@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "pink_crystal_growth"
-            },
+            "minecraft:icon": "pink_crystal_growth",
             "minecraft:display_name": {
                 "value": "Pink Crystal Growth"
             },

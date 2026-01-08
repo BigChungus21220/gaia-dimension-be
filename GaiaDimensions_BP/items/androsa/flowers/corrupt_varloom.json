@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "corrupt_varloom"
-            },
+            "minecraft:icon": "corrupt_varloom",
             "minecraft:display_name": {
                 "value": "Corrupt Varloom"
             },

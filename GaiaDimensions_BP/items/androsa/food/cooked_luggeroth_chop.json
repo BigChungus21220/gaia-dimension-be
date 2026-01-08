@@ -4,7 +4,8 @@
         "description": {
             "identifier": "gaiadimension:cooked_luggeroth_chop",
             "menu_category": {
-                "category": "equipment"
+                "category": "equipment",
+                "group": "itemGroup.name.equipment"
             }
         },
         "components": {

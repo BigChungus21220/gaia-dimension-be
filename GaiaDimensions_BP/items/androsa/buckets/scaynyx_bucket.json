@@ -5,13 +5,11 @@
             "identifier": "gaiadimension:scaynyx_bucket",
             "menu_category": {
                 "category": "items",
-                "group": ""
+                "group": "itemGroup.name.item"
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "scaynyx_bucket"
-            },
+            "minecraft:icon": "scaynyx_bucket",
             "minecraft:display_name": {
                 "value": "Scaynyx Bucket"
             },

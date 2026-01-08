@@ -5,13 +5,11 @@
             "identifier": "gaiadimension:mineral_water_bucket",
             "menu_category": {
                 "category": "items",
-                "group": ""
+                "group": "itemGroup.name.item"
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "mineral_water_bucket"
-            },
+            "minecraft:icon": "mineral_water_bucket",
             "minecraft:display_name": {
                 "value": "Mineral Water Bucket"
             },

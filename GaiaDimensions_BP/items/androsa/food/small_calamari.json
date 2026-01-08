@@ -4,7 +4,8 @@
         "description": {
             "identifier": "gaiadimension:small_calamari",
             "menu_category": {
-                "category": "equipment"
+                "category": "equipment",
+                "group": "itemGroup.name.equipment"
             }
         },
         "components": {

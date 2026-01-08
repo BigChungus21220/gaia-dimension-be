@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "corrupted_gaia_eye"
-            },
+            "minecraft:icon": "corrupted_gaia_eye",
             "minecraft:display_name": {
                 "value": "Corrupted Gaia Eye"
             },

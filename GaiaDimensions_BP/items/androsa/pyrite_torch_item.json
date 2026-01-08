@@ -12,9 +12,7 @@
             "minecraft:block_placer": {
                 "block": "gaiadimension:pyrite_torch"
             },
-            "minecraft:icon": {
-                "texture": "pyrite_torch"
-            }
+            "minecraft:icon": "pyrite_torch"
         }
     }
 }

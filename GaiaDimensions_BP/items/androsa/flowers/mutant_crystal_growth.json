@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "mutant_crystal_growth"
-            },
+            "minecraft:icon": "mutant_crystal_growth",
             "minecraft:display_name": {
                 "value": "Mutant Crystal Growth"
             },

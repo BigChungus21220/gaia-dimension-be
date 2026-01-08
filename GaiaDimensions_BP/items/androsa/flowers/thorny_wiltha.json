@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "thorny_wiltha"
-            },
+            "minecraft:icon": "thorny_wiltha",
             "minecraft:display_name": {
                 "value": "Thorny Witha"
             },

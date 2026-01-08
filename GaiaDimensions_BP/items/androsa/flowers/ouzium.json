@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "ouzium"
-            },
+            "minecraft:icon": "ouzium",
             "minecraft:display_name": {
                 "value": "Ouzium"
             },

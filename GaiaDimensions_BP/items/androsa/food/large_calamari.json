@@ -4,7 +4,8 @@
         "description": {
             "identifier": "gaiadimension:large_calamari",
             "menu_category": {
-                "category": "equipment"
+                "category": "equipment",
+                "group": "itemGroup.name.equipment"
             }
         },
         "components": {

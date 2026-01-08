@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "thiscus"
-            },
+            "minecraft:icon": "thiscus",
             "minecraft:display_name": {
                 "value": "Thiscus"
             },

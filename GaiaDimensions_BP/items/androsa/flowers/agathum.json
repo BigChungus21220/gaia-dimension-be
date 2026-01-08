@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "agathum"
-            },
+            "minecraft:icon": "agathum",
             "minecraft:display_name": {
                 "value": "Agathum"
             },

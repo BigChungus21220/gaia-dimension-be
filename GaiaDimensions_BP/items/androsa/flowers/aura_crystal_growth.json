@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "aura_crystal_growth"
-            },
+            "minecraft:icon": "aura_crystal_growth",
             "minecraft:display_name": {
                 "value": "Aura Crystal Growth"
             },

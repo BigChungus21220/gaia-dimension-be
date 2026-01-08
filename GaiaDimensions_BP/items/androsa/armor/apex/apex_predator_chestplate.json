@@ -9,7 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": "apex_predator_chestplate",
+            "minecraft:icon": "apex_predator_jacket",
             "minecraft:max_stack_size": 1,
             "minecraft:enchantable": {
                 "value": 15,

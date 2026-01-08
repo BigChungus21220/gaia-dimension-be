@@ -9,9 +9,7 @@
             }
         },
         "components": {
-            "minecraft:icon": {
-                "texture": "peach_crystal_growth"
-            },
+            "minecraft:icon": "peach_crystal_growth",
             "minecraft:display_name": {
                 "value": "Peach Crystal Growth"
             },
