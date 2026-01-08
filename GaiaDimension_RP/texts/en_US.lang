@@ -428,3 +428,13 @@ item.gaiadimension:sugilite_boots.name=Sugilite Boots
 item.gaiadimension:sugilite_chestplate.name=Sugilite Chestplate
 item.gaiadimension:sugilite_helmet.name=Sugilite Helmet
 item.gaiadimension:sugilite_leggings.name=Sugilite Leggings
+
+## Curtain Translations
+item.gaiadimension:blue_agate_curtain.name=Blue Agate Curtain
+item.gaiadimension:burnt_agate_curtain.name=Burnt Agate Curtain
+item.gaiadimension:corrupted_curtain.name=Corrupted Curtain
+item.gaiadimension:fire_agate_curtain.name=Fire Agate Curtain
+item.gaiadimension:fossilized_curtain.name=Fossilized Curtain
+item.gaiadimension:golden_curtain.name=Golden Curtain
+item.gaiadimension:green_agate_curtain.name=Green Agate Curtain
+item.gaiadimension:aura_curtain.name=Aura Curtain
