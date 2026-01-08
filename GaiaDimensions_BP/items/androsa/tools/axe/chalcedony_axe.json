@@ -1,5 +1,5 @@
 {
-    "format_version": "1.16.100",
+    "format_version": "1.20.50",
     "minecraft:item": {
         "description": {
             "identifier": "gaiadimension:chalcedony_axe",
