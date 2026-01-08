@@ -1,4 +1,4 @@
-import { world, system, BlockPermutation } from "@minecraft/server";
+import { world, system, BlockPermutation, ItemStack } from "@minecraft/server";
 
 const fluids = [
     "gaiadimension:liquid_bismuth",
@@ -329,22 +329,48 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     if (itemStack && itemStack.typeId === "gaiadimension:scaynyx_bucket") {
         if (fluids.includes(block.typeId)) {
              const typeId = block.typeId;
+
+             // Only allow pickup if it's a source block (no suffix like _down, 1, 2, 3)
+             // Source blocks are: liquid_bismuth, liquid_aura, mineral_water, superhot_magma, sweet_muck
+             const isFlowing = typeId.endsWith("_down") || /[1-3]$/.test(typeId);
+
+             if (isFlowing) {
+                 return; // Only source blocks can be picked up
+             }
+
              let fluidName = typeId.replace("gaiadimension:", "");
-             fluidName = fluidName.replace(/[0-9]|_down/g, "");
-             
              const bucketId = "gaiadimension:" + fluidName + "_bucket";
              
              system.run(() => {
-                 player.runCommand(`give @s ${bucketId}`);
                  const container = player.getComponent("inventory").container;
                  const slot = player.selectedSlotIndex;
                  const currentItem = container.getItem(slot);
+                 
+                 const gamemode = player.getGameMode();
+                 
+                 if (gamemode === "creative") {
+                     block.setType("minecraft:air");
+                     return;
+                 }
+
                  if (currentItem && currentItem.typeId === "gaiadimension:scaynyx_bucket") {
+                    const filledBucket = new ItemStack(bucketId, 1);
+                    
                     if (currentItem.amount > 1) {
+                         // Decrease empty bucket stack
                          currentItem.amount -= 1;
                          container.setItem(slot, currentItem);
+                         
+                         // Add filled bucket to inventory
+                         const remainder = container.addItem(filledBucket);
+                         
+                         // If inventory full, drop item
+                         if (remainder && remainder.amount > 0) {
+                             player.dimension.spawnItem(remainder, player.location);
+                         }
                     } else {
-                         container.setItem(slot, null);
+                         // Replace single empty bucket with filled bucket
+                         container.setItem(slot, filledBucket);
                     }
                  }
                  

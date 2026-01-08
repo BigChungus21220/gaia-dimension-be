@@ -58,17 +58,6 @@
           "event": "tick",
           "target": "self"
         }
-      },
-      "minecraft:inside_block_notifier": {
-        "block_list": [
-          {
-            "block": "gaiadimension:purifier",
-            "exited_block_event": {
-              "event": "destroy",
-              "target": "self"
-            }
-          }
-        ]
       }
     },
     "events": {
