@@ -1,0 +1,253 @@
+{
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:golden_curtain_bottom",
+            "states": {
+                "gaiadimension:open": [
+                    false,
+                    true
+                ]
+            },
+            "traits": {
+                "minecraft:placement_direction": {
+                    "enabled_states": [
+                        "minecraft:cardinal_direction"
+                    ],
+                    "y_rotation_offset": 180
+                }
+            }
+        },
+        "permutations": [
+            {
+                "condition": "q.block_state('gaiadimension:open') == false",
+                "components": {
+                    "minecraft:selection_box": {
+                        "origin": [
+                            -8,
+                            0,
+                            -8
+                        ],
+                        "size": [
+                            0,
+                            0,
+                            0
+                        ]
+                    },
+                    "minecraft:collision_box": {
+                        "origin": [
+                            -8,
+                            0,
+                            -8
+                        ],
+                        "size": [
+                            16,
+                            16,
+                            3
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:open') == true",
+                "components": {
+                    "minecraft:selection_box": {
+                        "origin": [
+                            -8,
+                            0,
+                            -8
+                        ],
+                        "size": [
+                            0,
+                            0,
+                            0
+                        ]
+                    },
+                    "minecraft:collision_box": {
+                        "origin": [
+                            -8,
+                            0,
+                            -8
+                        ],
+                        "size": [
+                            0,
+                            0,
+                            0
+                        ]
+                    },
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "gaiadimension:golden_curtain_bottom_open",
+                    "render_method": "blend"
+                }
+            }}
+            },
+            {
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'north'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            0,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'west'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            90,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'south'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            180,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'east'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            -90,
+                            0
+                        ]
+                    }
+                }
+            }
+        ],
+        "components": {
+            "minecraft:item_visual": {
+                "geometry": "geometry.rosa_gd.door_icon",
+                "material_instances": {
+                    "up_up": {
+                        "texture": "gaiadimension:golden_curtain_top",
+                        "render_method": "blend"
+                    },
+                    "up_down": {
+                        "texture": "gaiadimension:golden_curtain_top",
+                        "render_method": "blend"
+                    },
+                    "up_south": {
+                        "texture": "gaiadimension:golden_curtain_top",
+                        "render_method": "blend"
+                    },
+                    "up_east": {
+                        "texture": "gaiadimension:golden_curtain_top",
+                        "render_method": "blend"
+                    },
+                    "up_west": {
+                        "texture": "gaiadimension:golden_curtain_top",
+                        "render_method": "blend"
+                    },
+                    "up_north": {
+                        "texture": "gaiadimension:golden_curtain_top",
+                        "render_method": "blend"
+                    },
+                    "down_up": {
+                        "texture": "gaiadimension:golden_curtain_bottom",
+                        "render_method": "blend"
+                    },
+                    "down_down": {
+                        "texture": "gaiadimension:golden_curtain_bottom",
+                        "render_method": "blend"
+                    },
+                    "down_south": {
+                        "texture": "gaiadimension:golden_curtain_bottom",
+                        "render_method": "blend"
+                    },
+                    "down_east": {
+                        "texture": "gaiadimension:golden_curtain_bottom",
+                        "render_method": "blend"
+                    },
+                    "down_west": {
+                        "texture": "gaiadimension:golden_curtain_bottom",
+                        "render_method": "blend"
+                    },
+                    "down_north": {
+                        "texture": "gaiadimension:golden_curtain_bottom",
+                        "render_method": "blend"
+                    }
+                }
+            },
+            "minecraft:geometry": {
+                "identifier": "geometry.rosa_gd.curtain"
+            },
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "gaiadimension:golden_curtain_bottom",
+                    "render_method": "blend"
+                }
+            },
+            "minecraft:loot": "loot_tables/msc/empty.json",
+            "minecraft:selection_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "minecraft:collision_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 3,
+                "item_specific_speeds": [
+                    {
+                        "item": "minecraft:wooden_axe",
+                        "destroy_speed": 1.5
+                    },
+                    {
+                        "item": "minecraft:stone_axe",
+                        "destroy_speed": 0.75
+                    },
+                    {
+                        "item": "minecraft:iron_axe",
+                        "destroy_speed": 0.5
+                    },
+                    {
+                        "item": "minecraft:diamond_axe",
+                        "destroy_speed": 0.4
+                    },
+                    {
+                        "item": "minecraft:netherite_axe",
+                        "destroy_speed": 0.35
+                    },
+                    {
+                        "item": "minecraft:golden_axe",
+                        "destroy_speed": 0.25
+                    }
+                ]
+            }
+        }
+    }
+}

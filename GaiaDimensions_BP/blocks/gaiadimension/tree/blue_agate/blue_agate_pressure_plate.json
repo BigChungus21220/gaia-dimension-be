@@ -1,0 +1,196 @@
+{
+	"format_version": "1.21.120",
+	"minecraft:block": {
+		"description": {
+			"identifier": "gaiadimension:blue_agate_pressure_plate",
+			"menu_category": {
+				"category": "items",
+				"group": "minecraft:itemGroup.name.pressurePlate"
+			},
+			"traits": {
+				"minecraft:placement_direction": {
+					"enabled_states": [
+						"minecraft:cardinal_direction"
+					],
+					"y_rotation_offset": 180
+				}
+			},
+			"states": {
+				"gaiadimension:pressed": [
+					false,
+					true
+				]
+			}
+		},
+		"permutations": [
+			{
+				"condition": "q.block_state('gaiadimension:pressed') == true",
+				"components": {
+					"minecraft:selection_box": {
+						"origin": [
+							-7,
+							0,
+							-7
+						],
+						"size": [
+							14,
+							0.5,
+							14
+						]
+					},
+					"minecraft:collision_box": {
+						"origin": [
+							-7,
+							0,
+							-7
+						],
+						"size": [
+							14,
+							0.5,
+							14
+						]
+					},
+					"minecraft:redstone_producer": {
+						"power": 15
+					}
+				}
+			},
+			{
+				"condition": "q.block_state('minecraft:cardinal_direction') == 'north'",
+				"components": {
+					"minecraft:transformation": {
+						"rotation": [
+							0,
+							0,
+							0
+						]
+					}
+				}
+			},
+			{
+				"condition": "q.block_state('minecraft:cardinal_direction') == 'west'",
+				"components": {
+					"minecraft:transformation": {
+						"rotation": [
+							0,
+							90,
+							0
+						]
+					}
+				}
+			},
+			{
+				"condition": "q.block_state('minecraft:cardinal_direction') == 'south'",
+				"components": {
+					"minecraft:transformation": {
+						"rotation": [
+							0,
+							180,
+							0
+						]
+					}
+				}
+			},
+			{
+				"condition": "q.block_state('minecraft:cardinal_direction') == 'east'",
+				"components": {
+					"minecraft:transformation": {
+						"rotation": [
+							0,
+							-90,
+							0
+						]
+					}
+				}
+			}
+		],
+		"components": {
+			"minecraft:item_visual": {
+				"geometry": "geometry.rosa_gd.pressure_plate_icon",
+				"material_instances": {
+					"*": {
+						"texture": "gaiadimension:blue_agate_tiles",
+						"render_method": "opaque"
+					}
+				}
+			},
+			"minecraft:geometry": {
+				"identifier": "geometry.rosa_gd.pressure_plate",
+				"bone_visibility": {
+					"block": "q.block_state('gaiadimension:pressed') == false",
+					"pressed": "q.block_state('gaiadimension:pressed') == true"
+				}
+			},
+			"minecraft:material_instances": {
+				"*": {
+					"texture": "gaiadimension:blue_agate_tiles",
+					"render_method": "opaque"
+				}
+			},
+			"minecraft:selection_box": {
+				"origin": [
+					-7,
+					0,
+					-7
+				],
+				"size": [
+					14,
+					1,
+					14
+				]
+			},
+			"minecraft:collision_box": {
+				"origin": [
+					-7,
+					0,
+					-7
+				],
+				"size": [
+					14,
+					1,
+					14
+				]
+			},
+			"minecraft:destructible_by_mining": {
+				"seconds_to_destroy": 0.5,
+				"item_specific_speeds": [
+					{
+						"item": "minecraft:wooden_axe",
+						"destroy_speed": 1.5
+					},
+					{
+						"item": "minecraft:stone_axe",
+						"destroy_speed": 0.75
+					},
+					{
+						"item": "minecraft:copper_axe",
+						"destroy_speed": 0.6
+					},
+					{
+						"item": "minecraft:iron_axe",
+						"destroy_speed": 0.5
+					},
+					{
+						"item": "minecraft:diamond_axe",
+						"destroy_speed": 0.4
+					},
+					{
+						"item": "minecraft:netherite_axe",
+						"destroy_speed": 0.35
+					},
+					{
+						"item": "minecraft:golden_axe",
+						"destroy_speed": 0.25
+					}
+				]
+			},
+			"minecraft:flammable": {
+				"destroy_chance_modifier": 50,
+				"catch_chance_modifier": 10
+			},
+			"minecraft:redstone_producer": {
+				"power": 0
+			}
+		}
+	}
+}

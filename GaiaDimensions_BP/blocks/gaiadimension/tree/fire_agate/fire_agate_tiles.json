@@ -1,0 +1,86 @@
+{
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:fire_agate_tiles",
+            "menu_category": {
+                "category": "construction",
+                "group": "minecraft:itemGroup.name.planks"
+            },
+            "traits": {
+                "minecraft:placement_direction": {
+                    "enabled_states": [
+                        "minecraft:cardinal_direction"
+                    ],
+                    "y_rotation_offset": 180
+                }
+            }
+        },
+        "components": {
+            "minecraft:geometry": "minecraft:geometry.full_block",
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "gaiadimension:fire_agate_tiles",
+                    "render_method": "opaque"
+                }
+            },
+            "minecraft:selection_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:collision_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 3,
+                "item_specific_speeds": [
+                    {
+                        "item": "minecraft:wooden_axe",
+                        "destroy_speed": 1.5
+                    },
+                    {
+                        "item": "minecraft:stone_axe",
+                        "destroy_speed": 0.75
+                    },
+                    {
+                        "item": "minecraft:iron_axe",
+                        "destroy_speed": 0.5
+                    },
+                    {
+                        "item": "minecraft:diamond_axe",
+                        "destroy_speed": 0.4
+                    },
+                    {
+                        "item": "minecraft:netherite_axe",
+                        "destroy_speed": 0.35
+                    },
+                    {
+                        "item": "minecraft:golden_axe",
+                        "destroy_speed": 0.25
+                    }
+                ]
+            },
+            "minecraft:flammable": {
+                "destroy_chance_modifier": 50,
+                "catch_chance_modifier": 10
+            }
+        }
+    }
+}

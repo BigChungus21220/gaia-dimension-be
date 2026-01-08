@@ -1,0 +1,48 @@
+{
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:blue_agate_sapling",
+            "traits": {
+                "minecraft:placement_position": {
+                    "enabled_states": [
+                        "minecraft:block_face"
+                    ]
+                }
+            }
+        },
+        "components": {
+            "minecraft:geometry": "geometry.rosa_gd.sapling",
+            "minecraft:tick": {
+                "interval_range": [
+                    12000,
+                    18000
+                ],
+                "looping": true
+            },
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "gaiadimension:blue_agate_sapling",
+                    "render_method": "blend"
+                }
+            },
+            "minecraft:selection_box": {
+                "origin": [
+                    -6,
+                    0,
+                    -6
+                ],
+                "size": [
+                    12,
+                    16,
+                    12
+                ]
+            },
+            "minecraft:collision_box": false,
+            "minecraft:flammable": {
+                "destroy_chance_modifier": 50,
+                "catch_chance_modifier": 10
+            }
+        }
+    }
+}
