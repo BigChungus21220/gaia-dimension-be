@@ -7,7 +7,7 @@
         "default": "iron_golem"
       },
       "textures": {
-        "default": "textures/gaiadimension/androsa/entity/malachite_drone_normal"
+        "default": "textures/gaiadimension/androsa/entity/malachite_drone/malachite_drone_normal"
       },
       "geometry": {
         "default": "geometry.rosa_gd.malachite_drone"
