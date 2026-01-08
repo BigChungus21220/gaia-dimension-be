@@ -1,0 +1,27 @@
+{
+    "format_version": "1.12.0",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:burnt_agate_fence"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "W/W",
+            "W/W"
+        ],
+        "key": {
+            "W": {
+                "item": "gaiadimension:burnt_agate_tiles"
+            },
+            "/": {
+                "item": "gaiadimension:agate_stick"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:burnt_agate_fence",
+            "count": 3
+        }
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "format_version": "1.12.0",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:fire_agate_button"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "#"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:fire_agate_tiles"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:fire_agate_button",
+            "count": 1
+        }
+    }
+}

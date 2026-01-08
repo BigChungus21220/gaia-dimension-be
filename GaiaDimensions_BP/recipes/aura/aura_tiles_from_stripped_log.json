@@ -1,0 +1,23 @@
+{
+    "format_version": "1.12.0",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:aura_tiles_from_stripped_log"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "#"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:stripped_aura_log"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:aura_tiles",
+            "count": 4
+        }
+    }
+}

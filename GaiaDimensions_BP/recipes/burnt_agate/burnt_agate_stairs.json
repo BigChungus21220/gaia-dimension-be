@@ -1,0 +1,25 @@
+{
+    "format_version": "1.12.0",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:burnt_agate_stairs"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "#  ",
+            "## ",
+            "###"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:burnt_agate_tiles"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:burnt_agate_stairs",
+            "count": 4
+        }
+    }
+}

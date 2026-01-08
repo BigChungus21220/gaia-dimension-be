@@ -1,0 +1,25 @@
+{
+    "format_version": "1.12.0",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:golden_stairs"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "#  ",
+            "## ",
+            "###"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:golden_tiles"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:golden_stairs",
+            "count": 4
+        }
+    }
+}
