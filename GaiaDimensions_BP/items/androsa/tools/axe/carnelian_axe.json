@@ -1,5 +1,5 @@
 {
-    "format_version": "1.20.50",
+    "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
             "identifier": "gaiadimension:carnelian_axe",
@@ -292,7 +292,6 @@
                     }
                 ]
             },
-            
             "minecraft:display_name": {},
             "tag:minecraft:is_axe": {},
             "minecraft:custom_components": [
