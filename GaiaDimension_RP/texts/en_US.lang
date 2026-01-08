@@ -438,3 +438,15 @@ item.gaiadimension:fossilized_curtain.name=Fossilized Curtain
 item.gaiadimension:golden_curtain.name=Golden Curtain
 item.gaiadimension:green_agate_curtain.name=Green Agate Curtain
 item.gaiadimension:aura_curtain.name=Aura Curtain
+
+## Geode Translations
+item.gaiadimension:blue_geode_slice=Blue Geode Slice
+item.gaiadimension:blue_geode_tea=Blue Geode Tea
+item.gaiadimension:green_geode_slice=Green Geode Slice
+item.gaiadimension:green_geode_tea=Green Geode Tea
+item.gaiadimension:pink_geode_slice=Pink Geode Slice
+item.gaiadimension:pink_geode_juice=Pink Geode Juice
+item.gaiadimension:purple_geode_slice=Purple Geode Slice
+item.gaiadimension:purple_geode_soda=Purple Geode Soda
+item.gaiadimension:green_geode_ale=Green Geode Ale
+item.gaiadimension:pearly_geode_elixir=Pearly Geode Elixir
