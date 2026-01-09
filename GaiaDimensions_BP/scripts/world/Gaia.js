@@ -290,3 +290,18 @@ system.runInterval(() => {
         }
     } catch (e) {}
 }, 10);
+
+// Entity Spawn Filtering
+world.afterEvents.entitySpawn.subscribe((event) => {
+    const { entity } = event;
+    if (!entity || !entity.isValid) return;
+
+    // Filter Endermen in Gaia Dimension (95% failure rate)
+    if (entity.typeId === "minecraft:enderman" && DimensionSystem.isInGaia(entity)) {
+        if (Math.random() < 0.95) {
+            system.run(() => {
+                if (entity.isValid) entity.remove();
+            });
+        }
+    }
+});
