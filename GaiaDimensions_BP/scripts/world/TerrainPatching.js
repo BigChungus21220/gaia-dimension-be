@@ -8,15 +8,30 @@
 // The stars will remember your name
 // Code was made by Error404
 
-import { BlockPermutation, system, world } from "@minecraft/server";
-import Gaia from "./Gaia";
-import { the_end } from "../utils";
-const air = BlockPermutation.resolve("minecraft:air");
-const endstone = BlockPermutation.resolve("minecraft:end_stone");
-const flower = BlockPermutation.resolve("minecraft:chorus_flower");
-const plant = BlockPermutation.resolve("minecraft:chorus_plant");
-const bedrock = BlockPermutation.resolve("minecraft:bedrock");
-const gateway = BlockPermutation.resolve("minecraft:end_gateway");
+import { BlockPermutation, system, world, BlockVolume } from "@minecraft/server";
+import { GaiaDimension } from "./Gaia.js";
+
+let the_end;
+let air, endstone, flower, plant, bedrock, gateway;
+
+system.run(() => {
+  try {
+      the_end = world.getDimension("minecraft:the_end");
+      air = BlockPermutation.resolve("minecraft:air");
+      endstone = BlockPermutation.resolve("minecraft:end_stone");
+      flower = BlockPermutation.resolve("minecraft:chorus_flower");
+      plant = BlockPermutation.resolve("minecraft:chorus_plant");
+      bedrock = BlockPermutation.resolve("minecraft:bedrock");
+      gateway = BlockPermutation.resolve("minecraft:end_gateway");
+      
+      data = DB.getAll();
+      Q.run(30);
+      world.sendMessage("TerrainPatching initialized");
+  } catch(e) {
+      world.sendMessage("TerrainPatching init error: " + e);
+  }
+});
+
 const size = 16;
 const ysize = 16;
 
@@ -37,7 +52,9 @@ class EndlessDB {
    * Count of used dynamic properties for this DB
    */
   get count() {
-    return world.getDynamicProperty(this.prefix + "count") ?? 1
+    try {
+        return world.getDynamicProperty(this.prefix + "count") ?? 1
+    } catch(e) { return 1; }
   }
   set count(value) {
     world.setDynamicProperty(this.prefix + "count", value)
@@ -48,9 +65,11 @@ class EndlessDB {
    */
   getAll() {
     let json = '';
-    for (let i = 0; i < this.count; i++) {
-      json += world.getDynamicProperty(this.prefix + "part_" + i) ?? ""
-    }
+    try {
+        for (let i = 0; i < this.count; i++) {
+          json += world.getDynamicProperty(this.prefix + "part_" + i) ?? ""
+        }
+    } catch(e) {}
     return JSON.parse(json === "" ? "{}" : json)
   }
   /**
@@ -88,7 +107,8 @@ class MiniChunk {
    * @param {Vector} pos 
    * @param {Dimension} dim 
    */
-  static getAt(pos, dim = the_end) {
+  static getAt(pos, dim) {
+    if (!dim) dim = the_end;
     let { x, y, z } = pos;
     return new this({ x: x / size, z: z / size, y: y / ysize }, dim)
   }
@@ -129,14 +149,22 @@ class MiniChunk {
     return blocks
   }
   clear() {
+    if (!air) return false;
     try{     
-      this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: endstone })
-      this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: flower })
-      this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: plant })
-      this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: endstone })
-      this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: bedrock })
-      this.dim.fillBlocks({ x: this.x * size, y: this.y * ysize, z: this.z * size }, { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 }, air, { matchingBlock: gateway })
-    } catch(e){null /*throw new Error("Failed clearing at position { x:"+this.x * size+", y:"+this.y * ysize+", z:"+this.z * size+" }")*/}
+      const min = { x: this.x * size, y: this.y * ysize, z: this.z * size };
+      const max = { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 };
+      const volume = new BlockVolume(min, max);
+
+      this.dim.fillBlocks(volume, air, { includeTypes: ["minecraft:end_stone"] });
+      this.dim.fillBlocks(volume, air, { includeTypes: ["minecraft:chorus_flower"] });
+      this.dim.fillBlocks(volume, air, { includeTypes: ["minecraft:chorus_plant"] });
+      this.dim.fillBlocks(volume, air, { includeTypes: ["minecraft:bedrock"] });
+      this.dim.fillBlocks(volume, air, { includeTypes: ["minecraft:end_gateway"] });
+      return true;
+    } catch(e){
+        // world.sendMessage(`Clear failed: ${e}`);
+        return false;
+    }
   }
 }
 /**
@@ -171,13 +199,18 @@ class TaskQueue {
 
 
 let DB = new EndlessDB("lum:end_stone_clearing:");
-let data = DB.getAll();
+let data = {}; // Init empty
 const Q = new TaskQueue();
-Q.run(30);
+
+// Note: DB and Q run are initialized inside system.run above
 
 //console.warn("Terrain Interpolator loaded sucessfully")
 const main = () => {
-  for (const p of Gaia.getPlayers()) {
+  if (!GaiaDimension || !the_end) return; // Wait for initialization
+  const players = GaiaDimension.getPlayers();
+  // if (players.length > 0) world.sendMessage(`TP Players: ${players.length}`);
+  
+  for (const p of players) {
     //feel free to change
     let range = 8;
     // try{
@@ -188,19 +221,28 @@ const main = () => {
     let loc = p.location;
     for (let radius = 1; radius <= range; radius++) {
       for (let y = -2; y <= 3; y++) {
-        if (loc.y + y*ysize < the_end.heightRange.min || loc.y + y*ysize > the_end.heightRange.max) continue;
+        // Height range checks might fail if heightRange undefined in some API versions for sim dims
+        // if (loc.y + y*ysize < the_end.heightRange.min || loc.y + y*ysize > the_end.heightRange.max) continue;
         for (let x = -radius; x <= radius; x++) {
           for (let z = -radius; z <= radius; z++) {
             if (x === 0 && y === 0 && z === 0 && radius > 1) continue;
-            //console.warn('x:'+x+' y:'+y+' z:'+z)
-            Q.push(() => {
-              const chunk = MiniChunk.getAt({ x: loc.x + x * size, y: loc.y + y * ysize, z: loc.z + z * size }, p.dimension);
-              if (chunk.isChecked) {
-                return
-              };
-              chunk.clear();
-              chunk.isChecked = true;
-            })
+            
+            const checkX = loc.x + x * size;
+            const checkZ = loc.z + z * size;
+            
+            // Only patch terrain within Gaia Dimension bounds
+            if (checkX >= 100000 && checkX <= 400000 && checkZ >= 100000 && checkZ <= 400000) {
+                Q.push(() => {
+                  const chunk = MiniChunk.getAt({ x: checkX, y: loc.y + y * ysize, z: checkZ }, p.dimension);
+                  if (chunk.isChecked) {
+                    return
+                  };
+                  // world.sendMessage("Clearing chunk at " + checkX + " " + checkZ);
+                  if (chunk.clear()) {
+                      chunk.isChecked = true;
+                  }
+                })
+            }
           }
         }
       }
@@ -231,6 +273,6 @@ system.runInterval(() => {
   DB.setAll(data);
 }, 149)
 
-system.beforeEvents.watchdogTerminate.subscribe((e) => {
+system.beforeEvents.shutdown.subscribe((e) => {
   e.cancel = true
 })
