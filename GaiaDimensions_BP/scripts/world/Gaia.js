@@ -2,11 +2,7 @@ import { world, system, BlockPermutation } from "@minecraft/server";
 import { ModDimension } from "./ModDimension.js";
 import { PortalManager } from "../API/lib/PortalLib.js";
 
-/**
- * Gaia Dimension Configuration
- * Range: 100,000 to 400,000 (300k block square grid)
- * Location: Simulated in minecraft:the_end
- */
+// Configuration
 const GAIA_DIMENSION_ID = "gaia_dimension";
 const RANGE_START = 100000;
 const RANGE_END = 400000;
@@ -144,6 +140,11 @@ export class DimensionSystem {
             { dimension: targetDim }
         );
         player.addTag("gaiadimension:teleport_cooldown");
+        if (isToGaia) {
+            player.addTag("gaiadimension:in_gaia");
+        } else {
+            player.removeTag("gaiadimension:in_gaia");
+        }
 
         // 4. Post-Teleport: Scan for existing portals near landing or build a new one
         system.runTimeout(() => {
@@ -263,7 +264,20 @@ system.runInterval(() => {
         for (const player of players) {
             if (!player.isValid) continue;
             
-            // Check fixed 5s cooldown using current tick vs last teleport timestamp
+            // Boundary Enforcement
+            if (player.hasTag("gaiadimension:in_gaia") && player.dimension.id === "minecraft:the_end") {
+                if (!DimensionSystem.isInGaia(player)) {
+                    const center = GaiaDimension.getCenter();
+                    player.teleport(
+                        { x: center.x, y: 100, z: center.z },
+                        { dimension: player.dimension }
+                    );
+                    world.sendMessage(`§cYou cannot leave the Gaia Dimension this way!`);
+                    continue; 
+                }
+            }
+
+            // Fixed 5s Cooldown check
             const lastTeleport = player.getDynamicProperty("gaiadimension:last_teleport") || 0;
             if (system.currentTick - lastTeleport < 100) continue;
             
