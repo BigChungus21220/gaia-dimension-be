@@ -31,7 +31,7 @@
 			}
 		},
 		"components": {
-			"minecraft:loot": "loot_tables/blocks/null.json",
+			"minecraft:loot": "loot_tables/msc/empty.json",
 			"minecraft:material_instances": {
 				"*": {
 					"texture": "gaiadimension:superhot_magma_still",

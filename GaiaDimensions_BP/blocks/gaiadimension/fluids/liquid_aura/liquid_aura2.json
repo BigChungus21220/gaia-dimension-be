@@ -11,7 +11,7 @@
 					"render_method": "blend"
 				}
 			},
-			"minecraft:loot": "loot_tables/blocks/null.json",
+			"minecraft:loot": "loot_tables/msc/empty.json",
 			"tag:template": {},
 			"tag:template2": {},
 			"tag:fluid": {},
