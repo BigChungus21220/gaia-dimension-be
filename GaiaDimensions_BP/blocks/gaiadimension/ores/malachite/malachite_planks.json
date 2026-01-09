@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "gaiadimension:malachite_floor_tiles",
+                    "texture": "gaiadimension:malachite_tiles",
                     "render_method": "opaque"
                 }
             },

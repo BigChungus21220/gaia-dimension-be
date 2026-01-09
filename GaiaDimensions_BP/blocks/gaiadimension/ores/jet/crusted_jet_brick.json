@@ -11,7 +11,6 @@
             "tag:brick": {},
             "tag:stone": {},
             "minecraft:loot": "loot_tables/blocks/gaiadimension/ores/crusted_jet_brick.json",
-            "minecraft:display_name": "Crusted Jet Bricks",
             "minecraft:destructible_by_mining": {
                 "seconds_to_destroy": 1
             },
@@ -20,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "gaiadimension:crusted_jet_brick",
+                    "texture": "gaiadimension:crusted_jet_bricks",
                     "render_method": "opaque"
                 }
             },
