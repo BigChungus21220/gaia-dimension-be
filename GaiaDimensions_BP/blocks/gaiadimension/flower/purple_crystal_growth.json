@@ -25,7 +25,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "purple_crystal_growth",
+                    "texture": "gaiadimension:purple_crystal_growth",
                     "render_method": "alpha_test",
                     "face_dimming": false,
                     "ambient_occlusion": false

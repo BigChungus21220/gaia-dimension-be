@@ -25,7 +25,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "spotted_kersei",
+                    "texture": "gaiadimension:spotted_kersei",
                     "render_method": "alpha_test",
                     "face_dimming": false,
                     "ambient_occlusion": false

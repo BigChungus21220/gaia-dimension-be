@@ -46,13 +46,13 @@
                 },
                 "material_instances": {
                     "*": {
-                        "texture": "malachite_cracked_bricks"
+                        "texture": "gaiadimension:malachite_cracked_bricks"
                     }
                 }
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "malachite_cracked_bricks"
+                    "texture": "gaiadimension:malachite_cracked_bricks"
                 }
             },
             "tag:gaiadimension:stairs": {},

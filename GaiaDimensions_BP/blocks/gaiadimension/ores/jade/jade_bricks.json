@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "jade_bricks",
+                    "texture": "gaiadimension:jade_bricks",
                     "render_method": "opaque"
                 }
             },

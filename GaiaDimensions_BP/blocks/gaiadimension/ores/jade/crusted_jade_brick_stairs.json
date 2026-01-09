@@ -46,13 +46,13 @@
                 },
                 "material_instances": {
                     "*": {
-                        "texture": "crusted_jade_brick"
+                        "texture": "gaiadimension:crusted_jade_brick"
                     }
                 }
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "crusted_jade_brick"
+                    "texture": "gaiadimension:crusted_jade_brick"
                 }
             },
             "tag:gaiadimension:stairs": {},

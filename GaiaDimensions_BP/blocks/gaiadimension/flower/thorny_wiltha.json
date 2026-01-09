@@ -25,7 +25,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "thorny_wiltha",
+                    "texture": "gaiadimension:thorny_wiltha",
                     "render_method": "alpha_test",
                     "face_dimming": false,
                     "ambient_occlusion": false

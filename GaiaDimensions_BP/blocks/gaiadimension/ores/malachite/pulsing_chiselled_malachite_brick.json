@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "pulsing_chiselled_malachite_brick",
+                    "texture": "gaiadimension:pulsing_chiselled_malachite_brick",
                     "render_method": "opaque"
                 }
             },

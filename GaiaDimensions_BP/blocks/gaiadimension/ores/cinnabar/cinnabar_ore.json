@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "cinnabar_ore",
+                    "texture": "gaiadimension:cinnabar_ore",
                     "render_method": "opaque"
                 }
             },

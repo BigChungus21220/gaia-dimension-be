@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "sugilite_block",
+                    "texture": "gaiadimension:sugilite_block",
                     "render_method": "opaque"
                 }
             },

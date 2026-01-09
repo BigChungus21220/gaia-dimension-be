@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "malachite_chisel_bricks",
+                    "texture": "gaiadimension:malachite_chisel_bricks",
                     "render_method": "opaque"
                 }
             },

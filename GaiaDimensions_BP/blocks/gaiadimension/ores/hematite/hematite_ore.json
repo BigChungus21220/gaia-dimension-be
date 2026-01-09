@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "hematite_ore",
+                    "texture": "gaiadimension:hematite_ore",
                     "render_method": "opaque"
                 }
             },

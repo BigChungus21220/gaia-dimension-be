@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "white_opal_ore",
+                    "texture": "gaiadimension:white_opal_ore",
                     "render_method": "opaque"
                 }
             },

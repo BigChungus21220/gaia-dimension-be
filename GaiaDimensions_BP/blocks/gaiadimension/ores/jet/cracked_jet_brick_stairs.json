@@ -46,13 +46,13 @@
                 },
                 "material_instances": {
                     "*": {
-                        "texture": "cracked_jet_bricks"
+                        "texture": "gaiadimension:cracked_jet_bricks"
                     }
                 }
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "cracked_jet_bricks"
+                    "texture": "gaiadimension:cracked_jet_bricks"
                 }
             },
             "tag:gaiadimension:stairs": {},

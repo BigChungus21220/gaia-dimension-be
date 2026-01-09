@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "raw_jade",
+                    "texture": "gaiadimension:raw_jade",
                     "render_method": "opaque"
                 }
             },

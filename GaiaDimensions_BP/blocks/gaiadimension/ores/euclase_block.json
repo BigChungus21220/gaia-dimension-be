@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "euclase_block",
+                    "texture": "gaiadimension:euclase_block",
                     "render_method": "opaque"
                 }
             },

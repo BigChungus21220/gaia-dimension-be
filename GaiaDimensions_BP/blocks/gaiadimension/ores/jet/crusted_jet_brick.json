@@ -20,7 +20,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "crusted_jet_brick",
+                    "texture": "gaiadimension:crusted_jet_brick",
                     "render_method": "opaque"
                 }
             },

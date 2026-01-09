@@ -25,7 +25,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "aura_crystal_growth",
+                    "texture": "gaiadimension:aura_crystal_growth",
                     "render_method": "alpha_test",
                     "face_dimming": false,
                     "ambient_occlusion": false

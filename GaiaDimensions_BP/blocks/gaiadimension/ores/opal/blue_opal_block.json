@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "blue_opal_block",
+                    "texture": "gaiadimension:blue_opal_block",
                     "render_method": "opaque"
                 }
             },

@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "copal_bricks",
+                    "texture": "gaiadimension:copal_bricks",
                     "render_method": "opaque"
                 }
             },

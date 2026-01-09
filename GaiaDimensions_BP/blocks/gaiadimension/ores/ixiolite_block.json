@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "ixiolite_block",
+                    "texture": "gaiadimension:ixiolite_block",
                     "render_method": "opaque"
                 }
             },

@@ -20,7 +20,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "pulsing_malachite_planks",
+                    "texture": "gaiadimension:pulsing_malachite_planks",
                     "render_method": "opaque"
                 }
             },

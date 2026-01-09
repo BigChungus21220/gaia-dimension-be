@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "raw_copal",
+                    "texture": "gaiadimension:raw_copal",
                     "render_method": "opaque"
                 }
             },

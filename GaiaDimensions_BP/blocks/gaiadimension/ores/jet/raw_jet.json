@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "raw_jet",
+                    "texture": "gaiadimension:raw_jet",
                     "render_method": "opaque"
                 }
             },

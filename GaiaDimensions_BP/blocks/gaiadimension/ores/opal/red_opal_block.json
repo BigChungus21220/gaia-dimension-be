@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "red_opal_block",
+                    "texture": "gaiadimension:red_opal_block",
                     "render_method": "opaque"
                 }
             },

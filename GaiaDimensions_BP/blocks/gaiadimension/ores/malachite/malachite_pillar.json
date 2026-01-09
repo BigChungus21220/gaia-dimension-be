@@ -20,15 +20,15 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "malachite_pillar_side",
+                    "texture": "gaiadimension:malachite_pillar_side",
                     "render_method": "opaque"
                 },
                 "up": {
-                    "texture": "malachite_pillar_end",
+                    "texture": "gaiadimension:malachite_pillar_end",
                     "render_method": "opaque"
                 },
                 "down": {
-                    "texture": "malachite_pillar_end",
+                    "texture": "gaiadimension:malachite_pillar_end",
                     "render_method": "opaque"
                 }
             },

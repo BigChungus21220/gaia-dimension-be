@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "pyrite_ore",
+                    "texture": "gaiadimension:pyrite_ore",
                     "render_method": "opaque"
                 }
             },

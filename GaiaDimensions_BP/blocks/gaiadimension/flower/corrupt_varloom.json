@@ -25,7 +25,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "corrupt_varloom",
+                    "texture": "gaiadimension:corrupt_varloom",
                     "render_method": "alpha_test",
                     "face_dimming": false,
                     "ambient_occlusion": false

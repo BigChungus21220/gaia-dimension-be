@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "moonstone_block",
+                    "texture": "gaiadimension:moonstone_block",
                     "render_method": "opaque"
                 }
             },

@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "tektite_block",
+                    "texture": "gaiadimension:tektite_block",
                     "render_method": "opaque"
                 }
             },

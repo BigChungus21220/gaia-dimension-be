@@ -25,7 +25,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "corrupted_gaia_eye",
+                    "texture": "gaiadimension:corrupted_gaia_eye",
                     "render_method": "alpha_test",
                     "face_dimming": false,
                     "ambient_occlusion": false
