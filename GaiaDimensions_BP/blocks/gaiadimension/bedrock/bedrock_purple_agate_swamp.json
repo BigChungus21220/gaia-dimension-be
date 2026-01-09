@@ -1,24 +1,49 @@
 {
-	"format_version": "1.21.70",
-	"minecraft:block": {
-		"description": {
-			"identifier": "gaiadimension:bedrock_purple_agate_swamp"
-		},
-		"components": {
-			"minecraft:loot": "loot_tables/msc/empty.json",
-			"minecraft:destructible_by_mining": {
-				"seconds_to_destroy": 99999
-			},
-			"minecraft:destructible_by_explosion": {
-				"explosion_resistance": 999999
-			},
-			"minecraft:map_color": "#ffffff",
-			"minecraft:material_instances": {
-				"*": {
-					"texture": "gaia_bedrock",
-					"render_method": "opaque"
-				}
-			}
-		}
-	}
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:bedrock_purple_agate_swamp"
+        },
+        "components": {
+            "minecraft:loot": "loot_tables/msc/empty.json",
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 99999
+            },
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 999999
+            },
+            "minecraft:map_color": "#808080",
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "gaia_bedrock",
+                    "render_method": "opaque"
+                }
+            },
+            "minecraft:geometry": "minecraft:geometry.full_block",
+            "minecraft:selection_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:collision_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            }
+        }
+    }
 }
