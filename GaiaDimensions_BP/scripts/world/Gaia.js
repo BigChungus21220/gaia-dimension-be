@@ -2,7 +2,11 @@ import { world, system, BlockPermutation } from "@minecraft/server";
 import { ModDimension } from "./ModDimension.js";
 import { PortalManager } from "../API/lib/PortalLib.js";
 
-// Configuration
+/**
+ * Gaia Dimension Configuration
+ * Range: 100,000 to 400,000 (300k block square grid)
+ * Location: Simulated in minecraft:the_end
+ */
 const GAIA_DIMENSION_ID = "gaia_dimension";
 const RANGE_START = 100000;
 const RANGE_END = 400000;
@@ -11,7 +15,6 @@ export let GaiaDimension;
 
 /**
  * Persistently stores and retrieves links between portals across dimensions
- * using dynamic properties on the world object.
  */
 class PortalLinker {
     static getLink(dimensionId, x, y, z) {
@@ -27,6 +30,9 @@ class PortalLinker {
     }
 }
 
+// Queue for tasks that need to run after a dimension change (once chunks load)
+const pendingPortalTasks = [];
+
 export class DimensionSystem {
     /**
      * Determines if an entity is currently within the Gaia Dimension boundaries.
@@ -38,14 +44,20 @@ export class DimensionSystem {
     }
 
     /**
-     * Scans a column and nearby blocks for an existing portal structure to allow for linking.
+     * Optimized scan for a portal block near a location.
+     * Uses a limited volume to prevent script execution time issues.
      */
     static findPortalBlock(dimension, center) {
         const px = Math.floor(center.x);
+        const py = Math.floor(center.y);
         const pz = Math.floor(center.z);
-        for (let dx = -4; dx <= 4; dx++) {
-            for (let dz = -4; dz <= 4; dz++) {
-                for (let y = 0; y < 256; y++) {
+        
+        // Scan a 5x5 area horizontally, and 32 blocks vertically (-16 to +16)
+        for (let dx = -2; dx <= 2; dx++) {
+            for (let dz = -2; dz <= 2; dz++) {
+                for (let dy = -16; dy <= 16; dy++) {
+                    const y = py + dy;
+                    if (y < dimension.heightRange.min || y > dimension.heightRange.max) continue;
                     try {
                         const b = dimension.getBlock({ x: px + dx, y: y, z: pz + dz });
                         if (b && b.typeId === "gaiadimension:gaia_dimension_portal") {
@@ -59,12 +71,12 @@ export class DimensionSystem {
     }
 
     /**
-     * Scans downwards from the sky to find the highest solid block.
+     * Scans downwards from a starting height to find the ground.
      */
-    static getTopBlock(dimension, x, z) {
-        for (let y = 255; y > -64; y--) {
+    static getTopBlock(dimension, x, z, startY = 150) {
+        for (let y = startY; y > dimension.heightRange.min; y--) {
             try {
-                const block = dimension.getBlock({ x, y, z });
+                const block = dimension.getBlock({ x: x, y: y, z: z });
                 if (block && !block.isAir && !block.typeId.includes("liquid") && block.typeId !== "gaiadimension:gaia_dimension_portal") {
                     return y + 1;
                 }
@@ -73,54 +85,43 @@ export class DimensionSystem {
         return 100;
     }
 
-    /**
-     * Core teleportation logic handling coordinate mapping, linking, and safety.
-     */
     static handleTeleport(player, sourceDim, targetDimId, isToGaia) {
         if (!player.isValid) return;
+        if (sourceDim.id === targetDimId) return;
 
-        // Apply a timestamped cooldown to prevent immediate re-teleportation (janking)
+        // Apply a timestamped cooldown immediately
         player.setDynamicProperty("gaiadimension:last_teleport", system.currentTick);
 
         const sourceLoc = player.location;
         const sourcePortalLoc = this.findPortalBlock(sourceDim, sourceLoc) || sourceLoc; 
 
-        // 1. Check if this portal already has a persistent link saved
+        // 1. Check Link
         const savedLink = PortalLinker.getLink(sourceDim.id, sourcePortalLoc.x, sourcePortalLoc.y, sourcePortalLoc.z);
         if (savedLink) {
             try {
                 const targetDim = world.getDimension(savedLink.dimensionId);
-                const verifyPortal = this.findPortalBlock(targetDim, {x: savedLink.x, y: savedLink.y, z: savedLink.z});
+                player.teleport(
+                    { x: savedLink.x + 1, y: savedLink.y + 1, z: savedLink.z },
+                    { dimension: targetDim }
+                );
                 
-                if (verifyPortal) {
-                    // Rebuild safety platform at destination if it was destroyed
-                    const lpx = Math.floor(verifyPortal.x);
-                    const lpy = Math.floor(verifyPortal.y);
-                    const lpz = Math.floor(verifyPortal.z);
-                    for (let x = -2; x <= 2; x++) {
-                        for (let z = -2; z <= 2; z++) {
-                            try {
-                                const b = targetDim.getBlock({ x: lpx + x, y: lpy - 1, z: lpz + z });
-                                if (b && (b.typeId === "minecraft:air" || b.typeId === "minecraft:void_air")) {
-                                    b.setType("minecraft:obsidian");
-                                }
-                            } catch(e) {}
-                        }
-                    }
-
-                    player.teleport(
-                        { x: verifyPortal.x + 1, y: verifyPortal.y + 1, z: verifyPortal.z },
-                        { dimension: targetDim }
-                    );
-                    return;
-                }
+                pendingPortalTasks.push({
+                    playerId: player.id,
+                    targetDimId: savedLink.dimensionId,
+                    targetX: savedLink.x,
+                    targetY: savedLink.y,
+                    targetZ: savedLink.z,
+                    type: "VERIFY_LINK",
+                    sourcePortalLoc: { x: sourcePortalLoc.x, y: sourcePortalLoc.y, z: sourcePortalLoc.z },
+                    sourceDimId: sourceDim.id
+                });
+                return;
             } catch (e) {}
         }
 
-        // 2. Calculate New Destination using 1:4 mapping and boundary clamping
+        // 2. Calculate New Destination
         const center = GaiaDimension.getCenter();
         let targetX, targetZ;
-
         if (isToGaia) {
             let rawX = (sourceLoc.x / 4) + center.x;
             let rawZ = (sourceLoc.z / 4) + center.z;
@@ -132,107 +133,27 @@ export class DimensionSystem {
         }
 
         const targetDim = world.getDimension(targetDimId);
-        let targetY = this.getTopBlock(targetDim, Math.floor(targetX), Math.floor(targetZ));
-
-        // 3. Teleport First to load the chunks at destination
+        
+        // Initial Teleport to safe height
         player.teleport(
-            { x: targetX + 1, y: targetY + 1, z: targetZ },
+            { x: targetX + 1, y: 120, z: targetZ },
             { dimension: targetDim }
         );
         player.addTag("gaiadimension:teleport_cooldown");
-        if (isToGaia) {
-            player.addTag("gaiadimension:in_gaia");
-        } else {
-            player.removeTag("gaiadimension:in_gaia");
-        }
+        if (isToGaia) player.addTag("gaiadimension:in_gaia");
+        else player.removeTag("gaiadimension:in_gaia");
 
-        // 4. Post-Teleport: Scan for existing portals near landing or build a new one
-        system.runTimeout(() => {
-            if (!player.isValid) return;
-
-            const landingPortal = this.findPortalBlock(targetDim, { x: targetX, y: targetY, z: targetZ });
-            
-            if (landingPortal) {
-                // Link the portals persistently
-                PortalLinker.setLink(sourceDim.id, sourcePortalLoc.x, sourcePortalLoc.y, sourcePortalLoc.z, targetDimId, landingPortal.x, landingPortal.y, landingPortal.z);
-                PortalLinker.setLink(targetDimId, landingPortal.x, landingPortal.y, landingPortal.z, sourceDim.id, sourcePortalLoc.x, sourcePortalLoc.y, sourcePortalLoc.z);
-                
-                player.teleport(
-                    { x: landingPortal.x + 1, y: landingPortal.y + 1, z: landingPortal.z },
-                    { dimension: targetDim }
-                );
-                return;
-            }
-
-            // Determine Portal Orientation based on player facing
-            const rotation = player.getRotation().y;
-            const absRot = Math.abs(rotation % 360);
-            let axis = "z"; 
-            if ((absRot >= 45 && absRot <= 135) || (absRot >= 225 && absRot <= 315)) {
-                axis = "x"; 
-            }
-
-            const px = Math.floor(targetX);
-            const py = Math.floor(targetY);
-            const pz = Math.floor(targetZ);
-
-            // Generate Safety Platform (Obsidian)
-            for (let x = -2; x <= 2; x++) {
-                for (let z = -2; z <= 2; z++) {
-                    try {
-                        const b = targetDim.getBlock({ x: px + x, y: py - 1, z: pz + z });
-                        if (b) b.setType("minecraft:obsidian"); 
-                    } catch(e) {}
-                }
-            }
-
-            // Construct Portal Frame and fill with Portal Blocks
-            const frameBlock = "gaiadimension:keystone_block"; 
-            const portalBlockId = "gaiadimension:gaia_dimension_portal";
-            
-            let portalPerm;
-            if (axis === "x") {
-                portalPerm = BlockPermutation.resolve(portalBlockId, { "minecraft:cardinal_direction": "north" });
-            } else {
-                portalPerm = BlockPermutation.resolve(portalBlockId, { "minecraft:cardinal_direction": "east" });
-            }
-
-            const buildBlock = (dx, dy, dz, type, perm) => {
-                try {
-                    const block = targetDim.getBlock({ x: px + dx, y: py + dy, z: pz + dz });
-                    if (block) {
-                        block.setType(type);
-                        if (perm) block.setPermutation(perm);
-                    }
-                } catch (e) {}
-            };
-
-            // Build Frame logic (centered 4x5)
-            if (axis === "x") {
-                for (let i = -1; i <= 2; i++) buildBlock(i, 0, 0, frameBlock);
-                for (let i = -1; i <= 2; i++) buildBlock(i, 4, 0, frameBlock);
-                for (let y = 1; y <= 3; y++) { buildBlock(-1, y, 0, frameBlock); buildBlock(2, y, 0, frameBlock); }
-                for (let i = 0; i <= 1; i++) {
-                    for (let y = 1; y <= 3; y++) {
-                        buildBlock(i, y, 0, portalBlockId, portalPerm);
-                    }
-                }
-            } else {
-                for (let i = -1; i <= 2; i++) buildBlock(0, 0, i, frameBlock);
-                for (let i = -1; i <= 2; i++) buildBlock(0, 4, i, frameBlock);
-                for (let y = 1; y <= 3; y++) { buildBlock(0, y, -1, frameBlock); buildBlock(0, y, 2, frameBlock); }
-                for (let i = 0; i <= 1; i++) {
-                    for (let y = 1; y <= 3; y++) {
-                        buildBlock(0, y, i, portalBlockId, portalPerm);
-                    }
-                }
-            }
-
-            // Save the newly created link
-            PortalLinker.setLink(sourceDim.id, sourcePortalLoc.x, sourcePortalLoc.y, sourcePortalLoc.z, targetDimId, px, py, pz);
-            PortalLinker.setLink(targetDimId, px, py, pz, sourceDim.id, sourcePortalLoc.x, sourcePortalLoc.y, sourcePortalLoc.z); 
-
-        }, 40); 
+        // 3. Queue Building
+        pendingPortalTasks.push({
+            playerId: player.id,
+            targetDimId: targetDimId,
+            targetX: targetX,
+            targetZ: targetZ,
+            type: "BUILD_NEW",
+            sourcePortalLoc: { x: sourcePortalLoc.x, y: sourcePortalLoc.y, z: sourcePortalLoc.z },
+            sourceDimId: sourceDim.id,
+            rotationY: player.getRotation().y
+        });
     }
 
     static teleportToGaia(player) {
@@ -244,78 +165,151 @@ export class DimensionSystem {
     }
 }
 
+// Post-Teleport Task Processor (Runs every second to reduce overhead)
+system.runInterval(() => {
+    if (pendingPortalTasks.length === 0) return;
+
+    for (let i = pendingPortalTasks.length - 1; i >= 0; i--) {
+        const task = pendingPortalTasks[i];
+        const player = world.getEntity(task.playerId);
+        
+        if (!player || !player.isValid) {
+            pendingPortalTasks.splice(i, 1);
+            continue;
+        }
+
+        const targetDim = world.getDimension(task.targetDimId);
+        
+        // Ensure destination block is accessible
+        try {
+            const b = targetDim.getBlock({ x: Math.floor(task.targetX), y: 100, z: Math.floor(task.targetZ) });
+            if (!b) continue;
+        } catch (e) { continue; } 
+
+        if (task.type === "VERIFY_LINK") {
+            const lpx = Math.floor(task.targetX);
+            const lpy = Math.floor(task.targetY);
+            const lpz = Math.floor(task.targetZ);
+            
+            // Rebuild platform base if missing
+            for (let x = -2; x <= 2; x++) {
+                for (let z = -2; z <= 2; z++) {
+                    try {
+                        const b = targetDim.getBlock({ x: lpx + x, y: lpy - 1, z: lpz + z });
+                        if (b && (b.isAir || b.isLiquid)) b.setType("minecraft:obsidian");
+                    } catch(e) {}
+                }
+            }
+            pendingPortalTasks.splice(i, 1);
+        } 
+        else if (task.type === "BUILD_NEW") {
+            const targetY = DimensionSystem.getTopBlock(targetDim, Math.floor(task.targetX), Math.floor(task.targetZ), 120);
+            const landingPortal = DimensionSystem.findPortalBlock(targetDim, { x: task.targetX, y: targetY, z: task.targetZ });
+            
+            if (landingPortal) {
+                PortalLinker.setLink(task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z, task.targetDimId, landingPortal.x, landingPortal.y, landingPortal.z);
+                PortalLinker.setLink(task.targetDimId, landingPortal.x, landingPortal.y, landingPortal.z, task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z);
+                player.teleport({ x: landingPortal.x + 1, y: landingPortal.y + 1, z: landingPortal.z }, { dimension: targetDim });
+            } else {
+                const px = Math.floor(task.targetX);
+                const py = Math.floor(targetY);
+                const pz = Math.floor(task.targetZ);
+
+                // Build obsidian platform
+                for (let x = -2; x <= 2; x++) {
+                    for (let z = -2; z <= 2; z++) {
+                        try {
+                            const b = targetDim.getBlock({ x: px + x, y: py - 1, z: pz + z });
+                            if (b) b.setType("minecraft:obsidian");
+                        } catch(e) {}
+                    }
+                }
+
+                // Build Frame and Portal blocks
+                const absRot = Math.abs(task.rotationY % 360);
+                let axis = ((absRot >= 45 && absRot <= 135) || (absRot >= 225 && absRot <= 315)) ? "x" : "z";
+                const frameBlock = "gaiadimension:keystone_block"; 
+                const portalBlockId = "gaiadimension:gaia_dimension_portal";
+                let portalPerm = BlockPermutation.resolve(portalBlockId, { "minecraft:cardinal_direction": axis === "x" ? "north" : "east" });
+
+                const build = (dx, dy, dz, type, perm) => {
+                    const block = targetDim.getBlock({ x: px + dx, y: py + dy, z: pz + dz });
+                    if (block) { block.setType(type); if (perm) block.setPermutation(perm); }
+                };
+
+                if (axis === "x") {
+                    for (let i = -1; i <= 2; i++) { build(i, 0, 0, frameBlock); build(i, 4, 0, frameBlock); }
+                    for (let y = 1; y <= 3; y++) { build(-1, y, 0, frameBlock); build(2, y, 0, frameBlock); }
+                    for (let i = 0; i <= 1; i++) for (let y = 1; y <= 3; y++) build(i, y, 0, portalBlockId, portalPerm);
+                } else {
+                    for (let i = -1; i <= 2; i++) { build(0, 0, i, frameBlock); build(0, 4, i, frameBlock); }
+                    for (let y = 1; y <= 3; y++) { build(0, y, -1, frameBlock); build(0, y, 2, frameBlock); }
+                    for (let i = 0; i <= 1; i++) for (let y = 1; y <= 3; y++) build(0, y, i, portalBlockId, portalPerm);
+                }
+
+                PortalLinker.setLink(task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z, task.targetDimId, px, py, pz);
+                PortalLinker.setLink(targetDimId, px, py, pz, task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z);
+                player.teleport({ x: px + 1, y: py + 1, z: pz }, { dimension: targetDim });
+            }
+            pendingPortalTasks.splice(i, 1);
+        }
+    }
+}, 20);
+
 // Initialization Logic
 system.run(() => {
     try {
         GaiaDimension = ModDimension.register(GAIA_DIMENSION_ID, {
-            range: {
-                start: { x: RANGE_START, z: RANGE_START },
-                end: { x: RANGE_END, z: RANGE_END }
-            },
+            range: { start: { x: RANGE_START, z: RANGE_START }, end: { x: RANGE_END, z: RANGE_END } },
             inheritance: "minecraft:the_end"
         });
     } catch (e) {}
 });
 
-// Periodic loop to detect players standing inside portals
+// Main detection loop
 system.runInterval(() => {
-    try {
-        const players = world.getPlayers();
-        for (const player of players) {
-            if (!player.isValid) continue;
-            
-            // Boundary Enforcement
-            if (player.hasTag("gaiadimension:in_gaia") && player.dimension.id === "minecraft:the_end") {
-                if (!DimensionSystem.isInGaia(player)) {
-                    const center = GaiaDimension.getCenter();
-                    player.teleport(
-                        { x: center.x, y: 100, z: center.z },
-                        { dimension: player.dimension }
-                    );
-                    world.sendMessage(`§cYou cannot leave the Gaia Dimension this way!`);
-                    continue; 
-                }
-            }
-
-            // Fixed 5s Cooldown check
-            const lastTeleport = player.getDynamicProperty("gaiadimension:last_teleport") || 0;
-            if (system.currentTick - lastTeleport < 100) continue;
-            
-            const dimension = player.dimension;
-            const loc = player.location;
-            const px = Math.floor(loc.x);
-            const py = Math.floor(loc.y);
-            const pz = Math.floor(loc.z);
-            
-            let inPortal = false;
-            // Strict check: Player must be overlapping the portal block at legs or head
-            if (dimension.getBlock({ x: px, y: py, z: pz })?.typeId === "gaiadimension:gaia_dimension_portal" || 
-                dimension.getBlock({ x: px, y: py + 1, z: pz })?.typeId === "gaiadimension:gaia_dimension_portal") {
-                inPortal = true;
-            }
-            
-            if (inPortal) {
-                if (dimension.id === "minecraft:overworld") {
-                    DimensionSystem.teleportToGaia(player);
-                } else if (dimension.id === "minecraft:the_end") {
-                    DimensionSystem.returnFromGaia(player);
-                }
+    const players = world.getPlayers();
+    for (const player of players) {
+        if (!player.isValid) continue;
+        
+        // Cooldown check
+        const lastTeleport = player.getDynamicProperty("gaiadimension:last_teleport") || 0;
+        if (system.currentTick - lastTeleport < 100) continue;
+        
+        // Boundary Enforcement
+        if (player.hasTag("gaiadimension:in_gaia") && player.dimension.id === "minecraft:the_end") {
+            if (!DimensionSystem.isInGaia(player)) {
+                const center = GaiaDimension.getCenter();
+                player.teleport({ x: center.x, y: 100, z: center.z }, { dimension: player.dimension });
+                world.sendMessage(`§cYou cannot leave the Gaia Dimension this way!`);
+                continue; 
             }
         }
-    } catch (e) {}
+
+        const dimension = player.dimension;
+        const loc = player.location;
+        const px = Math.floor(loc.x);
+        const py = Math.floor(loc.y);
+        const pz = Math.floor(loc.z);
+        
+        let inPortal = false;
+        if (dimension.getBlock({ x: px, y: py, z: pz })?.typeId === "gaiadimension:gaia_dimension_portal" || 
+            dimension.getBlock({ x: px, y: py + 1, z: pz })?.typeId === "gaiadimension:gaia_dimension_portal") {
+            inPortal = true;
+        }
+        
+        if (inPortal) {
+            if (dimension.id === "minecraft:overworld") DimensionSystem.teleportToGaia(player);
+            else if (dimension.id === "minecraft:the_end") DimensionSystem.returnFromGaia(player);
+        }
+    }
 }, 10);
 
 // Entity Spawn Filtering
 world.afterEvents.entitySpawn.subscribe((event) => {
     const { entity } = event;
     if (!entity || !entity.isValid) return;
-
-    // Filter Endermen in Gaia Dimension (95% failure rate)
     if (entity.typeId === "minecraft:enderman" && DimensionSystem.isInGaia(entity)) {
-        if (Math.random() < 0.95) {
-            system.run(() => {
-                if (entity.isValid) entity.remove();
-            });
-        }
+        if (Math.random() < 0.95) system.run(() => { if (entity.isValid) entity.remove(); });
     }
 });
