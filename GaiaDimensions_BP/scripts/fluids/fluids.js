@@ -157,6 +157,16 @@ function runPlayerEffects() {
           player.playSound("ambient.underwater.exit", { volume: 0.5, pitch: 1 });
           player.runCommand("stopsound @s ambient.underwater.loop");
       }
+
+      // Surface Paddle Sound (Mineral Water)
+      const isOnSurfaceMineralWater = isFeetInMineralWater && !isHeadInMineralWater;
+      if (isOnSurfaceMineralWater) {
+          const velocity = player.getVelocity();
+          const speed = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
+          if (speed > 0.08 && system.currentTick % 8 === 0) {
+              player.playSound("entity.boat.paddle_water", { volume: 0.25, pitch: 1 });
+          }
+      }
       
       // Particle logic (Feet)
       if (isFeetInMineralWater && !prevState.feet) {
