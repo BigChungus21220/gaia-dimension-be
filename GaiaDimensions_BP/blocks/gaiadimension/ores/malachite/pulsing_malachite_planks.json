@@ -1,0 +1,55 @@
+{
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:green_planks3",
+            "menu_category": {
+                "category": "nature"
+            }
+        },
+        "components": {
+            "tag:is_axeable": {},
+            "tag:stone": {},
+            "minecraft:loot": "loot_tables/blocks/gaiadimension/pulsing_malachite_planks.json",
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 1
+            },
+            "minecraft:display_name": "Pulsing Malachite Tiles",
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 1
+            },
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "pulsing_malachite_planks",
+                    "render_method": "opaque"
+                }
+            },
+            "minecraft:geometry": "minecraft:geometry.full_block",
+            "minecraft:selection_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:collision_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:map_color": "#0bda51"
+        }
+    }
+}

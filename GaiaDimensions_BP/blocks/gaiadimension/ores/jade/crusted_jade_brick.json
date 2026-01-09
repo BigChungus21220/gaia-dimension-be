@@ -1,0 +1,54 @@
+{
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:crusted_jade_bricks",
+            "menu_category": {
+                "category": "nature"
+            }
+        },
+        "components": {
+            "tag:brick": {},
+            "tag:stone": {},
+            "minecraft:loot": "loot_tables/blocks/gaiadimension/crusted_jade_brick.json",
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 1
+            },
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 1
+            },
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "crusted_jade_brick",
+                    "render_method": "opaque"
+                }
+            },
+            "minecraft:geometry": "minecraft:geometry.full_block",
+            "minecraft:selection_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:collision_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:map_color": "#00a86b"
+        }
+    }
+}

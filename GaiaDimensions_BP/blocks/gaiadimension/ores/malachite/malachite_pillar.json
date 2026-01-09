@@ -1,0 +1,107 @@
+{
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:pillar1",
+            "menu_category": {
+                "category": "nature"
+            },
+            "states": {
+                "gaia:rotation": [
+                    0,
+                    1,
+                    2
+                ]
+            }
+        },
+        "components": {
+            "minecraft:on_player_placing": {
+                "event": "gaia:rotate"
+            },
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "malachite_pillar_side",
+                    "render_method": "opaque"
+                },
+                "up": {
+                    "texture": "malachite_pillar_end",
+                    "render_method": "opaque"
+                },
+                "down": {
+                    "texture": "malachite_pillar_end",
+                    "render_method": "opaque"
+                }
+            },
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 2
+            },
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 2
+            },
+            "minecraft:geometry": "minecraft:geometry.full_block",
+            "minecraft:selection_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:collision_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:map_color": "#0bda51"
+        },
+        "permutations": [
+            {
+                "condition": "query.block_state('gaia:rotation') == 0",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            0,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "query.block_state('gaia:rotation') == 1",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            90,
+                            0,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "query.block_state('gaia:rotation') == 2",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            0,
+                            90
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}
