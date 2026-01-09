@@ -67,6 +67,7 @@ system.runInterval(() => {
     // To optimize, maybe skip some ticks or batch players? 
     // For now, keep as is but monitor. Player count is usually low.
     runPlayerEffects();
+    runBoatLogic();
 
     // Fluid Flow Logic (Budgeted)
     if (PENDING_BLOCKS.size === 0) return;
@@ -501,4 +502,121 @@ world.beforeEvents.playerBreakBlock.subscribe((event) => {
 
 export function registerFluidComponent({ blockComponentRegistry }) {
     blockComponentRegistry.registerCustomComponent("gaiadimension:fluid_flow", new FluidFlowComponent());
+}
+
+function runBoatLogic() {
+    const players = world.getPlayers();
+    if (players.length === 0) return;
+    
+    const activeDimensions = new Set(players.map(p => p.dimension));
+    for (const dimension of activeDimensions) {
+        const boats = dimension.getEntities({ families: ["boat"] });
+        for (const boat of boats) {
+             processBoat(boat, dimension);
+        }
+    }
+}
+
+function processBoat(boat, dimension) {
+    if (!boat.isValid) return;
+
+    const location = boat.location;
+    // Check if boat is in mineral water
+    const blockAt = dimension.getBlock(location);
+    const blockBelow = dimension.getBlock({ x: location.x, y: location.y - 0.1, z: location.z });
+    
+    const isMineralWater = (blockAt && blockAt.typeId.includes("mineral_water")) || 
+                           (blockBelow && blockBelow.typeId.includes("mineral_water"));
+
+    if (isMineralWater) {
+        // Buoyancy: Only if deep in water (blockAt is water)
+        if (blockAt && blockAt.typeId.includes("mineral_water")) {
+            boat.applyImpulse({ x: 0, y: 0.2, z: 0 });
+        }
+
+        // Jank Movement Logic
+        // Calculate forward vector from rotation
+        const rotation = boat.getRotation().y;
+        const rad = (rotation + 90) * (Math.PI / 180);
+        // Boat rotation 0 is usually South? Need to verify. 
+        // Standard Minecraft: 0=South (+Z), 90=West (-X), 180=North (-Z), 270=East (+X).
+        // Math: cos(rad) for X, sin(rad) for Z usually.
+        // Let's try standard conversion.
+        // Actually, let's just use the boat's velocity to boost it if it's already moving,
+        // OR apply force based on player input if possible (cant detect input easily on entities).
+        // But if "boat cant move", it means friction is high.
+        // Let's apply a constant small push in the direction it is facing
+        // IF there is a player riding it.
+        
+        // Check for passengers
+        // Components: minecraft:rideable -> family_types
+        // We can't easily check passengers in API 1.21.30 without getComponent("minecraft:rideable")?
+        // Actually getComponent("minecraft:rideable") doesn't give passengers.
+        // We can iterate players and check their location/vehicle? No vehicle API on player yet in stable?
+        // Wait, "boat cant move" might be because it's sitting on a collision box (the holder).
+        // Boats on land move very slowly.
+        // We need to simulate ice-like sliding or just push it.
+        
+        // Let's try pushing it in its facing direction constantly.
+        const dirX = -Math.sin(rotation * (Math.PI / 180));
+        const dirZ = Math.cos(rotation * (Math.PI / 180));
+        
+        // Only push if there is some velocity already (player trying to move)
+        // or just push always? Always might make it drift.
+        const vel = boat.getVelocity();
+        const speed = Math.sqrt(vel.x * vel.x + vel.z * vel.z);
+        
+        if (speed > 0.01) {
+             // Boost
+             boat.applyImpulse({ x: dirX * 0.15, y: 0, z: dirZ * 0.15 });
+        }
+
+        // Calculate surface Y
+        let waterTopY = Math.floor(location.y);
+        const bAt = dimension.getBlock({ x: Math.floor(location.x), y: Math.floor(location.y), z: Math.floor(location.z) });
+        
+        if (bAt && bAt.typeId.includes("mineral_water")) {
+             waterTopY = Math.floor(location.y) + 1; 
+        } else if (blockBelow && blockBelow.typeId.includes("mineral_water")) {
+             waterTopY = Math.floor(location.y);
+        }
+        
+        // Find or spawn holder
+        const holders = dimension.getEntities({
+            type: "gaiadimension:boat_holder",
+            location: location,
+            maxDistance: 2
+        });
+        
+        let holder = holders.length > 0 ? holders[0] : null;
+        
+        // Target Y for holder
+        const targetHolderY = waterTopY - 0.55; 
+
+        if (!holder) {
+            holder = dimension.spawnEntity("gaiadimension:boat_holder", { x: location.x, y: targetHolderY, z: location.z });
+        }
+        
+        // Update Holder
+        try {
+            if (holder && holder.isValid) {
+                holder.teleport(
+                    { x: location.x, y: targetHolderY, z: location.z }, 
+                    { dimension: dimension, rotation: { x: 0, y: boat.getRotation().y } }
+                );
+            }
+        } catch (e) {}
+        
+    } else {
+        // Not in water, remove nearby holders
+        const holders = dimension.getEntities({
+            type: "gaiadimension:boat_holder",
+            location: location,
+            maxDistance: 2
+        });
+        
+        for (const h of holders) {
+            if (h.isValid) h.remove();
+        }
+    }
 }
