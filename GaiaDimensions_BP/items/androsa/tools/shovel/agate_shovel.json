@@ -42,26 +42,6 @@
                 "use_efficiency": true,
                 "destroy_speeds": [
                     {
-                        "block": "gaiadimension:green_soft_grass",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:soft_grass",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:purple_glitter_grass",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:corrupted_grass",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:murky_grass",
-                        "speed": 2
-                    },
-                    {
                         "block": "gaiadimension:corrupted_soil",
                         "speed": 2
                     },
@@ -74,28 +54,11 @@
                         "speed": 2
                     },
                     {
-                        "block": "gaiadimension:green_glitter_grass",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:yellow_glitter_grass",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:blue_glitter_grass",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:pink_glitter_grass",
-                        "speed": 2
-                    },
-                    {
                         "block": "gaiadimension:heavy_soil",
                         "speed": 2
                     }
                 ]
             },
-            
             "tag:minecraft:is_shovel": {},
             "minecraft:custom_components": [
                 "luminiae:durability"

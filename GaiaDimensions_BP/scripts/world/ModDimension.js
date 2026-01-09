@@ -13,8 +13,16 @@ class ModDimension {
             x: (this.range.start.x + this.range.end.x) / 2,
             z: (this.range.start.z + this.range.end.z) / 2
         };
-        this.inheritance = world.getDimension(inheritance);
+        this._inheritanceId = inheritance;
+        this._inheritance = undefined;
         this.eventsHandler = new DimensionEvents(this);
+    }
+
+    get inheritance() {
+        if (!this._inheritance) {
+            this._inheritance = world.getDimension(this._inheritanceId);
+        }
+        return this._inheritance;
     }
 
     getCenter() {

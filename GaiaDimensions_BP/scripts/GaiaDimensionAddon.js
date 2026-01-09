@@ -17,6 +17,8 @@ import { initializeEventManager } from "./systems/event_manager.js";
 import { initializeScriptEvents } from "./systems/scriptevents.js";
 import { registerFluidComponent } from "./fluids/fluids.js";
 import { registerCustomTool } from "./durability.js";
+import { DimensionSystem } from "./world/Gaia.js";
+import "./world/CoordinateDisplay.js";
 
 // Initialize systems
 initializeDestructionHandlers();

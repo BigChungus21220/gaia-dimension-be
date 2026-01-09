@@ -42,14 +42,6 @@
                 "use_efficiency": true,
                 "destroy_speeds": [
                     {
-                        "block": "gaiadimension:burnt_agate_tile_slab",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:burnt_agate_stair",
-                        "speed": 2
-                    },
-                    {
                         "block": "gaiadimension:stripped_aura_log",
                         "speed": 2
                     },
@@ -58,19 +50,11 @@
                         "speed": 2
                     },
                     {
-                        "block": "gaiadimension:stripped_purple_agate_log",
-                        "speed": 2
-                    },
-                    {
                         "block": "gaiadimension:stripped_blue_agate_log",
                         "speed": 2
                     },
                     {
                         "block": "gaiadimension:stripped_pink_agate_log",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:stripped_burning_log",
                         "speed": 2
                     },
                     {
@@ -98,23 +82,11 @@
                         "speed": 2
                     },
                     {
-                        "block": "gaiadimension:stripped_burning_wood",
-                        "speed": 2
-                    },
-                    {
                         "block": "gaiadimension:stripped_green_agate_wood",
                         "speed": 2
                     },
                     {
-                        "block": "gaiadimension:stripped_pink_agate_wood",
-                        "speed": 2
-                    },
-                    {
                         "block": "gaiadimension:stripped_blue_agate_wood",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:stripped_purple_agate_wood",
                         "speed": 2
                     },
                     {
@@ -126,15 +98,7 @@
                         "speed": 2
                     },
                     {
-                        "block": "gaiadimension:burning_wood",
-                        "speed": 2
-                    },
-                    {
                         "block": "gaiadimension:green_agate_wood",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:purple_agate_wood",
                         "speed": 2
                     },
                     {
@@ -154,22 +118,6 @@
                         "speed": 2
                     },
                     {
-                        "block": "gaiadimension:pink_agate_planks",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:burning_slab",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:burning_stair",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:fossilized_planks",
-                        "speed": 2
-                    },
-                    {
                         "block": "gaiadimension:fossilized_slab",
                         "speed": 2
                     },
@@ -182,15 +130,7 @@
                         "speed": 2
                     },
                     {
-                        "block": "gaiadimension:fossilized_stair",
-                        "speed": 2
-                    },
-                    {
                         "block": "gaiadimension:corrupted_log",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:purple_agate_slab",
                         "speed": 2
                     },
                     {
@@ -206,31 +146,7 @@
                         "speed": 2
                     },
                     {
-                        "block": "gaiadimension:aura_stair",
-                        "speed": 2
-                    },
-                    {
                         "block": "gaiadimension:blue_agate_slab",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:pink_agate_stair",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:purple_agate_stair",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:blue_agate_stair",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:purple_agate_planks",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:burnt_agate_planks",
                         "speed": 2
                     },
                     {
@@ -238,19 +154,7 @@
                         "speed": 2
                     },
                     {
-                        "block": "gaiadimension:green_agate_stair",
-                        "speed": 2
-                    },
-                    {
                         "block": "gaiadimension:green_agate_log",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:green_agate_planks",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:purple_agate_log",
                         "speed": 2
                     },
                     {
@@ -258,31 +162,7 @@
                         "speed": 2
                     },
                     {
-                        "block": "gaiadimension:burnt_agate",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:burning_log",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:burning_planks",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:blue_agate_planks",
-                        "speed": 2
-                    },
-                    {
                         "block": "gaiadimension:blue_agate_log",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:agate_crafting_table",
-                        "speed": 2
-                    },
-                    {
-                        "block": "gaiadimension:aura_planks",
                         "speed": 2
                     },
                     {
@@ -291,7 +171,6 @@
                     }
                 ]
             },
-            
             "tag:minecraft:is_axe": {},
             "minecraft:custom_components": [
                 "luminiae:durability"
