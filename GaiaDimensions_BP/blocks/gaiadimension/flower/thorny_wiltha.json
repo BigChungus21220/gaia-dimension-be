@@ -1,0 +1,152 @@
+{
+    "format_version": "1.21.30",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:thorny_wiltha",
+            "menu_category": {
+                "category": "none"
+            },
+            "traits": {
+                "minecraft:placement_direction": {
+                    "enabled_states": [
+                        "minecraft:cardinal_direction"
+                    ],
+                    "y_rotation_offset": 180
+                }
+            }
+        },
+        "components": {
+            "minecraft:loot": "loot_tables/blocks/gaiadimension/flower/thorny_wiltha.json",
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 0.1
+            },
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 0
+            },
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "thorny_wiltha",
+                    "render_method": "alpha_test",
+                    "face_dimming": false,
+                    "ambient_occlusion": false
+                }
+            },
+            "minecraft:geometry": "minecraft:geometry.cross",
+            "minecraft:placement_filter": {
+                "conditions": [
+                    {
+                        "block_filter": [
+                            "gaiadimension:orange_glitter_grass",
+                            "gaiadimension:blue_glitter_grass",
+                            "gaiadimension:green_glitter_grass",
+                            "gaiadimension:charred_grass",
+                            "gaiadimension:pale_green_glitter_grass",
+                            "gaiadimension:purple_glitter_grass",
+                            "gaiadimension:corrupted_grass",
+                            "gaiadimension:soft_grass",
+                            "gaiadimension:murky_grass",
+                            "gaiadimension:corrupt_grass",
+                            "gaiadimension:pink_glitter_grass",
+                            "gaiadimension:peach_glitter_grass",
+                            "gaiadimension:orange_glitter_grass",
+                            "gaiadimension:light_soil",
+                            "gaiadimension:heavy_soil",
+                            "gaiadimension:cinder",
+                            "gaiadimension:corrupt_soil",
+                            "gaiadimension:boggy_soil",
+                            "gaiadimension:light_soil",
+                            "minecraft:grass_block",
+                            "minecraft:dirt",
+                            "minecraft:podzol",
+                            "minecraft:dirt_with_roots",
+                            "minecraft:moss_block",
+                            "minecraft:coarse_dirt",
+                            "minecraft:sand"
+                        ],
+                        "allowed_faces": [
+                            "up"
+                        ]
+                    }
+                ]
+            },
+            "minecraft:selection_box": {
+                "origin": [
+                    -5,
+                    0,
+                    -5
+                ],
+                "size": [
+                    10,
+                    10,
+                    10
+                ]
+            },
+            "minecraft:collision_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    1,
+                    16
+                ]
+            },
+            "minecraft:flammable": {
+                "destroy_chance_modifier": 30,
+                "catch_chance_modifier": 5
+            }
+        },
+        "permutations": [
+            {
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'north'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            0,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'west'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            90,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'south'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            180,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'east'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            -90,
+                            0
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}
