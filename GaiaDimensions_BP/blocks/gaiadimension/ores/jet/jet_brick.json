@@ -2,7 +2,7 @@
     "format_version": "1.21.70",
     "minecraft:block": {
         "description": {
-            "identifier": "gaiadimension:jet_brick",
+            "identifier": "gaiadimension:jet_bricks",
             "menu_category": {
                 "category": "nature"
             }
@@ -19,7 +19,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "gaiadimension:jet_brick",
+                    "texture": "gaiadimension:jet_bricks",
                     "render_method": "opaque"
                 }
             },
