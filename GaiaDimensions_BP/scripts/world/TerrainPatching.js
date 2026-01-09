@@ -186,7 +186,12 @@ class TaskQueue {
    */
   run(runCount) {
     this.#run = system.runInterval(() => {
+      const start = Date.now();
+      const BUDGET = 15;
+      
       for (let iter = 0; iter < runCount; iter++) {
+        if (Date.now() - start > BUDGET) break; // Hard cap at 15ms
+        
         if (this.tasks.length !== 0) {
           this.tasks.shift()()
         } else this.push(main)

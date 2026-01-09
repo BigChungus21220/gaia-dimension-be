@@ -1,0 +1,64 @@
+{
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:salt",
+            "menu_category": {
+                "category": "nature"
+            }
+        },
+        "components": {
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 1.5
+            },
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 6
+            },
+            "minecraft:light_emission": 12,
+            "minecraft:geometry": "minecraft:geometry.full_block",
+            "minecraft:selection_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:collision_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "gaiadimension:salt",
+                    "render_method": "opaque"
+                },
+                "up": {
+                    "texture": "gaiadimension:salt",
+                    "render_method": "opaque"
+                },
+                "side": {
+                    "texture": "gaiadimension:salt",
+                    "render_method": "opaque"
+                },
+                "bottom": {
+                    "texture": "gaiadimension:salt",
+                    "render_method": "opaque"
+                }
+            },
+            "minecraft:map_color": "#FFFFFF"
+        }
+    }
+}

@@ -62,12 +62,18 @@ const playerFluidState = new Map(); // Key: player.id, Value: { head: boolean, f
 
 system.runInterval(() => {
     const start = Date.now();
+    const BUDGET = 15;
     
     // Player Effects Logic (Run every tick, but fast)
-    // To optimize, maybe skip some ticks or batch players? 
-    // For now, keep as is but monitor. Player count is usually low.
     runPlayerEffects();
+    
+    // Budget check after player effects
+    if (Date.now() - start > BUDGET) return;
+    
     runBoatLogic();
+
+    // Budget check after boat logic
+    if (Date.now() - start > BUDGET) return;
 
     // Fluid Flow Logic (Budgeted)
     if (PENDING_BLOCKS.size === 0) return;
@@ -75,7 +81,7 @@ system.runInterval(() => {
     // Use iterator to process manually so we can stop mid-loop
     for (const [key, data] of PENDING_BLOCKS) {
         // 1. Budget Check
-        if (Date.now() - start > MAX_EXECUTION_TIME_MS) {
+        if (Date.now() - start > BUDGET) {
             break; // Stop for this tick, resume next tick
         }
 
