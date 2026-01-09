@@ -769,6 +769,75 @@
         },
         "spawn_egg_nutrient_growth_sapper": {
             "textures": "textures/gaiadimension/androsa/item/spawn_egg_nutrient_growth_sapper"
+        },
+        "agathum": {
+            "textures": "textures/gaiadimension/androsa/blocks/agathum"
+        },
+        "bulbous_hobina": {
+            "textures": "textures/gaiadimension/androsa/blocks/bulbous_hobina"
+        },
+        "corrupted_gaia_eye": {
+            "textures": "textures/gaiadimension/androsa/blocks/corrupted_gaia_eye"
+        },
+        "gold_orb_tucher": {
+            "textures": "textures/gaiadimension/androsa/blocks/gold_orb_tucher"
+        },
+        "mystical_murgni": {
+            "textures": "textures/gaiadimension/androsa/blocks/mystical_murgni"
+        },
+        "ouzium": {
+            "textures": "textures/gaiadimension/androsa/blocks/ouzium"
+        },
+        "roofed_agaric": {
+            "textures": "textures/gaiadimension/androsa/blocks/roofed_agaric"
+        },
+        "spotted_kersei": {
+            "textures": "textures/gaiadimension/androsa/blocks/spotted_kersei"
+        },
+        "stickly_cupsir": {
+            "textures": "textures/gaiadimension/androsa/blocks/stickly_cupsir"
+        },
+        "thiscus": {
+            "textures": "textures/gaiadimension/androsa/blocks/thiscus"
+        },
+        "thorny_wiltha": {
+            "textures": "textures/gaiadimension/androsa/blocks/thorny_wiltha"
+        },
+        "aura_crystal_growth": {
+            "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_aura"
+        },
+        "black_crystal_growth": {
+            "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_black"
+        },
+        "corrupt_varloom": {
+            "textures": "textures/gaiadimension/androsa/blocks/corrupted_varloom"
+        },
+        "mutant_crystal_growth": {
+            "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_mutant"
+        },
+        "red_crystal_growth": {
+            "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_red"
+        },
+        "blue_crystal_growth": {
+            "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_blue"
+        },
+        "green_crystal_growth": {
+            "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_green"
+        },
+        "peach_crystal_growth": {
+            "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_peach"
+        },
+        "pink_crystal_growth": {
+            "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_pink"
+        },
+        "purple_crystal_growth": {
+            "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_purple"
+        },
+        "singed_crystal_growth": {
+            "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_seared"
+        },
+        "yellow_crystal_growth": {
+            "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_yellow"
         }
     }
 }
