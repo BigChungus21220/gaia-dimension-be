@@ -10,7 +10,7 @@
         "components": {
             "tag:brick": {},
             "tag:stone": {},
-            "minecraft:loot": "loot_tables/blocks/gaiadimension/jade_bricks.json",
+            "minecraft:loot": "loot_tables/blocks/gaiadimension/ores/jade_bricks.json",
             "minecraft:destructible_by_mining": {
                 "seconds_to_destroy": 1
             },

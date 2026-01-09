@@ -1,0 +1,14 @@
+{
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "gaiadimension:crusted_jade_brick_stair",
+                    "weight": 1
+                }
+            ]
+        }
+    ]
+}

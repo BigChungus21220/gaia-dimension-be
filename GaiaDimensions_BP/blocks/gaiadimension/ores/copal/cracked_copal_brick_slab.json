@@ -4,30 +4,79 @@
         "description": {
             "identifier": "gaiadimension:cracked_copal_brick_slab",
             "menu_category": {
-                "category": "construction"
+                "category": "construction",
+                "group": "minecraft:itemGroup.name.slab"
             },
             "traits": {
+                "minecraft:placement_direction": {
+                    "enabled_states": [
+                        "minecraft:cardinal_direction"
+                    ],
+                    "y_rotation_offset": 180
+                },
                 "minecraft:placement_position": {
                     "enabled_states": [
                         "minecraft:vertical_half"
                     ]
                 }
-            },
-            "states": {
-                "gaia:double": [
-                    false,
-                    true
-                ]
             }
         },
         "permutations": [
             {
-                "condition": "query.block_state('minecraft:vertical_half') == 'bottom' && !query.block_state('gaia:double')",
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'north'",
                 "components": {
-                    "minecraft:collision_box": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            0,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'west'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            90,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'south'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            180,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'east'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            -90,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:vertical_half') == 'top'",
+                "components": {
+                    "minecraft:selection_box": {
                         "origin": [
                             -8,
-                            0,
+                            8,
                             -8
                         ],
                         "size": [
@@ -36,6 +85,23 @@
                             16
                         ]
                     },
+                    "minecraft:collision_box": {
+                        "origin": [
+                            -8,
+                            8,
+                            -8
+                        ],
+                        "size": [
+                            16,
+                            8,
+                            16
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:vertical_half') == 'bottom'",
+                "components": {
                     "minecraft:selection_box": {
                         "origin": [
                             -8,
@@ -48,19 +114,10 @@
                             16
                         ]
                     },
-                    "minecraft:on_interact": {
-                        "event": "gaia:full_slab",
-                        "condition": "q.block_face == 1.0 && q.is_item_name_any('slot.weapon.mainhand','gaia:cracked_copal_brick_slab')"
-                    }
-                }
-            },
-            {
-                "condition": "query.block_state('minecraft:vertical_half') == 'top' && !query.block_state('gaia:double')",
-                "components": {
                     "minecraft:collision_box": {
                         "origin": [
                             -8,
-                            8,
+                            0,
                             -8
                         ],
                         "size": [
@@ -68,48 +125,39 @@
                             8,
                             16
                         ]
-                    },
-                    "minecraft:selection_box": {
-                        "origin": [
-                            -8,
-                            8,
-                            -8
-                        ],
-                        "size": [
-                            16,
-                            8,
-                            16
-                        ]
-                    },
-                    "minecraft:on_interact": {
-                        "event": "gaia:full_slab",
-                        "condition": "q.block_face == 0.0 && q.is_item_name_any('slot.weapon.mainhand','gaia:cracked_copal_brick_slab')"
-                    }
-                }
-            },
-            {
-                "condition": "query.block_state('gaia:double')",
-                "components": {
-                    "minecraft:unit_cube": {},
-                    "minecraft:on_player_destroyed": {
-                        "event": "gaia:double_destroy"
                     }
                 }
             }
         ],
         "components": {
-            "minecraft:destructible_by_mining": {
-                "seconds_to_destroy": 7
+            "minecraft:item_visual": {
+                "geometry": "geometry.rosa_gd.slab_icon",
+                "material_instances": {
+                    "*": {
+                        "texture": "cracked_copal_bricks",
+                        "render_method": "opaque"
+                    }
+                }
             },
-            "minecraft:destructible_by_explosion": {
-                "explosion_resistance": 6
+            "minecraft:geometry": {
+                "identifier": "geometry.rosa_gd.slab",
+                "bone_visibility": {
+                    "down": "q.block_state('minecraft:vertical_half') == 'bottom'",
+                    "up": "q.block_state('minecraft:vertical_half') == 'top'"
+                }
             },
-            "minecraft:geometry": "minecraft:geometry.full_block",
             "minecraft:material_instances": {
                 "*": {
                     "texture": "cracked_copal_bricks",
                     "render_method": "opaque"
                 }
+            },
+            "minecraft:tick": {
+                "interval_range": [
+                    1,
+                    1
+                ],
+                "looping": true
             },
             "minecraft:selection_box": {
                 "origin": [
@@ -119,7 +167,7 @@
                 ],
                 "size": [
                     16,
-                    16,
+                    8,
                     16
                 ]
             },
@@ -131,10 +179,40 @@
                 ],
                 "size": [
                     16,
-                    16,
+                    8,
                     16
                 ]
             },
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 3,
+                "item_specific_speeds": [
+                    {
+                        "item": "minecraft:wooden_axe",
+                        "destroy_speed": 1.5
+                    },
+                    {
+                        "item": "minecraft:stone_axe",
+                        "destroy_speed": 0.75
+                    },
+                    {
+                        "item": "minecraft:iron_axe",
+                        "destroy_speed": 0.5
+                    },
+                    {
+                        "item": "minecraft:diamond_axe",
+                        "destroy_speed": 0.4
+                    },
+                    {
+                        "item": "minecraft:netherite_axe",
+                        "destroy_speed": 0.35
+                    },
+                    {
+                        "item": "minecraft:golden_axe",
+                        "destroy_speed": 0.25
+                    }
+                ]
+            },
+            "minecraft:loot": "loot_tables/blocks/gaiadimension/ores/cracked_copal_brick_slab.json",
             "minecraft:map_color": "#a8c3bc"
         }
     }

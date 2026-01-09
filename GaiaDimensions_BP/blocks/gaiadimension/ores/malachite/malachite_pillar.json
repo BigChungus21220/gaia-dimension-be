@@ -63,7 +63,8 @@
                     16
                 ]
             },
-            "minecraft:map_color": "#0bda51"
+            "minecraft:map_color": "#0bda51",
+            "minecraft:loot": "loot_tables/blocks/gaiadimension/ores/malachite_pillar.json"
         },
         "permutations": [
             {

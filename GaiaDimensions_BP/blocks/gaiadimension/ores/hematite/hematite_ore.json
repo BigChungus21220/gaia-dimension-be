@@ -10,7 +10,7 @@
         "components": {
             "tag:ore": {},
             "tag:metal": {},
-            "minecraft:loot": "loot_tables/blocks/gaiadimension/hematite_ore.json",
+            "minecraft:loot": "loot_tables/blocks/gaiadimension/ores/hematite_ore.json",
             "minecraft:destructible_by_mining": {
                 "seconds_to_destroy": 2
             },

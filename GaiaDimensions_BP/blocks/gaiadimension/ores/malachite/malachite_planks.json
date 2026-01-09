@@ -10,7 +10,7 @@
         "components": {
             "tag:is_axeable": {},
             "tag:stone": {},
-            "minecraft:loot": "loot_tables/blocks/gaiadimension/malachite_planks.json",
+            "minecraft:loot": "loot_tables/blocks/gaiadimension/ores/malachite_planks.json",
             "minecraft:destructible_by_mining": {
                 "seconds_to_destroy": 1
             },

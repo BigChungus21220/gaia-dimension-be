@@ -1,0 +1,14 @@
+{
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "gaiadimension:malachite_tile_stair",
+                    "weight": 1
+                }
+            ]
+        }
+    ]
+}
