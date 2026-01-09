@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:singed_crystal_growth_placement",
-			"places_feature": "gaia:ground_cover/singed_crystal_growth_patch"
+			"identifier": "gaiadimension:singed_crystal_growth_placement",
+			"places_feature": "gaiadimension:ground_cover/singed_crystal_growth_patch"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

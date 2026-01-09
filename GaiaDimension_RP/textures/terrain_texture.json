@@ -1557,6 +1557,72 @@
         },
         "gaiadimension:sweet_muck_still": {
             "textures": "textures/gaiadimension/androsa/blocks/fluids/sweet_muck/sweet_muck_still"
+        },
+        "gaiadimension:blue_glitter_grass_side": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/blue_glitter_grass_side"
+        },
+        "gaiadimension:blue_glitter_grass_top": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/blue_glitter_grass_top"
+        },
+        "gaiadimension:charred_grass_side": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/charred_grass_side"
+        },
+        "gaiadimension:charred_grass_top": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/charred_grass_top"
+        },
+        "gaiadimension:corrupt_grass_side": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/corrupt_grass_side"
+        },
+        "gaiadimension:corrupt_grass_top": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/corrupt_grass_top"
+        },
+        "gaiadimension:green_glitter_grass_side": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/green_glitter_grass_side"
+        },
+        "gaiadimension:green_glitter_grass_top": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/green_glitter_grass_top"
+        },
+        "gaiadimension:murky_grass_side": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/murky_grass_side"
+        },
+        "gaiadimension:murky_grass_top": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/murky_grass_top"
+        },
+        "gaiadimension:orange_glitter_grass_side": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/orange_glitter_grass_side"
+        },
+        "gaiadimension:orange_glitter_grass_top": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/orange_glitter_grass_top"
+        },
+        "gaiadimension:pale_green_glitter_grass_side": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/pale_green_glitter_grass_side"
+        },
+        "gaiadimension:pale_green_glitter_grass_top": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/pale_green_glitter_grass_top"
+        },
+        "gaiadimension:peach_glitter_grass_side": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/peach_glitter_grass_side"
+        },
+        "gaiadimension:peach_glitter_grass_top": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/peach_glitter_grass_top"
+        },
+        "gaiadimension:pink_glitter_grass_side": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/pink_glitter_grass_side"
+        },
+        "gaiadimension:pink_glitter_grass_top": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/pink_glitter_grass_top"
+        },
+        "gaiadimension:purple_glitter_grass_side": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/purple_glitter_grass_side"
+        },
+        "gaiadimension:purple_glitter_grass_top": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/purple_glitter_grass_top"
+        },
+        "gaiadimension:soft_grass_side": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/soft_grass_side"
+        },
+        "gaiadimension:soft_grass_top": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/soft_grass_top"
         }
     }
 }

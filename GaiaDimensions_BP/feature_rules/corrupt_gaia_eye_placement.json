@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:corrupt_gaia_eye_placement",
-			"places_feature": "gaia:ground_cover/corrupt_gaia_eye_patch"
+			"identifier": "gaiadimension:corrupt_gaia_eye_placement",
+			"places_feature": "gaiadimension:ground_cover/corrupt_gaia_eye_patch"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

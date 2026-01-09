@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:pink_agate_tree_forest_placement",
-			"places_feature": "gaia:foliage/forest_pink_agate_tree"
+			"identifier": "gaiadimension:pink_agate_tree_forest_placement",
+			"places_feature": "gaiadimension:foliage/forest_pink_agate_tree"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

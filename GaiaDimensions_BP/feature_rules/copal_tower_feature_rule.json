@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:copal_tower_feature_rule",
-			"places_feature": "gaia:gen/structures/copal_tower_feature"
+			"identifier": "gaiadimension:copal_tower_feature_rule",
+			"places_feature": "gaiadimension:gen/structures/copal_tower_feature"
 		},
 		"conditions": {
 			"placement_pass": "after_sky_pass",

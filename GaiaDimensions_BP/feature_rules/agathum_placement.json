@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:agathum_placement",
-			"places_feature": "gaia:ground_cover/agathum_patch"
+			"identifier": "gaiadimension:agathum_placement",
+			"places_feature": "gaiadimension:ground_cover/agathum_patch"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

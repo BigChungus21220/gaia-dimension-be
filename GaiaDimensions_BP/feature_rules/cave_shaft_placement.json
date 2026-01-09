@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:cave_shaft_placement",
-			"places_feature": "gaia:gen/caves/shaft_ceiling"
+			"identifier": "gaiadimension:cave_shaft_placement",
+			"places_feature": "gaiadimension:gen/caves/shaft_ceiling"
 		},
 		"conditions": {
 			"placement_pass": "before_surface_pass",

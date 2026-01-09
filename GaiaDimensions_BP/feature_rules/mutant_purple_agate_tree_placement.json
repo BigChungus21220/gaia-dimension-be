@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:mutant_purple_agate_tree_placement",
-			"places_feature": "gaia:foliage/purple_tree_placer_mutant"
+			"identifier": "gaiadimension:mutant_purple_agate_tree_placement",
+			"places_feature": "gaiadimension:foliage/purple_tree_placer_mutant"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

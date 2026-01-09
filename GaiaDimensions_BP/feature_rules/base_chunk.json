@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:base_chunk",
-			"places_feature": "gaia:gen/base/column_placer"
+			"identifier": "gaiadimension:base_chunk",
+			"places_feature": "gaiadimension:gen/base/column_placer"
 		},
 		"conditions": {
 			"placement_pass": "first_pass",

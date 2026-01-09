@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:spike_placement",
-			"places_feature": "gaia:decorations/spike_placer"
+			"identifier": "gaiadimension:spike_placement",
+			"places_feature": "gaiadimension:decorations/spike_placer"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

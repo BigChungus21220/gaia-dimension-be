@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:spotted_kersei_placement",
-			"places_feature": "gaia:ground_cover/spotted_kersei_patch"
+			"identifier": "gaiadimension:spotted_kersei_placement",
+			"places_feature": "gaiadimension:ground_cover/spotted_kersei_patch"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

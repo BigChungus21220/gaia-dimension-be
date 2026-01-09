@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:roofed_agaric_placement",
-			"places_feature": "gaia:ground_cover/roofed_agaric_patch"
+			"identifier": "gaiadimension:roofed_agaric_placement",
+			"places_feature": "gaiadimension:ground_cover/roofed_agaric_patch"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

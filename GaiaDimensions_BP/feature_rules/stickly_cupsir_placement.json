@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:stickly_cupsir_placement",
-			"places_feature": "gaia:ground_cover/stickly_cupsir_patch"
+			"identifier": "gaiadimension:stickly_cupsir_placement",
+			"places_feature": "gaiadimension:ground_cover/stickly_cupsir_patch"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

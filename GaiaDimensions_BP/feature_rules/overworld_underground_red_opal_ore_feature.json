@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:overworld_underground_red_opal_ore_feature",
-			"places_feature": "gaia:gen/caves/red_opal_ore_feature"
+			"identifier": "gaiadimension:overworld_underground_red_opal_ore_feature",
+			"places_feature": "gaiadimension:gen/caves/red_opal_ore_feature"
 		},
 		"conditions": {
 			"placement_pass": "underground_pass",

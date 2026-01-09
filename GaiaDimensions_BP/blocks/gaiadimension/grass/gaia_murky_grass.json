@@ -1,26 +1,75 @@
 {
-	"format_version": "1.20.10",
-	"minecraft:block": {
-		"description": {
-			"identifier": "gaia:murky_grass",
-			"menu_category": {
-				"category": "nature",
-				"group": "itemGroup.name.glitter_grass"
-			}
-		},
-		"components": {
-			"tag:is_shovelable": {},
-			"tag:dirt": {},
-			"minecraft:loot": "loot_tables/blocks/murky_grass.json",
-			"minecraft:destructible_by_mining": {
-				"seconds_to_destroy": 1
-			},
-			
-			"minecraft:light_emission": 12,
-			"minecraft:destructible_by_explosion": {
-				"explosion_resistance": 1
-			},
-			"minecraft:map_color": "#ffffff"
-		}
-	}
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:murky_grass",
+            "menu_category": {
+                "category": "nature"
+            }
+        },
+        "components": {
+            "tag:is_shovelable": {},
+            "tag:dirt": {},
+            "minecraft:loot": "loot_tables/blocks/murky_grass.json",
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 1
+            },
+            "minecraft:light_emission": 12,
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 1
+            },
+            "minecraft:map_color": "#ffffff",
+            "minecraft:geometry": "minecraft:geometry.full_block",
+            "minecraft:selection_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:collision_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:material_instances": {
+                "up": {
+                    "texture": "gaiadimension:murky_grass_top",
+                    "render_method": "opaque"
+                },
+                "down": {
+                    "texture": "gaiadimension:boggy_soil",
+                    "render_method": "opaque"
+                },
+                "north": {
+                    "texture": "gaiadimension:murky_grass_side",
+                    "render_method": "opaque"
+                },
+                "south": {
+                    "texture": "gaiadimension:murky_grass_side",
+                    "render_method": "opaque"
+                },
+                "east": {
+                    "texture": "gaiadimension:murky_grass_side",
+                    "render_method": "opaque"
+                },
+                "west": {
+                    "texture": "gaiadimension:murky_grass_side",
+                    "render_method": "opaque"
+                }
+            }
+        }
+    }
 }

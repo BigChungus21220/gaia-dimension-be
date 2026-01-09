@@ -155,11 +155,17 @@ class MiniChunk {
       const max = { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 };
       const volume = new BlockVolume(min, max);
 
-      this.dim.fillBlocks(volume, air, { includeTypes: ["minecraft:end_stone"] });
-      this.dim.fillBlocks(volume, air, { includeTypes: ["minecraft:chorus_flower"] });
-      this.dim.fillBlocks(volume, air, { includeTypes: ["minecraft:chorus_plant"] });
-      this.dim.fillBlocks(volume, air, { includeTypes: ["minecraft:bedrock"] });
-      this.dim.fillBlocks(volume, air, { includeTypes: ["minecraft:end_gateway"] });
+      this.dim.fillBlocks(volume, air, { 
+          blockFilter: { 
+              includeTypes: [
+                  "minecraft:end_stone", 
+                  "minecraft:chorus_flower", 
+                  "minecraft:chorus_plant", 
+                  "minecraft:bedrock", 
+                  "minecraft:end_gateway"
+              ] 
+          } 
+      });
       return true;
     } catch(e){
         // world.sendMessage(`Clear failed: ${e}`);

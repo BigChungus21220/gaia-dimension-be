@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:green_bush_placement",
-			"places_feature": "gaia:foliage/green_bush"
+			"identifier": "gaiadimension:green_bush_placement",
+			"places_feature": "gaiadimension:foliage/green_bush"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

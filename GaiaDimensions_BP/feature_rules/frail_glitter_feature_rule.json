@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:frail_glitter_feature_rule",
-			"places_feature": "gaia:gen/caves/frail_glitter_feature"
+			"identifier": "gaiadimension:frail_glitter_feature_rule",
+			"places_feature": "gaiadimension:gen/caves/frail_glitter_feature"
 		},
 		"conditions": {
 			"placement_pass": "final_pass",

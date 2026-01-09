@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:static_stone_placement",
-			"places_feature": "gaia:decorations/static_stone_blob"
+			"identifier": "gaiadimension:static_stone_placement",
+			"places_feature": "gaiadimension:decorations/static_stone_blob"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

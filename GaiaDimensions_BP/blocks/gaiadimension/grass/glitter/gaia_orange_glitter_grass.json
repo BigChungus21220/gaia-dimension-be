@@ -1,0 +1,75 @@
+{
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:orange_glitter_grass",
+            "menu_category": {
+                "category": "none"
+            }
+        },
+        "components": {
+            "tag:is_shovelable": {},
+            "tag:dirt": {},
+            "minecraft:loot": "loot_tables/blocks/orange_glitter_grass.json",
+            "minecraft:light_emission": 12,
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 1
+            },
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 1
+            },
+            "minecraft:map_color": "#ffffff",
+            "minecraft:geometry": "minecraft:geometry.full_block",
+            "minecraft:selection_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:collision_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:material_instances": {
+                "up": {
+                    "texture": "gaiadimension:orange_glitter_grass_top",
+                    "render_method": "opaque"
+                },
+                "down": {
+                    "texture": "gaiadimension:heavy_soil",
+                    "render_method": "opaque"
+                },
+                "north": {
+                    "texture": "gaiadimension:orange_glitter_grass_side",
+                    "render_method": "opaque"
+                },
+                "south": {
+                    "texture": "gaiadimension:orange_glitter_grass_side",
+                    "render_method": "opaque"
+                },
+                "east": {
+                    "texture": "gaiadimension:orange_glitter_grass_side",
+                    "render_method": "opaque"
+                },
+                "west": {
+                    "texture": "gaiadimension:orange_glitter_grass_side",
+                    "render_method": "opaque"
+                }
+            }
+        }
+    }
+}

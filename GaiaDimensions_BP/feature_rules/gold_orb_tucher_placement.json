@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:gold_orb_tucher_placement",
-			"places_feature": "gaia:ground_cover/gold_orb_tucher_patch"
+			"identifier": "gaiadimension:gold_orb_tucher_placement",
+			"places_feature": "gaiadimension:ground_cover/gold_orb_tucher_patch"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

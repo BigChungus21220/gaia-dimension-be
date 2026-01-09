@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:burnt_tree_placement",
-			"places_feature": "gaia:foliage/burnt_tree"
+			"identifier": "gaiadimension:burnt_tree_placement",
+			"places_feature": "gaiadimension:foliage/burnt_tree"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

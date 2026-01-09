@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:bulbous_hobina_placement",
-			"places_feature": "gaia:ground_cover/bulbous_hobina_patch"
+			"identifier": "gaiadimension:bulbous_hobina_placement",
+			"places_feature": "gaiadimension:ground_cover/bulbous_hobina_patch"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

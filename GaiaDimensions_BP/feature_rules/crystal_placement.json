@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:crystal_placement",
-			"places_feature": "gaia:decorations/crystal_placer"
+			"identifier": "gaiadimension:crystal_placement",
+			"places_feature": "gaiadimension:decorations/crystal_placer"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

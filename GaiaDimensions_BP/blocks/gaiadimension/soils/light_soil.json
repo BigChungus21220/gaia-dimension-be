@@ -18,7 +18,7 @@
             "minecraft:destructible_by_explosion": {
                 "explosion_resistance": 1
             },
-             "minecraft:selection_box": {
+            "minecraft:selection_box": {
                 "origin": [
                     -8,
                     0,
@@ -43,11 +43,11 @@
                 ]
             },
             "minecraft:material_instances": {
-				"*": {
-					"texture": "gaiadimension:light_soil",
-					"render_method": "blend"
-				}
-			},
+                "*": {
+                    "texture": "gaiadimension:light_soil",
+                    "render_method": "blend"
+                }
+            },
             "minecraft:map_color": "#ffffff"
         }
     }

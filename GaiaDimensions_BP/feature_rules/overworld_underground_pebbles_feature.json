@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:overworld_underground_pebbles_feature",
-			"places_feature": "gaia:gen/caves/pebbles_feature"
+			"identifier": "gaiadimension:overworld_underground_pebbles_feature",
+			"places_feature": "gaiadimension:gen/caves/pebbles_feature"
 		},
 		"conditions": {
 			"placement_pass": "underground_pass",

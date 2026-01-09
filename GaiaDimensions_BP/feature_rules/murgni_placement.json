@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:murgni_placement",
-			"places_feature": "gaia:ground_cover/murgni_patch"
+			"identifier": "gaiadimension:murgni_placement",
+			"places_feature": "gaiadimension:ground_cover/murgni_patch"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

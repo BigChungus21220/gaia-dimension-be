@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:geyser_placement",
-			"places_feature": "gaia:decorations/geyser_placer"
+			"identifier": "gaiadimension:geyser_placement",
+			"places_feature": "gaiadimension:decorations/geyser_placer"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

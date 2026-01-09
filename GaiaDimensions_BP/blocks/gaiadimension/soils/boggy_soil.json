@@ -16,12 +16,12 @@
                 "seconds_to_destroy": 1
             },
             "minecraft:material_instances": {
-				"*": {
-					"texture": "gaiadimension:boggy_soil",
-					"render_method": "blend"
-				}
-			},
-             "minecraft:selection_box": {
+                "*": {
+                    "texture": "gaiadimension:boggy_soil",
+                    "render_method": "blend"
+                }
+            },
+            "minecraft:selection_box": {
                 "origin": [
                     -8,
                     0,

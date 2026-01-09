@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:goldstone_tree_placement",
-			"places_feature": "gaia:foliage/goldstone_tree"
+			"identifier": "gaiadimension:goldstone_tree_placement",
+			"places_feature": "gaiadimension:foliage/goldstone_tree"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

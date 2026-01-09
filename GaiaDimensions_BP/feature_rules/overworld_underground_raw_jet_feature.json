@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:overworld_underground_raw_jet_feature",
-			"places_feature": "gaia:gen/caves/raw_jet_feature"
+			"identifier": "gaiadimension:overworld_underground_raw_jet_feature",
+			"places_feature": "gaiadimension:gen/caves/raw_jet_feature"
 		},
 		"conditions": {
 			"placement_pass": "underground_pass",

@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:blue_agate_tree_placement",
-			"places_feature": "gaia:foliage/blue_agate_tree"
+			"identifier": "gaiadimension:blue_agate_tree_placement",
+			"places_feature": "gaiadimension:foliage/blue_agate_tree"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

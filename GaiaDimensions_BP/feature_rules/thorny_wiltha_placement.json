@@ -2,8 +2,8 @@
 	"format_version": "1.20.20",
 	"minecraft:feature_rules": {
 		"description": {
-			"identifier": "gaia:thorny_wiltha_placement",
-			"places_feature": "gaia:ground_cover/thorny_wiltha_patch"
+			"identifier": "gaiadimension:thorny_wiltha_placement",
+			"places_feature": "gaiadimension:ground_cover/thorny_wiltha_patch"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",
