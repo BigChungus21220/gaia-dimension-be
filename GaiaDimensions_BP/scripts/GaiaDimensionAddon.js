@@ -14,12 +14,14 @@ import { registerGlitteringFireComponent } from "./blocks/glittering_fire.js";
 import { PortalManager } from "./API/lib/PortalLib.js";
 import { initializeDestructionHandlers } from "./systems/destruction_handler.js";
 import { initializeEventManager } from "./systems/event_manager.js";
+import { initializeScriptEvents } from "./systems/scriptevents.js";
 import { registerFluidComponent } from "./fluids/fluids.js";
 import { registerCustomTool } from "./durability.js";
 
 // Initialize systems
 initializeDestructionHandlers();
 initializeEventManager();
+initializeScriptEvents();
 registerCustomTool();
 
 system.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {

@@ -102,7 +102,7 @@
       "gaiadimension:spawn_item": {
         "queue_command": {
           "command": [
-            "give @p[r=3] gaiadimension:agate_arrow 1 0",
+            "scriptevent gaiadimension:give_agate_arrow",
             "playsound random.pop @p[r=3]"
           ]
         },
