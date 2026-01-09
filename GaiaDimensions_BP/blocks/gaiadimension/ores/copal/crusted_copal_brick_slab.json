@@ -134,7 +134,7 @@
                 "geometry": "geometry.rosa_gd.slab_icon",
                 "material_instances": {
                     "*": {
-                        "texture": "gaiadimension:crusted_copal_brick",
+                        "texture": "gaiadimension:crusted_copal_bricks",
                         "render_method": "opaque"
                     }
                 }

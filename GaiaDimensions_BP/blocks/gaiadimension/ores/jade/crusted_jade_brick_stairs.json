@@ -46,7 +46,7 @@
                 },
                 "material_instances": {
                     "*": {
-                        "texture": "gaiadimension:crusted_jade_brick"
+                        "texture": "gaiadimension:crusted_jade_bricks"
                     }
                 }
             },
