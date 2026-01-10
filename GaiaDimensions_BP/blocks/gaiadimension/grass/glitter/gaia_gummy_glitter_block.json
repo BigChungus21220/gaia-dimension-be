@@ -21,9 +21,8 @@
             "minecraft:light_emission": 12,
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "gummy_glitter_block",
-                    "render_method": "blend",
-                    "minecraft:map_color": "#ffffff"
+                    "texture": "gaiadimension:gummy_glitter_block",
+                    "render_method": "blend"
                 }
             },
             "minecraft:geometry": "minecraft:geometry.full_block",

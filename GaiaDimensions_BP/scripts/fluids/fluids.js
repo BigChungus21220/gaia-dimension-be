@@ -190,28 +190,31 @@ function runPlayerEffects() {
     }
 }
 
-// Helper: Check if block is replaceable (Air or Vegetation)
 function isReplaceable(blk) {
     if (!blk || !blk.isValid) return false;
-    if (blk.typeId === "minecraft:air") return true;
-    
+    if (blk.isAir) return true;
+    if (blk.isLiquid) return false; 
+
     const id = blk.typeId;
-    if (id.includes("grass_block") || id.includes("dirt") || id.includes("soil")) return false;
 
-    // Explicitly allow vanilla grass/tall grass
-    if (id === "minecraft:grass" || id === "minecraft:tall_grass") return true;
+    if (id === "minecraft:snow_layer" || 
+        id === "minecraft:fire" || 
+        id === "minecraft:soul_fire" ||
+        id === "minecraft:double_plant" || 
+        id === "minecraft:tallgrass" ||
+        id === "minecraft:deadbush" ||
+        id === "minecraft:web") return true;
 
-    const tags = [
+    const vegetationTags = [
         "minecraft:is_plant",
         "flower",
         "plant",
         "double_plant",
         "minecraft:crop"
     ];
+    if (vegetationTags.some(tag => blk.hasTag(tag))) return true;
     
-    if (tags.some(tag => blk.hasTag(tag))) return true;
-    
-    if (id.includes("flower") || id.includes("plant") || id.includes("litter") || id.includes("sapling") || id.includes("bush")) return true;
+    if (id.includes("flower") || id.includes("sapling") || id.includes("bush") || id.includes("plant")) return true;
     
     return false;
 }
