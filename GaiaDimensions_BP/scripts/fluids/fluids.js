@@ -214,7 +214,8 @@ function isReplaceable(blk) {
     ];
     if (vegetationTags.some(tag => blk.hasTag(tag))) return true;
     
-    if (id.includes("flower") || id.includes("sapling") || id.includes("bush") || id.includes("plant")) return true;
+// Core Fluid Logic
+    if (id.includes("flower") || id.includes("sapling") || id.includes("bush") || id.includes("plant") || id.includes("leaf_litter")) return true;
     
     return false;
 }
