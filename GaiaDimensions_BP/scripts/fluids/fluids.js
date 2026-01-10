@@ -1,4 +1,4 @@
-import { world, system, BlockPermutation, ItemStack } from "@minecraft/server";
+import { world, system, BlockPermutation, ItemStack, BlockVolume } from "@minecraft/server";
 
 const fluids = [
     "gaiadimension:liquid_bismuth",
@@ -47,7 +47,7 @@ const hot_fluids = [
 ];
 
 // --- Fluid Processing System (Budgeted) ---
-const MAX_EXECUTION_TIME_MS = 15; // Target max ms usage per tick
+const BUDGET = 15; // Target max ms usage per tick
 const PENDING_BLOCKS = new Map(); // Key: "x,y,z,dim", Value: {block, dimension}
 
 // Directions for flow checks
@@ -62,17 +62,12 @@ const playerFluidState = new Map(); // Key: player.id, Value: { head: boolean, f
 
 system.runInterval(() => {
     const start = Date.now();
-    const BUDGET = 15;
     
-    // Player Effects Logic (Run every tick, but fast)
+    // Player Effects Logic
     runPlayerEffects();
-    
-    // Budget check after player effects
     if (Date.now() - start > BUDGET) return;
-    
-    runBoatLogic();
 
-    // Budget check after boat logic
+    runBoatLogic();
     if (Date.now() - start > BUDGET) return;
 
     // Fluid Flow Logic (Budgeted)
@@ -80,15 +75,10 @@ system.runInterval(() => {
 
     // Use iterator to process manually so we can stop mid-loop
     for (const [key, data] of PENDING_BLOCKS) {
-        // 1. Budget Check
-        if (Date.now() - start > BUDGET) {
-            break; // Stop for this tick, resume next tick
-        }
+        if (Date.now() - start > BUDGET) break;
 
-        // 2. Remove from queue
         PENDING_BLOCKS.delete(key);
 
-        // 3. Process
         try {
             const { block, dimension } = data;
             if (block.isValid) {
@@ -208,12 +198,13 @@ function isReplaceable(blk) {
     const id = blk.typeId;
     if (id.includes("grass_block") || id.includes("dirt") || id.includes("soil")) return false;
 
+    // Explicitly allow vanilla grass/tall grass
+    if (id === "minecraft:grass" || id === "minecraft:tall_grass") return true;
+
     const tags = [
         "minecraft:is_plant",
-        "minecraft:grass",
         "flower",
         "plant",
-        "tall_grass",
         "double_plant",
         "minecraft:crop"
     ];
@@ -221,7 +212,6 @@ function isReplaceable(blk) {
     if (tags.some(tag => blk.hasTag(tag))) return true;
     
     if (id.includes("flower") || id.includes("plant") || id.includes("litter") || id.includes("sapling") || id.includes("bush")) return true;
-    if (id.includes("grass") && !id.includes("block")) return true;
     
     return false;
 }
@@ -230,13 +220,13 @@ function isReplaceable(blk) {
 function processFluidBlock(block, dimension) {
     const typeId = block.typeId;
 
-    // Determine fluid level/stage based on ID suffix
+    // ... (stage logic) ...
     let currentStage = 0; // 0 = source, -1 = down
     let baseId = typeId;
     
     if (typeId.endsWith("_down")) {
         currentStage = -1;
-        baseId = typeId.slice(0, -5); // Remove "_down"
+        baseId = typeId.slice(0, -5); 
     } else if (typeId.endsWith("3")) {
         currentStage = 3;
         baseId = typeId.slice(0, -1);
@@ -266,8 +256,10 @@ function processFluidBlock(block, dimension) {
              
              if (isAboveDown || isAboveHalf) {
                  const downId = baseId + "_down";
-                 // Direct set (we are in system.run context mostly, but better safe)
-                 if (block.isValid) block.setType(downId);
+                 if (block.isValid) {
+                     const vol = new BlockVolume(block.location, block.location);
+                     dimension.fillBlocks(vol, BlockPermutation.resolve(downId));
+                 }
                  return;
              }
          }
@@ -284,28 +276,30 @@ function processFluidBlock(block, dimension) {
             }
         }
         if (!hasParent) {
-            if (block.isValid) block.setType("minecraft:air");
+            if (block.isValid) {
+                const vol = new BlockVolume(block.location, block.location);
+                dimension.fillBlocks(vol, BlockPermutation.resolve("minecraft:air"));
+            }
             return;
         }
     } else if (currentStage === -1) {
-        // Down blocks need source, down, or any stage above to survive
         const above = dimension.getBlock({ x: block.location.x, y: block.location.y + 1, z: block.location.z });
         if (!above) {
-             if (block.isValid) block.setType("minecraft:air");
+             if (block.isValid) {
+                 const vol = new BlockVolume(block.location, block.location);
+                 dimension.fillBlocks(vol, BlockPermutation.resolve("minecraft:air"));
+             }
              return;
         }
         
         const aboveId = above.typeId;
-        const validParents = [
-            baseId,
-            baseId + "_down",
-            baseId + "1",
-            baseId + "2",
-            baseId + "3"
-        ];
+        const validParents = [ baseId, baseId + "_down", baseId + "1", baseId + "2", baseId + "3" ];
         
         if (!validParents.includes(aboveId)) {
-            if (block.isValid) block.setType("minecraft:air");
+            if (block.isValid) {
+                const vol = new BlockVolume(block.location, block.location);
+                dimension.fillBlocks(vol, BlockPermutation.resolve("minecraft:air"));
+            }
             return;
         }
     }
@@ -322,7 +316,8 @@ function processFluidBlock(block, dimension) {
              if (isDestructible) {
                  below.dimension.runCommand(`setblock ${below.location.x} ${below.location.y} ${below.location.z} air destroy`);
              }
-             below.setType(downId);
+             const vol = new BlockVolume(below.location, below.location);
+             dimension.fillBlocks(vol, BlockPermutation.resolve(downId));
          }
          flowedDown = true;
     } else if (below && (below.typeId === baseId + "_down" || below.typeId === baseId)) {
@@ -345,7 +340,8 @@ function processFluidBlock(block, dimension) {
                     if (isDestructible) {
                         neighbor.dimension.runCommand(`setblock ${neighbor.location.x} ${neighbor.location.y} ${neighbor.location.z} air destroy`);
                     }
-                    neighbor.setType(nextStageId);
+                    const vol = new BlockVolume(neighbor.location, neighbor.location);
+                    dimension.fillBlocks(vol, BlockPermutation.resolve(nextStageId));
                 }
             }
         }
@@ -375,7 +371,10 @@ function processFluidBlock(block, dimension) {
         
         if (changed) {
             const newPerm = BlockPermutation.resolve(typeId, perms);
-            if (block.isValid) block.setPermutation(newPerm);
+            if (block.isValid) {
+                const vol = new BlockVolume(block.location, block.location);
+                dimension.fillBlocks(vol, newPerm);
+            }
         }
     }
 }
