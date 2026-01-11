@@ -561,3 +561,26 @@ tile.gaiadimension:stickly_cupsir.name=Stickly Cupsir
 tile.gaiadimension:thiscus.name=Thiscus
 tile.gaiadimension:thorny_wiltha.name=Thorny Wiltha
 tile.gaiadimension:yellow_crystal_growth.name=Yellow Crystal Growth
+
+## Purple Agate Translations
+item.gaiadimension:purple_agate_curtain=Purple Agate Curtain
+tile.gaiadimension:bedrock_purple_agate_forest.name=Bedrock Purple Agate Forest
+tile.gaiadimension:purple_agate_button.name=Purple Agate Button
+tile.gaiadimension:purple_agate_curtain_bottom.name=Purple Agate Curtain Bottom
+tile.gaiadimension:purple_agate_curtain_bottom_left.name=Purple Agate Curtain Bottom Left
+tile.gaiadimension:purple_agate_curtain_bottom_right.name=Purple Agate Curtain Bottom Right
+tile.gaiadimension:purple_agate_curtain_top.name=Purple Agate Curtain Top
+tile.gaiadimension:purple_agate_curtain_top_left.name=Purple Agate Curtain Top Left
+tile.gaiadimension:purple_agate_curtain_top_right.name=Purple Agate Curtain Top Right
+tile.gaiadimension:purple_agate_fence_gate.name=Purple Agate Fence Gate
+tile.gaiadimension:purple_agate_leaves.name=Purple Agate Leaves
+tile.gaiadimension:purple_agate_log.name=Purple Agate Log
+tile.gaiadimension:purple_agate_pressure_plate.name=Purple Agate Pressure Plate
+tile.gaiadimension:purple_agate_sapling.name=Purple Agate Sapling
+tile.gaiadimension:purple_agate_slab.name=Purple Agate Slab
+tile.gaiadimension:purple_agate_stairs.name=Purple Agate Stairs
+tile.gaiadimension:purple_agate_tiles.name=Purple Agate Tiles
+tile.gaiadimension:purple_agate_wood.name=Purple Agate Wood
+tile.gaiadimension:purple_agate_fence.name=Purple Agate Fence
+tile.gaiadimension:stripped_purple_agate_log.name=Stripped Purple Agate Log
+tile.gaiadimension:stripped_purple_agate_wood.name=Stripped Purple Agate Wood
