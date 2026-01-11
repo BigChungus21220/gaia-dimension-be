@@ -868,6 +868,9 @@
         },
         "purple_agate_sapling": {
             "textures": "textures/gaiadimension/androsa/blocks/purple_agate_sapling"
+        },
+        "pyrite_torch": {
+            "textures": "textures/gaiadimension/androsa/blocks/pyrite_torch"
         }
     }
 }

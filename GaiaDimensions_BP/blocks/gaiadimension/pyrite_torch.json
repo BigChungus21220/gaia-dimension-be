@@ -1,0 +1,169 @@
+{
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:pyrite_torch",
+            "menu_category": {
+                "category": "none"
+            },
+            "traits": {
+                "minecraft:placement_position": {
+                    "enabled_states": [
+                        "minecraft:block_face"
+                    ]
+                }
+            }
+        },
+        "permutations": [
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'up'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            0,
+                            0
+                        ]
+                    },
+                    "minecraft:geometry": {
+                        "identifier": "geometry.rosa_gd.pyrite_torch",
+                        "bone_visibility": {
+                            "wall": false,
+                            "center": true
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'north'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            0,
+                            0
+                        ]
+                    },
+                    "minecraft:geometry": {
+                        "identifier": "geometry.rosa_gd.pyrite_torch",
+                        "bone_visibility": {
+                            "wall": true,
+                            "center": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'south'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            180,
+                            0
+                        ]
+                    },
+                    "minecraft:geometry": {
+                        "identifier": "geometry.rosa_gd.pyrite_torch",
+                        "bone_visibility": {
+                            "wall": true,
+                            "center": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'east'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            -90,
+                            0
+                        ]
+                    },
+                    "minecraft:geometry": {
+                        "identifier": "geometry.rosa_gd.pyrite_torch",
+                        "bone_visibility": {
+                            "wall": true,
+                            "center": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'west'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            90,
+                            0
+                        ]
+                    },
+                    "minecraft:geometry": {
+                        "identifier": "geometry.rosa_gd.pyrite_torch",
+                        "bone_visibility": {
+                            "wall": true,
+                            "center": false
+                        }
+                    }
+                }
+            }
+        ],
+        "components": {
+            "minecraft:geometry": "geometry.rosa_gd.pyrite_torch",
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "gaiadimension:pyrite_torch",
+                    "render_method": "alpha_test",
+                    "face_dimming": false,
+                    "ambient_occlusion": false
+                }
+            },
+            "minecraft:light_emission": 15,
+            "minecraft:light_dampening": 0,
+            "minecraft:placement_filter": {
+                "conditions": [
+                    {
+                        "allowed_faces": [
+                            "up",
+                            "north",
+                            "south",
+                            "east",
+                            "west"
+                        ]
+                    }
+                ]
+            },
+            "minecraft:loot": "loot_tables/msc/empty.json",
+            "minecraft:collision_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "minecraft:selection_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 0.2
+            }
+        }
+    }
+}

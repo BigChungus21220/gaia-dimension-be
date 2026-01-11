@@ -4,8 +4,7 @@
         "description": {
             "identifier": "gaiadimension:pyrite_torch_item",
             "menu_category": {
-                "category": "items",
-                "group": "items"
+                "category": "items"
             }
         },
         "components": {

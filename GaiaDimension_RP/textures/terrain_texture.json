@@ -958,9 +958,6 @@
         "gaiadimension:soft_grass_side": {
             "textures": "textures/gaiadimension/androsa/blocks/soft_grass_side"
         },
-        "gaiadimension:soft_grass_top": {
-            "textures": "textures/gaiadimension/androsa/blocks/soft_grass_top"
-        },
         "gaiadimension:sombre_cacti_side": {
             "textures": "textures/gaiadimension/androsa/blocks/sombre_cacti_side"
         },
@@ -1570,23 +1567,11 @@
         "gaiadimension:charred_grass_top": {
             "textures": "textures/gaiadimension/androsa/blocks/grasses/charred_grass_top"
         },
-        "gaiadimension:corrupted_grass_side": {
-            "textures": "textures/gaiadimension/androsa/blocks/grasses/corrupt_grass_side"
-        },
-        "gaiadimension:corrupted_grass_top": {
-            "textures": "textures/gaiadimension/androsa/blocks/grasses/corrupt_grass_top"
-        },
         "gaiadimension:green_glitter_grass_side": {
             "textures": "textures/gaiadimension/androsa/blocks/grasses/green_glitter_grass_side"
         },
         "gaiadimension:green_glitter_grass_top": {
             "textures": "textures/gaiadimension/androsa/blocks/grasses/green_glitter_grass_top"
-        },
-        "gaiadimension:murky_grass_side": {
-            "textures": "textures/gaiadimension/androsa/blocks/grasses/murky_grass_side"
-        },
-        "gaiadimension:murky_grass_top": {
-            "textures": "textures/gaiadimension/androsa/blocks/grasses/murky_grass_top"
         },
         "gaiadimension:orange_glitter_grass_side": {
             "textures": "textures/gaiadimension/androsa/blocks/grasses/orange_glitter_grass_side"
@@ -1618,41 +1603,8 @@
         "gaiadimension:purple_glitter_grass_top": {
             "textures": "textures/gaiadimension/androsa/blocks/grasses/purple_glitter_grass_top"
         },
-        "gaiadimension:soft_grass_side": {
-            "textures": "textures/gaiadimension/androsa/blocks/grasses/soft_grass_side"
-        },
-        "gaiadimension:agathum": {
-            "textures": "textures/gaiadimension/androsa/blocks/agathum"
-        },
-        "gaiadimension:bulbous_hobina": {
-            "textures": "textures/gaiadimension/androsa/blocks/bulbous_hobina"
-        },
-        "gaiadimension:corrupted_gaia_eye": {
-            "textures": "textures/gaiadimension/androsa/blocks/corrupted_gaia_eye"
-        },
-        "gaiadimension:gold_orb_tucher": {
-            "textures": "textures/gaiadimension/androsa/blocks/gold_orb_tucher"
-        },
-        "gaiadimension:mystical_murgni": {
-            "textures": "textures/gaiadimension/androsa/blocks/mystical_murgni"
-        },
-        "gaiadimension:ouzium": {
-            "textures": "textures/gaiadimension/androsa/blocks/ouzium"
-        },
-        "gaiadimension:roofed_agaric": {
-            "textures": "textures/gaiadimension/androsa/blocks/roofed_agaric"
-        },
-        "gaiadimension:spotted_kersei": {
-            "textures": "textures/gaiadimension/androsa/blocks/spotted_kersei"
-        },
-        "gaiadimension:stickly_cupsir": {
-            "textures": "textures/gaiadimension/androsa/blocks/stickly_cupsir"
-        },
-        "gaiadimension:thiscus": {
-            "textures": "textures/gaiadimension/androsa/blocks/thiscus"
-        },
-        "gaiadimension:thorny_wiltha": {
-            "textures": "textures/gaiadimension/androsa/blocks/thorny_wiltha"
+        "gaiadimension:soft_grass_top": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/soft_grass_top"
         },
         "gaiadimension:aura_crystal_growth": {
             "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_aura"
