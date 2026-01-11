@@ -838,6 +838,36 @@
         },
         "yellow_crystal_growth": {
             "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_yellow"
+        },
+        "aura_sapling": {
+            "textures": "textures/gaiadimension/androsa/blocks/aura_sapling"
+        },
+        "blue_agate_sapling": {
+            "textures": "textures/gaiadimension/androsa/blocks/blue_agate_sapling"
+        },
+        "burnt_agate_sapling": {
+            "textures": "textures/gaiadimension/androsa/blocks/burnt_agate_sapling"
+        },
+        "corrupted_sapling": {
+            "textures": "textures/gaiadimension/androsa/blocks/corrupted_sapling"
+        },
+        "fire_agate_sapling": {
+            "textures": "textures/gaiadimension/androsa/blocks/fire_agate_sapling"
+        },
+        "fossilized_sapling": {
+            "textures": "textures/gaiadimension/androsa/blocks/fossilized_sapling"
+        },
+        "golden_sapling": {
+            "textures": "textures/gaiadimension/androsa/blocks/golden_sapling"
+        },
+        "green_agate_sapling": {
+            "textures": "textures/gaiadimension/androsa/blocks/green_agate_sapling"
+        },
+        "pink_agate_sapling": {
+            "textures": "textures/gaiadimension/androsa/blocks/pink_agate_sapling"
+        },
+        "purple_agate_sapling": {
+            "textures": "textures/gaiadimension/androsa/blocks/purple_agate_sapling"
         }
     }
 }

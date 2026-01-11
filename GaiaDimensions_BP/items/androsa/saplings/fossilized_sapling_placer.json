@@ -2,18 +2,18 @@
     "format_version": "1.20.50",
     "minecraft:item": {
         "description": {
-            "identifier": "gaiadimension:purple_agate_sapling_placer",
+            "identifier": "gaiadimension:fossilized_sapling_placer",
             "menu_category": {
                 "category": "nature",
                 "group": "itemGroup.name.nature"
             }
         },
         "components": {
+            "minecraft:icon": "fossilized_sapling",
             "minecraft:block_placer": {
-                "block": "gaiadimension:purple_agate_sapling"
+                "block": "gaiadimension:fossilized_sapling"
             },
-            "minecraft:max_stack_size": 64,
-            "minecraft:icon": "gaiadimension:purple_agate_sapling"
+            "minecraft:max_stack_size": 64
         }
     }
 }
