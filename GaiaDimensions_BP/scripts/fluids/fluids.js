@@ -49,7 +49,9 @@ const hot_fluids = [
 // --- Fluid Processing System (Budgeted) ---
 const BUDGET = 15; // Target max ms usage per tick
 const MAX_QUEUE_SIZE = 500; // Hard limit on pending blocks to prevent memory/lag spikes
+const IDLE_TIMEOUT = 40; // Ticks before a fluid goes idle (~2 seconds)
 const PENDING_BLOCKS = new Map(); // Key: "x,y,z,dim", Value: {block, dimension}
+const ACTIVE_FLUIDS = new Map(); // Key: "x,y,z,dim", Value: lastActiveTick
 
 // Directions for flow checks
 const DIRECTIONS = [
@@ -83,7 +85,10 @@ system.runInterval(() => {
         try {
             const { block, dimension } = data;
             if (block.isValid) {
-                processFluidBlock(block, dimension);
+                const didChange = processFluidBlock(block, dimension);
+                if (didChange) {
+                    ACTIVE_FLUIDS.set(key, system.currentTick);
+                }
             }
         } catch (e) {
             // Handle error silently or log
@@ -224,6 +229,7 @@ function isReplaceable(blk) {
 // Core Fluid Logic
 function processFluidBlock(block, dimension) {
     const typeId = block.typeId;
+    let changesHappened = false;
 
     // ... (stage logic) ...
     let currentStage = 0; // 0 = source, -1 = down
@@ -264,8 +270,9 @@ function processFluidBlock(block, dimension) {
                  if (block.isValid) {
                      const vol = new BlockVolume(block.location, block.location);
                      dimension.fillBlocks(vol, BlockPermutation.resolve(downId));
+                     changesHappened = true;
                  }
-                 return;
+                 return changesHappened;
              }
          }
     }
@@ -284,8 +291,9 @@ function processFluidBlock(block, dimension) {
             if (block.isValid) {
                 const vol = new BlockVolume(block.location, block.location);
                 dimension.fillBlocks(vol, BlockPermutation.resolve("minecraft:air"));
+                changesHappened = true;
             }
-            return;
+            return changesHappened;
         }
     } else if (currentStage === -1) {
         const above = dimension.getBlock({ x: block.location.x, y: block.location.y + 1, z: block.location.z });
@@ -293,8 +301,9 @@ function processFluidBlock(block, dimension) {
              if (block.isValid) {
                  const vol = new BlockVolume(block.location, block.location);
                  dimension.fillBlocks(vol, BlockPermutation.resolve("minecraft:air"));
+                 changesHappened = true;
              }
-             return;
+             return changesHappened;
         }
         
         const aboveId = above.typeId;
@@ -304,8 +313,9 @@ function processFluidBlock(block, dimension) {
             if (block.isValid) {
                 const vol = new BlockVolume(block.location, block.location);
                 dimension.fillBlocks(vol, BlockPermutation.resolve("minecraft:air"));
+                changesHappened = true;
             }
-            return;
+            return changesHappened;
         }
     }
 
@@ -323,6 +333,7 @@ function processFluidBlock(block, dimension) {
              }
              const vol = new BlockVolume(below.location, below.location);
              dimension.fillBlocks(vol, BlockPermutation.resolve(downId));
+             changesHappened = true;
          }
          flowedDown = true;
     } else if (below && (below.typeId === baseId + "_down" || below.typeId === baseId)) {
@@ -347,6 +358,7 @@ function processFluidBlock(block, dimension) {
                     }
                     const vol = new BlockVolume(neighbor.location, neighbor.location);
                     dimension.fillBlocks(vol, BlockPermutation.resolve(nextStageId));
+                    changesHappened = true;
                 }
             }
         }
@@ -379,9 +391,11 @@ function processFluidBlock(block, dimension) {
             if (block.isValid) {
                 const vol = new BlockVolume(block.location, block.location);
                 dimension.fillBlocks(vol, newPerm);
+                changesHappened = true;
             }
         }
     }
+    return changesHappened;
 }
 
 class FluidFlowComponent {
@@ -396,11 +410,51 @@ class FluidFlowComponent {
         const { block } = event;
         // Push to global queue
         const key = `${block.location.x},${block.location.y},${block.location.z},${block.dimension.id}`;
+        
+        // Idle Check
+        const lastActive = ACTIVE_FLUIDS.get(key);
+        if (lastActive) {
+            if (system.currentTick - lastActive > IDLE_TIMEOUT) {
+                // Too old, ignore (Fluid is idle/stable)
+                return;
+            }
+        } else {
+            // New fluid, mark active
+            ACTIVE_FLUIDS.set(key, system.currentTick);
+        }
+
         if (!PENDING_BLOCKS.has(key)) {
             PENDING_BLOCKS.set(key, { block, dimension: block.dimension });
         }
     }
 }
+
+// Wake up fluids on block interactions
+function wakeNeighbors(block) {
+    const dimension = block.dimension;
+    const locations = [
+        { x: 0, y: 1, z: 0 }, { x: 0, y: -1, z: 0 },
+        { x: 1, y: 0, z: 0 }, { x: -1, y: 0, z: 0 },
+        { x: 0, y: 0, z: 1 }, { x: 0, y: 0, z: -1 }
+    ];
+    
+    for (const offset of locations) {
+        const nx = block.location.x + offset.x;
+        const ny = block.location.y + offset.y;
+        const nz = block.location.z + offset.z;
+        const key = `${nx},${ny},${nz},${dimension.id}`;
+        // Force update timestamp to wake it up if it's a fluid
+        ACTIVE_FLUIDS.set(key, system.currentTick);
+    }
+}
+
+world.afterEvents.playerPlaceBlock.subscribe((event) => {
+    wakeNeighbors(event.block);
+});
+
+world.afterEvents.playerBreakBlock.subscribe((event) => {
+    wakeNeighbors(event.block);
+});
 
 // Interaction Logic
 world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
@@ -551,31 +605,12 @@ function processBoat(boat, dimension) {
         // Calculate forward vector from rotation
         const rotation = boat.getRotation().y;
         const rad = (rotation + 90) * (Math.PI / 180);
-        // Boat rotation 0 is usually South? Need to verify. 
-        // Standard Minecraft: 0=South (+Z), 90=West (-X), 180=North (-Z), 270=East (+X).
-        // Math: cos(rad) for X, sin(rad) for Z usually.
-        // Let's try standard conversion.
-        // Actually, let's just use the boat's velocity to boost it if it's already moving,
-        // OR apply force based on player input if possible (cant detect input easily on entities).
-        // But if "boat cant move", it means friction is high.
-        // Let's apply a constant small push in the direction it is facing
-        // IF there is a player riding it.
-        
-        // Check for passengers
-        // Components: minecraft:rideable -> family_types
-        // We can't easily check passengers in API 1.21.30 without getComponent("minecraft:rideable")?
-        // Actually getComponent("minecraft:rideable") doesn't give passengers.
-        // We can iterate players and check their location/vehicle? No vehicle API on player yet in stable?
-        // Wait, "boat cant move" might be because it's sitting on a collision box (the holder).
-        // Boats on land move very slowly.
         // We need to simulate ice-like sliding or just push it.
         
         // Let's try pushing it in its facing direction constantly.
         const dirX = -Math.sin(rotation * (Math.PI / 180));
         const dirZ = Math.cos(rotation * (Math.PI / 180));
         
-        // Only push if there is some velocity already (player trying to move)
-        // or just push always? Always might make it drift.
         const vel = boat.getVelocity();
         const speed = Math.sqrt(vel.x * vel.x + vel.z * vel.z);
         
