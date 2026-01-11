@@ -195,7 +195,7 @@
                 }
             },
             "minecraft:custom_components": [
-                "gaiadimension:door"
+                "gaiadimension:curtain"
             ],
             "minecraft:loot": "loot_tables/msc/empty.json",
             "minecraft:tick": {
