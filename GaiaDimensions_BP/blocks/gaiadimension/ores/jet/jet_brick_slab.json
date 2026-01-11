@@ -134,7 +134,7 @@
                 "geometry": "geometry.rosa_gd.slab_icon",
                 "material_instances": {
                     "*": {
-                        "texture": "gaiadimension:jet_brick",
+                        "texture": "gaiadimension:jet_bricks",
                         "render_method": "opaque"
                     }
                 }
@@ -148,7 +148,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "gaiadimension:jet_brick",
+                    "texture": "gaiadimension:jet_bricks",
                     "render_method": "opaque"
                 }
             },
