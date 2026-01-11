@@ -802,8 +802,8 @@
         "gaiadimension:pebbles": {
             "textures": "textures/gaiadimension/androsa/blocks/pebbles"
         },
-        "gaiadimension:pink_crystal_leaves": {
-            "textures": "textures/gaiadimension/androsa/blocks/pink_crystal_leaves"
+        "gaiadimension:frail_glitter_block": {
+            "textures": "textures/gaiadimension/androsa/blocks/frail_glitter_block"
         },
         "gaiadimension:pink_agate_log_end": {
             "textures": "textures/gaiadimension/androsa/blocks/pink_agate_log_end"
