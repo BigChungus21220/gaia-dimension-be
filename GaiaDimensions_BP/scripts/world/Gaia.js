@@ -174,8 +174,8 @@ system.runInterval(() => {
     for (let i = pendingPortalTasks.length - 1; i >= 0; i--) {
         const task = pendingPortalTasks[i];
         
-        // Wait for dimension load (approx 5 seconds)
-        if (system.currentTick - task.createdAt < 100) continue;
+        // Wait for dimension load (approx 10 seconds)
+        if (system.currentTick - task.createdAt < 200) continue;
 
         const player = world.getEntity(task.playerId);
         
@@ -189,9 +189,10 @@ system.runInterval(() => {
         
         // Ensure destination block is accessible
         try {
+            // Check if chunk is loaded by attempting to get a block
             const b = targetDim.getBlock({ x: Math.floor(task.targetX), y: 100, z: Math.floor(task.targetZ) });
-            if (!b) continue;
-        } catch (e) { continue; } 
+            if (!b) continue; // Chunk not loaded, retry later
+        } catch (e) { continue; } // Error accessing block, retry later
 
         if (task.type === "VERIFY_LINK") {
             const lpx = Math.floor(task.targetX);
@@ -210,19 +211,26 @@ system.runInterval(() => {
             pendingPortalTasks.splice(i, 1);
         } 
         else if (task.type === "BUILD_NEW") {
-            const targetY = DimensionSystem.getTopBlock(targetDim, Math.floor(task.targetX), Math.floor(task.targetZ), 319);
+            let targetY = DimensionSystem.getTopBlock(targetDim, Math.floor(task.targetX), Math.floor(task.targetZ), 319);
+            
+            // If terrain is too high (likely inside a mountain or solid chunk), force a safe underground height
+            if (targetY >= 318) {
+                targetY = 100;
+            }
+
             const landingPortal = DimensionSystem.findPortalBlock(targetDim, { x: task.targetX, y: targetY, z: task.targetZ });
             
             if (landingPortal) {
                 PortalLinker.setLink(task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z, task.targetDimId, landingPortal.x, landingPortal.y, landingPortal.z);
                 PortalLinker.setLink(task.targetDimId, landingPortal.x, landingPortal.y, landingPortal.z, task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z);
+                player.setDynamicProperty("gaiadimension:last_teleport", system.currentTick); // Reset cooldown on arrival
                 player.teleport({ x: landingPortal.x + 1, y: landingPortal.y + 1, z: landingPortal.z }, { dimension: targetDim });
             } else {
                 const px = Math.floor(task.targetX);
                 const py = Math.floor(targetY);
                 const pz = Math.floor(task.targetZ);
 
-                // Carve air cube to prevent suffocation
+                // Carve air cube to prevent suffocation (essential for underground/forced height)
                 for (let x = -3; x <= 3; x++) {
                     for (let z = -3; z <= 3; z++) {
                         for (let y = 0; y <= 6; y++) {
@@ -268,6 +276,7 @@ system.runInterval(() => {
 
                 PortalLinker.setLink(task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z, task.targetDimId, px, py, pz);
                 PortalLinker.setLink(targetDimId, px, py, pz, task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z);
+                player.setDynamicProperty("gaiadimension:last_teleport", system.currentTick); // Reset cooldown on arrival
                 player.teleport({ x: px + 1, y: py + 1, z: pz }, { dimension: targetDim });
             }
             pendingPortalTasks.splice(i, 1);
@@ -293,7 +302,14 @@ system.runInterval(() => {
         
         // Cooldown check
         const lastTeleport = player.getDynamicProperty("gaiadimension:last_teleport") || 0;
-        if (system.currentTick - lastTeleport < 100) continue;
+        const timeDiff = system.currentTick - lastTeleport;
+
+        if (timeDiff > 300 && player.hasTag("gaiadimension:teleport_cooldown")) {
+            player.removeTag("gaiadimension:teleport_cooldown");
+        }
+        
+        if (timeDiff < 300) continue;
+        if (player.hasTag("gaiadimension:teleport_cooldown")) continue;
         
         // Boundary Enforcement
         if (player.hasTag("gaiadimension:in_gaia") && player.dimension.id === "minecraft:the_end") {
