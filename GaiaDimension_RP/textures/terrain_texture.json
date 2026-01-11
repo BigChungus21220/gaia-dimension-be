@@ -1621,9 +1621,6 @@
         "gaiadimension:soft_grass_side": {
             "textures": "textures/gaiadimension/androsa/blocks/grasses/soft_grass_side"
         },
-        "gaiadimension:aura_crystal_growth" : {
-            "textures": "textures/gaiadimension/androsa/items/crystal_growth_aura"
-        },
         "gaiadimension:agathum": {
             "textures": "textures/gaiadimension/androsa/blocks/agathum"
         },
