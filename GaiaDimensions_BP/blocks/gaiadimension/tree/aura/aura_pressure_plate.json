@@ -114,7 +114,6 @@
 					}
 				}
 			},
-			"gaiadimension:pressure_plate": {},
 			"minecraft:geometry": {
 				"identifier": "geometry.rosa_gd.pressure_plate",
 				"bone_visibility": {
