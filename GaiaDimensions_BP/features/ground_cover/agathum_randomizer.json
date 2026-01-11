@@ -1,12 +1,14 @@
 {
-    "format_version": "1.21.40",
-    "minecraft:single_block_feature": {
-        "description": {
-            "identifier": "gaiadimension:ground_cover/agathum_randomizer"
-        },
-        "places_block": "gaiadimension:agathum",
-        "enforce_placement_rules": true,
-        "randomize_rotation": true,
-        "enforce_survivability_rules": true
-    }
+	"format_version": "1.20.20",
+	"minecraft:weighted_random_feature": {
+		"description": {
+			"identifier": "gaiadimension:ground_cover/agathum_randomizer"
+		},
+		"features": [
+			[ "gaiadimension:ground_cover/agathum_0", 1 ],
+			[ "gaiadimension:ground_cover/agathum_1", 1 ],
+			[ "gaiadimension:ground_cover/agathum_2", 1 ],
+			[ "gaiadimension:ground_cover/agathum_3", 1 ]
+		]
+	}
 }
