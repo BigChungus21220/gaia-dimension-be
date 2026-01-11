@@ -135,6 +135,10 @@ export class DimensionSystem {
 
         const targetDim = world.getDimension(targetDimId);
         
+        // Apply safety effects for fall damage prevention
+        player.addEffect("resistance", 400, { amplifier: 255, showParticles: false });
+        player.addEffect("slow_falling", 400, { amplifier: 0, showParticles: false });
+
         // Initial Teleport to safe height
         player.teleport(
             { x: targetX + 1, y: 120, z: targetZ },
