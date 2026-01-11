@@ -16,7 +16,7 @@
             "minecraft:display_name": {
                 "value": "Pixel Plant\n\u00a77A RIP Pixel (2009-2023)"
             },
-            "minecraft:icon": "missingno_plant"
+            "minecraft:icon": "gaiadimension:missingno_plant"
         }
     }
 }
