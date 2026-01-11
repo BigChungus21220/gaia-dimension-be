@@ -782,10 +782,10 @@
             "textures": "textures/gaiadimension/androsa/blocks/murky_grass_overlay"
         },
         "gaiadimension:murky_grass_side": {
-            "textures": "textures/gaiadimension/androsa/blocks/grasses/murky_grass_side"
+            "textures": "textures/gaiadimension/androsa/blocks/murky_grass_side"
         },
         "gaiadimension:murky_grass_top": {
-            "textures": "textures/gaiadimension/androsa/blocks/grasses/murky_grass_top"
+            "textures": "textures/gaiadimension/androsa/blocks/murky_grass_top"
         },
         "gaiadimension:mystical_murgni": {
             "textures": "textures/gaiadimension/androsa/blocks/mystical_murgni"
@@ -956,10 +956,10 @@
             "textures": "textures/gaiadimension/androsa/blocks/soft_grass_overlay"
         },
         "gaiadimension:soft_grass_side": {
-            "textures": "textures/gaiadimension/androsa/blocks/grasses/soft_grass_side"
+            "textures": "textures/gaiadimension/androsa/blocks/soft_grass_side"
         },
         "gaiadimension:soft_grass_top": {
-            "textures": "textures/gaiadimension/androsa/blocks/grasses/soft_grass_top"
+            "textures": "textures/gaiadimension/androsa/blocks/soft_grass_top"
         },
         "gaiadimension:sombre_cacti_side": {
             "textures": "textures/gaiadimension/androsa/blocks/sombre_cacti_side"
@@ -1582,6 +1582,12 @@
         "gaiadimension:green_glitter_grass_top": {
             "textures": "textures/gaiadimension/androsa/blocks/grasses/green_glitter_grass_top"
         },
+        "gaiadimension:murky_grass_side": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/murky_grass_side"
+        },
+        "gaiadimension:murky_grass_top": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/murky_grass_top"
+        },
         "gaiadimension:orange_glitter_grass_side": {
             "textures": "textures/gaiadimension/androsa/blocks/grasses/orange_glitter_grass_side"
         },
@@ -1612,8 +1618,11 @@
         "gaiadimension:purple_glitter_grass_top": {
             "textures": "textures/gaiadimension/androsa/blocks/grasses/purple_glitter_grass_top"
         },
-        "gaiadimension:burnt_sapling": {
-            "textures": "textures/gaiadimension/androsa/blocks/burnt_agate_sapling"
+        "gaiadimension:soft_grass_side": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/soft_grass_side"
+        },
+        "gaiadimension:soft_grass_top": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/soft_grass_top"
         }
     }
 }
