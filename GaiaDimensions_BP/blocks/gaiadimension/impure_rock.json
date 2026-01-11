@@ -2,26 +2,17 @@
     "format_version": "1.21.70",
     "minecraft:block": {
         "description": {
-            "identifier": "gaiadimension:thick_glitter_block",
+            "identifier": "gaiadimension:impure_rock",
             "menu_category": {
                 "category": "nature"
             }
         },
         "components": {
-            "tag:is_shovelable": {},
-            "tag:dirt": {},
             "minecraft:destructible_by_mining": {
-                "seconds_to_destroy": 1
+                "seconds_to_destroy": 1.5
             },
             "minecraft:destructible_by_explosion": {
-                "explosion_resistance": 1
-            },
-            "minecraft:light_emission": 12,
-            "minecraft:material_instances": {
-                "*": {
-                    "texture": "thick_glitter_block",
-                    "render_method": "opaque"
-                }
+                "explosion_resistance": 6
             },
             "minecraft:geometry": "minecraft:geometry.full_block",
             "minecraft:selection_box": {
@@ -47,7 +38,14 @@
                     16,
                     16
                 ]
-            }
+            },
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "gaiadimension:impure_rock",
+                    "render_method": "opaque"
+                }
+            },
+            "minecraft:map_color": "#7a7a7a"
         }
     }
 }

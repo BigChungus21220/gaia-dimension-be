@@ -38,6 +38,9 @@
                     12
                 ]
             },
+            "minecraft:custom_components": [
+                "gaiadimension:sapling"
+            ],
             "minecraft:collision_box": false,
             "minecraft:flammable": {
                 "destroy_chance_modifier": 50,

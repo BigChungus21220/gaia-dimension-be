@@ -50,7 +50,7 @@
                     "render_method": "opaque"
                 },
                 "down": {
-                    "texture": "gaiadimension:corrupt_soil",
+                    "texture": "gaiadimension:corrupted_soil",
                     "render_method": "opaque"
                 },
                 "north": {

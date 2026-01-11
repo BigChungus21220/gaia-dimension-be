@@ -548,6 +548,9 @@
                     4
                 ]
             },
+            "minecraft:custom_components": [
+                "gaiadimension:stairs"
+            ],
             "minecraft:destructible_by_mining": {
                 "seconds_to_destroy": 3,
                 "item_specific_speeds": [

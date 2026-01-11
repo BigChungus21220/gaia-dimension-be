@@ -4,14 +4,12 @@
         "description": {
             "identifier": "gaiadimension:frail_glitter_block",
             "menu_category": {
-                "category": "none",
-                "group": "itemGroup.name.glitter"
+                "category": "nature"
             }
         },
         "components": {
             "tag:is_shovelable": {},
             "tag:dirt": {},
-            "minecraft:loot": "loot_tables/blocks/frail_glitter_block.json",
             "minecraft:destructible_by_mining": {
                 "seconds_to_destroy": 0.5
             },

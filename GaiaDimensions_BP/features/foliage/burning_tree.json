@@ -11,7 +11,7 @@
         "intervals": [ 2 ],
         "min_height_for_canopy": 3
       },
-      "trunk_block": "gaiadimension:burning_log",
+      "trunk_block": "gaiadimension:fire_agate_log",
       "trunk_lean": {
         "allow_diagonal_growth": true,
         "lean_height": {
@@ -33,7 +33,7 @@
       "canopy_radius": 3,
       "leaf_placement_attempts": 50,
       "leaf_blocks": [
-        ["gaiadimension:burning_leaves", 3]
+        ["gaiadimension:fire_agate_leaves", 3]
       ]
     },
     "base_block": [
@@ -45,8 +45,8 @@
     "may_replace": [
       "minecraft:air",
       "gaiadimension:aura_leaves",
-      "gaiadimension:burning_leaves",
-      "gaiadimension:burned_leaves",
+      "gaiadimension:fire_agate_leaves",
+      "gaiadimension:burnt_agate_leaves",
       "gaiadimension:corrupted_leaves",
       "gaiadimension:fossilized_leaves",
       "gaiadimension:green_agate_leaves",
@@ -71,7 +71,7 @@
       "gaiadimension:light_soil",
       "gaiadimension:heavy_soil",
       "gaiadimension:cinder",
-      "gaiadimension:corrupt_soil",
+      "gaiadimension:corrupted_soil",
       "gaiadimension:boggy_soil",
       "gaiadimension:light_soil"
     ]

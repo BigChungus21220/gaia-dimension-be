@@ -26,7 +26,7 @@
       "leaf_block": "gaiadimension:corrupted_leaves"
     },
     "base_block": [
-      "gaiadimension:corrupt_soil"
+      "gaiadimension:corrupted_soil"
     ],
     "may_grow_on": [
       "gaiadimension:corrupt_grass"
@@ -34,8 +34,8 @@
     "may_replace": [
       "minecraft:air",
       "gaiadimension:aura_leaves",
-      "gaiadimension:burning_leaves",
-      "gaiadimension:burned_leaves",
+      "gaiadimension:fire_agate_leaves",
+      "gaiadimension:burnt_agate_leaves",
       "gaiadimension:corrupted_leaves",
       "gaiadimension:fossilized_leaves",
       "gaiadimension:green_agate_leaves",
@@ -60,7 +60,7 @@
       "gaiadimension:light_soil",
       "gaiadimension:heavy_soil",
       "gaiadimension:cinder",
-      "gaiadimension:corrupt_soil",
+      "gaiadimension:corrupted_soil",
       "gaiadimension:boggy_soil",
       "gaiadimension:light_soil"
     ]

@@ -422,6 +422,7 @@
 					"render_method": "opaque"
 				}
 			},
+			"gaiadimension:button": {},
 			"minecraft:destructible_by_mining": {
 				"seconds_to_destroy": 0.5,
 				"item_specific_speeds": [

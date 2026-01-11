@@ -25,7 +25,7 @@
 - `gaiadimension:blue_opal_ore`
 - `gaiadimension:boggy_soil`
 - `gaiadimension:burned_log`
-- `gaiadimension:burning_log`
+- `gaiadimension:fire_agate_log`
 - `gaiadimension:charged_mineral`
 - `gaiadimension:charred_grass`
 - `gaiadimension:cinder`
@@ -33,7 +33,7 @@
 - `gaiadimension:coarse_rock`
 - `gaiadimension:copal_tower_feature`
 - `gaiadimension:corrupt_grass`
-- `gaiadimension:corrupt_soil`
+- `gaiadimension:corrupted_soil`
 - `gaiadimension:corrupted_leaves`
 - `gaiadimension:corrupted_log`
 - `gaiadimension:fossilized_leaves`
