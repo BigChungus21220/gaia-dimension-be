@@ -73,7 +73,7 @@ export class DimensionSystem {
     /**
      * Scans downwards from a starting height to find the ground.
      */
-    static getTopBlock(dimension, x, z, startY = 150) {
+    static getTopBlock(dimension, x, z, startY = 319) {
         for (let y = startY; y > dimension.heightRange.min; y--) {
             try {
                 const block = dimension.getBlock({ x: x, y: y, z: z });
@@ -113,7 +113,8 @@ export class DimensionSystem {
                     targetZ: savedLink.z,
                     type: "VERIFY_LINK",
                     sourcePortalLoc: { x: sourcePortalLoc.x, y: sourcePortalLoc.y, z: sourcePortalLoc.z },
-                    sourceDimId: sourceDim.id
+                    sourceDimId: sourceDim.id,
+                    createdAt: system.currentTick
                 });
                 return;
             } catch (e) {}
@@ -152,7 +153,8 @@ export class DimensionSystem {
             type: "BUILD_NEW",
             sourcePortalLoc: { x: sourcePortalLoc.x, y: sourcePortalLoc.y, z: sourcePortalLoc.z },
             sourceDimId: sourceDim.id,
-            rotationY: player.getRotation().y
+            rotationY: player.getRotation().y,
+            createdAt: system.currentTick
         });
     }
 
@@ -171,6 +173,10 @@ system.runInterval(() => {
 
     for (let i = pendingPortalTasks.length - 1; i >= 0; i--) {
         const task = pendingPortalTasks[i];
+        
+        // Wait for dimension load (approx 5 seconds)
+        if (system.currentTick - task.createdAt < 100) continue;
+
         const player = world.getEntity(task.playerId);
         
         if (!player || !player.isValid) {
@@ -179,6 +185,7 @@ system.runInterval(() => {
         }
 
         const targetDim = world.getDimension(task.targetDimId);
+        if (!targetDim) continue; // Retry if dimension not ready
         
         // Ensure destination block is accessible
         try {
@@ -203,7 +210,7 @@ system.runInterval(() => {
             pendingPortalTasks.splice(i, 1);
         } 
         else if (task.type === "BUILD_NEW") {
-            const targetY = DimensionSystem.getTopBlock(targetDim, Math.floor(task.targetX), Math.floor(task.targetZ), 120);
+            const targetY = DimensionSystem.getTopBlock(targetDim, Math.floor(task.targetX), Math.floor(task.targetZ), 319);
             const landingPortal = DimensionSystem.findPortalBlock(targetDim, { x: task.targetX, y: targetY, z: task.targetZ });
             
             if (landingPortal) {
@@ -214,6 +221,18 @@ system.runInterval(() => {
                 const px = Math.floor(task.targetX);
                 const py = Math.floor(targetY);
                 const pz = Math.floor(task.targetZ);
+
+                // Carve air cube to prevent suffocation
+                for (let x = -3; x <= 3; x++) {
+                    for (let z = -3; z <= 3; z++) {
+                        for (let y = 0; y <= 6; y++) {
+                            try {
+                                const b = targetDim.getBlock({ x: px + x, y: py + y, z: pz + z });
+                                if (b) b.setType("minecraft:air");
+                            } catch(e) {}
+                        }
+                    }
+                }
 
                 // Build obsidian platform
                 for (let x = -2; x <= 2; x++) {
