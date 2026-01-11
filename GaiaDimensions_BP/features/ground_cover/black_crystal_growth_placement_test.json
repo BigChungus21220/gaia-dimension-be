@@ -9,11 +9,11 @@
 		"enforce_survivability_rules": true,
 		"may_attach_to": {
 			"bottom": [
-				"gaiadimension:corrupt_grass"
+				"gaiadimension:corrupted_grass"
 			]
 		},
 		"may_replace": [
-			"gaiadimension:corrupt_grass",
+			"gaiadimension:corrupted_grass",
 			"minecraft:air"
 		]
 	}

@@ -1570,10 +1570,10 @@
         "gaiadimension:charred_grass_top": {
             "textures": "textures/gaiadimension/androsa/blocks/grasses/charred_grass_top"
         },
-        "gaiadimension:corrupt_grass_side": {
+        "gaiadimension:corrupted_grass_side": {
             "textures": "textures/gaiadimension/androsa/blocks/grasses/corrupt_grass_side"
         },
-        "gaiadimension:corrupt_grass_top": {
+        "gaiadimension:corrupted_grass_top": {
             "textures": "textures/gaiadimension/androsa/blocks/grasses/corrupt_grass_top"
         },
         "gaiadimension:green_glitter_grass_side": {

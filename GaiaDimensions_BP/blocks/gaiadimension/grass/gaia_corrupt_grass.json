@@ -2,7 +2,7 @@
     "format_version": "1.21.70",
     "minecraft:block": {
         "description": {
-            "identifier": "gaiadimension:corrupt_grass",
+            "identifier": "gaiadimension:corrupted_grass",
             "menu_category": {
                 "category": "nature"
             }
@@ -10,7 +10,6 @@
         "components": {
             "tag:is_shovelable": {},
             "tag:dirt": {},
-            "minecraft:loot": "loot_tables/blocks/corrupt_grass.json",
             "minecraft:destructible_by_mining": {
                 "seconds_to_destroy": 1
             },
@@ -46,7 +45,7 @@
             },
             "minecraft:material_instances": {
                 "up": {
-                    "texture": "gaiadimension:corrupt_grass_top",
+                    "texture": "gaiadimension:corrupted_grass_top",
                     "render_method": "opaque"
                 },
                 "down": {
@@ -54,19 +53,19 @@
                     "render_method": "opaque"
                 },
                 "north": {
-                    "texture": "gaiadimension:corrupt_grass_side",
+                    "texture": "gaiadimension:corrupted_grass_side",
                     "render_method": "opaque"
                 },
                 "south": {
-                    "texture": "gaiadimension:corrupt_grass_side",
+                    "texture": "gaiadimension:corrupted_grass_side",
                     "render_method": "opaque"
                 },
                 "east": {
-                    "texture": "gaiadimension:corrupt_grass_side",
+                    "texture": "gaiadimension:corrupted_grass_side",
                     "render_method": "opaque"
                 },
                 "west": {
-                    "texture": "gaiadimension:corrupt_grass_side",
+                    "texture": "gaiadimension:corrupted_grass_side",
                     "render_method": "opaque"
                 }
             }

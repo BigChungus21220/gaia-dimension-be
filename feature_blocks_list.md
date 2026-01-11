@@ -32,7 +32,7 @@
 - `gaiadimension:cinnabar_ore`
 - `gaiadimension:coarse_rock`
 - `gaiadimension:copal_tower_feature`
-- `gaiadimension:corrupt_grass`
+- `gaiadimension:corrupted_grass`
 - `gaiadimension:corrupted_soil`
 - `gaiadimension:corrupted_leaves`
 - `gaiadimension:corrupted_log`

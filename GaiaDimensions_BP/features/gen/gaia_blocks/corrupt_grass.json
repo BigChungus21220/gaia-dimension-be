@@ -4,7 +4,7 @@
 		"description": {
 			"identifier": "gaiadimension:gen/gaia_blocks/corrupt_grass"
 		},
-		"places_block": "gaiadimension:corrupt_grass",
+		"places_block": "gaiadimension:corrupted_grass",
 		"enforce_placement_rules": false,
 		"enforce_survivability_rules": false
 	}

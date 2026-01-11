@@ -29,7 +29,7 @@
       "gaiadimension:corrupted_soil"
     ],
     "may_grow_on": [
-      "gaiadimension:corrupt_grass"
+      "gaiadimension:corrupted_grass"
     ],
     "may_replace": [
       "minecraft:air",
@@ -53,7 +53,7 @@
       "gaiadimension:orange_glitter_grass",
       "gaiadimension:soft_grass",
       "gaiadimension:murky_grass",
-      "gaiadimension:corrupt_grass",
+      "gaiadimension:corrupted_grass",
       "gaiadimension:pink_glitter_grass",
       "gaiadimension:peach_glitter_grass",
       "gaiadimension:orange_glitter_grass",
