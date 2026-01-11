@@ -48,6 +48,7 @@ const hot_fluids = [
 
 // --- Fluid Processing System (Budgeted) ---
 const BUDGET = 15; // Target max ms usage per tick
+const MAX_QUEUE_SIZE = 500; // Hard limit on pending blocks to prevent memory/lag spikes
 const PENDING_BLOCKS = new Map(); // Key: "x,y,z,dim", Value: {block, dimension}
 
 // Directions for flow checks
@@ -389,6 +390,9 @@ class FluidFlowComponent {
     }
 
     onTick(event) {
+        // Optimization: Drop update if queue is overloaded to save performance
+        if (PENDING_BLOCKS.size >= MAX_QUEUE_SIZE) return;
+
         const { block } = event;
         // Push to global queue
         const key = `${block.location.x},${block.location.y},${block.location.z},${block.dimension.id}`;
