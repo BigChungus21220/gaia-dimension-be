@@ -785,7 +785,7 @@
             "textures": "textures/gaiadimension/androsa/blocks/murky_grass_side"
         },
         "gaiadimension:murky_grass_top": {
-            "textures": "textures/gaiadimension/androsa/blocks/murky_grass_top"
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/murky_grass_top"
         },
         "gaiadimension:mystical_murgni": {
             "textures": "textures/gaiadimension/androsa/blocks/mystical_murgni"
