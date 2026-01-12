@@ -27,7 +27,7 @@ export class PortalManager {
                 return true;
             }
         }
-        console.warn(`[PortalLib] tryIgnite failed.`);
+        // console.warn(`[PortalLib] tryIgnite failed.`);
         return false;
     }
 
@@ -78,7 +78,7 @@ export class PortalManager {
             } else if (block.typeId === frameId) {
                 break;
             } else {
-                console.warn(`[PortalLib] Bottom search failed at y=${checkY}. Found: ${block.typeId}`);
+                // console.warn(`[PortalLib] Bottom search failed at y=${checkY}. Found: ${block.typeId}`);
                 return null;
             }
         }
@@ -97,7 +97,7 @@ export class PortalManager {
             } else if (block.typeId === frameId) {
                 break;
             } else {
-                console.warn(`[PortalLib] Top search failed at y=${topY+1}. Found: ${block.typeId}`);
+                // console.warn(`[PortalLib] Top search failed at y=${topY+1}. Found: ${block.typeId}`);
                 return null;
             }
         }
