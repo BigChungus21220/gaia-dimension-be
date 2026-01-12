@@ -2,7 +2,7 @@
     "format_version": "1.21.60",
     "minecraft:block": {
         "description": {
-            "identifier": "bftr:furnace_flame_0",
+            "identifier": "gaiadimension:furnace_flame_0",
             "menu_category": {
                 "category": "none",
                 "is_hidden_in_commands": true
@@ -11,7 +11,7 @@
         "components": {
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "bftr:furnace_flame_atlas",
+                    "texture": "gaiadimension:furnace_flame_atlas",
                     "render_method": "opaque",
                     "face_dimming": false,
                     "ambient_occlusion": false
@@ -35,7 +35,7 @@
             "minecraft:collision_box": false,
             "minecraft:selection_box": false,
             "minecraft:geometry": {
-                "identifier": "geometry.bftr_addon.ui.flame_furnace",
+                "identifier": "geometry.gaiadimension_addon.ui.flame_furnace",
                 "bone_visibility": {
                     "progress_1": true,
                     "progress_2": false,

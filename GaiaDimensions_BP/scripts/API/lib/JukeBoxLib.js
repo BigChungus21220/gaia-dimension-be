@@ -26,7 +26,7 @@ const VANILLA_RECORDS = [
  *    - `name:<Display Name>` (e.g., `name:My Song - Artist`)
  * 
  * Example:
- * "minecraft:tags": { "tags": [ "minecraft:is_music_disc", "sound:bftr.song", "duration:180", "name:Song Title" ] }
+ * "minecraft:tags": { "tags": [ "minecraft:is_music_disc", "sound:gaiadimension.song", "duration:180", "name:Song Title" ] }
  */
 class CustomJukeBox {
     constructor() {

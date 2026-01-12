@@ -2,7 +2,7 @@
     "format_version": "1.21.60",
     "minecraft:block": {
         "description": {
-            "identifier": "bftr:generic_progress_arrow_10",
+            "identifier": "gaiadimension:generic_progress_arrow_10",
             "menu_category": {
                 "category": "none",
                 "is_hidden_in_commands": true
@@ -11,7 +11,7 @@
         "components": {
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "bftr:progress_arrow_atlas",
+                    "texture": "gaiadimension:progress_arrow_atlas",
                     "render_method": "opaque",
                     "face_dimming": false,
                     "ambient_occlusion": false
@@ -35,7 +35,7 @@
             "minecraft:collision_box": false,
             "minecraft:selection_box": false,
             "minecraft:geometry": {
-                "identifier": "geometry.bftr.ui.generic_progress_arrow_frames",
+                "identifier": "geometry.gaiadimension.ui.generic_progress_arrow_frames",
                 "bone_visibility": {
                     "progress_1": true,
                     "progress_2": true,
