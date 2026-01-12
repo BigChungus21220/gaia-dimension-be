@@ -1,0 +1,151 @@
+{
+	"format_version" : "1.10.0",
+	"animation_controllers" : {
+		"controller.animation.gaia_sky.planet" : {
+			"initial_state" : "default",
+			"states" : {
+				"default" : {
+					"transitions" : [
+						{
+							"spawn" : "q.is_local_player && !q.is_in_ui"
+						}
+					]
+				},
+				"spawn" : {
+					"animations": ["one_second_timer"],
+					"particle_effects": [
+						{
+						  	"effect": "gaia_planet"
+						}
+					],
+					"transitions" : [
+						{
+							"default" : "q.any_animation_finished"
+						}
+					]
+				}
+			}
+		},
+		"controller.animation.gaia_sky.cloud" : {
+			"initial_state" : "default",
+			"states" : {
+				"default" : {
+					"transitions" : [
+						{
+							"spawn0" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 0"
+						},
+						{
+							"spawn1" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 1"
+						},
+						{
+							"spawn2" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 2"
+						},
+						{
+							"spawn3" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 3"
+						},
+						{
+							"spawn4" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 4"
+						},
+						{
+							"spawn5" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 5"
+						},
+						{
+							"spawn6" : "q.is_local_player && !q.is_in_ui && v.cloud_picker == 6"
+						}
+					]
+				},
+				"spawn0" : {
+					"animations": ["one_second_timer"],
+					"particle_effects": [
+						{
+						  	"effect": "cloud0"
+						}
+					],
+					"transitions" : [
+						{
+							"default" : "q.any_animation_finished"
+						}
+					]
+				},
+				"spawn1" : {
+					"animations": ["one_second_timer"],
+					"particle_effects": [
+						{
+						  	"effect": "cloud1"
+						}
+					],
+					"transitions" : [
+						{
+							"default" : "q.any_animation_finished"
+						}
+					]
+				},
+				"spawn2" : {
+					"animations": ["one_second_timer"],
+					"particle_effects": [
+						{
+						  	"effect": "cloud2"
+						}
+					],
+					"transitions" : [
+						{
+							"default" : "q.any_animation_finished"
+						}
+					]
+				},
+				"spawn3" : {
+					"animations": ["one_second_timer"],
+					"particle_effects": [
+						{
+						  	"effect": "cloud3"
+						}
+					],
+					"transitions" : [
+						{
+							"default" : "q.any_animation_finished"
+						}
+					]
+				},
+				"spawn4" : {
+					"animations": ["one_second_timer"],
+					"particle_effects": [
+						{
+						  	"effect": "cloud4"
+						}
+					],
+					"transitions" : [
+						{
+							"default" : "q.any_animation_finished"
+						}
+					]
+				},
+				"spawn5" : {
+					"animations": ["one_second_timer"],
+					"particle_effects": [
+						{
+						  	"effect": "cloud5"
+						}
+					],
+					"transitions" : [
+						{
+							"default" : "q.any_animation_finished"
+						}
+					]
+				},
+				"spawn6" : {
+					"animations": ["one_second_timer"],
+					"particle_effects": [
+						{
+						  	"effect": "cloud6"
+						}
+					],
+					"transitions" : [
+						{
+							"default" : "q.any_animation_finished"
+						}
+					]
+				}
+			}
+		}
+	}
+}

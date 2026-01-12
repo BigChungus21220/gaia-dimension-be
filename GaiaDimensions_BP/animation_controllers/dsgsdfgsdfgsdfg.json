@@ -1,0 +1,20 @@
+{
+  "format_version": "1.10.0",
+  "animation_controllers": {
+    "controller.animation.malachite_guard": {
+        "states": {
+            "default": {
+                "transitions": [{
+                    "woah": "query.health <= 200"
+                }]
+            },
+            "woah": {
+                "on_entry": [
+                    "/event entity @s resist",
+                    "/effect @s resistance 9999999 2 true"
+                ]
+            }
+        }
+    }
+  }
+}
