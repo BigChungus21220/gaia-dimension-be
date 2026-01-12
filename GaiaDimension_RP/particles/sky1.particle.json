@@ -5,7 +5,7 @@
 			"identifier": "gaia:sky1",
 			"basic_render_parameters": {
 				"material": "particles_add",
-				"texture": "textures/sky/gaia_bottom"
+				"texture": "textures/gaiadimension/androsa/sky/gaia_bottom"
 			}
 		},
 		"components": {

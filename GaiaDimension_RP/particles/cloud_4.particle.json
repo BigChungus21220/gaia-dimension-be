@@ -27,21 +27,7 @@
 			},
 			"minecraft:particle_motion_parametric": {
 				"relative_position": [
-					"
-						v.px != 0 && v.pz != 0 ? {
-							v.px = v.px - v.vz*0.1*v.particle_random_1;
-							v.pz = v.pz + v.vx*0.1*v.particle_random_1;
-						} : {
-							v.px = (v.emitter_random_1*2 - 1)*1000 + q.position(0);
-							v.pz = (v.emitter_random_3*2 - 1)*1000 + q.position(2);
-						};
-						v.vx = v.px - q.position(0);
-						v.vz = v.pz - q.position(2);
-						v.l = math.sqrt(v.vx*v.vx + v.vz*v.vz);
-						v.vx = v.vx/v.l;
-						v.vz = v.vz/v.l;
-						return v.px;
-					", 
+					"v.px != 0 && v.pz != 0 ? {v.px = v.px - v.vz*0.1*v.particle_random_1 ; v.pz = v.pz + v.vx*0.1*v.particle_random_1;} : {v.px = (v.emitter_random_1*2 - 1)*1000 + q.position(0);v.pz = (v.emitter_random_3*2 - 1)*1000 + q.position(2);	};v.vx = v.px - q.position(0);v.vz = v.pz - q.position(2);v.l = math.sqrt(v.vx*v.vx + v.vz*v.vz);v.vx = v.vx/v.l;v.vz = v.vz/v.l;return v.px;", 
 					240, 
 					"v.pz"
 				]

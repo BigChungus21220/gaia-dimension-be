@@ -5,7 +5,7 @@
 			"identifier": "gaia:sky_side3",
 			"basic_render_parameters": {
 				"material": "particles_add",
-				"texture": "textures/sky/gaia_side3"
+				"texture": "textures/gaiadimension/androsa/sky/gaia_side3"
 			}
 		},
 		"components": {
