@@ -1,0 +1,16 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:fog_settings": {
+    "description": {
+      "identifier": "gaia:green_agate_jungle_fog"
+    },
+    "distance": {
+      "air": {
+        "fog_color": "#80bf9e",
+        "fog_start": 0.92,
+        "fog_end": 1.0,
+        "render_distance_type": "render"
+      }
+    }
+  }
+}

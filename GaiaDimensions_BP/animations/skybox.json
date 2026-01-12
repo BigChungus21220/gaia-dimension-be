@@ -1,0 +1,19 @@
+{
+	"format_version": "1.10.0",
+	"animations": {
+		"animation.gaiadimension.skybox": {
+			"animation_length": 59,
+			"loop": true,
+			"timeline": {
+				"0": [
+			     "/particle gaiadimension:sky_side1",
+				 "/particle gaiadimension:sky_side2",
+				 "/particle gaiadimension:sky_side3",
+				 "/particle gaiadimension:sky_side4",
+				"/particle gaiadimension:sky1",
+                "/particle gaiadimension:sky2"
+				]
+			}
+		}
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "format_version": "1.16.100",
+    "minecraft:fog_settings": {
+      "description": {
+        "identifier": "gaia:blue_agate_taiga_fog"
+      },
+      "distance": {
+        "air": {
+            "fog_color": "#d5e5f1",
+        "fog_start": 0.92,
+        "fog_end": 1.0,
+            "render_distance_type": "render"
+        }
+      }
+    }
+  }
+  
