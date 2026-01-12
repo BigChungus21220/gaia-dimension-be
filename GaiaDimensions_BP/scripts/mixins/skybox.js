@@ -15,7 +15,7 @@ const PLANET_PARTICLE = "gaiadimension:gaia_planet";
 
 // Timings (in ticks)
 const SKY_REFRESH = 10 * 20; // 10 seconds
-const PLANET_REFRESH = 58;    // 58 ticks
+const PLANET_REFRESH = 8;    // 8 ticks
 
 // State tracking: Map<playerId, { nextSky: tick, nextPlanet: tick }>
 const playerSkyState = new Map();
