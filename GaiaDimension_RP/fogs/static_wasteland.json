@@ -1,17 +1,39 @@
 {
     "format_version": "1.16.100",
     "minecraft:fog_settings": {
-      "description": {
-        "identifier": "gaia:static_wasteland_fog"
-      },
-      "distance": {
-        "air": {
-            "fog_color": "#282f52",
-        "fog_start": 0.92,
-        "fog_end": 1.0,
-            "render_distance_type": "render"
+        "description": {
+            "identifier": "gaiadimension:static_wasteland_fog"
+        },
+        "distance": {
+            "air": {
+                "fog_color": "#282f52",
+                "fog_start": 0.92,
+                "fog_end": 1.0,
+                "render_distance_type": "render"
+            }
+        },
+        "volumetric": {
+            "density": {
+                "air": {
+                    "max_density": 0.05,
+                    "zero_density_height": 128.0,
+                    "max_density_height": 64.0
+                }
+            },
+            "media_coefficients": {
+                "air": {
+                    "scattering": [
+                        0.1568627450980392,
+                        0.1843137254901961,
+                        0.3215686274509804
+                    ],
+                    "absorption": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            }
         }
-      }
     }
-  }
-  
+}

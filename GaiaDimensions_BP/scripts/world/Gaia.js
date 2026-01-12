@@ -1,6 +1,7 @@
 import { world, system, BlockPermutation } from "@minecraft/server";
 import { ModDimension } from "./ModDimension.js";
 import { PortalManager } from "../API/lib/PortalLib.js";
+import { BIOME_MAPPING } from "../config/biome_config.js";
 
 /**
  * Gaia Dimension Configuration
@@ -41,6 +42,22 @@ export class DimensionSystem {
         if (!entity || !entity.isValid || !GaiaDimension) return false;
         if (entity.dimension.id !== GaiaDimension.inheritance.id) return false;
         return GaiaDimension.isInDimension(entity.location);
+    }
+
+    /**
+     * Gets the biome name for a specific entity based on bedrock at y=0.
+     */
+    static getBiome(entity) {
+        if (!entity || !entity.isValid) return "crystal_plains";
+        try {
+            const { x, z } = entity.location;
+            // Check bedrock at y=0
+            const block = entity.dimension.getBlock({ x: Math.floor(x), y: 0, z: Math.floor(z) });
+            if (block && BIOME_MAPPING.has(block.typeId)) {
+                return BIOME_MAPPING.get(block.typeId);
+            }
+        } catch (e) {}
+        return "crystal_plains"; // Default
     }
 
     /**

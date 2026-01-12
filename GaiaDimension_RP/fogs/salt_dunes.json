@@ -1,17 +1,39 @@
 {
     "format_version": "1.16.100",
     "minecraft:fog_settings": {
-      "description": {
-        "identifier": "gaia:salt_dunes_fog"
-      },
-      "distance": {
-        "air": {
-            "fog_color": "#ffe3a8",
-        "fog_start": 0.92,
-        "fog_end": 1.0,
-            "render_distance_type": "render"
+        "description": {
+            "identifier": "gaiadimension:salt_dunes_fog"
+        },
+        "distance": {
+            "air": {
+                "fog_color": "#ffe3a8",
+                "fog_start": 0.92,
+                "fog_end": 1.0,
+                "render_distance_type": "render"
+            }
+        },
+        "volumetric": {
+            "density": {
+                "air": {
+                    "max_density": 0.05,
+                    "zero_density_height": 128.0,
+                    "max_density_height": 64.0
+                }
+            },
+            "media_coefficients": {
+                "air": {
+                    "scattering": [
+                        1.0,
+                        0.8901960784313725,
+                        0.6588235294117647
+                    ],
+                    "absorption": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            }
         }
-      }
     }
-  }
-  
+}

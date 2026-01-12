@@ -1,23 +1,51 @@
 {
-  "format_version": "1.16.100",
-  "minecraft:fog_settings": {
-    "description": {
-      "identifier": "gaiadimension:mineral_water_fog"
-    },
-    "distance": {
-      "air": {
-		    "fog_start": 0,
-		    "fog_end": 0.07,
-		   "fog_color": "#90D5FF",
-		    "render_distance_type": "render"
-	    },
-      "water":  { "fog_start": 0, "fog_end": 10,   "fog_color": "#062ade", "render_distance_type": "fixed" },
-	    "weather": {
-		    "fog_start": 0,
-		    "fog_end": 0.04,
-		    "fog_color": "#5f6eef",
-		    "render_distance_type": "render"
-      }
+    "format_version": "1.16.100",
+    "minecraft:fog_settings": {
+        "description": {
+            "identifier": "gaiadimension:mineral_water_fog"
+        },
+        "distance": {
+            "air": {
+                "fog_start": 0,
+                "fog_end": 0.07,
+                "fog_color": "#90D5FF",
+                "render_distance_type": "render"
+            },
+            "water": {
+                "fog_start": 0,
+                "fog_end": 10,
+                "fog_color": "#062ade",
+                "render_distance_type": "fixed"
+            },
+            "weather": {
+                "fog_start": 0,
+                "fog_end": 0.04,
+                "fog_color": "#5f6eef",
+                "render_distance_type": "render"
+            }
+        },
+        "volumetric": {
+            "density": {
+                "air": {
+                    "max_density": 0.05,
+                    "zero_density_height": 128.0,
+                    "max_density_height": 64.0
+                }
+            },
+            "media_coefficients": {
+                "air": {
+                    "scattering": [
+                        0.5647058823529412,
+                        0.8352941176470589,
+                        1.0
+                    ],
+                    "absorption": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            }
+        }
     }
-  }
 }

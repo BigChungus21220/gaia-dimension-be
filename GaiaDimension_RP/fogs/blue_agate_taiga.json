@@ -1,17 +1,39 @@
 {
     "format_version": "1.16.100",
     "minecraft:fog_settings": {
-      "description": {
-        "identifier": "gaia:blue_agate_taiga_fog"
-      },
-      "distance": {
-        "air": {
-            "fog_color": "#d5e5f1",
-        "fog_start": 0.92,
-        "fog_end": 1.0,
-            "render_distance_type": "render"
+        "description": {
+            "identifier": "gaiadimension:blue_agate_taiga_fog"
+        },
+        "distance": {
+            "air": {
+                "fog_color": "#d5e5f1",
+                "fog_start": 0.92,
+                "fog_end": 1.0,
+                "render_distance_type": "render"
+            }
+        },
+        "volumetric": {
+            "density": {
+                "air": {
+                    "max_density": 0.05,
+                    "zero_density_height": 128.0,
+                    "max_density_height": 64.0
+                }
+            },
+            "media_coefficients": {
+                "air": {
+                    "scattering": [
+                        0.8352941176470589,
+                        0.8980392156862745,
+                        0.9450980392156862
+                    ],
+                    "absorption": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            }
         }
-      }
     }
-  }
-  
+}

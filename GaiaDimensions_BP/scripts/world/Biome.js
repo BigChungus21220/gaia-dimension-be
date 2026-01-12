@@ -1,4 +1,4 @@
-import Gaia from './Gaia'
+import { DimensionSystem } from "./Gaia.js"
 import * as Events from "./Events"
 
 
@@ -17,8 +17,8 @@ class BiomeSystem {
      * @param {Player} player Player to update biome of
      */
     static updateBiome(player){
-        const biome = Gaia.getBiome(player.location);
-        if (Gaia.isInGaia(player.location)) {
+        const biome = DimensionSystem.getBiome(player);
+        if (DimensionSystem.isInGaia(player)) {
             if (this.#playerBiomes[player.id] != biome){
                 Events.playerChangeBiome.trigger({player:player,biome:biome}); //trigger playerChangeBiome
             }

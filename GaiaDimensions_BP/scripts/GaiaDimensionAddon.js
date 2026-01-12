@@ -16,6 +16,7 @@ import { registerGlitteringFireComponent } from "./blocks/glittering_fire.js";
 import { registerCrudeStorageCrateComponent } from "./blocks/crates/crude_storage_crate.js";
 import { registerMegaStorageCrateComponent } from "./blocks/crates/mega_storage_crate.js";
 import { initializeLightMixin } from "./mixins/LightMixin.js";
+import { initializeSkybox } from "./mixins/skybox.js";
 import { PortalManager } from "./API/lib/PortalLib.js";
 import { initializeDestructionHandlers } from "./systems/destruction_handler.js";
 import { initializeEventManager } from "./systems/event_manager.js";
@@ -32,6 +33,7 @@ initializeEventManager();
 initializeScriptEvents();
 initializeGeyser();
 initializeLightMixin();
+initializeSkybox();
 registerCustomTool();
 
 system.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {

@@ -1,17 +1,39 @@
 {
     "format_version": "1.16.100",
     "minecraft:fog_settings": {
-      "description": {
-        "identifier": "gaia:mutant_agate_wildwood_fog"
-      },
-      "distance": {
-        "air": {
-            "fog_color": "#f1d0df",
-        "fog_start": 0.92,
-        "fog_end": 1.0,
-            "render_distance_type": "render"
+        "description": {
+            "identifier": "gaiadimension:mutant_agate_wildwood_fog"
+        },
+        "distance": {
+            "air": {
+                "fog_color": "#f1d0df",
+                "fog_start": 0.92,
+                "fog_end": 1.0,
+                "render_distance_type": "render"
+            }
+        },
+        "volumetric": {
+            "density": {
+                "air": {
+                    "max_density": 0.05,
+                    "zero_density_height": 128.0,
+                    "max_density_height": 64.0
+                }
+            },
+            "media_coefficients": {
+                "air": {
+                    "scattering": [
+                        0.9450980392156862,
+                        0.8156862745098039,
+                        0.8745098039215686
+                    ],
+                    "absorption": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            }
         }
-      }
     }
-  }
-  
+}
