@@ -42,11 +42,11 @@
             "minecraft:light_emission": 12,
              "minecraft:material_instances": {
                 "up": {
-                    "texture": "gaiadimension:salt_rock_side",
+                    "texture": "gaiadimension:salt_rock_top",
                     "render_method": "opaque"
                 },
                 "east": {
-                    "texture": "gaiadimension:salt_rock_top",
+                    "texture": "gaiadimension:salt_rock_side",
                     "render_method": "opaque"
                 },
                 "west": {

@@ -1,0 +1,145 @@
+{
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:agate_crafting_table",
+            "menu_category": {
+                "category": "nature"
+            },
+            "traits": {
+                "minecraft:placement_position": {
+                    "enabled_states": [
+                        "minecraft:block_face"
+                    ]
+                }
+            }
+        },
+        "components": {
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 1.5
+            },
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 6
+            },
+            "minecraft:geometry": "minecraft:geometry.full_block",
+            "minecraft:selection_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:collision_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:light_emission": 12,
+             "minecraft:material_instances": {
+                "up": {
+                    "texture": "gaiadimension:agate_table_top",
+                    "render_method": "opaque"
+                },
+                "east": {
+                    "texture": "gaiadimension:agate_table_side",
+                    "render_method": "opaque"
+                },
+                "west": {
+                    "texture": "gaiadimension:agate_table_side",
+                    "render_method": "opaque"
+                },
+                "north": {
+                    "texture": "gaiadimension:agate_table_side",
+                    "render_method": "opaque"
+                },
+                "south": {
+                    "texture": "gaiadimension:agate_table_front",
+                    "render_method": "opaque"
+                },
+                "down": {
+                    "texture": "gaiadimension:agate_table_bottom",
+                    "render_method": "opaque"
+                }
+            },
+            "minecraft:crafting_table": {
+                "crafting_tags": ["crafting_table"],
+                "table_name": "Agate Crafting Table"
+            },
+            "minecraft:map_color": "#FFFFFF"
+        },
+         "permutations": [
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'down'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            0,
+                            180
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'north'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            90,
+                            0,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'south'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            90,
+                            180,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'west'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            90,
+                            90,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'east'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [
+                            90,
+                            -90,
+                            0
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}   
