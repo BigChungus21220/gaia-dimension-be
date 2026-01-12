@@ -26,7 +26,7 @@ export function initializeLightMixin() {
 
         // --- Perpetual Glow System ---
         // Place light sources around the newly placed block if in Gaia
-        if (player && DimensionSystem.isInGaia(player)) {
+        if (player && DimensionSystem.isInGaia(player) && block.typeId !== "gaiadimension:glittering_fire") {
              const { x, y, z } = block.location;
              placeLight(dimension, { x: x + 1, y: y, z: z });
              placeLight(dimension, { x: x - 1, y: y, z: z });

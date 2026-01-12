@@ -15,11 +15,19 @@ export class PortalManager {
     }
 
     static tryIgnite(originBlock) {
+        if (!originBlock || !originBlock.dimension) {
+            console.warn("[PortalLib] tryIgnite called with invalid block");
+            return false;
+        }
+        console.warn(`[PortalLib] tryIgnite triggered at ${originBlock.location.x}, ${originBlock.location.y}, ${originBlock.location.z} in ${originBlock.dimension.id}`);
+        
         for (const [portalId, config] of this.registeredPortals) {
             if (this.attemptPortalCreation(originBlock, portalId, config.frameId)) {
+                console.warn(`[PortalLib] Portal created successfully: ${portalId}`);
                 return true;
             }
         }
+        console.warn(`[PortalLib] tryIgnite failed.`);
         return false;
     }
 
@@ -40,7 +48,10 @@ export class PortalManager {
     }
 
     static detectPortalShape(startBlock, frameId, axis) {
+        // console.warn(`[PortalLib] Checking shape axis: ${axis}`);
         const dim = startBlock.dimension;
+        if (!dim) return null;
+
         const { x, y, z } = startBlock.location;
         const MAX_SIZE = 21;
         const MIN_SIZE = 2;
@@ -48,20 +59,26 @@ export class PortalManager {
 
         const dx = axis === 'x' ? 1 : 0;
         const dz = axis === 'z' ? 1 : 0;
+        
+        const minYLimit = dim.heightRange ? dim.heightRange.min : -64;
+        const maxYLimit = dim.heightRange ? dim.heightRange.max : 320;
 
         let bottomY = y;
         while (true) {
             const checkY = bottomY - 1;
             if (bottomY - y < -MAX_SIZE) return null;
+            if (checkY < minYLimit) return null; // Hit world bottom
             
-            const block = dim.getBlock({ x, y: checkY, z });
+            let block;
+            try { block = dim.getBlock({ x, y: checkY, z }); } catch(e) { return null; }
             if (!block) return null;
 
-            if (block.isAir || block.typeId === "minecraft:fire" || block.typeId === fillerId) {
+            if (this.isEmptyBlock(dim, block.location) || block.typeId === fillerId) {
                 bottomY = checkY;
             } else if (block.typeId === frameId) {
                 break;
             } else {
+                console.warn(`[PortalLib] Bottom search failed at y=${checkY}. Found: ${block.typeId}`);
                 return null;
             }
         }
@@ -69,21 +86,27 @@ export class PortalManager {
         let topY = bottomY;
         while (true) {
             if (topY - bottomY >= MAX_SIZE) return null;
+            if (topY + 1 > maxYLimit) return null; // Hit world top
 
-            const block = dim.getBlock({ x, y: topY + 1, z });
+            let block;
+            try { block = dim.getBlock({ x, y: topY + 1, z }); } catch(e) { return null; }
             if (!block) return null;
 
-            if (block.isAir || block.typeId === "minecraft:fire" || block.typeId === fillerId) {
+            if (this.isEmptyBlock(dim, block.location) || block.typeId === fillerId) {
                 topY++;
             } else if (block.typeId === frameId) {
                 break;
             } else {
+                console.warn(`[PortalLib] Top search failed at y=${topY+1}. Found: ${block.typeId}`);
                 return null;
             }
         }
 
         const height = topY - bottomY + 1;
-        if (height < MIN_SIZE) return null;
+        if (height < MIN_SIZE) {
+            console.warn(`[PortalLib] Height too small: ${height}`);
+            return null;
+        }
 
         let minSide = 0;
         let maxSide = 0;
@@ -96,6 +119,7 @@ export class PortalManager {
                     minSide = -i;
                     break;
                 } else {
+                    console.warn(`[PortalLib] MinSide check failed at i=${i}`);
                     return null;
                 }
             }
@@ -109,6 +133,7 @@ export class PortalManager {
                     maxSide = i;
                     break;
                 } else {
+                    console.warn(`[PortalLib] MaxSide check failed at i=${i}`);
                     return null;
                 }
             }
@@ -145,15 +170,17 @@ export class PortalManager {
 
     static checkColumn(dim, x, z, minY, maxY, frameId, fillerId) {
         for (let y = minY; y <= maxY; y++) {
-            const block = dim.getBlock({ x, y, z });
-            if (!block || (!block.isAir && block.typeId !== "minecraft:fire" && block.typeId !== fillerId)) return false;
+            let block;
+            try { block = dim.getBlock({ x, y, z }); } catch(e) { return false; }
+            if (!block || (!this.isEmptyBlock(dim, block.location) && block.typeId !== fillerId)) return false;
         }
         return true;
     }
 
     static checkFrameColumn(dim, x, z, minY, maxY, frameId) {
         for (let y = minY; y <= maxY; y++) {
-            const block = dim.getBlock({ x, y, z });
+            let block;
+            try { block = dim.getBlock({ x, y, z }); } catch(e) { return false; }
             if (!block || block.typeId !== frameId) return false;
         }
         return true;
@@ -465,7 +492,7 @@ export class PortalManager {
         try {
             const block = dimension.getBlock(pos);
             if (!block) return false;
-            if (block.isAir || block.isLiquid) return true;
+            if (block.isAir || block.isLiquid || block.typeId.includes("minecraft:light_block")) return true;
             // Add other replaceable tags if known
             if (block.typeId.includes("grass") || block.typeId.includes("flower") || block.typeId.includes("snow")) return true;
             return false;
@@ -475,7 +502,7 @@ export class PortalManager {
     static isSolid(dimension, pos) {
         try {
             const block = dimension.getBlock(pos);
-            return block && !block.isAir && !block.isLiquid; // Basic solid check
+            return block && !block.isAir && !block.isLiquid && !block.typeId.includes("minecraft:light_block"); // Basic solid check
         } catch (e) { return false; }
     }
 

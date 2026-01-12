@@ -36,10 +36,27 @@ export function registerGlitteringFireComponent() {
         const { block } = event;
 
         if (block.typeId === "gaiadimension:glittering_fire") {
+            // Capture dimension and location immediately
+            const dimension = block.dimension;
+            const location = block.location;
+
             // Attempt to ignite the portal
             // The PortalManager will handle checking the shape and placing portal blocks
             system.run(() => {
-                const ignited = PortalManager.tryIgnite(block);
+                try {
+                    const dimension = block.dimension;
+                    const location = block.location;
+                    console.warn(`[GlitteringFire] Checking ignition at ${location.x}, ${location.y}, ${location.z} in ${dimension.id}`);
+                    
+                    const currentBlock = dimension.getBlock(location);
+                    if (currentBlock && currentBlock.typeId === "gaiadimension:glittering_fire") {
+                         PortalManager.tryIgnite(currentBlock);
+                    } else {
+                         console.warn("[GlitteringFire] Block mismatch or invalid after wait.");
+                    }
+                } catch(e) {
+                    console.warn(`[GlitteringFire] Error: ${e}`);
+                }
             });
         }
     });
