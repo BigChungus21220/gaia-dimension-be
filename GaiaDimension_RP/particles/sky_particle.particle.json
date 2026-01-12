@@ -2,7 +2,7 @@
 	"format_version": "1.10.0",
 	"particle_effect": {
 		"description": {
-			"identifier": "gaia:sky_particle",
+			"identifier": "gaiadimension:sky_particle",
 			"basic_render_parameters": {
 				"material": "particles_add",
 				"texture": "textures/gaiadimension/androsa/environment/gaia_sky.png"
@@ -13,46 +13,7 @@
 				"num_particles": 1
 			},
 			"minecraft:emitter_lifetime_expression": {
-				"activation_expression": "
-                v.s = 500; 
-                v.i == 0 ? {  
-                    v.x = 1;  
-                    v.y = 0;  
-                    v.z = 0;  
-                    v.d = 1;
-                } : {
-                v.i == 1 ? {
-                    v.x = 1;  
-                    v.y = 0;  
-                    v.z = 0;  
-                    v.d = -1;
-                } : {
-                v.i == 2 ? {  
-                    v.x = 0; 
-                    v.y = 1;  
-                    v.z = 0;  
-                    v.d = 1;
-                } : {
-                v.i == 3 ? {
-                    v.x = 0;  
-                    v.y = 1;  
-                    v.z = 0;  
-                    v.d = -1;
-                } : { 
-                v.i == 4 ? {  
-                    v.x = 0;  
-                    v.y = 0;  
-                    v.z = 1;  
-                    v.d = 1;
-                } : { 
-                v.i == 5 ? {  
-                    v.x = 0;  
-                    v.y = 0;  
-                    v.z = 1;  
-                    v.d = -1;
-                };};};};};}; 
-                return 0.01;
-                "
+				"activation_expression": "v.s = 500;v.i == 0 ? { v.x = 1;v.y = 0;v.z = 0;v.d = 1;} : { v.i == 1 ? { v.x = 1;v.y = 0;v.z = 0;v.d = -1;} : { v.i == 2 ? { v.x = 0;v.y = 1;v.z = 0;v.d = 1;} : { v.i == 3 ? { v.x = 0;v.y = 1;v.z = 0;v.d = -1;} : { v.i == 4 ? { v.x = 0;v.y = 0;v.z = 1;v.d = 1;} : { v.i == 5 ? { v.x = 0;v.y = 0;v.z = 1;v.d = -1;} ;} ;} ;} ;} ;} ;return 0.01;"
 			},
 			"minecraft:emitter_shape_point": {
 				"offset": ["v.x*v.d*v.s", "v.y*v.d*v.s", "v.z*v.d*v.s"]

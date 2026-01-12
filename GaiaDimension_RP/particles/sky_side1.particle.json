@@ -2,7 +2,7 @@
 	"format_version": "1.10.0",
 	"particle_effect": {
 		"description": {
-			"identifier": "gaia:sky_side1",
+			"identifier": "gaiadimension:sky_side1",
 			"basic_render_parameters": {
 				"material": "particles_add",
 				"texture": "textures/gaiadimension/androsa/sky/gaia_side1"

@@ -2,10 +2,10 @@
 	"format_version": "1.10.0",
 	"particle_effect": {
 		"description": {
-			"identifier": "gaia:portal_particle",
+			"identifier": "gaiadimension:portal_particle",
 			"basic_render_parameters": {
 				"material": "particles_alpha",
-				"texture": "textures/particle/gaia_portal_particle"
+				"texture": "textures/gaiadimension/androsa/particle/gaia_portal_particle"
 			}
 		},
 		"components": {

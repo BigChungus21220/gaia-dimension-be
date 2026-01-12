@@ -2,10 +2,10 @@
 	"format_version": "1.10.0",
 	"particle_effect": {
 		"description": {
-			"identifier": "gaia:gaia_rain",
+			"identifier": "gaiadimension:gaia_rain",
 			"basic_render_parameters": {
 				"material": "particles_blend",
-				"texture": "textures/particle/gaia_rain"
+				"texture": "textures/gaiadimension/androsa/particle/gaia_rain"
 			}
 		},
 		"components": {
@@ -17,7 +17,8 @@
 				"active_time": 2
 			},
 			"minecraft:emitter_shape_box": {
-				"half_dimensions": [160, 1, 160]
+				"half_dimensions": [160, 1, 160],
+				"direction": "outwards"
 			},
 			"minecraft:particle_lifetime_expression": {
 				"max_lifetime": "2 + v.particle_random_1*0.5"
@@ -28,13 +29,7 @@
 			},
 			"minecraft:particle_appearance_billboard": {
 				"size": ["math.clamp(-5*(v.particle_age - v.particle_lifetime),0,1)*0.1", "math.clamp(-5*(v.particle_age - v.particle_lifetime),0,1)*0.1"],
-				"facing_camera_mode": "rotate_xyz",
-				"uv": {
-					"texture_width": 1,
-					"texture_height": 1,
-					"uv": [0, 0],
-					"uv_size": [1, 1]
-				}
+				"facing_camera_mode": "rotate_xyz"
 			}
 		}
 	}

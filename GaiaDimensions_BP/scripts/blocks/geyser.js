@@ -62,7 +62,7 @@ async function eruptGeyser(block) {
     dimension.playSound("geyser.blast", blockCenter);
     
     // Pre-steam particles
-    dimension.spawnParticle("gaia:geyser_pre_steam", blockCenter);
+    dimension.spawnParticle("gaiadimension:geyser_pre_steam", blockCenter);
     
     await sleep(10);
     
@@ -72,13 +72,13 @@ async function eruptGeyser(block) {
     pushEntities(dimension, blockCenter, 60); // Blast for 3 seconds
     
     // Main steam and blast particles
-    dimension.spawnParticle("gaia:geyser_steam", blockCenter);
-    dimension.spawnParticle("gaia:geyser_blast", blockCenter);
+    dimension.spawnParticle("gaiadimension:geyser_steam", blockCenter);
+    dimension.spawnParticle("gaiadimension:geyser_blast", blockCenter);
 }
 
 export function initializeGeyser() {
     system.afterEvents.scriptEventReceive.subscribe((event) => {
-        if (event.id === "gaia:geyser.erupt" || event.id === "gaiadimension:geyser.erupt") {
+        if (event.id === "gaiadimension:geyser.erupt" || event.id === "gaiadimension:geyser.erupt") {
              if (event.sourceBlock) {
                  eruptGeyser(event.sourceBlock);
              }
