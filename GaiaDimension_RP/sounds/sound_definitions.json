@@ -1,0 +1,9 @@
+{
+	"format_version": "1.14.0",
+	"sound_definitions": {
+		"geyser.blast": {
+			"category": "neutral",
+			"sounds": ["sounds/gaia/geyser"]
+		}
+	}
+}
