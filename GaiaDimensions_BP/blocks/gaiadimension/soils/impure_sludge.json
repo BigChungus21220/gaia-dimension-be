@@ -6,6 +6,13 @@
             "menu_category": {
                 "category": "nature",
                 "group": "minecraft:itemGroup.name.soil"
+            },
+            "states": {
+                "gaiadimension:perm_dim": [
+                    0,
+                    1,
+                    2
+                ]
             }
         },
         "components": {
@@ -48,7 +55,23 @@
                     "render_method": "blend"
                 }
             },
-            "minecraft:map_color": "#ffffff"
-        }
+            "minecraft:map_color": "#ffffff",
+            "minecraft:light_emission": 15,
+            "minecraft:light_dampening": 0
+        },
+        "permutations": [
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 1",
+                "components": {
+                    "minecraft:light_emission": 5
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 2",
+                "components": {
+                    "minecraft:light_emission": 5
+                }
+            }
+        ]
     }
 }

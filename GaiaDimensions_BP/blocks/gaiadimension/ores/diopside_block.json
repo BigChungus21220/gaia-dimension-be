@@ -5,6 +5,13 @@
             "identifier": "gaiadimension:diopside_block",
             "menu_category": {
                 "category": "nature"
+            },
+            "states": {
+                "gaiadimension:perm_dim": [
+                    0,
+                    1,
+                    2
+                ]
             }
         },
         "components": {
@@ -48,7 +55,23 @@
                     16
                 ]
             },
-            "minecraft:map_color": "#6b8c42"
-        }
+            "minecraft:map_color": "#6b8c42",
+            "minecraft:light_emission": 15,
+            "minecraft:light_dampening": 0
+        },
+        "permutations": [
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 1",
+                "components": {
+                    "minecraft:light_emission": 5
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 2",
+                "components": {
+                    "minecraft:light_emission": 5
+                }
+            }
+        ]
     }
 }

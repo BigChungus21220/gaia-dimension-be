@@ -505,9 +505,6 @@
         "gaiadimension:fossilized_tiles": {
             "textures": "textures/gaiadimension/androsa/blocks/fossilized_tiles"
         },
-        "gaiadimension:frail_glitter_block": {
-            "textures": "textures/gaiadimension/androsa/blocks/frail_glitter_block"
-        },
         "gaiadimension:fungus_pink": {
             "textures": "textures/gaiadimension/androsa/blocks/fungus_pink"
         },
@@ -1641,6 +1638,51 @@
         },
         "gaiadimension:yellow_crystal_growth": {
             "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_yellow"
+        },
+        "gaiadimension:crystal_growth_blue": {
+            "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_blue"
+        },
+        "gaiadimension:crystal_growth_green": {
+            "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_green"
+        },
+        "gaiadimension:crystal_growth_peach": {
+            "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_peach"
+        },
+        "gaiadimension:crystal_growth_pink": {
+            "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_pink"
+        },
+        "gaiadimension:crystal_growth_purple": {
+            "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_purple"
+        },
+        "gaiadimension:crystal_growth_yellow": {
+            "textures": "textures/gaiadimension/androsa/blocks/crystal_growth_yellow"
+        },
+        "gaiadimension:malachite_floor_tiles": {
+            "textures": "textures/gaiadimension/androsa/blocks/malachite_floor_tiles"
+        },
+        "gaiadimension:pulsing_chiselled_malachite_bricks": {
+            "textures": "textures/gaiadimension/androsa/blocks/pulsing_chiselled_malachite_bricks"
+        },
+        "gaiadimension:pulsing_chiselled_malachite_planks": {
+            "textures": "textures/gaiadimension/androsa/blocks/pulsing_chiselled_malachite_planks"
+        },
+        "gaiadimension:pulsing_malachite_bricks": {
+            "textures": "textures/gaiadimension/androsa/blocks/pulsing_malachite_bricks"
+        },
+        "gaiadimension:pulsing_malachite_planks": {
+            "textures": "textures/gaiadimension/androsa/blocks/pulsing_malachite_planks"
+        },
+        "gaiadimension:corrupt_grass_side": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/corrupt_grass_side"
+        },
+        "gaiadimension:corrupt_grass_top": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/corrupt_grass_top"
+        },
+        "gaiadimension:corrupt_soil": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/corrupt_soil"
+        },
+        "gaiadimension:green_glitter_grass_side ": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/green_glitter_grass_side "
         }
     }
 }

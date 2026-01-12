@@ -26,6 +26,11 @@
                     3,
                     4,
                     5
+                ],
+                "gaiadimension:perm_dim": [
+                    0,
+                    1,
+                    2
                 ]
             }
         },
@@ -88,7 +93,9 @@
             },
             "minecraft:destructible_by_explosion": true,
             "minecraft:loot": "loot_tables/blocks/gaiadimension/ores/crusted_copal_brick_stairs.json",
-            "minecraft:map_color": "#a8c3bc"
+            "minecraft:map_color": "#a8c3bc",
+            "minecraft:light_emission": 15,
+            "minecraft:light_dampening": 0
         },
         "permutations": [
             {
@@ -1347,6 +1354,18 @@
                             }
                         ]
                     }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 1",
+                "components": {
+                    "minecraft:light_emission": 5
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 2",
+                "components": {
+                    "minecraft:light_emission": 5
                 }
             }
         ]

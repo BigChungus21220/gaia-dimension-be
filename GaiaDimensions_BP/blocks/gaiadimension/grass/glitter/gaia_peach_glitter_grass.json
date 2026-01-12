@@ -5,12 +5,19 @@
             "identifier": "gaiadimension:peach_glitter_grass",
             "menu_category": {
                 "category": "none"
+            },
+            "states": {
+                "gaiadimension:perm_dim": [
+                    0,
+                    1,
+                    2
+                ]
             }
         },
         "components": {
             "tag:is_shovelable": {},
             "tag:dirt": {},
-            "minecraft:light_emission": 12,
+            "minecraft:light_emission": 15,
             "minecraft:destructible_by_mining": {
                 "seconds_to_destroy": 1
             },
@@ -68,7 +75,22 @@
                     "texture": "gaiadimension:peach_glitter_grass_side",
                     "render_method": "opaque"
                 }
+            },
+            "minecraft:light_dampening": 0
+        },
+        "permutations": [
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 1",
+                "components": {
+                    "minecraft:light_emission": 5
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 2",
+                "components": {
+                    "minecraft:light_emission": 5
+                }
             }
-        }
+        ]
     }
 }

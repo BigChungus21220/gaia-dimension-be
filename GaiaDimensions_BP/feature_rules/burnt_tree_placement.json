@@ -3,7 +3,7 @@
 	"minecraft:feature_rules": {
 		"description": {
 			"identifier": "gaiadimension:burnt_tree_placement",
-			"places_feature": "gaiadimension:foliage/burnt_tree"
+			"places_feature": "gaiadimension:foliage/burnt_agate_tree"
 		},
 		"conditions": {
 			"placement_pass": "surface_pass",

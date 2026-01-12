@@ -1,36 +1,58 @@
 {
-	"format_version": "1.21.70",
-	"minecraft:block": {
-		"description": {
-			"identifier": "gaiadimension:sweet_muck3"
-		},
-		"components": {
-			"minecraft:material_instances": {
-				"*": {
-					"texture": "gaiadimension:sweet_muck_still",
-					"render_method": "blend"
-				}
-			},
-			"minecraft:loot": "loot_tables/msc/empty.json",
-			"tag:template3": {},
-			"tag:template": {},
-			"tag:fluid": {},
-			"minecraft:geometry": "geometry.rosa_gd.fluid3",
-			"minecraft:light_dampening": 0.0,
-			"minecraft:destructible_by_mining": false,
-			"minecraft:collision_box": false,
-			"minecraft:destructible_by_explosion": false,
-			"minecraft:flammable": false,
-			"minecraft:custom_components": [
-				"gaiadimension:fluid_flow"
-			],
-			"minecraft:tick": {
-				"interval_range": [
-					4,
-					4
-				],
-				"looping": true
-			}
-		}
-	}
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:sweet_muck3",
+            "states": {
+                "gaiadimension:perm_dim": [
+                    0,
+                    1,
+                    2
+                ]
+            }
+        },
+        "components": {
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "gaiadimension:sweet_muck_still",
+                    "render_method": "blend"
+                }
+            },
+            "minecraft:loot": "loot_tables/msc/empty.json",
+            "tag:template3": {},
+            "tag:template": {},
+            "tag:fluid": {},
+            "minecraft:geometry": "geometry.rosa_gd.fluid3",
+            "minecraft:light_dampening": 0,
+            "minecraft:destructible_by_mining": false,
+            "minecraft:collision_box": false,
+            "minecraft:destructible_by_explosion": false,
+            "minecraft:flammable": false,
+            "minecraft:custom_components": [
+                "gaiadimension:fluid_flow"
+            ],
+            "minecraft:tick": {
+                "interval_range": [
+                    4,
+                    4
+                ],
+                "looping": true
+            },
+            "minecraft:light_emission": 15
+        },
+        "permutations": [
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 1",
+                "components": {
+                    "minecraft:light_emission": 5
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 2",
+                "components": {
+                    "minecraft:light_emission": 5
+                }
+            }
+        ]
+    }
 }

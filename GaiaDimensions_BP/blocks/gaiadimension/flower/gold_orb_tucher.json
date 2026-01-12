@@ -13,6 +13,13 @@
                     ],
                     "y_rotation_offset": 180
                 }
+            },
+            "states": {
+                "gaiadimension:perm_dim": [
+                    0,
+                    1,
+                    2
+                ]
             }
         },
         "components": {
@@ -23,7 +30,7 @@
             "minecraft:destructible_by_explosion": {
                 "explosion_resistance": 0
             },
-            "minecraft:light_emission": 2,
+            "minecraft:light_emission": 15,
             "minecraft:material_instances": {
                 "*": {
                     "texture": "gaiadimension:gold_orb_tucher",
@@ -98,7 +105,8 @@
             "minecraft:flammable": {
                 "destroy_chance_modifier": 30,
                 "catch_chance_modifier": 5
-            }
+            },
+            "minecraft:light_dampening": 0
         },
         "permutations": [
             {
@@ -147,6 +155,18 @@
                             0
                         ]
                     }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 1",
+                "components": {
+                    "minecraft:light_emission": 5
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 2",
+                "components": {
+                    "minecraft:light_emission": 5
                 }
             }
         ]

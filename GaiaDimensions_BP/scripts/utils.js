@@ -1,4 +1,4 @@
-import { world } from "@minecraft/server";
+import { world, system } from "@minecraft/server";
 
 export function getDimensions() {
     return [
@@ -181,3 +181,21 @@ export function getRedstonePower(block) {
 
     return 0;
 }
+
+/**
+ * Returns a promise that resolves after a specified number of ticks.
+ * @param {number} ticks 
+ * @returns {Promise<void>}
+ */
+export function sleep(ticks) {
+    return new Promise(resolve => system.runTimeout(resolve, ticks));
+}
+
+export const invertFace = {
+    'north': 'south',
+    'south': 'north',
+    'east': 'west',
+    'west': 'east',
+    'above': 'below',
+    'below': 'above'
+};

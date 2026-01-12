@@ -2,7 +2,7 @@
     "format_version": "1.21.70",
     "minecraft:block": {
         "description": {
-            "identifier": "gaiadimension:pillar1",
+            "identifier": "gaiadimension:malachite_pillar",
             "menu_category": {
                 "category": "nature"
             },
@@ -12,6 +12,13 @@
                         "minecraft:block_face"
                     ]
                 }
+            },
+            "states": {
+                "gaiadimension:perm_dim": [
+                    0,
+                    1,
+                    2
+                ]
             }
         },
         "components": {
@@ -61,9 +68,11 @@
                 ]
             },
             "minecraft:map_color": "#0bda51",
-            "minecraft:loot": "loot_tables/blocks/gaiadimension/ores/malachite_pillar.json"
+            "minecraft:loot": "loot_tables/blocks/gaiadimension/ores/malachite_pillar.json",
+            "minecraft:light_emission": 15,
+            "minecraft:light_dampening": 0
         },
-       "permutations": [
+        "permutations": [
             {
                 "condition": "q.block_state('minecraft:block_face') == 'up'",
                 "components": {
@@ -134,6 +143,18 @@
                             0
                         ]
                     }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 1",
+                "components": {
+                    "minecraft:light_emission": 5
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 2",
+                "components": {
+                    "minecraft:light_emission": 5
                 }
             }
         ]

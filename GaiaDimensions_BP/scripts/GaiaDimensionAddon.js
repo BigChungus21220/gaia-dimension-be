@@ -9,8 +9,13 @@ import { registerWallComponent } from "./blocks/wall.js";
 import { registerButtonComponent } from "./blocks/button.js";
 import { registerPressurePlateComponent } from "./blocks/pressure_plate.js";
 import { registerStairsComponent } from "./blocks/stairs.js";
+import { registerGeyserComponent, initializeGeyser } from "./blocks/geyser.js";
 import { registerSandstoneComponent } from "./blocks/sandstone_slab.js";
+import { registerStoneSlabComponent } from "./blocks/stone_slab.js";
 import { registerGlitteringFireComponent } from "./blocks/glittering_fire.js";
+import { registerCrudeStorageCrateComponent } from "./blocks/crates/crude_storage_crate.js";
+import { registerMegaStorageCrateComponent } from "./blocks/crates/mega_storage_crate.js";
+import { initializeLightMixin } from "./mixins/LightMixin.js";
 import { PortalManager } from "./API/lib/PortalLib.js";
 import { initializeDestructionHandlers } from "./systems/destruction_handler.js";
 import { initializeEventManager } from "./systems/event_manager.js";
@@ -25,6 +30,8 @@ import "./world/TerrainPatching.js";
 initializeDestructionHandlers();
 initializeEventManager();
 initializeScriptEvents();
+initializeGeyser();
+initializeLightMixin();
 registerCustomTool();
 
 system.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
@@ -38,7 +45,11 @@ system.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
     registerButtonComponent({ blockComponentRegistry });
     registerPressurePlateComponent({ blockComponentRegistry });
     registerStairsComponent({ blockComponentRegistry });
+    registerGeyserComponent({ blockComponentRegistry });
     registerSandstoneComponent({ blockComponentRegistry });
+    registerStoneSlabComponent({ blockComponentRegistry });
     registerGlitteringFireComponent();
+    registerCrudeStorageCrateComponent({ blockComponentRegistry });
+    registerMegaStorageCrateComponent({ blockComponentRegistry });
     registerFluidComponent({ blockComponentRegistry });
 });

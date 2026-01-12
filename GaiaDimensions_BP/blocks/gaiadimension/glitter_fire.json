@@ -1,51 +1,72 @@
 {
-	"format_version": "1.21.70",
-	"minecraft:block": {
-		"description": {
-			"identifier": "gaiadimension:glittering_fire",
-			"menu_category": {
-				"category": "none"
-			}
-		},
-		"components": {
-			"minecraft:light_dampening": 0,
-			"minecraft:light_emission": 15,
-			"minecraft:geometry": "geometry.rosa_gd.gaia_fire",
-			"minecraft:destructible_by_explosion": false,
-			"minecraft:material_instances": {
-				"*": {
-					"texture": "gaiadimension:gold_fire",
-					"render_method": "blend",
-					"ambient_occlusion": false,
-					"face_dimming": false
-				}
-			},
-			"minecraft:selection_box": {
-				"origin": [
-					-8,
-					0,
-					-8
-				],
-				"size": [
-					16,
-					16,
-					16
-				]
-			},
-			"minecraft:collision_box": {
-				"origin": [
-					-8,
-					0,
-					-8
-				],
-				"size": [
-					0,
-					0,
-					0
-				]
-			},
-			"minecraft:loot": "loot_tables/empty.json",
-			"tag:fire": {}
-		}
-	}
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:glittering_fire",
+            "menu_category": {
+                "category": "none"
+            },
+            "states": {
+                "gaiadimension:perm_dim": [
+                    0,
+                    1,
+                    2
+                ]
+            }
+        },
+        "components": {
+            "minecraft:light_dampening": 0,
+            "minecraft:light_emission": 15,
+            "minecraft:geometry": "geometry.rosa_gd.gaia_fire",
+            "minecraft:destructible_by_explosion": false,
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "gaiadimension:gold_fire",
+                    "render_method": "blend",
+                    "ambient_occlusion": false,
+                    "face_dimming": false
+                }
+            },
+            "minecraft:selection_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:collision_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "minecraft:loot": "loot_tables/empty.json",
+            "tag:fire": {}
+        },
+        "permutations": [
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 1",
+                "components": {
+                    "minecraft:light_emission": 5
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 2",
+                "components": {
+                    "minecraft:light_emission": 5
+                }
+            }
+        ]
+    }
 }

@@ -1,0 +1,104 @@
+{
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:geyser_vent",
+            "menu_category": {
+                "category": "nature"
+            },
+            "states": {
+                "gaiadimension:perm_dim": [
+                    0,
+                    1,
+                    2
+                ]
+            }
+        },
+        "components": {
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 1.5
+            },
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 6
+            },
+            "minecraft:geometry": "minecraft:geometry.full_block",
+            "minecraft:material_instances": {
+                "up": {
+                    "texture": "gaiadimension:geyser_block_top",
+                    "render_method": "opaque"
+                },
+                "east": {
+                    "texture": "gaiadimension:geyser_block_side",
+                    "render_method": "opaque"
+                },
+                "west": {
+                    "texture": "gaiadimension:geyser_block_side",
+                    "render_method": "opaque"
+                },
+                "north": {
+                    "texture": "gaiadimension:geyser_block_side",
+                    "render_method": "opaque"
+                },
+                "south": {
+                    "texture": "gaiadimension:geyser_block_side",
+                    "render_method": "opaque"
+                },
+                "down": {
+                    "texture": "gaiadimension:volcanic_rock",
+                    "render_method": "opaque"
+                }
+            },
+            "minecraft:selection_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:collision_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:map_color": "#7a7a7a",
+            "minecraft:custom_components": [
+                "gaiadimension:geyser"
+            ],
+            "minecraft:tick": {
+                "interval_range": [
+                    600,
+                    1200
+                ],
+                "looping": true
+            },
+            "minecraft:light_emission": 15,
+            "minecraft:light_dampening": 0
+        },
+        "permutations": [
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 1",
+                "components": {
+                    "minecraft:light_emission": 5
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 2",
+                "components": {
+                    "minecraft:light_emission": 5
+                }
+            }
+        ]
+    }
+}

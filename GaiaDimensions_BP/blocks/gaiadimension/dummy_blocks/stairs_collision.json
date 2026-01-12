@@ -23,6 +23,11 @@
                 "gaiadimension:corner": [
                     false,
                     true
+                ],
+                "gaiadimension:perm_dim": [
+                    0,
+                    1,
+                    2
                 ]
             }
         },
@@ -82,7 +87,9 @@
                 "redstone_conductor": false
             },
             "minecraft:replaceable": {},
-            "tag:tap:no_connect": {}
+            "tag:tap:no_connect": {},
+            "minecraft:light_emission": 15,
+            "minecraft:light_dampening": 0
         },
         "permutations": [
             {
@@ -199,6 +206,18 @@
                             8
                         ]
                     }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 1",
+                "components": {
+                    "minecraft:light_emission": 5
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 2",
+                "components": {
+                    "minecraft:light_emission": 5
                 }
             }
         ]

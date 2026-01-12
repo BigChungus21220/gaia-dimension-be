@@ -1,0 +1,51 @@
+{
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:frail_glitter_rock",
+            "menu_category": {
+                "category": "nature"
+            }
+        },
+        "components": {
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 1.5
+            },
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 6
+            },
+            "minecraft:geometry": "minecraft:geometry.full_block",
+            "minecraft:selection_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:collision_box": {
+                "origin": [
+                    -8,
+                    0,
+                    -8
+                ],
+                "size": [
+                    16,
+                    16,
+                    16
+                ]
+            },
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "gaiadimension:frail_glitter_rock",
+                    "render_method": "opaque"
+                }
+            },
+            "minecraft:map_color": "#7a7a7a"
+        }
+    }
+}

@@ -1,0 +1,125 @@
+{
+    "format_version": "1.20.0",
+    "minecraft:entity": {
+        "description": {
+            "identifier": "gaiadimension:crude_storage_crate",
+            "is_summonable": true
+        },
+        "component_groups": {
+			"shrink": {
+				"minecraft:collision_box": {
+					"width": 0.0,
+					"height": 0.0
+				}
+			},
+			"expand": {
+				"minecraft:collision_box": {
+					"width": 1,
+					"height": 1
+				}
+			},
+			"despawn": {
+				"minecraft:instant_despawn": {}
+			},
+			"highlight": {
+				"minecraft:timer": {
+					"looping": true,
+					"time": 0.5,
+					"time_down_event": {
+						"event":"compycraft_era:highlight_paricles"
+					}
+				}
+			}
+		},
+        "components": {
+            "minecraft:inventory": {
+                "container_type": "container",
+                "inventory_size": 27
+            },
+            "minecraft:type_family": {
+                "family": [
+                    "gaiadimension",
+                    "machine"
+                ]
+            },
+            "minecraft:damage_sensor": {
+                "triggers": {
+                    "deals_damage": false
+                }
+            },
+            "minecraft:collision_box": {
+                "width": 1,
+                "height": 1
+            },
+            "minecraft:health": {
+                "value": 1,
+                "max": 1,
+                "min": 1
+            },
+            "minecraft:knockback_resistance": {
+                "value": 100,
+                "max": 100
+            },
+            "minecraft:pushable": {
+                "is_pushable": false,
+                "is_pushable_by_piston": true
+            },
+            "minecraft:persistent": {},
+            "minecraft:physics": {
+                "has_gravity": false,
+                "has_collision": false
+            }
+        },
+		"events": {
+			"general_block_entity:shrink": {
+				"add": {
+					"component_groups": ["shrink"]
+				}
+			},
+			"compycraft_era:despawn": {
+				"add": {
+					"component_groups": ["despawn"]
+				}
+			},
+			"general_block_entity:expand": {
+				"remove": {
+					"component_groups": ["shrink"]
+				},
+				"add": {
+					"component_groups": ["expand"]
+				}
+			},
+			"compycraft_era:highlight": {
+				"add": {
+					"component_groups": ["highlight"]
+				}
+			},
+			"compycraft_era:highlight_paricles": {
+				"queue_command": {
+					"command": [
+						"particle \"minecraft:villager_happy\" ~-0.5 ~1 ~-0.5",
+						"particle \"minecraft:villager_happy\" ~-0.5 ~1 ~0.5",
+						"particle \"minecraft:villager_happy\" ~0.5 ~1 ~-0.5",
+						"particle \"minecraft:villager_happy\" ~0.5 ~1 ~0.5",
+						"particle \"minecraft:villager_happy\" ~-0.5 ~1 ~",
+						"particle \"minecraft:villager_happy\" ~ ~1 ~-0.5",
+						"particle \"minecraft:villager_happy\" ~ ~1 ~0.5",
+						"particle \"minecraft:villager_happy\" ~0.5 ~1 ~",
+						"particle \"minecraft:villager_happy\" ~-0.5 ~ ~-0.5",
+						"particle \"minecraft:villager_happy\" ~-0.5 ~ ~0.5",
+						"particle \"minecraft:villager_happy\" ~0.5 ~ ~-0.5",
+						"particle \"minecraft:villager_happy\" ~0.5 ~ ~0.5",
+						"particle \"minecraft:villager_happy\" ~-0.5 ~ ~",
+						"particle \"minecraft:villager_happy\" ~ ~ ~-0.5",
+						"particle \"minecraft:villager_happy\" ~ ~ ~0.5",
+						"particle \"minecraft:villager_happy\" ~0.5 ~ ~",
+						"particle \"minecraft:villager_happy\" ~-0.5 ~0.5 ~-0.5",
+						"particle \"minecraft:villager_happy\" ~-0.5 ~0.5 ~0.5",
+						"particle \"minecraft:villager_happy\" ~0.5 ~0.5 ~-0.5",
+						"particle \"minecraft:villager_happy\" ~0.5 ~0.5 ~0.5"
+					]
+				}
+			}
+		}
+    }
+}

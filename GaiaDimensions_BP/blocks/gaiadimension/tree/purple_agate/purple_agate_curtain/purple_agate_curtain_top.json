@@ -7,6 +7,11 @@
                 "gaiadimension:open": [
                     false,
                     true
+                ],
+                "gaiadimension:perm_dim": [
+                    0,
+                    1,
+                    2
                 ]
             },
             "traits": {
@@ -75,11 +80,12 @@
                             0
                         ]
                     },
-                     "minecraft:material_instances": {
-                "*": {
-                    "texture": "gaiadimension:purple_agate_curtain_top_open",
-                    "render_method": "blend"
-                }}
+                    "minecraft:material_instances": {
+                        "*": {
+                            "texture": "gaiadimension:purple_agate_curtain_top_open",
+                            "render_method": "blend"
+                        }
+                    }
                 }
             },
             {
@@ -128,6 +134,18 @@
                             0
                         ]
                     }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 1",
+                "components": {
+                    "minecraft:light_emission": 5
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:perm_dim') == 2",
+                "components": {
+                    "minecraft:light_emission": 5
                 }
             }
         ],
@@ -257,7 +275,9 @@
                         "destroy_speed": 0.25
                     }
                 ]
-            }
+            },
+            "minecraft:light_emission": 15,
+            "minecraft:light_dampening": 0
         }
     }
 }
