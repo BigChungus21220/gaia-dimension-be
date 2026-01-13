@@ -26,7 +26,7 @@
 					"looping": true,
 					"time": 0.5,
 					"time_down_event": {
-						"event":"compycraft_era:highlight_paricles"
+						"event":"gaiadimension:highlight_paricles"
 					}
 				}
 			}
@@ -79,7 +79,7 @@
 					"component_groups": ["shrink"]
 				}
 			},
-			"compycraft_era:despawn": {
+			"gaiadimension:despawn": {
 				"add": {
 					"component_groups": ["despawn"]
 				}
@@ -92,7 +92,7 @@
 					"component_groups": ["expand"]
 				}
 			},
-			"compycraft_era:highlight": {
+			"gaiadimension:highlight": {
 				"add": {
 					"component_groups": ["highlight"]
 				}
