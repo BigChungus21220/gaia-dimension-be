@@ -4,7 +4,7 @@
     "description": {
       "identifier": "gaiadimension:gaia_dimension_skybox",
       "materials": {
-        "default": "entity_alphablend"
+        "default": "entity_emissive_alpha"
       },
       "textures": {
         "default": "textures/gaiadimension/androsa/environment/gaia_skybox_atlas"
