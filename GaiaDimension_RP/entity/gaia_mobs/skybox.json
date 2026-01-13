@@ -1,0 +1,39 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "gaiadimension:gaia_dimension_skybox",
+      "materials": {
+        "default": "entity_alphablend"
+      },
+      "textures": {
+        "default": "textures/gaiadimension/androsa/environment/gaia_skybox_atlas"
+      },
+      "geometry": {
+        "default": "geometry.rosa_gd.gaiadimension_skybox"
+      },
+      "animations": {
+        "always": "animation.skybox.gaia"
+      },
+      "particle_effects": {
+        "sky1": "gaiadimension:sky1",
+        "sky2": "gaiadimension:sky2",
+        "sky_side1": "gaiadimension:sky_side1",
+        "sky_side2": "gaiadimension:sky_side2",
+        "sky_side3": "gaiadimension:sky_side3",
+        "sky_side4": "gaiadimension:sky_side4",
+        "gaia_planet": "gaiadimension:gaia_planet",
+        "cloud0": "gaiadimension:cloud_0",
+        "cloud1": "gaiadimension:cloud_1",
+        "cloud2": "gaiadimension:cloud_2",
+        "cloud3": "gaiadimension:cloud_3",
+        "cloud4": "gaiadimension:cloud_4",
+        "cloud5": "gaiadimension:cloud_5",
+        "cloud6": "gaiadimension:cloud_6"
+      },
+      "render_controllers": [
+        "controller.render.player.skyblend"
+      ]
+    }
+  }
+}
