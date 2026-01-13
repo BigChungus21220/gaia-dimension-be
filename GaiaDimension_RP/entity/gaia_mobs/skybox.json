@@ -13,7 +13,11 @@
         "default": "geometry.rosa_gd.gaiadimension_skybox"
       },
       "animations": {
-        "always": "animation.skybox.gaia"
+        "nebula": "animation.skybox.gaia",
+        "skyblend": "animation.player.skyblend",
+        "spawn_gaia_planet": "controller.animation.gaia_sky.planet",
+        "spawn_cloud": "controller.animation.gaia_sky.cloud",
+        "one_second_timer": "animation.particle.one_second"
       },
       "particle_effects": {
         "sky1": "gaiadimension:sky1",
