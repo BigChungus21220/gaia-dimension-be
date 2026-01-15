@@ -30,6 +30,9 @@
 			"initial_state" : "default",
 			"states" : {
 				"default" : {
+					"on_entry": [
+						"v.cloud_picker = math.floor(math.random(0, 7));"
+					],
 					"transitions" : [
 						{
 							"spawn0" : "q.property('gaiadimension:is_active') && v.cloud_picker == 0"
