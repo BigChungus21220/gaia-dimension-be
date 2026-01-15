@@ -2,49 +2,31 @@
     "format_version": "1.20.0",
     "minecraft:entity": {
         "description": {
-            "identifier": "gaiadimension:crude_storage_crate",
-            "is_summonable": true
+            "identifier": "gaiadimension:gaia_dimension_skybox",
+            "is_summonable": true,
+            "properties": {
+                "gaiadimension:is_active": {
+                    "type": "bool",
+                    "default": false,
+                    "client_sync": true
+                }
+            }
         },
         "component_groups": {
-			"shrink": {
-				"minecraft:collision_box": {
-					"width": 0.0,
-					"height": 0.0
-				}
-			},
-			"expand": {
-				"minecraft:collision_box": {
-					"width": 1,
-					"height": 1
-				}
-			},
 			"despawn": {
 				"minecraft:instant_despawn": {}
-			},
-			"highlight": {
-				"minecraft:timer": {
-					"looping": true,
-					"time": 0.5,
-					"time_down_event": {
-						"event":"gaiadimension:highlight_paricles"
-					}
-				}
 			}
 		},
         "components": {
-            "minecraft:inventory": {
-                "container_type": "container",
-                "inventory_size": 27
-            },
             "minecraft:type_family": {
                 "family": [
                     "gaiadimension",
-                    "machine"
+                    "skybox"
                 ]
             },
             "minecraft:damage_sensor": {
                 "triggers": {
-                    "deals_damage": false
+                    "deals_damage": "no"
                 }
             },
             "minecraft:collision_box": {
@@ -70,56 +52,6 @@
                 "has_collision": false
             }
         },
-		"events": {
-			"general_block_entity:shrink": {
-				"add": {
-					"component_groups": ["shrink"]
-				}
-			},
-			"gaiadimension:despawn": {
-				"add": {
-					"component_groups": ["despawn"]
-				}
-			},
-			"general_block_entity:expand": {
-				"remove": {
-					"component_groups": ["shrink"]
-				},
-				"add": {
-					"component_groups": ["expand"]
-				}
-			},
-			"gaiadimension:highlight": {
-				"add": {
-					"component_groups": ["highlight"]
-				}
-			},
-			"gaiadimension:highlight_paricles": {
-				"queue_command": {
-					"command": [
-						"particle \"minecraft:villager_happy\" ~-0.5 ~1 ~-0.5",
-						"particle \"minecraft:villager_happy\" ~-0.5 ~1 ~0.5",
-						"particle \"minecraft:villager_happy\" ~0.5 ~1 ~-0.5",
-						"particle \"minecraft:villager_happy\" ~0.5 ~1 ~0.5",
-						"particle \"minecraft:villager_happy\" ~-0.5 ~1 ~",
-						"particle \"minecraft:villager_happy\" ~ ~1 ~-0.5",
-						"particle \"minecraft:villager_happy\" ~ ~1 ~0.5",
-						"particle \"minecraft:villager_happy\" ~0.5 ~1 ~",
-						"particle \"minecraft:villager_happy\" ~-0.5 ~ ~-0.5",
-						"particle \"minecraft:villager_happy\" ~-0.5 ~ ~0.5",
-						"particle \"minecraft:villager_happy\" ~0.5 ~ ~-0.5",
-						"particle \"minecraft:villager_happy\" ~0.5 ~ ~0.5",
-						"particle \"minecraft:villager_happy\" ~-0.5 ~ ~",
-						"particle \"minecraft:villager_happy\" ~ ~ ~-0.5",
-						"particle \"minecraft:villager_happy\" ~ ~ ~0.5",
-						"particle \"minecraft:villager_happy\" ~0.5 ~ ~",
-						"particle \"minecraft:villager_happy\" ~-0.5 ~0.5 ~-0.5",
-						"particle \"minecraft:villager_happy\" ~-0.5 ~0.5 ~0.5",
-						"particle \"minecraft:villager_happy\" ~0.5 ~0.5 ~-0.5",
-						"particle \"minecraft:villager_happy\" ~0.5 ~0.5 ~0.5"
-					]
-				}
-			}
-		}
+		"events": {}
     }
 }

@@ -13,18 +13,19 @@
         "default": "geometry.rosa_gd.gaiadimension_skybox"
       },
       "animations": {
-        "nebula": "animation.skybox.gaia",
         "skyblend": "animation.player.skyblend",
         "spawn_gaia_planet": "controller.animation.gaia_sky.planet",
         "spawn_cloud": "controller.animation.gaia_sky.cloud",
         "one_second_timer": "animation.particle.one_second"
       },
+      "scripts": {
+        "animate": [
+          "skyblend",
+          "spawn_gaia_planet",
+          "spawn_cloud"
+        ]
+      },
       "particle_effects": {
-        "sky1": "gaiadimension:sky1",
-        "sky2": "gaiadimension:sky2",
-        "sky_side1": "gaiadimension:sky_side1",
-        "sky_side2": "gaiadimension:sky_side2",
-        "sky_side3": "gaiadimension:sky_side3",
         "sky_side4": "gaiadimension:sky_side4",
         "gaia_planet": "gaiadimension:gaia_planet",
         "cloud0": "gaiadimension:cloud_0",

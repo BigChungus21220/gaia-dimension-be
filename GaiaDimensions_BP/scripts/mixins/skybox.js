@@ -1,36 +1,24 @@
 import { world, system } from "@minecraft/server";
 import { DimensionSystem } from "../world/Gaia.js";
 
-// Particle definitions
-const SKY_PARTICLES = [
-    "gaiadimension:sky_side1",
-    "gaiadimension:sky_side2",
-    "gaiadimension:sky_side3",
-    "gaiadimension:sky_side4",
-    "gaiadimension:sky1",
-    "gaiadimension:sky2"
-];
+const SKYBOX_ENTITY = "gaiadimension:gaia_dimension_skybox";
+const SKYBOX_PROPERTY = "gaiadimension:is_active";
 
-const PLANET_PARTICLE = "gaiadimension:gaia_planet";
+// Map<playerId, skyboxEntity>
+const playerSkyboxMap = new Map();
 
-// Timings (in ticks)
-const SKY_REFRESH = 10 * 20; // 10 seconds
-const PLANET_REFRESH = 8;    // 8 ticks
-
-// State tracking: Map<playerId, { nextSky: tick, nextPlanet: tick }>
-const playerSkyState = new Map();
-
-// Player Cache: Cache player objects to avoid expensive getAllPlayers calls every tick
+// Player Cache
 const playerCache = new Map();
 
 export function initializeSkybox() {
     // Initial cache population
     system.run(() => {
-    for (const player of world.getAllPlayers()) {
-        playerCache.set(player.id, player);
-    }})
+        for (const player of world.getAllPlayers()) {
+            playerCache.set(player.id, player);
+        }
+    });
 
-    // Maintenance loop to keep cache fresh and valid (runs infrequently)
+    // Maintenance loop
     system.runInterval(() => {
         // Refresh valid players
         for (const player of world.getAllPlayers()) {
@@ -40,64 +28,65 @@ export function initializeSkybox() {
         for (const [id, player] of playerCache) {
             if (!player.isValid) playerCache.delete(id);
         }
-    }, 40); // Run every 2 seconds
+    }, 40);
 
-    // Event listeners for immediate cache updates
+    // Event listeners
     world.afterEvents.playerJoin.subscribe(event => {
-        // Add to cache (attempt retrieval next tick to ensure loaded)
         system.run(() => {
-            const p = world.getEntity(event.playerId);
-            if (p) playerCache.set(p.id, p);
+            const player = world.getEntity(event.playerId);
+            if (player) playerCache.set(player.id, player);
         });
     });
 
     world.afterEvents.playerLeave.subscribe(event => {
+        const skybox = playerSkyboxMap.get(event.playerId);
+        if (skybox && skybox.isValid) {
+            try { skybox.remove(); } catch (e) {}
+        }
+        playerSkyboxMap.delete(event.playerId);
         playerCache.delete(event.playerId);
-        playerSkyState.delete(event.playerId);
     });
 
     // Main Loop
     system.runInterval(() => {
-        const currentTick = system.currentTick;
-        
-        // Iterate over CACHED players only
         for (const player of playerCache.values()) {
             if (!player.isValid) continue;
 
-            // Only spawn if in Gaia dimension
             if (DimensionSystem.isInGaia(player)) {
-                let state = playerSkyState.get(player.id);
-                if (!state) {
-                    // Force immediate spawn on first detection
-                    state = { nextSky: 0, nextPlanet: 0 }; 
-                    playerSkyState.set(player.id, state);
-                }
+                let skybox = playerSkyboxMap.get(player.id);
 
-                // Handle Skybox Particles (Every 10 seconds)
-                if (currentTick >= state.nextSky) {
-                    const loc = player.location;
-                    for (const particleId of SKY_PARTICLES) {
-                        try {
-                            player.dimension.spawnParticle(particleId, loc);
-                        } catch (e) {}
-                    }
-                    state.nextSky = currentTick + SKY_REFRESH;
-                }
-
-                // Handle Planet Particle (Every 9 ticks)
-                if (currentTick >= state.nextPlanet) {
+                if (!skybox || !skybox.isValid) {
                     try {
-                        player.dimension.spawnParticle(PLANET_PARTICLE, player.location);
-                    } catch (e) {}
-                    state.nextPlanet = currentTick + PLANET_REFRESH;
+                        skybox = player.dimension.spawnEntity(SKYBOX_ENTITY, player.location);
+                        playerSkyboxMap.set(player.id, skybox);
+                    } catch (e) {
+                        continue;
+                    }
+                }
+
+                try {
+                    // Teleport to player
+                    skybox.teleport(player.location);
+                    
+                    // Activate property if needed
+                    const isActive = skybox.getProperty(SKYBOX_PROPERTY);
+                    if (isActive !== true) {
+                        skybox.setProperty(SKYBOX_PROPERTY, true);
+                    }
+                } catch (e) {
+                   playerSkyboxMap.delete(player.id);
                 }
 
             } else {
-                // Remove state if player is no longer in Gaia
-                if (playerSkyState.has(player.id)) {
-                    playerSkyState.delete(player.id);
+                // Not in Gaia, cleanup
+                const skybox = playerSkyboxMap.get(player.id);
+                if (skybox) {
+                     if (skybox.isValid) {
+                        try { skybox.remove(); } catch(e) {}
+                     }
+                     playerSkyboxMap.delete(player.id);
                 }
             }
         }
-    }, 1); // Run every tick for precise timing of 9-tick planet
+    }, 1);
 }
