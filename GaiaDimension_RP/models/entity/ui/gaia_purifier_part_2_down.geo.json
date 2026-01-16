@@ -3,7 +3,7 @@
 	"minecraft:geometry": [
 		{
 			"description": {
-				"identifier": "geometry.rosa_gd.ui.gaia_stone_furnace_part_two",
+				"identifier": "geometry.rosa_gd.ui.gaia_purifier_part_two_down",
 				"texture_width": 256,
 				"texture_height": 256,
 				"visible_bounds_width": 6,
