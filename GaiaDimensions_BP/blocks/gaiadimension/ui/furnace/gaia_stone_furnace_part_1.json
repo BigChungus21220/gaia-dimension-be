@@ -1,0 +1,45 @@
+{
+    "format_version": "1.21.60",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:gaia_stone_furnace_part_1",
+            "menu_category": {
+                "category": "none",
+                "is_hidden_in_commands": true
+            }
+        },
+        "components": {
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "gaiadimension:gaia_stone_furnace_gui",
+                    "render_method": "opaque",
+                    "face_dimming": false,
+                    "ambient_occlusion": false
+                }
+            },
+            "minecraft:placement_filter": {
+                "conditions": [
+                    {
+                        "allowed_faces": [
+                            "down"
+                        ],
+                        "block_filter": [
+                            {
+                                "tags": "q.any_tag('empty_lol')"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "minecraft:display_name": "Steel Furnace Part 1",
+            "minecraft:collision_box": false,
+            "minecraft:selection_box": false,
+            "minecraft:geometry": "geometry.rosa_gd.ui.gaia_stone_furnace_part_one",
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 0.1
+            },
+            "minecraft:light_dampening": 0,
+            "minecraft:map_color": "#b3ada6"
+        }
+    }
+}

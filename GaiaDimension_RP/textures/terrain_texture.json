@@ -1681,8 +1681,11 @@
         "gaiadimension:corrupt_soil": {
             "textures": "textures/gaiadimension/androsa/blocks/grasses/corrupt_soil"
         },
-        "gaiadimension:green_glitter_grass_side ": {
-            "textures": "textures/gaiadimension/androsa/blocks/grasses/green_glitter_grass_side "
+        "gaiadimension:gaia_stone_furnace_gui": {
+            "textures": "textures/gaiadimension/androsa/gui/gaia_stone_furnace"
+        },
+        "gaiadimension:green_glitter_grass_side": {
+            "textures": "textures/gaiadimension/androsa/blocks/grasses/green_glitter_grass_side"
         }
     }
 }
