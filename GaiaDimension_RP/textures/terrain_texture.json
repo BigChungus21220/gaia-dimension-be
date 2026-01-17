@@ -1689,6 +1689,12 @@
         },
         "gaiadimension:restructurer_gui": {
             "textures": "textures/gaiadimension/androsa/gui/restructurer"
+        },
+        "gaiadimension:furnace_flame_atlas": {
+            "textures": "textures/gaiadimension/androsa/gui/furnace_flame_atlas"
+        },
+        "gaiadimension:progress_arrow_atlas": {
+            "textures": "textures/gaiadimension/androsa/gui/progress_arrow_atlas"
         }
     }
 }

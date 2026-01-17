@@ -12,6 +12,7 @@ import { registerStairsComponent } from "./blocks/stairs.js";
 import { registerGeyserComponent, initializeGeyser } from "./blocks/geyser.js";
 import { registerSandstoneComponent } from "./blocks/sandstone_slab.js";
 import { registerStoneSlabComponent } from "./blocks/stone_slab.js";
+import { registerGaiaFurnaceComponent } from "./blocks/furnaces/GaiaFurnace.js";
 import { registerGlitteringFireComponent } from "./blocks/glittering_fire.js";
 import { registerCrudeStorageCrateComponent } from "./blocks/crates/crude_storage_crate.js";
 import { registerMegaStorageCrateComponent } from "./blocks/crates/mega_storage_crate.js";
@@ -51,6 +52,7 @@ system.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
     registerGeyserComponent({ blockComponentRegistry });
     registerSandstoneComponent({ blockComponentRegistry });
     registerStoneSlabComponent({ blockComponentRegistry });
+    registerGaiaFurnaceComponent({ blockComponentRegistry });
     registerGlitteringFireComponent();
     registerCrudeStorageCrateComponent({ blockComponentRegistry });
     registerMegaStorageCrateComponent({ blockComponentRegistry });
