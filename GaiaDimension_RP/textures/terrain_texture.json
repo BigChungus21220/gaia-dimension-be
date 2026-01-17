@@ -1695,6 +1695,12 @@
         },
         "gaiadimension:progress_arrow_atlas": {
             "textures": "textures/gaiadimension/androsa/gui/progress_arrow_atlas"
+        },
+        "gaiadimension:gaia_stone_furnace_name": {
+            "textures": "textures/gaiadimension/androsa/gui/gaia_furnace_name"
+        },
+        "gaiadimension:placeholder_invisible": {
+            "textures": "textures/gaiadimension/androsa/absolute_void"
         }
     }
 }

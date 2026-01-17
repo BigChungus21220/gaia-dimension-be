@@ -1,0 +1,18 @@
+{
+    "format_version": "1.20.0",
+    "minecraft:item": {
+        "description": {
+            "identifier": "gaiadimension:placeholder_invisible",
+            "menu_category": {
+                "category": "nature",
+                "is_hidden_in_commands": true
+            }
+        },
+        "components": {
+            "minecraft:icon": "gaiadimension:placeholder_invisible",
+            "minecraft:display_name": {
+                "value": ""
+            }
+        }
+    }
+}
