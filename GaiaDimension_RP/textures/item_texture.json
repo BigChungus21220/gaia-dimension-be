@@ -871,6 +871,9 @@
         },
         "pyrite_torch": {
             "textures": "textures/gaiadimension/androsa/blocks/pyrite_torch"
+        },
+        "gaiadimension:placeholder_invisible": {
+            "textures": "textures/gaiadimension/androsa/absolute_void"
         }
     }
 }
