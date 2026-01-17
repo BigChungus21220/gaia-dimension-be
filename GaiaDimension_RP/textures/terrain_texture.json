@@ -1684,8 +1684,11 @@
         "gaiadimension:gaia_stone_furnace_gui": {
             "textures": "textures/gaiadimension/androsa/gui/gaia_stone_furnace"
         },
-        "gaiadimension:green_glitter_grass_side": {
-            "textures": "textures/gaiadimension/androsa/blocks/grasses/green_glitter_grass_side"
+        "gaiadimension:purifier_gui": {
+            "textures": "textures/gaiadimension/androsa/gui/purifier"
+        },
+        "gaiadimension:restructurer_gui": {
+            "textures": "textures/gaiadimension/androsa/gui/restructurer"
         }
     }
 }

@@ -2,7 +2,7 @@
     "format_version": "1.21.60",
     "minecraft:block": {
         "description": {
-            "identifier": "gaiadimension:gaia_stone_furnace_part_2",
+            "identifier": "gaiadimension:restructurer_part_two_down",
             "menu_category": {
                 "category": "none",
                 "is_hidden_in_commands": true
@@ -11,7 +11,7 @@
         "components": {
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "gaiadimension:gaia_stone_furnace_gui",
+                    "texture": "gaiadimension:restructurer_gui",
                     "render_method": "opaque",
                     "face_dimming": false,
                     "ambient_occlusion": false
@@ -31,10 +31,10 @@
                     }
                 ]
             },
-            "minecraft:display_name": "Steel Furnace Part 2",
+            "minecraft:display_name": "Steel Furnace Part 1",
             "minecraft:collision_box": false,
             "minecraft:selection_box": false,
-            "minecraft:geometry": "geometry.rosa_gd.ui.gaia_stone_furnace_part_two",
+            "minecraft:geometry": "geometry.rosa_gd.ui.gaia_restructurer_part_two_down",
             "minecraft:destructible_by_mining": {
                 "seconds_to_destroy": 0.1
             },
