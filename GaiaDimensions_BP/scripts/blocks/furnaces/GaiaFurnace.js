@@ -20,8 +20,8 @@ export class GaiaFurnace extends Machine {
             11: "gaiadimension:furnace_flame_empty",
             13: "gaiadimension:generic_progress_arrow_empty",
             9: "gaiadimension:gaia_stone_furnace_part_1",
-            17: "gaiadimension:gaia__stone_furnace_part_2",
-            4: "gaiadimension:gaia_furnace_name"
+            17: "gaiadimension:gaia_stone_furnace_part_2",
+            4: "gaiadimension:gaia_stone_furnace_name"
         };
 
         const animatedUI = [

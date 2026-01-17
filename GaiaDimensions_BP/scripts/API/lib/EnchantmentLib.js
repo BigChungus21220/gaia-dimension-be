@@ -1,5 +1,5 @@
 import { world, system, ItemStack } from "@minecraft/server";
-import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
+import { ActionFormData } from "@minecraft/server-ui";
 
 /**
  * --- Custom Enchantment Library ---
@@ -39,6 +39,9 @@ class EnchantmentManager {
     }
 
     initEvents() {
+        // Visual Management Loop (Cursor vs Inventory)
+        system.runInterval(() => this.manageVisuals(), 5);
+
         // 1. Table Interaction (UI)
         world.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
             const { block, player, itemStack } = ev;
@@ -239,46 +242,6 @@ ${color}Cost: ${e.cost} Lvl`);
         }
     }
 
-    initEvents() {
-        // Visual Management Loop (Cursor vs Inventory)
-        system.runInterval(() => this.manageVisuals(), 5);
-
-        // 1. Table Interaction (UI)
-        world.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
-            const { block, player, itemStack } = ev;
-            if (block.typeId === "minecraft:enchanting_table" && player.isSneaking) {
-                // Cancel vanilla interaction if we can serve a custom UI
-                ev.cancel = true;
-                
-                // We need to run UI on the next tick because we are cancelling the beforeEvent
-                system.run(() => {
-                    this.openEnchantmentUI(player);
-                });
-            }
-        });
-
-        // 2. Combat Trigger
-        world.afterEvents.entityHitEntity.subscribe((ev) => {
-            const { damagingEntity, hitEntity } = ev;
-            if (!damagingEntity || !damagingEntity.getComponent("minecraft:equippable")) return;
-            
-            const equippable = damagingEntity.getComponent("minecraft:equippable");
-            const mainHand = equippable.getEquipment("Mainhand");
-            
-            if (mainHand) {
-                this.triggerEnchants(mainHand, 'onHit', ev);
-            }
-        });
-
-        // 3. Mining Trigger
-        world.afterEvents.playerBreakBlock.subscribe((ev) => {
-            const { player, itemStack } = ev;
-            if (itemStack) {
-                this.triggerEnchants(itemStack, 'onMine', ev);
-            }
-        });
-    }
-
     /**
      * Scans players to toggle glint state (Clean in cursor, Glint in inventory).
      */
@@ -333,5 +296,36 @@ ${color}Cost: ${e.cost} Lvl`);
     }
 
     /**
-     * Triggers registered callbacks for an item's enchants.
+     * Helper to retrieve custom enchantments object from item dynamic property.
+     * @param {ItemStack} itemStack 
+     * @returns {Object} Key-value map of enchants
      */
+    getEnchantments(itemStack) {
+        if (!itemStack) return {};
+        const data = itemStack.getDynamicProperty("luminiae:enchants");
+        if (!data) return {};
+        try {
+            return JSON.parse(data);
+        } catch (e) {
+            return {};
+        }
+    }
+
+    /**
+     * Converts a number to Roman numeral.
+     * @param {number} num 
+     * @returns {string}
+     */
+    toRoman(num) {
+        const roman = {M:1000,CM:900,D:500,CD:400,C:100,XC:90,L:50,XL:40,X:10,IX:9,V:5,IV:4,I:1};
+        let str = '';
+        for (let i of Object.keys(roman)) {
+            let q = Math.floor(num / roman[i]);
+            num -= q * roman[i];
+            str += i.repeat(q);
+        }
+        return str;
+    }
+}
+
+export const enchantmentManager = new EnchantmentManager();
