@@ -1,4 +1,4 @@
-import { world, system, BlockPermutation, ItemStack, BlockVolume } from "@minecraft/server";
+import { world, system, BlockPermutation, ItemStack, BlockVolume, GameMode } from "@minecraft/server";
 
 const fluids = [
     "gaiadimension:liquid_bismuth",
@@ -31,6 +31,68 @@ const fluids = [
     "gaiadimension:sweet_muck2",
     "gaiadimension:sweet_muck3"
 ];
+
+const fluidIDs = new Set(fluids);
+
+class FluidTemplate {
+    constructor(baseId) {
+        this.baseId = baseId;
+        this.interactions = [];
+    }
+
+    addInteraction(directions, targetBlock, action, resultBlock, sound) {
+        this.interactions.push({ directions, targetBlock, action, resultBlock, sound });
+    }
+
+    getInteractions() {
+        return this.interactions;
+    }
+}
+
+const idToTemplate = new Map();
+
+function getFluidVariants(baseId) {
+    return [
+        baseId,
+        baseId + "_down",
+        baseId + "1",
+        baseId + "2",
+        baseId + "3"
+    ];
+}
+
+function registerFluidInteraction(selfId, targetId, resultId, sound) {
+    let template = idToTemplate.get(selfId);
+    if (!template) {
+        template = new FluidTemplate(selfId);
+        idToTemplate.set(selfId, template);
+    }
+    // Normalize targetId to array
+    const targets = Array.isArray(targetId) ? targetId : [targetId];
+    template.addInteraction("adjacent", targets, "transformTarget", resultId, sound);
+}
+
+// --- Interaction Rules ---
+const MAGMA = "gaiadimension:superhot_magma";
+const AURA = "gaiadimension:liquid_aura";
+const MINERAL = "gaiadimension:mineral_water";
+const MUCK = "gaiadimension:sweet_muck";
+const PRIMAL = "gaiadimension:primal_mass";
+const AURA_CRYSTAL_BLOCK = "gaiadimension:aura_crystal_block";
+const WATER_VARIANTS = ["minecraft:water", "minecraft:flowing_water"];
+
+// 1. Superhot Magma + Liquid Aura = Block of Aura Crystal
+registerFluidInteraction(MAGMA, getFluidVariants(AURA), AURA_CRYSTAL_BLOCK, "random.fizz");
+registerFluidInteraction(AURA, getFluidVariants(MAGMA), AURA_CRYSTAL_BLOCK, "random.fizz");
+
+// 2. Superhot Magma + Mineral Water / Normal Water = Primal Mass
+registerFluidInteraction(MAGMA, [...getFluidVariants(MINERAL), ...WATER_VARIANTS], PRIMAL, "random.fizz");
+registerFluidInteraction(MINERAL, getFluidVariants(MAGMA), PRIMAL, "random.fizz");
+
+// 3. Sweet Muck + Superhot Magma = Primal Mass
+registerFluidInteraction(MUCK, getFluidVariants(MAGMA), PRIMAL, "random.fizz");
+registerFluidInteraction(MAGMA, getFluidVariants(MUCK), PRIMAL, "random.fizz");
+
 
 const hot_fluids = [
     "gaiadimension:superhot_magma",
@@ -200,6 +262,7 @@ function isReplaceable(blk) {
     if (!blk || !blk.isValid) return false;
     if (blk.isAir) return true;
     if (blk.isLiquid) return false; 
+    if (fluidIDs.has(blk.typeId)) return false;
 
     const id = blk.typeId;
 
@@ -208,6 +271,7 @@ function isReplaceable(blk) {
         id === "minecraft:soul_fire" ||
         id === "minecraft:double_plant" || 
         id === "minecraft:tallgrass" ||
+        id === "minecraft:short_grass" ||
         id === "minecraft:deadbush" ||
         id === "minecraft:web") return true;
 
@@ -250,6 +314,63 @@ function processFluidBlock(block, dimension) {
     } else {
         currentStage = 0; // Source
         baseId = typeId;
+    }
+
+    if (!fluidIDs.has(baseId)) return false; 
+    
+    // Interaction Logic (Generic)
+    const currentTemplate = idToTemplate.get(baseId);
+    if (currentTemplate) {
+        const interactions = currentTemplate.getInteractions();
+        for (const rule of interactions) {
+            // Determine blocks to check based on direction
+            const blocksToCheck = [];
+            
+            if (rule.directions === "adjacent" || rule.directions === "all") {
+                blocksToCheck.push(
+                    dimension.getBlock({ x: block.location.x + 1, y: block.location.y, z: block.location.z }),
+                    dimension.getBlock({ x: block.location.x - 1, y: block.location.y, z: block.location.z }),
+                    dimension.getBlock({ x: block.location.x, y: block.location.y, z: block.location.z + 1 }),
+                    dimension.getBlock({ x: block.location.x, y: block.location.y, z: block.location.z - 1 }),
+                    dimension.getBlock({ x: block.location.x, y: block.location.y + 1, z: block.location.z })
+                );
+            }
+            if (rule.directions === "below" || rule.directions === "all") {
+                blocksToCheck.push(
+                    dimension.getBlock({ x: block.location.x, y: block.location.y - 1, z: block.location.z })
+                );
+            }
+
+            let triggered = false;
+            for (const checkBlock of blocksToCheck) {
+                if (!checkBlock) continue;
+                
+                const isMatch = Array.isArray(rule.targetBlock) 
+                    ? rule.targetBlock.includes(checkBlock.typeId)
+                    : checkBlock.typeId === rule.targetBlock;
+
+                if (isMatch) {
+                    if (rule.action === "transformTarget" && checkBlock.isValid) {
+                        checkBlock.setType(rule.resultBlock);
+                        triggered = true;
+                    } else if (rule.action === "transformSelf") {
+                        triggered = true;
+                        break; 
+                    }
+                }
+            }
+
+            if (triggered) {
+                changesHappened = true;
+                if (rule.sound) {
+                    dimension.playSound(rule.sound, block.location, { volume: 0.5, pitch: 1 });
+                }
+                if (rule.action === "transformSelf" && block.isValid) {
+                    block.setType(rule.resultBlock);
+                    return true; // Stop processing this block (it changed)
+                }
+            }
+        }
     }
     
     let requiredParentTag = "";
@@ -350,15 +471,48 @@ function processFluidBlock(block, dimension) {
         
         for (const dir of DIRECTIONS) {
             const neighbor = dimension.getBlock({ x: block.location.x + dir.x, y: block.location.y, z: block.location.z + dir.z });
-            if (neighbor && isReplaceable(neighbor)) {
-                const isDestructible = neighbor.typeId !== "minecraft:air";
-                if (neighbor.isValid) {
-                    if (isDestructible) {
-                        neighbor.dimension.runCommand(`setblock ${neighbor.location.x} ${neighbor.location.y} ${neighbor.location.z} air destroy`);
+            if (neighbor) {
+                let canOverwrite = false;
+                
+                if (isReplaceable(neighbor)) {
+                    canOverwrite = true;
+                } else if (neighbor.typeId.startsWith(baseId)) {
+                    // Check if neighbor is a flow stage of the same fluid
+                    let neighborStage = 0; // Default to source (0)
+                    if (neighbor.typeId.endsWith("_down")) neighborStage = -1;
+                    else {
+                        const match = neighbor.typeId.match(/(\d)$/);
+                        if (match) neighborStage = parseInt(match[1]);
+                        else if (neighbor.typeId === baseId) neighborStage = 0; // Explicit source check
+                        else neighborStage = -999; // Not a valid flow stage
                     }
-                    const vol = new BlockVolume(neighbor.location, neighbor.location);
-                    dimension.fillBlocks(vol, BlockPermutation.resolve(nextStageId));
-                    changesHappened = true;
+
+                    // We want to replace if our new stage (nextStageId suffix) is "fuller" (lower number) than neighbor.
+                    // nextStageId is e.g. "liquid_magma1".
+                    const nextStageNum = parseInt(nextStageId.slice(-1)); 
+                    
+                    if (neighborStage > 0 && nextStageNum < neighborStage) {
+                        canOverwrite = true;
+                    }
+                }
+
+                if (canOverwrite) {
+                    const isDestructible = neighbor.typeId !== "minecraft:air";
+                    if (neighbor.isValid) {
+                        if (isDestructible) {
+                            neighbor.dimension.runCommand(`setblock ${neighbor.location.x} ${neighbor.location.y} ${neighbor.location.z} air destroy`);
+                        }
+                        const vol = new BlockVolume(neighbor.location, neighbor.location);
+
+                        let direction = "north";
+                        if (dir.z === 1) direction = "south";
+                        else if (dir.x === 1) direction = "east";
+                        else if (dir.x === -1) direction = "west";
+
+                        const perm = BlockPermutation.resolve(nextStageId, { "minecraft:cardinal_direction": direction });
+                        dimension.fillBlocks(vol, perm);
+                        changesHappened = true;
+                    }
                 }
             }
         }
@@ -404,25 +558,15 @@ class FluidFlowComponent {
     }
 
     onTick(event) {
-        // Optimization: Drop update if queue is overloaded to save performance
         if (PENDING_BLOCKS.size >= MAX_QUEUE_SIZE) return;
-
         const { block } = event;
-        // Push to global queue
         const key = `${block.location.x},${block.location.y},${block.location.z},${block.dimension.id}`;
         
-        // Idle Check
         const lastActive = ACTIVE_FLUIDS.get(key);
-        if (lastActive) {
-            if (system.currentTick - lastActive > IDLE_TIMEOUT) {
-                // Too old, ignore (Fluid is idle/stable)
-                return;
-            }
-        } else {
-            // New fluid, mark active
+
+        if (!lastActive) {
             ACTIVE_FLUIDS.set(key, system.currentTick);
         }
-
         if (!PENDING_BLOCKS.has(key)) {
             PENDING_BLOCKS.set(key, { block, dimension: block.dimension });
         }
@@ -430,8 +574,7 @@ class FluidFlowComponent {
 }
 
 // Wake up fluids on block interactions
-function wakeNeighbors(block) {
-    const dimension = block.dimension;
+function wakeNeighbors(location, dimension) {
     const locations = [
         { x: 0, y: 1, z: 0 }, { x: 0, y: -1, z: 0 },
         { x: 1, y: 0, z: 0 }, { x: -1, y: 0, z: 0 },
@@ -439,9 +582,9 @@ function wakeNeighbors(block) {
     ];
     
     for (const offset of locations) {
-        const nx = block.location.x + offset.x;
-        const ny = block.location.y + offset.y;
-        const nz = block.location.z + offset.z;
+        const nx = location.x + offset.x;
+        const ny = location.y + offset.y;
+        const nz = location.z + offset.z;
         const key = `${nx},${ny},${nz},${dimension.id}`;
         // Force update timestamp to wake it up if it's a fluid
         ACTIVE_FLUIDS.set(key, system.currentTick);
@@ -449,76 +592,70 @@ function wakeNeighbors(block) {
 }
 
 world.afterEvents.playerPlaceBlock.subscribe((event) => {
-    wakeNeighbors(event.block);
+    wakeNeighbors(event.block.location, event.block.dimension);
 });
 
 world.afterEvents.playerBreakBlock.subscribe((event) => {
-    wakeNeighbors(event.block);
+    wakeNeighbors(event.block.location, event.block.dimension);
 });
 
-// Interaction Logic
 world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
-    const { player, block, itemStack, face } = event;
-    
-    // 1. Bucket Interaction
-    if (itemStack && itemStack.typeId === "gaiadimension:scaynyx_bucket") {
-        if (fluids.includes(block.typeId)) {
-             const typeId = block.typeId;
+    const { player, block, itemStack } = event;
+    if (!itemStack) return;
 
-             // Only allow pickup if it's a source block (no suffix like _down, 1, 2, 3)
-             // Source blocks are: liquid_bismuth, liquid_aura, mineral_water, superhot_magma, sweet_muck
-             const isFlowing = typeId.endsWith("_down") || /[1-3]$/.test(typeId);
+    if (itemStack.typeId.startsWith("gaiadimension:") && itemStack.typeId.endsWith("_bucket")) {
+        const fluidId = itemStack.typeId.replace("_bucket", "");
+        
+        // Logic 1:/Case 1 Replace flowing fluid directly if clicking on it
+        const isFlowingVariant = (blk) => {
+            return blk.typeId === fluidId + "1" || 
+                   blk.typeId === fluidId + "2" || 
+                   blk.typeId === fluidId + "3" || 
+                   blk.typeId === fluidId + "_down";
+        };
 
-             if (isFlowing) {
-                 return; // Only source blocks can be picked up
-             }
-
-             let fluidName = typeId.replace("gaiadimension:", "");
-             const bucketId = "gaiadimension:" + fluidName + "_bucket";
-             
-             system.run(() => {
-                 const container = player.getComponent("inventory").container;
-                 const slot = player.selectedSlotIndex;
-                 const currentItem = container.getItem(slot);
-                 
-                 const gamemode = player.getGameMode();
-                 
-                 if (gamemode === "creative") {
-                     block.setType("minecraft:air");
-                     return;
-                 }
-
-                 if (currentItem && currentItem.typeId === "gaiadimension:scaynyx_bucket") {
-                    const filledBucket = new ItemStack(bucketId, 1);
+        if (isFlowingVariant(block)) {
+            event.cancel = true;
+            system.run(() => {
+                if (block.isValid) {
+                    const perm = BlockPermutation.resolve(fluidId);
+                    block.setPermutation(perm);
+                    wakeNeighbors(block.location, block.dimension);
                     
-                    if (currentItem.amount > 1) {
-                         // Decrease empty bucket stack
-                         currentItem.amount -= 1;
-                         container.setItem(slot, currentItem);
-                         
-                         // Add filled bucket to inventory
-                         const remainder = container.addItem(filledBucket);
-                         
-                         // If inventory full, drop item
-                         if (remainder && remainder.amount > 0) {
-                             player.dimension.spawnItem(remainder, player.location);
-                         }
-                    } else {
-                         // Replace single empty bucket with filled bucket
-                         container.setItem(slot, filledBucket);
+                    const isHot = fluidId.includes("magma") || fluidId.includes("bismuth");
+                    const sound = isHot ? "bucket.empty_lava" : "bucket.empty_water";
+                    player.playSound(sound, { pitch: 1, volume: 1 });
+                    
+                    if (player.getGameMode() !== GameMode.Creative) {
+                        const container = player.getComponent("inventory")?.container;
+                        if (container) {
+                            const slot = player.selectedSlotIndex;
+                            const currentItem = container.getItem(slot);
+                            if (currentItem && currentItem.typeId === itemStack.typeId) {
+                                if (currentItem.amount > 1) {
+                                    currentItem.amount--;
+                                    container.setItem(slot, currentItem);
+                                    const emptyBucket = new ItemStack("minecraft:bucket", 1);
+                                    const remainder = container.addItem(emptyBucket);
+                                    if (remainder) {
+                                        player.dimension.spawnItem(remainder, player.location);
+                                    }                                
+                                } else {
+                                    container.setItem(slot, new ItemStack("minecraft:bucket", 1));
+                                }
+                            }
+                        }
                     }
-                 }
-                 
-                 block.setType("minecraft:air");
-             });
-             
-             event.cancel = true;
-             return; 
+                }
+            });
+            return;
         }
-    }
 
-    // 2. Block Placement (Replace Fluid)
-    if (itemStack) {
+        // Logic 2:/ Case 2 Standard placement via offset
+        const raycast = player.getBlockFromViewDirection({ maxDistance: 10 });
+        if (!raycast) return;
+        const { face } = raycast;
+
         let targetLoc = { x: block.location.x, y: block.location.y, z: block.location.z };
         switch (face) {
             case "Up": targetLoc.y += 1; break;
@@ -529,43 +666,164 @@ world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
             case "East": targetLoc.x += 1; break;
         }
 
-        const dimension = block.dimension;
+        const dimension = player.dimension;
         const targetBlock = dimension.getBlock(targetLoc);
 
-        if (targetBlock && fluids.includes(targetBlock.typeId)) {
-            try {
-                const perm = BlockPermutation.resolve(itemStack.typeId);
+        if (targetBlock && (targetBlock.isAir || isReplaceable(targetBlock) || isFlowingVariant(targetBlock))) {
+             if (targetBlock.typeId === fluidId) {
+                event.cancel = true;
                 system.run(() => {
-                    if (targetBlock.isValid) {
-                         targetBlock.setPermutation(perm);
-                         dimension.playSound("dig.stone", targetLoc);
-                         
-                         const container = player.getComponent("inventory").container;
-                         const slot = player.selectedSlotIndex;
-                         const currentItem = container.getItem(slot);
-                         
-                         if (currentItem) {
-                             if (currentItem.amount > 1) {
-                                 currentItem.amount -= 1;
-                                 container.setItem(slot, currentItem);
+                    targetBlock.setType("minecraft:air");
+                    wakeNeighbors(targetBlock.location, dimension);
+                });
+                return;
+             }
+
+             event.cancel = true;
+             
+             system.run(() => {
+                 if (targetBlock.isValid) {
+                     const perm = BlockPermutation.resolve(fluidId);
+                     targetBlock.setPermutation(perm);
+                     wakeNeighbors(targetBlock.location, dimension);
+                     
+                     const isHot = fluidId.includes("magma") || fluidId.includes("bismuth");
+                     const sound = isHot ? "bucket.empty_lava" : "bucket.empty_water";
+                     player.playSound(sound, { pitch: 1, volume: 1 });
+                     
+                     if (player.getGameMode() !== GameMode.Creative) {
+                         const container = player.getComponent("inventory")?.container;
+                         if (container) {
+                             const slot = player.selectedSlotIndex;
+                             const currentItem = container.getItem(slot);
+                             if (currentItem && currentItem.typeId === itemStack.typeId) {
+                                 if (currentItem.amount > 1) {
+                                     currentItem.amount--;
+                                     container.setItem(slot, currentItem);
+                                     const emptyBucket = new ItemStack("minecraft:bucket", 1);
+                                     const remainder = container.addItem(emptyBucket);
+                                     if (remainder) {
+                                         player.dimension.spawnItem(remainder, player.location);
+                                     }                                 
+                                 } else {
+                                     container.setItem(slot, new ItemStack("minecraft:bucket", 1));
+                                 }
+                             }
+                         }
+                     }
+                 }
+             });
+        }
+        return;
+    }
+
+    // Pickup Fluid (Empty Bucket on Source)
+    if (fluidIDs.has(block.typeId) && itemStack.typeId === "minecraft:bucket") {
+        const typeId = block.typeId;
+        const isFlowing = typeId.endsWith("_down") || /[1-3]$/.test(typeId);
+        
+        if (!isFlowing) {
+            let bucketId = typeId + "_bucket";
+            
+            event.cancel = true; // Stop native behavior
+
+            system.run(() => {
+                if (player.getGameMode() !== GameMode.Creative) {
+                    const container = player.getComponent("inventory")?.container;
+                    if (container) {
+                        const slot = player.selectedSlotIndex;
+                        const currentItem = container.getItem(slot);
+                        
+                        if (currentItem && currentItem.typeId === "minecraft:bucket") {
+                            const filledBucket = new ItemStack(bucketId, 1);
+                            if (currentItem.amount > 1) {
+                                currentItem.amount -= 1;
+                                container.setItem(slot, currentItem);
+                                const remainder = container.addItem(filledBucket);
+                                if (remainder && remainder.amount > 0) {
+                                    player.dimension.spawnItem(remainder, player.location);
+                                }
+                            } else {
+                                container.setItem(slot, filledBucket);
+                            }
+                        }
+                    }
+                }
+
+                // Sound
+                const isHot = typeId.includes("magma") || typeId.includes("bismuth");
+                const sound = isHot ? "bucket.fill_lava" : "bucket.fill_water";
+                player.dimension.playSound(sound, block.location, { pitch: 1, volume: 1 });
+
+                block.setType("minecraft:air");
+                wakeNeighbors(block.location, block.dimension);
+            });
+            return;
+        }
+    }
+    
+    if (fluidIDs.has(block.typeId)) {
+        if (itemStack.typeId === "minecraft:bucket" || itemStack.typeId.endsWith("_bucket")) return;
+
+        event.cancel = true;
+        system.run(() => {
+            if (block.isValid && itemStack) {
+                try {
+                    const blockPerm = BlockPermutation.resolve(itemStack.typeId);
+                    block.setPermutation(blockPerm);
+                    wakeNeighbors(block.location, block.dimension);
+                    player.playSound("stone.dig", { location: block.location });
+                    
+                    if (player.getGameMode() !== GameMode.Creative) {
+                         const container = player.getComponent("inventory")?.container;
+                         if (container) {
+                             const slot = player.selectedSlotIndex;
+                             if (itemStack.amount > 1) {
+                                 itemStack.amount--;
+                                 container.setItem(slot, itemStack);
                              } else {
-                                 container.setItem(slot, null);
+                                 container.setItem(slot, undefined);
                              }
                          }
                     }
-                });
-                event.cancel = true;
-            } catch (e) {}
-        }
+                } catch (e) {}
+            }
+        });
     }
 });
 
-// Indestructibility
 world.beforeEvents.playerBreakBlock.subscribe((event) => {
-    if (fluids.includes(event.block.typeId)) {
+    const { player, block, itemStack } = event;
+    if (fluidIDs.has(block.typeId)) {
         event.cancel = true;
     }
 });
+
+// (QOL:) Replace Fluid Blocks with Buckets
+system.runInterval(() => {
+    for (const player of world.getAllPlayers()) {
+        const container = player.getComponent("inventory")?.container;
+        if (!container) continue;
+
+        for (let i = 0; i < container.size; i++) {
+            const item = container.getItem(i);
+            if (!item) continue;
+
+            if (fluidIDs.has(item.typeId)) {
+                let baseId = item.typeId;
+                if (baseId.endsWith("_down")) baseId = baseId.slice(0, -5);
+                else if (/[1-3]$/.test(baseId)) baseId = baseId.slice(0, -1);
+                
+                const bucketId = baseId + "_bucket";
+                try {
+                    const bucket = new ItemStack(bucketId, item.amount);
+                    container.setItem(i, bucket);
+                } catch (e) {
+                }
+            }
+        }
+    }
+}, 80);
 
 export function registerFluidComponent({ blockComponentRegistry }) {
     blockComponentRegistry.registerCustomComponent("gaiadimension:fluid_flow", new FluidFlowComponent());
