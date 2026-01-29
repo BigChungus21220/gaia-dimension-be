@@ -267,6 +267,7 @@ function isReplaceable(blk) {
     const id = blk.typeId;
 
     if (id === "minecraft:snow_layer" || 
+        id === "minecraft:light_block" ||
         id === "minecraft:fire" || 
         id === "minecraft:soul_fire" ||
         id === "minecraft:double_plant" || 

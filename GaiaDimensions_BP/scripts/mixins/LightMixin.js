@@ -24,9 +24,19 @@ export function initializeLightMixin() {
         const dimId = dimension.id;
         let stateVal = 0; // Default / Gaia
 
+        const typeId = block.typeId;
+        const isExcluded = typeId === "gaiadimension:glittering_fire" || 
+                           typeId.includes("curtain") || 
+                           typeId.includes("door") ||
+                           typeId.includes("fluid") ||
+                           typeId.includes("liquid") ||
+                           typeId.includes("water") ||
+                           typeId.includes("magma") ||
+                           typeId.includes("muck");
+
         // --- Perpetual Glow System ---
         // Place light sources around the newly placed block if in Gaia
-        if (player && DimensionSystem.isInGaia(player) && block.typeId !== "gaiadimension:glittering_fire") {
+        if (player && DimensionSystem.isInGaia(player) && !isExcluded) {
              const { x, y, z } = block.location;
              placeLight(dimension, { x: x + 1, y: y, z: z });
              placeLight(dimension, { x: x - 1, y: y, z: z });
