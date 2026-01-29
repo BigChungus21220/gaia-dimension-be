@@ -66,7 +66,7 @@ export function initializeSkybox() {
 
                 try {
                     // Teleport to player
-                    skybox.teleport(player.location);
+                    skybox.teleport({ x: player.location.x, y: player.location.y - 20, z: player.location.z });
                     
                     // Activate property if needed
                     const isActive = skybox.getProperty(SKYBOX_PROPERTY);

@@ -9,7 +9,7 @@
             "traits": {
                 "minecraft:placement_position": {
                     "enabled_states": [
-                        "minecraft:cardinal_direction"
+                        "minecraft:block_face"
                     ]
                 }
             },
