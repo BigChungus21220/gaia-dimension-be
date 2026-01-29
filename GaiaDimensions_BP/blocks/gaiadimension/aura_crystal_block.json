@@ -41,7 +41,7 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "gaiadimension:aura_crystal_block",
+                    "texture": "gaiadimension:aura_block",
                     "render_method": "opaque"
                 }
             },
