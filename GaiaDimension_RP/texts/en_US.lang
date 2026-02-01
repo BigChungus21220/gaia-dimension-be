@@ -631,3 +631,6 @@ tile.gaiadimension:malachite_pulsing_chiselled_bricks.name=Malachite Pulsing Chi
 tile.gaiadimension:pulsing_malachite_bricks.name=Pulsing Malachite Bricks
 tile.gaiadimension:aurum_soil.name=Aurum Soil
 tile.gaiadimension:aura_crystal_block.name=Block of Aura Crystal
+tile.gaiadimension:gaia_furnace.name=Gaia Stone Furnace
+tile.gaiadimension:purifier.name=Purifier
+tile.gaiadimension:restructurer.name=Restructurer

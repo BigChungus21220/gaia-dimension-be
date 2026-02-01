@@ -821,7 +821,7 @@ export class Machine {
                     hopperInventory.setItem(hopperSlot, undefined);
                 }
                 return;
-            } else if (currentItem.typeId === itemToMove.typeId && currentItem.amount < currentItem.maxStackSize) {
+            } else if (currentItem.typeId === itemToMove.typeId && currentItem.amount < (currentItem.maxStackSize ?? 64)) {
                 // Slot has same item and space
                 currentItem.amount++;
                 this.setInventoryItem(slot, currentItem);

@@ -13,6 +13,8 @@ import { registerGeyserComponent, initializeGeyser } from "./blocks/geyser.js";
 import { registerSandstoneComponent } from "./blocks/sandstone_slab.js";
 import { registerStoneSlabComponent } from "./blocks/stone_slab.js";
 import { registerGaiaFurnaceComponent } from "./blocks/furnaces/GaiaFurnace.js";
+import { registerPurifierComponent } from "./blocks/purifier.js";
+import { registerRestructurerComponent } from "./blocks/restructurer.js";
 import { registerGlitteringFireComponent } from "./blocks/glittering_fire.js";
 import { registerCrudeStorageCrateComponent } from "./blocks/crates/crude_storage_crate.js";
 import { registerMegaStorageCrateComponent } from "./blocks/crates/mega_storage_crate.js";
@@ -28,6 +30,10 @@ import { DimensionSystem } from "./world/Gaia.js";
 import "./world/CoordinateDisplay.js";
 import "./world/TerrainPatching.js";
 import "./systems/enchantments.js";
+import "./blocks/mineral_centrifuge.js";
+import "./blocks/arcane_library.js";
+import "./blocks/purifier.js";
+import "./blocks/restructurer.js";
 
 // Initialize systems
 initializeDestructionHandlers();
@@ -53,6 +59,8 @@ system.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
     registerSandstoneComponent({ blockComponentRegistry });
     registerStoneSlabComponent({ blockComponentRegistry });
     registerGaiaFurnaceComponent({ blockComponentRegistry });
+    registerPurifierComponent({ blockComponentRegistry });
+    registerRestructurerComponent({ blockComponentRegistry });
     registerGlitteringFireComponent();
     registerCrudeStorageCrateComponent({ blockComponentRegistry });
     registerMegaStorageCrateComponent({ blockComponentRegistry });

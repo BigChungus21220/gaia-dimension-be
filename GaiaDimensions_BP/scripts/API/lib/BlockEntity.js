@@ -373,7 +373,7 @@ class BlockEntityManager {
         if (totalMachines === 0) return;
 
         const PROCESS_LIMIT = 40; 
-        const TIME_BUDGET_MS = 5; 
+        const TIME_BUDGET_MS = 2; 
         const startTime = Date.now();
         const currentTick = system.currentTick;
 

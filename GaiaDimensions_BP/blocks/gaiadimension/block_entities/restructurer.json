@@ -2,7 +2,7 @@
     "format_version": "1.21.70",
     "minecraft:block": {
         "description": {
-            "identifier": "gaiadimension:gaia_furnace",
+            "identifier": "gaiadimension:restructurer",
             "menu_category": {
                 "category": "items"
             },
@@ -14,7 +14,7 @@
                 }
             },
             "states": {
-                "gaiadimension:furnace_on": [false, true]
+                "gaiadimension:restructurer_on": [false, true]
             }
         },
         "components": {
@@ -35,23 +35,15 @@
             },
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "gaiadimension:gaia_stone_furnace_side",
-                    "render_method": "opaque"
-                },
-                "up": {
-                    "texture": "gaiadimension:gaia_stone_furnace_top",
-                    "render_method": "opaque"
-                },
-                "down": {
-                    "texture": "gaiadimension:gaia_stone_furnace_top",
+                    "texture": "gaiadimension:restructurer_side",
                     "render_method": "opaque"
                 },
                 "north": {
-                    "texture": "gaiadimension:gaia_stone_furnace_front",
+                    "texture": "gaiadimension:restructurer_front",
                     "render_method": "opaque"
                 }
             },
-            "minecraft:custom_components": ["gaiadimension:gaia_furnace"],
+            "minecraft:custom_components": ["gaiadimension:restructurer"],
             "minecraft:tick": {
                 "interval_range": [1, 1]
             },
@@ -84,13 +76,17 @@
                 }
             },
             {
-                "condition": "q.block_state('gaiadimension:furnace_on') == true",
+                "condition": "q.block_state('gaiadimension:restructurer_on') == true",
                 "components": {
                     "minecraft:material_instances": {
                         "north": {
-                            "texture": "gaiadimension:gaia_stone_furnace_front_lit",
+                            "texture": "gaiadimension:restructuer_front_lit",
                             "render_method": "opaque"
-                        }
+                        },
+                         "*": {
+                    "texture": "gaiadimension:restructurer_side",
+                    "render_method": "opaque"
+                         }
                     },
                     "minecraft:light_emission": 13
                 }

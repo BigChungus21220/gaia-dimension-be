@@ -1,0 +1,28 @@
+{
+	"format_version": "1.20.50",
+	"minecraft:block": {
+		"description": {
+			"identifier": "gaiadimension:arcane_library",
+			"menu_category": {
+				"category": "items",
+				"group": "itemGroup.name.items"
+			}
+		},
+		"components": {
+			"minecraft:destructible_by_mining": {
+				"seconds_to_destroy": 1.5
+			},
+			"minecraft:destructible_by_explosion": {
+				"explosion_resistance": 5
+			},
+			"minecraft:geometry": "minecraft:geometry.full_block",
+			"minecraft:material_instances": {
+				"*": {
+					"texture": "bookshelf",
+					"render_method": "opaque"
+				}
+			},
+			"minecraft:unit_cube": {}
+		}
+	}
+}
