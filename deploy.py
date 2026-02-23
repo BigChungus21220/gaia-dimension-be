@@ -12,9 +12,9 @@ PROJECT_BP_PATH = os.path.join(SCRIPT_DIR, 'GaiaDimensions_BP')
 PROJECT_RP_PATH = os.path.join(SCRIPT_DIR, 'GaiaDimension_RP')
 
 # Minecraft Game Data Path (com.mojang)
-# This uses the %LOCALAPPDATA% environment variable to be more robust
-LOCALAPPDATA = os.getenv('LOCALAPPDATA')
-COM_MOJANG_PATH = os.path.join(LOCALAPPDATA, 'Packages', 'Microsoft.MinecraftUWP_8wekyb3d8bbwe', 'LocalState', 'games', 'com.mojang')
+# Updated to the new Roaming location
+APPDATA = os.getenv('APPDATA')
+COM_MOJANG_PATH = os.path.join(APPDATA, 'Minecraft Bedrock', 'Users', 'Shared', 'games', 'com.mojang')
 
 # Target Deployment Paths
 TARGET_BP_DIR = os.path.join(COM_MOJANG_PATH, 'development_behavior_packs')
@@ -67,8 +67,8 @@ def deploy():
     # 6. Copy new Behavior Pack
     try:
         print(f"Copying new Behavior Pack from: {PROJECT_BP_PATH}")
-        # We ignore '.git' and this script itself to keep the deployment clean
-        shutil.copytree(PROJECT_BP_PATH, target_bp_path, ignore=shutil.ignore_patterns('.git*', 'deploy.py'))
+        # We ignore '.git', the src folder, and this script itself to keep the deployment clean
+        shutil.copytree(PROJECT_BP_PATH, target_bp_path, ignore=shutil.ignore_patterns('.git*', 'deploy.py', 'src'))
         print("-> Behavior Pack deployed successfully.")
     except FileNotFoundError:
         print(f"ERROR: Source Behavior Pack not found at {PROJECT_BP_PATH}")

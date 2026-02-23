@@ -66,9 +66,6 @@ export const nativeRecipes = {
     "minecraft:nether_gold_ore":{
         output: "minecraft:gold_ingot"
     },
-    "minecraft:deepslate_emerald_ore":{
-        output: "minecraft:emerald"
-    },
     "minecraft:porkchop":{
         output: "minecraft:cooked_porkchop"
     },
@@ -346,15 +343,6 @@ export const nativeFuels = {
     "minecraft:stripped_dark_oak_wood": 300,
     "minecraft:stripped_mangrove_wood": 300,
     "minecraft:stripped_cherry_wood": 300,
-    "minecraft:oak_sign": 200,
-    "minecraft:spruce_sign": 200,
-    "minecraft:birch_sign": 200,
-    "minecraft:jungle_sign": 200,
-    "minecraft:acacia_sign": 200,
-    "minecraft:dark_oak_sign": 200,
-    "minecraft:mangrove_sign": 200,
-    "minecraft:cherry_sign": 200,
-    "minecraft:bamboo_sign": 200,
     "minecraft:crimson_sign": 200,
     "minecraft:warped_sign": 200,
     "minecraft:oak_hanging_sign": 800,

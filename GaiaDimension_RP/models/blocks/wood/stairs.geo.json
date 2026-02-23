@@ -3,7 +3,7 @@
 	"minecraft:geometry": [
 		{
 			"description": {
-				"identifier": "geometry.rosa_gd.stairs",
+				"identifier": "geometry.cosmos.stairs",
 				"texture_width": 16,
 				"texture_height": 16,
 				"visible_bounds_width": 2,
