@@ -18,7 +18,7 @@
     },
     "modules": [
         {
-            "version": [ 1, 0, 0 ],
+            "version": [ 1, 2, 0 ],
             "type": "resources",
             "uuid": "d0e57684-89c1-44cc-8774-8b3e674fe285"
         }
@@ -28,7 +28,7 @@
             "uuid": "11ace802-e738-4079-8b9d-25cccc9e09c8",
             "version": [
                 1,
-                0,
+                2,
                 0
             ]
         }

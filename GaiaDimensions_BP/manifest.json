@@ -35,14 +35,14 @@
 			"type": "script",
 			"language": "javascript",
 			"uuid": "dbcdfb66-073d-40a0-9abe-a644b98d327c",
-			"version": [ 1, 0, 0 ]
+			"version": [ 1, 2, 0 ]
 		}
 	],
 	"dependencies": [
 		{
 			"version": [
 				1,
-				0,
+				2,
 				0
 			],
 			"uuid": "cc4ac671-dc96-4f53-aeeb-2e5ea42fe322"
