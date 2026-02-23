@@ -1,12 +1,12 @@
 {
   "scripts": {
-    "bundle": "esbuild GaiaDimensions_BP/src/GaiaDimensionAddon.js --bundle --format=esm --external:@minecraft/server --external:@minecraft/server-ui --external:@minecraft/server-gametest --external:@minecraft/server-admin --external:@minecraft/server-editor --external:@minecraft/server-net --outfile=GaiaDimensions_BP/scripts/GaiaDimensionAddon.js",
+    "bundle": "esbuild GaiaDimensions_BP/src/GaiaDimensionAddon.js --bundle --minify --format=esm --external:@minecraft/server --external:@minecraft/server-ui --external:@minecraft/server-gametest --external:@minecraft/server-admin --external:@minecraft/server-editor --external:@minecraft/server-net --outfile=GaiaDimensions_BP/scripts/GaiaDimensionAddon.js",
     "build": "npm run bundle && python deploy.py",
     "watch": "npm run bundle -- --watch"
   },
   "dependencies": {
-    "@minecraft/server": "^2.0.0",
-    "@minecraft/server-ui": "^1.3.0",
+    "@minecraft/server": "^2.5.0",
+    "@minecraft/server-ui": "^2.0.0",
     "npm": "^11.3.2"
   },
   "devDependencies": {
