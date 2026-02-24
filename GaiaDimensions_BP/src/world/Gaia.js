@@ -39,9 +39,17 @@ export class DimensionSystem {
      * Determines if an entity is currently within the Gaia Dimension boundaries.
      */
     static isInGaia(entity) {
-        if (!entity || !entity.isValid || !GaiaDimension) return false;
-        if (entity.dimension.id !== GaiaDimension.inheritance.id) return false;
-        return GaiaDimension.isInDimension(entity.location);
+        if (!entity || !entity.isValid || !GaiaDimension) {
+            world.sendMessage(`§e[Gaia.js] isInGaia: Invalid entity or GaiaDimension not ready.`);
+            return false;
+        }
+        if (entity.dimension.id !== GaiaDimension.inheritance.id) {
+            world.sendMessage(`§e[Gaia.js] isInGaia: Entity in wrong dimension (${entity.dimension.id}), expected ${GaiaDimension.inheritance.id}.`);
+            return false;
+        }
+        const result = GaiaDimension.isInDimension(entity.location);
+        world.sendMessage(`§e[Gaia.js] isInGaia: Entity at (${entity.location.x}, ${entity.location.y}, ${entity.location.z}) in ${entity.dimension.id}. In Gaia bounds: ${result}.`);
+        return result;
     }
 
     /**
@@ -103,8 +111,15 @@ export class DimensionSystem {
     }
 
     static handleTeleport(player, sourceDim, targetDimId, isToGaia) {
-        if (!player.isValid) return;
-        if (sourceDim.id === targetDimId) return;
+        world.sendMessage(`§6[Gaia.js] handleTeleport called for player ${player.name} from ${sourceDim.id} to ${targetDimId}. Is to Gaia: ${isToGaia}`);
+        if (!player.isValid) {
+            world.sendMessage(`§c[Gaia.js] handleTeleport: Player is invalid.`);
+            return;
+        }
+        if (sourceDim.id === targetDimId) {
+            world.sendMessage(`§c[Gaia.js] handleTeleport: Source and target dimensions are the same.`);
+            return;
+        }
 
         // Apply a timestamped cooldown immediately
         player.setDynamicProperty("gaiadimension:last_teleport", system.currentTick);
@@ -115,12 +130,14 @@ export class DimensionSystem {
         // 1. Check Link
         const savedLink = PortalLinker.getLink(sourceDim.id, sourcePortalLoc.x, sourcePortalLoc.y, sourcePortalLoc.z);
         if (savedLink) {
+            world.sendMessage(`§6[Gaia.js] handleTeleport: Found saved link to ${savedLink.dimensionId} at (${savedLink.x}, ${savedLink.y}, ${savedLink.z}).`);
             try {
                 const targetDim = world.getDimension(savedLink.dimensionId);
                 player.teleport(
                     { x: savedLink.x + 1, y: savedLink.y + 1, z: savedLink.z },
                     { dimension: targetDim }
                 );
+                world.sendMessage(`§a[Gaia.js] handleTeleport: Teleported player ${player.name} via saved link.`);
                 
                 pendingPortalTasks.push({
                     playerId: player.id,
@@ -134,7 +151,9 @@ export class DimensionSystem {
                     createdAt: system.currentTick
                 });
                 return;
-            } catch (e) {}
+            } catch (e) {
+                world.sendMessage(`§c[Gaia.js] handleTeleport: Error teleporting via saved link: ${e}`);
+            }
         }
 
         // 2. Calculate New Destination
@@ -145,9 +164,11 @@ export class DimensionSystem {
             let rawZ = (sourceLoc.z / 4) + center.z;
             targetX = Math.max(RANGE_START, Math.min(RANGE_END, rawX));
             targetZ = Math.max(RANGE_START, Math.min(RANGE_END, rawZ));
+            world.sendMessage(`§6[Gaia.js] handleTeleport: Calculating destination to Gaia: (${targetX}, 120, ${targetZ}).`);
         } else {
             targetX = (sourceLoc.x - center.x) * 4;
             targetZ = (sourceLoc.z - center.z) * 4;
+            world.sendMessage(`§6[Gaia.js] handleTeleport: Calculating destination from Gaia: (${targetX}, 120, ${targetZ}).`);
         }
 
         const targetDim = world.getDimension(targetDimId);
@@ -161,6 +182,7 @@ export class DimensionSystem {
             { x: targetX + 1, y: 120, z: targetZ },
             { dimension: targetDim }
         );
+        world.sendMessage(`§a[Gaia.js] handleTeleport: Initial teleport for player ${player.name} to ${targetDimId} at (${targetX + 1}, 120, ${targetZ}).`);
         player.addTag("gaiadimension:teleport_cooldown");
         if (isToGaia) player.addTag("gaiadimension:in_gaia");
         else player.removeTag("gaiadimension:in_gaia");
@@ -177,6 +199,7 @@ export class DimensionSystem {
             rotationY: player.getRotation().y,
             createdAt: system.currentTick
         });
+        world.sendMessage(`§6[Gaia.js] handleTeleport: Queued BUILD_NEW task for player ${player.name}.`);
     }
 
     static teleportToGaia(player) {
@@ -191,31 +214,47 @@ export class DimensionSystem {
 // Post-Teleport Task Processor (Runs every second to reduce overhead)
 system.runInterval(() => {
     if (pendingPortalTasks.length === 0) return;
+    world.sendMessage(`§d[Gaia.js] Processing ${pendingPortalTasks.length} pending portal tasks.`);
 
     for (let i = pendingPortalTasks.length - 1; i >= 0; i--) {
         const task = pendingPortalTasks[i];
+        world.sendMessage(`§d[Gaia.js] Task ${i}: Type ${task.type}, Player ${task.playerId}`);
         
         // Wait for dimension load (approx 10 seconds)
-        if (system.currentTick - task.createdAt < 200) continue;
+        if (system.currentTick - task.createdAt < 200) {
+            world.sendMessage(`§d[Gaia.js] Task ${i}: Waiting for chunk load timeout. CurrentTick: ${system.currentTick}, CreatedAt: ${task.createdAt}`);
+            continue;
+        }
 
         const player = world.getEntity(task.playerId);
         
         if (!player || !player.isValid) {
+            world.sendMessage(`§c[Gaia.js] Task ${i}: Player invalid or not found. Removing task.`);
             pendingPortalTasks.splice(i, 1);
             continue;
         }
 
         const targetDim = world.getDimension(task.targetDimId);
-        if (!targetDim) continue; // Retry if dimension not ready
+        if (!targetDim) {
+            world.sendMessage(`§c[Gaia.js] Task ${i}: Target dimension ${task.targetDimId} not ready. Retrying.`);
+            continue; // Retry if dimension not ready
+        }
         
         // Ensure destination block is accessible
         try {
             // Check if chunk is loaded by attempting to get a block
             const b = targetDim.getBlock({ x: Math.floor(task.targetX), y: 100, z: Math.floor(task.targetZ) });
-            if (!b) continue; // Chunk not loaded, retry later
-        } catch (e) { continue; } // Error accessing block, retry later
+            if (!b) {
+                world.sendMessage(`§e[Gaia.js] Task ${i}: Chunk at (${task.targetX}, 100, ${task.targetZ}) not loaded in ${task.targetDimId}. Retrying.`);
+                continue; // Chunk not loaded, retry later
+            }
+        } catch (e) {
+            world.sendMessage(`§c[Gaia.js] Task ${i}: Error accessing block for chunk check: ${e}. Retrying.`);
+            continue; // Error accessing block, retry later
+        }
 
         if (task.type === "VERIFY_LINK") {
+            world.sendMessage(`§d[Gaia.js] Task ${i}: Executing VERIFY_LINK.`);
             const lpx = Math.floor(task.targetX);
             const lpy = Math.floor(task.targetY);
             const lpz = Math.floor(task.targetZ);
@@ -226,27 +265,35 @@ system.runInterval(() => {
                     try {
                         const b = targetDim.getBlock({ x: lpx + x, y: lpy - 1, z: lpz + z });
                         if (b && (b.isAir || b.isLiquid)) b.setType("minecraft:obsidian");
-                    } catch(e) {}
+                    } catch(e) {
+                        world.sendMessage(`§c[Gaia.js] Task ${i} VERIFY_LINK: Error rebuilding platform: ${e}`);
+                    }
                 }
             }
             pendingPortalTasks.splice(i, 1);
+            world.sendMessage(`§a[Gaia.js] Task ${i}: VERIFY_LINK completed.`);
         } 
         else if (task.type === "BUILD_NEW") {
+            world.sendMessage(`§d[Gaia.js] Task ${i}: Executing BUILD_NEW.`);
             let targetY = DimensionSystem.getTopBlock(targetDim, Math.floor(task.targetX), Math.floor(task.targetZ), 319);
             
             // If terrain is too high (likely inside a mountain or solid chunk), force a safe underground height
             if (targetY >= 318) {
                 targetY = 100;
+                world.sendMessage(`§e[Gaia.js] Task ${i} BUILD_NEW: Terrain too high, forcing Y to ${targetY}.`);
             }
 
             const landingPortal = DimensionSystem.findPortalBlock(targetDim, { x: task.targetX, y: targetY, z: task.targetZ });
             
             if (landingPortal) {
+                world.sendMessage(`§a[Gaia.js] Task ${i} BUILD_NEW: Found existing landing portal.`);
                 PortalLinker.setLink(task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z, task.targetDimId, landingPortal.x, landingPortal.y, landingPortal.z);
                 PortalLinker.setLink(task.targetDimId, landingPortal.x, landingPortal.y, landingPortal.z, task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z);
                 player.setDynamicProperty("gaiadimension:last_teleport", system.currentTick); // Reset cooldown on arrival
                 player.teleport({ x: landingPortal.x + 1, y: landingPortal.y + 1, z: landingPortal.z }, { dimension: targetDim });
+                world.sendMessage(`§a[Gaia.js] Task ${i}: Teleported player ${player.name} to existing portal.`);
             } else {
+                world.sendMessage(`§e[Gaia.js] Task ${i} BUILD_NEW: No existing portal found, building new one.`);
                 const px = Math.floor(task.targetX);
                 const py = Math.floor(targetY);
                 const pz = Math.floor(task.targetZ);
@@ -258,7 +305,9 @@ system.runInterval(() => {
                             try {
                                 const b = targetDim.getBlock({ x: px + x, y: py + y, z: pz + z });
                                 if (b) b.setType("minecraft:air");
-                            } catch(e) {}
+                            } catch(e) {
+                                world.sendMessage(`§c[Gaia.js] Task ${i} BUILD_NEW: Error carving air: ${e}`);
+                            }
                         }
                     }
                 }
@@ -269,7 +318,9 @@ system.runInterval(() => {
                         try {
                             const b = targetDim.getBlock({ x: px + x, y: py - 1, z: pz + z });
                             if (b) b.setType("minecraft:obsidian");
-                        } catch(e) {}
+                        } catch(e) {
+                            world.sendMessage(`§c[Gaia.js] Task ${i} BUILD_NEW: Error building platform: ${e}`);
+                        }
                     }
                 }
 
@@ -299,8 +350,10 @@ system.runInterval(() => {
                 PortalLinker.setLink(targetDimId, px, py, pz, task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z);
                 player.setDynamicProperty("gaiadimension:last_teleport", system.currentTick); // Reset cooldown on arrival
                 player.teleport({ x: px + 1, y: py + 1, z: pz }, { dimension: targetDim });
+                world.sendMessage(`§a[Gaia.js] Task ${i}: Teleported player ${player.name} to newly built portal.`);
             }
             pendingPortalTasks.splice(i, 1);
+            world.sendMessage(`§a[Gaia.js] Task ${i}: BUILD_NEW completed.`);
         }
     }
 }, 20);
@@ -312,7 +365,10 @@ system.run(() => {
             range: { start: { x: RANGE_START, z: RANGE_START }, end: { x: RANGE_END, z: RANGE_END } },
             inheritance: "minecraft:overworld"
         });
-    } catch (e) {}
+        world.sendMessage(`§a[Gaia.js] GaiaDimension initialized with inheritance: ${GaiaDimension.inheritance.id}`);
+    } catch (e) {
+        world.sendMessage(`§c[Gaia.js] GaiaDimension initialization error: ${e}`);
+    }
 });
 
 // Main detection loop
@@ -355,8 +411,14 @@ system.runInterval(() => {
         }
         
         if (inPortal) {
-            if (dimension.id === "minecraft:overworld") DimensionSystem.teleportToGaia(player);
-            else if (dimension.id === "minecraft:overworld") DimensionSystem.returnFromGaia(player);
+            world.sendMessage(`§b[Gaia.js] Player ${player.name} in portal. Current dim: ${dimension.id}`);
+            if (DimensionSystem.isInGaia(player)) {
+                world.sendMessage(`§b[Gaia.js] Player ${player.name} is in Gaia. Calling returnFromGaia.`);
+                DimensionSystem.returnFromGaia(player);
+            } else if (dimension.id === "minecraft:overworld") {
+                world.sendMessage(`§b[Gaia.js] Player ${player.name} is in Overworld (not Gaia). Calling teleportToGaia.`);
+                DimensionSystem.teleportToGaia(player);
+            }
         }
     }
 }, 10);

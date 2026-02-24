@@ -25,7 +25,7 @@ system.run(() => {
       gateway = BlockPermutation.resolve("minecraft:end_gateway");
       
       data = DB.getAll();
-      // Q.run(30); // Disabled terrain patching
+      Q.run(30); // Re-enabled TaskQueue initialization
       world.sendMessage("TerrainPatching initialized (clearing disabled)");
   } catch(e) {
       world.sendMessage("TerrainPatching init error: " + e);
@@ -262,7 +262,7 @@ const main = () => {
       }
     };
     Q.push(() => null/*console.warn("Clearing Done")*/)
-    // DB.setAll(data); // Disabled to prevent unnecessary writes if terrain clearing is truly disabled.
+    DB.setAll(data); // Re-enabled DB write
   }
 }
 
@@ -284,7 +284,7 @@ system.runInterval(() => {
   // console.warn("Total byte size of dynprops (not only my ones): "+world.getDynamicPropertyTotalByteCount())
   // console.warn(JSON.stringify(world.getDynamicPropertyIds().filter((value)=>value.startsWith(DB.prefix))))
   // console.warn("Operations per tick: " + Q.runCount);
-  // DB.setAll(data); // Disabled to prevent unnecessary writes if terrain clearing is truly disabled.
+  DB.setAll(data); // Re-enabled DB write
 }, 149)
 
 system.beforeEvents.shutdown.subscribe((e) => {
