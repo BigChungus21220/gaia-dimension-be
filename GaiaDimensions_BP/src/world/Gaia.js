@@ -234,7 +234,7 @@ system.runInterval(() => {
         else if (task.type === "BUILD_NEW") {
             let targetY = DimensionSystem.getTopBlock(targetDim, Math.floor(task.targetX), Math.floor(task.targetZ), 319);
             
-            // If terrain is too high 
+            // If terrain is too high (likely inside a mountain or solid chunk), force a safe underground height
             if (targetY >= 318) {
                 targetY = 100;
             }
@@ -251,7 +251,7 @@ system.runInterval(() => {
                 const py = Math.floor(targetY);
                 const pz = Math.floor(task.targetZ);
 
-                // Carve air cube to prevent suffocation \
+                // Carve air cube to prevent suffocation (essential for underground/forced height)
                 for (let x = -3; x <= 3; x++) {
                     for (let z = -3; z <= 3; z++) {
                         for (let y = 0; y <= 6; y++) {
@@ -366,6 +366,6 @@ world.afterEvents.entitySpawn.subscribe((event) => {
     const { entity } = event;
     if (!entity || !entity.isValid) return;
     if (entity.typeId === "minecraft:enderman" && DimensionSystem.isInGaia(entity)) {
-        if (Math.random() < 0.99) system.run(() => { if (entity.isValid) entity.remove(); });
+        if (Math.random() < 0.95) system.run(() => { if (entity.isValid) entity.remove(); });
     }
 });

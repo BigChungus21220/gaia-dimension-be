@@ -35,21 +35,21 @@
 			"type": "script",
 			"language": "javascript",
 			"uuid": "dbcdfb66-073d-40a0-9abe-a644b98d327c",
-			"version": [ 1, 2, 0 ]
+			"version": [ 1, 0, 0 ]
 		}
 	],
 	"dependencies": [
 		{
 			"version": [
 				1,
-				2,
+				0,
 				0
 			],
 			"uuid": "cc4ac671-dc96-4f53-aeeb-2e5ea42fe322"
 		},
 		{
 			"module_name": "@minecraft/server",
-			"version": "2.5.0"
+			"version": "2.3.0"
 		},
 		{
 			"module_name": "@minecraft/server-ui",

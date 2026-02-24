@@ -19,7 +19,7 @@ export class PortalManager {
             console.warn("[PortalLib] tryIgnite called with invalid block");
             return false;
         }
-        // console.warn(`[PortalLib] tryIgnite triggered at ${originBlock.location.x}, ${originBlock.location.y}, ${originBlock.location.z} in ${originBlock.dimension.id}`);
+        console.warn(`[PortalLib] tryIgnite triggered at ${originBlock.location.x}, ${originBlock.location.y}, ${originBlock.location.z} in ${originBlock.dimension.id}`);
         
         for (const [portalId, config] of this.registeredPortals) {
             if (this.attemptPortalCreation(originBlock, portalId, config.frameId)) {
