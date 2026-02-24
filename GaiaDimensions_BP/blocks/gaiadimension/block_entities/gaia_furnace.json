@@ -60,25 +60,25 @@
         },
         "permutations": [
             {
-                "condition": "q.block_state('minecraft:cardinal_direction') == 'north'",
+                "condition": "q.block_state('minecraft:block_face') == 'north'",
                 "components": {
                     "minecraft:transformation": { "rotation": [0, 180, 0] }
                 }
             },
             {
-                "condition": "q.block_state('minecraft:cardinal_direction') == 'south'",
+                "condition": "q.block_state('minecraft:block_face') == 'south'",
                 "components": {
                     "minecraft:transformation": { "rotation": [0, 0, 0] }
                 }
             },
             {
-                "condition": "q.block_state('minecraft:cardinal_direction') == 'west'",
+                "condition": "q.block_state('minecraft:block_face') == 'west'",
                 "components": {
                     "minecraft:transformation": { "rotation": [0, 90, 0] }
                 }
             },
             {
-                "condition": "q.block_state('minecraft:cardinal_direction') == 'east'",
+                "condition": "q.block_state('minecraft:block_face') == 'east'",
                 "components": {
                     "minecraft:transformation": { "rotation": [0, -90, 0] }
                 }
