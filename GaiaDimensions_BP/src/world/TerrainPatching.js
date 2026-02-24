@@ -16,17 +16,17 @@ let air, endstone, flower, plant, bedrock, gateway;
 
 system.run(() => {
   try {
-      the_end = world.getDimension("minecraft:the_end");
+      the_end = world.getDimension("minecraft:overworld");
       air = BlockPermutation.resolve("minecraft:air");
-      endstone = BlockPermutation.resolve("minecraft:end_stone");
+      endstone = BlockPermutation.resolve("minecraft:end_stone"); // Keep end_stone for filtering consistency
       flower = BlockPermutation.resolve("minecraft:chorus_flower");
       plant = BlockPermutation.resolve("minecraft:chorus_plant");
       bedrock = BlockPermutation.resolve("minecraft:bedrock");
       gateway = BlockPermutation.resolve("minecraft:end_gateway");
       
       data = DB.getAll();
-      Q.run(30);
-      world.sendMessage("TerrainPatching initialized");
+      // Q.run(30); // Disabled terrain patching
+      world.sendMessage("TerrainPatching initialized (clearing disabled)");
   } catch(e) {
       world.sendMessage("TerrainPatching init error: " + e);
   }
@@ -149,6 +149,8 @@ class MiniChunk {
     return blocks
   }
   clear() {
+    return true; // Terrain clearing disabled
+    /*
     if (!air) return false;
     try{     
       const min = { x: this.x * size, y: this.y * ysize, z: this.z * size };
@@ -171,6 +173,7 @@ class MiniChunk {
         // world.sendMessage(`Clear failed: ${e}`);
         return false;
     }
+    */
   }
 }
 /**
@@ -249,7 +252,7 @@ const main = () => {
                     return
                   };
                   // world.sendMessage("Clearing chunk at " + checkX + " " + checkZ);
-                  if (chunk.clear()) {
+                  if (chunk.clear()) { // This call will now effectively do nothing, but leave it to call DB.setAll(data)
                       chunk.isChecked = true;
                   }
                 })
@@ -259,7 +262,7 @@ const main = () => {
       }
     };
     Q.push(() => null/*console.warn("Clearing Done")*/)
-    DB.setAll(data);
+    // DB.setAll(data); // Disabled to prevent unnecessary writes if terrain clearing is truly disabled.
   }
 }
 
@@ -281,9 +284,10 @@ system.runInterval(() => {
   // console.warn("Total byte size of dynprops (not only my ones): "+world.getDynamicPropertyTotalByteCount())
   // console.warn(JSON.stringify(world.getDynamicPropertyIds().filter((value)=>value.startsWith(DB.prefix))))
   // console.warn("Operations per tick: " + Q.runCount);
-  DB.setAll(data);
+  // DB.setAll(data); // Disabled to prevent unnecessary writes if terrain clearing is truly disabled.
 }, 149)
 
 system.beforeEvents.shutdown.subscribe((e) => {
   e.cancel = true
 })
+

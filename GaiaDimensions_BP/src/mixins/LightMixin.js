@@ -60,7 +60,7 @@ export function initializeLightMixin() {
 
             if (inGaia) {
                 stateVal = 0;
-            } else if (dimId === "minecraft:overworld" || dimId === "minecraft:the_end") {
+            } else if (dimId === "minecraft:overworld" && !inGaia) {
                 stateVal = 1;
             } else if (dimId === "minecraft:nether") {
                 stateVal = 2;

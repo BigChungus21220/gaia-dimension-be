@@ -310,7 +310,7 @@ system.run(() => {
     try {
         GaiaDimension = ModDimension.register(GAIA_DIMENSION_ID, {
             range: { start: { x: RANGE_START, z: RANGE_START }, end: { x: RANGE_END, z: RANGE_END } },
-            inheritance: "minecraft:the_end"
+            inheritance: "minecraft:overworld"
         });
     } catch (e) {}
 });
@@ -333,7 +333,7 @@ system.runInterval(() => {
         if (player.hasTag("gaiadimension:teleport_cooldown")) continue;
         
         // Boundary Enforcement
-        if (player.hasTag("gaiadimension:in_gaia") && player.dimension.id === "minecraft:the_end") {
+        if (player.hasTag("gaiadimension:in_gaia") && player.dimension.id === "minecraft:overworld") {
             if (!DimensionSystem.isInGaia(player)) {
                 const center = GaiaDimension.getCenter();
                 player.teleport({ x: center.x, y: 100, z: center.z }, { dimension: player.dimension });
@@ -356,7 +356,7 @@ system.runInterval(() => {
         
         if (inPortal) {
             if (dimension.id === "minecraft:overworld") DimensionSystem.teleportToGaia(player);
-            else if (dimension.id === "minecraft:the_end") DimensionSystem.returnFromGaia(player);
+            else if (dimension.id === "minecraft:overworld") DimensionSystem.returnFromGaia(player);
         }
     }
 }, 10);
