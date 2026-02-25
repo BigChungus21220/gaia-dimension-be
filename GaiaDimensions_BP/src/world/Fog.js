@@ -55,6 +55,7 @@ class FogSystem {
         this.clearFogs(player);
         try {
             // Quote wrapping for identifier and user ID
+            console.warn(`[FogSystem] Updating fog for ${player.name}: gaiadimension:${biome}_fog`);
             player.runCommand(`fog @s push "gaiadimension:${biome}_fog" "${biome}"`);
             if (!this.playerFogs[player.id]) this.playerFogs[player.id] = [];
             this.playerFogs[player.id].push(biome);

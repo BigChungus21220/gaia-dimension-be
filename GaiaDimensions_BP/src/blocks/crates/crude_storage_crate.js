@@ -13,7 +13,6 @@ class CrudeStorageCrate extends Machine {
             slots: [] 
         };
     }
-
     onLoad() {
         if (this.entity && this.entity.isValid) {
             this.entity.nameTag = "Crude Storage Crate";

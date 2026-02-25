@@ -150,14 +150,14 @@ class Portal {
                     if (is_edge) {
                       block.setType('gaiadimension:keystone_block')
                     } else {
-                      block.setPermutation(BlockPermutation.resolve("gaiadimension:gaia_portal", { "gaiadimension:x_oriented": x_oriented }));
+                      block.setPermutation(BlockPermutation.resolve("gaiadimension:gaia_dimension_portal", { "gaiadimension:perm_dim": 0 }));
                     }
                 }
             }
         }
       }
     static breakPortal(block) {
-        const adjacent = this.getAdjacentBlocks(block, 'gaiadimension:gaia_portal');
+        const adjacent = this.getAdjacentBlocks(block, 'gaiadimension:gaia_dimension_portal');
         adjacent.forEach(b => {
             this.LinkPositions.forEach(position => {
                 const link = this.getLink(position, block.location);
@@ -218,5 +218,3 @@ class Portal {
 }
 
 export default Portal;
-
-

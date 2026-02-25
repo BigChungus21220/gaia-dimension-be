@@ -26,7 +26,7 @@ import { registerFluidComponent } from "./fluids/fluids.js";
 import { registerCustomTool } from "./durability.js";
 import { DimensionSystem } from "./world/Gaia.js";
 import "./world/CoordinateDisplay.js";
-import "./world/TerrainPatching.js";
+import "./systems/Cleaner.js";
 import "./systems/enchantments.js";
 
 // Initialize systems
