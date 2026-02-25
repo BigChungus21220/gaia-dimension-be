@@ -6252,42 +6252,43 @@ function applyCustomDamage(player, itemStack, damageAmount) {
 
 // GaiaDimensions_BP/src/world/CoordinateDisplay.js
 import { world as world27, system as system31 } from "@minecraft/server";
-var CoordinateDisplay = class {
-  constructor(player) {
-    this.player = player;
-  }
-  updateCoordinates() {
-    if (!this.player || !this.player.isValid) return;
-    const inGaia = DimensionSystem.isInGaia(this.player);
-    const hiddenTag = "gaiadimension:coords_hidden";
-    if (inGaia) {
-      if (!this.player.hasTag(hiddenTag)) {
-        this.player.runCommand("gamerule showcoordinates false");
-        this.player.addTag(hiddenTag);
+function updateAllCoordinateDisplays() {
+  const showCoords = world27.gameRules.showCoordinates;
+  for (const player of world27.getAllPlayers()) {
+    if (!player.isValid) continue;
+    if (!showCoords) {
+      if (player.hasTag("gaiadimension:showing_coords")) {
+        player.onScreenDisplay.setActionBar("");
+        player.removeTag("gaiadimension:showing_coords");
       }
-      const center = GaiaDimension.getCenter();
-      const location = this.player.location;
-      const relX = Math.floor(location.x - center.x);
-      const relY = Math.floor(location.y);
-      const relZ = Math.floor(location.z - center.z);
-      const coordString = `Position: ${relX}, ${relY}, ${relZ}`;
-      this.player.onScreenDisplay.setActionBar(coordString);
-    } else {
-      if (this.player.hasTag(hiddenTag)) {
-        this.player.runCommand("gamerule showcoordinates true");
-        this.player.removeTag(hiddenTag);
-        this.player.onScreenDisplay.setActionBar("");
-      }
+      continue;
     }
+    const location = player.location;
+    const currentDimId = player.dimension.id;
+    const modDim = ModDimension.getAll().find(
+      (dim) => dim.inheritance.id === currentDimId && dim.isInDimension(location)
+    );
+    let x, y, z;
+    if (modDim) {
+      const offset = modDim.offset(location);
+      x = Math.floor(offset.x);
+      y = Math.floor(offset.y);
+      z = Math.floor(offset.z);
+    } else {
+      x = Math.floor(location.x);
+      y = Math.floor(location.y);
+      z = Math.floor(location.z);
+    }
+    player.onScreenDisplay.setActionBar(`Position: ${x}, ${y}, ${z}`);
+    if (!player.hasTag("gaiadimension:showing_coords")) player.addTag("gaiadimension:showing_coords");
   }
-};
+}
 system31.runInterval(() => {
-  const players = world27.getPlayers();
-  for (const player of players) {
-    const display = new CoordinateDisplay(player);
-    display.updateCoordinates();
+  try {
+    updateAllCoordinateDisplays();
+  } catch (e) {
   }
-}, 5);
+}, 1);
 
 // GaiaDimensions_BP/src/systems/Cleaner.js
 import { world as world28, BlockVolume as BlockVolume3, system as system32 } from "@minecraft/server";
