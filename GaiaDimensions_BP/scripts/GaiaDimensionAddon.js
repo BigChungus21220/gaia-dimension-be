@@ -1428,10 +1428,10 @@ var RedstoneControl = {
     if (!sourceBlock) return [];
     const foundDoors = [];
     const visited = /* @__PURE__ */ new Set();
-    const queue = [{ block: sourceBlock, depth: 0 }];
+    const queue2 = [{ block: sourceBlock, depth: 0 }];
     const dimension = sourceBlock.dimension;
-    while (queue.length > 0) {
-      const { block, depth } = queue.shift();
+    while (queue2.length > 0) {
+      const { block, depth } = queue2.shift();
       if (depth > maxDepth) continue;
       const blockKey = this.getBlockKey(block.location);
       if (visited.has(blockKey)) continue;
@@ -1447,7 +1447,7 @@ var RedstoneControl = {
           }
         }
         if (depth < maxDepth && this.isRedstoneConductor(neighborBlock)) {
-          queue.push({ block: neighborBlock, depth: depth + 1 });
+          queue2.push({ block: neighborBlock, depth: depth + 1 });
         }
       }
     }
@@ -4499,15 +4499,15 @@ var PortalManager = class {
     return blockpos;
   }
   static breakPortal(dimension, startLoc, portalBlockId) {
-    const queue = [startLoc];
+    const queue2 = [startLoc];
     const visited = /* @__PURE__ */ new Set();
     const key = (l) => `${l.x},${l.y},${l.z}`;
     visited.add(key(startLoc));
     const blocksToBreak = [];
     const MAX_BLOCKS = 600;
     let head = 0;
-    while (head < queue.length && blocksToBreak.length < MAX_BLOCKS) {
-      const current = queue[head++];
+    while (head < queue2.length && blocksToBreak.length < MAX_BLOCKS) {
+      const current = queue2[head++];
       let block;
       try {
         block = dimension.getBlock(current);
@@ -4529,7 +4529,7 @@ var PortalManager = class {
           const k = key(n);
           if (!visited.has(k)) {
             visited.add(k);
-            queue.push(n);
+            queue2.push(n);
           }
         }
       }
@@ -9500,8 +9500,9 @@ var MinecraftPotionEffectTypes = ((MinecraftPotionEffectTypes2) => {
 })(MinecraftPotionEffectTypes || {});
 
 // GaiaDimensions_BP/src/systems/Cleaner.js
-var cleaningQueue = [];
-var pendingChunks = /* @__PURE__ */ new Set();
+var queue = [];
+var handledThisTick = /* @__PURE__ */ new Set();
+system32.runInterval(() => handledThisTick.clear(), 20);
 function chunk_corner({ x, z }) {
   return {
     x: Math.floor(x / 16) * 16,
@@ -9510,63 +9511,37 @@ function chunk_corner({ x, z }) {
 }
 var clearFilter = [];
 system32.run(() => {
-  const targets = [
-    "log",
-    "leaves",
-    "wood",
-    "lichen",
-    "grass",
-    "flower",
-    "plant",
-    "fern",
-    "bush",
-    "vine",
-    "sapling",
-    "mushroom",
-    "bamboo",
-    "sugar_cane",
-    "lily_pad",
-    "kelp",
-    "seagrass",
-    "coral",
-    "roots",
-    "hanging",
-    "spore",
-    "moss",
-    "azalea",
-    "mangrove"
-  ];
-  const filterSet = /* @__PURE__ */ new Set();
-  Object.values(MinecraftBlockTypes).forEach((typeId) => {
-    if (!typeId.startsWith("minecraft:")) return;
-    const lower = typeId.toLowerCase();
-    if (targets.some((t) => lower.includes(t))) {
-      if (!["minecraft:air", "minecraft:bedrock", "minecraft:stone", "minecraft:dirt", "minecraft:grass_block", "minecraft:sand", "minecraft:gravel", "minecraft:deepslate", "minecraft:tuff"].includes(lower)) {
-        filterSet.add(typeId);
+  try {
+    const targets = ["log", "leaves", "wood", "lichen", "grass", "flower", "plant", "fern", "bush", "vine", "sapling", "mushroom", "bamboo", "sugar_cane", "lily_pad", "kelp", "seagrass", "coral", "roots", "hanging", "spore", "moss", "azalea", "mangrove", "dripleaf", "glow_berry", "pumpkin", "melon", "cactus", "berry", "sea_pickle", "turtle_egg", "pink_petals", "propule", "cherry", "sculk", "snow", "ice", "mud", "dripstone", "sunflower", "lilac", "rose", "peony", "reeds", "waterlily", "web"];
+    const filterSet = /* @__PURE__ */ new Set();
+    Object.values(MinecraftBlockTypes).forEach((id) => {
+      if (!id.startsWith("minecraft:")) return;
+      const l = id.toLowerCase();
+      if (targets.some((t) => l.includes(t))) {
+        if (!l.includes("brick") && !l.includes("ore") && !l.includes("deepslate") && !["minecraft:air", "minecraft:bedrock", "minecraft:stone", "minecraft:dirt", "minecraft:grass_block", "minecraft:sand", "minecraft:gravel", "minecraft:tuff", "minecraft:water", "minecraft:lava"].includes(l)) {
+          filterSet.add(id);
+        }
       }
-    }
-  });
-  clearFilter = Array.from(filterSet);
+    });
+    clearFilter = Array.from(filterSet);
+  } catch (e) {
+  }
 });
 system32.runInterval(() => {
-  if (cleaningQueue.length === 0) return;
+  if (queue.length === 0) return;
   const startTime = Date.now();
   const BUDGET2 = 2;
-  while (cleaningQueue.length > 0) {
+  while (queue.length > 0) {
     if (Date.now() - startTime >= BUDGET2) break;
-    const loc = cleaningQueue.shift();
-    const { x, z } = chunk_corner(loc);
-    pendingChunks.delete(`${x},${z}`);
-    if (GaiaDimension && GaiaDimension.isInDimension(loc)) {
-      const overworld = world28.getDimension("overworld");
-      try {
-        overworld.fillBlocks(
-          new BlockVolume3({ x, y: 30, z }, { x: x + 15, y: 115, z: z + 15 }),
-          "minecraft:air",
-          { blockFilter: { includeTypes: clearFilter } }
-        );
-      } catch (e) {
-      }
+    const task = queue.shift();
+    const overworld = world28.getDimension("minecraft:overworld");
+    try {
+      overworld.fillBlocks(
+        new BlockVolume3({ x: task.x, y: 30, z: task.z }, { x: task.x + 15, y: 115, z: task.z + 15 }),
+        "minecraft:air",
+        { blockFilter: { includeTypes: clearFilter } }
+      );
+    } catch (e) {
     }
   }
 }, 1);
@@ -9574,12 +9549,13 @@ system32.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
   blockComponentRegistry.registerCustomComponent("gaiadimension:overworld_cleaner", {
     onTick({ block }) {
       block.setType("minecraft:air");
-      const { x, z } = chunk_corner(block.location);
+      const loc = block.location;
+      if (!GaiaDimension || !GaiaDimension.isInDimension(loc)) return;
+      const { x, z } = chunk_corner(loc);
       const key = `${x},${z}`;
-      if (!pendingChunks.has(key)) {
-        pendingChunks.add(key);
-        cleaningQueue.push(block.location);
-      }
+      if (handledThisTick.has(key)) return;
+      handledThisTick.add(key);
+      queue.push({ x, z });
     }
   });
 });

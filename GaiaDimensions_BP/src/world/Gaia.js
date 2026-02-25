@@ -268,17 +268,17 @@ system.runInterval(() => {
                     }
                 }
 
-                // IMPROVED Cardinal Direction mapping
+                // Correct Rotation to Cardinal Direction mapping
                 let rotation = task.rotationY;
                 while (rotation < 0) rotation += 360;
                 rotation = rotation % 360;
 
                 let direction = "north";
-                let axis = "x"; // Frame along X axis
+                let axis = "x"; // Frame varies along X axis
 
                 if (rotation >= 45 && rotation < 135) {
                     direction = "east";
-                    axis = "z";
+                    axis = "z"; // Frame varies along Z axis
                 } else if (rotation >= 135 && rotation < 225) {
                     direction = "south";
                     axis = "x";
