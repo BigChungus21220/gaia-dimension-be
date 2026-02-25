@@ -2,39 +2,20 @@
 //Прощай, старый друг
 //Прощавай, старий друг
 //* Спасибо тебе, добрый друг, за то, что был с нами в студии, мы тебя любим на земле и на небесах
-//* Дякуємо тобі, добрий друже, за те, що був з нами в студії, ми тебе любимо на землі і на небі
+//* Дякуємо тобі, добрий друже, за те, що был з нами в студії, ми тебе любимо на землі і на небі
 // We will never forget you Error404
 //* *//
 // The stars will remember your name
 // Code was made by Error404
 
 import { BlockPermutation, system, world, BlockVolume } from "@minecraft/server";
+import { MinecraftBlockTypes } from "@minecraft/vanilla-data";
 import { GaiaDimension } from "./Gaia.js";
 
 let the_end;
-let air, endstone, flower, plant, bedrock, gateway;
-
-system.run(() => {
-  try {
-      the_end = world.getDimension("minecraft:overworld");
-      air = BlockPermutation.resolve("minecraft:air");
-      endstone = BlockPermutation.resolve("minecraft:end_stone"); // Keep end_stone for filtering consistency
-      flower = BlockPermutation.resolve("minecraft:chorus_flower");
-      plant = BlockPermutation.resolve("minecraft:chorus_plant");
-      bedrock = BlockPermutation.resolve("minecraft:bedrock");
-      gateway = BlockPermutation.resolve("minecraft:end_gateway");
-      
-      data = DB.getAll();
-      Q.run(30); // Re-enabled TaskQueue initialization
-      world.sendMessage("TerrainPatching initialized (clearing disabled)");
-  } catch(e) {
-      world.sendMessage("TerrainPatching init error: " + e);
-  }
-});
-
-const size = 16;
-const ysize = 16;
-
+let air;
+/** @type {string[]} */
+let clearFilter = [];
 
 /**
  * Class for endless object databases
@@ -70,7 +51,11 @@ class EndlessDB {
           json += world.getDynamicProperty(this.prefix + "part_" + i) ?? ""
         }
     } catch(e) {}
-    return JSON.parse(json === "" ? "{}" : json)
+    try {
+        return JSON.parse(json === "" ? "{}" : json)
+    } catch(e) {
+        return {};
+    }
   }
   /**
    * 
@@ -88,14 +73,13 @@ class EndlessDB {
   }
 }
 
+const size = 16;
+const ysize = 16;
+
 /**
  * A piece of loaded blocks with utils 
  */
 class MiniChunk {
-  x;
-  y;
-  z;
-  dim;
   constructor(chunkLoc, dim) {
     this.x = Math.floor(chunkLoc.x);
     this.y = Math.floor(chunkLoc.y);
@@ -104,156 +88,158 @@ class MiniChunk {
   }
   /**
    * Alternative constructor
-   * @param {Vector} pos 
-   * @param {Dimension} dim 
+   * @param {import("@minecraft/server").Vector3} pos 
+   * @param {import("@minecraft/server").Dimension} dim 
    */
   static getAt(pos, dim) {
     if (!dim) dim = the_end;
     let { x, y, z } = pos;
-    return new this({ x: x / size, z: z / size, y: y / ysize }, dim)
+    return new MiniChunk({ x: x / size, z: z / size, y: y / ysize }, dim)
   }
   /**
    * if the chunk is already cleared
    */
   get isChecked() {
-    let chunk = data[this.y]?.[this.x]?.[this.z];
-    return !!chunk
+    return !!data[this.y]?.[this.x]?.[this.z];
   }
   set isChecked(value) {
-    if (typeof value !== "boolean") value = !!value;
-    let chunk = data[this.y]?.[this.x]?.[this.z];
-    if (!chunk && value) {
-      if (!data[this.y]) data[this.y] = {};
-      if (!data[this.y][this.x]) data[this.y][this.x] = {};
-      data[this.y][this.x][this.z] = true
-    } else if (chunk) {
-      if (data[this.y] &&
-        data[this.y][this.x]) {
-        delete data[this.y][this.x][this.z]
-      }
-    };
+    if (!data[this.y]) data[this.y] = {};
+    if (!data[this.y][this.x]) data[this.y][this.x] = {};
+    
+    if (value) {
+      data[this.y][this.x][this.z] = true;
+    } else {
+      delete data[this.y][this.x][this.z];
+    }
   }
-  /**
-   * unused
-   */
-  getBlocks() {
-    let blocks = [];
-    for (let x = this.x * size; x < this.x * size + size; x++) {
-      for (let y = this.y * ysize; y < this.y * ysize + size; y++) {
-        for (let z = this.z * size; z < this.z * size + size; z++) {
-          let b = this.dim.getBlock({ x, y, z });
-          if (b) blocks.push(b)
-        }
-      }
-    };
-    return blocks
-  }
+
   clear() {
-    return true; // Terrain clearing disabled
-    /*
     if (!air) return false;
-    try{     
+    try {     
       const min = { x: this.x * size, y: this.y * ysize, z: this.z * size };
       const max = { x: this.x * size + size - 1, y: this.y * ysize + ysize - 1, z: this.z * size + size - 1 };
       const volume = new BlockVolume(min, max);
 
       this.dim.fillBlocks(volume, air, { 
           blockFilter: { 
-              includeTypes: [
-                  "minecraft:end_stone", 
-                  "minecraft:chorus_flower", 
-                  "minecraft:chorus_plant", 
-                  "minecraft:bedrock", 
-                  "minecraft:end_gateway"
-              ] 
+              includeTypes: clearFilter
           } 
       });
       return true;
-    } catch(e){
-        // world.sendMessage(`Clear failed: ${e}`);
+    } catch(e) {
         return false;
     }
-    */
   }
 }
+
 /**
  * Class for optimization
  */
 class TaskQueue {
   tasks = [];
   #run;
-  runCount;
+  runCount = 10;
   /**
    * 
    * @param {number} runCount 
    */
   run(runCount) {
+    this.runCount = runCount;
     this.#run = system.runInterval(() => {
       const start = Date.now();
       const BUDGET = 15;
       
-      for (let iter = 0; iter < runCount; iter++) {
-        if (Date.now() - start > BUDGET) break; // Hard cap at 15ms
+      for (let iter = 0; iter < this.runCount; iter++) {
+        if (Date.now() - start > BUDGET) break; 
         
         if (this.tasks.length !== 0) {
-          this.tasks.shift()()
-        } else this.push(main)
+          const task = this.tasks.shift();
+          if (task) task();
+        } else {
+            this.push(main);
+        }
       }
-    },0);
-    this.runCount = runCount;
+    }, 0);
   }
   stop() {
-    system.clearRun(this.#run)
+    if (this.#run !== undefined) system.clearRun(this.#run);
   }
 
   push = (...args) => this.tasks.push(...args)
 }
 
-
-
-
 let DB = new EndlessDB("lum:end_stone_clearing:");
-let data = {}; // Init empty
+let data = {};
 const Q = new TaskQueue();
 
-// Note: DB and Q run are initialized inside system.run above
+system.run(() => {
+  try {
+      the_end = world.getDimension("minecraft:overworld");
+      air = BlockPermutation.resolve("minecraft:air");
+      
+      // Initialize the filter with vanilla data for logs, leaves, lichen, and more
+      clearFilter = Object.values(MinecraftBlockTypes).filter(typeId => {
+          // Keep common essential blocks
+          if (["minecraft:air", "minecraft:bedrock", "minecraft:stone", "minecraft:dirt", "minecraft:grass_block", "minecraft:sand", "minecraft:gravel", "minecraft:water", "minecraft:lava", "minecraft:deepslate"].includes(typeId)) return false;
+          
+          // Only target vanilla blocks
+          if (!typeId.startsWith("minecraft:")) return false;
 
-//console.warn("Terrain Interpolator loaded sucessfully")
+          // Inclusion criteria: logs, leaves, vegetation, lichen
+          return (
+              typeId.includes("log") || 
+              typeId.includes("leaves") || 
+              typeId.includes("wood") || 
+              typeId.includes("lichen") || 
+              typeId.includes("grass") || 
+              typeId.includes("flower") || 
+              typeId.includes("plant") || 
+              typeId.includes("fern") || 
+              typeId.includes("bush") || 
+              typeId.includes("vine") || 
+              typeId.includes("sapling") || 
+              typeId.includes("mushroom") || 
+              typeId.includes("bamboo") || 
+              typeId.includes("sugar_cane") || 
+              typeId.includes("lily_pad") ||
+              typeId.includes("chorus_") ||
+              typeId.includes("end_stone") ||
+              typeId.includes("end_gateway")
+          );
+      });
+
+      data = DB.getAll();
+      Q.run(30); 
+      world.sendMessage("TerrainPatching initialized (extended overworld clearing enabled)");
+  } catch(e) {
+      world.sendMessage("TerrainPatching init error: " + e);
+  }
+});
+
 const main = () => {
-  if (!GaiaDimension || !the_end) return; // Wait for initialization
+  if (!GaiaDimension || !the_end) return; 
   const players = GaiaDimension.getPlayers();
-  // if (players.length > 0) world.sendMessage(`TP Players: ${players.length}`);
   
   for (const p of players) {
-    //feel free to change
     let range = 8;
-    // try{
-    //   while (p.dimension.getBlock({...off,x:off.x+(range+1)*size})){
-    //     range++
-    //   }
-    // }catch(e){};
     let loc = p.location;
     for (let radius = 1; radius <= range; radius++) {
       for (let y = -2; y <= 3; y++) {
-        // Height range checks might fail if heightRange undefined in some API versions for sim dims
-        // if (loc.y + y*ysize < the_end.heightRange.min || loc.y + y*ysize > the_end.heightRange.max) continue;
         for (let x = -radius; x <= radius; x++) {
           for (let z = -radius; z <= radius; z++) {
             if (x === 0 && y === 0 && z === 0 && radius > 1) continue;
             
             const checkX = loc.x + x * size;
+            const checkY = loc.y + y * ysize;
             const checkZ = loc.z + z * size;
             
-            // Only patch terrain within Gaia Dimension bounds
-            if (checkX >= 100000 && checkX <= 400000 && checkZ >= 100000 && checkZ <= 400000) {
+            if (GaiaDimension.isInDimension({ x: checkX, y: checkY, z: checkZ })) {
                 Q.push(() => {
-                  const chunk = MiniChunk.getAt({ x: checkX, y: loc.y + y * ysize, z: checkZ }, p.dimension);
-                  if (chunk.isChecked) {
-                    return
-                  };
-                  // world.sendMessage("Clearing chunk at " + checkX + " " + checkZ);
-                  if (chunk.clear()) { // This call will now effectively do nothing, but leave it to call DB.setAll(data)
-                      chunk.isChecked = true;
+                  const chunk = MiniChunk.getAt({ x: checkX, y: checkY, z: checkZ }, p.dimension);
+                  if (!chunk.isChecked) {
+                      if (chunk.clear()) {
+                          chunk.isChecked = true;
+                      }
                   }
                 })
             }
@@ -261,33 +247,34 @@ const main = () => {
         }
       }
     };
-    Q.push(() => null/*console.warn("Clearing Done")*/)
-    DB.setAll(data); // Re-enabled DB write
   }
 }
 
-//tps counter
-export var ticksPerSecond = 20;
-var startTime = new Date();
+// TPS counter
+export let ticksPerSecond = 20;
+let startTime = Date.now();
+
 system.runInterval(() => {
-  ticksPerSecond = 150000 / (new Date() - startTime);
-  startTime = new Date();
-  // console.warn("TPS: "+ticksPerSecond);
-  // console.warn("Count of dynProps: " + DB.count);
+  const now = Date.now();
+  ticksPerSecond = 1000 / ((now - startTime) / 20);
+  startTime = now;
+
   if (ticksPerSecond > 20.15) {
-    Q.stop();
-    Q.run(Q.runCount+1)
+    Q.runCount = Math.min(Q.runCount + 1, 100);
   } else if (ticksPerSecond < 19.3){
-    Q.stop();
-    Q.run(Q.runCount-1)
+    Q.runCount = Math.max(Q.runCount - 1, 1);
   };
-  // console.warn("Total byte size of dynprops (not only my ones): "+world.getDynamicPropertyTotalByteCount())
-  // console.warn(JSON.stringify(world.getDynamicPropertyIds().filter((value)=>value.startsWith(DB.prefix))))
-  // console.warn("Operations per tick: " + Q.runCount);
-  DB.setAll(data); // Re-enabled DB write
-}, 149)
+}, 20);
 
-system.beforeEvents.shutdown.subscribe((e) => {
-  e.cancel = true
-})
+// Persistence
+system.runInterval(() => {
+    if (Object.keys(data).length > 0) {
+        DB.setAll(data);
+    }
+}, 600);
 
+system.beforeEvents.worldLeave.subscribe((e) => {
+  if (Object.keys(data).length > 0) {
+      DB.setAll(data);
+  }
+});

@@ -1,4 +1,5 @@
 import { world, system } from "@minecraft/server";
+world.sendMessage("§l§a[GaiaDimensionAddon.js] Main script loaded and executing!");
 import { registerLeavesComponent } from "./blocks/leaves.js";
 import { registerInvisibleComponent } from "./blocks/invisible.js";
 import { registerCurtainComponent } from "./blocks/curtain.js";
