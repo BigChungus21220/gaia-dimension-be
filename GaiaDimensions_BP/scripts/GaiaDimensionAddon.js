@@ -5043,8 +5043,9 @@ var DimensionSystem = class {
       world22.sendMessage(`\xA7c[Gaia.js] handleTeleport: Player is invalid.`);
       return;
     }
-    if (sourceDim.id === targetDimId2) {
-      world22.sendMessage(`\xA7c[Gaia.js] handleTeleport: Source and target dimensions are the same.`);
+    const inGaiaCurrently = this.isInGaia(player);
+    if (sourceDim.id === targetDimId2 && inGaiaCurrently === isToGaia) {
+      world22.sendMessage(`\xA7c[Gaia.js] handleTeleport: Player is already in the target virtual dimension state.`);
       return;
     }
     player.setDynamicProperty("gaiadimension:last_teleport", system25.currentTick);

@@ -116,8 +116,11 @@ export class DimensionSystem {
             world.sendMessage(`§c[Gaia.js] handleTeleport: Player is invalid.`);
             return;
         }
-        if (sourceDim.id === targetDimId) {
-            world.sendMessage(`§c[Gaia.js] handleTeleport: Source and target dimensions are the same.`);
+        
+        // Only block if it's not a virtual dimension transition within the same physical dimension
+        const inGaiaCurrently = this.isInGaia(player);
+        if (sourceDim.id === targetDimId && inGaiaCurrently === isToGaia) {
+            world.sendMessage(`§c[Gaia.js] handleTeleport: Player is already in the target virtual dimension state.`);
             return;
         }
 
