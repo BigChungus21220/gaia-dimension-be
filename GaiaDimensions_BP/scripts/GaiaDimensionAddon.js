@@ -1,5 +1,5 @@
 // GaiaDimensions_BP/src/GaiaDimensionAddon.js
-import { world as world31, system as system34 } from "@minecraft/server";
+import { world as world33, system as system35 } from "@minecraft/server";
 
 // GaiaDimensions_BP/src/blocks/leaves.js
 import { system } from "@minecraft/server";
@@ -32,10 +32,10 @@ function registerLeavesComponent({ blockComponentRegistry }) {
 }
 
 // GaiaDimensions_BP/src/blocks/invisible.js
-import { world as world3, system as system4 } from "@minecraft/server";
+import { world as world4, system as system4 } from "@minecraft/server";
 
 // GaiaDimensions_BP/src/systems/event_manager.js
-import { world, system as system2 } from "@minecraft/server";
+import { world as world2, system as system2 } from "@minecraft/server";
 var placeHandlers = [];
 var breakBeforeHandlers = [];
 var breakAfterHandlers = [];
@@ -56,7 +56,7 @@ function registerInteractHandler(handler) {
   interactHandlers.push(handler);
 }
 function initializeEventManager() {
-  world.afterEvents.playerPlaceBlock.subscribe((event) => {
+  world2.afterEvents.playerPlaceBlock.subscribe((event) => {
     system2.run(() => {
       for (const handler of placeHandlers) {
         if (handler.check(event.block)) {
@@ -65,14 +65,14 @@ function initializeEventManager() {
       }
     });
   });
-  world.beforeEvents.playerBreakBlock.subscribe((event) => {
+  world2.beforeEvents.playerBreakBlock.subscribe((event) => {
     for (const handler of breakBeforeHandlers) {
       if (handler.check(event.block)) {
         handler.execute(event);
       }
     }
   });
-  world.afterEvents.playerBreakBlock.subscribe((event) => {
+  world2.afterEvents.playerBreakBlock.subscribe((event) => {
     system2.run(() => {
       for (const handler of breakAfterHandlers) {
         if (handler.check(event)) {
@@ -81,7 +81,7 @@ function initializeEventManager() {
       }
     });
   });
-  world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
+  world2.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     const { player, block } = event;
     const equippable = player.getComponent("minecraft:equippable");
     const mainHandItem = equippable.getEquipment("Mainhand");
@@ -95,14 +95,14 @@ function initializeEventManager() {
       }
     }
   });
-  world.afterEvents.playerSpawn.subscribe((event) => {
+  world2.afterEvents.playerSpawn.subscribe((event) => {
     system2.run(() => {
       for (const handler of spawnHandlers) {
         handler(event);
       }
     });
   });
-  world.afterEvents.playerJoin.subscribe((event) => {
+  world2.afterEvents.playerJoin.subscribe((event) => {
     system2.run(() => {
       for (const handler of joinHandlers) {
         handler(event);
@@ -112,7 +112,7 @@ function initializeEventManager() {
 }
 
 // GaiaDimensions_BP/src/systems/destruction_handler.js
-import { world as world2, system as system3 } from "@minecraft/server";
+import { world as world3, system as system3 } from "@minecraft/server";
 var STAIRS_TAG = "gaiadimension:stairs";
 var trackedBlocks = /* @__PURE__ */ new Map();
 function trackBlock(block) {
@@ -135,7 +135,7 @@ function initializeDestructionHandlers() {
   system3.runInterval(() => {
     for (const [locationStr, blockData] of [...trackedBlocks.entries()]) {
       try {
-        const dimension = world2.getDimension(blockData.dimensionId);
+        const dimension = world3.getDimension(blockData.dimensionId);
         const location = {
           x: parseInt(locationStr.split(",")[0]),
           y: parseInt(locationStr.split(",")[1]),
@@ -173,7 +173,7 @@ function initializeDestructionHandlers() {
 var UNTRACKED_SCAN_INTERVAL = 149;
 var UNTRACKED_SCAN_DISTANCE = 5;
 system3.runInterval(() => {
-  for (const player of world2.getAllPlayers()) {
+  for (const player of world3.getAllPlayers()) {
     const headLoc = player.getHeadLocation();
     const direction = player.getViewDirection();
     const dimension = player.dimension;
@@ -249,7 +249,7 @@ function registerInvisibleComponent({ blockComponentRegistry }) {
       }
     }
   });
-  world3.afterEvents.pistonActivate.subscribe((event) => {
+  world4.afterEvents.pistonActivate.subscribe((event) => {
     const { piston, dimension } = event;
     for (const location of piston.getAttachedBlocks()) {
       const block = dimension.getBlock(location);
@@ -265,7 +265,7 @@ function registerInvisibleComponent({ blockComponentRegistry }) {
 }
 
 // GaiaDimensions_BP/src/blocks/curtain.js
-import { system as system5, BlockPermutation, GameMode, ItemStack as ItemStack2, world as world4 } from "@minecraft/server";
+import { system as system5, BlockPermutation, GameMode, ItemStack as ItemStack2, world as world5 } from "@minecraft/server";
 var activeCurtains = [];
 var relativeDirs = {
   "north": { left: "west", right: "east" },
@@ -621,7 +621,7 @@ function registerCurtainComponent({ blockComponentRegistry }) {
 }
 
 // GaiaDimensions_BP/src/blocks/wood.js
-import { world as world5, system as system6, BlockPermutation as BlockPermutation2, GameMode as GameMode2, Direction } from "@minecraft/server";
+import { world as world6, system as system6, BlockPermutation as BlockPermutation2, GameMode as GameMode2, Direction } from "@minecraft/server";
 function handleDoubleSlab(player, block, mainhandItem) {
   let plankId = block.typeId.replace("_slab", "_planks");
   try {
@@ -652,7 +652,7 @@ function handleDoubleSlab(player, block, mainhandItem) {
 }
 function registerWoodComponent({ blockComponentRegistry }) {
   blockComponentRegistry.registerCustomComponent("gaiadimension:wood", {});
-  world5.beforeEvents.playerInteractWithBlock.subscribe((event) => {
+  world6.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     const { player, block, itemStack, blockFace } = event;
     if (block.typeId.includes("_slab") && !block.typeId.includes("sandstone") && itemStack?.typeId === block.typeId) {
       const slabState = block.permutation.getState("minecraft:vertical_half");
@@ -704,10 +704,10 @@ function registerWoodComponent({ blockComponentRegistry }) {
 import { system as system9, BlockPermutation as BlockPermutation4, Direction as Direction3, GameMode as GameMode4 } from "@minecraft/server";
 
 // GaiaDimensions_BP/src/blocks/wall.js
-import { system as system8, world as world7, BlockPermutation as BlockPermutation3, Direction as Direction2, GameMode as GameMode3 } from "@minecraft/server";
+import { system as system8, world as world8, BlockPermutation as BlockPermutation3, Direction as Direction2, GameMode as GameMode3 } from "@minecraft/server";
 
 // GaiaDimensions_BP/src/systems/BlockUpdate.js
-import { world as world6, system as system7 } from "@minecraft/server";
+import { world as world7, system as system7 } from "@minecraft/server";
 var blockUpdateRegistry = [];
 function registerForBlockUpdates(registration) {
   blockUpdateRegistry.push(registration);
@@ -731,7 +731,7 @@ function updateNeighboringBlocks(block) {
     }
   }
 }
-world6.afterEvents.pistonActivate.subscribe((event) => {
+world7.afterEvents.pistonActivate.subscribe((event) => {
   const { piston, dimension } = event;
   system7.run(() => {
     for (const location of piston.getAttachedBlocks()) {
@@ -742,7 +742,7 @@ world6.afterEvents.pistonActivate.subscribe((event) => {
     }
   });
 });
-world6.afterEvents.explosion.subscribe((event) => {
+world7.afterEvents.explosion.subscribe((event) => {
   const { dimension } = event;
   for (const location of event.getImpactedBlocks()) {
     const block = dimension.getBlock(location);
@@ -1132,7 +1132,7 @@ function registerFenceComponent({ blockComponentRegistry }) {
 }
 
 // GaiaDimensions_BP/src/blocks/sapling.js
-import { world as world8, GameMode as GameMode5, system as system10 } from "@minecraft/server";
+import { world as world9, GameMode as GameMode5, system as system10 } from "@minecraft/server";
 
 // GaiaDimensions_BP/src/config/sapling_config.js
 var saplingConfig = {
@@ -1222,13 +1222,13 @@ function registerSaplingComponent({ blockComponentRegistry }) {
 }
 
 // GaiaDimensions_BP/src/blocks/button.js
-import { system as system13, world as world11 } from "@minecraft/server";
+import { system as system13, world as world12 } from "@minecraft/server";
 
 // GaiaDimensions_BP/src/systems/Redstone.js
-import { system as system12, world as world10 } from "@minecraft/server";
+import { system as system12, world as world11 } from "@minecraft/server";
 
 // GaiaDimensions_BP/src/utils.js
-import { world as world9, system as system11 } from "@minecraft/server";
+import { world as world10, system as system11 } from "@minecraft/server";
 function playDoorSound(block, isOpen, options = {}) {
   if (!block || !block.location || !block.dimension) {
     console.warn("Invalid block provided to playDoorSound.");
@@ -1613,7 +1613,7 @@ function registerButtonComponent({ blockComponentRegistry }) {
 }
 
 // GaiaDimensions_BP/src/blocks/pressure_plate.js
-import { system as system14, world as world12 } from "@minecraft/server";
+import { system as system14, world as world13 } from "@minecraft/server";
 var PRESSURE_PLATE_SUFFIX = "_pressure_plate";
 var doorStates = /* @__PURE__ */ new Map();
 function isPressurePlate(blockTypeId) {
@@ -1790,7 +1790,7 @@ function cleanupDoorStates() {
     }
     try {
       const [dimensionId, x, y, z] = doorKey.split(",").map((part, index) => index === 0 ? part : Number(part));
-      const dimension = world12.getDimension(dimensionId);
+      const dimension = world13.getDimension(dimensionId);
       const block = dimension.getBlock({ x, y, z });
       if (!block || !block.typeId.startsWith("gaiadimension:") || !block.typeId.includes("door")) {
         keysToDelete.push(doorKey);
@@ -1817,7 +1817,7 @@ function cleanupDoorStates() {
 }
 var activePlates = /* @__PURE__ */ new Set();
 system14.runInterval(() => {
-  const players = world12.getPlayers();
+  const players = world13.getPlayers();
   const newlyActivePlates = /* @__PURE__ */ new Set();
   for (const player of players) {
     try {
@@ -1839,7 +1839,7 @@ system14.runInterval(() => {
     if (!activePlates.has(plateKey)) {
       try {
         const [dimensionId, x, y, z] = plateKey.split(",");
-        const dimension = world12.getDimension(dimensionId);
+        const dimension = world13.getDimension(dimensionId);
         const block = dimension.getBlock({ x: Number(x), y: Number(y), z: Number(z) });
         if (block) {
           if (isPressurePlate(block.typeId)) {
@@ -1861,7 +1861,7 @@ system14.runInterval(() => {
     if (!newlyActivePlates.has(plateKey)) {
       try {
         const [dimensionId, x, y, z] = plateKey.split(",");
-        const dimension = world12.getDimension(dimensionId);
+        const dimension = world13.getDimension(dimensionId);
         const block = dimension.getBlock({ x: Number(x), y: Number(y), z: Number(z) });
         if (block && (isPressurePlate(block.typeId) || isVanillaPressurePlate(block.typeId))) {
           if (isPressurePlate(block.typeId)) {
@@ -2083,7 +2083,7 @@ function registerStairsComponent({ blockComponentRegistry }) {
 }
 
 // GaiaDimensions_BP/src/blocks/geyser.js
-import { system as system16, world as world13 } from "@minecraft/server";
+import { system as system16, world as world14 } from "@minecraft/server";
 function pushEntities(dimension, spawnPos, duration) {
   let elapsed = 0;
   const intervalTicks = 4;
@@ -2148,7 +2148,7 @@ function registerGeyserComponent({ blockComponentRegistry }) {
 }
 
 // GaiaDimensions_BP/src/blocks/sandstone_slab.js
-import { world as world14, system as system17, BlockPermutation as BlockPermutation6, GameMode as GameMode6, Direction as Direction4 } from "@minecraft/server";
+import { world as world15, system as system17, BlockPermutation as BlockPermutation6, GameMode as GameMode6, Direction as Direction4 } from "@minecraft/server";
 function handleDoubleSandstoneSlab(player, block, mainhandItem) {
   const fullBlockId = block.typeId.replace("_slab", "");
   try {
@@ -2169,7 +2169,7 @@ function handleDoubleSandstoneSlab(player, block, mainhandItem) {
 }
 function registerSandstoneComponent({ blockComponentRegistry }) {
   blockComponentRegistry.registerCustomComponent("gaiadimension:sandstone_slab", {});
-  world14.beforeEvents.playerInteractWithBlock.subscribe((event) => {
+  world15.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     const { player, block, itemStack, blockFace } = event;
     if (block.typeId.includes("sandstone_slab") && itemStack?.typeId === block.typeId) {
       const slabState = block.permutation.getState("minecraft:vertical_half");
@@ -2188,7 +2188,7 @@ function registerSandstoneComponent({ blockComponentRegistry }) {
 }
 
 // GaiaDimensions_BP/src/blocks/stone_slab.js
-import { world as world15, system as system18, BlockPermutation as BlockPermutation7, GameMode as GameMode7, Direction as Direction5 } from "@minecraft/server";
+import { world as world16, system as system18, BlockPermutation as BlockPermutation7, GameMode as GameMode7, Direction as Direction5 } from "@minecraft/server";
 function handleDoubleOreSlab(player, block, mainhandItem) {
   const baseId = block.typeId.replace("_slab", "");
   const possibleIds = [baseId, baseId + "s"];
@@ -2219,7 +2219,7 @@ function handleDoubleOreSlab(player, block, mainhandItem) {
 }
 function registerStoneSlabComponent({ blockComponentRegistry }) {
   blockComponentRegistry.registerCustomComponent("gaiadimension:stone_slab", {});
-  world15.beforeEvents.playerInteractWithBlock.subscribe((event) => {
+  world16.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     const { player, block, itemStack, blockFace } = event;
     if (block.typeId.startsWith("gaiadimension:") && block.typeId.endsWith("_slab") && !block.typeId.includes("sandstone") && itemStack?.typeId === block.typeId) {
       const slabState = block.permutation.getState("minecraft:vertical_half");
@@ -2241,7 +2241,7 @@ function registerStoneSlabComponent({ blockComponentRegistry }) {
 import { ItemStack as ItemStack6 } from "@minecraft/server";
 
 // GaiaDimensions_BP/src/API/lib/Machine.js
-import { world as world16, system as system19, ItemStack as ItemStack3 } from "@minecraft/server";
+import { world as world17, system as system19, ItemStack as ItemStack3 } from "@minecraft/server";
 function getSegment(initialValue, currentValue, parts) {
   if (parts === 0 || initialValue === 0) return 0;
   const ratio = Math.max(0, Math.min(1, currentValue / initialValue));
@@ -2255,9 +2255,9 @@ var TimerManager = class {
     if (!timerConfig) return;
     for (const timerName in timerConfig) {
       const scoreboardId = `gaiadimension:${timerName}`;
-      let objective = world16.scoreboard.getObjective(scoreboardId);
+      let objective = world17.scoreboard.getObjective(scoreboardId);
       if (!objective) {
-        objective = world16.scoreboard.addObjective(scoreboardId, timerName);
+        objective = world17.scoreboard.addObjective(scoreboardId, timerName);
       }
       let currentMax = timerConfig[timerName].max;
       Object.defineProperty(this, timerName, {
@@ -2987,7 +2987,7 @@ var Machine = class {
 };
 var BANNED_ITEMS = /* @__PURE__ */ new Set(["gaiadimension:placeholder_invisible"]);
 var BANNED_PREFIXES = /* @__PURE__ */ new Set();
-world16.afterEvents.entitySpawn.subscribe((event) => {
+world17.afterEvents.entitySpawn.subscribe((event) => {
   const { entity } = event;
   if (entity.typeId !== "minecraft:item") return;
   try {
@@ -3396,7 +3396,7 @@ var nativeFuels = {
 };
 
 // GaiaDimensions_BP/src/furnace_recipes/furnace/RecipeDiscovery.js
-import { world as world17, system as system20, ItemStack as ItemStack5 } from "@minecraft/server";
+import { world as world18, system as system20, ItemStack as ItemStack5 } from "@minecraft/server";
 var DB_PREFIX = "luminiae:fn_";
 var ENTITY_ID = "luminiae:recipe_check";
 var TICK_BUDGET_MS = 3;
@@ -3413,7 +3413,7 @@ var RecipeDiscoverySystem = class {
     this.loadState();
     system20.runInterval(() => this.tick(), 1);
     system20.runTimeout(() => this.resumeTests(), 40);
-    world17.afterEvents.entityLoad.subscribe((ev) => {
+    world18.afterEvents.entityLoad.subscribe((ev) => {
       if (ev.entity.typeId === ENTITY_ID) {
         if (ev.entity.hasTag("luminiae:checked")) {
           if (!this.runtimeTests.has(ev.entity.nameTag)) {
@@ -3572,7 +3572,7 @@ var RecipeDiscoverySystem = class {
     for (const [inputId, data] of this.activeTests) {
       if (this.runtimeTests.has(inputId)) continue;
       try {
-        const dim = world17.getDimension(data.dimId);
+        const dim = world18.getDimension(data.dimId);
         if (dim) this.startTest(inputId, data.location, dim);
       } catch (e) {
       }
@@ -3580,12 +3580,12 @@ var RecipeDiscoverySystem = class {
   }
   loadState() {
     try {
-      const activeRaw = world17.getDynamicProperty(`${DB_PREFIX}tests`);
+      const activeRaw = world18.getDynamicProperty(`${DB_PREFIX}tests`);
       if (activeRaw) {
         const parsed = JSON.parse(activeRaw);
         for (const [k, v] of Object.entries(parsed)) this.activeTests.set(k, v);
       }
-      const customRaw = world17.getDynamicProperty(`${DB_PREFIX}recipes`);
+      const customRaw = world18.getDynamicProperty(`${DB_PREFIX}recipes`);
       if (customRaw) {
         this.customRecipes = JSON.parse(customRaw);
         this.applyRecipes();
@@ -3595,8 +3595,8 @@ var RecipeDiscoverySystem = class {
   }
   saveState(key) {
     try {
-      if (key === "tests") world17.setDynamicProperty(`${DB_PREFIX}tests`, JSON.stringify(Object.fromEntries(this.activeTests)));
-      else if (key === "recipes") world17.setDynamicProperty(`${DB_PREFIX}recipes`, JSON.stringify(this.customRecipes));
+      if (key === "tests") world18.setDynamicProperty(`${DB_PREFIX}tests`, JSON.stringify(Object.fromEntries(this.activeTests)));
+      else if (key === "recipes") world18.setDynamicProperty(`${DB_PREFIX}recipes`, JSON.stringify(this.customRecipes));
     } catch (e) {
     }
   }
@@ -3609,7 +3609,7 @@ var RecipeDiscoverySystem = class {
 var recipeDiscovery = new RecipeDiscoverySystem();
 
 // GaiaDimensions_BP/src/API/lib/BlockEntity.js
-import { world as world18, system as system21 } from "@minecraft/server";
+import { world as world19, system as system21 } from "@minecraft/server";
 var BlockEntityManager = class {
   registeredMachineClasses = /* @__PURE__ */ new Map();
   activeMachineInstances = /* @__PURE__ */ new Map();
@@ -3643,13 +3643,13 @@ var BlockEntityManager = class {
     }
   }
   registerEventListeners() {
-    world18.afterEvents.playerPlaceBlock.subscribe(this.handlePlayerPlaceBlock.bind(this));
-    world18.beforeEvents.playerBreakBlock.subscribe(this.handlePlayerBreakBlock.bind(this));
-    world18.afterEvents.explosion.subscribe(this.handleExplosion.bind(this));
+    world19.afterEvents.playerPlaceBlock.subscribe(this.handlePlayerPlaceBlock.bind(this));
+    world19.beforeEvents.playerBreakBlock.subscribe(this.handlePlayerBreakBlock.bind(this));
+    world19.afterEvents.explosion.subscribe(this.handleExplosion.bind(this));
     system21.runInterval(this.handlePlayerViewCheck.bind(this), 5);
     system21.runInterval(this.handleMachineTick.bind(this), 1);
-    world18.afterEvents.worldLoad.subscribe(this.handleWorldLoad.bind(this));
-    world18.afterEvents.entityLoad.subscribe(this.handleEntityLoad.bind(this));
+    world19.afterEvents.worldLoad.subscribe(this.handleWorldLoad.bind(this));
+    world19.afterEvents.entityLoad.subscribe(this.handleEntityLoad.bind(this));
   }
   handleExplosion(event) {
     const impactedBlocks = event.getImpactedBlocks();
@@ -3807,7 +3807,7 @@ var BlockEntityManager = class {
       machine.isViewed = false;
     }
     const machinesToShrink = /* @__PURE__ */ new Set();
-    for (const player of world18.getAllPlayers()) {
+    for (const player of world19.getAllPlayers()) {
       const blockHit = player.getBlockFromViewDirection({ maxDistance: 7 });
       let targetMachine = null;
       if (blockHit) {
@@ -3948,7 +3948,7 @@ var BlockEntityManager = class {
   }
   handleWorldLoad() {
     console.warn("[BlockEntity] World load handling started...");
-    const dimensions = ["overworld", "nether", "the_end"].map((id) => world18.getDimension(id));
+    const dimensions = ["overworld", "nether", "the_end"].map((id) => world19.getDimension(id));
     dimensions.forEach((dimension) => {
       const entities = dimension.getEntities({ families: ["luminiae_generic"] });
       console.warn(`[BlockEntity] Found ${entities.length} generic block entities in ${dimension.id}`);
@@ -4146,10 +4146,10 @@ function registerGaiaFurnaceComponent({ blockComponentRegistry }) {
 }
 
 // GaiaDimensions_BP/src/blocks/glittering_fire.js
-import { world as world20, system as system23 } from "@minecraft/server";
+import { world as world21, system as system23 } from "@minecraft/server";
 
 // GaiaDimensions_BP/src/API/lib/PortalLib.js
-import { world as world19, system as system22, BlockPermutation as BlockPermutation9, BlockVolume } from "@minecraft/server";
+import { world as world20, system as system22, BlockPermutation as BlockPermutation9, BlockVolume } from "@minecraft/server";
 var PortalManager = class {
   static registeredPortals = /* @__PURE__ */ new Map();
   static register(portalBlockId, frameBlockId, options = {}) {
@@ -4627,7 +4627,7 @@ var PortalManager = class {
 // GaiaDimensions_BP/src/blocks/glittering_fire.js
 PortalManager.register("gaiadimension:gaia_dimension_portal", "gaiadimension:keystone_block");
 function registerGlitteringFireComponent() {
-  world20.beforeEvents.playerInteractWithBlock.subscribe((event) => {
+  world21.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     const { block } = event;
     if (block.typeId === "gaiadimension:glittering_fire") {
       event.cancel = true;
@@ -4642,7 +4642,7 @@ function registerGlitteringFireComponent() {
       });
     }
   });
-  world20.afterEvents.playerPlaceBlock.subscribe((event) => {
+  world21.afterEvents.playerPlaceBlock.subscribe((event) => {
     const { block } = event;
     if (block.typeId === "gaiadimension:glittering_fire") {
       const dimension = block.dimension;
@@ -4661,13 +4661,13 @@ function registerGlitteringFireComponent() {
       });
     }
   });
-  world20.beforeEvents.playerBreakBlock.subscribe((event) => {
+  world21.beforeEvents.playerBreakBlock.subscribe((event) => {
     const { block } = event;
     if (block.typeId === "gaiadimension:glittering_fire") {
       event.cancel = true;
     }
   });
-  world20.afterEvents.playerBreakBlock.subscribe((event) => {
+  world21.afterEvents.playerBreakBlock.subscribe((event) => {
     const { block, brokenBlockPermutation, dimension } = event;
     const brokenId = brokenBlockPermutation.type.id;
     if (PortalManager.registeredPortals.has(brokenId)) {
@@ -4785,13 +4785,13 @@ function registerMegaStorageCrateComponent({ blockComponentRegistry }) {
 }
 
 // GaiaDimensions_BP/src/mixins/LightMixin.js
-import { world as world23, system as system26, BlockPermutation as BlockPermutation11 } from "@minecraft/server";
+import { world as world24, system as system26, BlockPermutation as BlockPermutation11 } from "@minecraft/server";
 
 // GaiaDimensions_BP/src/world/Gaia.js
-import { world as world22, system as system25, BlockPermutation as BlockPermutation10 } from "@minecraft/server";
+import { world as world23, system as system25, BlockPermutation as BlockPermutation10 } from "@minecraft/server";
 
 // GaiaDimensions_BP/src/world/ModDimension.js
-import { Player, Entity, world as world21, ScreenDisplay, system as system24 } from "@minecraft/server";
+import { Player, Entity, world as world22, ScreenDisplay, system as system24 } from "@minecraft/server";
 var ALL_MOD_DIMENSIONS = {};
 var ModDimension = class _ModDimension {
   constructor({ type: type2, range, inheritance }) {
@@ -4807,7 +4807,7 @@ var ModDimension = class _ModDimension {
   }
   get inheritance() {
     if (!this._inheritance) {
-      this._inheritance = world21.getDimension(this._inheritanceId);
+      this._inheritance = world22.getDimension(this._inheritanceId);
     }
     return this._inheritance;
   }
@@ -4872,7 +4872,7 @@ var DimensionEvents = class {
       let newPlayers = currentPlayers.filter((player) => !this.players[player.id]);
       let leavingPlayers = Object.keys(this.players).filter((id) => !currentPlayers.some((player) => player.id === id));
       leavingPlayers.forEach((id, index) => {
-        let player = world21.getEntity(id);
+        let player = world22.getEntity(id);
         if (player && player.isValid) {
           delete this.players[id];
           system24.runTimeout(() => {
@@ -4955,33 +4955,22 @@ var GaiaDimension;
 var PortalLinker = class {
   static getLink(dimensionId, x, y, z) {
     const key = `link_${dimensionId}_${Math.floor(x)}_${Math.floor(y)}_${Math.floor(z)}`;
-    const data = world22.getDynamicProperty(key);
+    const data = world23.getDynamicProperty(key);
     return data ? JSON.parse(data) : null;
   }
   static setLink(fromDim, fromX, fromY, fromZ, toDim, toX, toY, toZ) {
     const key = `link_${fromDim}_${Math.floor(fromX)}_${Math.floor(fromY)}_${Math.floor(fromZ)}`;
     const value = JSON.stringify({ dimensionId: toDim, x: toX, y: toY, z: toZ });
-    world22.setDynamicProperty(key, value);
+    world23.setDynamicProperty(key, value);
   }
 };
 var pendingPortalTasks = [];
 var DimensionSystem = class {
-  /**
-   * Determines if an entity is currently within the Gaia Dimension boundaries.
-   */
   static isInGaia(entity) {
-    if (!entity || !entity.isValid || !GaiaDimension) {
-      return false;
-    }
-    if (entity.dimension.id !== GaiaDimension.inheritance.id) {
-      return false;
-    }
-    const result = GaiaDimension.isInDimension(entity.location);
-    return result;
+    if (!entity || !entity.isValid || !GaiaDimension) return false;
+    if (entity.dimension.id !== GaiaDimension.inheritance.id) return false;
+    return GaiaDimension.isInDimension(entity.location);
   }
-  /**
-   * Gets the biome name for a specific entity based on bedrock at y=0 or y=-64.
-   */
   static getBiome(entity) {
     if (!entity || !entity.isValid) return "crystal_plains";
     try {
@@ -4992,20 +4981,13 @@ var DimensionSystem = class {
       if (!block || !block.isValid || !BIOME_MAPPING.has(block.typeId)) {
         block = entity.dimension.getBlock({ x: px, y: -64, z: pz });
       }
-      if (block && block.isValid) {
-        if (BIOME_MAPPING.has(block.typeId)) {
-          return BIOME_MAPPING.get(block.typeId);
-        } else {
-          world22.sendMessage(`\xA7e[BiomeCheck] Found non-marker block at marker pos: ${block.typeId}`);
-        }
+      if (block && block.isValid && BIOME_MAPPING.has(block.typeId)) {
+        return BIOME_MAPPING.get(block.typeId);
       }
     } catch (e) {
     }
     return "crystal_plains";
   }
-  /**
-   * Optimized scan for a portal block near a location.
-   */
   static findPortalBlock(dimension, center) {
     const px = Math.floor(center.x);
     const py = Math.floor(center.y);
@@ -5017,9 +4999,7 @@ var DimensionSystem = class {
           if (y < dimension.heightRange.min || y > dimension.heightRange.max) continue;
           try {
             const b = dimension.getBlock({ x: px + dx, y, z: pz + dz });
-            if (b && b.typeId === "gaiadimension:gaia_dimension_portal") {
-              return { x: px + dx, y, z: pz + dz };
-            }
+            if (b && b.typeId === "gaiadimension:gaia_dimension_portal") return { x: px + dx, y, z: pz + dz };
           } catch (e) {
           }
         }
@@ -5027,9 +5007,6 @@ var DimensionSystem = class {
     }
     return null;
   }
-  /**
-   * Scans downwards from a starting height to find the ground.
-   */
   static getTopBlock(dimension, x, z, startY = 319) {
     for (let y = startY; y > dimension.heightRange.min; y--) {
       try {
@@ -5042,70 +5019,46 @@ var DimensionSystem = class {
     }
     return 100;
   }
-  static handleTeleport(player, sourceDim, targetDimId2, isToGaia) {
+  static handleTeleport(player, sourceDim, targetDimId, isToGaia) {
     if (!player.isValid) return;
     const inGaiaCurrently = this.isInGaia(player);
-    if (sourceDim.id === targetDimId2 && inGaiaCurrently === isToGaia) {
-      return;
-    }
+    if (sourceDim.id === targetDimId && inGaiaCurrently === isToGaia) return;
     player.setDynamicProperty("gaiadimension:last_teleport", system25.currentTick);
+    player.addTag("gaiadimension:teleport_cooldown");
+    if (isToGaia) player.addTag("gaiadimension:in_gaia");
+    else player.removeTag("gaiadimension:in_gaia");
     const sourceLoc = player.location;
     const sourcePortalLoc = this.findPortalBlock(sourceDim, sourceLoc) || sourceLoc;
-    const savedLink = PortalLinker.getLink(sourceDim.id, sourcePortalLoc.x, sourcePortalLoc.y, sourcePortalLoc.z);
-    if (savedLink) {
-      try {
-        const targetDim2 = world22.getDimension(savedLink.dimensionId);
-        player.teleport(
-          { x: savedLink.x + 1, y: savedLink.y + 1, z: savedLink.z },
-          { dimension: targetDim2 }
-        );
-        pendingPortalTasks.push({
-          playerId: player.id,
-          targetDimId: savedLink.dimensionId,
-          targetX: savedLink.x,
-          targetY: savedLink.y,
-          targetZ: savedLink.z,
-          type: "VERIFY_LINK",
-          sourcePortalLoc: { x: sourcePortalLoc.x, y: sourcePortalLoc.y, z: sourcePortalLoc.z },
-          sourceDimId: sourceDim.id,
-          createdAt: system25.currentTick
-        });
-        return;
-      } catch (e) {
-      }
-    }
     const center = GaiaDimension.getCenter();
     let targetX, targetZ;
     if (isToGaia) {
-      let rawX = sourceLoc.x / 4 + center.x;
-      let rawZ = sourceLoc.z / 4 + center.z;
-      targetX = Math.max(RANGE_START, Math.min(RANGE_END, rawX));
-      targetZ = Math.max(RANGE_START, Math.min(RANGE_END, rawZ));
+      targetX = Math.max(RANGE_START, Math.min(RANGE_END, sourceLoc.x / 4 + center.x));
+      targetZ = Math.max(RANGE_START, Math.min(RANGE_END, sourceLoc.z / 4 + center.z));
     } else {
       targetX = (sourceLoc.x - center.x) * 4;
       targetZ = (sourceLoc.z - center.z) * 4;
     }
-    const targetDim = world22.getDimension(targetDimId2);
-    player.addEffect("resistance", 400, { amplifier: 255, showParticles: false });
-    player.addEffect("slow_falling", 400, { amplifier: 0, showParticles: false });
-    player.teleport(
-      { x: targetX + 1, y: 120, z: targetZ },
-      { dimension: targetDim }
-    );
-    player.addTag("gaiadimension:teleport_cooldown");
-    if (isToGaia) player.addTag("gaiadimension:in_gaia");
-    else player.removeTag("gaiadimension:in_gaia");
+    const targetDim = world23.getDimension(targetDimId);
+    const areaName = `portal_${player.id}`;
+    try {
+      targetDim.runCommand(`tickingarea add circle ${Math.floor(targetX)} 100 ${Math.floor(targetZ)} 2 ${areaName}`);
+    } catch (e) {
+    }
     pendingPortalTasks.push({
       playerId: player.id,
-      targetDimId: targetDimId2,
+      targetDimId,
       targetX,
       targetZ,
-      type: "BUILD_NEW",
       sourcePortalLoc: { x: sourcePortalLoc.x, y: sourcePortalLoc.y, z: sourcePortalLoc.z },
       sourceDimId: sourceDim.id,
       rotationY: player.getRotation().y,
-      createdAt: system25.currentTick
+      createdAt: system25.currentTick,
+      areaName,
+      state: "WAITING"
     });
+    player.addEffect("blindness", 220, { amplifier: 0, showParticles: false });
+    player.addEffect("slowness", 220, { amplifier: 255, showParticles: false });
+    player.addEffect("resistance", 250, { amplifier: 255, showParticles: false });
   }
   static teleportToGaia(player) {
     this.handleTeleport(player, player.dimension, GaiaDimension.inheritance.id, true);
@@ -5118,123 +5071,115 @@ system25.runInterval(() => {
   if (pendingPortalTasks.length === 0) return;
   for (let i = pendingPortalTasks.length - 1; i >= 0; i--) {
     const task = pendingPortalTasks[i];
-    if (system25.currentTick - task.createdAt < 20) continue;
-    const player = world22.getEntity(task.playerId);
+    const player = world23.getEntity(task.playerId);
     if (!player || !player.isValid) {
+      try {
+        world23.getDimension(task.targetDimId).runCommand(`tickingarea remove ${task.areaName}`);
+      } catch (e) {
+      }
       pendingPortalTasks.splice(i, 1);
       continue;
     }
-    const targetDim = world22.getDimension(task.targetDimId);
-    if (!targetDim) continue;
-    try {
-      const b = targetDim.getBlock({ x: Math.floor(task.targetX), y: 100, z: Math.floor(task.targetZ) });
-      if (!b) continue;
-    } catch (e) {
-      continue;
+    const targetDim = world23.getDimension(task.targetDimId);
+    if (task.state === "WAITING") {
+      if (system25.currentTick - task.createdAt < 200) continue;
+      task.state = "PREPARING";
     }
-    if (task.type === "VERIFY_LINK") {
-      const lpx = Math.floor(task.targetX);
-      const lpy = Math.floor(task.targetY);
-      const lpz = Math.floor(task.targetZ);
-      for (let x = -2; x <= 2; x++) {
-        for (let z = -2; z <= 2; z++) {
-          try {
-            const b = targetDim.getBlock({ x: lpx + x, y: lpy - 1, z: lpz + z });
-            if (b && (b.isAir || b.isLiquid)) b.setType("minecraft:obsidian");
-          } catch (e) {
+    if (task.state === "PREPARING") {
+      const savedLink = PortalLinker.getLink(task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z);
+      if (savedLink) {
+        task.finalPos = { x: savedLink.x + 1, y: savedLink.y + 1, z: savedLink.z };
+        task.state = "TELEPORTING";
+      } else {
+        let targetY = DimensionSystem.getTopBlock(targetDim, Math.floor(task.targetX), Math.floor(task.targetZ), 319);
+        if (targetY >= 318) targetY = 100;
+        task.targetY = targetY;
+        const landingPortal = DimensionSystem.findPortalBlock(targetDim, { x: task.targetX, y: targetY, z: task.targetZ });
+        if (landingPortal) {
+          PortalLinker.setLink(task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z, task.targetDimId, landingPortal.x, landingPortal.y, landingPortal.z);
+          PortalLinker.setLink(task.targetDimId, landingPortal.x, landingPortal.y, landingPortal.z, task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z);
+          task.finalPos = { x: landingPortal.x + 1, y: landingPortal.y + 1, z: landingPortal.z };
+          task.state = "TELEPORTING";
+        } else {
+          task.state = "BUILDING";
+        }
+      }
+    }
+    if (task.state === "BUILDING") {
+      const px = Math.floor(task.targetX);
+      const py = task.targetY;
+      const pz = Math.floor(task.targetZ);
+      for (let dx = -3; dx <= 3; dx++) {
+        for (let dz = -3; dz <= 3; dz++) {
+          for (let dy = -1; dy <= 6; dy++) {
+            const b = targetDim.getBlock({ x: px + dx, y: py + dy, z: pz + dz });
+            if (b) {
+              if (dy === -1) b.setType("minecraft:obsidian");
+              else b.setType("minecraft:air");
+            }
           }
         }
       }
-      pendingPortalTasks.splice(i, 1);
-    } else if (task.type === "BUILD_NEW") {
-      let targetY = DimensionSystem.getTopBlock(targetDim, Math.floor(task.targetX), Math.floor(task.targetZ), 319);
-      if (targetY >= 318) targetY = 100;
-      const landingPortal = DimensionSystem.findPortalBlock(targetDim, { x: task.targetX, y: targetY, z: task.targetZ });
-      if (landingPortal) {
-        PortalLinker.setLink(task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z, task.targetDimId, landingPortal.x, landingPortal.y, landingPortal.z);
-        PortalLinker.setLink(task.targetDimId, landingPortal.x, landingPortal.y, landingPortal.z, task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z);
-        player.teleport({ x: landingPortal.x + 1, y: landingPortal.y + 1, z: landingPortal.z }, { dimension: targetDim });
+      let rotation = task.rotationY;
+      while (rotation < 0) rotation += 360;
+      rotation = rotation % 360;
+      let direction = "north", axis = "x";
+      if (rotation >= 45 && rotation < 135) {
+        direction = "east";
+        axis = "z";
+      } else if (rotation >= 135 && rotation < 225) {
+        direction = "south";
+        axis = "x";
+      } else if (rotation >= 225 && rotation < 315) {
+        direction = "west";
+        axis = "z";
+      }
+      const frameBlock = "gaiadimension:keystone_block";
+      const portalBlockId = "gaiadimension:gaia_dimension_portal";
+      let portalPerm = BlockPermutation10.resolve(portalBlockId, { "gaiadimension:perm_dim": 0, "minecraft:cardinal_direction": direction });
+      const build = (dx, dy, dz, type2, perm) => {
+        const b = targetDim.getBlock({ x: px + dx, y: py + dy, z: pz + dz });
+        if (b) {
+          b.setType(type2);
+          if (perm) b.setPermutation(perm);
+        }
+      };
+      if (axis === "x") {
+        for (let i2 = -1; i2 <= 2; i2++) {
+          build(i2, 0, 0, frameBlock);
+          build(i2, 4, 0, frameBlock);
+        }
+        for (let y = 1; y <= 3; y++) {
+          build(-1, y, 0, frameBlock);
+          build(2, y, 0, frameBlock);
+        }
+        for (let i2 = 0; i2 <= 1; i2++) for (let y = 1; y <= 3; y++) build(i2, y, 0, portalBlockId, portalPerm);
       } else {
-        const px = Math.floor(task.targetX);
-        const py = Math.floor(targetY);
-        const pz = Math.floor(task.targetZ);
-        for (let x = -3; x <= 3; x++) {
-          for (let z = -3; z <= 3; z++) {
-            for (let y = 0; y <= 6; y++) {
-              try {
-                const b = targetDim.getBlock({ x: px + x, y: py + y, z: pz + z });
-                if (b) b.setType("minecraft:air");
-              } catch (e) {
-              }
-            }
-          }
+        for (let i2 = -1; i2 <= 2; i2++) {
+          build(0, 0, i2, frameBlock);
+          build(0, 4, i2, frameBlock);
         }
-        for (let x = -2; x <= 2; x++) {
-          for (let z = -2; z <= 2; z++) {
-            try {
-              const b = targetDim.getBlock({ x: px + x, y: py - 1, z: pz + z });
-              if (b) b.setType("minecraft:obsidian");
-            } catch (e) {
-            }
-          }
+        for (let y = 1; y <= 3; y++) {
+          build(0, y, -1, frameBlock);
+          build(0, y, 2, frameBlock);
         }
-        let rotation = task.rotationY;
-        while (rotation < 0) rotation += 360;
-        rotation = rotation % 360;
-        let direction = "north";
-        let axis = "x";
-        if (rotation >= 45 && rotation < 135) {
-          direction = "east";
-          axis = "z";
-        } else if (rotation >= 135 && rotation < 225) {
-          direction = "south";
-          axis = "x";
-        } else if (rotation >= 225 && rotation < 315) {
-          direction = "west";
-          axis = "z";
-        }
-        const frameBlock = "gaiadimension:keystone_block";
-        const portalBlockId = "gaiadimension:gaia_dimension_portal";
-        let portalPerm = BlockPermutation10.resolve(portalBlockId, {
-          "gaiadimension:perm_dim": 0,
-          "minecraft:cardinal_direction": direction
-        });
-        const build = (dx, dy, dz, type2, perm) => {
-          const block = targetDim.getBlock({ x: px + dx, y: py + dy, z: pz + dz });
-          if (block) {
-            block.setType(type2);
-            if (perm) block.setPermutation(perm);
-          }
-        };
-        if (axis === "x") {
-          for (let i2 = -1; i2 <= 2; i2++) {
-            build(i2, 0, 0, frameBlock);
-            build(i2, 4, 0, frameBlock);
-          }
-          for (let y = 1; y <= 3; y++) {
-            build(-1, y, 0, frameBlock);
-            build(2, y, 0, frameBlock);
-          }
-          for (let i2 = 0; i2 <= 1; i2++) for (let y = 1; y <= 3; y++) build(i2, y, 0, portalBlockId, portalPerm);
-        } else {
-          for (let i2 = -1; i2 <= 2; i2++) {
-            build(0, 0, i2, frameBlock);
-            build(0, 4, i2, frameBlock);
-          }
-          for (let y = 1; y <= 3; y++) {
-            build(0, y, -1, frameBlock);
-            build(0, y, 2, frameBlock);
-          }
-          for (let i2 = 0; i2 <= 1; i2++) for (let y = 1; y <= 3; y++) build(0, y, i2, portalBlockId, portalPerm);
-        }
-        PortalLinker.setLink(task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z, task.targetDimId, px, py, pz);
-        PortalLinker.setLink(targetDimId, px, py, pz, task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z);
-        player.teleport({ x: px + 1, y: py + 1, z: pz }, { dimension: targetDim });
+        for (let i2 = 0; i2 <= 1; i2++) for (let y = 1; y <= 3; y++) build(0, y, i2, portalBlockId, portalPerm);
+      }
+      PortalLinker.setLink(task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z, task.targetDimId, px, py, pz);
+      PortalLinker.setLink(task.targetDimId, px, py, pz, task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z);
+      task.finalPos = { x: px + 1, y: py + 1, z: pz };
+      task.state = "TELEPORTING";
+    }
+    if (task.state === "TELEPORTING") {
+      player.teleport(task.finalPos, { dimension: targetDim });
+      try {
+        targetDim.runCommand(`tickingarea remove ${task.areaName}`);
+      } catch (e) {
       }
       pendingPortalTasks.splice(i, 1);
     }
   }
-}, 20);
+}, 10);
 system25.run(() => {
   try {
     GaiaDimension = ModDimension.register(GAIA_DIMENSION_ID, {
@@ -5246,7 +5191,7 @@ system25.run(() => {
 });
 var isAlwaysDayActive = false;
 system25.runInterval(() => {
-  const players = world22.getAllPlayers();
+  const players = world23.getAllPlayers();
   let anyPlayerInGaia = false;
   for (const player of players) {
     if (!player.isValid) continue;
@@ -5254,9 +5199,7 @@ system25.runInterval(() => {
     if (inGaia) anyPlayerInGaia = true;
     const lastTeleport = player.getDynamicProperty("gaiadimension:last_teleport") || 0;
     const timeDiff = system25.currentTick - lastTeleport;
-    if (timeDiff > 300 && player.hasTag("gaiadimension:teleport_cooldown")) {
-      player.removeTag("gaiadimension:teleport_cooldown");
-    }
+    if (timeDiff > 300 && player.hasTag("gaiadimension:teleport_cooldown")) player.removeTag("gaiadimension:teleport_cooldown");
     if (timeDiff < 100) continue;
     if (player.hasTag("gaiadimension:teleport_cooldown")) continue;
     if (player.hasTag("gaiadimension:in_gaia") && player.dimension.id === "minecraft:overworld") {
@@ -5268,32 +5211,25 @@ system25.runInterval(() => {
     }
     const dimension = player.dimension;
     const loc = player.location;
-    const px = Math.floor(loc.x);
-    const py = Math.floor(loc.y);
-    const pz = Math.floor(loc.z);
+    const px = Math.floor(loc.x), py = Math.floor(loc.y), pz = Math.floor(loc.z);
     let inPortal = false;
     const b1 = dimension.getBlock({ x: px, y: py, z: pz });
     const b2 = dimension.getBlock({ x: px, y: py + 1, z: pz });
-    if (b1?.typeId === "gaiadimension:gaia_dimension_portal" || b2?.typeId === "gaiadimension:gaia_dimension_portal") {
-      inPortal = true;
-    }
+    if (b1?.typeId === "gaiadimension:gaia_dimension_portal" || b2?.typeId === "gaiadimension:gaia_dimension_portal") inPortal = true;
     if (inPortal) {
-      if (inGaia) {
-        DimensionSystem.returnFromGaia(player);
-      } else if (dimension.id === "minecraft:overworld") {
-        DimensionSystem.teleportToGaia(player);
-      }
+      if (inGaia) DimensionSystem.returnFromGaia(player);
+      else if (dimension.id === "minecraft:overworld") DimensionSystem.teleportToGaia(player);
     }
   }
   if (anyPlayerInGaia && !isAlwaysDayActive) {
-    world22.getDimension("minecraft:overworld").runCommand("alwaysday");
+    world23.getDimension("minecraft:overworld").runCommand("alwaysday");
     isAlwaysDayActive = true;
   } else if (!anyPlayerInGaia && isAlwaysDayActive) {
-    world22.getDimension("minecraft:overworld").runCommand("alwaysday");
+    world23.getDimension("minecraft:overworld").runCommand("alwaysday");
     isAlwaysDayActive = false;
   }
 }, 10);
-world22.afterEvents.entitySpawn.subscribe((event) => {
+world23.afterEvents.entitySpawn.subscribe((event) => {
   const { entity } = event;
   if (!entity || !entity.isValid) return;
   if (entity.typeId === "minecraft:enderman" && DimensionSystem.isInGaia(entity)) {
@@ -5302,11 +5238,9 @@ world22.afterEvents.entitySpawn.subscribe((event) => {
     });
   }
 });
-world22.afterEvents.gameRuleChange.subscribe(({ rule, value }) => {
+world23.afterEvents.gameRuleChange.subscribe(({ rule, value }) => {
   if (rule == "showCoordinates" && value == false) {
-    world22.getAllPlayers().forEach(
-      (player) => player.onScreenDisplay.setActionBar(`\xA7.`)
-    );
+    world23.getAllPlayers().forEach((player) => player.onScreenDisplay.setActionBar(`\xA7.`));
   }
 });
 
@@ -5329,7 +5263,7 @@ function placeLight(dimension, location) {
   }
 }
 function initializeLightMixin() {
-  world23.afterEvents.playerPlaceBlock.subscribe((event) => {
+  world24.afterEvents.playerPlaceBlock.subscribe((event) => {
     const { block, dimension, player } = event;
     const dimId = dimension.id;
     let stateVal = 0;
@@ -5366,7 +5300,7 @@ function initializeLightMixin() {
     } catch (e) {
     }
   });
-  world23.afterEvents.playerBreakBlock.subscribe((event) => {
+  world24.afterEvents.playerBreakBlock.subscribe((event) => {
     const { player, block, dimension } = event;
     if (player && DimensionSystem.isInGaia(player)) {
       placeLight(dimension, block.location);
@@ -5375,32 +5309,32 @@ function initializeLightMixin() {
 }
 
 // GaiaDimensions_BP/src/mixins/skybox.js
-import { world as world24, system as system27 } from "@minecraft/server";
+import { world as world25, system as system27 } from "@minecraft/server";
 var SKYBOX_ENTITY = "gaiadimension:gaia_dimension_skybox";
 var SKYBOX_PROPERTY = "gaiadimension:is_active";
 var playerSkyboxMap = /* @__PURE__ */ new Map();
 var playerCache = /* @__PURE__ */ new Map();
 function initializeSkybox() {
   system27.run(() => {
-    for (const player of world24.getAllPlayers()) {
+    for (const player of world25.getAllPlayers()) {
       playerCache.set(player.id, player);
     }
   });
   system27.runInterval(() => {
-    for (const player of world24.getAllPlayers()) {
+    for (const player of world25.getAllPlayers()) {
       playerCache.set(player.id, player);
     }
     for (const [id, player] of playerCache) {
       if (!player.isValid) playerCache.delete(id);
     }
   }, 40);
-  world24.afterEvents.playerJoin.subscribe((event) => {
+  world25.afterEvents.playerJoin.subscribe((event) => {
     system27.run(() => {
-      const player = world24.getEntity(event.playerId);
+      const player = world25.getEntity(event.playerId);
       if (player) playerCache.set(player.id, player);
     });
   });
-  world24.afterEvents.playerLeave.subscribe((event) => {
+  world25.afterEvents.playerLeave.subscribe((event) => {
     const skybox = playerSkyboxMap.get(event.playerId);
     if (skybox && skybox.isValid) {
       try {
@@ -5450,7 +5384,7 @@ function initializeSkybox() {
 }
 
 // GaiaDimensions_BP/src/systems/scriptevents.js
-import { system as system28, world as world25, ItemStack as ItemStack7 } from "@minecraft/server";
+import { system as system28, world as world26, ItemStack as ItemStack7 } from "@minecraft/server";
 function initializeScriptEvents() {
   system28.afterEvents.scriptEventReceive.subscribe((event) => {
     if (event.id === "gaiadimension:give_agate_arrow") {
@@ -5474,7 +5408,7 @@ function initializeScriptEvents() {
 }
 
 // GaiaDimensions_BP/src/fluids/fluids.js
-import { world as world26, system as system29, BlockPermutation as BlockPermutation12, ItemStack as ItemStack8, BlockVolume as BlockVolume2, GameMode as GameMode8 } from "@minecraft/server";
+import { world as world27, system as system29, BlockPermutation as BlockPermutation12, ItemStack as ItemStack8, BlockVolume as BlockVolume2, GameMode as GameMode8 } from "@minecraft/server";
 var fluids = [
   "gaiadimension:liquid_bismuth",
   "gaiadimension:liquid_bismuth_down",
@@ -5593,9 +5527,9 @@ system29.runInterval(() => {
   }
 });
 function runPlayerEffects() {
-  const players = world26.getPlayers();
+  const players = world27.getPlayers();
   for (const player of players) {
-    const dimension = world26.getDimension(player.dimension.id);
+    const dimension = world27.getDimension(player.dimension.id);
     const location = player.location;
     const blockAt = dimension.getBlock(location);
     const blockAbove = dimension.getBlock({ x: location.x, y: location.y + 1, z: location.z });
@@ -5932,13 +5866,13 @@ function wakeNeighbors(location, dimension) {
     ACTIVE_FLUIDS.set(key, system29.currentTick);
   }
 }
-world26.afterEvents.playerPlaceBlock.subscribe((event) => {
+world27.afterEvents.playerPlaceBlock.subscribe((event) => {
   wakeNeighbors(event.block.location, event.block.dimension);
 });
-world26.afterEvents.playerBreakBlock.subscribe((event) => {
+world27.afterEvents.playerBreakBlock.subscribe((event) => {
   wakeNeighbors(event.block.location, event.block.dimension);
 });
-world26.beforeEvents.playerInteractWithBlock.subscribe((event) => {
+world27.beforeEvents.playerInteractWithBlock.subscribe((event) => {
   const { player, block, itemStack } = event;
   if (!itemStack) return;
   if (itemStack.typeId.startsWith("gaiadimension:") && itemStack.typeId.endsWith("_bucket")) {
@@ -6113,14 +6047,14 @@ world26.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     });
   }
 });
-world26.beforeEvents.playerBreakBlock.subscribe((event) => {
+world27.beforeEvents.playerBreakBlock.subscribe((event) => {
   const { player, block, itemStack } = event;
   if (fluidIDs.has(block.typeId)) {
     event.cancel = true;
   }
 });
 system29.runInterval(() => {
-  for (const player of world26.getAllPlayers()) {
+  for (const player of world27.getAllPlayers()) {
     const container = player.getComponent("inventory")?.container;
     if (!container) continue;
     for (let i = 0; i < container.size; i++) {
@@ -6144,7 +6078,7 @@ function registerFluidComponent({ blockComponentRegistry }) {
   blockComponentRegistry.registerCustomComponent("gaiadimension:fluid_flow", new FluidFlowComponent());
 }
 function runBoatLogic() {
-  const players = world26.getPlayers();
+  const players = world27.getPlayers();
   if (players.length === 0) return;
   const activeDimensions = new Set(players.map((p) => p.dimension));
   for (const dimension of activeDimensions) {
@@ -6255,10 +6189,10 @@ function applyCustomDamage(player, itemStack, damageAmount) {
 }
 
 // GaiaDimensions_BP/src/world/CoordinateDisplay.js
-import { world as world27, system as system31 } from "@minecraft/server";
+import { world as world28, system as system31 } from "@minecraft/server";
 function updateAllCoordinateDisplays() {
-  const showCoords = world27.gameRules.showCoordinates;
-  for (const player of world27.getAllPlayers()) {
+  const showCoords = world28.gameRules.showCoordinates;
+  for (const player of world28.getAllPlayers()) {
     if (!player.isValid) continue;
     if (!showCoords) {
       if (player.hasTag("gaiadimension:showing_coords")) {
@@ -6294,8 +6228,170 @@ system31.runInterval(() => {
   }
 }, 1);
 
+// GaiaDimensions_BP/src/world/Events.js
+import { world as world29, system as system32 } from "@minecraft/server";
+var EventHandler = class {
+  constructor() {
+    this.handlers = [];
+  }
+  subscribe(callback) {
+    this.handlers.push(callback);
+  }
+  trigger(data) {
+    for (const handler of this.handlers) {
+      try {
+        handler(data);
+      } catch (e) {
+        console.warn(`Event trigger error: ${e}`);
+      }
+    }
+  }
+};
+var playerChangeBiome = new EventHandler();
+var playerChangeBlock = new EventHandler();
+var lastPlayerPositions = /* @__PURE__ */ new Map();
+system32.runInterval(() => {
+  for (const player of world29.getAllPlayers()) {
+    if (!player.isValid) {
+      lastPlayerPositions.delete(player.id);
+      continue;
+    }
+    const currentPos = {
+      x: Math.floor(player.location.x),
+      y: Math.floor(player.location.y),
+      z: Math.floor(player.location.z),
+      dimension: player.dimension.id
+    };
+    const lastPos = lastPlayerPositions.get(player.id);
+    if (!lastPos || lastPos.x !== currentPos.x || lastPos.y !== currentPos.y || lastPos.z !== currentPos.z || lastPos.dimension !== currentPos.dimension) {
+      playerChangeBlock.trigger({ player });
+      lastPlayerPositions.set(player.id, currentPos);
+    }
+  }
+}, 5);
+
+// GaiaDimensions_BP/src/world/Biome.js
+var BiomeSystem = class {
+  /**
+   * The biome each player is in (should be made private)
+   */
+  static #playerBiomes = {};
+  /**
+   * Checks and updates player biome
+   * @param {Player} player Player to update biome of
+   */
+  static updateBiome(player) {
+    const biome = DimensionSystem.getBiome(player);
+    if (DimensionSystem.isInGaia(player)) {
+      if (this.#playerBiomes[player.id] != biome) {
+        world.sendMessage(`\xA7b[BiomeSystem] Biome change for ${player.name}: ${biome}`);
+        playerChangeBiome.trigger({ player, biome });
+      }
+    }
+    this.#playerBiomes[player.id] = biome;
+  }
+  /**
+   * Gets the biome a player is in
+   * @param {Player} player Player to get biome of
+   * @returns {string} Biome player is in
+   */
+  static getBiome(player) {
+    return this.#playerBiomes[player.id];
+  }
+};
+playerChangeBlock.subscribe((eventData) => {
+  BiomeSystem.updateBiome(eventData.player);
+});
+
+// GaiaDimensions_BP/src/world/Fog.js
+var FogSystem = class {
+  /**
+   * The fogs the player has applied
+   */
+  static playerFogs = {};
+  /**
+   * Cache active biome to prevent command spam
+   */
+  static activeBiomes = {};
+  /**
+   * Track if the base Gaia fog is applied
+   */
+  static baseFogApplied = {};
+  /**
+   * Updates the fogs applied to the player
+   * @param {Player} player Player to update fogs of
+   */
+  static updateFog(player, biome) {
+    if (DimensionSystem.isInGaia(player)) {
+      if (!this.baseFogApplied[player.id]) {
+        try {
+          player.runCommand(`fog @s push "gaiadimension:fog_gaia" "gaia_base"`);
+          this.baseFogApplied[player.id] = true;
+        } catch (e) {
+        }
+      }
+      if (this.activeBiomes[player.id] !== biome) {
+        this.setBiomeFog(player, biome);
+      }
+    } else {
+      this.clearAllFogs(player);
+    }
+  }
+  /**
+   * Removes all fogs, including the base dimension fog
+   */
+  static clearAllFogs(player) {
+    this.clearBiomeFogs(player);
+    if (this.baseFogApplied[player.id]) {
+      try {
+        player.runCommand(`fog @s remove "gaia_base"`);
+      } catch (e) {
+      }
+      this.baseFogApplied[player.id] = false;
+    }
+  }
+  /**
+   * Removes only the biome-specific fogs
+   */
+  static clearBiomeFogs(player) {
+    if (!this.playerFogs[player.id] || this.playerFogs[player.id].length === 0) return;
+    for (const biome of this.playerFogs[player.id]) {
+      try {
+        player.runCommand(`fog @s remove "${biome}"`);
+      } catch (e) {
+      }
+    }
+    this.playerFogs[player.id] = [];
+    this.activeBiomes[player.id] = null;
+  }
+  /**
+   * Sets the biome-specific fog layer
+   */
+  static setBiomeFog(player, biome) {
+    this.clearBiomeFogs(player);
+    try {
+      console.warn(`[FogSystem] Layering biome fog for ${player.name}: gaiadimension:${biome}_fog`);
+      player.runCommand(`fog @s push "gaiadimension:${biome}_fog" "${biome}"`);
+      if (!this.playerFogs[player.id]) this.playerFogs[player.id] = [];
+      this.playerFogs[player.id].push(biome);
+      this.activeBiomes[player.id] = biome;
+    } catch (e) {
+    }
+  }
+};
+playerChangeBiome.subscribe((eventData) => {
+  FogSystem.updateFog(eventData.player, eventData.biome);
+});
+playerChangeBlock.subscribe((eventData) => {
+  if (DimensionSystem.isInGaia(eventData.player) && !FogSystem.baseFogApplied[eventData.player.id]) {
+    FogSystem.updateFog(eventData.player, null);
+  } else if (!DimensionSystem.isInGaia(eventData.player) && FogSystem.baseFogApplied[eventData.player.id]) {
+    FogSystem.clearAllFogs(eventData.player);
+  }
+});
+
 // GaiaDimensions_BP/src/systems/Cleaner.js
-import { world as world28, BlockVolume as BlockVolume3, system as system32 } from "@minecraft/server";
+import { world as world30, BlockVolume as BlockVolume3, system as system33 } from "@minecraft/server";
 
 // node_modules/@minecraft/vanilla-data/lib/index.js
 var MinecraftBiomeTypes = ((MinecraftBiomeTypes2) => {
@@ -9507,7 +9603,7 @@ var MinecraftPotionEffectTypes = ((MinecraftPotionEffectTypes2) => {
 // GaiaDimensions_BP/src/systems/Cleaner.js
 var queue = [];
 var handledThisTick = /* @__PURE__ */ new Set();
-system32.runInterval(() => handledThisTick.clear(), 20);
+system33.runInterval(() => handledThisTick.clear(), 20);
 function chunk_corner({ x, z }) {
   return {
     x: Math.floor(x / 16) * 16,
@@ -9515,7 +9611,7 @@ function chunk_corner({ x, z }) {
   };
 }
 var clearFilter = [];
-system32.run(() => {
+system33.run(() => {
   try {
     const targets = [
       "log",
@@ -9581,14 +9677,14 @@ system32.run(() => {
   } catch (e) {
   }
 });
-system32.runInterval(() => {
+system33.runInterval(() => {
   if (queue.length === 0) return;
   const startTime = Date.now();
   const BUDGET2 = 2;
   while (queue.length > 0) {
     if (Date.now() - startTime >= BUDGET2) break;
     const task = queue.shift();
-    const overworld = world28.getDimension("minecraft:overworld");
+    const overworld = world30.getDimension("minecraft:overworld");
     try {
       overworld.fillBlocks(
         new BlockVolume3({ x: task.x, y: 30, z: task.z }, { x: task.x + 15, y: 115, z: task.z + 15 }),
@@ -9599,7 +9695,7 @@ system32.runInterval(() => {
     }
   }
 }, 1);
-system32.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
+system33.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
   blockComponentRegistry.registerCustomComponent("gaiadimension:overworld_cleaner", {
     onTick({ block }) {
       block.setType("minecraft:air");
@@ -9616,7 +9712,7 @@ system32.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
 });
 
 // GaiaDimensions_BP/src/API/lib/EnchantmentLib.js
-import { world as world29, system as system33, ItemStack as ItemStack9 } from "@minecraft/server";
+import { world as world31, system as system34, ItemStack as ItemStack9 } from "@minecraft/server";
 import { ActionFormData } from "@minecraft/server-ui";
 var EnchantmentManager = class {
   constructor() {
@@ -9648,17 +9744,17 @@ var EnchantmentManager = class {
     });
   }
   initEvents() {
-    system33.runInterval(() => this.manageVisuals(), 5);
-    world29.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
+    system34.runInterval(() => this.manageVisuals(), 5);
+    world31.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
       const { block, player, itemStack } = ev;
       if (block.typeId === "minecraft:enchanting_table" && player.isSneaking) {
         ev.cancel = true;
-        system33.run(() => {
+        system34.run(() => {
           this.openEnchantmentUI(player);
         });
       }
     });
-    world29.afterEvents.entityHitEntity.subscribe((ev) => {
+    world31.afterEvents.entityHitEntity.subscribe((ev) => {
       const { damagingEntity, hitEntity } = ev;
       if (!damagingEntity || !damagingEntity.getComponent("minecraft:equippable")) return;
       const equippable = damagingEntity.getComponent("minecraft:equippable");
@@ -9667,7 +9763,7 @@ var EnchantmentManager = class {
         this.triggerEnchants(mainHand, "onHit", ev);
       }
     });
-    world29.afterEvents.playerBreakBlock.subscribe((ev) => {
+    world31.afterEvents.playerBreakBlock.subscribe((ev) => {
       const { player, itemStack } = ev;
       if (itemStack) {
         this.triggerEnchants(itemStack, "onMine", ev);
@@ -9798,7 +9894,7 @@ ${color}Cost: ${e.cost} Lvl`);
    * Scans players to toggle glint state (Clean in cursor, Glint in inventory).
    */
   manageVisuals() {
-    for (const player of world29.getAllPlayers()) {
+    for (const player of world31.getAllPlayers()) {
       const cursorComp = player.getComponent("minecraft:cursor_inventory");
       if (cursorComp && cursorComp.item) {
         const item = cursorComp.item;
@@ -9872,7 +9968,7 @@ ${color}Cost: ${e.cost} Lvl`);
 var enchantmentManager = new EnchantmentManager();
 
 // GaiaDimensions_BP/src/systems/enchantments.js
-import { world as world30 } from "@minecraft/server";
+import { world as world32 } from "@minecraft/server";
 enchantmentManager.register("gaia:life_steal", {
   name: "Life Steal",
   maxLevel: 3,
@@ -9908,7 +10004,7 @@ initializeGeyser();
 initializeLightMixin();
 initializeSkybox();
 registerCustomTool();
-system34.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
+system35.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
   registerLeavesComponent({ blockComponentRegistry });
   registerInvisibleComponent({ blockComponentRegistry });
   registerCurtainComponent({ blockComponentRegistry });

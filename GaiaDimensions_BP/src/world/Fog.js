@@ -13,6 +13,10 @@ class FogSystem {
      * Cache active biome to prevent command spam
      */
     static activeBiomes = {};
+    /**
+     * Track if the base Gaia fog is applied
+     */
+    static baseFogApplied = {};
 
     /**
      * Updates the fogs applied to the player
@@ -20,25 +24,45 @@ class FogSystem {
      */
     static updateFog(player, biome) {
         if (DimensionSystem.isInGaia(player)) {
-            // Heavy Caching: Only update if biome changed
+            // 1. Ensure Base Gaia Fog is always active
+            if (!this.baseFogApplied[player.id]) {
+                try {
+                    player.runCommand(`fog @s push "gaiadimension:fog_gaia" "gaia_base"`);
+                    this.baseFogApplied[player.id] = true;
+                } catch(e) {}
+            }
+
+            // 2. Layer Biome Fog on top
             if (this.activeBiomes[player.id] !== biome) {
-                this.setFog(player, biome);
+                this.setBiomeFog(player, biome);
             }
         } else {
-            this.clearFogs(player);
+            // Remove everything when leaving Gaia
+            this.clearAllFogs(player);
         }
     }
 
     /**
-     * Removes all fogs applied to the player
-     * @param {Player} player Player to remove fogs from
+     * Removes all fogs, including the base dimension fog
      */
-    static clearFogs(player) {
+    static clearAllFogs(player) {
+        this.clearBiomeFogs(player);
+        if (this.baseFogApplied[player.id]) {
+            try {
+                player.runCommand(`fog @s remove "gaia_base"`);
+            } catch(e) {}
+            this.baseFogApplied[player.id] = false;
+        }
+    }
+
+    /**
+     * Removes only the biome-specific fogs
+     */
+    static clearBiomeFogs(player) {
         if (!this.playerFogs[player.id] || this.playerFogs[player.id].length === 0) return;
 
         for (const biome of this.playerFogs[player.id]) {
             try {
-                // Quotes for safety
                 player.runCommand(`fog @s remove "${biome}"`);
             } catch(e) {}
         }
@@ -47,15 +71,12 @@ class FogSystem {
     }
 
     /**
-     * Sets the active active fog of the player
-     * @param {Player} player The player to add a fog to
-     * @param {string} biome The biome fog to add to the player
+     * Sets the biome-specific fog layer
      */
-    static setFog(player, biome) {
-        this.clearFogs(player);
+    static setBiomeFog(player, biome) {
+        this.clearBiomeFogs(player);
         try {
-            // Quote wrapping for identifier and user ID
-            console.warn(`[FogSystem] Updating fog for ${player.name}: gaiadimension:${biome}_fog`);
+            console.warn(`[FogSystem] Layering biome fog for ${player.name}: gaiadimension:${biome}_fog`);
             player.runCommand(`fog @s push "gaiadimension:${biome}_fog" "${biome}"`);
             if (!this.playerFogs[player.id]) this.playerFogs[player.id] = [];
             this.playerFogs[player.id].push(biome);
@@ -64,7 +85,17 @@ class FogSystem {
     }
 }
 
-//Subscribe updateFog to playerChangeBiome
+// Subscribe updateFog to playerChangeBiome for initial entry and transitions
 Events.playerChangeBiome.subscribe((eventData) => {
     FogSystem.updateFog(eventData.player, eventData.biome);
+});
+
+// Also subscribe to playerChangeBlock to ensure base fog stays active on entry
+Events.playerChangeBlock.subscribe((eventData) => {
+    // We only need a light check here; setBiomeFog is handled by playerChangeBiome
+    if (DimensionSystem.isInGaia(eventData.player) && !FogSystem.baseFogApplied[eventData.player.id]) {
+        FogSystem.updateFog(eventData.player, null);
+    } else if (!DimensionSystem.isInGaia(eventData.player) && FogSystem.baseFogApplied[eventData.player.id]) {
+        FogSystem.clearAllFogs(eventData.player);
+    }
 });
