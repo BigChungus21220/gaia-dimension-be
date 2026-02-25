@@ -9656,8 +9656,21 @@ system32.run(() => {
     the_end = world28.getDimension("minecraft:overworld");
     air = BlockPermutation13.resolve("minecraft:air");
     clearFilter = Object.values(MinecraftBlockTypes).filter((typeId) => {
-      if (["minecraft:air", "minecraft:bedrock", "minecraft:stone", "minecraft:dirt", "minecraft:grass_block", "minecraft:sand", "minecraft:gravel", "minecraft:water", "minecraft:lava", "minecraft:deepslate"].includes(typeId)) return false;
       if (!typeId.startsWith("minecraft:")) return false;
+      const essentialBlocks = [
+        "minecraft:air",
+        "minecraft:bedrock",
+        "minecraft:stone",
+        "minecraft:dirt",
+        "minecraft:grass_block",
+        "minecraft:sand",
+        "minecraft:gravel",
+        "minecraft:water",
+        "minecraft:lava",
+        "minecraft:deepslate",
+        "minecraft:tuff"
+      ];
+      if (essentialBlocks.includes(typeId)) return false;
       return typeId.includes("log") || typeId.includes("leaves") || typeId.includes("wood") || typeId.includes("lichen") || typeId.includes("grass") || typeId.includes("flower") || typeId.includes("plant") || typeId.includes("fern") || typeId.includes("bush") || typeId.includes("vine") || typeId.includes("sapling") || typeId.includes("mushroom") || typeId.includes("bamboo") || typeId.includes("sugar_cane") || typeId.includes("lily_pad") || typeId.includes("chorus_") || typeId.includes("end_stone") || typeId.includes("end_gateway");
     });
     data = DB.getAll();

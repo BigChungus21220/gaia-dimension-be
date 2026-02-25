@@ -178,14 +178,20 @@ system.run(() => {
       air = BlockPermutation.resolve("minecraft:air");
       
       // Initialize the filter with vanilla data for logs, leaves, lichen, and more
+      // This ensures we ONLY delete vanilla features and NEVER touch custom Gaia blocks.
       clearFilter = Object.values(MinecraftBlockTypes).filter(typeId => {
-          // Keep common essential blocks
-          if (["minecraft:air", "minecraft:bedrock", "minecraft:stone", "minecraft:dirt", "minecraft:grass_block", "minecraft:sand", "minecraft:gravel", "minecraft:water", "minecraft:lava", "minecraft:deepslate"].includes(typeId)) return false;
-          
-          // Only target vanilla blocks
+          // NEVER target custom blocks (anything not starting with minecraft:)
           if (!typeId.startsWith("minecraft:")) return false;
 
-          // Inclusion criteria: logs, leaves, vegetation, lichen
+          // Keep essential vanilla terrain blocks (do not delete these)
+          const essentialBlocks = [
+              "minecraft:air", "minecraft:bedrock", "minecraft:stone", "minecraft:dirt", 
+              "minecraft:grass_block", "minecraft:sand", "minecraft:gravel", 
+              "minecraft:water", "minecraft:lava", "minecraft:deepslate", "minecraft:tuff"
+          ];
+          if (essentialBlocks.includes(typeId)) return false;
+
+          // Inclusion criteria: Target vanilla vegetation, logs, and structures that shouldn't be in Gaia
           return (
               typeId.includes("log") || 
               typeId.includes("leaves") || 
