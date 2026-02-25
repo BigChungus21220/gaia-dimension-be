@@ -161,8 +161,8 @@ class TaskQueue {
       }
     }, 0);
   }
-  stop() {
-    if (this.#run !== undefined) system.clearRun(this.#run);
+  stop(runId = this.#run) {
+    if (typeof runId === "number") system.clearRun(runId);
   }
 
   push = (...args) => this.tasks.push(...args)
