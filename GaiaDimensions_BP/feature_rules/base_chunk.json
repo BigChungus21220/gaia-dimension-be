@@ -3,7 +3,7 @@
 	"minecraft:feature_rules": {
 		"description": {
 			"identifier": "gaiadimension:base_chunk",
-			"places_feature": "gaiadimension:gen/base/column_placer"
+			"places_feature": "gaiadimension:gen/base/chunk_sequence"
 		},
 		"conditions": {
 			"placement_pass": "first_pass",

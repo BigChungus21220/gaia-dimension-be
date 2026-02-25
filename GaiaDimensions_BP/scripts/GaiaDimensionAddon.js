@@ -4992,8 +4992,12 @@ var DimensionSystem = class {
       if (!block || !block.isValid || !BIOME_MAPPING.has(block.typeId)) {
         block = entity.dimension.getBlock({ x: px, y: -64, z: pz });
       }
-      if (block && block.isValid && BIOME_MAPPING.has(block.typeId)) {
-        return BIOME_MAPPING.get(block.typeId);
+      if (block && block.isValid) {
+        if (BIOME_MAPPING.has(block.typeId)) {
+          return BIOME_MAPPING.get(block.typeId);
+        } else {
+          world22.sendMessage(`\xA7e[BiomeCheck] Found non-marker block at marker pos: ${block.typeId}`);
+        }
       }
     } catch (e) {
     }
@@ -9513,13 +9517,62 @@ function chunk_corner({ x, z }) {
 var clearFilter = [];
 system32.run(() => {
   try {
-    const targets = ["log", "leaves", "wood", "lichen", "grass", "flower", "plant", "fern", "bush", "vine", "sapling", "mushroom", "bamboo", "sugar_cane", "lily_pad", "kelp", "seagrass", "coral", "roots", "hanging", "spore", "moss", "azalea", "mangrove", "dripleaf", "glow_berry", "pumpkin", "melon", "cactus", "berry", "sea_pickle", "turtle_egg", "pink_petals", "propule", "cherry", "sculk", "snow", "ice", "mud", "dripstone", "sunflower", "lilac", "rose", "peony", "reeds", "waterlily", "web"];
+    const targets = [
+      "log",
+      "leaves",
+      "wood",
+      "lichen",
+      "grass",
+      "flower",
+      "plant",
+      "fern",
+      "bush",
+      "vine",
+      "sapling",
+      "mushroom",
+      "bamboo",
+      "sugar_cane",
+      "lily_pad",
+      "kelp",
+      "seagrass",
+      "coral",
+      "roots",
+      "hanging",
+      "spore",
+      "moss",
+      "azalea",
+      "mangrove",
+      "dripleaf",
+      "glow_berry",
+      "pumpkin",
+      "melon",
+      "cactus",
+      "berry",
+      "sea_pickle",
+      "turtle_egg",
+      "pink_petals",
+      "propule",
+      "cherry",
+      "sculk",
+      "snow",
+      "ice",
+      "mud",
+      "dripstone",
+      "sunflower",
+      "lilac",
+      "rose",
+      "peony",
+      "reeds",
+      "waterlily",
+      "web"
+    ];
     const filterSet = /* @__PURE__ */ new Set();
     Object.values(MinecraftBlockTypes).forEach((id) => {
       if (!id.startsWith("minecraft:")) return;
       const l = id.toLowerCase();
       if (targets.some((t) => l.includes(t))) {
-        if (!l.includes("brick") && !l.includes("ore") && !l.includes("deepslate") && !["minecraft:air", "minecraft:bedrock", "minecraft:stone", "minecraft:dirt", "minecraft:grass_block", "minecraft:sand", "minecraft:gravel", "minecraft:tuff", "minecraft:water", "minecraft:lava"].includes(l)) {
+        const essentials = ["minecraft:air", "minecraft:bedrock", "minecraft:stone", "minecraft:dirt", "minecraft:grass_block", "minecraft:sand", "minecraft:gravel", "minecraft:tuff", "minecraft:water", "minecraft:lava", "minecraft:deepslate"];
+        if (!essentials.includes(l) && !l.includes("brick") && !l.includes("ore")) {
           filterSet.add(id);
         }
       }
@@ -9554,9 +9607,10 @@ system32.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
       if (!GaiaDimension || !GaiaDimension.isInDimension(loc)) return;
       const { x, z } = chunk_corner(loc);
       const key = `${x},${z}`;
-      if (handledThisTick.has(key)) return;
-      handledThisTick.add(key);
-      queue.push({ x, z });
+      if (!handledThisTick.has(key)) {
+        handledThisTick.add(key);
+        queue.push({ x, z });
+      }
     }
   });
 });

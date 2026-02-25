@@ -1,13 +1,13 @@
 {
-    "format_version": "1.20.20",
-    "minecraft:scatter_feature": {
-        "description": {
-            "identifier": "gaiadimension:conditions/condition_1734596463"
-        },
-        "places_feature": "gaiadimension:gen/gaia_blocks/soft_grass",
-        "iterations": "t.biome == 'shining_grove'",
-        "x": 0,
-        "z": 0,
-        "y": 0
-    }
+	"format_version": "1.20.20",
+	"minecraft:scatter_feature": {
+		"description": {
+			"identifier": "gaiadimension:conditions/condition_1734596463"
+		},
+		"places_feature": "gaiadimension:gen/gaia_blocks/soft_grass",
+		"iterations": "t.biome_id == 3",
+		"x": 0,
+		"z": 0,
+		"y": 0
+	}
 }

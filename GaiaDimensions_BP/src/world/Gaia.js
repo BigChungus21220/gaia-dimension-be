@@ -59,16 +59,21 @@ export class DimensionSystem {
             const px = Math.floor(x);
             const pz = Math.floor(z);
             
-            // Primary check: Y=0 (where Gaia generation places biome bedrock)
+            // Primary check: Y=0
             let block = entity.dimension.getBlock({ x: px, y: 0, z: pz });
             
-            // Fallback check: Y=-64 (Overworld actual bedrock floor)
+            // Fallback check: Y=-64
             if (!block || !block.isValid || !BIOME_MAPPING.has(block.typeId)) {
                 block = entity.dimension.getBlock({ x: px, y: -64, z: pz });
             }
 
-            if (block && block.isValid && BIOME_MAPPING.has(block.typeId)) {
-                return BIOME_MAPPING.get(block.typeId);
+            if (block && block.isValid) {
+                if (BIOME_MAPPING.has(block.typeId)) {
+                    return BIOME_MAPPING.get(block.typeId);
+                } else {
+                    // Log the unrecognized block type at marker positions
+                    world.sendMessage(`§e[BiomeCheck] Found non-marker block at marker pos: ${block.typeId}`);
+                }
             }
         } catch (e) {}
         return "crystal_plains"; // Default

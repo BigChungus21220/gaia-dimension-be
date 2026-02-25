@@ -20,6 +20,7 @@ class BiomeSystem {
         const biome = DimensionSystem.getBiome(player);
         if (DimensionSystem.isInGaia(player)) {
             if (this.#playerBiomes[player.id] != biome){
+                world.sendMessage(`§b[BiomeSystem] Biome change for ${player.name}: ${biome}`);
                 Events.playerChangeBiome.trigger({player:player,biome:biome}); //trigger playerChangeBiome
             }
         }

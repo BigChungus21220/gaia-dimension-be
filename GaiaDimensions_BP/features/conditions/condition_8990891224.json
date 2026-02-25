@@ -1,13 +1,13 @@
 {
-    "format_version": "1.20.20",
-    "minecraft:scatter_feature": {
-        "description": {
-            "identifier": "gaiadimension:conditions/condition_8990891224"
-        },
-        "places_feature": "gaiadimension:gen/gaia_blocks/bedrock_purple_agate_swamp",
-        "iterations": "t.biome == 'purple_agate_swamp'",
-        "x": 0,
-        "z": 0,
-        "y": 0
-    }
+	"format_version": "1.20.20",
+	"minecraft:scatter_feature": {
+		"description": {
+			"identifier": "gaiadimension:conditions/condition_8990891224"
+		},
+		"places_feature": "gaiadimension:gen/gaia_blocks/bedrock_purple_agate_swamp",
+		"iterations": "t.biome_id == 9",
+		"x": 0,
+		"z": 0,
+		"y": 0
+	}
 }

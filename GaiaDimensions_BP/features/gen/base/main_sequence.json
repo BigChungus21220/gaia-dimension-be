@@ -9,8 +9,7 @@
       "gaiadimension:gen/base/column_height",
       "gaiadimension:gen/caves/cave_layer_placer",
       "gaiadimension:gen/caves/magma_placer",
-      "gaiadimension:gen/base/bedrock_picker",
-      "gaiadimension:utils/cleaner"
+      "gaiadimension:gen/base/bedrock_picker"
     ]
   }
 }
