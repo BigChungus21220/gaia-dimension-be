@@ -3893,7 +3893,7 @@ var BlockEntityManager = class {
     if (totalMachines === 0) return;
     const PROCESS_LIMIT = 40;
     const TIME_BUDGET_MS = 5;
-    const startTime2 = Date.now();
+    const startTime = Date.now();
     const currentTick = system21.currentTick;
     for (const machine of this.activeMachineList) {
       if (machine.isViewed && machine.entity?.isValid) {
@@ -3913,7 +3913,7 @@ var BlockEntityManager = class {
     let processedCount = 0;
     let attempts = 0;
     while (processedCount < PROCESS_LIMIT && attempts < totalMachines) {
-      if (Date.now() - startTime2 > TIME_BUDGET_MS) break;
+      if (Date.now() - startTime > TIME_BUDGET_MS) break;
       this.lastProcessedIndex = (this.lastProcessedIndex + 1) % totalMachines;
       const machine = this.activeMachineList[this.lastProcessedIndex];
       attempts++;
@@ -4979,7 +4979,6 @@ var DimensionSystem = class {
       return false;
     }
     const result = GaiaDimension.isInDimension(entity.location);
-    world22.sendMessage(`\xA7e[Gaia.js] isInGaia: Entity at (${entity.location.x}, ${entity.location.y}, ${entity.location.z}) in ${entity.dimension.id}. In Gaia bounds: ${result}.`);
     return result;
   }
   /**
@@ -5261,9 +5260,7 @@ system25.run(() => {
       range: { start: { x: RANGE_START, z: RANGE_START }, end: { x: RANGE_END, z: RANGE_END } },
       inheritance: "minecraft:overworld"
     });
-    world22.sendMessage(`\xA7a[Gaia.js] GaiaDimension initialized with inheritance: ${GaiaDimension.inheritance.id}`);
   } catch (e) {
-    world22.sendMessage(`\xA7c[Gaia.js] GaiaDimension initialization error: ${e}`);
   }
 });
 system25.runInterval(() => {
@@ -9588,6 +9585,9 @@ var MiniChunk = class _MiniChunk {
     let { x, y, z } = pos;
     return new _MiniChunk({ x: x / size, z: z / size, y: y / ysize }, dim);
   }
+  static getChunkKey(x, y, z) {
+    return `${Math.floor(x / size)}|${Math.floor(y / ysize)}|${Math.floor(z / size)}`;
+  }
   /**
    * if the chunk is already cleared
    */
@@ -9620,38 +9620,10 @@ var MiniChunk = class _MiniChunk {
     }
   }
 };
-var TaskQueue = class {
-  tasks = [];
-  #run;
-  runCount = 10;
-  /**
-   * 
-   * @param {number} runCount 
-   */
-  run(runCount) {
-    this.runCount = runCount;
-    this.#run = system32.runInterval(() => {
-      const start = Date.now();
-      const BUDGET2 = 15;
-      for (let iter = 0; iter < this.runCount; iter++) {
-        if (Date.now() - start > BUDGET2) break;
-        if (this.tasks.length !== 0) {
-          const task = this.tasks.shift();
-          if (task) task();
-        } else {
-          this.push(main);
-        }
-      }
-    }, 0);
-  }
-  stop(runId = this.#run) {
-    if (typeof runId === "number") system32.clearRun(runId);
-  }
-  push = (...args) => this.tasks.push(...args);
-};
 var DB = new EndlessDB("lum:end_stone_clearing:");
 var data = {};
-var Q = new TaskQueue();
+var Q = [];
+var lastPlayerChunks = /* @__PURE__ */ new Map();
 system32.run(() => {
   try {
     the_end = world28.getDimension("minecraft:overworld");
@@ -9675,29 +9647,43 @@ system32.run(() => {
       return typeId.includes("log") || typeId.includes("leaves") || typeId.includes("wood") || typeId.includes("lichen") || typeId.includes("grass") || typeId.includes("flower") || typeId.includes("plant") || typeId.includes("fern") || typeId.includes("bush") || typeId.includes("vine") || typeId.includes("sapling") || typeId.includes("mushroom") || typeId.includes("bamboo") || typeId.includes("sugar_cane") || typeId.includes("lily_pad") || typeId.includes("chorus_") || typeId.includes("end_stone") || typeId.includes("end_gateway");
     });
     data = DB.getAll();
-    Q.run(30);
-    world28.sendMessage("TerrainPatching initialized (extended overworld clearing enabled)");
   } catch (e) {
-    world28.sendMessage("TerrainPatching init error: " + e);
+    console.warn("TerrainPatching init error: " + e);
   }
 });
-var main = () => {
+system32.runInterval(() => {
+  if (Q.length === 0) return;
+  const start = Date.now();
+  const BUDGET2 = 5;
+  while (Q.length > 0) {
+    if (Date.now() - start > BUDGET2) break;
+    const task = Q.shift();
+    if (task) task();
+  }
+}, 1);
+system32.runInterval(() => {
   if (!GaiaDimension || !the_end) return;
   const players = GaiaDimension.getPlayers();
   for (const p of players) {
-    let range = 8;
-    let loc = p.location;
-    for (let radius = 1; radius <= range; radius++) {
-      for (let y = -2; y <= 3; y++) {
-        for (let x = -radius; x <= radius; x++) {
-          for (let z = -radius; z <= radius; z++) {
-            if (x === 0 && y === 0 && z === 0 && radius > 1) continue;
-            const checkX = loc.x + x * size;
-            const checkY = loc.y + y * ysize;
-            const checkZ = loc.z + z * size;
-            if (GaiaDimension.isInDimension({ x: checkX, y: checkY, z: checkZ })) {
+    const loc = p.location;
+    const currentChunkKey = `${Math.floor(loc.x / size)}|${Math.floor(loc.z / size)}`;
+    if (lastPlayerChunks.get(p.id) === currentChunkKey) continue;
+    lastPlayerChunks.set(p.id, currentChunkKey);
+    const range = 4;
+    const dim = p.dimension;
+    for (let x = -range; x <= range; x++) {
+      for (let z = -range; z <= range; z++) {
+        for (let y = -2; y <= 2; y++) {
+          const checkX = loc.x + x * size;
+          const checkY = loc.y + y * ysize;
+          const checkZ = loc.z + z * size;
+          if (GaiaDimension.isInDimension({ x: checkX, y: checkY, z: checkZ })) {
+            const chunkX = Math.floor(checkX / size);
+            const chunkY = Math.floor(checkY / ysize);
+            const chunkZ = Math.floor(checkZ / size);
+            if (!data[chunkY]?.[chunkX]?.[chunkZ]) {
               Q.push(() => {
-                const chunk = MiniChunk.getAt({ x: checkX, y: checkY, z: checkZ }, p.dimension);
+                const chunk = new MiniChunk({ x: chunkX, y: chunkY, z: chunkZ }, dim);
                 if (!chunk.isChecked) {
                   if (chunk.clear()) {
                     chunk.isChecked = true;
@@ -9709,28 +9695,14 @@ var main = () => {
         }
       }
     }
-    ;
   }
-};
-var ticksPerSecond = 20;
-var startTime = Date.now();
-system32.runInterval(() => {
-  const now = Date.now();
-  ticksPerSecond = 1e3 / ((now - startTime) / 20);
-  startTime = now;
-  if (ticksPerSecond > 20.15) {
-    Q.runCount = Math.min(Q.runCount + 1, 100);
-  } else if (ticksPerSecond < 19.3) {
-    Q.runCount = Math.max(Q.runCount - 1, 1);
-  }
-  ;
-}, 20);
+}, 10);
 system32.runInterval(() => {
   if (Object.keys(data).length > 0) {
     DB.setAll(data);
   }
 }, 600);
-system32.beforeEvents.worldLeave.subscribe((e) => {
+system32.beforeEvents.shutdown.subscribe((e) => {
   if (Object.keys(data).length > 0) {
     DB.setAll(data);
   }
@@ -10022,7 +9994,6 @@ enchantmentManager.register("gaia:thunder_strike", {
 });
 
 // GaiaDimensions_BP/src/GaiaDimensionAddon.js
-world31.sendMessage("\xA7l\xA7a[GaiaDimensionAddon.js] Main script loaded and executing!");
 initializeDestructionHandlers();
 initializeEventManager();
 initializeScriptEvents();

@@ -48,7 +48,7 @@ export class DimensionSystem {
             return false;
         }
         const result = GaiaDimension.isInDimension(entity.location);
-        world.sendMessage(`§e[Gaia.js] isInGaia: Entity at (${entity.location.x}, ${entity.location.y}, ${entity.location.z}) in ${entity.dimension.id}. In Gaia bounds: ${result}.`);
+        // world.sendMessage(`§e[Gaia.js] isInGaia: Entity at (${entity.location.x}, ${entity.location.y}, ${entity.location.z}) in ${entity.dimension.id}. In Gaia bounds: ${result}.`);
         return result;
     }
 
@@ -368,9 +368,9 @@ system.run(() => {
             range: { start: { x: RANGE_START, z: RANGE_START }, end: { x: RANGE_END, z: RANGE_END } },
             inheritance: "minecraft:overworld"
         });
-        world.sendMessage(`§a[Gaia.js] GaiaDimension initialized with inheritance: ${GaiaDimension.inheritance.id}`);
+        // world.sendMessage(`§a[Gaia.js] GaiaDimension initialized with inheritance: ${GaiaDimension.inheritance.id}`);
     } catch (e) {
-        world.sendMessage(`§c[Gaia.js] GaiaDimension initialization error: ${e}`);
+        // world.sendMessage(`§c[Gaia.js] GaiaDimension initialization error: ${e}`);
     }
 });
 

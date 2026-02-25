@@ -96,6 +96,11 @@ class MiniChunk {
     let { x, y, z } = pos;
     return new MiniChunk({ x: x / size, z: z / size, y: y / ysize }, dim)
   }
+  
+  static getChunkKey(x, y, z) {
+      return `${Math.floor(x/size)}|${Math.floor(y/ysize)}|${Math.floor(z/size)}`;
+  }
+
   /**
    * if the chunk is already cleared
    */
@@ -132,45 +137,10 @@ class MiniChunk {
   }
 }
 
-/**
- * Class for optimization
- */
-class TaskQueue {
-  tasks = [];
-  #run;
-  runCount = 10;
-  /**
-   * 
-   * @param {number} runCount 
-   */
-  run(runCount) {
-    this.runCount = runCount;
-    this.#run = system.runInterval(() => {
-      const start = Date.now();
-      const BUDGET = 15;
-      
-      for (let iter = 0; iter < this.runCount; iter++) {
-        if (Date.now() - start > BUDGET) break; 
-        
-        if (this.tasks.length !== 0) {
-          const task = this.tasks.shift();
-          if (task) task();
-        } else {
-            this.push(main);
-        }
-      }
-    }, 0);
-  }
-  stop(runId = this.#run) {
-    if (typeof runId === "number") system.clearRun(runId);
-  }
-
-  push = (...args) => this.tasks.push(...args)
-}
-
 let DB = new EndlessDB("lum:end_stone_clearing:");
 let data = {};
-const Q = new TaskQueue();
+const Q = []; // Radically simplified queue
+const lastPlayerChunks = new Map();
 
 system.run(() => {
   try {
@@ -180,10 +150,8 @@ system.run(() => {
       // Initialize the filter with vanilla data for logs, leaves, lichen, and more
       // This ensures we ONLY delete vanilla features and NEVER touch custom Gaia blocks.
       clearFilter = Object.values(MinecraftBlockTypes).filter(typeId => {
-          // NEVER target custom blocks (anything not starting with minecraft:)
           if (!typeId.startsWith("minecraft:")) return false;
 
-          // Keep essential vanilla terrain blocks (do not delete these)
           const essentialBlocks = [
               "minecraft:air", "minecraft:bedrock", "minecraft:stone", "minecraft:dirt", 
               "minecraft:grass_block", "minecraft:sand", "minecraft:gravel", 
@@ -191,7 +159,6 @@ system.run(() => {
           ];
           if (essentialBlocks.includes(typeId)) return false;
 
-          // Inclusion criteria: Target vanilla vegetation, logs, and structures that shouldn't be in Gaia
           return (
               typeId.includes("log") || 
               typeId.includes("leaves") || 
@@ -215,62 +182,71 @@ system.run(() => {
       });
 
       data = DB.getAll();
-      Q.run(30); 
-      world.sendMessage("TerrainPatching initialized (extended overworld clearing enabled)");
   } catch(e) {
-      world.sendMessage("TerrainPatching init error: " + e);
+      console.warn("TerrainPatching init error: " + e);
   }
 });
 
-const main = () => {
+// This executes chunk clears with a very strict time budget to entirely eliminate lag spikes.
+system.runInterval(() => {
+    if (Q.length === 0) return;
+    
+    const start = Date.now();
+    const BUDGET = 5; // Strict 5ms budget per tick (Minecraft ticks are 50ms)
+    
+    while (Q.length > 0) {
+        if (Date.now() - start > BUDGET) break;
+        const task = Q.shift();
+        if (task) task();
+    }
+}, 1);
+
+// Run the main scanner only twice a second instead of every tick.
+// The old logic was endlessly executing this scan hundreds of times per tick if the queue was empty!
+system.runInterval(() => {
   if (!GaiaDimension || !the_end) return; 
   const players = GaiaDimension.getPlayers();
   
   for (const p of players) {
-    let range = 8;
-    let loc = p.location;
-    for (let radius = 1; radius <= range; radius++) {
-      for (let y = -2; y <= 3; y++) {
-        for (let x = -radius; x <= radius; x++) {
-          for (let z = -radius; z <= radius; z++) {
-            if (x === 0 && y === 0 && z === 0 && radius > 1) continue;
-            
+    const loc = p.location;
+    const currentChunkKey = `${Math.floor(loc.x/size)}|${Math.floor(loc.z/size)}`;
+    
+    // Only scan if the player moved to a new chunk (16x16 horizontal area)
+    if (lastPlayerChunks.get(p.id) === currentChunkKey) continue;
+    lastPlayerChunks.set(p.id, currentChunkKey);
+
+    const range = 4; // 64 block radius
+    const dim = p.dimension;
+
+    for (let x = -range; x <= range; x++) {
+      for (let z = -range; z <= range; z++) {
+        for (let y = -2; y <= 2; y++) {
             const checkX = loc.x + x * size;
             const checkY = loc.y + y * ysize;
             const checkZ = loc.z + z * size;
             
             if (GaiaDimension.isInDimension({ x: checkX, y: checkY, z: checkZ })) {
-                Q.push(() => {
-                  const chunk = MiniChunk.getAt({ x: checkX, y: checkY, z: checkZ }, p.dimension);
-                  if (!chunk.isChecked) {
-                      if (chunk.clear()) {
-                          chunk.isChecked = true;
+                const chunkX = Math.floor(checkX / size);
+                const chunkY = Math.floor(checkY / ysize);
+                const chunkZ = Math.floor(checkZ / size);
+                
+                // Extremely fast memory lookup before any heavy instantiation or queueing
+                if (!data[chunkY]?.[chunkX]?.[chunkZ]) {
+                    Q.push(() => {
+                      const chunk = new MiniChunk({ x: chunkX, y: chunkY, z: chunkZ }, dim);
+                      if (!chunk.isChecked) {
+                          if (chunk.clear()) {
+                              chunk.isChecked = true;
+                          }
                       }
-                  }
-                })
+                    });
+                }
             }
-          }
         }
       }
-    };
+    }
   }
-}
-
-// TPS counter
-export let ticksPerSecond = 20;
-let startTime = Date.now();
-
-system.runInterval(() => {
-  const now = Date.now();
-  ticksPerSecond = 1000 / ((now - startTime) / 20);
-  startTime = now;
-
-  if (ticksPerSecond > 20.15) {
-    Q.runCount = Math.min(Q.runCount + 1, 100);
-  } else if (ticksPerSecond < 19.3){
-    Q.runCount = Math.max(Q.runCount - 1, 1);
-  };
-}, 20);
+}, 10);
 
 // Persistence
 system.runInterval(() => {
@@ -279,7 +255,7 @@ system.runInterval(() => {
     }
 }, 600);
 
-system.beforeEvents.worldLeave.subscribe((e) => {
+system.beforeEvents.shutdown.subscribe((e) => {
   if (Object.keys(data).length > 0) {
       DB.setAll(data);
   }
