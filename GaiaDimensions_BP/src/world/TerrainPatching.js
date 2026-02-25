@@ -169,7 +169,7 @@ system.run(() => {
               typeId.includes("plant") || 
               typeId.includes("fern") || 
               typeId.includes("bush") || 
-              typeId.includes("vine") || 
+              typeId.includes("vines") || 
               typeId.includes("sapling") || 
               typeId.includes("mushroom") || 
               typeId.includes("bamboo") || 
@@ -192,7 +192,7 @@ system.runInterval(() => {
     if (Q.length === 0) return;
     
     const start = Date.now();
-    const BUDGET = 5; // Strict 5ms budget per tick (Minecraft ticks are 50ms)
+    const BUDGET = 1; // Strict 5ms budget per tick (Minecraft ticks are 50ms)
     
     while (Q.length > 0) {
         if (Date.now() - start > BUDGET) break;

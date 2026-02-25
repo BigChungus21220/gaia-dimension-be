@@ -9644,7 +9644,7 @@ system32.run(() => {
         "minecraft:tuff"
       ];
       if (essentialBlocks.includes(typeId)) return false;
-      return typeId.includes("log") || typeId.includes("leaves") || typeId.includes("wood") || typeId.includes("lichen") || typeId.includes("grass") || typeId.includes("flower") || typeId.includes("plant") || typeId.includes("fern") || typeId.includes("bush") || typeId.includes("vine") || typeId.includes("sapling") || typeId.includes("mushroom") || typeId.includes("bamboo") || typeId.includes("sugar_cane") || typeId.includes("lily_pad") || typeId.includes("chorus_") || typeId.includes("end_stone") || typeId.includes("end_gateway");
+      return typeId.includes("log") || typeId.includes("leaves") || typeId.includes("wood") || typeId.includes("lichen") || typeId.includes("grass") || typeId.includes("flower") || typeId.includes("plant") || typeId.includes("fern") || typeId.includes("bush") || typeId.includes("vines") || typeId.includes("sapling") || typeId.includes("mushroom") || typeId.includes("bamboo") || typeId.includes("sugar_cane") || typeId.includes("lily_pad") || typeId.includes("chorus_") || typeId.includes("end_stone") || typeId.includes("end_gateway");
     });
     data = DB.getAll();
   } catch (e) {
@@ -9654,7 +9654,7 @@ system32.run(() => {
 system32.runInterval(() => {
   if (Q.length === 0) return;
   const start = Date.now();
-  const BUDGET2 = 5;
+  const BUDGET2 = 1;
   while (Q.length > 0) {
     if (Date.now() - start > BUDGET2) break;
     const task = Q.shift();
