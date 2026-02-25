@@ -268,25 +268,46 @@ system.runInterval(() => {
                     }
                 }
 
-                const absRot = Math.abs(task.rotationY % 360);
-                let axis = ((absRot >= 45 && absRot <= 135) || (absRot >= 225 && absRot <= 315)) ? "x" : "z";
+                // IMPROVED Cardinal Direction mapping
+                let rotation = task.rotationY;
+                while (rotation < 0) rotation += 360;
+                rotation = rotation % 360;
+
+                let direction = "north";
+                let axis = "x"; // Frame along X axis
+
+                if (rotation >= 45 && rotation < 135) {
+                    direction = "east";
+                    axis = "z";
+                } else if (rotation >= 135 && rotation < 225) {
+                    direction = "south";
+                    axis = "x";
+                } else if (rotation >= 225 && rotation < 315) {
+                    direction = "west";
+                    axis = "z";
+                }
+
                 const frameBlock = "gaiadimension:keystone_block"; 
                 const portalBlockId = "gaiadimension:gaia_dimension_portal";
-                let portalPerm = BlockPermutation.resolve(portalBlockId, { "gaiadimension:perm_dim": 0, "minecraft:cardinal_direction": axis === "x" ? "north" : "east" });
+                let portalPerm = BlockPermutation.resolve(portalBlockId, { 
+                    "gaiadimension:perm_dim": 0, 
+                    "minecraft:cardinal_direction": direction 
+                });
 
                 const build = (dx, dy, dz, type, perm) => {
                     const block = targetDim.getBlock({ x: px + dx, y: py + dy, z: pz + dz });
                     if (block) { block.setType(type); if (perm) block.setPermutation(perm); }
                 };
 
+                // Alignment: If axis is X, frame varies in X. If axis is Z, frame varies in Z.
                 if (axis === "x") {
-                    for (let i = -1; i <= 2; i++) { build(0, 0, i, frameBlock); build(0, 4, i, frameBlock); }
-                    for (let y = 1; y <= 3; y++) { build(0, y, -1, frameBlock); build(0, y, 2, frameBlock); }
-                    for (let i = 0; i <= 1; i++) for (let y = 1; y <= 3; y++) build(0, y, i, portalBlockId, portalPerm);
-                } else {
                     for (let i = -1; i <= 2; i++) { build(i, 0, 0, frameBlock); build(i, 4, 0, frameBlock); }
                     for (let y = 1; y <= 3; y++) { build(-1, y, 0, frameBlock); build(2, y, 0, frameBlock); }
                     for (let i = 0; i <= 1; i++) for (let y = 1; y <= 3; y++) build(i, y, 0, portalBlockId, portalPerm);
+                } else {
+                    for (let i = -1; i <= 2; i++) { build(0, 0, i, frameBlock); build(0, 4, i, frameBlock); }
+                    for (let y = 1; y <= 3; y++) { build(0, y, -1, frameBlock); build(0, y, 2, frameBlock); }
+                    for (let i = 0; i <= 1; i++) for (let y = 1; y <= 3; y++) build(0, y, i, portalBlockId, portalPerm);
                 }
 
                 PortalLinker.setLink(task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z, task.targetDimId, px, py, pz);
@@ -307,8 +328,10 @@ system.run(() => {
     } catch (e) {}
 });
 
+let isAlwaysDayActive = false;
+
 system.runInterval(() => {
-    const players = world.getPlayers();
+    const players = world.getAllPlayers();
     let anyPlayerInGaia = false;
 
     for (const player of players) {
@@ -357,8 +380,12 @@ system.runInterval(() => {
         }
     }
 
-    if (anyPlayerInGaia) {
+    if (anyPlayerInGaia && !isAlwaysDayActive) {
         world.getDimension("minecraft:overworld").runCommand("alwaysday");
+        isAlwaysDayActive = true;
+    } else if (!anyPlayerInGaia && isAlwaysDayActive) {
+        world.getDimension("minecraft:overworld").runCommand("alwaysday");
+        isAlwaysDayActive = false;
     }
 }, 10);
 
@@ -367,5 +394,13 @@ world.afterEvents.entitySpawn.subscribe((event) => {
     if (!entity || !entity.isValid) return;
     if (entity.typeId === "minecraft:enderman" && DimensionSystem.isInGaia(entity)) {
         if (Math.random() < 0.95) system.run(() => { if (entity.isValid) entity.remove(); });
+    }
+});
+
+world.afterEvents.gameRuleChange.subscribe(({rule, value}) => {
+    if (rule == "showCoordinates" && value == false) {
+        world.getAllPlayers().forEach(player =>
+            player.onScreenDisplay.setActionBar(`§.`)
+        );
     }
 });

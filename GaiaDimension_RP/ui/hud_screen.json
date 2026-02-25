@@ -1,0 +1,143 @@
+{
+	"namespace": "hud",
+
+	// this removes the action bar if it contains the text 'Position:'
+	"hud_actionbar_text": {
+		"$action_text": "$actionbar_text",
+		"visible": "(('§.' + $action_text) - 'Position:' = ('§.' + $action_text)))",
+		"controls": [
+			{
+				"actionbar_message": {
+				"type": "label",
+				"anchor_from": "center",
+				"anchor_to": "center",
+				"color": "$tool_tip_text",
+				"enable_profanity_filter": true,
+				"layer": 31,
+				"text": "$action_text",
+				"shadow": true,
+				"localize": false,
+				"alpha": "@hud.anim_actionbar_text_alpha_out"
+				}
+			}
+		]
+	},
+		
+	// replaces the vanilla coordinates panels with a custom actionbar
+	"player_position": {
+		"size": [ "100%c", "100%c" ],
+    	"texture": "textures/empty",
+		"controls": [],
+		"factory": {
+			"name": "hud_actionbar_text_factory",
+			"control_ids": {
+				"hud_actionbar_text": "custom_coordinates_text@hud.custom_coordinates_text"
+			}
+		}
+	},
+
+	// custom actionbar for chat stack
+	"custom_coordinates_text": {
+		"type": "image",
+		"anchor_from": "top_left",
+		"anchor_to": "top_left",
+		"size": [ "100%c + 6px", "100%c + 2px" ],
+		"texture": "textures/ui/Black",
+		"alpha": 0.7,
+		"$action_text": "$actionbar_text",
+		"$position": "($action_text - 'Position:')",
+		"visible": "(not (('§.' + $action_text) - 'Position:' = ('§.' + $action_text)))",
+		"bindings": [
+			{
+				"binding_name": "#player_position_visible",
+				"binding_name_override": "#visible",
+				"binding_condition": "always",
+				"binding_type": "global"
+			},
+			{
+				"binding_name": "#hud_text_background_alpha",
+				"binding_name_override": "#alpha"
+			}
+		],
+		"controls": [
+			{ "text_hieght": {
+				"type": "label",
+				"text": "§.",
+				"size": [ "100%c", "default" ],
+				"offset": [ 0, 1 ],
+				"controls": [
+					{ "position_stack": {
+						"type": "stack_panel",
+						"orientation": "horizontal",
+						"size": [ "100%c", "100%" ],
+						"controls": [
+							{
+								"position": {
+									"type": "label",
+									"layer": 31,
+									"text": "custom.coords",
+									"localize": true,
+									"alpha": "@hud.anim_actionbar_text_alpha_out"
+								}
+							},
+							{
+								"coords": {
+									"type": "label",
+									"layer": 31,
+									"text": "($action_text - 'Position')",
+									"alpha": "@hud.anim_actionbar_text_alpha_out"
+								}
+							}
+						]
+					}}
+				]
+			}}
+		]
+	},
+
+
+	// this replaces the vanilla title panel with a panel that contains vanilla and custom titles
+	"root_panel/hud_title_text_area": {
+		"factory": {
+			"name": "hud_title_text_factory",
+			"control_ids": {
+				"hud_title_text": "hud_title_text@hud.titles_panel"
+			}
+		}
+	},
+
+	// displays the custom titles if it contains the text 'cosmos:'; otherwise, it displays the vanilla title
+	"titles_panel": {
+		"type": "panel",
+		"controls": [
+			{ "default_title@hud.hud_title_text": {
+				"bindings": [
+					{
+						"binding_name": "#hud_title_text_string",
+						"binding_name_override": "#title_text",
+						"binding_type": "global"
+					},
+					{
+						"binding_type": "view",
+						"source_property_name": "(#title_text - 'cosmos:' = #title_text)",
+						"target_property_name": "#visible"
+					}
+				]
+			}},
+			{ "cosmos_title@hud.space_information": {
+				"bindings": [
+					{
+						"binding_name": "#hud_title_text_string",
+						"binding_name_override": "#title_text",
+						"binding_type": "global"
+					},
+					{
+						"binding_type": "view",
+						"source_property_name": "(not (#title_text - 'cosmos:' = #title_text))",
+						"target_property_name": "#visible"
+					}
+				]
+			}}
+		]
+	}
+	}

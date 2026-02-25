@@ -1,5 +1,6 @@
 pack.name=Gaia Dimension
 pack.description=Basked under an eternal sun, a world preserved in time, a land sprouting with crystals and minerals, the ground seeping a mysterious energy. Welcome to Gaia. Now its on Bedrock. This is a Bedrock port of the Java Mod Gaia Dimension.
+custom.coords=Position
 
 ## Auto-generated Translations
 item.gaiadimension:agate_arrow=Agate Arrow
