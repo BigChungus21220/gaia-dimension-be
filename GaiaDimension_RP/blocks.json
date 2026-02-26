@@ -1,3 +1,70 @@
 {
-  "format_version": [1, 1, 0]
+    "format_version": [
+        1,
+        1,
+        0
+    ],
+    "gaiadimension:charred_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:corrupted_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:murky_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:soft_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:blue_glitter_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:green_glitter_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:orange_glitter_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:pale_green_glitter_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:peach_glitter_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:pink_glitter_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:purple_glitter_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:aura_leaves": {
+        "sound": "glass"
+    },
+    "gaiadimension:blue_agate_leaves": {
+        "sound": "glass"
+    },
+    "gaiadimension:burnt_agate_leaves": {
+        "sound": "glass"
+    },
+    "gaiadimension:corrupted_leaves": {
+        "sound": "glass"
+    },
+    "gaiadimension:fire_agate_leaves": {
+        "sound": "glass"
+    },
+    "gaiadimension:fossilized_leaves": {
+        "sound": "glass"
+    },
+    "gaiadimension:golden_leaves": {
+        "sound": "glass"
+    },
+    "gaiadimension:green_agate_leaves": {
+        "sound": "glass"
+    },
+    "gaiadimension:pink_agate_leaves": {
+        "sound": "glass"
+    },
+    "gaiadimension:purple_agate_leaves": {
+        "sound": "glass"
+    }
 }
