@@ -12,14 +12,21 @@ let deployPlugin = {
                 console.error('Build failed, skipping deployment');
                 return;
             }
-            console.log('Build succeeded, deploying...');
-            const deploy = spawn('python', ['deploy.py'], { stdio: 'inherit' });
-            deploy.on('close', (code) => {
-                if (code === 0) {
-                    console.log('Deployment complete!');
-                } else {
-                    console.error(`Deployment failed with code ${code}`);
+            console.log('Build succeeded, generating staves and deploying...');
+            const gen = spawn('python', ['magic_staff_gen.py'], { stdio: 'inherit' });
+            gen.on('close', (genCode) => {
+                if (genCode !== 0) {
+                    console.error(`Staff generation failed with code ${genCode}`);
+                    return;
                 }
+                const deploy = spawn('python', ['deploy.py'], { stdio: 'inherit' });
+                deploy.on('close', (code) => {
+                    if (code === 0) {
+                        console.log('Deployment complete!');
+                    } else {
+                        console.error(`Deployment failed with code ${code}`);
+                    }
+                });
             });
         });
     },
