@@ -1,5 +1,5 @@
 // GaiaDimensions_BP/src/GaiaDimensionAddon.js
-import { world as world34, system as system35 } from "@minecraft/server";
+import { world as world33, system as system34 } from "@minecraft/server";
 
 // GaiaDimensions_BP/src/blocks/leaves.js
 import { system } from "@minecraft/server";
@@ -5308,85 +5308,10 @@ function initializeLightMixin() {
   });
 }
 
-// GaiaDimensions_BP/src/mixins/skybox.js
-import { world as world24, system as system27 } from "@minecraft/server";
-var SKYBOX_ENTITY = "gaiadimension:gaia_dimension_skybox";
-var SKYBOX_PROPERTY = "gaiadimension:is_active";
-var playerSkyboxMap = /* @__PURE__ */ new Map();
-var playerCache = /* @__PURE__ */ new Map();
-function initializeSkybox() {
-  system27.run(() => {
-    for (const player of world24.getAllPlayers()) {
-      playerCache.set(player.id, player);
-    }
-  });
-  system27.runInterval(() => {
-    for (const player of world24.getAllPlayers()) {
-      playerCache.set(player.id, player);
-    }
-    for (const [id, player] of playerCache) {
-      if (!player.isValid) playerCache.delete(id);
-    }
-  }, 40);
-  world24.afterEvents.playerJoin.subscribe((event) => {
-    system27.run(() => {
-      const player = world24.getEntity(event.playerId);
-      if (player) playerCache.set(player.id, player);
-    });
-  });
-  world24.afterEvents.playerLeave.subscribe((event) => {
-    const skybox = playerSkyboxMap.get(event.playerId);
-    if (skybox && skybox.isValid) {
-      try {
-        skybox.remove();
-      } catch (e) {
-      }
-    }
-    playerSkyboxMap.delete(event.playerId);
-    playerCache.delete(event.playerId);
-  });
-  system27.runInterval(() => {
-    for (const player of playerCache.values()) {
-      if (!player.isValid) continue;
-      if (DimensionSystem.isInGaia(player)) {
-        let skybox = playerSkyboxMap.get(player.id);
-        if (!skybox || !skybox.isValid) {
-          try {
-            skybox = player.dimension.spawnEntity(SKYBOX_ENTITY, player.location);
-            playerSkyboxMap.set(player.id, skybox);
-          } catch (e) {
-            continue;
-          }
-        }
-        try {
-          skybox.teleport({ x: player.location.x, y: player.location.y - 20, z: player.location.z });
-          const isActive = skybox.getProperty(SKYBOX_PROPERTY);
-          if (isActive !== true) {
-            skybox.setProperty(SKYBOX_PROPERTY, true);
-          }
-        } catch (e) {
-          playerSkyboxMap.delete(player.id);
-        }
-      } else {
-        const skybox = playerSkyboxMap.get(player.id);
-        if (skybox) {
-          if (skybox.isValid) {
-            try {
-              skybox.remove();
-            } catch (e) {
-            }
-          }
-          playerSkyboxMap.delete(player.id);
-        }
-      }
-    }
-  }, 1);
-}
-
 // GaiaDimensions_BP/src/systems/scriptevents.js
-import { system as system28, world as world25, ItemStack as ItemStack7 } from "@minecraft/server";
+import { system as system27, world as world24, ItemStack as ItemStack7 } from "@minecraft/server";
 function initializeScriptEvents() {
-  system28.afterEvents.scriptEventReceive.subscribe((event) => {
+  system27.afterEvents.scriptEventReceive.subscribe((event) => {
     if (event.id === "gaiadimension:give_agate_arrow") {
       const arrow = event.sourceEntity;
       if (!arrow) return;
@@ -5408,7 +5333,7 @@ function initializeScriptEvents() {
 }
 
 // GaiaDimensions_BP/src/fluids/fluids.js
-import { world as world26, system as system29, BlockPermutation as BlockPermutation12, ItemStack as ItemStack8, BlockVolume as BlockVolume2, GameMode as GameMode8 } from "@minecraft/server";
+import { world as world25, system as system28, BlockPermutation as BlockPermutation12, ItemStack as ItemStack8, BlockVolume as BlockVolume2, GameMode as GameMode8 } from "@minecraft/server";
 var fluids = [
   "gaiadimension:liquid_bismuth",
   "gaiadimension:liquid_bismuth_down",
@@ -5504,7 +5429,7 @@ var DIRECTIONS = [
   { x: -1, y: 0, z: 0, name: "West" }
 ];
 var playerFluidState = /* @__PURE__ */ new Map();
-system29.runInterval(() => {
+system28.runInterval(() => {
   const start = Date.now();
   runPlayerEffects();
   if (Date.now() - start > BUDGET) return;
@@ -5519,7 +5444,7 @@ system29.runInterval(() => {
       if (block.isValid) {
         const didChange = processFluidBlock(block, dimension);
         if (didChange) {
-          ACTIVE_FLUIDS.set(key, system29.currentTick);
+          ACTIVE_FLUIDS.set(key, system28.currentTick);
         }
       }
     } catch (e) {
@@ -5527,9 +5452,9 @@ system29.runInterval(() => {
   }
 });
 function runPlayerEffects() {
-  const players = world26.getPlayers();
+  const players = world25.getPlayers();
   for (const player of players) {
-    const dimension = world26.getDimension(player.dimension.id);
+    const dimension = world25.getDimension(player.dimension.id);
     const location = player.location;
     const blockAt = dimension.getBlock(location);
     const blockAbove = dimension.getBlock({ x: location.x, y: location.y + 1, z: location.z });
@@ -5576,7 +5501,7 @@ function runPlayerEffects() {
     if (isOnSurfaceMineralWater) {
       const velocity = player.getVelocity();
       const speed = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
-      if (speed > 0.08 && system29.currentTick % 8 === 0) {
+      if (speed > 0.08 && system28.currentTick % 8 === 0) {
         player.playSound("entity.boat.paddle_water", { volume: 0.25, pitch: 1 });
       }
     }
@@ -5842,7 +5767,7 @@ var FluidFlowComponent = class {
     const key = `${block.location.x},${block.location.y},${block.location.z},${block.dimension.id}`;
     const lastActive = ACTIVE_FLUIDS.get(key);
     if (!lastActive) {
-      ACTIVE_FLUIDS.set(key, system29.currentTick);
+      ACTIVE_FLUIDS.set(key, system28.currentTick);
     }
     if (!PENDING_BLOCKS.has(key)) {
       PENDING_BLOCKS.set(key, { block, dimension: block.dimension });
@@ -5863,16 +5788,16 @@ function wakeNeighbors(location, dimension) {
     const ny = location.y + offset.y;
     const nz = location.z + offset.z;
     const key = `${nx},${ny},${nz},${dimension.id}`;
-    ACTIVE_FLUIDS.set(key, system29.currentTick);
+    ACTIVE_FLUIDS.set(key, system28.currentTick);
   }
 }
-world26.afterEvents.playerPlaceBlock.subscribe((event) => {
+world25.afterEvents.playerPlaceBlock.subscribe((event) => {
   wakeNeighbors(event.block.location, event.block.dimension);
 });
-world26.afterEvents.playerBreakBlock.subscribe((event) => {
+world25.afterEvents.playerBreakBlock.subscribe((event) => {
   wakeNeighbors(event.block.location, event.block.dimension);
 });
-world26.beforeEvents.playerInteractWithBlock.subscribe((event) => {
+world25.beforeEvents.playerInteractWithBlock.subscribe((event) => {
   const { player, block, itemStack } = event;
   if (!itemStack) return;
   if (itemStack.typeId.startsWith("gaiadimension:") && itemStack.typeId.endsWith("_bucket")) {
@@ -5882,7 +5807,7 @@ world26.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     };
     if (isFlowingVariant(block)) {
       event.cancel = true;
-      system29.run(() => {
+      system28.run(() => {
         if (block.isValid) {
           const perm = BlockPermutation12.resolve(fluidId);
           block.setPermutation(perm);
@@ -5943,14 +5868,14 @@ world26.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     if (targetBlock && (targetBlock.isAir || isReplaceable(targetBlock) || isFlowingVariant(targetBlock))) {
       if (targetBlock.typeId === fluidId) {
         event.cancel = true;
-        system29.run(() => {
+        system28.run(() => {
           targetBlock.setType("minecraft:air");
           wakeNeighbors(targetBlock.location, dimension);
         });
         return;
       }
       event.cancel = true;
-      system29.run(() => {
+      system28.run(() => {
         if (targetBlock.isValid) {
           const perm = BlockPermutation12.resolve(fluidId);
           targetBlock.setPermutation(perm);
@@ -5989,7 +5914,7 @@ world26.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     if (!isFlowing) {
       let bucketId = typeId + "_bucket";
       event.cancel = true;
-      system29.run(() => {
+      system28.run(() => {
         if (player.getGameMode() !== GameMode8.Creative) {
           const container = player.getComponent("inventory")?.container;
           if (container) {
@@ -6022,7 +5947,7 @@ world26.beforeEvents.playerInteractWithBlock.subscribe((event) => {
   if (fluidIDs.has(block.typeId)) {
     if (itemStack.typeId === "minecraft:bucket" || itemStack.typeId.endsWith("_bucket")) return;
     event.cancel = true;
-    system29.run(() => {
+    system28.run(() => {
       if (block.isValid && itemStack) {
         try {
           const blockPerm = BlockPermutation12.resolve(itemStack.typeId);
@@ -6047,14 +5972,14 @@ world26.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     });
   }
 });
-world26.beforeEvents.playerBreakBlock.subscribe((event) => {
+world25.beforeEvents.playerBreakBlock.subscribe((event) => {
   const { player, block, itemStack } = event;
   if (fluidIDs.has(block.typeId)) {
     event.cancel = true;
   }
 });
-system29.runInterval(() => {
-  for (const player of world26.getAllPlayers()) {
+system28.runInterval(() => {
+  for (const player of world25.getAllPlayers()) {
     const container = player.getComponent("inventory")?.container;
     if (!container) continue;
     for (let i = 0; i < container.size; i++) {
@@ -6078,7 +6003,7 @@ function registerFluidComponent({ blockComponentRegistry }) {
   blockComponentRegistry.registerCustomComponent("gaiadimension:fluid_flow", new FluidFlowComponent());
 }
 function runBoatLogic() {
-  const players = world26.getPlayers();
+  const players = world25.getPlayers();
   if (players.length === 0) return;
   const activeDimensions = new Set(players.map((p) => p.dimension));
   for (const dimension of activeDimensions) {
@@ -6146,9 +6071,9 @@ function processBoat(boat, dimension) {
 }
 
 // GaiaDimensions_BP/src/durability.js
-import { system as system30 } from "@minecraft/server";
+import { system as system29 } from "@minecraft/server";
 function registerCustomTool() {
-  system30.beforeEvents.startup.subscribe((event) => {
+  system29.beforeEvents.startup.subscribe((event) => {
     event.itemComponentRegistry.registerCustomComponent("luminiae:durability", {
       onUseOn(e, params) {
         const { source, itemStack, block } = e;
@@ -6189,10 +6114,10 @@ function applyCustomDamage(player, itemStack, damageAmount) {
 }
 
 // GaiaDimensions_BP/src/world/CoordinateDisplay.js
-import { world as world27, system as system31 } from "@minecraft/server";
+import { world as world26, system as system30 } from "@minecraft/server";
 function updateAllCoordinateDisplays() {
-  const showCoords = world27.gameRules.showCoordinates;
-  for (const player of world27.getAllPlayers()) {
+  const showCoords = world26.gameRules.showCoordinates;
+  for (const player of world26.getAllPlayers()) {
     if (!player.isValid) continue;
     if (!showCoords) {
       if (player.hasTag("gaiadimension:showing_coords")) {
@@ -6221,7 +6146,7 @@ function updateAllCoordinateDisplays() {
     if (!player.hasTag("gaiadimension:showing_coords")) player.addTag("gaiadimension:showing_coords");
   }
 }
-system31.runInterval(() => {
+system30.runInterval(() => {
   try {
     updateAllCoordinateDisplays();
   } catch (e) {
@@ -6229,10 +6154,10 @@ system31.runInterval(() => {
 }, 1);
 
 // GaiaDimensions_BP/src/world/Biome.js
-import { world as world29 } from "@minecraft/server";
+import { world as world28 } from "@minecraft/server";
 
 // GaiaDimensions_BP/src/world/Events.js
-import { world as world28, system as system32 } from "@minecraft/server";
+import { world as world27, system as system31 } from "@minecraft/server";
 var EventHandler = class {
   constructor() {
     this.handlers = [];
@@ -6252,8 +6177,8 @@ var EventHandler = class {
 var playerChangeBiome = new EventHandler();
 var playerChangeBlock = new EventHandler();
 var lastPlayerPositions = /* @__PURE__ */ new Map();
-system32.runInterval(() => {
-  for (const player of world28.getAllPlayers()) {
+system31.runInterval(() => {
+  for (const player of world27.getAllPlayers()) {
     if (!player.isValid) {
       lastPlayerPositions.delete(player.id);
       continue;
@@ -6286,7 +6211,7 @@ var BiomeSystem = class {
     const biome = DimensionSystem.getBiome(player);
     if (DimensionSystem.isInGaia(player)) {
       if (this.#playerBiomes[player.id] != biome) {
-        world29.sendMessage(`\xA7b[BiomeSystem] Biome change for ${player.name}: ${biome}`);
+        world28.sendMessage(`\xA7b[BiomeSystem] Biome change for ${player.name}: ${biome}`);
         playerChangeBiome.trigger({ player, biome });
       }
     }
@@ -6306,7 +6231,7 @@ playerChangeBlock.subscribe((eventData) => {
 });
 
 // GaiaDimensions_BP/src/world/Fog.js
-import { world as world30 } from "@minecraft/server";
+import { world as world29 } from "@minecraft/server";
 var FogSystem = class {
   /**
    * The fogs the player has applied
@@ -6396,7 +6321,7 @@ playerChangeBlock.subscribe((eventData) => {
 });
 
 // GaiaDimensions_BP/src/systems/Cleaner.js
-import { world as world31, system as system33, BlockVolume as BlockVolume3, BlockPermutation as BlockPermutation13 } from "@minecraft/server";
+import { world as world30, system as system32, BlockVolume as BlockVolume3, BlockPermutation as BlockPermutation13 } from "@minecraft/server";
 var CLUTTER_TAGS = [
   "grass",
   "plant",
@@ -6434,17 +6359,17 @@ var DIM;
 var SHARED_VOL;
 var QUEUE = [];
 var CACHE = /* @__PURE__ */ new Set();
-system33.run(() => {
+system32.run(() => {
   try {
     AIR = BlockPermutation13.resolve("minecraft:air");
-    DIM = world31.getDimension("minecraft:overworld");
+    DIM = world30.getDimension("minecraft:overworld");
     SHARED_VOL = new BlockVolume3({ x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 0 });
   } catch (e) {
   }
 });
-system33.runInterval(() => {
+system32.runInterval(() => {
   if (QUEUE.length < 2) return;
-  const players = world31.getAllPlayers().filter((p) => p.dimension.id === "minecraft:overworld");
+  const players = world30.getAllPlayers().filter((p) => p.dimension.id === "minecraft:overworld");
   if (players.length === 0) return;
   const pLoc = players[0].location;
   QUEUE.sort((a, b) => {
@@ -6453,7 +6378,7 @@ system33.runInterval(() => {
     return dA - dB;
   });
 }, 100);
-system33.runInterval(() => {
+system32.runInterval(() => {
   if (QUEUE.length === 0 || !SHARED_VOL) return;
   const t = QUEUE[0];
   const yMin = 85 + t.s * 32;
@@ -6469,7 +6394,7 @@ system33.runInterval(() => {
     QUEUE.shift();
   }
 }, 1);
-system33.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
+system32.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
   blockComponentRegistry.registerCustomComponent("gaiadimension:overworld_cleaner", {
     onTick({ block }) {
       block.setPermutation(AIR);
@@ -6487,7 +6412,7 @@ system33.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
 });
 
 // GaiaDimensions_BP/src/API/lib/EnchantmentLib.js
-import { world as world32, system as system34, ItemStack as ItemStack9 } from "@minecraft/server";
+import { world as world31, system as system33, ItemStack as ItemStack9 } from "@minecraft/server";
 import { ActionFormData } from "@minecraft/server-ui";
 var EnchantmentManager = class {
   constructor() {
@@ -6519,17 +6444,17 @@ var EnchantmentManager = class {
     });
   }
   initEvents() {
-    system34.runInterval(() => this.manageVisuals(), 5);
-    world32.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
+    system33.runInterval(() => this.manageVisuals(), 5);
+    world31.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
       const { block, player, itemStack } = ev;
       if (block.typeId === "minecraft:enchanting_table" && player.isSneaking) {
         ev.cancel = true;
-        system34.run(() => {
+        system33.run(() => {
           this.openEnchantmentUI(player);
         });
       }
     });
-    world32.afterEvents.entityHitEntity.subscribe((ev) => {
+    world31.afterEvents.entityHitEntity.subscribe((ev) => {
       const { damagingEntity, hitEntity } = ev;
       if (!damagingEntity || !damagingEntity.getComponent("minecraft:equippable")) return;
       const equippable = damagingEntity.getComponent("minecraft:equippable");
@@ -6538,7 +6463,7 @@ var EnchantmentManager = class {
         this.triggerEnchants(mainHand, "onHit", ev);
       }
     });
-    world32.afterEvents.playerBreakBlock.subscribe((ev) => {
+    world31.afterEvents.playerBreakBlock.subscribe((ev) => {
       const { player, itemStack } = ev;
       if (itemStack) {
         this.triggerEnchants(itemStack, "onMine", ev);
@@ -6669,7 +6594,7 @@ ${color}Cost: ${e.cost} Lvl`);
    * Scans players to toggle glint state (Clean in cursor, Glint in inventory).
    */
   manageVisuals() {
-    for (const player of world32.getAllPlayers()) {
+    for (const player of world31.getAllPlayers()) {
       const cursorComp = player.getComponent("minecraft:cursor_inventory");
       if (cursorComp && cursorComp.item) {
         const item = cursorComp.item;
@@ -6743,7 +6668,7 @@ ${color}Cost: ${e.cost} Lvl`);
 var enchantmentManager = new EnchantmentManager();
 
 // GaiaDimensions_BP/src/systems/enchantments.js
-import { world as world33 } from "@minecraft/server";
+import { world as world32 } from "@minecraft/server";
 enchantmentManager.register("gaia:life_steal", {
   name: "Life Steal",
   maxLevel: 3,
@@ -6777,9 +6702,8 @@ initializeEventManager();
 initializeScriptEvents();
 initializeGeyser();
 initializeLightMixin();
-initializeSkybox();
 registerCustomTool();
-system35.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
+system34.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
   registerLeavesComponent({ blockComponentRegistry });
   registerInvisibleComponent({ blockComponentRegistry });
   registerCurtainComponent({ blockComponentRegistry });
