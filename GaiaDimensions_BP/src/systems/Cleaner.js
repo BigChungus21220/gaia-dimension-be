@@ -56,11 +56,12 @@ system.beforeEvents.startup.subscribe(({blockComponentRegistry}) => {
             if (GaiaDimension && GaiaDimension.isInDimension({x, z})) {
                 CACHE.add(key);
                 const dim = block.dimension;
+                
                 // Pre-instantiate BlockVolumes to remove all logic from the runInterval
                 for (let y = 85; y < 200; y += 24) {
                     QUEUE.push({
                         dim: dim,
-                        vol: new BlockVolume({x: cx, y: y, z: cz}, {x: cx + 15, y: y + 23, z: cz + 15})
+                        vol: new BlockVolume({x: cx, y: y, z: cz}, {x: cx + 15, y: Math.min(y + 23, 200), z: cz + 15})
                     });
                 }
             }

@@ -6516,7 +6516,7 @@ system33.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
         for (let y = 85; y < 200; y += 24) {
           QUEUE.push({
             dim,
-            vol: new BlockVolume3({ x: cx, y, z: cz }, { x: cx + 15, y: y + 23, z: cz + 15 })
+            vol: new BlockVolume3({ x: cx, y, z: cz }, { x: cx + 15, y: Math.min(y + 23, 200), z: cz + 15 })
           });
         }
       }
