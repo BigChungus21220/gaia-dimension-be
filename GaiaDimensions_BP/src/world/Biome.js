@@ -1,5 +1,6 @@
+import { world } from "@minecraft/server";
 import { DimensionSystem } from "./Gaia.js"
-import * as Events from "./Events"
+import * as Events from "./Events.js"
 
 
 

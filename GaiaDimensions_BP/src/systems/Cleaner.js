@@ -1,4 +1,4 @@
-import { world, BlockVolume, system } from "@minecraft/server"
+import { world, BlockVolume, system, BlockPermutation } from "@minecraft/server"
 import { GaiaDimension } from "../world/Gaia.js"
 
 /**
@@ -29,6 +29,17 @@ const VANILLA_CLUTTER = [
     "minecraft:snow", "minecraft:snow_layer", "minecraft:ice", "minecraft:packed_ice", "minecraft:blue_ice", "minecraft:powder_snow"
 ];
 
+// PRE-CALCULATED CONSTANTS
+let AIR_PERMUTATION;
+let CLEAR_OPTIONS;
+
+system.run(() => {
+    try {
+        AIR_PERMUTATION = BlockPermutation.resolve("minecraft:air");
+        CLEAR_OPTIONS = { blockFilter: { includeTypes: VANILLA_CLUTTER } };
+    } catch(e) {}
+});
+
 function chunk_corner({x, z}) {
     return {
         x: Math.floor(x / 16) * 16,
@@ -36,35 +47,61 @@ function chunk_corner({x, z}) {
     }
 }
 
+/**
+ * FAST QUEUE SYSTEM
+ * Processes strictly ONE slice per tick to ensure zero lag spikes.
+ */
+const CLEAR_QUEUE = [];
+
+system.runInterval(() => {
+    if (CLEAR_QUEUE.length === 0 || !AIR_PERMUTATION) return;
+    
+    const task = CLEAR_QUEUE.shift();
+    try {
+        task.dim.fillBlocks(
+            task.volume, 
+            AIR_PERMUTATION, 
+            CLEAR_OPTIONS
+        );
+    } catch(e) {}
+}, 1);
+
 system.beforeEvents.startup.subscribe(({blockComponentRegistry}) => {
     blockComponentRegistry.registerCustomComponent('gaiadimension:overworld_cleaner', {
         onTick({block}) {
             const dim = block.dimension;
             const loc = block.location;
             
+            // DEFER IF CHUNK NOT LOADED
+            if (!dim.isChunkLoaded(loc)) return;
+
+            try {
+                if (GaiaDimension && GaiaDimension.isInDimension(loc)) {
+                    const {x, z} = chunk_corner(loc);
+                    
+                    // HEIGHTMAP OPTIMIZATION
+                    const topBlock = dim.getTopmostBlock({ x: x + 8, z: z + 8 });
+                    const maxTopY = topBlock ? topBlock.y : 0;
+
+                    if (maxTopY >= 85) {
+                        const targetMaxY = Math.min(maxTopY, 200);
+                        const sliceSize = 16; // Smaller slices for smoother execution
+
+                        for (let y = 85; y < targetMaxY; y += sliceSize) {
+                            CLEAR_QUEUE.push({
+                                dim,
+                                volume: new BlockVolume(
+                                    { x, y: y, z }, 
+                                    { x: x + 15, y: Math.min(y + sliceSize - 1, targetMaxY), z: z + 15 }
+                                )
+                            });
+                        }
+                    }
+                }
+            } catch(e) {}
+
             // KILL RECURSION IMMEDIATELY
             block.setType("minecraft:air");
-
-            if (!GaiaDimension || !GaiaDimension.isInDimension(loc)) return;
-
-            const {x, z} = chunk_corner(loc);
-            
-            try {
-                // HEIGHTMAP OPTIMIZATION: Skip air-only chunks entirely
-                const maxTopY = dim.getHeight({x: x + 8, z: z + 8});
-                if (maxTopY < 85) return;
-
-                /**
-                 * DIRECT EXECUTION: No queue, no scheduler.
-                 * Because of the air-short-circuiting and heightmap skipping, 
-                 * we can safely clear the entire chunk segment in a single call.
-                 */
-                dim.fillBlocks(
-                    new BlockVolume({x, y: 85, z}, {x: x + 15, y: Math.min(maxTopY, 200), z: z + 15}), 
-                    'minecraft:air', 
-                    { blockFilter: { includeTypes: VANILLA_CLUTTER } }
-                );
-            } catch(e) {}
         }
     })
 })

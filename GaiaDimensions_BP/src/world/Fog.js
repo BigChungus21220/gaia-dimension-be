@@ -1,3 +1,4 @@
+import { world } from "@minecraft/server";
 import { DimensionSystem } from "./Gaia.js";
 import * as Events from "./Events.js";
 
@@ -21,6 +22,7 @@ class FogSystem {
     /**
      * Updates the fogs applied to the player
      * @param {Player} player Player to update fogs of
+     * @param {string|null} biome Biome to update fog to
      */
     static updateFog(player, biome) {
         if (DimensionSystem.isInGaia(player)) {
@@ -32,8 +34,8 @@ class FogSystem {
                 } catch(e) {}
             }
 
-            // 2. Layer Biome Fog on top
-            if (this.activeBiomes[player.id] !== biome) {
+            // 2. Layer Biome Fog on top (only if biome is provided)
+            if (biome && this.activeBiomes[player.id] !== biome) {
                 this.setBiomeFog(player, biome);
             }
         } else {
@@ -76,12 +78,14 @@ class FogSystem {
     static setBiomeFog(player, biome) {
         this.clearBiomeFogs(player);
         try {
-            console.warn(`[FogSystem] Layering biome fog for ${player.name}: gaiadimension:${biome}_fog`);
+            console.warn(`[FogSystem] Pushing biome fog: gaiadimension:${biome}_fog with ID: ${biome}`);
             player.runCommand(`fog @s push "gaiadimension:${biome}_fog" "${biome}"`);
             if (!this.playerFogs[player.id]) this.playerFogs[player.id] = [];
             this.playerFogs[player.id].push(biome);
             this.activeBiomes[player.id] = biome;
-        } catch(e) {}
+        } catch(e) {
+            console.warn(`[FogSystem] Failed to push fog for ${biome}: ${e}`);
+        }
     }
 }
 
