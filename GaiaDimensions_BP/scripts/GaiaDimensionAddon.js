@@ -6387,7 +6387,7 @@ system32.runInterval(() => {
   SHARED_VOL.from = { x: t.x, y: yMin, z: t.z };
   SHARED_VOL.to = { x: t.x + 15, y: yMax, z: t.z + 15 };
   try {
-    DIM.fillBlocks(SHARED_VOL, AIR, FILTER);
+    t.dim.fillBlocks(SHARED_VOL, AIR, FILTER);
     t.s++;
     if (yMax >= 200) {
       CACHE.add(t.key);
@@ -6395,20 +6395,19 @@ system32.runInterval(() => {
       QUEUE.shift();
     }
   } catch (e) {
-    QUEUED.delete(t.key);
-    QUEUE.shift();
+    QUEUE.push(QUEUE.shift());
   }
 }, 1);
 system32.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
   blockComponentRegistry.registerCustomComponent("gaiadimension:overworld_cleaner", {
     onTick({ block }) {
       block.setPermutation(AIR);
-      const loc = block.location;
-      const cx = Math.floor(loc.x) >> 4 << 4;
-      const cz = Math.floor(loc.z) >> 4 << 4;
+      const { x, z } = block.location;
+      const cx = Math.floor(x) >> 4 << 4;
+      const cz = Math.floor(z) >> 4 << 4;
       const key = cx * 1e6 + cz;
       if (CACHE.has(key) || QUEUED.has(key)) return;
-      if (GaiaDimension && GaiaDimension.isInDimension(loc)) {
+      if (GaiaDimension && GaiaDimension.isInDimension({ x, z })) {
         QUEUED.add(key);
         QUEUE.push({ x: cx, z: cz, s: 0, key, dim: block.dimension });
       }

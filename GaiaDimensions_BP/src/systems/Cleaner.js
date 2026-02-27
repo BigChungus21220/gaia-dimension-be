@@ -65,7 +65,7 @@ system.runInterval(() => {
     SHARED_VOL.to = { x: t.x + 15, y: yMax, z: t.z + 15 };
 
     try {
-        DIM.fillBlocks(SHARED_VOL, AIR, FILTER);
+        t.dim.fillBlocks(SHARED_VOL, AIR, FILTER);
         
         t.s++;
         if (yMax >= 200) {
@@ -74,27 +74,27 @@ system.runInterval(() => {
             QUEUE.shift();
         }
     } catch(e) {
-        // If it fails (e.g. totally unloaded), remove from QUEUED so it can be retried
-        QUEUED.delete(t.key);
-        QUEUE.shift();
+        // If it fails (e.g. unloaded), move to back of queue to retry later
+        // This ensures the chunk is NEVER lost if it's temporarily unloaded
+        QUEUE.push(QUEUE.shift());
     }
 }, 1);
 
 system.beforeEvents.startup.subscribe(({blockComponentRegistry}) => {
     blockComponentRegistry.registerCustomComponent('gaiadimension:overworld_cleaner', {
         onTick({block}) {
-            // Kill block instantly
+            // Kill block instantly with pre-resolved permutation (fastest possible)
             block.setPermutation(AIR);
             
-            const loc = block.location;
-            const cx = (Math.floor(loc.x) >> 4) << 4;
-            const cz = (Math.floor(loc.z) >> 4) << 4;
+            const {x, z} = block.location;
+            const cx = (Math.floor(x) >> 4) << 4;
+            const cz = (Math.floor(z) >> 4) << 4;
             const key = (cx * 1000000) + cz;
 
             // Only skip if fully cleared or already in progress
             if (CACHE.has(key) || QUEUED.has(key)) return;
 
-            if (GaiaDimension && GaiaDimension.isInDimension(loc)) {
+            if (GaiaDimension && GaiaDimension.isInDimension({x, z})) {
                 QUEUED.add(key);
                 QUEUE.push({ x: cx, z: cz, s: 0, key: key, dim: block.dimension });
             }
