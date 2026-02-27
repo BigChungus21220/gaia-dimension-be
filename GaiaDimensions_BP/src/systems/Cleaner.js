@@ -25,6 +25,7 @@ const FILTER = {
 let AIR, DIM, SHARED_VOL;
 const QUEUE = [];
 const CACHE = new Set();
+const QUEUED = new Set();
 
 system.run(() => {
     try {
@@ -57,7 +58,7 @@ system.runInterval(() => {
     if (QUEUE.length === 0 || !SHARED_VOL) return;
     
     const t = QUEUE[0];
-    const yMin = 85 + (t.s * 32); // Increased to 32 block vertical increments for better throughput
+    const yMin = 85 + (t.s * 32);
     const yMax = Math.min(yMin + 31, 200);
 
     SHARED_VOL.from = { x: t.x, y: yMin, z: t.z };
@@ -65,10 +66,16 @@ system.runInterval(() => {
 
     try {
         DIM.fillBlocks(SHARED_VOL, AIR, FILTER);
-    } catch(e) {}
-
-    t.s++;
-    if (yMax >= 200) {
+        
+        t.s++;
+        if (yMax >= 200) {
+            CACHE.add(t.key);
+            QUEUED.delete(t.key);
+            QUEUE.shift();
+        }
+    } catch(e) {
+        // If it fails (e.g. totally unloaded), remove from QUEUED so it can be retried
+        QUEUED.delete(t.key);
         QUEUE.shift();
     }
 }, 1);
@@ -84,11 +91,12 @@ system.beforeEvents.startup.subscribe(({blockComponentRegistry}) => {
             const cz = (Math.floor(loc.z) >> 4) << 4;
             const key = (cx * 1000000) + cz;
 
-            if (CACHE.has(key)) return;
-            CACHE.add(key);
+            // Only skip if fully cleared or already in progress
+            if (CACHE.has(key) || QUEUED.has(key)) return;
 
             if (GaiaDimension && GaiaDimension.isInDimension(loc)) {
-                QUEUE.push({ x: cx, z: cz, s: 0 });
+                QUEUED.add(key);
+                QUEUE.push({ x: cx, z: cz, s: 0, key: key, dim: block.dimension });
             }
         }
     })

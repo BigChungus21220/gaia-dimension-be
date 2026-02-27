@@ -6359,6 +6359,7 @@ var DIM;
 var SHARED_VOL;
 var QUEUE = [];
 var CACHE = /* @__PURE__ */ new Set();
+var QUEUED = /* @__PURE__ */ new Set();
 system32.run(() => {
   try {
     AIR = BlockPermutation13.resolve("minecraft:air");
@@ -6387,10 +6388,14 @@ system32.runInterval(() => {
   SHARED_VOL.to = { x: t.x + 15, y: yMax, z: t.z + 15 };
   try {
     DIM.fillBlocks(SHARED_VOL, AIR, FILTER);
+    t.s++;
+    if (yMax >= 200) {
+      CACHE.add(t.key);
+      QUEUED.delete(t.key);
+      QUEUE.shift();
+    }
   } catch (e) {
-  }
-  t.s++;
-  if (yMax >= 200) {
+    QUEUED.delete(t.key);
     QUEUE.shift();
   }
 }, 1);
@@ -6402,10 +6407,10 @@ system32.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
       const cx = Math.floor(loc.x) >> 4 << 4;
       const cz = Math.floor(loc.z) >> 4 << 4;
       const key = cx * 1e6 + cz;
-      if (CACHE.has(key)) return;
-      CACHE.add(key);
+      if (CACHE.has(key) || QUEUED.has(key)) return;
       if (GaiaDimension && GaiaDimension.isInDimension(loc)) {
-        QUEUE.push({ x: cx, z: cz, s: 0 });
+        QUEUED.add(key);
+        QUEUE.push({ x: cx, z: cz, s: 0, key, dim: block.dimension });
       }
     }
   });
