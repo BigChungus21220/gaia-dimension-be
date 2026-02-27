@@ -46,12 +46,12 @@ system.run(() => {
     } catch(e) {}
 });
 
-// Throttled Processor: Respects 2ms budget per tick
+// Throttled Processor: Respects 1ms budget per tick
 system.runInterval(() => {
     if (queue.length === 0) return;
     
     const startTime = Date.now();
-    const BUDGET = 2; 
+    const BUDGET = 1; 
 
     while (queue.length > 0) {
         if (Date.now() - startTime >= BUDGET) break;
@@ -60,10 +60,9 @@ system.runInterval(() => {
         const overworld = world.getDimension('minecraft:overworld');
         
         try {
-            // Safe single-pass clearing from Y=30 to Y=115
-            // This range is far above the bedrock markers at Y=0 and Y=-64
+            // Processing smaller slices to prevent blocking the main thread
             overworld.fillBlocks(
-                new BlockVolume({x: task.x, y: 30, z: task.z}, {x: task.x + 15, y: 115, z: task.z + 15}), 
+                new BlockVolume({x: task.x, y: task.y, z: task.z}, {x: task.x + 15, y: task.ey, z: task.z + 15}), 
                 'minecraft:air', 
                 { blockFilter: { includeTypes: clearFilter } }
             );
@@ -85,7 +84,11 @@ system.beforeEvents.startup.subscribe(({blockComponentRegistry}) => {
 
             if (!handledThisTick.has(key)) {
                 handledThisTick.add(key);
-                queue.push({x, z});
+                // Push 4 smaller vertical slices to keep fillBlocks calls fast
+                queue.push({x, z, y: 85, ey: 115});
+                queue.push({x, z, y: 116, ey: 145});
+                queue.push({x, z, y: 146, ey: 175});
+                queue.push({x, z, y: 176, ey: 200});
             }
         }
     })

@@ -78,8 +78,8 @@ const main = () => {
             const cz = Math.floor((loc.z + z * size) / 16) * 16;
             
             if (cx >= 100000 && cx <= 400000 && cz >= 100000 && cz <= 400000) {
-                // Vertical range Y=30 to Y=222 in steps of 24 (8 slices per chunk)
-                for (let y = 30; y < 222; y += 24) {
+                // Vertical range Y=85 to Y=200 in steps of 24 (approx 5 slices per chunk)
+                for (let y = 85; y < 200; y += 24) {
                     const sliceKey = `${cx},${y},${cz}`;
                     if (!clearedSlices.has(sliceKey)) {
                         clearedSlices.add(sliceKey);
