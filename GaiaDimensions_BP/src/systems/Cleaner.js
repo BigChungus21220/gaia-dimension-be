@@ -1,69 +1,100 @@
-import { BlockVolume, system } from "@minecraft/server"
+import { world, system, BlockVolume, BlockPermutation } from "@minecraft/server"
 import { GaiaDimension } from "../world/Gaia.js"
 
-const VANILLA_CLUTTER = [
-    "minecraft:tall_grass", "minecraft:grass", "minecraft:fern", "minecraft:large_fern",
-    "minecraft:deadbush", "minecraft:double_plant", "minecraft:yellow_flower", "minecraft:red_flower",
-    "minecraft:dandelion", "minecraft:poppy", "minecraft:blue_orchid", "minecraft:allium",
-    "minecraft:azure_bluet", "minecraft:red_tulip", "minecraft:orange_tulip", "minecraft:white_tulip",
-    "minecraft:pink_tulip", "minecraft:oxeye_daisy", "minecraft:cornflower", "minecraft:lily_of_the_valley",
-    "minecraft:sunflower", "minecraft:lilac", "minecraft:rose_bush", "minecraft:death_bush", "minecraft:dead_bush", "minecraft:peony",
-    "minecraft:sugar_cane", "minecraft:reeds", "minecraft:cactus", "minecraft:vine",
-    "minecraft:glow_lichen", "minecraft:hanging_roots", "minecraft:spore_blossom", "minecraft:moss_carpet",
-    "minecraft:azalea", "minecraft:flowering_azalea", "minecraft:cave_vines", "minecraft:cave_vines_body_with_berries",
-    "minecraft:big_dripleaf", "minecraft:small_dripleaf", "minecraft:sweet_berry_bush", "minecraft:bamboo",
-    "minecraft:bamboo_sapling", "minecraft:sea_pickle", "minecraft:turtle_egg", "minecraft:pink_petals",
-    "minecraft:cherry_sapling", "minecraft:mangrove_propagule", "minecraft:lily_pad", "minecraft:waterlily",
-    "minecraft:kelp", "minecraft:seagrass", "minecraft:tall_seagrass", "minecraft:coral", "minecraft:coral_fan",
-    "minecraft:brown_mushroom", "minecraft:red_mushroom", "minecraft:crimson_fungus", "minecraft:warped_fungus",
-    "minecraft:crimson_roots", "minecraft:warped_roots", "minecraft:nether_sprouts", "minecraft:weeping_vines",
-    "minecraft:twisting_vines", "minecraft:torchflower", "minecraft:pitcher_plant",
-    "minecraft:oak_log", "minecraft:spruce_log", "minecraft:birch_log", "minecraft:jungle_log", "minecraft:acacia_log", "minecraft:dark_oak_log", "minecraft:cherry_log", "minecraft:mangrove_log",
-    "minecraft:oak_leaves", "minecraft:spruce_leaves", "minecraft:birch_leaves", "minecraft:jungle_leaves", "minecraft:acacia_leaves", "minecraft:dark_oak_leaves", "minecraft:cherry_leaves", "minecraft:mangrove_leaves",
-    "minecraft:snow", "minecraft:snow_layer", "minecraft:ice", "minecraft:packed_ice", "minecraft:blue_ice", "minecraft:powder_snow"
-];
+/**
+ * OPTIMIZATION: NATIVE TAG FILTERING
+ * Tags are bitmask-based in the engine (O(1) lookup).
+ * This eliminates the overhead of string comparisons for 99% of clutter.
+ */
+const CLUTTER_TAGS = ["flower", "grass", "leaves", "log", "plant", "bush", "vine", "snow", "mushroom", "coral", "waterlily", "reeds"];
+const CLUTTER_TYPES = ["minecraft:deadbush", "minecraft:sugar_cane", "minecraft:bamboo", "minecraft:kelp", "minecraft:seagrass"];
 
-const CLEAR_OPTIONS = { 
-    blockFilter: { includeTypes: VANILLA_CLUTTER },
+const FILTER = {
+    blockFilter: {
+        includeTags: CLUTTER_TAGS,
+        includeTypes: CLUTTER_TYPES
+    },
     ignoreChunkBoundErrors: true
 };
 
+let AIR, DIM, SHARED_VOL;
 const QUEUE = [];
 const CACHE = new Set();
 
-// Ultra-lightweight runner, perfectly mimicking TerrainPatching.js
-system.runInterval(() => {
-    if (QUEUE.length === 0) return;
-    const task = QUEUE.shift();
+system.run(() => {
     try {
-        task.dim.fillBlocks(task.vol, "minecraft:air", CLEAR_OPTIONS);
+        AIR = BlockPermutation.resolve("minecraft:air");
+        DIM = world.getDimension("minecraft:overworld");
+        // Pre-instantiate exactly ONE volume to eliminate horrd allocation overhead
+        SHARED_VOL = new BlockVolume({x:0, y:0, z:0}, {x:0, y:0, z:0});
     } catch(e) {}
-}, 1);
+});
+
+/**
+ * LAG-FREE CHAINED RUNNER
+ * Processes small 16-block slices and yields to the engine.
+ */
+function runNext() {
+    if (QUEUE.length === 0 || !SHARED_VOL) return;
+    
+    // PRIORITY SORT: Every so often, sort queue by distance to nearest player
+    if (system.currentTick % 20 === 0) {
+        const players = world.getAllPlayers().filter(p => p.dimension.id === "minecraft:overworld");
+        if (players.length > 0) {
+            QUEUE.sort((a, b) => {
+                let distA = Infinity;
+                let distB = Infinity;
+                for (const p of players) {
+                    const loc = p.location;
+                    const dA = Math.abs(a.x - loc.x) + Math.abs(a.z - loc.z);
+                    const dB = Math.abs(b.x - loc.x) + Math.abs(b.z - loc.z);
+                    if (dA < distA) distA = dA;
+                    if (dB < distB) distB = dB;
+                }
+                return distA - distB;
+            });
+        }
+    }
+
+    const t = QUEUE[0];
+    const yMin = 85 + (t.s << 4); // 16 block vertical increments
+    const yMax = Math.min(yMin + 15, 200);
+
+    SHARED_VOL.from = { x: t.x, y: yMin, z: t.z };
+    SHARED_VOL.to = { x: t.x + 15, y: yMax, z: t.z + 15 };
+
+    try {
+        DIM.fillBlocks(SHARED_VOL, AIR, FILTER);
+    } catch(e) {}
+
+    t.s++;
+    if (yMax >= 200) {
+        QUEUE.shift();
+    }
+    
+    if (QUEUE.length > 0) system.run(runNext);
+}
 
 system.beforeEvents.startup.subscribe(({blockComponentRegistry}) => {
     blockComponentRegistry.registerCustomComponent('gaiadimension:overworld_cleaner', {
         onTick({block}) {
-            // Instant termination of recursion
-            block.setType("minecraft:air");
-
-            const {x, z} = block.location;
-            const cx = Math.floor(x / 16) * 16;
-            const cz = Math.floor(z / 16) * 16;
-            const key = cx + "," + cz;
+            // Kill block instantly with pre-resolved permutation
+            block.setPermutation(AIR);
+            
+            const loc = block.location;
+            const cx = (Math.floor(loc.x) >> 4) << 4;
+            const cz = (Math.floor(loc.z) >> 4) << 4;
+            
+            // Numeric bit-mask key for ultra-fast lookup (cx/cz are multiples of 16)
+            const key = (cx * 1000000) + cz;
 
             if (CACHE.has(key)) return;
+            CACHE.add(key);
 
-            if (GaiaDimension && GaiaDimension.isInDimension({x, z})) {
-                CACHE.add(key);
-                const dim = block.dimension;
-                
-                // Pre-instantiate BlockVolumes to remove all logic from the runInterval
-                for (let y = 85; y < 200; y += 24) {
-                    QUEUE.push({
-                        dim: dim,
-                        vol: new BlockVolume({x: cx, y: y, z: cz}, {x: cx + 15, y: Math.min(y + 23, 200), z: cz + 15})
-                    });
-                }
+            if (GaiaDimension && GaiaDimension.isInDimension(loc)) {
+                const idle = QUEUE.length === 0;
+                QUEUE.push({ x: cx, z: cz, s: 0 });
+                if (idle) system.run(runNext);
             }
         }
     })
