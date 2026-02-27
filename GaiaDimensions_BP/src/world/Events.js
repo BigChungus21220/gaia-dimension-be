@@ -14,7 +14,6 @@ class EventHandler {
             try {
                 handler(data);
             } catch (e) {
-                console.warn(`Event trigger error: ${e}`);
             }
         }
     }

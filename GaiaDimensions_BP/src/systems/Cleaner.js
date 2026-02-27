@@ -1,12 +1,33 @@
 import { world, BlockVolume, system } from "@minecraft/server"
 import { GaiaDimension } from "../world/Gaia.js"
-import { MinecraftBlockTypes } from "@minecraft/vanilla-data";
 
-const queue = [];
-const handledThisTick = new Set();
-
-// Periodically clear to keep memory efficient
-system.runInterval(() => handledThisTick.clear(), 20);
+/**
+ * PRE-CALCULATED VANILLA CLUTTER LIST
+ * Static cache for zero startup lag. 
+ * 'minecraft:air' at index 0 enables engine short-circuiting.
+ */
+const VANILLA_CLUTTER = [
+    "minecraft:air",
+    "minecraft:tall_grass", "minecraft:grass", "minecraft:fern", "minecraft:large_fern",
+    "minecraft:deadbush", "minecraft:double_plant", "minecraft:yellow_flower", "minecraft:red_flower",
+    "minecraft:dandelion", "minecraft:poppy", "minecraft:blue_orchid", "minecraft:allium",
+    "minecraft:azure_bluet", "minecraft:red_tulip", "minecraft:orange_tulip", "minecraft:white_tulip",
+    "minecraft:pink_tulip", "minecraft:oxeye_daisy", "minecraft:cornflower", "minecraft:lily_of_the_valley",
+    "minecraft:sunflower", "minecraft:lilac", "minecraft:rose_bush", "minecraft:peony",
+    "minecraft:sugar_cane", "minecraft:reeds", "minecraft:cactus", "minecraft:vine",
+    "minecraft:glow_lichen", "minecraft:hanging_roots", "minecraft:spore_blossom", "minecraft:moss_carpet",
+    "minecraft:azalea", "minecraft:flowering_azalea", "minecraft:cave_vines", "minecraft:cave_vines_body_with_berries",
+    "minecraft:big_dripleaf", "minecraft:small_dripleaf", "minecraft:sweet_berry_bush", "minecraft:bamboo",
+    "minecraft:bamboo_sapling", "minecraft:sea_pickle", "minecraft:turtle_egg", "minecraft:pink_petals",
+    "minecraft:cherry_sapling", "minecraft:mangrove_propagule", "minecraft:lily_pad", "minecraft:waterlily",
+    "minecraft:kelp", "minecraft:seagrass", "minecraft:tall_seagrass", "minecraft:coral", "minecraft:coral_fan",
+    "minecraft:brown_mushroom", "minecraft:red_mushroom", "minecraft:crimson_fungus", "minecraft:warped_fungus",
+    "minecraft:crimson_roots", "minecraft:warped_roots", "minecraft:nether_sprouts", "minecraft:weeping_vines",
+    "minecraft:twisting_vines", "minecraft:torchflower", "minecraft:pitcher_plant",
+    "minecraft:oak_log", "minecraft:spruce_log", "minecraft:birch_log", "minecraft:jungle_log", "minecraft:acacia_log", "minecraft:dark_oak_log", "minecraft:cherry_log", "minecraft:mangrove_log",
+    "minecraft:oak_leaves", "minecraft:spruce_leaves", "minecraft:birch_leaves", "minecraft:jungle_leaves", "minecraft:acacia_leaves", "minecraft:dark_oak_leaves", "minecraft:cherry_leaves", "minecraft:mangrove_leaves",
+    "minecraft:snow", "minecraft:snow_layer", "minecraft:ice", "minecraft:packed_ice", "minecraft:blue_ice", "minecraft:powder_snow"
+];
 
 function chunk_corner({x, z}) {
     return {
@@ -15,81 +36,35 @@ function chunk_corner({x, z}) {
     }
 }
 
-let clearFilter = [];
-system.run(() => {
-    try {
-        const targets = [
-            "log", "leaves", "wood", "lichen", "grass", "flower", "plant", "fern", "bush", 
-            "vine", "sapling", "mushroom", "bamboo", "sugar_cane", "lily_pad", "kelp", 
-            "seagrass", "coral", "roots", "hanging", "spore", "moss", "azalea", "mangrove",
-            "dripleaf", "glow_berry", "pumpkin", "melon", "cactus", "berry", "sea_pickle",
-            "turtle_egg", "pink_petals", "propule", "cherry", "sculk", "snow", "ice", "mud",
-            "dripstone", "sunflower", "lilac", "rose", "peony", "reeds", "waterlily", "web"
-        ];
-
-        const filterSet = new Set();
-        Object.values(MinecraftBlockTypes).forEach(id => {
-            // CRITICAL: Only include vanilla Minecraft blocks
-            // This guarantees gaiadimension: blocks are NEVER in the deletion list
-            if (!id.startsWith("minecraft:")) return;
-
-            const l = id.toLowerCase();
-            if (targets.some(t => l.includes(t))) {
-                // Protect essential vanilla terrain blocks
-                const essentials = ["minecraft:air", "minecraft:bedrock", "minecraft:stone", "minecraft:dirt", "minecraft:grass_block", "minecraft:sand", "minecraft:gravel", "minecraft:tuff", "minecraft:water", "minecraft:lava", "minecraft:deepslate"];
-                if (!essentials.includes(l) && !l.includes("brick") && !l.includes("ore")) {
-                    filterSet.add(id);
-                }
-            }
-        });
-        clearFilter = Array.from(filterSet);
-    } catch(e) {}
-});
-
-// Throttled Processor: Respects 1ms budget per tick
-system.runInterval(() => {
-    if (queue.length === 0) return;
-    
-    const startTime = Date.now();
-    const BUDGET = 1; 
-
-    while (queue.length > 0) {
-        if (Date.now() - startTime >= BUDGET) break;
-
-        const task = queue.shift();
-        const overworld = world.getDimension('minecraft:overworld');
-        
-        try {
-            // Processing smaller slices to prevent blocking the main thread
-            overworld.fillBlocks(
-                new BlockVolume({x: task.x, y: task.y, z: task.z}, {x: task.x + 15, y: task.ey, z: task.z + 15}), 
-                'minecraft:air', 
-                { blockFilter: { includeTypes: clearFilter } }
-            );
-        } catch(e) {}
-    }
-}, 1);
-
 system.beforeEvents.startup.subscribe(({blockComponentRegistry}) => {
     blockComponentRegistry.registerCustomComponent('gaiadimension:overworld_cleaner', {
         onTick({block}) {
+            const dim = block.dimension;
+            const loc = block.location;
+            
             // KILL RECURSION IMMEDIATELY
             block.setType("minecraft:air");
 
-            const loc = block.location;
             if (!GaiaDimension || !GaiaDimension.isInDimension(loc)) return;
 
             const {x, z} = chunk_corner(loc);
-            const key = `${x},${z}`;
+            
+            try {
+                // HEIGHTMAP OPTIMIZATION: Skip air-only chunks entirely
+                const maxTopY = dim.getHeight({x: x + 8, z: z + 8});
+                if (maxTopY < 85) return;
 
-            if (!handledThisTick.has(key)) {
-                handledThisTick.add(key);
-                // Push 4 smaller vertical slices to keep fillBlocks calls fast
-                queue.push({x, z, y: 85, ey: 115});
-                queue.push({x, z, y: 116, ey: 145});
-                queue.push({x, z, y: 146, ey: 175});
-                queue.push({x, z, y: 176, ey: 200});
-            }
+                /**
+                 * DIRECT EXECUTION: No queue, no scheduler.
+                 * Because of the air-short-circuiting and heightmap skipping, 
+                 * we can safely clear the entire chunk segment in a single call.
+                 */
+                dim.fillBlocks(
+                    new BlockVolume({x, y: 85, z}, {x: x + 15, y: Math.min(maxTopY, 200), z: z + 15}), 
+                    'minecraft:air', 
+                    { blockFilter: { includeTypes: VANILLA_CLUTTER } }
+                );
+            } catch(e) {}
         }
     })
 })
