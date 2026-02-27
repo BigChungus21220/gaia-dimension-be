@@ -6397,7 +6397,30 @@ playerChangeBlock.subscribe((eventData) => {
 
 // GaiaDimensions_BP/src/systems/Cleaner.js
 import { world as world31, system as system33, BlockVolume as BlockVolume3, BlockPermutation as BlockPermutation13 } from "@minecraft/server";
-var CLUTTER_TAGS = ["flower", "grass", "leaves", "log", "plant", "bush", "vine", "snow", "mushroom", "coral", "waterlily", "reeds"];
+var CLUTTER_TAGS = [
+  "grass",
+  "plant",
+  "snow",
+  "leaves",
+  "log",
+  "wood",
+  "acacia",
+  "birch",
+  "dark_oak",
+  "jungle",
+  "oak",
+  "spruce",
+  "minecraft:is_shears_item_destructible",
+  "minecraft:is_hoe_item_destructible",
+  "minecraft:crop",
+  "flower",
+  "bush",
+  "vine",
+  "mushroom",
+  "coral",
+  "waterlily",
+  "reeds"
+];
 var CLUTTER_TYPES = ["minecraft:deadbush", "minecraft:sugar_cane", "minecraft:bamboo", "minecraft:kelp", "minecraft:seagrass"];
 var FILTER = {
   blockFilter: {
@@ -6419,28 +6442,22 @@ system33.run(() => {
   } catch (e) {
   }
 });
-function runNext() {
+system33.runInterval(() => {
+  if (QUEUE.length < 2) return;
+  const players = world31.getAllPlayers().filter((p) => p.dimension.id === "minecraft:overworld");
+  if (players.length === 0) return;
+  const pLoc = players[0].location;
+  QUEUE.sort((a, b) => {
+    const dA = Math.abs(a.x - pLoc.x) + Math.abs(a.z - pLoc.z);
+    const dB = Math.abs(b.x - pLoc.x) + Math.abs(b.z - pLoc.z);
+    return dA - dB;
+  });
+}, 100);
+system33.runInterval(() => {
   if (QUEUE.length === 0 || !SHARED_VOL) return;
-  if (system33.currentTick % 20 === 0) {
-    const players = world31.getAllPlayers().filter((p) => p.dimension.id === "minecraft:overworld");
-    if (players.length > 0) {
-      QUEUE.sort((a, b) => {
-        let distA = Infinity;
-        let distB = Infinity;
-        for (const p of players) {
-          const loc = p.location;
-          const dA = Math.abs(a.x - loc.x) + Math.abs(a.z - loc.z);
-          const dB = Math.abs(b.x - loc.x) + Math.abs(b.z - loc.z);
-          if (dA < distA) distA = dA;
-          if (dB < distB) distB = dB;
-        }
-        return distA - distB;
-      });
-    }
-  }
   const t = QUEUE[0];
-  const yMin = 85 + (t.s << 4);
-  const yMax = Math.min(yMin + 15, 200);
+  const yMin = 85 + t.s * 32;
+  const yMax = Math.min(yMin + 31, 200);
   SHARED_VOL.from = { x: t.x, y: yMin, z: t.z };
   SHARED_VOL.to = { x: t.x + 15, y: yMax, z: t.z + 15 };
   try {
@@ -6451,8 +6468,7 @@ function runNext() {
   if (yMax >= 200) {
     QUEUE.shift();
   }
-  if (QUEUE.length > 0) system33.run(runNext);
-}
+}, 1);
 system33.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
   blockComponentRegistry.registerCustomComponent("gaiadimension:overworld_cleaner", {
     onTick({ block }) {
@@ -6464,9 +6480,7 @@ system33.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
       if (CACHE.has(key)) return;
       CACHE.add(key);
       if (GaiaDimension && GaiaDimension.isInDimension(loc)) {
-        const idle = QUEUE.length === 0;
         QUEUE.push({ x: cx, z: cz, s: 0 });
-        if (idle) system33.run(runNext);
       }
     }
   });
