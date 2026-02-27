@@ -1,5 +1,5 @@
 // GaiaDimensions_BP/src/GaiaDimensionAddon.js
-import { world as world34, system as system35 } from "@minecraft/server";
+import { world as world33, system as system35 } from "@minecraft/server";
 
 // GaiaDimensions_BP/src/blocks/leaves.js
 import { system } from "@minecraft/server";
@@ -6396,9 +6396,8 @@ playerChangeBlock.subscribe((eventData) => {
 });
 
 // GaiaDimensions_BP/src/systems/Cleaner.js
-import { world as world31, BlockVolume as BlockVolume3, system as system33, BlockPermutation as BlockPermutation13 } from "@minecraft/server";
+import { BlockVolume as BlockVolume3, system as system33 } from "@minecraft/server";
 var VANILLA_CLUTTER = [
-  "minecraft:air",
   "minecraft:tall_grass",
   "minecraft:grass",
   "minecraft:fern",
@@ -6422,6 +6421,8 @@ var VANILLA_CLUTTER = [
   "minecraft:sunflower",
   "minecraft:lilac",
   "minecraft:rose_bush",
+  "minecraft:death_bush",
+  "minecraft:dead_bush",
   "minecraft:peony",
   "minecraft:sugar_cane",
   "minecraft:reeds",
@@ -6486,68 +6487,45 @@ var VANILLA_CLUTTER = [
   "minecraft:blue_ice",
   "minecraft:powder_snow"
 ];
-var AIR_PERMUTATION;
-var CLEAR_OPTIONS;
-system33.run(() => {
-  try {
-    AIR_PERMUTATION = BlockPermutation13.resolve("minecraft:air");
-    CLEAR_OPTIONS = { blockFilter: { includeTypes: VANILLA_CLUTTER } };
-  } catch (e) {
-  }
-});
-function chunk_corner({ x, z }) {
-  return {
-    x: Math.floor(x / 16) * 16,
-    z: Math.floor(z / 16) * 16
-  };
-}
-var CLEAR_QUEUE = [];
+var CLEAR_OPTIONS = {
+  blockFilter: { includeTypes: VANILLA_CLUTTER },
+  ignoreChunkBoundErrors: true
+};
+var QUEUE = [];
+var CACHE = /* @__PURE__ */ new Set();
 system33.runInterval(() => {
-  if (CLEAR_QUEUE.length === 0 || !AIR_PERMUTATION) return;
-  const task = CLEAR_QUEUE.shift();
+  if (QUEUE.length === 0) return;
+  const task = QUEUE.shift();
   try {
-    task.dim.fillBlocks(
-      task.volume,
-      AIR_PERMUTATION,
-      CLEAR_OPTIONS
-    );
+    task.dim.fillBlocks(task.vol, "minecraft:air", CLEAR_OPTIONS);
   } catch (e) {
   }
 }, 1);
 system33.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
   blockComponentRegistry.registerCustomComponent("gaiadimension:overworld_cleaner", {
     onTick({ block }) {
-      const dim = block.dimension;
-      const loc = block.location;
-      if (!dim.isChunkLoaded(loc)) return;
-      try {
-        if (GaiaDimension && GaiaDimension.isInDimension(loc)) {
-          const { x, z } = chunk_corner(loc);
-          const topBlock = dim.getTopmostBlock({ x: x + 8, z: z + 8 });
-          const maxTopY = topBlock ? topBlock.y : 0;
-          if (maxTopY >= 85) {
-            const targetMaxY = Math.min(maxTopY, 200);
-            const sliceSize = 16;
-            for (let y = 85; y < targetMaxY; y += sliceSize) {
-              CLEAR_QUEUE.push({
-                dim,
-                volume: new BlockVolume3(
-                  { x, y, z },
-                  { x: x + 15, y: Math.min(y + sliceSize - 1, targetMaxY), z: z + 15 }
-                )
-              });
-            }
-          }
-        }
-      } catch (e) {
-      }
       block.setType("minecraft:air");
+      const { x, z } = block.location;
+      const cx = Math.floor(x / 16) * 16;
+      const cz = Math.floor(z / 16) * 16;
+      const key = cx + "," + cz;
+      if (CACHE.has(key)) return;
+      if (GaiaDimension && GaiaDimension.isInDimension({ x, z })) {
+        CACHE.add(key);
+        const dim = block.dimension;
+        for (let y = 85; y < 200; y += 24) {
+          QUEUE.push({
+            dim,
+            vol: new BlockVolume3({ x: cx, y, z: cz }, { x: cx + 15, y: y + 23, z: cz + 15 })
+          });
+        }
+      }
     }
   });
 });
 
 // GaiaDimensions_BP/src/API/lib/EnchantmentLib.js
-import { world as world32, system as system34, ItemStack as ItemStack9 } from "@minecraft/server";
+import { world as world31, system as system34, ItemStack as ItemStack9 } from "@minecraft/server";
 import { ActionFormData } from "@minecraft/server-ui";
 var EnchantmentManager = class {
   constructor() {
@@ -6580,7 +6558,7 @@ var EnchantmentManager = class {
   }
   initEvents() {
     system34.runInterval(() => this.manageVisuals(), 5);
-    world32.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
+    world31.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
       const { block, player, itemStack } = ev;
       if (block.typeId === "minecraft:enchanting_table" && player.isSneaking) {
         ev.cancel = true;
@@ -6589,7 +6567,7 @@ var EnchantmentManager = class {
         });
       }
     });
-    world32.afterEvents.entityHitEntity.subscribe((ev) => {
+    world31.afterEvents.entityHitEntity.subscribe((ev) => {
       const { damagingEntity, hitEntity } = ev;
       if (!damagingEntity || !damagingEntity.getComponent("minecraft:equippable")) return;
       const equippable = damagingEntity.getComponent("minecraft:equippable");
@@ -6598,7 +6576,7 @@ var EnchantmentManager = class {
         this.triggerEnchants(mainHand, "onHit", ev);
       }
     });
-    world32.afterEvents.playerBreakBlock.subscribe((ev) => {
+    world31.afterEvents.playerBreakBlock.subscribe((ev) => {
       const { player, itemStack } = ev;
       if (itemStack) {
         this.triggerEnchants(itemStack, "onMine", ev);
@@ -6729,7 +6707,7 @@ ${color}Cost: ${e.cost} Lvl`);
    * Scans players to toggle glint state (Clean in cursor, Glint in inventory).
    */
   manageVisuals() {
-    for (const player of world32.getAllPlayers()) {
+    for (const player of world31.getAllPlayers()) {
       const cursorComp = player.getComponent("minecraft:cursor_inventory");
       if (cursorComp && cursorComp.item) {
         const item = cursorComp.item;
@@ -6803,7 +6781,7 @@ ${color}Cost: ${e.cost} Lvl`);
 var enchantmentManager = new EnchantmentManager();
 
 // GaiaDimensions_BP/src/systems/enchantments.js
-import { world as world33 } from "@minecraft/server";
+import { world as world32 } from "@minecraft/server";
 enchantmentManager.register("gaia:life_steal", {
   name: "Life Steal",
   maxLevel: 3,
