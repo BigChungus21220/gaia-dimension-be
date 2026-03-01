@@ -55,9 +55,25 @@ system.runInterval(() => {
  * ROCK-SOLID RUNNER
  */
 system.runInterval(() => {
-    if (QUEUE.length === 0 || !SHARED_VOL) return;
+    if (QUEUE.length === 0 || !SHARED_VOL || !DIM) return;
     
+    // Always work on the first item in the queue
     const t = QUEUE[0];
+    
+    // Proximity check: If no players are near this chunk, move it to the back
+    // This prevents trying to fill blocks in unloaded chunks.
+    const players = world.getAllPlayers();
+    const isAnyPlayerNear = players.some(p => {
+        if (p.dimension.id !== "minecraft:overworld") return false;
+        const loc = p.location;
+        return Math.abs(loc.x - (t.x + 8)) < 128 && Math.abs(loc.z - (t.z + 8)) < 128;
+    });
+
+    if (!isAnyPlayerNear) {
+        QUEUE.push(QUEUE.shift());
+        return;
+    }
+
     const yMin = 85 + (t.s * 32);
     const yMax = Math.min(yMin + 31, 200);
 
@@ -65,7 +81,7 @@ system.runInterval(() => {
     SHARED_VOL.to = { x: t.x + 15, y: yMax, z: t.z + 15 };
 
     try {
-        t.dim.fillBlocks(SHARED_VOL, AIR, FILTER);
+        DIM.fillBlocks(SHARED_VOL, AIR, FILTER);
         
         t.s++;
         if (yMax >= 200) {
@@ -74,8 +90,7 @@ system.runInterval(() => {
             QUEUE.shift();
         }
     } catch(e) {
-        // If it fails (e.g. unloaded), move to back of queue to retry later
-        // This ensures the chunk is NEVER lost if it's temporarily unloaded
+        // If it fails (likely chunk became unloaded mid-process), rotate to back
         QUEUE.push(QUEUE.shift());
     }
 }, 1);
@@ -83,20 +98,24 @@ system.runInterval(() => {
 system.beforeEvents.startup.subscribe(({blockComponentRegistry}) => {
     blockComponentRegistry.registerCustomComponent('gaiadimension:overworld_cleaner', {
         onTick({block}) {
-            // Kill block instantly with pre-resolved permutation (fastest possible)
-            block.setPermutation(AIR);
-            
             const {x, z} = block.location;
             const cx = (Math.floor(x) >> 4) << 4;
             const cz = (Math.floor(z) >> 4) << 4;
             const key = (cx * 1000000) + cz;
 
-            // Only skip if fully cleared or already in progress
-            if (CACHE.has(key) || QUEUED.has(key)) return;
+            // If this chunk is already cleared, remove the cleaner block
+            if (CACHE.has(key)) {
+                block.setPermutation(AIR);
+                return;
+            }
 
+            // Skip if already in the processing queue
+            if (QUEUED.has(key)) return;
+
+            // Add to queue if within Gaia range
             if (GaiaDimension && GaiaDimension.isInDimension({x, z})) {
                 QUEUED.add(key);
-                QUEUE.push({ x: cx, z: cz, s: 0, key: key, dim: block.dimension });
+                QUEUE.push({ x: cx, z: cz, s: 0, key: key });
             }
         }
     })

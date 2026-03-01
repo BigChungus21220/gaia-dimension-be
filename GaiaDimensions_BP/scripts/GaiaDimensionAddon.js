@@ -6393,14 +6393,24 @@ system32.runInterval(() => {
   });
 }, 100);
 system32.runInterval(() => {
-  if (QUEUE.length === 0 || !SHARED_VOL) return;
+  if (QUEUE.length === 0 || !SHARED_VOL || !DIM) return;
   const t = QUEUE[0];
+  const players = world30.getAllPlayers();
+  const isAnyPlayerNear = players.some((p) => {
+    if (p.dimension.id !== "minecraft:overworld") return false;
+    const loc = p.location;
+    return Math.abs(loc.x - (t.x + 8)) < 128 && Math.abs(loc.z - (t.z + 8)) < 128;
+  });
+  if (!isAnyPlayerNear) {
+    QUEUE.push(QUEUE.shift());
+    return;
+  }
   const yMin = 85 + t.s * 32;
   const yMax = Math.min(yMin + 31, 200);
   SHARED_VOL.from = { x: t.x, y: yMin, z: t.z };
   SHARED_VOL.to = { x: t.x + 15, y: yMax, z: t.z + 15 };
   try {
-    t.dim.fillBlocks(SHARED_VOL, AIR, FILTER);
+    DIM.fillBlocks(SHARED_VOL, AIR, FILTER);
     t.s++;
     if (yMax >= 200) {
       CACHE.add(t.key);
@@ -6414,15 +6424,18 @@ system32.runInterval(() => {
 system32.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
   blockComponentRegistry.registerCustomComponent("gaiadimension:overworld_cleaner", {
     onTick({ block }) {
-      block.setPermutation(AIR);
       const { x, z } = block.location;
       const cx = Math.floor(x) >> 4 << 4;
       const cz = Math.floor(z) >> 4 << 4;
       const key = cx * 1e6 + cz;
-      if (CACHE.has(key) || QUEUED.has(key)) return;
+      if (CACHE.has(key)) {
+        block.setPermutation(AIR);
+        return;
+      }
+      if (QUEUED.has(key)) return;
       if (GaiaDimension && GaiaDimension.isInDimension({ x, z })) {
         QUEUED.add(key);
-        QUEUE.push({ x: cx, z: cz, s: 0, key, dim: block.dimension });
+        QUEUE.push({ x: cx, z: cz, s: 0, key });
       }
     }
   });
