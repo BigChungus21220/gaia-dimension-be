@@ -5235,7 +5235,9 @@ system25.runInterval(() => {
     }
   }
   if (anyPlayerInGaia && !isAlwaysDayActive) {
-    world22.getDimension("minecraft:overworld").runCommand("alwaysday");
+    const overworld = world22.getDimension("minecraft:overworld");
+    overworld.runCommand("alwaysday");
+    overworld.runCommand("weather clear");
     isAlwaysDayActive = true;
   } else if (!anyPlayerInGaia && isAlwaysDayActive) {
     world22.getDimension("minecraft:overworld").runCommand("alwaysday");
@@ -6193,11 +6195,13 @@ function registerGaiaCommands(registry) {
       player.sendMessage("\xA76\xA7lGAIA STATUS REPORT");
       player.sendMessage("\xA77Location: " + dimensionName);
       player.sendMessage("\xA77Synchronization: " + (inGaia ? "\xA7aStable" : "\xA7cExternal"));
-      if (inGaia) {
+      let coords = player.location;
+      if (inGaia && GaiaDimension) {
         const biome = DimensionSystem.getBiome(player);
         player.sendMessage("\xA77Current Biome: \xA7e" + formatName(biome));
+        coords = GaiaDimension.offset(player.location);
       }
-      player.sendMessage("\xA77Coordinates: \xA7f" + Math.floor(player.location.x) + ", " + Math.floor(player.location.y) + ", " + Math.floor(player.location.z));
+      player.sendMessage("\xA77Coordinates: \xA7f" + Math.floor(coords.x) + ", " + Math.floor(coords.y) + ", " + Math.floor(coords.z));
       player.sendMessage("\xA78\xA7l========================================");
     });
     return { status: 0 };

@@ -1,5 +1,5 @@
 import { Player, system, CommandPermissionLevel } from "@minecraft/server";
-import { DimensionSystem } from "../world/Gaia.js";
+import { DimensionSystem, GaiaDimension } from "../world/Gaia.js";
 
 /**
  * Formats snake_case IDs to Title Case
@@ -89,12 +89,15 @@ export function registerGaiaCommands(registry) {
             player.sendMessage("§7Location: " + dimensionName);
             player.sendMessage("§7Synchronization: " + (inGaia ? "§aStable" : "§cExternal"));
             
-            if (inGaia) {
+            let coords = player.location;
+            if (inGaia && GaiaDimension) {
                 const biome = DimensionSystem.getBiome(player);
                 player.sendMessage("§7Current Biome: §e" + formatName(biome));
+                // Map real world coordinates to Gaia-relative coordinates (250,000 -> 0)
+                coords = GaiaDimension.offset(player.location);
             }
             
-            player.sendMessage("§7Coordinates: §f" + Math.floor(player.location.x) + ", " + Math.floor(player.location.y) + ", " + Math.floor(player.location.z));
+            player.sendMessage("§7Coordinates: §f" + Math.floor(coords.x) + ", " + Math.floor(coords.y) + ", " + Math.floor(coords.z));
             player.sendMessage("§8§l========================================");
         });
 
