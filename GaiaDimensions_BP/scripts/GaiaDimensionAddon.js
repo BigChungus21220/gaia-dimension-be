@@ -1,5 +1,5 @@
 // GaiaDimensions_BP/src/GaiaDimensionAddon.js
-import { world as world33, system as system34 } from "@minecraft/server";
+import { world as world33, system as system35 } from "@minecraft/server";
 
 // GaiaDimensions_BP/src/blocks/leaves.js
 import { system } from "@minecraft/server";
@@ -6126,8 +6126,112 @@ function applyCustomDamage(player, itemStack, damageAmount) {
   }
 }
 
+// GaiaDimensions_BP/src/systems/Commands.js
+import { Player as Player2, system as system30, CommandPermissionLevel } from "@minecraft/server";
+function formatName(id) {
+  return id.split(/[:_]/).map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+}
+function registerGaiaCommands(registry) {
+  registry.registerCommand({
+    name: "gaiadimension:gaiahelp",
+    description: "Technical information and lore regarding the Gaia Dimension Bedrock Port.",
+    permissionLevel: CommandPermissionLevel.Any
+  }, (origin) => {
+    const player = origin.sourceEntity;
+    if (!(player instanceof Player2)) return;
+    system30.run(() => {
+      player.sendMessage("\xA78\xA7l========================================");
+      player.sendMessage("\xA76\xA7lGAIA DIMENSION BEDROCK PORT");
+      player.sendMessage("\xA77Basked under an eternal sun, a world preserved in time, a land sprouting with crystals and minerals, the ground seeping a mysterious energy.");
+      player.sendMessage("");
+      player.sendMessage("\xA7eWelcome to Gaia. Now its on Bedrock.");
+      player.sendMessage("\xA7bThis is a Bedrock port of the Java Mod Gaia Dimension.");
+      player.sendMessage("\xA78\xA7l========================================");
+    });
+    return { status: 0 };
+  });
+  registry.registerCommand({
+    name: "gaiadimension:whereami",
+    description: "Identify your current dimensional location.",
+    permissionLevel: CommandPermissionLevel.Any
+  }, (origin) => {
+    const player = origin.sourceEntity;
+    if (!(player instanceof Player2)) return;
+    system30.run(() => {
+      const inGaia = DimensionSystem.isInGaia(player);
+      const dimId = player.dimension.id;
+      let dimensionName = "\xA77" + dimId;
+      if (inGaia) {
+        dimensionName = "\xA76Gaia Dimension";
+      } else if (dimId === "minecraft:overworld") {
+        dimensionName = "\xA7aOverworld";
+      } else if (dimId === "minecraft:nether") {
+        dimensionName = "\xA7cNether";
+      } else if (dimId === "minecraft:the_end") {
+        dimensionName = "\xA7dThe End";
+      }
+      player.sendMessage("\xA78[\xA76Gaia\xA78] \xA77Current Location: " + dimensionName);
+    });
+    return { status: 0 };
+  });
+  registry.registerCommand({
+    name: "gaiadimension:gaiainfo",
+    description: "Display technical status within the Gaia Dimension.",
+    permissionLevel: CommandPermissionLevel.Any
+  }, (origin) => {
+    const player = origin.sourceEntity;
+    if (!(player instanceof Player2)) return;
+    system30.run(() => {
+      const inGaia = DimensionSystem.isInGaia(player);
+      const dimId = player.dimension.id;
+      let dimensionName = "\xA77" + dimId;
+      if (inGaia) dimensionName = "\xA76Gaia Dimension";
+      else if (dimId === "minecraft:overworld") dimensionName = "\xA7aOverworld";
+      else if (dimId === "minecraft:nether") dimensionName = "\xA7cNether";
+      else if (dimId === "minecraft:the_end") dimensionName = "\xA7dThe End";
+      player.sendMessage("\xA78\xA7l========================================");
+      player.sendMessage("\xA76\xA7lGAIA STATUS REPORT");
+      player.sendMessage("\xA77Location: " + dimensionName);
+      player.sendMessage("\xA77Synchronization: " + (inGaia ? "\xA7aStable" : "\xA7cExternal"));
+      if (inGaia) {
+        const biome = DimensionSystem.getBiome(player);
+        player.sendMessage("\xA77Current Biome: \xA7e" + formatName(biome));
+      }
+      player.sendMessage("\xA77Coordinates: \xA7f" + Math.floor(player.location.x) + ", " + Math.floor(player.location.y) + ", " + Math.floor(player.location.z));
+      player.sendMessage("\xA78\xA7l========================================");
+    });
+    return { status: 0 };
+  });
+  registry.registerCommand({
+    name: "gaiadimension:androsa",
+    description: "The Architect.",
+    permissionLevel: CommandPermissionLevel.Any
+  }, (origin) => {
+    const player = origin.sourceEntity;
+    if (!(player instanceof Player2)) return;
+    system30.run(() => {
+      player.sendMessage("\xA7d[Gaia Creator] \xA77She's the primordial architect who birthed the original Java realm. If you see crystals, thank her. If you see bugs, it's definitely the porter's fault.");
+      player.sendMessage("\xA7b\u{1F517} https://www.curseforge.com/minecraft/mc-mods/gaia-dimension");
+    });
+    return { status: 0 };
+  });
+  registry.registerCommand({
+    name: "gaiadimension:sen",
+    description: "The Porter.",
+    permissionLevel: CommandPermissionLevel.Any
+  }, (origin) => {
+    const player = origin.sourceEntity;
+    if (!(player instanceof Player2)) return;
+    system30.run(() => {
+      player.sendMessage("\xA76[The Porter] \xA77Behold the one who dragged this entire dimension into Bedrock by its crystal ears.");
+      player.sendMessage("\xA7eIt only took 4 years, three gray hairs, and a questionable amount of sanity. Don't ask why it took so long... those gray hairs are just Albite dust, I promise.");
+    });
+    return { status: 0 };
+  });
+}
+
 // GaiaDimensions_BP/src/world/CoordinateDisplay.js
-import { world as world26, system as system30 } from "@minecraft/server";
+import { world as world26, system as system31 } from "@minecraft/server";
 function updateAllCoordinateDisplays() {
   const showCoords = world26.gameRules.showCoordinates;
   for (const player of world26.getAllPlayers()) {
@@ -6159,7 +6263,7 @@ function updateAllCoordinateDisplays() {
     if (!player.hasTag("gaiadimension:showing_coords")) player.addTag("gaiadimension:showing_coords");
   }
 }
-system30.runInterval(() => {
+system31.runInterval(() => {
   try {
     updateAllCoordinateDisplays();
   } catch (e) {
@@ -6170,7 +6274,7 @@ system30.runInterval(() => {
 import { world as world28 } from "@minecraft/server";
 
 // GaiaDimensions_BP/src/world/Events.js
-import { world as world27, system as system31 } from "@minecraft/server";
+import { world as world27, system as system32 } from "@minecraft/server";
 var EventHandler = class {
   constructor() {
     this.handlers = [];
@@ -6190,7 +6294,7 @@ var EventHandler = class {
 var playerChangeBiome = new EventHandler();
 var playerChangeBlock = new EventHandler();
 var lastPlayerPositions = /* @__PURE__ */ new Map();
-system31.runInterval(() => {
+system32.runInterval(() => {
   for (const player of world27.getAllPlayers()) {
     if (!player.isValid) {
       lastPlayerPositions.delete(player.id);
@@ -6334,7 +6438,7 @@ playerChangeBlock.subscribe((eventData) => {
 });
 
 // GaiaDimensions_BP/src/systems/Cleaner.js
-import { world as world30, system as system32, BlockVolume as BlockVolume3, BlockPermutation as BlockPermutation13 } from "@minecraft/server";
+import { world as world30, system as system33, BlockVolume as BlockVolume3, BlockPermutation as BlockPermutation13 } from "@minecraft/server";
 var CLUTTER_TAGS = [
   "grass",
   "plant",
@@ -6373,7 +6477,7 @@ var SHARED_VOL;
 var QUEUE = [];
 var CACHE = /* @__PURE__ */ new Set();
 var QUEUED = /* @__PURE__ */ new Set();
-system32.run(() => {
+system33.run(() => {
   try {
     AIR = BlockPermutation13.resolve("minecraft:air");
     DIM = world30.getDimension("minecraft:overworld");
@@ -6381,7 +6485,7 @@ system32.run(() => {
   } catch (e) {
   }
 });
-system32.runInterval(() => {
+system33.runInterval(() => {
   if (QUEUE.length < 2) return;
   const players = world30.getAllPlayers().filter((p) => p.dimension.id === "minecraft:overworld");
   if (players.length === 0) return;
@@ -6392,7 +6496,7 @@ system32.runInterval(() => {
     return dA - dB;
   });
 }, 100);
-system32.runInterval(() => {
+system33.runInterval(() => {
   if (QUEUE.length === 0 || !SHARED_VOL || !DIM) return;
   const t = QUEUE[0];
   const players = world30.getAllPlayers();
@@ -6421,7 +6525,7 @@ system32.runInterval(() => {
     QUEUE.push(QUEUE.shift());
   }
 }, 1);
-system32.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
+system33.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
   blockComponentRegistry.registerCustomComponent("gaiadimension:overworld_cleaner", {
     onTick({ block }) {
       const { x, z } = block.location;
@@ -6442,7 +6546,7 @@ system32.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
 });
 
 // GaiaDimensions_BP/src/API/lib/EnchantmentLib.js
-import { world as world31, system as system33, ItemStack as ItemStack9 } from "@minecraft/server";
+import { world as world31, system as system34, ItemStack as ItemStack9 } from "@minecraft/server";
 import { ActionFormData } from "@minecraft/server-ui";
 var EnchantmentManager = class {
   constructor() {
@@ -6474,12 +6578,12 @@ var EnchantmentManager = class {
     });
   }
   initEvents() {
-    system33.runInterval(() => this.manageVisuals(), 5);
+    system34.runInterval(() => this.manageVisuals(), 5);
     world31.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
       const { block, player, itemStack } = ev;
       if (block.typeId === "minecraft:enchanting_table" && player.isSneaking) {
         ev.cancel = true;
-        system33.run(() => {
+        system34.run(() => {
           this.openEnchantmentUI(player);
         });
       }
@@ -6733,23 +6837,26 @@ initializeScriptEvents();
 initializeGeyser();
 initializeLightMixin();
 registerCustomTool();
-system34.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
-  registerLeavesComponent({ blockComponentRegistry });
-  registerInvisibleComponent({ blockComponentRegistry });
-  registerCurtainComponent({ blockComponentRegistry });
-  registerWoodComponent({ blockComponentRegistry });
-  registerFenceComponent({ blockComponentRegistry });
-  registerSaplingComponent({ blockComponentRegistry });
-  registerWallComponent({ blockComponentRegistry });
-  registerButtonComponent({ blockComponentRegistry });
-  registerPressurePlateComponent({ blockComponentRegistry });
-  registerStairsComponent({ blockComponentRegistry });
-  registerGeyserComponent({ blockComponentRegistry });
-  registerSandstoneComponent({ blockComponentRegistry });
-  registerStoneSlabComponent({ blockComponentRegistry });
-  registerGaiaFurnaceComponent({ blockComponentRegistry });
-  registerGlitteringFireComponent();
-  registerCrudeStorageCrateComponent({ blockComponentRegistry });
-  registerMegaStorageCrateComponent({ blockComponentRegistry });
-  registerFluidComponent({ blockComponentRegistry });
-});
+system35.beforeEvents.startup.subscribe(
+  ({ blockComponentRegistry, customCommandRegistry }) => {
+    registerLeavesComponent({ blockComponentRegistry });
+    registerInvisibleComponent({ blockComponentRegistry });
+    registerCurtainComponent({ blockComponentRegistry });
+    registerWoodComponent({ blockComponentRegistry });
+    registerFenceComponent({ blockComponentRegistry });
+    registerSaplingComponent({ blockComponentRegistry });
+    registerWallComponent({ blockComponentRegistry });
+    registerButtonComponent({ blockComponentRegistry });
+    registerPressurePlateComponent({ blockComponentRegistry });
+    registerStairsComponent({ blockComponentRegistry });
+    registerGeyserComponent({ blockComponentRegistry });
+    registerSandstoneComponent({ blockComponentRegistry });
+    registerStoneSlabComponent({ blockComponentRegistry });
+    registerGaiaFurnaceComponent({ blockComponentRegistry });
+    registerGlitteringFireComponent();
+    registerCrudeStorageCrateComponent({ blockComponentRegistry });
+    registerMegaStorageCrateComponent({ blockComponentRegistry });
+    registerFluidComponent({ blockComponentRegistry });
+    registerGaiaCommands(customCommandRegistry);
+  }
+);

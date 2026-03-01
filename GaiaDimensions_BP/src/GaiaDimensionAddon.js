@@ -25,6 +25,7 @@ import { initializeScriptEvents } from "./systems/scriptevents.js";
 import { registerFluidComponent } from "./fluids/fluids.js";
 import { registerCustomTool } from "./durability.js";
 import { DimensionSystem } from "./world/Gaia.js";
+import { registerGaiaCommands } from "./systems/Commands.js";
 import "./world/CoordinateDisplay.js";
 import "./world/Biome.js";
 import "./world/Fog.js";
@@ -40,7 +41,7 @@ initializeLightMixin();
 // initializeSkybox();
 registerCustomTool();
 
-system.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
+system.beforeEvents.startup.subscribe(({ blockComponentRegistry, customCommandRegistry }) => {
     registerLeavesComponent({ blockComponentRegistry });
     registerInvisibleComponent({ blockComponentRegistry });
     registerCurtainComponent({ blockComponentRegistry });
@@ -59,4 +60,7 @@ system.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
     registerCrudeStorageCrateComponent({ blockComponentRegistry });
     registerMegaStorageCrateComponent({ blockComponentRegistry });
     registerFluidComponent({ blockComponentRegistry });
-});
+    // Register custom commands
+    registerGaiaCommands(customCommandRegistry);
+    }
+);
