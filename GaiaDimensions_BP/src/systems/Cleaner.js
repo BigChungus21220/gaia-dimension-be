@@ -12,7 +12,7 @@ const CLUTTER_TAGS = [
     "minecraft:is_hoe_item_destructible",
     "minecraft:crop", "flower", "bush", "vine", "mushroom", "coral", "waterlily", "reeds"
 ];
-const CLUTTER_TYPES = ["minecraft:deadbush", "minecraft:sugar_cane", "minecraft:bamboo", "minecraft:kelp", "minecraft:seagrass"];
+const CLUTTER_TYPES = ["minecraft:deadbush", "minecraft:sugar_cane", "minecraft:bamboo", "minecraft:kelp", "minecraft:glow_lichen"];
 
 const FILTER = {
     blockFilter: {

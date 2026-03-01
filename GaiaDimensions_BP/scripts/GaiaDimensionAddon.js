@@ -6359,7 +6359,7 @@ var CLUTTER_TAGS = [
   "waterlily",
   "reeds"
 ];
-var CLUTTER_TYPES = ["minecraft:deadbush", "minecraft:sugar_cane", "minecraft:bamboo", "minecraft:kelp", "minecraft:seagrass"];
+var CLUTTER_TYPES = ["minecraft:deadbush", "minecraft:sugar_cane", "minecraft:bamboo", "minecraft:kelp", "minecraft:glow_lichen"];
 var FILTER = {
   blockFilter: {
     includeTags: CLUTTER_TAGS,
