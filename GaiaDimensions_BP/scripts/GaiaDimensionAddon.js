@@ -5172,10 +5172,15 @@ system25.runInterval(() => {
     }
     if (task.state === "TELEPORTING") {
       player.teleport(task.finalPos, { dimension: targetDim });
-      try {
-        targetDim.runCommand(`tickingarea remove ${task.areaName}`);
-      } catch (e) {
-      }
+      player.setDynamicProperty("gaiadimension:last_teleport", system25.currentTick);
+      const areaName = task.areaName;
+      const targetDimId = task.targetDimId;
+      system25.runTimeout(() => {
+        try {
+          world22.getDimension(targetDimId).runCommand(`tickingarea remove ${areaName}`);
+        } catch (e) {
+        }
+      }, 100);
       pendingPortalTasks.splice(i, 1);
     }
   }
@@ -5205,9 +5210,17 @@ system25.runInterval(() => {
     if (player.hasTag("gaiadimension:in_gaia") && player.dimension.id === "minecraft:overworld") {
       if (!inGaia) {
         const center = GaiaDimension.getCenter();
-        player.teleport({ x: center.x, y: 100, z: center.z }, { dimension: player.dimension });
+        const targetX = Math.max(RANGE_START + 10, Math.min(RANGE_END - 10, player.location.x + center.x));
+        const targetZ = Math.max(RANGE_START + 10, Math.min(RANGE_END - 10, player.location.z + center.z));
+        player.teleport({ x: targetX, y: player.location.y, z: targetZ }, { dimension: player.dimension });
         continue;
       }
+    } else if (player.dimension.id === "minecraft:overworld" && inGaia) {
+      const center = GaiaDimension.getCenter();
+      const targetX = player.location.x - center.x;
+      const targetZ = player.location.z - center.z;
+      player.teleport({ x: targetX, y: player.location.y, z: targetZ }, { dimension: player.dimension });
+      continue;
     }
     const dimension = player.dimension;
     const loc = player.location;

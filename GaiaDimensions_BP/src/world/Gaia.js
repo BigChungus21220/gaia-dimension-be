@@ -242,7 +242,19 @@ system.runInterval(() => {
         // State 4: Final Teleport and Cleanup
         if (task.state === "TELEPORTING") {
             player.teleport(task.finalPos, { dimension: targetDim });
-            try { targetDim.runCommand(`tickingarea remove ${task.areaName}`); } catch(e) {}
+            
+            // Refresh cooldown at the moment of physical teleport to ensure immunity starts now
+            player.setDynamicProperty("gaiadimension:last_teleport", system.currentTick);
+            
+            // Keep ticking area for 100 ticks after teleport to ensure stability, then remove
+            const areaName = task.areaName;
+            const targetDimId = task.targetDimId;
+            system.runTimeout(() => {
+                try {
+                    world.getDimension(targetDimId).runCommand(`tickingarea remove ${areaName}`);
+                } catch(e) {}
+            }, 100);
+
             pendingPortalTasks.splice(i, 1);
         }
     }
@@ -276,9 +288,24 @@ system.runInterval(() => {
         if (player.hasTag("gaiadimension:in_gaia") && player.dimension.id === "minecraft:overworld") {
             if (!inGaia) {
                 const center = GaiaDimension.getCenter();
-                player.teleport({ x: center.x, y: 100, z: center.z }, { dimension: player.dimension });
+                // Map the player's current location (outside) into the Gaia range relative to the center.
+                // This allows manual /tp commands (e.g., "/tp 20000 90 20000") to be intercepted and corrected.
+                const targetX = Math.max(RANGE_START + 10, Math.min(RANGE_END - 10, player.location.x + center.x));
+                const targetZ = Math.max(RANGE_START + 10, Math.min(RANGE_END - 10, player.location.z + center.z));
+                
+                // Teleport to the mapped coordinate, preserving the player's intended Y height.
+                player.teleport({ x: targetX, y: player.location.y, z: targetZ }, { dimension: player.dimension });
                 continue; 
             }
+        } else if (player.dimension.id === "minecraft:overworld" && inGaia) {
+            // PROTECTION: If a player DOES NOT have the Gaia tag but is inside the Gaia range, map them back to normal coords.
+            // This prevents manual /tp into the dimension (e.g., "/tp 250000 100 250000" maps to "0 100 0").
+            const center = GaiaDimension.getCenter();
+            const targetX = player.location.x - center.x;
+            const targetZ = player.location.z - center.z;
+            
+            player.teleport({ x: targetX, y: player.location.y, z: targetZ }, { dimension: player.dimension });
+            continue;
         }
 
         const dimension = player.dimension;
