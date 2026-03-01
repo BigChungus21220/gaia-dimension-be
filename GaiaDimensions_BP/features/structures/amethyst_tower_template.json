@@ -2,9 +2,9 @@
 	"format_version": "1.20.20",
 	"minecraft:structure_template_feature": {
 		"description": {
-			"identifier": "gaiadimension:gen/structures/jet_tower_feature"
+			"identifier": "gaiadimension:structures/amethyst_tower_template"
 		},
-		"structure_name": "mystructure:jet_tower",
+		"structure_name": "mystructure:amethyst_tower",
 		"adjustment_radius": 1,
 		"facing_direction": "north",
 		"constraints": {}

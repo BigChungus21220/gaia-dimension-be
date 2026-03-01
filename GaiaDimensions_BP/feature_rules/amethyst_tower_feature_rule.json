@@ -6,7 +6,7 @@
 			"places_feature": "gaiadimension:gen/structures/amethyst_tower_feature"
 		},
 		"conditions": {
-			"placement_pass": "after_sky_pass",
+			"placement_pass": "surface_pass",
 			"minecraft:biome_filter": [
 				{
 					"any_of": [
@@ -23,25 +23,25 @@
 			]
 		},
 		"distribution": {
-			"iterations": "v.originx >= 100000 && v.originz >= 100000 && v.originx <= 400000 && v.originz <= 400000*5",
+			"iterations": "v.originx >= 100000 && v.originz >= 100000 && v.originx <= 400000 && v.originz <= 400000",
 			"x": {
 				"extent": [
 					0,
-					16
+					15
 				],
 				"distribution": "uniform"
 			},
-			"y": "q.above_top_solid(v.originx,v.originz)",
+			"y": "query.above_top_solid(v.worldx, v.worldz)",
 			"z": {
 				"extent": [
 					0,
-					16
+					15
 				],
 				"distribution": "uniform"
 			},
 			"scatter_chance": {
-				"numerator": 4,
-				"denominator": 100
+				"numerator": 1,
+				"denominator": 1000
 			}
 		}
 	}
