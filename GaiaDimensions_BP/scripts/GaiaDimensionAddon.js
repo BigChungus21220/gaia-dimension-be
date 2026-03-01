@@ -6446,7 +6446,6 @@ import { world as world30, system as system33, BlockVolume as BlockVolume3, Bloc
 var CLUTTER_TAGS = [
   "grass",
   "plant",
-  "snow",
   "leaves",
   "log",
   "wood",

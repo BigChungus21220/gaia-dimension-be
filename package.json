@@ -7,7 +7,8 @@
   "dependencies": {
     "@minecraft/server": "^2.5.0",
     "@minecraft/server-ui": "^2.0.0",
-    "npm": "^11.3.2"
+    "npm": "^11.3.2",
+    "prismarine-nbt": "^2.8.0"
   },
   "devDependencies": {
     "esbuild": "^0.27.3"

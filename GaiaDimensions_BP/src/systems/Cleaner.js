@@ -6,7 +6,7 @@ import { GaiaDimension } from "../world/Gaia.js"
  * Using native bitmask tags is O(1) in the engine.
  */
 const CLUTTER_TAGS = [
-    "grass", "plant", "snow", "leaves", "log", "wood",
+    "grass", "plant", "leaves", "log", "wood",
     "acacia", "birch", "dark_oak", "jungle", "oak", "spruce",
     "minecraft:is_shears_item_destructible", 
     "minecraft:is_hoe_item_destructible",
