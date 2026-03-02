@@ -6,7 +6,7 @@
 			"places_feature": "gaiadimension:gen/structures/copal_tower_feature"
 		},
 		"conditions": {
-			"placement_pass": "surface_pass",
+			"placement_pass": "final_pass",
 			"minecraft:biome_filter": [
 				{
 					"any_of": [
