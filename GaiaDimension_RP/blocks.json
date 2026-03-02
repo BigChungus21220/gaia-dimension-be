@@ -66,5 +66,41 @@
     },
     "gaiadimension:purple_agate_leaves": {
         "sound": "glass"
+    },
+    "gaiadimension:amethyst_bricks": {
+        "textures": "gaiadimension:amethyst_bricks",
+        "sound": "stone"
+    },
+    "gaiadimension:cracked_amethyst_bricks": {
+        "textures": "gaiadimension:cracked_amethyst_bricks",
+        "sound": "stone"
+    },
+    "gaiadimension:crusted_amethyst_bricks": {
+        "textures": "gaiadimension:crusted_amethyst_bricks",
+        "sound": "stone"
+    },
+    "gaiadimension:amethyst_brick_stairs": {
+        "textures": "gaiadimension:amethyst_bricks",
+        "sound": "stone"
+    },
+    "gaiadimension:cracked_amethyst_brick_stairs": {
+        "textures": "gaiadimension:cracked_amethyst_bricks",
+        "sound": "stone"
+    },
+    "gaiadimension:crusted_amethyst_brick_stairs": {
+        "textures": "gaiadimension:crusted_amethyst_bricks",
+        "sound": "stone"
+    },
+    "gaiadimension:amethyst_brick_slab": {
+        "textures": "gaiadimension:amethyst_bricks",
+        "sound": "stone"
+    },
+    "gaiadimension:cracked_amethyst_brick_slab": {
+        "textures": "gaiadimension:cracked_amethyst_bricks",
+        "sound": "stone"
+    },
+    "gaiadimension:crusted_amethyst_brick_slab": {
+        "textures": "gaiadimension:crusted_amethyst_bricks",
+        "sound": "stone"
     }
 }
