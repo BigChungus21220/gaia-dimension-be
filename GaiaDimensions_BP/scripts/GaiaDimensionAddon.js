@@ -5236,11 +5236,11 @@ system25.runInterval(() => {
   }
   if (anyPlayerInGaia && !isAlwaysDayActive) {
     const overworld = world22.getDimension("minecraft:overworld");
-    overworld.runCommand("alwaysday");
+    overworld.runCommand("alwaysday true");
     overworld.runCommand("weather clear");
     isAlwaysDayActive = true;
   } else if (!anyPlayerInGaia && isAlwaysDayActive) {
-    world22.getDimension("minecraft:overworld").runCommand("alwaysday");
+    world22.getDimension("minecraft:overworld").runCommand("alwaysday false");
     isAlwaysDayActive = false;
   }
 }, 10);

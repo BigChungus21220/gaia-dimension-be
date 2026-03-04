@@ -325,11 +325,11 @@ system.runInterval(() => {
 
     if (anyPlayerInGaia && !isAlwaysDayActive) {
         const overworld = world.getDimension("minecraft:overworld");
-        overworld.runCommand("alwaysday");
+        overworld.runCommand("alwaysday true");
         overworld.runCommand("weather clear");
         isAlwaysDayActive = true;
     } else if (!anyPlayerInGaia && isAlwaysDayActive) {
-        world.getDimension("minecraft:overworld").runCommand("alwaysday");
+        world.getDimension("minecraft:overworld").runCommand("alwaysday false");
         isAlwaysDayActive = false;
     }
 }, 10);

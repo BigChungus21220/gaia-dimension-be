@@ -44,7 +44,7 @@
             },
             "minecraft:damage_sensor": {
                 "triggers": {
-                    "deals_damage": false
+                    "deals_damage": "no"
                 }
             },
             "minecraft:collision_box": {

@@ -33,7 +33,7 @@
 		},
         "components": {
             "minecraft:inventory": {
-                "container_type": "container",
+				"container_type": "container",
                 "inventory_size": 54
             },
             "minecraft:type_family": {
@@ -44,7 +44,7 @@
             },
             "minecraft:damage_sensor": {
                 "triggers": {
-                    "deals_damage": false
+                    "deals_damage": "no"
                 }
             },
             "minecraft:collision_box": {
