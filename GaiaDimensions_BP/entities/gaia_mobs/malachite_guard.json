@@ -232,6 +232,17 @@
           {
             "on_damage": {
               "filters": {
+                "test": "has_tag",
+                "subject": "self",
+                "operator": "==",
+                "value": "gaiadimension:has_active_drones"
+              }
+            },
+            "deals_damage": false
+          },
+          {
+            "on_damage": {
+              "filters": {
                 "all_of": [
                   {
                     "test": "has_component",
@@ -316,14 +327,6 @@
 
     "events": {
       "minecraft:entity_spawned": {
-        "queue_command": {
-          "command": [
-            "summon gaiadimension:malachite_drone MG_MINION ~ ~ ~4",
-            "summon gaiadimension:malachite_drone MG_MINION ~ ~ ~-4",
-            "summon gaiadimension:malachite_drone MG_MINION ~4 ~ ~",
-            "summon gaiadimension:malachite_drone MG_MINION ~-4 ~ ~"
-          ]
-        }
       },
       "dead": {},
       "no_mg_defend": {

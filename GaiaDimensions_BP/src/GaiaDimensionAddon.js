@@ -31,6 +31,7 @@ import "./world/Biome.js";
 import "./world/Fog.js";
 import "./systems/Cleaner.js";
 import "./systems/enchantments.js";
+import "./entities/MalachiteGuard.js";
 
 // Initialize systems
 initializeDestructionHandlers();

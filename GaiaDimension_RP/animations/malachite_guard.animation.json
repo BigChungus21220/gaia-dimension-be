@@ -1,0 +1,67 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.malachite_guard.activate": {
+			"animation_length": 1.2917,
+			"bones": {
+				"upperArmL": {
+					"rotation": {
+						"0.0": [75, 0, 0],
+						"0.7917": [0, 0, 0]
+					}
+				},
+				"lowerArmL": {
+					"rotation": {
+						"0.0": [97.48326, 30, 0.0487],
+						"0.7917": [0, 0, 0]
+					}
+				},
+				"leg1": {
+					"rotation": {
+						"0.0": [27.5, 42.5, 0],
+						"0.7917": [0, 0, 0]
+					}
+				},
+				"footR": {
+					"rotation": {
+						"0.0": [-27.5, 0, 0],
+						"0.7917": [0, 0, 0]
+					},
+					"position": [0, 0, 0]
+				},
+				"head": {
+					"rotation": [0, 0, 0]
+				},
+				"leg0": {
+					"relative_to": {
+						"rotation": "entity"
+					},
+					"rotation": {
+						"0.0": [27.5, -42.5, 0],
+						"0.7917": [0, 0, 0.01]
+					}
+				},
+				"footL": {
+					"rotation": {
+						"0.0": [-27.5, 0, 0],
+						"0.7917": [0, 0, 0]
+					},
+					"position": [0, 0, 0],
+					"scale": 1
+				},
+				"upperArmR": {
+					"rotation": {
+						"0.0": [75, 0, 0],
+						"0.7917": [0, 0, 0]
+					}
+				},
+				"lowerArmR": {
+					"rotation": {
+						"0.0": [97.48326, -29.99997, -0.04873],
+						"0.7917": [0, 0, 0]
+					}
+				}
+			}
+		}
+	}
+}

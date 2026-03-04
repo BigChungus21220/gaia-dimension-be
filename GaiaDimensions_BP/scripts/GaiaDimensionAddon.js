@@ -1,5 +1,5 @@
 // GaiaDimensions_BP/src/GaiaDimensionAddon.js
-import { world as world33, system as system35 } from "@minecraft/server";
+import { world as world34, system as system36 } from "@minecraft/server";
 
 // GaiaDimensions_BP/src/blocks/leaves.js
 import { system } from "@minecraft/server";
@@ -6466,7 +6466,7 @@ var CLUTTER_TAGS = [
   "waterlily",
   "reeds"
 ];
-var CLUTTER_TYPES = ["minecraft:deadbush", "minecraft:sugar_cane", "minecraft:bamboo", "minecraft:kelp", "minecraft:glow_lichen"];
+var CLUTTER_TYPES = ["minecraft:deadbush", "minecraft:snow_layer", "minecraft:sugar_cane", "minecraft:bamboo", "minecraft:kelp", "minecraft:glow_lichen"];
 var FILTER = {
   blockFilter: {
     includeTags: CLUTTER_TAGS,
@@ -6833,6 +6833,108 @@ enchantmentManager.register("gaia:thunder_strike", {
   }
 });
 
+// GaiaDimensions_BP/src/entities/MalachiteGuard.js
+import { world as world33, system as system35, Entity as Entity2, EntityDamageCause } from "@minecraft/server";
+var MalachiteGuardSystem = class {
+  constructor() {
+    this.init();
+  }
+  init() {
+    world33.afterEvents.entitySpawn.subscribe((event) => {
+      const { entity } = event;
+      if (entity.typeId === "gaiadimension:malachite_guard") {
+        this.setupGuard(entity);
+      }
+    });
+    system35.runInterval(() => {
+      const overworld = world33.getDimension("overworld");
+      const guards = overworld.getEntities({
+        type: "gaiadimension:malachite_guard"
+      });
+      const activeGuardIds = /* @__PURE__ */ new Set();
+      for (const guard of guards) {
+        const guardId = guard.getDynamicProperty("gaiadimension:guard_id");
+        if (guardId) {
+          activeGuardIds.add(guardId);
+          this.updateGuardState(guard, guardId);
+        }
+      }
+      const allDrones = overworld.getEntities({
+        type: "gaiadimension:malachite_drone"
+      });
+      for (const drone of allDrones) {
+        const parentId = drone.getDynamicProperty("gaiadimension:parent_id");
+        if (parentId && !activeGuardIds.has(parentId)) {
+          drone.remove();
+        }
+      }
+    }, 10);
+  }
+  /**
+   * Initialize a new Malachite Guard
+   * @param {Entity} guard 
+   */
+  setupGuard(guard) {
+    const guardId = `mg_${Date.now()}_${Math.floor(Math.random() * 1e3)}`;
+    guard.setDynamicProperty("gaiadimension:guard_id", guardId);
+    guard.addTag("gaiadimension:has_active_drones");
+    system35.run(() => {
+      if (!guard.isValid) return;
+      guard.triggerEvent("mg_defend");
+      this.spawnDrones(guard, guardId);
+    });
+  }
+  /**
+   * Spawns 4 drones linked to the guard
+   * @param {Entity} guard 
+   * @param {string} guardId 
+   */
+  spawnDrones(guard, guardId) {
+    const dim = guard.dimension;
+    const loc = guard.location;
+    const offsets = [
+      { x: 4, z: 0 },
+      { x: -4, z: 0 },
+      { x: 0, z: 4 },
+      { x: 0, z: -4 }
+    ];
+    offsets.forEach((offset) => {
+      try {
+        const drone = dim.spawnEntity("gaiadimension:malachite_drone", {
+          x: loc.x + offset.x,
+          y: loc.y + 2,
+          z: loc.z + offset.z
+        });
+        drone.addTag(`mg_parent:${guardId}`);
+        drone.setDynamicProperty("gaiadimension:parent_id", guardId);
+      } catch (e) {
+      }
+    });
+  }
+  /**
+   * Check if drones are still alive and update Guard state
+   * @param {Entity} guard 
+   * @param {string} guardId
+   */
+  updateGuardState(guard, guardId) {
+    const drones = guard.dimension.getEntities({
+      type: "gaiadimension:malachite_drone",
+      tags: [`mg_parent:${guardId}`]
+    });
+    const hasDrones = drones.length > 0;
+    const currentlyFlagged = guard.hasTag("gaiadimension:has_active_drones");
+    if (!hasDrones && currentlyFlagged) {
+      guard.removeTag("gaiadimension:has_active_drones");
+      guard.triggerEvent("no_mg_defend");
+      world33.sendMessage("\xA7c[Malachite Guard] \xA77The drones have fallen! The Guard's core is exposed!");
+    } else if (hasDrones && !currentlyFlagged) {
+      guard.addTag("gaiadimension:has_active_drones");
+      guard.triggerEvent("mg_defend");
+    }
+  }
+};
+var malachiteGuardSystem = new MalachiteGuardSystem();
+
 // GaiaDimensions_BP/src/GaiaDimensionAddon.js
 initializeDestructionHandlers();
 initializeEventManager();
@@ -6840,7 +6942,7 @@ initializeScriptEvents();
 initializeGeyser();
 initializeLightMixin();
 registerCustomTool();
-system35.beforeEvents.startup.subscribe(
+system36.beforeEvents.startup.subscribe(
   ({ blockComponentRegistry, customCommandRegistry }) => {
     registerLeavesComponent({ blockComponentRegistry });
     registerInvisibleComponent({ blockComponentRegistry });
