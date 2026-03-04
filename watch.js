@@ -1,56 +1,92 @@
 const esbuild = require('esbuild');
 const { spawn } = require('child_process');
+const chokidar = require('chokidar');
+const path = require('path');
 
 /**
- * Simple plugin to run deploy.py after each build
+ * Runs a shell command and returns a promise
  */
-let deployPlugin = {
-    name: 'deploy',
-    setup(build) {
-        build.onEnd(result => {
-            if (result.errors.length > 0) {
-                console.error('Build failed, skipping deployment');
-                return;
-            }
-            console.log('Build succeeded, generating staves and deploying...');
-            const gen = spawn('python', ['magic_staff_gen.py'], { stdio: 'inherit' });
-            gen.on('close', (genCode) => {
-                if (genCode !== 0) {
-                    console.error(`Staff generation failed with code ${genCode}`);
-                    return;
-                }
-                const deploy = spawn('python', ['deploy.py'], { stdio: 'inherit' });
-                deploy.on('close', (code) => {
-                    if (code === 0) {
-                        console.log('Deployment complete!');
-                    } else {
-                        console.error(`Deployment failed with code ${code}`);
-                    }
-                });
-            });
+function runCommand(command, args) {
+    return new Promise((resolve) => {
+        console.log(`> Running ${command} ${args.join(' ')}`);
+        const proc = spawn(command, args, { stdio: 'inherit', shell: true });
+        proc.on('close', (code) => {
+            resolve(code === 0);
         });
-    },
-};
-
-async function watch() {
-    let ctx = await esbuild.context({
-        entryPoints: ['GaiaDimensions_BP/src/GaiaDimensionAddon.js'],
-        bundle: true,
-        format: 'esm',
-        external: [
-            '@minecraft/server',
-            '@minecraft/server-ui',
-            '@minecraft/server-gametest',
-            '@minecraft/server-admin',
-            '@minecraft/server-editor',
-            '@minecraft/server-net'
-        ],
-        outfile: 'GaiaDimensions_BP/scripts/GaiaDimensionAddon.js',
-        plugins: [deployPlugin],
     });
-
-    await ctx.watch();
-    console.log('Watching for changes...');
 }
 
-watch().catch(() => process.exit(1));
+let isBuilding = false;
+let pendingBuild = false;
+
+async function buildAndDeploy() {
+    if (isBuilding) {
+        pendingBuild = true;
+        return;
+    }
+
+    isBuilding = true;
+    console.log('\n--- Starting Build & Deploy ---');
+
+    try {
+        // 1. Generate staves
+        const genSuccess = await runCommand('python', ['magic_staff_gen.py']);
+        if (!genSuccess) throw new Error('Staff generation failed');
+
+        // 2. Bundle JS
+        await esbuild.build({
+            entryPoints: ['GaiaDimensions_BP/src/GaiaDimensionAddon.js'],
+            bundle: true,
+            format: 'esm',
+            external: [
+                '@minecraft/server',
+                '@minecraft/server-ui',
+                '@minecraft/server-gametest',
+                '@minecraft/server-admin',
+                '@minecraft/server-editor',
+                '@minecraft/server-net'
+            ],
+            outfile: 'GaiaDimensions_BP/scripts/GaiaDimensionAddon.js',
+        });
+        console.log('> JS Bundling complete');
+
+        // 3. Deploy
+        const deploySuccess = await runCommand('python', ['deploy.py']);
+        if (!deploySuccess) throw new Error('Deployment failed');
+
+        console.log('--- Build & Deploy Successful ---\n');
+    } catch (err) {
+        console.error(`\n!!! Build Error: ${err.message}\n`);
+    }
+
+    isBuilding = false;
+    if (pendingBuild) {
+        pendingBuild = false;
+        buildAndDeploy();
+    }
+}
+
+// Initialize watcher
+const watcher = chokidar.watch([
+    'GaiaDimensions_BP',
+    'GaiaDimension_RP'
+], {
+    ignored: [
+        '**/scripts/GaiaDimensionAddon.js', // Ignore the output file to prevent loops
+        '**/.git/**',
+        '**/node_modules/**'
+    ],
+    persistent: true,
+    ignoreInitial: true
+});
+
+console.log('Watching GaiaDimensions_BP and GaiaDimension_RP for changes...');
+
+watcher.on('all', (event, filePath) => {
+    const fileName = path.basename(filePath);
+    console.log(`Change detected: ${fileName} (${event})`);
+    buildAndDeploy();
+});
+
+// Run initial build
+buildAndDeploy();

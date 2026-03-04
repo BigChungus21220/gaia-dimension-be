@@ -144,6 +144,7 @@
                     "render_method": "opaque"
                 }
             },
+            "gaiadimension:pressure_plate": {},
             "minecraft:selection_box": {
                 "origin": [
                     -7,

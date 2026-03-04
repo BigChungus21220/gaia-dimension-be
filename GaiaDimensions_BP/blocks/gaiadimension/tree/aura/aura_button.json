@@ -472,6 +472,7 @@
                     }
                 ]
             },
+            "gaiadimension:button":{},
             "minecraft:flammable": {
                 "destroy_chance_modifier": 50,
                 "catch_chance_modifier": 10

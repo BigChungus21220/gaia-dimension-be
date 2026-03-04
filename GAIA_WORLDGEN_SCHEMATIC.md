@@ -6,43 +6,27 @@ This document abstracts the nested Molang and feature-rule pipeline that generat
 
 ## 🏗️ The Generation Pipeline
 
-The generation flows through seven distinct layers of nesting to achieve high-performance per-block terrain.
+The generation is split into two primary phases to ensure terrain stability and proper structure placement.
 
-### 1. The Trigger (`feature_rules/base_chunk.json`)
-- **Action**: Listens for Overworld chunk generation.
-- **Filter**: Checks if coordinates are within the Gaia Range.
-- **Goal**: Fires the `chunk_sequence`.
+### Phase 1: Terrain, Cleaning & Towers (First Pass)
+**Trigger: `feature_rules/base_chunk.json`**
+- **Pass**: **`first_pass`** (Terrain generation entry point).
+- **Action**: Fires the `chunk_sequence`.
+- **Sequential Tasks**:
+    1. **Build**: Triggers `column_placer` to generate terrain columns.
+    2. **Wipe**: Triggers `utils/cleaner` to remove Overworld clutter.
+    3. **Finalize**: Triggers `tower_spawn_wrapper` to place landmarks on the built terrain.
 
-### 2. The Coordinator (`features/gen/base/chunk_sequence.json`)
-- **Action**: Orchestrates two primary tasks:
-    1. **Build**: Triggers the `column_placer`.
-    2. **Wipe**: Triggers the `utils/cleaner` (JS-based overworld clutter removal).
+---
 
-### 3. The Scatter (`features/gen/base/column_placer.json`)
-- **Action**: Scatters 256 iterations across a 16x16 area.
-- **Goal**: Ensures every X/Z coordinate in the chunk is processed once at Y=0.
+## 🏗️ Layered Nesting (Internal Flow)
 
-### 4. The Brain (`features/gen/base/column_height.json`)
-- **Logic**: The most complex layer. Uses heavy Molang math to:
-    - **Calculate Noise**: River noise, mountain noise, and ocean noise.
-    - **Determine Height**: Interpolates noise values into a `t.height` variable.
-    - **Assign Biome ID**: Maps noise results to a **Numeric ID** (`t.biome_id`).
-- **Critical Fix**: Numeric IDs are used because the engine cannot compare biome strings during generation.
-
-### 5. The Vertical Stack (`features/gen/base/column_stack.json`)
-- **Action**: Iterates vertically from Y=0 to `t.height`.
-- **Variable**: Tracks `t.layer` (depth from surface) to decide block types.
-
-### 6. The Block Picker (`features/gen/base/block_picker.json`)
-- **Logic**: Selects blocks based on:
-    - `t.layer`: Surface (Grass/Soil) vs. Underground (Stone).
-    - `t.biome_id`: Specific blocks for specific biomes (e.g., Pink Agate vs. Crystal).
-- **Identity**: At Y=0, the `bedrock_picker` places a unique **Bedrock Marker** tied to the `t.biome_id`.
-
-### 7. The Atmospheric Bridge (`JS: Gaia.js & Fog.js`)
-- **Detection**: The JavaScript system looks at the player's X/Z and checks **Y=0 or Y=-64**.
-- **Logic**: Identifies the Bedrock Marker block.
-- **Result**: Pushes the corresponding `gaiadimension:[biome]_fog` to the player.
+1. **The Trigger (`base_chunk.json`)** -> `first_pass` entry point.
+2. **The Coordinator (`chunk_sequence.json`)** -> Orchestrates column building.
+3. **The Scatter (`column_placer.json`)** -> Processes 256 columns per chunk.
+4. **The Brain (`column_height.json`)** -> Molang noise & Biome ID logic.
+5. **The Vertical Stack (`column_stack.json`)** -> Iterates Y=0 to `t.height`.
+6. **The Block Picker (`block_picker.json`)** -> Selects blocks based on Layer & Biome ID.
 
 ---
 
@@ -53,7 +37,7 @@ The generation flows through seven distinct layers of nesting to achieve high-pe
 | **Molang** | Native engine execution | Near-zero lag |
 | **Numeric IDs** | Bypasses string comparison | Mandatory for 1.20+ |
 | **Cleaner** | Lagless Component + 2ms Budget | No tick spikes |
-| **Fog Tracking** | Bedrock Markers | O(1) Biome Lookups |
+| **Pass Splitting** | First Pass (Terrain) vs Final Pass (Towers) | Prevents structure corruption |
 
 ---
 
