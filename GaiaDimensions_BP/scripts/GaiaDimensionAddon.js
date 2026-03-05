@@ -4163,7 +4163,6 @@ var PortalManager = class {
       console.warn("[PortalLib] tryIgnite called with invalid block");
       return false;
     }
-    console.warn(`[PortalLib] tryIgnite triggered at ${originBlock.location.x}, ${originBlock.location.y}, ${originBlock.location.z} in ${originBlock.dimension.id}`);
     for (const [portalId, config] of this.registeredPortals) {
       if (this.attemptPortalCreation(originBlock, portalId, config.frameId)) {
         console.warn(`[PortalLib] Portal created successfully: ${portalId}`);
@@ -4626,18 +4625,73 @@ var PortalManager = class {
 
 // GaiaDimensions_BP/src/blocks/glittering_fire.js
 PortalManager.register("gaiadimension:gaia_dimension_portal", "gaiadimension:keystone_block");
+var playerHitboxes = /* @__PURE__ */ new Map();
 function registerGlitteringFireComponent() {
-  world20.beforeEvents.playerInteractWithBlock.subscribe((event) => {
-    const { block } = event;
-    if (block.typeId === "gaiadimension:glittering_fire") {
-      event.cancel = true;
+  system23.runInterval(() => {
+    for (const player of world20.getAllPlayers()) {
+      const raycast = player.getBlockFromViewDirection({ maxDistance: 5 });
+      const currentHitbox = playerHitboxes.get(player.id);
+      if (raycast && raycast.block.typeId === "gaiadimension:glittering_fire") {
+        const fireBlock = raycast.block;
+        const loc = fireBlock.location;
+        const center = { x: loc.x + 0.5, y: loc.y + 0.2, z: loc.z + 0.5 };
+        if (currentHitbox) {
+          const hLoc = currentHitbox.location;
+          if (Math.floor(hLoc.x) !== loc.x || Math.floor(hLoc.y) !== loc.y || Math.floor(hLoc.z) !== loc.z) {
+            try {
+              currentHitbox.teleport(center);
+            } catch (e) {
+              playerHitboxes.delete(player.id);
+            }
+          }
+        } else {
+          try {
+            const entity = player.dimension.spawnEntity("gaiadimension:fire_hitbox", center);
+            playerHitboxes.set(player.id, entity);
+          } catch (e) {
+          }
+        }
+      } else if (currentHitbox) {
+        try {
+          if (currentHitbox.isValid) currentHitbox.remove();
+        } catch (e) {
+        }
+        playerHitboxes.delete(player.id);
+      }
+    }
+  }, 2);
+  world20.afterEvents.playerLeave.subscribe((event) => {
+    const { playerId } = event;
+    const currentHitbox = playerHitboxes.get(playerId);
+    if (currentHitbox) {
+      try {
+        if (currentHitbox.isValid) currentHitbox.remove();
+      } catch (e) {
+      }
+      playerHitboxes.delete(playerId);
+    }
+  });
+  world20.afterEvents.entityHitEntity.subscribe((event) => {
+    const { hitEntity } = event;
+    if (hitEntity.typeId === "gaiadimension:fire_hitbox") {
+      const loc = hitEntity.location;
+      const blockLoc = { x: Math.floor(loc.x), y: Math.floor(loc.y), z: Math.floor(loc.z) };
+      const dimension = hitEntity.dimension;
       system23.run(() => {
-        if (block.isValid) {
+        const block = dimension.getBlock(blockLoc);
+        if (block && block.typeId === "gaiadimension:glittering_fire") {
           block.setType("minecraft:air");
-          block.dimension.playSound("random.fizz", block.location, {
+          dimension.playSound("random.fizz", blockLoc, {
             volume: 1,
             pitch: 1
           });
+        }
+        if (hitEntity.isValid) hitEntity.remove();
+        for (const [pid, entity] of playerHitboxes) {
+          if (entity.id === hitEntity.id) {
+            playerHitboxes.delete(pid);
+            break;
+          }
         }
       });
     }
@@ -4645,16 +4699,13 @@ function registerGlitteringFireComponent() {
   world20.afterEvents.playerPlaceBlock.subscribe((event) => {
     const { block } = event;
     if (block.typeId === "gaiadimension:glittering_fire") {
-      const dimension = block.dimension;
-      const location = block.location;
       system23.run(() => {
         try {
-          const dimension2 = block.dimension;
-          const location2 = block.location;
-          const currentBlock = dimension2.getBlock(location2);
+          const dimension = block.dimension;
+          const location = block.location;
+          const currentBlock = dimension.getBlock(location);
           if (currentBlock && currentBlock.typeId === "gaiadimension:glittering_fire") {
             PortalManager.tryIgnite(currentBlock);
-          } else {
           }
         } catch (e) {
         }

@@ -78,7 +78,7 @@ class FogSystem {
     static setBiomeFog(player, biome) {
         this.clearBiomeFogs(player);
         try {
-            console.warn(`[FogSystem] Pushing biome fog: gaiadimension:${biome}_fog with ID: ${biome}`);
+            // console.warn(`[FogSystem] Pushing biome fog: gaiadimension:${biome}_fog with ID: ${biome}`);
             player.runCommand(`fog @s push "gaiadimension:${biome}_fog" "${biome}"`);
             if (!this.playerFogs[player.id]) this.playerFogs[player.id] = [];
             this.playerFogs[player.id].push(biome);

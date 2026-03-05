@@ -2,30 +2,88 @@ import { world, system } from "@minecraft/server";
 import { PortalManager } from "../API/lib/PortalLib.js";
 
 // Register the Gaia Dimension Portal
-// Portal Block ID: gaiadimension:gaia_dimension_portal
-// Frame Block ID: gaiadimension:keystone_block
 PortalManager.register("gaiadimension:gaia_dimension_portal", "gaiadimension:keystone_block");
+
+const playerHitboxes = new Map();
 
 /**
  * Registers the glittering fire component logic.
- * This handles the interaction with gaiadimension:glittering_fire to extinguish it,
- * and attempts to light the portal when placed.
  */
 export function registerGlitteringFireComponent() {
-    // Handle extinguishing the fire
-    world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
-        const { block } = event;
+    // Raycast system to spawn hitboxes when looking at fire
+    system.runInterval(() => {
+        for (const player of world.getAllPlayers()) {
+            const raycast = player.getBlockFromViewDirection({ maxDistance: 5 });
+            const currentHitbox = playerHitboxes.get(player.id);
 
-        if (block.typeId === "gaiadimension:glittering_fire") {
-            event.cancel = true;
+            if (raycast && raycast.block.typeId === "gaiadimension:glittering_fire") {
+                const fireBlock = raycast.block;
+                const loc = fireBlock.location;
+                const center = { x: loc.x + 0.5, y: loc.y + 0.2, z: loc.z + 0.5 };
+
+                if (currentHitbox) {
+                    const hLoc = currentHitbox.location;
+                    // If looking at a different fire block, move the hitbox
+                    if (Math.floor(hLoc.x) !== loc.x || Math.floor(hLoc.y) !== loc.y || Math.floor(hLoc.z) !== loc.z) {
+                        try {
+                            currentHitbox.teleport(center);
+                        } catch (e) {
+                            playerHitboxes.delete(player.id);
+                        }
+                    }
+                } else {
+                    // Spawn new hitbox
+                    try {
+                        const entity = player.dimension.spawnEntity("gaiadimension:fire_hitbox", center);
+                        playerHitboxes.set(player.id, entity);
+                    } catch (e) {}
+                }
+            } else if (currentHitbox) {
+                // Not looking at fire anymore, remove hitbox
+                try {
+                    if (currentHitbox.isValid) currentHitbox.remove();
+                } catch (e) {}
+                playerHitboxes.delete(player.id);
+            }
+        }
+    }, 2);
+
+    // Handle player leaving
+    world.afterEvents.playerLeave.subscribe((event) => {
+        const { playerId } = event;
+        const currentHitbox = playerHitboxes.get(playerId);
+        if (currentHitbox) {
+            try {
+                if (currentHitbox.isValid) currentHitbox.remove();
+            } catch (e) {}
+            playerHitboxes.delete(playerId);
+        }
+    });
+
+    // Handle hitting the fire hitbox
+    world.afterEvents.entityHitEntity.subscribe((event) => {
+        const { hitEntity } = event;
+        if (hitEntity.typeId === "gaiadimension:fire_hitbox") {
+            const loc = hitEntity.location;
+            const blockLoc = { x: Math.floor(loc.x), y: Math.floor(loc.y), z: Math.floor(loc.z) };
+            const dimension = hitEntity.dimension;
 
             system.run(() => {
-                if (block.isValid) {
+                const block = dimension.getBlock(blockLoc);
+                if (block && block.typeId === "gaiadimension:glittering_fire") {
                     block.setType("minecraft:air");
-                    block.dimension.playSound("random.fizz", block.location, {
+                    dimension.playSound("random.fizz", blockLoc, {
                         volume: 1,
                         pitch: 1,
                     });
+                }
+                if (hitEntity.isValid) hitEntity.remove();
+                // Clean up map
+                for (const [pid, entity] of playerHitboxes) {
+                    if (entity.id === hitEntity.id) {
+                        playerHitboxes.delete(pid);
+                        break;
+                    }
                 }
             });
         }
@@ -34,29 +92,16 @@ export function registerGlitteringFireComponent() {
     // Handle lighting the portal
     world.afterEvents.playerPlaceBlock.subscribe((event) => {
         const { block } = event;
-
         if (block.typeId === "gaiadimension:glittering_fire") {
-            // Capture dimension and location immediately
-            const dimension = block.dimension;
-            const location = block.location;
-
-            // Attempt to ignite the portal
-            // The PortalManager will handle checking the shape and placing portal blocks
             system.run(() => {
                 try {
                     const dimension = block.dimension;
                     const location = block.location;
-                    // console.warn(`[GlitteringFire] Checking ignition at ${location.x}, ${location.y}, ${location.z} in ${dimension.id}`);
-                    
                     const currentBlock = dimension.getBlock(location);
                     if (currentBlock && currentBlock.typeId === "gaiadimension:glittering_fire") {
                          PortalManager.tryIgnite(currentBlock);
-                    } else {
-                        //  console.warn("[GlitteringFire] Block mismatch or invalid after wait.");
                     }
-                } catch(e) {
-                    // console.warn(`[GlitteringFire] Error: ${e}`);
-                }
+                } catch(e) {}
             });
         }
     });
@@ -74,9 +119,7 @@ export function registerGlitteringFireComponent() {
         const { block, brokenBlockPermutation, dimension } = event;
         const brokenId = brokenBlockPermutation.type.id;
 
-        // Check if broken block was a portal
         if (PortalManager.registeredPortals.has(brokenId)) {
-            // Check neighbors for remaining portal blocks to trigger chain reaction
             const neighbors = [
                 block.above(), block.below(), block.north(), block.south(), block.east(), block.west()
             ];
@@ -89,10 +132,8 @@ export function registerGlitteringFireComponent() {
             return;
         }
 
-        // Check if broken block was a frame
         for (const [portalId, config] of PortalManager.registeredPortals) {
             if (config.frameId === brokenId) {
-                // Frame broken, check for adjacent portal blocks
                 const neighbors = [
                     block.above(), block.below(), block.north(), block.south(), block.east(), block.west()
                 ];
