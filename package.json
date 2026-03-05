@@ -1,7 +1,7 @@
 {
   "scripts": {
     "bundle": "esbuild GaiaDimensions_BP/src/GaiaDimensionAddon.js --bundle --format=esm --external:@minecraft/server --external:@minecraft/server-ui --external:@minecraft/server-gametest --external:@minecraft/server-admin --external:@minecraft/server-editor --external:@minecraft/server-net --outfile=GaiaDimensions_BP/scripts/GaiaDimensionAddon.js",
-    "build": "python magic_staff_gen.py && npm run bundle && python deploy.py && python package.py",
+    "build": "python magic_staff_gen.py && npm run bundle && node scripts/build_tools.js all",
     "watch": "node watch.js"
   },
   "dependencies": {
@@ -11,7 +11,9 @@
     "prismarine-nbt": "^2.8.0"
   },
   "devDependencies": {
+    "adm-zip": "^0.5.16",
     "chokidar": "^5.0.0",
-    "esbuild": "^0.27.3"
+    "esbuild": "^0.27.3",
+    "fs-extra": "^11.3.4"
   }
 }

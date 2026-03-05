@@ -50,13 +50,9 @@ async function buildAndDeploy() {
         });
         console.log('> JS Bundling complete');
 
-        // 3. Deploy
-        const deploySuccess = await runCommand('python', ['deploy.py']);
-        if (!deploySuccess) throw new Error('Deployment failed');
-
-        // 4. Package (.mcaddon)
-        const packageSuccess = await runCommand('python', ['package.py']);
-        if (!packageSuccess) throw new Error('Packaging failed');
+        // 3. Deploy & Package (Native Node.js)
+        const buildToolsSuccess = await runCommand('node', ['scripts/build_tools.js', 'all']);
+        if (!buildToolsSuccess) throw new Error('Build tools failed');
 
         console.log('--- Build & Deploy Successful ---\n');
     } catch (err) {
