@@ -6332,7 +6332,6 @@ var BiomeSystem = class {
     const biome = DimensionSystem.getBiome(player);
     if (DimensionSystem.isInGaia(player)) {
       if (this.#playerBiomes[player.id] != biome) {
-        world28.sendMessage(`\xA7b[BiomeSystem] Biome change for ${player.name}: ${biome}`);
         playerChangeBiome.trigger({ player, biome });
       }
     }
