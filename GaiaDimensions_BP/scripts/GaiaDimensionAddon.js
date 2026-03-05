@@ -5236,6 +5236,18 @@ system25.runInterval(() => {
     }
   }
 }, 10);
+world22.beforeEvents.weatherChange.subscribe((event) => {
+  let anyPlayerInGaia = false;
+  for (const player of world22.getAllPlayers()) {
+    if (player.isValid && DimensionSystem.isInGaia(player)) {
+      anyPlayerInGaia = true;
+      break;
+    }
+  }
+  if (anyPlayerInGaia) {
+    event.cancel = true;
+  }
+});
 system25.run(() => {
   try {
     GaiaDimension = ModDimension.register(GAIA_DIMENSION_ID, {
@@ -6494,7 +6506,6 @@ var FogSystem = class {
   static setBiomeFog(player, biome) {
     this.clearBiomeFogs(player);
     try {
-      console.warn(`[FogSystem] Pushing biome fog: gaiadimension:${biome}_fog with ID: ${biome}`);
       player.runCommand(`fog @s push "gaiadimension:${biome}_fog" "${biome}"`);
       if (!this.playerFogs[player.id]) this.playerFogs[player.id] = [];
       this.playerFogs[player.id].push(biome);

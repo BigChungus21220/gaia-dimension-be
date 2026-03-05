@@ -54,6 +54,10 @@ async function buildAndDeploy() {
         const deploySuccess = await runCommand('python', ['deploy.py']);
         if (!deploySuccess) throw new Error('Deployment failed');
 
+        // 4. Package (.mcaddon)
+        const packageSuccess = await runCommand('python', ['package.py']);
+        if (!packageSuccess) throw new Error('Packaging failed');
+
         console.log('--- Build & Deploy Successful ---\n');
     } catch (err) {
         console.error(`\n!!! Build Error: ${err.message}\n`);
