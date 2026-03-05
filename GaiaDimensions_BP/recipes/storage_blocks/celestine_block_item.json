@@ -1,0 +1,20 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shapeless": {
+        "description": {
+            "identifier": "gaiadimension:celestine_block_item"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "ingredients": [
+            {
+                "item": "gaiadimension:celestine_block"
+            }
+        ],
+        "result": {
+            "item": "gaiadimension:celestine",
+            "count": 9
+        }
+    }
+}

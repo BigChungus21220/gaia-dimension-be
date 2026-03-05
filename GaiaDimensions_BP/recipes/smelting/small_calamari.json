@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+        "description": {
+            "identifier": "gaiadimension:small_calamari"
+        },
+        "tags": [
+            "furnace"
+        ],
+        "input": "gaiadimension:small_tentacle",
+        "output": "gaiadimension:small_calamari"
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:goshenite_axe"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "##",
+            "#/",
+            " /"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:goshenite"
+            },
+            "/": {
+                "item": "gaiadimension:agate_stick"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:goshenite_axe",
+            "count": 1
+        }
+    }
+}

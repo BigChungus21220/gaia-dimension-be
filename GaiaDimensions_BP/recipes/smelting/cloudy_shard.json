@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+        "description": {
+            "identifier": "gaiadimension:cloudy_shard"
+        },
+        "tags": [
+            "furnace"
+        ],
+        "input": "gaiadimension:fine_dust",
+        "output": "gaiadimension:cloudy_shard"
+    }
+}

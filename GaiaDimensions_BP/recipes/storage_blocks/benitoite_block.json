@@ -1,0 +1,25 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:benitoite_block"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "###",
+            "###",
+            "###"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:benitoite"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:benitoite_block",
+            "count": 1
+        }
+    }
+}

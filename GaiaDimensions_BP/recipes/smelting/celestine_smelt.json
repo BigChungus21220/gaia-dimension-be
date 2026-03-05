@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+        "description": {
+            "identifier": "gaiadimension:celestine_smelt"
+        },
+        "tags": [
+            "furnace"
+        ],
+        "input": "gaiadimension:celestine_ore",
+        "output": "gaiadimension:celestine"
+    }
+}

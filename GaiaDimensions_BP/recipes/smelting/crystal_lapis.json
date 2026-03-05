@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+        "description": {
+            "identifier": "gaiadimension:crystal_lapis"
+        },
+        "tags": [
+            "furnace"
+        ],
+        "input": "minecraft:lapis_lazuli",
+        "output": "gaiadimension:crystallized_lapis_lazuli"
+    }
+}

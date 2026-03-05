@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+        "description": {
+            "identifier": "gaiadimension:sugilite_smelt"
+        },
+        "tags": [
+            "furnace"
+        ],
+        "input": "gaiadimension:sugilite_ore",
+        "output": "gaiadimension:sugilite"
+    }
+}

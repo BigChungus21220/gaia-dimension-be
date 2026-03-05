@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+        "description": {
+            "identifier": "gaiadimension:cinnabar_smelt"
+        },
+        "tags": [
+            "furnace"
+        ],
+        "input": "gaiadimension:cinnabar_ore",
+        "output": "gaiadimension:cinnabar"
+    }
+}

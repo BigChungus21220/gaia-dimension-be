@@ -1,0 +1,25 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:bismuth_block"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "###",
+            "###",
+            "###"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:bismuth_crystal"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:bismuth_block",
+            "count": 1
+        }
+    }
+}

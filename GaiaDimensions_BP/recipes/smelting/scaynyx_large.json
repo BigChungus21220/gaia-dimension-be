@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+        "description": {
+            "identifier": "gaiadimension:scaynyx_large"
+        },
+        "tags": [
+            "furnace"
+        ],
+        "input": "gaiadimension:precious_rock",
+        "output": "gaiadimension:scaynyx_ingot"
+    }
+}

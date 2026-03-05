@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+        "description": {
+            "identifier": "gaiadimension:crystal_redstone"
+        },
+        "tags": [
+            "furnace"
+        ],
+        "input": "minecraft:redstone",
+        "output": "gaiadimension:crystallized_redstone"
+    }
+}

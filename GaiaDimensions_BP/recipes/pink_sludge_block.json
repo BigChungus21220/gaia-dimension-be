@@ -1,0 +1,25 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:pink_sludge_block"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "###",
+            "###",
+            "###"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:pink_goo"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:pink_sludge_block",
+            "count": 1
+        }
+    }
+}

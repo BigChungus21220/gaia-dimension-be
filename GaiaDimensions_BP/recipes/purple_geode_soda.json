@@ -1,0 +1,26 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shapeless": {
+        "description": {
+            "identifier": "gaiadimension:purple_geode_soda"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "ingredients": [
+            {
+                "item": "gaiadimension:purple_geode_slice"
+            },
+            {
+                "item": "gaiadimension:sugar_crystals"
+            },
+            {
+                "item": "gaiadimension:agate_cup"
+            }
+        ],
+        "result": {
+            "item": "gaiadimension:purple_geode_soda",
+            "count": 1
+        }
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:diopside_block"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "###",
+            "###",
+            "###"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:diopside"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:diopside_block",
+            "count": 1
+        }
+    }
+}

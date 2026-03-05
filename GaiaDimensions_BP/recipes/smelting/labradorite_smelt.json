@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+        "description": {
+            "identifier": "gaiadimension:labradorite_smelt"
+        },
+        "tags": [
+            "furnace"
+        ],
+        "input": "gaiadimension:labradorite_ore",
+        "output": "gaiadimension:labradorite"
+    }
+}

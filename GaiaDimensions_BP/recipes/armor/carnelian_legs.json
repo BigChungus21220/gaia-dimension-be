@@ -1,0 +1,25 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:carnelian_legs"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "###",
+            "# #",
+            "# #"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:carnelian"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:carnelian_legs",
+            "count": 1
+        }
+    }
+}

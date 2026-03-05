@@ -1,0 +1,35 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shapeless": {
+        "description": {
+            "identifier": "gaiadimension:elixir_drink"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "ingredients": [
+            {
+                "item": "gaiadimension:pink_geode_slice"
+            },
+            {
+                "item": "gaiadimension:blue_geode_slice"
+            },
+            {
+                "item": "gaiadimension:green_geode_slice"
+            },
+            {
+                "item": "gaiadimension:purple_geode_slice"
+            },
+            {
+                "item": "gaiadimension:sugar_cluster"
+            },
+            {
+                "item": "gaiadimension:agate_cup"
+            }
+        ],
+        "result": {
+            "item": "gaiadimension:pearly_geode_elixir",
+            "count": 1
+        }
+    }
+}

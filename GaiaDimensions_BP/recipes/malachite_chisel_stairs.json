@@ -1,0 +1,25 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:malachite_chisel_stairs"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "#  ",
+            "## ",
+            "###"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:malachite_chisel_bricks"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:malachite_chisel_stairs",
+            "count": 8
+        }
+    }
+}

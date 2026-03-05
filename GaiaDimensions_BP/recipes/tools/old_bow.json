@@ -1,0 +1,28 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:old_bow"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "#/ ",
+            "# /",
+            "#/ "
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:twined_thread"
+            },
+            "/": {
+                "item": "gaiadimension:shiny_bone"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:old_bow",
+            "count": 1
+        }
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:pyrite_block"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "###",
+            "###",
+            "###"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:pyrite"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:pyrite_block",
+            "count": 1
+        }
+    }
+}

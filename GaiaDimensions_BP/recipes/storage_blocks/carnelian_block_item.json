@@ -1,0 +1,20 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shapeless": {
+        "description": {
+            "identifier": "gaiadimension:carnelian_block_item"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "ingredients": [
+            {
+                "item": "gaiadimension:carnelian_block"
+            }
+        ],
+        "result": {
+            "item": "gaiadimension:carnelian",
+            "count": 9
+        }
+    }
+}

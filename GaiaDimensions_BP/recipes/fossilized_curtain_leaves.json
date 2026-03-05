@@ -1,0 +1,28 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:fossilized_curtain_leaves"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "//",
+            "##",
+            "##"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:fossilized_leaves"
+            },
+            "/": {
+                "item": "gaiadimension:agate_stick"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:fossilized_curtain",
+            "count": 4
+        }
+    }
+}

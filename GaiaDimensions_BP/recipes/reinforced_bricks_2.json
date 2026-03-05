@@ -1,0 +1,27 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:reinforced_bricks_2"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "#%",
+            "%#"
+        ],
+        "key": {
+            "#": {
+                "tag": "gaiadimension:gaia_bricks"
+            },
+            "%": {
+                "item": "gaiadimension:thick_glitter_block"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:reinforced_bricks",
+            "count": 2
+        }
+    }
+}

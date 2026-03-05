@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+        "description": {
+            "identifier": "gaiadimension:moonstone_smelt"
+        },
+        "tags": [
+            "furnace"
+        ],
+        "input": "gaiadimension:moonstone_ore",
+        "output": "gaiadimension:moonstone"
+    }
+}

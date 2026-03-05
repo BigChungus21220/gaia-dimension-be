@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+        "description": {
+            "identifier": "gaiadimension:green_opal_smelt"
+        },
+        "tags": [
+            "furnace"
+        ],
+        "input": "gaiadimension:green_opal_ore",
+        "output": "gaiadimension:green_opal"
+    }
+}

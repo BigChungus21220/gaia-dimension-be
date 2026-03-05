@@ -1,0 +1,24 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:scaynyx_bucket"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "# #",
+            " # "
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:scaynyx_ingot"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:scaynyx_bucket",
+            "count": 1
+        }
+    }
+}

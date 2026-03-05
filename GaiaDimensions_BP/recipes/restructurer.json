@@ -1,0 +1,28 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:restructurer"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "///",
+            "/#/",
+            "///"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:gaia_stone_furnace"
+            },
+            "/": {
+                "item": "gaiadimension:reinforced_bricks"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:restructurer",
+            "count": 1
+        }
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shapeless": {
+        "description": {
+            "identifier": "gaiadimension:bismuth_crystal_block_item"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "ingredients": [
+            {
+                "item": "gaiadimension:bismuth_block"
+            }
+        ],
+        "result": {
+            "item": "gaiadimension:bismuth_crystal",
+            "count": 9
+        }
+    }
+}

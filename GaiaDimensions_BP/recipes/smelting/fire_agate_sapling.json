@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+        "description": {
+            "identifier": "gaiadimension:fire_agate_sapling"
+        },
+        "tags": [
+            "furnace"
+        ],
+        "input": "gaiadimension:burnt_agate_sapling",
+        "output": "gaiadimension:fire_agate_sapling"
+    }
+}

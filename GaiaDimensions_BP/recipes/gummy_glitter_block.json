@@ -1,0 +1,24 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:gummy_glitter_block"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "##",
+            "##"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:sweet_muckball"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:gummy_glitter_block",
+            "count": 1
+        }
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:small_chest"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "###",
+            "# #",
+            "###"
+        ],
+        "key": {
+            "#": {
+                "tag": "gaiadimension:agate_tiles"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:crude_storage_crate",
+            "count": 1
+        }
+    }
+}

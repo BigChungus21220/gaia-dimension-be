@@ -1,0 +1,27 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:bolstered_bricks"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "%#",
+            "#%"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:reinforced_bricks"
+            },
+            "%": {
+                "item": "gaiadimension:goldstone_block"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:bolstered_bricks",
+            "count": 2
+        }
+    }
+}

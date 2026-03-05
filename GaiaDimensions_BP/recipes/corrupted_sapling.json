@@ -1,0 +1,28 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:corrupted_sapling"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            " / ",
+            "/#/",
+            " / "
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:pink_agate_sapling"
+            },
+            "/": {
+                "item": "gaiadimension:goldstone_residue"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:corrupted_sapling",
+            "count": 1
+        }
+    }
+}

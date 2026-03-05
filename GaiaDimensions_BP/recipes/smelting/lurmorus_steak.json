@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+        "description": {
+            "identifier": "gaiadimension:lurmorus_steak"
+        },
+        "tags": [
+            "furnace"
+        ],
+        "input": "gaiadimension:lurmorus_meat",
+        "output": "gaiadimension:lurmorus_steak"
+    }
+}

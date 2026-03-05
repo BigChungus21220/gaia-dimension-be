@@ -1,0 +1,23 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:amethyst_brick_slab"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "###"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:amethyst_bricks"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:amethyst_brick_slab",
+            "count": 6
+        }
+    }
+}

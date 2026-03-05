@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+        "description": {
+            "identifier": "gaiadimension:golstone_residue"
+        },
+        "tags": [
+            "furnace"
+        ],
+        "input": "gaiadimension:goldstone_dust",
+        "output": "gaiadimension:goldstone_residue"
+    }
+}

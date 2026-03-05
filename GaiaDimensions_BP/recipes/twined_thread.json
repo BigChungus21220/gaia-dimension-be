@@ -1,0 +1,29 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shapeless": {
+        "description": {
+            "identifier": "gaiadimension:twined_thread"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "ingredients": [
+            {
+                "item": "gaiadimension:fine_thread"
+            },
+            {
+                "item": "gaiadimension:fine_thread"
+            },
+            {
+                "item": "gaiadimension:fine_thread"
+            },
+            {
+                "item": "gaiadimension:fine_thread"
+            }
+        ],
+        "result": {
+            "item": "gaiadimension:twined_thread",
+            "count": 1
+        }
+    }
+}

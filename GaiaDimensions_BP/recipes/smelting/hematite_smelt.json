@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+        "description": {
+            "identifier": "gaiadimension:hematite_smelt"
+        },
+        "tags": [
+            "furnace"
+        ],
+        "input": "gaiadimension:hematite_ore",
+        "output": "gaiadimension:hematite"
+    }
+}

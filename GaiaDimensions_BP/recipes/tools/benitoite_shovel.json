@@ -1,0 +1,28 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:benitoite_shovel"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "#",
+            "/",
+            "/"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:benitoite"
+            },
+            "/": {
+                "item": "gaiadimension:agate_stick"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:benitoite_shovel",
+            "count": 1
+        }
+    }
+}
