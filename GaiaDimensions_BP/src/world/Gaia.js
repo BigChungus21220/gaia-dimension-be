@@ -260,6 +260,21 @@ system.runInterval(() => {
     }
 }, 10);
 
+// Handle weather change prevention in Gaia
+world.beforeEvents.weatherChange.subscribe((event) => {
+    let anyPlayerInGaia = false;
+    for (const player of world.getAllPlayers()) {
+        if (player.isValid && DimensionSystem.isInGaia(player)) {
+            anyPlayerInGaia = true;
+            break;
+        }
+    }
+
+    if (anyPlayerInGaia) {
+        event.cancel = true;
+    }
+});
+
 system.run(() => {
     try {
         GaiaDimension = ModDimension.register(GAIA_DIMENSION_ID, {
