@@ -74,7 +74,11 @@ const watcher = chokidar.watch([
     ignored: [
         '**/scripts/GaiaDimensionAddon.js', // Ignore the output file to prevent loops
         '**/.git/**',
-        '**/node_modules/**'
+        '**/node_modules/**',
+        '**/textures/gaiadimension/androsa/item/gen/**', // Ignore generated textures
+        '**/items/androsa/magic_staff/**', // Ignore generated items
+        '**/textures/item_texture.json', // Ignore files modified by magic_staff_gen.py
+        '**/texts/en_US.lang' // Ignore language file modified by magic_staff_gen.py
     ],
     persistent: true,
     ignoreInitial: true

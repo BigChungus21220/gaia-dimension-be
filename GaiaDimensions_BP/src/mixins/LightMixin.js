@@ -26,6 +26,7 @@ export function initializeLightMixin() {
 
         const typeId = block.typeId;
         const isExcluded = typeId === "gaiadimension:glittering_fire" || 
+                           typeId === "gaiadimension:stairs_collision" ||
                            typeId.includes("curtain") || 
                            typeId.includes("door") ||
                            typeId.includes("fluid") ||
@@ -38,12 +39,31 @@ export function initializeLightMixin() {
         // Place light sources around the newly placed block if in Gaia
         if (player && DimensionSystem.isInGaia(player) && !isExcluded) {
              const { x, y, z } = block.location;
-             placeLight(dimension, { x: x + 1, y: y, z: z });
-             placeLight(dimension, { x: x - 1, y: y, z: z });
-             placeLight(dimension, { x: x, y: y + 1, z: z });
-             placeLight(dimension, { x: x, y: y - 1, z: z });
-             placeLight(dimension, { x: x, y: y, z: z + 1 });
-             placeLight(dimension, { x: x, y: y, z: z - 1 });
+             const possibleLightLocations = [
+                { x: x + 1, y: y, z: z },
+                { x: x - 1, y: y, z: z },
+                { x: x, y: y + 1, z: z },
+                { x: x, y: y - 1, z: z },
+                { x: x, y: y, z: z + 1 },
+                { x: x, y: y, z: z - 1 }
+             ];
+
+             for (const loc of possibleLightLocations) {
+                const targetBlock = dimension.getBlock(loc);
+                if (targetBlock && targetBlock.isAir) {
+                    // Check if this air block is needed for a stair collision
+                    const { x: tx, y: ty, z: tz } = loc;
+                    const stairNeighbors = [
+                        dimension.getBlock({ x: tx, y: ty + 1, z: tz }),
+                        dimension.getBlock({ x: tx, y: ty - 1, z: tz })
+                    ];
+                    const isNeededForStair = stairNeighbors.some(n => n?.hasTag("gaiadimension:stairs"));
+                    
+                    if (!isNeededForStair) {
+                        placeLight(dimension, loc);
+                    }
+                }
+             }
         }
 
         // --- Custom Block State Logic ---
@@ -78,8 +98,19 @@ export function initializeLightMixin() {
     world.afterEvents.playerBreakBlock.subscribe((event) => {
         const { player, block, dimension } = event;
         if (player && DimensionSystem.isInGaia(player)) {
-             // Fill the broken spot with light
-             placeLight(dimension, block.location);
+             // Check if there's a stair nearby that might want to place a collision block here
+             const { x, y, z } = block.location;
+             const neighbors = [
+                dimension.getBlock({ x, y: y + 1, z }),
+                dimension.getBlock({ x, y: y - 1, z })
+             ];
+             
+             const isNearStair = neighbors.some(n => n?.hasTag("gaiadimension:stairs"));
+             
+             if (!isNearStair) {
+                // Fill the broken spot with light if no stairs are nearby
+                placeLight(dimension, block.location);
+             }
         }
     });
 }

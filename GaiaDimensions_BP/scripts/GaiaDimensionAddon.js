@@ -5283,15 +5283,31 @@ function initializeLightMixin() {
     const dimId = dimension.id;
     let stateVal = 0;
     const typeId = block.typeId;
-    const isExcluded = typeId === "gaiadimension:glittering_fire" || typeId.includes("curtain") || typeId.includes("door") || typeId.includes("fluid") || typeId.includes("liquid") || typeId.includes("water") || typeId.includes("magma") || typeId.includes("muck");
+    const isExcluded = typeId === "gaiadimension:glittering_fire" || typeId === "gaiadimension:stairs_collision" || typeId.includes("curtain") || typeId.includes("door") || typeId.includes("fluid") || typeId.includes("liquid") || typeId.includes("water") || typeId.includes("magma") || typeId.includes("muck");
     if (player && DimensionSystem.isInGaia(player) && !isExcluded) {
       const { x, y, z } = block.location;
-      placeLight(dimension, { x: x + 1, y, z });
-      placeLight(dimension, { x: x - 1, y, z });
-      placeLight(dimension, { x, y: y + 1, z });
-      placeLight(dimension, { x, y: y - 1, z });
-      placeLight(dimension, { x, y, z: z + 1 });
-      placeLight(dimension, { x, y, z: z - 1 });
+      const possibleLightLocations = [
+        { x: x + 1, y, z },
+        { x: x - 1, y, z },
+        { x, y: y + 1, z },
+        { x, y: y - 1, z },
+        { x, y, z: z + 1 },
+        { x, y, z: z - 1 }
+      ];
+      for (const loc of possibleLightLocations) {
+        const targetBlock = dimension.getBlock(loc);
+        if (targetBlock && targetBlock.isAir) {
+          const { x: tx, y: ty, z: tz } = loc;
+          const stairNeighbors = [
+            dimension.getBlock({ x: tx, y: ty + 1, z: tz }),
+            dimension.getBlock({ x: tx, y: ty - 1, z: tz })
+          ];
+          const isNeededForStair = stairNeighbors.some((n) => n?.hasTag("gaiadimension:stairs"));
+          if (!isNeededForStair) {
+            placeLight(dimension, loc);
+          }
+        }
+      }
     }
     try {
       const currentState = block.permutation.getState("gaiadimension:perm_dim");
@@ -5318,7 +5334,15 @@ function initializeLightMixin() {
   world23.afterEvents.playerBreakBlock.subscribe((event) => {
     const { player, block, dimension } = event;
     if (player && DimensionSystem.isInGaia(player)) {
-      placeLight(dimension, block.location);
+      const { x, y, z } = block.location;
+      const neighbors = [
+        dimension.getBlock({ x, y: y + 1, z }),
+        dimension.getBlock({ x, y: y - 1, z })
+      ];
+      const isNearStair = neighbors.some((n) => n?.hasTag("gaiadimension:stairs"));
+      if (!isNearStair) {
+        placeLight(dimension, block.location);
+      }
     }
   });
 }
