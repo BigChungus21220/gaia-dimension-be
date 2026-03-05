@@ -1,0 +1,28 @@
+{
+    "format_version": "1.12",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:agate_axe_from_corrupted_tiles"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "##",
+            "#/",
+            " /"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:corrupted_tiles"
+            },
+            "/": {
+                "item": "gaiadimension:agate_stick"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:agate_axe",
+            "count": 1
+        }
+    }
+}

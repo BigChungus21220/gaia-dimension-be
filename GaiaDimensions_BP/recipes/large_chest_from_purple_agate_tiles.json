@@ -1,0 +1,31 @@
+{
+    "format_version": "1.12",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:large_chest_from_purple_agate_tiles"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "*%*",
+            "%#%",
+            "*%*"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:crude_storage_crate"
+            },
+            "%": {
+                "item": "gaiadimension:thick_glitter_block"
+            },
+            "*": {
+                "item": "gaiadimension:purple_agate_tiles"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:mega_storage_crate",
+            "count": 1
+        }
+    }
+}

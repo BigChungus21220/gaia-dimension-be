@@ -1,5 +1,5 @@
 {
-    "format_version": "1.20.10",
+    "format_version": "1.12",
     "minecraft:recipe_shaped": {
         "description": {
             "identifier": "gaiadimension:reinforced_bricks"
@@ -13,7 +13,7 @@
         ],
         "key": {
             "#": {
-                "tag": "gaiadimension:gaia_bricks"
+                "item": "gaiadimension:gaia_bricks"
             },
             "%": {
                 "item": "gaiadimension:thick_glitter_block"

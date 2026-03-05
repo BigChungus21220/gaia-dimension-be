@@ -1,0 +1,28 @@
+{
+    "format_version": "1.12",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:agate_sword_from_fossilized_tiles"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "#",
+            "#",
+            "/"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:fossilized_tiles"
+            },
+            "/": {
+                "item": "gaiadimension:agate_stick"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:agate_sword",
+            "count": 1
+        }
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "format_version": "1.12",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:agate_cup_from_fossilized_tiles"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "# #",
+            " # "
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:fossilized_tiles"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:agate_cup",
+            "count": 8
+        }
+    }
+}

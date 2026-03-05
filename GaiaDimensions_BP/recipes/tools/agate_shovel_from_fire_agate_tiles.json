@@ -1,0 +1,28 @@
+{
+    "format_version": "1.12",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "gaiadimension:agate_shovel_from_fire_agate_tiles"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "#",
+            "/",
+            "/"
+        ],
+        "key": {
+            "#": {
+                "item": "gaiadimension:fire_agate_tiles"
+            },
+            "/": {
+                "item": "gaiadimension:agate_stick"
+            }
+        },
+        "result": {
+            "item": "gaiadimension:agate_shovel",
+            "count": 1
+        }
+    }
+}

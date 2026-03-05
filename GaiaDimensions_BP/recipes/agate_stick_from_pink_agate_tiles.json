@@ -1,0 +1,20 @@
+{
+    "format_version": "1.12",
+    "minecraft:recipe_shapeless": {
+        "description": {
+            "identifier": "gaiadimension:agate_stick_from_pink_agate_tiles"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "ingredients": [
+            {
+                "item": "gaiadimension:pink_agate_tiles"
+            }
+        ],
+        "result": {
+            "item": "gaiadimension:agate_stick",
+            "count": 4
+        }
+    }
+}
