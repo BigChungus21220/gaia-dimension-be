@@ -2,9 +2,9 @@ const createProxy = (prefix) => new Proxy({}, {
     get: (_, p) => `${prefix}.${p}`
 });
 
-export const q = createProxy('query');
-export const v = createProxy('variable');
-export const t = createProxy('temp');
+export const q = createProxy('q');
+export const v = createProxy('v');
+export const t = createProxy('t');
 export const Mth = createProxy('math');
 
 export function loop(count, body) { if (typeof body === 'function') body(); }
@@ -36,36 +36,37 @@ export class Molang {
             }
         }
 
-        // --- 1. Basic Keyword Replacements ---
-        // (Do this before complex transformations to clean up the code)
+        // --- 1. Variable Promotion ---
+        const varMap = {};
+        const declRegex = /\b(?:const|let)\s+([a-zA-Z0-9_]+)\b/g;
+        let match;
+        while ((match = declRegex.exec(code)) !== null) {
+            const name = match[1];
+            // t. for locals, v. for v_ prefixed
+            varMap[name] = name.startsWith('v_') ? `v.${name.substring(2)}` : `t.${name}`;
+        }
+
         let res = code
             .replace(/\b(?:const|let)\s+/g, '')
             .replace(/return\s+/g, '')
             .replace(/Math\./g, 'math.')
             .replace(/Mth\./g, 'math.')
             .replace(/([0-9.]+)[fF]\b/g, '$1')
-            .replace(/q\./g, 'query.')
-            .replace(/v\./g, 'variable.')
-            .replace(/t\./g, 'temp.');
+            .replace(/query\./g, 'q.')
+            .replace(/variable\./g, 'v.')
+            .replace(/temp\./g, 't.');
 
-        // --- 2. Variable Map & Promotion ---
-        const declRegex = /\b(?:const|let)\s+([a-zA-Z0-9_]+)\b/g;
-        let match;
-        while ((match = declRegex.exec(code)) !== null) {
-            const name = match[1];
-            const target = name.startsWith('v_') ? `variable.${name.substring(2)}` : `temp.${name}`;
+        for (const [name, target] of Object.entries(varMap)) {
             res = res.replace(new RegExp(`\\b${name}\\b`, 'g'), target);
         }
 
-        // --- 3. Recursive Statement Parser ---
+        // --- 2. Recursive Statement Parser ---
         const parseStatements = (str) => {
             let output = "";
             let i = 0;
             while (i < str.length) {
-                // Peek for keywords
                 const substr = str.substring(i);
                 
-                // LOOP
                 const loopMatch = substr.match(/^\bloop\s*\(([^,]+),\s*(?:\(\)\s*=>\s*)?\{/);
                 if (loopMatch) {
                     const count = loopMatch[1].trim();
@@ -79,7 +80,6 @@ export class Molang {
                     }
                 }
 
-                // IF
                 const ifMatch = substr.match(/^\bif\s*\(([^)]+)\)\s*\{/);
                 if (ifMatch) {
                     const cond = ifMatch[1].trim();
@@ -89,8 +89,7 @@ export class Molang {
                         const body = str.substring(bodyStart + 1, bodyEnd);
                         const compiledBody = parseStatements(body);
                         
-                        // Check for else
-                        let elsePart = "0";
+                        let elsePart = null;
                         let nextIdx = bodyEnd + 1;
                         const rest = str.substring(nextIdx).trim();
                         if (rest.startsWith('else')) {
@@ -111,7 +110,6 @@ export class Molang {
                     }
                 }
 
-                // Normal character
                 output += str[i];
                 i++;
             }
@@ -120,13 +118,13 @@ export class Molang {
 
         res = parseStatements(res);
 
-        // Final cleanup
+        // --- 3. Dense 1-to-1 Formatting ---
         return res
             .split('\n')
             .map(l => l.trim())
             .filter(l => l.length > 0)
-            .join(' ')
-            .replace(/;\s*/g, '; ')
+            .join('')
+            .replace(/;\s*/g, ';')
             .trim();
     }
 }
