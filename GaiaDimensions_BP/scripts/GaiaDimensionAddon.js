@@ -2084,6 +2084,73 @@ function registerStairsComponent({ blockComponentRegistry }) {
 
 // GaiaDimensions_BP/src/blocks/geyser.js
 import { system as system16, world as world13 } from "@minecraft/server";
+
+// GaiaDimensions_BP/src/Vec3.js
+var Vec3 = class {
+  static get zero() {
+    return { x: 0, y: 0, z: 0 };
+  }
+  static add(v1, v2) {
+    return { x: v1.x + v2.x, y: v1.y + v2.y, z: v1.z + v2.z };
+  }
+  static subtract(v1, v2) {
+    return { x: v1.x - v2.x, y: v1.y - v2.y, z: v1.z - v2.z };
+  }
+  static multiply(v, scale) {
+    return { x: v.x * scale, y: v.y * scale, z: v.z * scale };
+  }
+  static divide(v, scale) {
+    if (scale === 0) return this.zero;
+    return { x: v.x / scale, y: v.y / scale, z: v.z / scale };
+  }
+  static dot(v1, v2) {
+    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+  }
+  static cross(v1, v2) {
+    return {
+      x: v1.y * v2.z - v1.z * v2.y,
+      y: v1.z * v2.x - v1.x * v2.z,
+      z: v1.x * v2.y - v1.y * v2.x
+    };
+  }
+  static magnitude(v) {
+    return Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+  }
+  static normalize(v) {
+    const mag = this.magnitude(v);
+    if (mag === 0) return this.zero;
+    return this.divide(v, mag);
+  }
+  static distance(v1, v2) {
+    return this.magnitude(this.subtract(v1, v2));
+  }
+  static lerp(v1, v2, t) {
+    return this.add(v1, this.multiply(this.subtract(v2, v1), t));
+  }
+  static floor(v) {
+    return { x: Math.floor(v.x), y: Math.floor(v.y), z: Math.floor(v.z) };
+  }
+  static ceil(v) {
+    return { x: Math.ceil(v.x), y: Math.ceil(v.y), z: Math.ceil(v.z) };
+  }
+  static round(v) {
+    return { x: Math.round(v.x), y: Math.round(v.y), z: Math.round(v.z) };
+  }
+  static abs(v) {
+    return { x: Math.abs(v.x), y: Math.abs(v.y), z: Math.abs(v.z) };
+  }
+  static min(v1, v2) {
+    return { x: Math.min(v1.x, v2.x), y: Math.min(v1.y, v2.y), z: Math.min(v1.z, v2.z) };
+  }
+  static max(v1, v2) {
+    return { x: Math.max(v1.x, v2.x), y: Math.max(v1.y, v2.y), z: Math.max(v1.z, v2.z) };
+  }
+  static toString(v) {
+    return `(${v.x.toFixed(2)}, ${v.y.toFixed(2)}, ${v.z.toFixed(2)})`;
+  }
+};
+
+// GaiaDimensions_BP/src/blocks/geyser.js
 function pushEntities(dimension, spawnPos, duration) {
   let elapsed = 0;
   const intervalTicks = 4;
@@ -6216,11 +6283,167 @@ function applyCustomDamage(player, itemStack, damageAmount) {
 }
 
 // GaiaDimensions_BP/src/systems/Commands.js
-import { Player as Player2, system as system30, CommandPermissionLevel } from "@minecraft/server";
+import { Player as Player2, system as system30, CommandPermissionLevel, CustomCommandParamType } from "@minecraft/server";
+
+// GaiaDimensions_BP/src/systems/MathParser.js
+var MathParser = class {
+  static get context() {
+    return {
+      v: (x, y, z) => ({ x: Number(x), y: Number(y), z: Number(z) }),
+      vec3: (x, y, z) => ({ x: Number(x), y: Number(y), z: Number(z) }),
+      add: (v1, v2) => Vec3.add(v1, v2),
+      sub: (v1, v2) => Vec3.subtract(v1, v2),
+      mul: (v, s) => typeof v === "number" ? v * s : Vec3.multiply(v, s),
+      div: (v, s) => typeof v === "number" ? v / s : Vec3.divide(v, s),
+      dot: (v1, v2) => Vec3.dot(v1, v2),
+      cross: (v1, v2) => Vec3.cross(v1, v2),
+      mag: (v) => Vec3.magnitude(v),
+      magnitude: (v) => Vec3.magnitude(v),
+      norm: (v) => Vec3.normalize(v),
+      normalize: (v) => Vec3.normalize(v),
+      dist: (v1, v2) => Vec3.distance(v1, v2),
+      distance: (v1, v2) => Vec3.distance(v1, v2),
+      lerp: (v1, v2, t) => Vec3.lerp(v1, v2, t),
+      floor: (v) => typeof v === "number" ? Math.floor(v) : Vec3.floor(v),
+      ceil: (v) => typeof v === "number" ? Math.ceil(v) : Vec3.ceil(v),
+      round: (v) => typeof v === "number" ? Math.round(v) : Vec3.round(v),
+      abs: (v) => typeof v === "number" ? Math.abs(v) : Vec3.abs(v),
+      min: (a, b) => typeof a === "number" ? Math.min(a, b) : Vec3.min(a, b),
+      max: (a, b) => typeof a === "number" ? Math.max(a, b) : Vec3.max(a, b),
+      pi: () => Math.PI,
+      e: () => Math.E,
+      sin: (x) => Math.sin(x),
+      cos: (x) => Math.cos(x),
+      tan: (x) => Math.tan(x),
+      sqrt: (x) => Math.sqrt(x),
+      pow: (x, y) => Math.pow(x, y),
+      random: () => Math.random()
+    };
+  }
+  static evaluate(expression) {
+    const tokens = this.tokenize(expression);
+    let pos = 0;
+    const peek = () => tokens[pos];
+    const consume = () => tokens[pos++];
+    const parsePrimary = () => {
+      let token = consume();
+      if (!token) throw new Error("Unexpected end of expression");
+      if (token === "-") {
+        const val = parsePrimary();
+        return typeof val === "number" ? -val : Vec3.multiply(val, -1);
+      }
+      if (token === "(") {
+        const val = parseExpr();
+        if (consume() !== ")") throw new Error("Expected ')'");
+        return val;
+      }
+      if (!isNaN(token)) return Number(token);
+      const lowerToken = token.toLowerCase();
+      if (this.context[lowerToken]) {
+        const entry = this.context[lowerToken];
+        if (peek() === "(") {
+          consume();
+          const args = [];
+          if (peek() !== ")") {
+            args.push(parseExpr());
+            while (peek() === ",") {
+              consume();
+              args.push(parseExpr());
+            }
+          }
+          if (consume() !== ")") throw new Error(`Expected ')' after arguments for ${token}`);
+          return entry(...args);
+        } else {
+          return entry();
+        }
+      }
+      throw new Error(`Unexpected token: '${token}'`);
+    };
+    const parseMulDiv = () => {
+      let left = parsePrimary();
+      while (peek() === "*" || peek() === "/") {
+        const op = consume();
+        const right = parsePrimary();
+        if (op === "*") {
+          left = typeof left === "number" && typeof right === "number" ? left * right : typeof left === "object" ? Vec3.multiply(left, right) : Vec3.multiply(right, left);
+        } else {
+          left = typeof left === "number" ? left / right : Vec3.divide(left, right);
+        }
+      }
+      return left;
+    };
+    const parseAddSub = () => {
+      let left = parseMulDiv();
+      while (peek() === "+" || peek() === "-") {
+        const op = consume();
+        const right = parseMulDiv();
+        if (op === "+") {
+          left = typeof left === "number" && typeof right === "number" ? left + right : Vec3.add(left, right);
+        } else {
+          left = typeof left === "number" && typeof right === "number" ? left - right : Vec3.subtract(left, right);
+        }
+      }
+      return left;
+    };
+    const parseExpr = () => parseAddSub();
+    const result = parseExpr();
+    if (pos < tokens.length) throw new Error(`Unexpected extra tokens starting at '${tokens[pos]}'`);
+    return result;
+  }
+  static tokenize(str) {
+    const regex = /[a-zA-Z_]+|[0-9]*\.?[0-9]+(?:e[+-]?[0-9]+)?|\(|\)|,|\+|\-|\*|\//gi;
+    return str.match(regex) || [];
+  }
+};
+
+// GaiaDimensions_BP/src/systems/Commands.js
 function formatName(id) {
   return id.split(/[:_]/).map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
 }
 function registerGaiaCommands(registry) {
+  registry.registerCommand({
+    name: "gaiadimension:math",
+    description: "Evaluates a mathematical expression with Vec3 and Math support.",
+    permissionLevel: CommandPermissionLevel.Any,
+    optionalParameters: [
+      { name: "p1", type: CustomCommandParamType.String },
+      { name: "p2", type: CustomCommandParamType.String },
+      { name: "p3", type: CustomCommandParamType.String },
+      { name: "p4", type: CustomCommandParamType.String },
+      { name: "p5", type: CustomCommandParamType.String },
+      { name: "p6", type: CustomCommandParamType.String },
+      { name: "p7", type: CustomCommandParamType.String },
+      { name: "p8", type: CustomCommandParamType.String }
+    ]
+  }, (origin, p1, p2, p3, p4, p5, p6, p7, p8) => {
+    const player = origin.sourceEntity;
+    if (!(player instanceof Player2)) return;
+    system30.run(() => {
+      try {
+        const expression = [p1, p2, p3, p4, p5, p6, p7, p8].filter((p) => p !== void 0).join(" ");
+        if (!expression) {
+          player.sendMessage("\xA7cUsage: /gaiadimension:math <expression>");
+          player.sendMessage('\xA77Example: /gaiadimension:math "sub(v(1,0,0), v(0,1,0))"');
+          return;
+        }
+        const result = MathParser.evaluate(expression);
+        let output = "";
+        if (typeof result === "object" && result !== null) {
+          if ("x" in result && "y" in result && "z" in result) {
+            output = Vec3.toString(result);
+          } else {
+            output = JSON.stringify(result);
+          }
+        } else {
+          output = String(result);
+        }
+        player.sendMessage(`\xA78[\xA76Math\xA78] \xA7f${expression} \xA77= \xA7a${output}`);
+      } catch (e) {
+        player.sendMessage(`\xA78[\xA76Math\xA78] \xA7cError: ${e.message}`);
+      }
+    });
+    return { status: 0 };
+  });
   registry.registerCommand({
     name: "gaiadimension:gaiahelp",
     description: "Technical information and lore regarding the Gaia Dimension Bedrock Port.",
