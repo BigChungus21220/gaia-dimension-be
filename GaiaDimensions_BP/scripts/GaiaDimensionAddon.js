@@ -6286,7 +6286,7 @@ function applyCustomDamage(player, itemStack, damageAmount) {
 import { Player as Player2, system as system30, CommandPermissionLevel, CustomCommandParamType } from "@minecraft/server";
 
 // GaiaDimensions_BP/src/systems/MathParser.js
-var MathParser = class {
+var MathParser = class _MathParser {
   static getContext(extra = {}) {
     return {
       v: (x, y, z) => ({ x: Number(x), y: Number(y), z: Number(z) }),
@@ -6329,11 +6329,28 @@ var MathParser = class {
         if (d === 0) return [-b / (2 * a)];
         return [(-b + Math.sqrt(d)) / (2 * a), (-b - Math.sqrt(d)) / (2 * a)];
       },
-      solve: (a, b, c) => {
-        const d = b * b - 4 * a * c;
-        if (d < 0) return "No real roots";
-        if (d === 0) return [-b / (2 * a)];
-        return [(-b + Math.sqrt(d)) / (2 * a), (-b - Math.sqrt(d)) / (2 * a)];
+      // Universal numerical solver using Secant method for f(x) = 0
+      solve: (exprStr, guess1 = 0, guess2 = 1) => {
+        if (typeof exprStr !== "string") return "Error: solve() requires a string expression (e.g., 'x^2 - 4'). Use single quotes.";
+        let finalExpr = exprStr;
+        if (exprStr.includes("=") && !exprStr.includes("<=") && !exprStr.includes(">=") && !exprStr.includes("==")) {
+          const parts = exprStr.split("=");
+          finalExpr = `${parts[0]} - (${parts[1]})`;
+        }
+        let x0 = Number(guess1);
+        let x1 = Number(guess2);
+        let f0 = _MathParser.evaluate(finalExpr, { ...extra, x: x0 });
+        let f1 = _MathParser.evaluate(finalExpr, { ...extra, x: x1 });
+        for (let i = 0; i < 100; i++) {
+          if (Math.abs(f1) < 1e-10) return x1;
+          if (Math.abs(f1 - f0) < 1e-15) break;
+          let x2 = x1 - f1 * ((x1 - x0) / (f1 - f0));
+          x0 = x1;
+          f0 = f1;
+          x1 = x2;
+          f1 = _MathParser.evaluate(finalExpr, { ...extra, x: x1 });
+        }
+        return Math.abs(f1) < 1e-5 ? x1 : "No real solution found near guesses";
       },
       ...extra
     };
@@ -6355,6 +6372,9 @@ var MathParser = class {
         const val = parseExpr();
         if (consume() !== ")") throw new Error("Expected ')'");
         return val;
+      }
+      if (token.startsWith("'") || token.startsWith('"')) {
+        return token.slice(1, -1);
       }
       if (!isNaN(token)) return Number(token);
       const lowerToken = token.toLowerCase();
@@ -6384,13 +6404,68 @@ var MathParser = class {
           return entry;
         }
       }
+      if (token.toLowerCase() === "x" && extra.x !== void 0) {
+        return extra.x;
+      }
+      let current = context[lowerToken] !== void 0 ? context[lowerToken] : extra[lowerToken];
+      if (current !== void 0) {
+        while (peek() === ".") {
+          consume();
+          const prop = consume();
+          if (!prop) throw new Error("Expected property name after '.'");
+          current = current[prop];
+        }
+        if (typeof current === "function") {
+          if (peek() === "(") {
+            consume();
+            const args = [];
+            if (peek() !== ")") {
+              args.push(parseExpr());
+              while (peek() === ",") {
+                consume();
+                args.push(parseExpr());
+              }
+            }
+            if (consume() !== ")") throw new Error(`Expected ')' after arguments for ${token}`);
+            return current(...args);
+          } else {
+            try {
+              return current();
+            } catch (e) {
+              return current;
+            }
+          }
+        }
+        return current;
+      }
       throw new Error(`Unexpected token: '${token}'`);
     };
-    const parseMulDiv = () => {
+    const parseImplicitMul = () => {
       let left = parsePrimary();
+      while (peek() && !["+", "-", "*", "/", "^", ",", ")", "<", ">", "=", "<=", ">="].includes(peek()) && !/^[0-9]/.test(peek()) === false) {
+        const right = parsePrimary();
+        left = typeof left === "number" && typeof right === "number" ? left * right : typeof left === "object" ? Vec3.multiply(left, right) : Vec3.multiply(right, left);
+      }
+      while (peek() && (peek() === "(" || /^[a-zA-Z_x]/.test(peek()))) {
+        const right = parsePrimary();
+        left = typeof left === "number" && typeof right === "number" ? left * right : typeof left === "object" ? Vec3.multiply(left, right) : Vec3.multiply(right, left);
+      }
+      return left;
+    };
+    const parsePower = () => {
+      let left = parseImplicitMul();
+      while (peek() === "^") {
+        consume();
+        const right = parseImplicitMul();
+        left = Math.pow(left, right);
+      }
+      return left;
+    };
+    const parseMulDiv = () => {
+      let left = parsePower();
       while (peek() === "*" || peek() === "/") {
         const op = consume();
-        const right = parsePrimary();
+        const right = parsePower();
         if (op === "*") {
           left = typeof left === "number" && typeof right === "number" ? left * right : typeof left === "object" ? Vec3.multiply(left, right) : Vec3.multiply(right, left);
         } else {
@@ -6412,13 +6487,26 @@ var MathParser = class {
       }
       return left;
     };
-    const parseExpr = () => parseAddSub();
+    const parseComparison = () => {
+      let left = parseAddSub();
+      while (peek() === "<" || peek() === ">" || peek() === "=" || peek() === "<=" || peek() === ">=") {
+        const op = consume();
+        const right = parseAddSub();
+        if (op === "<") left = left < right;
+        else if (op === ">") left = left > right;
+        else if (op === "=") left = left == right;
+        else if (op === "<=") left = left <= right;
+        else if (op === ">=") left = left >= right;
+      }
+      return left;
+    };
+    const parseExpr = () => parseComparison();
     const result = parseExpr();
     if (pos < tokens.length) throw new Error(`Unexpected extra tokens starting at '${tokens[pos]}'`);
     return result;
   }
   static tokenize(str) {
-    const regex = /[a-zA-Z_]+|[0-9]*\.?[0-9]+(?:e[+-]?[0-9]+)?|\(|\)|,|\+|\-|\*|\//gi;
+    const regex = /"[^"]*"|'[^']*'|[a-zA-Z_]+|[0-9]*\.?[0-9]+(?:e[+-]?[0-9]+)?|\(|\)|,|\+|\-|\*|\/|\^|\<=|\>=|\<|\>|\=/gi;
     return str.match(regex) || [];
   }
 };

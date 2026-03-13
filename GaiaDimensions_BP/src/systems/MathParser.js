@@ -47,11 +47,33 @@ export class MathParser {
                 if (d === 0) return [-b / (2 * a)];
                 return [(-b + Math.sqrt(d)) / (2 * a), (-b - Math.sqrt(d)) / (2 * a)];
             },
-            solve: (a, b, c) => {
-                const d = b * b - 4 * a * c;
-                if (d < 0) return "No real roots";
-                if (d === 0) return [-b / (2 * a)];
-                return [(-b + Math.sqrt(d)) / (2 * a), (-b - Math.sqrt(d)) / (2 * a)];
+            // Universal numerical solver using Secant method for f(x) = 0
+            solve: (exprStr, guess1 = 0, guess2 = 1) => {
+                if (typeof exprStr !== 'string') return "Error: solve() requires a string expression (e.g., 'x^2 - 4'). Use single quotes.";
+                
+                // Support equations with '=' by transforming 'A = B' into 'A - (B)'
+                let finalExpr = exprStr;
+                if (exprStr.includes('=') && !exprStr.includes('<=') && !exprStr.includes('>=') && !exprStr.includes('==')) {
+                    const parts = exprStr.split('=');
+                    finalExpr = `${parts[0]} - (${parts[1]})`;
+                }
+
+                let x0 = Number(guess1);
+                let x1 = Number(guess2);
+                let f0 = MathParser.evaluate(finalExpr, { ...extra, x: x0 });
+                let f1 = MathParser.evaluate(finalExpr, { ...extra, x: x1 });
+                
+                for (let i = 0; i < 100; i++) {
+                    if (Math.abs(f1) < 1e-10) return x1;
+                    if (Math.abs(f1 - f0) < 1e-15) break; // Avoid division by zero
+                    
+                    let x2 = x1 - f1 * ((x1 - x0) / (f1 - f0));
+                    x0 = x1;
+                    f0 = f1;
+                    x1 = x2;
+                    f1 = MathParser.evaluate(finalExpr, { ...extra, x: x1 });
+                }
+                return Math.abs(f1) < 1e-5 ? x1 : "No real solution found near guesses";
             },
             ...extra
         };
@@ -82,6 +104,11 @@ export class MathParser {
                 return val;
             }
 
+            // Handle strings
+            if (token.startsWith("'") || token.startsWith('"')) {
+                return token.slice(1, -1);
+            }
+
             // Handle numbers
             if (!isNaN(token)) return Number(token);
 
@@ -107,19 +134,82 @@ export class MathParser {
                         try { return entry(); } catch(e) { return entry; }
                     }
                 } else {
-                    // It's a direct value (like pos)
+                    // It's a direct value (like pos or x)
                     return entry;
                 }
+            }
+
+            // For variable 'x' passed dynamically
+            if (token.toLowerCase() === 'x' && extra.x !== undefined) {
+                return extra.x;
+            }
+
+            // Handle variables and dot notation (e.g., pos.x)
+            let current = context[lowerToken] !== undefined ? context[lowerToken] : extra[lowerToken];
+            if (current !== undefined) {
+                while (peek() === ".") {
+                    consume(); // consume "."
+                    const prop = consume();
+                    if (!prop) throw new Error("Expected property name after '.'");
+                    current = current[prop];
+                }
+
+                if (typeof current === 'function') {
+                    if (peek() === "(") {
+                        consume(); // "("
+                        const args = [];
+                        if (peek() !== ")") {
+                            args.push(parseExpr());
+                            while (peek() === ",") {
+                                consume(); // ","
+                                args.push(parseExpr());
+                            }
+                        }
+                        if (consume() !== ")") throw new Error(`Expected ')' after arguments for ${token}`);
+                        return current(...args);
+                    } else {
+                        try { return current(); } catch(e) { return current; }
+                    }
+                }
+                return current;
             }
 
             throw new Error(`Unexpected token: '${token}'`);
         };
 
-        const parseMulDiv = () => {
+        const parseImplicitMul = () => {
             let left = parsePrimary();
+            // If next token is a number, variable, or "(", and not an operator, it's implicit multiplication
+            while (peek() && !["+", "-", "*", "/", "^", ",", ")", "<", ">", "=", "<=", ">="].includes(peek()) && !/^[0-9]/.test(peek()) === false) {
+                // Peek is a number, variable, or "("
+                const right = parsePrimary();
+                left = (typeof left === 'number' && typeof right === 'number') ? left * right : 
+                       (typeof left === 'object') ? Vec3.multiply(left, right) : Vec3.multiply(right, left);
+            }
+            // Simplified implicit mul check for x, pi, etc.
+            while (peek() && (peek() === "(" || /^[a-zA-Z_x]/.test(peek()))) {
+                const right = parsePrimary();
+                left = (typeof left === 'number' && typeof right === 'number') ? left * right : 
+                       (typeof left === 'object') ? Vec3.multiply(left, right) : Vec3.multiply(right, left);
+            }
+            return left;
+        };
+
+        const parsePower = () => {
+            let left = parseImplicitMul();
+            while (peek() === "^") {
+                consume(); // consume "^"
+                const right = parseImplicitMul();
+                left = Math.pow(left, right);
+            }
+            return left;
+        };
+
+        const parseMulDiv = () => {
+            let left = parsePower();
             while (peek() === "*" || peek() === "/") {
                 const op = consume();
-                const right = parsePrimary();
+                const right = parsePower();
                 if (op === "*") {
                     left = (typeof left === 'number' && typeof right === 'number') ? left * right : 
                            (typeof left === 'object') ? Vec3.multiply(left, right) : Vec3.multiply(right, left);
@@ -144,7 +234,21 @@ export class MathParser {
             return left;
         };
 
-        const parseExpr = () => parseAddSub();
+        const parseComparison = () => {
+            let left = parseAddSub();
+            while (peek() === "<" || peek() === ">" || peek() === "=" || peek() === "<=" || peek() === ">=") {
+                const op = consume();
+                const right = parseAddSub();
+                if (op === "<") left = left < right;
+                else if (op === ">") left = left > right;
+                else if (op === "=") left = left == right;
+                else if (op === "<=") left = left <= right;
+                else if (op === ">=") left = left >= right;
+            }
+            return left;
+        };
+
+        const parseExpr = () => parseComparison();
 
         const result = parseExpr();
         if (pos < tokens.length) throw new Error(`Unexpected extra tokens starting at '${tokens[pos]}'`);
@@ -152,7 +256,8 @@ export class MathParser {
     }
 
     static tokenize(str) {
-        const regex = /[a-zA-Z_]+|[0-9]*\.?[0-9]+(?:e[+-]?[0-9]+)?|\(|\)|,|\+|\-|\*|\//gi;
+        // Regex handles strings in quotes, numbers with scientific notation, identifiers, and operators
+        const regex = /"[^"]*"|'[^']*'|[a-zA-Z_]+|[0-9]*\.?[0-9]+(?:e[+-]?[0-9]+)?|\(|\)|,|\+|\-|\*|\/|\^|\<=|\>=|\<|\>|\=/gi;
         return str.match(regex) || [];
     }
 }
