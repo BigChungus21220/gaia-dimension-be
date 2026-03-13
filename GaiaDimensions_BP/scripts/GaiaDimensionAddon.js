@@ -6511,6 +6511,89 @@ function registerGaiaCommands(registry) {
     return { status: 0 };
   });
   registry.registerCommand({
+    name: "gaiadimension:data",
+    description: "Manage dynamic properties on blocks, entities, or yourself.",
+    permissionLevel: CommandPermissionLevel.GameDirectors,
+    optionalParameters: [
+      { name: "op", type: CustomCommandParamType.String },
+      { name: "target", type: CustomCommandParamType.String },
+      { name: "key", type: CustomCommandParamType.String },
+      { name: "v1", type: CustomCommandParamType.String },
+      { name: "v2", type: CustomCommandParamType.String },
+      { name: "v3", type: CustomCommandParamType.String },
+      { name: "v4", type: CustomCommandParamType.String },
+      { name: "v5", type: CustomCommandParamType.String }
+    ]
+  }, (origin, op, target, key, v1, v2, v3, v4, v5) => {
+    const player = origin.sourceEntity;
+    if (!(player instanceof Player2)) return;
+    system30.run(() => {
+      const operation = op ? op.toLowerCase() : "get";
+      const targetType = target ? target.toLowerCase() : "self";
+      let targetObj = null;
+      if (targetType === "block") {
+        const ray = player.getBlockFromViewDirection({ maxDistance: 10 });
+        targetObj = ray ? ray.block : null;
+      } else if (targetType === "entity") {
+        const ray = player.getEntitiesFromViewDirection({ maxDistance: 10 });
+        targetObj = ray && ray.length > 0 ? ray[0].entity : null;
+      } else if (targetType === "self") {
+        targetObj = player;
+      }
+      if (!targetObj) {
+        player.sendMessage(`\xA7cTarget '${targetType}' not found or out of range.`);
+        return;
+      }
+      try {
+        if (operation === "get") {
+          if (key) {
+            const val = targetObj.getDynamicProperty(key);
+            player.sendMessage(`\xA78[\xA76Data\xA78] \xA7a${key} \xA77= \xA7f${typeof val === "object" ? JSON.stringify(val) : val}`);
+          } else {
+            const ids = targetObj.getDynamicPropertyIds();
+            player.sendMessage(`\xA78[\xA76Data\xA78] \xA77Properties on \xA7f${targetType}:`);
+            ids.forEach((id) => {
+              const val = targetObj.getDynamicProperty(id);
+              player.sendMessage(`\xA77 - \xA7a${id}\xA77: \xA7f${typeof val === "object" ? JSON.stringify(val) : val}`);
+            });
+          }
+        } else if (operation === "set") {
+          if (!key || v1 === void 0) {
+            player.sendMessage("\xA7cUsage: /data set <target> <key> <value>");
+            return;
+          }
+          let value = v1;
+          if (v1 === "true") value = true;
+          else if (v1 === "false") value = false;
+          else if (!isNaN(v1)) value = Number(v1);
+          targetObj.setDynamicProperty(key, value);
+          player.sendMessage(`\xA78[\xA76Data\xA78] \xA77Set \xA7a${key} \xA77to \xA7f${value} \xA77on \xA7f${targetType}`);
+        } else if (operation === "remove") {
+          if (!key) {
+            player.sendMessage("\xA7cUsage: /data remove <target> <key>");
+            return;
+          }
+          targetObj.setDynamicProperty(key, void 0);
+          player.sendMessage(`\xA78[\xA76Data\xA78] \xA77Removed \xA7a${key} \xA77from \xA7f${targetType}`);
+        } else if (operation === "math") {
+          if (!key || v1 === void 0) {
+            player.sendMessage("\xA7cUsage: /data math <target> <key> <expression>");
+            return;
+          }
+          const expression = [v1, v2, v3, v4, v5].filter((p) => p !== void 0).join(" ");
+          const result = MathParser.evaluate(expression, { pos: player.location });
+          targetObj.setDynamicProperty(key, result);
+          player.sendMessage(`\xA78[\xA76Data\xA78] \xA77Stored result of \xA7f'${expression}' \xA77into \xA7a${key} \xA77(Result: \xA7f${typeof result === "object" ? Vec3.toString(result) : result}\xA77)`);
+        } else {
+          player.sendMessage("\xA7cUnknown operation. Use get, set, remove, or math.");
+        }
+      } catch (e) {
+        player.sendMessage(`\xA78[\xA76Data\xA78] \xA7cError: ${e.message}`);
+      }
+    });
+    return { status: 0 };
+  });
+  registry.registerCommand({
     name: "gaiadimension:gaiahelp",
     description: "Technical information and lore regarding the Gaia Dimension Bedrock Port.",
     permissionLevel: CommandPermissionLevel.Any

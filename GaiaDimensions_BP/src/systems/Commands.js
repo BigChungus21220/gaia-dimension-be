@@ -113,6 +113,104 @@ export function registerGaiaCommands(registry) {
         return { status: 0 };
     });
 
+    // /gaiadimension:data <operation> <target> [property] [value/expression...]
+    registry.registerCommand({
+        name: "gaiadimension:data",
+        description: "Manage dynamic properties on blocks, entities, or yourself.",
+        permissionLevel: CommandPermissionLevel.GameDirectors,
+        optionalParameters: [
+            { name: "op", type: CustomCommandParamType.String },
+            { name: "target", type: CustomCommandParamType.String },
+            { name: "key", type: CustomCommandParamType.String },
+            { name: "v1", type: CustomCommandParamType.String },
+            { name: "v2", type: CustomCommandParamType.String },
+            { name: "v3", type: CustomCommandParamType.String },
+            { name: "v4", type: CustomCommandParamType.String },
+            { name: "v5", type: CustomCommandParamType.String }
+        ]
+    }, (origin, op, target, key, v1, v2, v3, v4, v5) => {
+        const player = origin.sourceEntity;
+        if (!(player instanceof Player)) return;
+
+        system.run(() => {
+            const operation = op ? op.toLowerCase() : "get";
+            const targetType = target ? target.toLowerCase() : "self";
+            
+            // Helper to get target object
+            let targetObj = null;
+            if (targetType === "block") {
+                const ray = player.getBlockFromViewDirection({ maxDistance: 10 });
+                targetObj = ray ? ray.block : null;
+            } else if (targetType === "entity") {
+                const ray = player.getEntitiesFromViewDirection({ maxDistance: 10 });
+                targetObj = ray && ray.length > 0 ? ray[0].entity : null;
+            } else if (targetType === "self") {
+                targetObj = player;
+            }
+
+            if (!targetObj) {
+                player.sendMessage(`§cTarget '${targetType}' not found or out of range.`);
+                return;
+            }
+
+            try {
+                if (operation === "get") {
+                    if (key) {
+                        const val = targetObj.getDynamicProperty(key);
+                        player.sendMessage(`§8[§6Data§8] §a${key} §7= §f${typeof val === 'object' ? JSON.stringify(val) : val}`);
+                    } else {
+                        const ids = targetObj.getDynamicPropertyIds();
+                        player.sendMessage(`§8[§6Data§8] §7Properties on §f${targetType}:`);
+                        ids.forEach(id => {
+                            const val = targetObj.getDynamicProperty(id);
+                            player.sendMessage(`§7 - §a${id}§7: §f${typeof val === 'object' ? JSON.stringify(val) : val}`);
+                        });
+                    }
+                } 
+                else if (operation === "set") {
+                    if (!key || v1 === undefined) {
+                        player.sendMessage("§cUsage: /data set <target> <key> <value>");
+                        return;
+                    }
+                    // Attempt to parse value
+                    let value = v1;
+                    if (v1 === "true") value = true;
+                    else if (v1 === "false") value = false;
+                    else if (!isNaN(v1)) value = Number(v1);
+                    
+                    targetObj.setDynamicProperty(key, value);
+                    player.sendMessage(`§8[§6Data§8] §7Set §a${key} §7to §f${value} §7on §f${targetType}`);
+                }
+                else if (operation === "remove") {
+                    if (!key) {
+                        player.sendMessage("§cUsage: /data remove <target> <key>");
+                        return;
+                    }
+                    targetObj.setDynamicProperty(key, undefined);
+                    player.sendMessage(`§8[§6Data§8] §7Removed §a${key} §7from §f${targetType}`);
+                }
+                else if (operation === "math") {
+                    if (!key || v1 === undefined) {
+                        player.sendMessage("§cUsage: /data math <target> <key> <expression>");
+                        return;
+                    }
+                    const expression = [v1, v2, v3, v4, v5].filter(p => p !== undefined).join(" ");
+                    const result = MathParser.evaluate(expression, { pos: player.location });
+                    
+                    targetObj.setDynamicProperty(key, result);
+                    player.sendMessage(`§8[§6Data§8] §7Stored result of §f'${expression}' §7into §a${key} §7(Result: §f${typeof result === 'object' ? Vec3.toString(result) : result}§7)`);
+                }
+                else {
+                    player.sendMessage("§cUnknown operation. Use get, set, remove, or math.");
+                }
+            } catch (e) {
+                player.sendMessage(`§8[§6Data§8] §cError: ${e.message}`);
+            }
+        });
+
+        return { status: 0 };
+    });
+
     // /gaiadimension:gaiahelp
     registry.registerCommand({
         name: "gaiadimension:gaiahelp",
