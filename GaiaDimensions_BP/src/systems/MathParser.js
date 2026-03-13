@@ -5,7 +5,7 @@ import { Vec3 } from "../Vec3.js";
  * Supports numbers, scientific notation, vectors, functions, and infix operators.
  */
 export class MathParser {
-    static get context() {
+    static getContext(extra = {}) {
         return {
             v: (x, y, z) => ({ x: Number(x), y: Number(y), z: Number(z) }),
             vec3: (x, y, z) => ({ x: Number(x), y: Number(y), z: Number(z) }),
@@ -35,12 +35,31 @@ export class MathParser {
             tan: (x) => Math.tan(x),
             sqrt: (x) => Math.sqrt(x),
             pow: (x, y) => Math.pow(x, y),
-            random: () => Math.random()
+            log: (x) => Math.log(x),
+            log10: (x) => Math.log10(x),
+            random: () => Math.random(),
+            // Simple linear solver: ax + b = 0 => x = -b/a
+            solve_linear: (a, b) => -b / a,
+            // Quadratic solver: ax^2 + bx + c = 0
+            solve_quadratic: (a, b, c) => {
+                const d = b * b - 4 * a * c;
+                if (d < 0) return "No real roots";
+                if (d === 0) return [-b / (2 * a)];
+                return [(-b + Math.sqrt(d)) / (2 * a), (-b - Math.sqrt(d)) / (2 * a)];
+            },
+            solve: (a, b, c) => {
+                const d = b * b - 4 * a * c;
+                if (d < 0) return "No real roots";
+                if (d === 0) return [-b / (2 * a)];
+                return [(-b + Math.sqrt(d)) / (2 * a), (-b - Math.sqrt(d)) / (2 * a)];
+            },
+            ...extra
         };
     }
 
-    static evaluate(expression) {
+    static evaluate(expression, extra = {}) {
         const tokens = this.tokenize(expression);
+        const context = this.getContext(extra);
         let pos = 0;
 
         const peek = () => tokens[pos];
@@ -68,22 +87,28 @@ export class MathParser {
 
             // Handle functions and constants
             const lowerToken = token.toLowerCase();
-            if (this.context[lowerToken]) {
-                const entry = this.context[lowerToken];
-                if (peek() === "(") {
-                    consume(); // "("
-                    const args = [];
-                    if (peek() !== ")") {
-                        args.push(parseExpr());
-                        while (peek() === ",") {
-                            consume(); // ","
+            if (context[lowerToken] !== undefined) {
+                const entry = context[lowerToken];
+                if (typeof entry === 'function') {
+                    if (peek() === "(") {
+                        consume(); // "("
+                        const args = [];
+                        if (peek() !== ")") {
                             args.push(parseExpr());
+                            while (peek() === ",") {
+                                consume(); // ","
+                                args.push(parseExpr());
+                            }
                         }
+                        if (consume() !== ")") throw new Error(`Expected ')' after arguments for ${token}`);
+                        return entry(...args);
+                    } else {
+                        // If it's a constant function (like pi or e)
+                        try { return entry(); } catch(e) { return entry; }
                     }
-                    if (consume() !== ")") throw new Error(`Expected ')' after arguments for ${token}`);
-                    return entry(...args);
                 } else {
-                    return entry();
+                    // It's a direct value (like pos)
+                    return entry;
                 }
             }
 
@@ -127,7 +152,6 @@ export class MathParser {
     }
 
     static tokenize(str) {
-        // Regex handles numbers with scientific notation, identifiers, and operators
         const regex = /[a-zA-Z_]+|[0-9]*\.?[0-9]+(?:e[+-]?[0-9]+)?|\(|\)|,|\+|\-|\*|\//gi;
         return str.match(regex) || [];
     }

@@ -6287,7 +6287,7 @@ import { Player as Player2, system as system30, CommandPermissionLevel, CustomCo
 
 // GaiaDimensions_BP/src/systems/MathParser.js
 var MathParser = class {
-  static get context() {
+  static getContext(extra = {}) {
     return {
       v: (x, y, z) => ({ x: Number(x), y: Number(y), z: Number(z) }),
       vec3: (x, y, z) => ({ x: Number(x), y: Number(y), z: Number(z) }),
@@ -6317,11 +6317,30 @@ var MathParser = class {
       tan: (x) => Math.tan(x),
       sqrt: (x) => Math.sqrt(x),
       pow: (x, y) => Math.pow(x, y),
-      random: () => Math.random()
+      log: (x) => Math.log(x),
+      log10: (x) => Math.log10(x),
+      random: () => Math.random(),
+      // Simple linear solver: ax + b = 0 => x = -b/a
+      solve_linear: (a, b) => -b / a,
+      // Quadratic solver: ax^2 + bx + c = 0
+      solve_quadratic: (a, b, c) => {
+        const d = b * b - 4 * a * c;
+        if (d < 0) return "No real roots";
+        if (d === 0) return [-b / (2 * a)];
+        return [(-b + Math.sqrt(d)) / (2 * a), (-b - Math.sqrt(d)) / (2 * a)];
+      },
+      solve: (a, b, c) => {
+        const d = b * b - 4 * a * c;
+        if (d < 0) return "No real roots";
+        if (d === 0) return [-b / (2 * a)];
+        return [(-b + Math.sqrt(d)) / (2 * a), (-b - Math.sqrt(d)) / (2 * a)];
+      },
+      ...extra
     };
   }
-  static evaluate(expression) {
+  static evaluate(expression, extra = {}) {
     const tokens = this.tokenize(expression);
+    const context = this.getContext(extra);
     let pos = 0;
     const peek = () => tokens[pos];
     const consume = () => tokens[pos++];
@@ -6339,22 +6358,30 @@ var MathParser = class {
       }
       if (!isNaN(token)) return Number(token);
       const lowerToken = token.toLowerCase();
-      if (this.context[lowerToken]) {
-        const entry = this.context[lowerToken];
-        if (peek() === "(") {
-          consume();
-          const args = [];
-          if (peek() !== ")") {
-            args.push(parseExpr());
-            while (peek() === ",") {
-              consume();
+      if (context[lowerToken] !== void 0) {
+        const entry = context[lowerToken];
+        if (typeof entry === "function") {
+          if (peek() === "(") {
+            consume();
+            const args = [];
+            if (peek() !== ")") {
               args.push(parseExpr());
+              while (peek() === ",") {
+                consume();
+                args.push(parseExpr());
+              }
+            }
+            if (consume() !== ")") throw new Error(`Expected ')' after arguments for ${token}`);
+            return entry(...args);
+          } else {
+            try {
+              return entry();
+            } catch (e) {
+              return entry;
             }
           }
-          if (consume() !== ")") throw new Error(`Expected ')' after arguments for ${token}`);
-          return entry(...args);
         } else {
-          return entry();
+          return entry;
         }
       }
       throw new Error(`Unexpected token: '${token}'`);
@@ -6426,7 +6453,7 @@ function registerGaiaCommands(registry) {
           player.sendMessage('\xA77Example: /gaiadimension:math "sub(v(1,0,0), v(0,1,0))"');
           return;
         }
-        const result = MathParser.evaluate(expression);
+        const result = MathParser.evaluate(expression, { pos: player.location });
         let output = "";
         if (typeof result === "object" && result !== null) {
           if ("x" in result && "y" in result && "z" in result) {
@@ -6440,6 +6467,45 @@ function registerGaiaCommands(registry) {
         player.sendMessage(`\xA78[\xA76Math\xA78] \xA7f${expression} \xA77= \xA7a${output}`);
       } catch (e) {
         player.sendMessage(`\xA78[\xA76Math\xA78] \xA7cError: ${e.message}`);
+      }
+    });
+    return { status: 0 };
+  });
+  registry.registerCommand({
+    name: "gaiadimension:tpmath",
+    description: "Calculates a location and teleports you there.",
+    permissionLevel: CommandPermissionLevel.Any,
+    optionalParameters: [
+      { name: "p1", type: CustomCommandParamType.String },
+      { name: "p2", type: CustomCommandParamType.String },
+      { name: "p3", type: CustomCommandParamType.String },
+      { name: "p4", type: CustomCommandParamType.String },
+      { name: "p5", type: CustomCommandParamType.String },
+      { name: "p6", type: CustomCommandParamType.String },
+      { name: "p7", type: CustomCommandParamType.String },
+      { name: "p8", type: CustomCommandParamType.String }
+    ]
+  }, (origin, p1, p2, p3, p4, p5, p6, p7, p8) => {
+    const player = origin.sourceEntity;
+    if (!(player instanceof Player2)) return;
+    system30.run(() => {
+      try {
+        const expression = [p1, p2, p3, p4, p5, p6, p7, p8].filter((p) => p !== void 0).join(" ");
+        if (!expression) {
+          player.sendMessage("\xA7cUsage: /gaiadimension:tpmath <expression>");
+          player.sendMessage('\xA77Example: /gaiadimension:tpmath "pos + v(10, 0, 10)"');
+          return;
+        }
+        const result = MathParser.evaluate(expression, { pos: player.location });
+        if (typeof result === "object" && result !== null && "x" in result && "y" in result && "z" in result) {
+          player.teleport(result);
+          player.sendMessage(`\xA78[\xA76TPMath\xA78] \xA77Teleported to \xA7a${Vec3.toString(result)}`);
+        } else {
+          player.sendMessage("\xA7cError: The expression must result in a Vector3 (v(x,y,z)).");
+          player.sendMessage(`\xA77Got: \xA7f${result}`);
+        }
+      } catch (e) {
+        player.sendMessage(`\xA78[\xA76TPMath\xA78] \xA7cError: ${e.message}`);
       }
     });
     return { status: 0 };

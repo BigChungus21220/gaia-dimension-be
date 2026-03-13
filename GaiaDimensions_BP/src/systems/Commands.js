@@ -45,8 +45,8 @@ export function registerGaiaCommands(registry) {
                     return;
                 }
 
-                // Evaluate the expression using the manual parser
-                const result = MathParser.evaluate(expression);
+                // Evaluate the expression using the manual parser, passing current location as 'pos'
+                const result = MathParser.evaluate(expression, { pos: player.location });
 
                 let output = "";
                 if (typeof result === 'object' && result !== null) {
@@ -62,6 +62,51 @@ export function registerGaiaCommands(registry) {
                 player.sendMessage(`§8[§6Math§8] §f${expression} §7= §a${output}`);
             } catch (e) {
                 player.sendMessage(`§8[§6Math§8] §cError: ${e.message}`);
+            }
+        });
+
+        return { status: 0 };
+    });
+
+    // /gaiadimension:tpmath [expression...]
+    registry.registerCommand({
+        name: "gaiadimension:tpmath",
+        description: "Calculates a location and teleports you there.",
+        permissionLevel: CommandPermissionLevel.Any,
+        optionalParameters: [
+            { name: "p1", type: CustomCommandParamType.String },
+            { name: "p2", type: CustomCommandParamType.String },
+            { name: "p3", type: CustomCommandParamType.String },
+            { name: "p4", type: CustomCommandParamType.String },
+            { name: "p5", type: CustomCommandParamType.String },
+            { name: "p6", type: CustomCommandParamType.String },
+            { name: "p7", type: CustomCommandParamType.String },
+            { name: "p8", type: CustomCommandParamType.String }
+        ]
+    }, (origin, p1, p2, p3, p4, p5, p6, p7, p8) => {
+        const player = origin.sourceEntity;
+        if (!(player instanceof Player)) return;
+
+        system.run(() => {
+            try {
+                const expression = [p1, p2, p3, p4, p5, p6, p7, p8].filter(p => p !== undefined).join(" ");
+                if (!expression) {
+                    player.sendMessage("§cUsage: /gaiadimension:tpmath <expression>");
+                    player.sendMessage("§7Example: /gaiadimension:tpmath \"pos + v(10, 0, 10)\"");
+                    return;
+                }
+
+                const result = MathParser.evaluate(expression, { pos: player.location });
+
+                if (typeof result === 'object' && result !== null && 'x' in result && 'y' in result && 'z' in result) {
+                    player.teleport(result);
+                    player.sendMessage(`§8[§6TPMath§8] §7Teleported to §a${Vec3.toString(result)}`);
+                } else {
+                    player.sendMessage("§cError: The expression must result in a Vector3 (v(x,y,z)).");
+                    player.sendMessage(`§7Got: §f${result}`);
+                }
+            } catch (e) {
+                player.sendMessage(`§8[§6TPMath§8] §cError: ${e.message}`);
             }
         });
 
