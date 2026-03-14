@@ -136,7 +136,7 @@ export function registerGaiaCommands(registry) {
     // /gaiadimension:data <op> <target> [path] [value/expression/json]
     registry.registerCommand({
         name: "gaiadimension:data",
-        description: "Java-like data manipulation command for Bedrock Port.",
+        description: "Allows you to get, merge, modify, and remove data from block entities and entities.",
         permissionLevel: CommandPermissionLevel.GameDirectors,
         optionalParameters: [
             { name: "op", type: CustomCommandParamType.String },
@@ -174,17 +174,22 @@ export function registerGaiaCommands(registry) {
                 if (!targetObj) throw new Error(`Target '${targetType}' not found or out of range.`);
 
                 const data = DataSystem.getRoot(targetObj);
+                const targetName = targetType === "self" ? player.name : targetType;
 
                 if (operation === "get") {
                     const val = DataSystem.getByPath(data, path);
-                    player.sendMessage(`§8[§6Data§8] §7Value at §a${path || "root"}§7: §f${JSON.stringify(val, null, 2)}`);
+                    if (path) {
+                        player.sendMessage(`${targetName} has the following entity data: ${JSON.stringify(val, null, 2)}`);
+                    } else {
+                        player.sendMessage(`${targetName} has the following entity data: ${JSON.stringify(data, null, 2)}`);
+                    }
                 } 
                 else if (operation === "merge") {
                     const jsonStr = [path, v1, v2, v3, v4, v5].filter(p => p !== undefined).join(" ");
                     const source = JSON.parse(jsonStr);
                     DataSystem.deepMerge(data, source);
                     DataSystem.saveRoot(targetObj, data);
-                    player.sendMessage(`§8[§6Data§8] §7Merged data into §f${targetType}`);
+                    player.sendMessage(`Modified entity data of ${targetName}`);
                 }
                 else if (operation === "modify") {
                     const subOp = v1 ? v1.toLowerCase() : "set";
@@ -213,13 +218,13 @@ export function registerGaiaCommands(registry) {
                     }
                     
                     DataSystem.saveRoot(targetObj, data);
-                    player.sendMessage(`§8[§6Data§8] §7Modified §a${path} §7on §f${targetType}`);
+                    player.sendMessage(`Modified entity data of ${targetName}`);
                 }
                 else if (operation === "remove") {
                     if (!path) throw new Error("Path required for remove.");
                     DataSystem.setByPath(data, path, undefined);
                     DataSystem.saveRoot(targetObj, data);
-                    player.sendMessage(`§8[§6Data§8] §7Removed §a${path} §7from §f${targetType}`);
+                    player.sendMessage(`Modified entity data of ${targetName}`);
                 }
                 else if (operation === "math") {
                     const expression = [v1, v2, v3, v4, v5].filter(p => p !== undefined).join(" ");
@@ -240,13 +245,13 @@ export function registerGaiaCommands(registry) {
                     const result = MathParser.evaluate(expression, contextExtra);
                     DataSystem.setByPath(data, path, result);
                     DataSystem.saveRoot(targetObj, data);
-                    player.sendMessage(`§8[§6Data§8] §7Stored math result into §a${path}`);
+                    player.sendMessage(`Modified entity data of ${targetName}`);
                 }
                 else {
                     throw new Error("Unknown operation. Use get, merge, modify, remove, or math.");
                 }
             } catch (e) {
-                player.sendMessage(`§8[§6Data§8] §cError: ${e.message}`);
+                player.sendMessage(`§cError: ${e.message}`);
             }
         });
 
