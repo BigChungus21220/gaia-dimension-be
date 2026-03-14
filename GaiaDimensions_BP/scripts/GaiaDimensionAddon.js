@@ -6677,7 +6677,7 @@ function registerGaiaCommands(registry) {
   });
   registry.registerCommand({
     name: "gaiadimension:data",
-    description: "Java-like data manipulation command for Bedrock Port.",
+    description: "Allows you to get, merge, modify, and remove data from block entities and entities.",
     permissionLevel: CommandPermissionLevel.GameDirectors,
     optionalParameters: [
       { name: "op", type: CustomCommandParamType.String },
@@ -6711,9 +6711,14 @@ function registerGaiaCommands(registry) {
         let targetObj = getTarget(targetType);
         if (!targetObj) throw new Error(`Target '${targetType}' not found or out of range.`);
         const data = DataSystem.getRoot(targetObj);
+        const targetName = targetType === "self" ? player.name : targetType;
         if (operation === "get") {
           const val = DataSystem.getByPath(data, path);
-          player.sendMessage(`\xA78[\xA76Data\xA78] \xA77Value at \xA7a${path || "root"}\xA77: \xA7f${JSON.stringify(val, null, 2)}`);
+          if (path) {
+            player.sendMessage(`${targetName} has the following entity data: ${JSON.stringify(val, null, 2)}`);
+          } else {
+            player.sendMessage(`${targetName} has the following entity data: ${JSON.stringify(data, null, 2)}`);
+          }
         } else if (operation === "merge") {
           const jsonStr = [path, v1, v2, v3, v4, v5].filter((p) => p !== void 0).join(" ");
           const source = JSON.parse(jsonStr);
