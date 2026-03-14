@@ -2,6 +2,7 @@ import { Player, system, CommandPermissionLevel, CustomCommandParamType } from "
 import { DimensionSystem, GaiaDimension } from "../world/Gaia.js";
 import { Vec3 } from "../Vec3.js";
 import { MathParser } from "./MathParser.js";
+import { DataSystem } from "./DataSystem.js";
 
 /**
  * Formats snake_case IDs to Title Case
@@ -36,17 +37,26 @@ export function registerGaiaCommands(registry) {
 
         system.run(() => {
             try {
-                // Join all provided positional arguments
                 const expression = [p1, p2, p3, p4, p5, p6, p7, p8].filter(p => p !== undefined).join(" ");
-                
                 if (!expression) {
                     player.sendMessage("§cUsage: /gaiadimension:math <expression>");
-                    player.sendMessage("§7Example: /gaiadimension:math \"sub(v(1,0,0), v(0,1,0))\"");
                     return;
                 }
 
-                // Evaluate the expression using the manual parser, passing current location as 'pos'
-                const result = MathParser.evaluate(expression, { pos: player.location });
+                // Robust player data context
+                const pos = { x: player.location.x, y: player.location.y, z: player.location.z };
+                const view = player.getViewDirection();
+                const rot = player.getRotation();
+                const contextExtra = { 
+                    pos, view, rot, 
+                    self: player,
+                    lp: pos, // Location Pos shorthand
+                    lx: pos.x, ly: pos.y, lz: pos.z,
+                    vx: view.x, vy: view.y, vz: view.z,
+                    rx: rot.x, ry: rot.y
+                };
+
+                const result = MathParser.evaluate(expression, contextExtra);
 
                 let output = "";
                 if (typeof result === 'object' && result !== null) {
@@ -92,18 +102,28 @@ export function registerGaiaCommands(registry) {
                 const expression = [p1, p2, p3, p4, p5, p6, p7, p8].filter(p => p !== undefined).join(" ");
                 if (!expression) {
                     player.sendMessage("§cUsage: /gaiadimension:tpmath <expression>");
-                    player.sendMessage("§7Example: /gaiadimension:tpmath \"pos + v(10, 0, 10)\"");
                     return;
                 }
 
-                const result = MathParser.evaluate(expression, { pos: player.location });
+                const pos = { x: player.location.x, y: player.location.y, z: player.location.z };
+                const view = player.getViewDirection();
+                const rot = player.getRotation();
+                const contextExtra = { 
+                    pos, view, rot, 
+                    self: player,
+                    lp: pos,
+                    lx: pos.x, ly: pos.y, lz: pos.z,
+                    vx: view.x, vy: view.y, vz: view.z,
+                    rx: rot.x, ry: rot.y
+                };
+
+                const result = MathParser.evaluate(expression, contextExtra);
 
                 if (typeof result === 'object' && result !== null && 'x' in result && 'y' in result && 'z' in result) {
                     player.teleport(result);
                     player.sendMessage(`§8[§6TPMath§8] §7Teleported to §a${Vec3.toString(result)}`);
                 } else {
-                    player.sendMessage("§cError: The expression must result in a Vector3 (v(x,y,z)).");
-                    player.sendMessage(`§7Got: §f${result}`);
+                    player.sendMessage("§cError: The expression must result in a Vector3.");
                 }
             } catch (e) {
                 player.sendMessage(`§8[§6TPMath§8] §cError: ${e.message}`);
@@ -113,95 +133,117 @@ export function registerGaiaCommands(registry) {
         return { status: 0 };
     });
 
-    // /gaiadimension:data <operation> <target> [property] [value/expression...]
+    // /gaiadimension:data <op> <target> [path] [value/expression/json]
     registry.registerCommand({
         name: "gaiadimension:data",
-        description: "Manage dynamic properties on blocks, entities, or yourself.",
+        description: "Java-like data manipulation command for Bedrock Port.",
         permissionLevel: CommandPermissionLevel.GameDirectors,
         optionalParameters: [
             { name: "op", type: CustomCommandParamType.String },
             { name: "target", type: CustomCommandParamType.String },
-            { name: "key", type: CustomCommandParamType.String },
+            { name: "path", type: CustomCommandParamType.String },
             { name: "v1", type: CustomCommandParamType.String },
             { name: "v2", type: CustomCommandParamType.String },
             { name: "v3", type: CustomCommandParamType.String },
             { name: "v4", type: CustomCommandParamType.String },
             { name: "v5", type: CustomCommandParamType.String }
         ]
-    }, (origin, op, target, key, v1, v2, v3, v4, v5) => {
+    }, (origin, op, target, path, v1, v2, v3, v4, v5) => {
         const player = origin.sourceEntity;
         if (!(player instanceof Player)) return;
 
         system.run(() => {
-            const operation = op ? op.toLowerCase() : "get";
-            const targetType = target ? target.toLowerCase() : "self";
-            
-            // Helper to get target object
-            let targetObj = null;
-            if (targetType === "block") {
-                const ray = player.getBlockFromViewDirection({ maxDistance: 10 });
-                targetObj = ray ? ray.block : null;
-            } else if (targetType === "entity") {
-                const ray = player.getEntitiesFromViewDirection({ maxDistance: 10 });
-                targetObj = ray && ray.length > 0 ? ray[0].entity : null;
-            } else if (targetType === "self") {
-                targetObj = player;
-            }
-
-            if (!targetObj) {
-                player.sendMessage(`§cTarget '${targetType}' not found or out of range.`);
-                return;
-            }
-
             try {
+                const operation = op ? op.toLowerCase() : "get";
+                const targetType = target ? target.toLowerCase() : "self";
+                
+                const getTarget = (type) => {
+                    if (type === "block") {
+                        const ray = player.getBlockFromViewDirection({ maxDistance: 10 });
+                        return ray ? ray.block : null;
+                    } else if (type === "entity") {
+                        const ray = player.getEntitiesFromViewDirection({ maxDistance: 10 });
+                        return ray && ray.length > 0 ? ray[0].entity : null;
+                    } else if (type === "self") {
+                        return player;
+                    }
+                    return null;
+                };
+
+                let targetObj = getTarget(targetType);
+                if (!targetObj) throw new Error(`Target '${targetType}' not found or out of range.`);
+
+                const data = DataSystem.getRoot(targetObj);
+
                 if (operation === "get") {
-                    if (key) {
-                        const val = targetObj.getDynamicProperty(key);
-                        player.sendMessage(`§8[§6Data§8] §a${key} §7= §f${typeof val === 'object' ? JSON.stringify(val) : val}`);
-                    } else {
-                        const ids = targetObj.getDynamicPropertyIds();
-                        player.sendMessage(`§8[§6Data§8] §7Properties on §f${targetType}:`);
-                        ids.forEach(id => {
-                            const val = targetObj.getDynamicProperty(id);
-                            player.sendMessage(`§7 - §a${id}§7: §f${typeof val === 'object' ? JSON.stringify(val) : val}`);
-                        });
-                    }
+                    const val = DataSystem.getByPath(data, path);
+                    player.sendMessage(`§8[§6Data§8] §7Value at §a${path || "root"}§7: §f${JSON.stringify(val, null, 2)}`);
                 } 
-                else if (operation === "set") {
-                    if (!key || v1 === undefined) {
-                        player.sendMessage("§cUsage: /data set <target> <key> <value>");
-                        return;
+                else if (operation === "merge") {
+                    const jsonStr = [path, v1, v2, v3, v4, v5].filter(p => p !== undefined).join(" ");
+                    const source = JSON.parse(jsonStr);
+                    DataSystem.deepMerge(data, source);
+                    DataSystem.saveRoot(targetObj, data);
+                    player.sendMessage(`§8[§6Data§8] §7Merged data into §f${targetType}`);
+                }
+                else if (operation === "modify") {
+                    const subOp = v1 ? v1.toLowerCase() : "set";
+                    const sourceType = v2 ? v2.toLowerCase() : "value";
+                    let finalVal = undefined;
+
+                    if (sourceType === "value") {
+                        const rawVal = [v3, v4, v5].filter(p => p !== undefined).join(" ");
+                        finalVal = rawVal;
+                        try { finalVal = JSON.parse(rawVal); } catch(e) {}
+                        if (!isNaN(rawVal)) finalVal = Number(rawVal);
+                        if (rawVal === "true") finalVal = true;
+                        if (rawVal === "false") finalVal = false;
+                    } 
+                    else if (sourceType === "from") {
+                        const fromSourceType = v3 ? v3.toLowerCase() : "self";
+                        const fromSourcePath = v4;
+                        const sourceObj = getTarget(fromSourceType);
+                        if (!sourceObj) throw new Error(`Source '${fromSourceType}' not found.`);
+                        const sourceData = DataSystem.getRoot(sourceObj);
+                        finalVal = DataSystem.getByPath(sourceData, fromSourcePath);
                     }
-                    // Attempt to parse value
-                    let value = v1;
-                    if (v1 === "true") value = true;
-                    else if (v1 === "false") value = false;
-                    else if (!isNaN(v1)) value = Number(v1);
+
+                    if (subOp === "set") {
+                        DataSystem.setByPath(data, path, finalVal);
+                    }
                     
-                    targetObj.setDynamicProperty(key, value);
-                    player.sendMessage(`§8[§6Data§8] §7Set §a${key} §7to §f${value} §7on §f${targetType}`);
+                    DataSystem.saveRoot(targetObj, data);
+                    player.sendMessage(`§8[§6Data§8] §7Modified §a${path} §7on §f${targetType}`);
                 }
                 else if (operation === "remove") {
-                    if (!key) {
-                        player.sendMessage("§cUsage: /data remove <target> <key>");
-                        return;
-                    }
-                    targetObj.setDynamicProperty(key, undefined);
-                    player.sendMessage(`§8[§6Data§8] §7Removed §a${key} §7from §f${targetType}`);
+                    if (!path) throw new Error("Path required for remove.");
+                    DataSystem.setByPath(data, path, undefined);
+                    DataSystem.saveRoot(targetObj, data);
+                    player.sendMessage(`§8[§6Data§8] §7Removed §a${path} §7from §f${targetType}`);
                 }
                 else if (operation === "math") {
-                    if (!key || v1 === undefined) {
-                        player.sendMessage("§cUsage: /data math <target> <key> <expression>");
-                        return;
-                    }
                     const expression = [v1, v2, v3, v4, v5].filter(p => p !== undefined).join(" ");
-                    const result = MathParser.evaluate(expression, { pos: player.location });
                     
-                    targetObj.setDynamicProperty(key, result);
-                    player.sendMessage(`§8[§6Data§8] §7Stored result of §f'${expression}' §7into §a${key} §7(Result: §f${typeof result === 'object' ? Vec3.toString(result) : result}§7)`);
+                    const pos = { x: player.location.x, y: player.location.y, z: player.location.z };
+                    const view = player.getViewDirection();
+                    const rot = player.getRotation();
+                    const contextExtra = { 
+                        pos, view, rot, 
+                        self: player,
+                        lp: pos,
+                        lx: pos.x, ly: pos.y, lz: pos.z,
+                        vx: view.x, vy: view.y, vz: view.z,
+                        rx: rot.x, ry: rot.y,
+                        ...data 
+                    };
+
+                    const result = MathParser.evaluate(expression, contextExtra);
+                    DataSystem.setByPath(data, path, result);
+                    DataSystem.saveRoot(targetObj, data);
+                    player.sendMessage(`§8[§6Data§8] §7Stored math result into §a${path}`);
                 }
                 else {
-                    player.sendMessage("§cUnknown operation. Use get, set, remove, or math.");
+                    throw new Error("Unknown operation. Use get, merge, modify, remove, or math.");
                 }
             } catch (e) {
                 player.sendMessage(`§8[§6Data§8] §cError: ${e.message}`);

@@ -114,41 +114,17 @@ export class MathParser {
 
             // Handle functions and constants
             const lowerToken = token.toLowerCase();
-            if (context[lowerToken] !== undefined) {
-                const entry = context[lowerToken];
-                if (typeof entry === 'function') {
-                    if (peek() === "(") {
-                        consume(); // "("
-                        const args = [];
-                        if (peek() !== ")") {
-                            args.push(parseExpr());
-                            while (peek() === ",") {
-                                consume(); // ","
-                                args.push(parseExpr());
-                            }
-                        }
-                        if (consume() !== ")") throw new Error(`Expected ')' after arguments for ${token}`);
-                        return entry(...args);
-                    } else {
-                        // If it's a constant function (like pi or e)
-                        try { return entry(); } catch(e) { return entry; }
-                    }
-                } else {
-                    // It's a direct value (like pos or x)
-                    return entry;
-                }
-            }
-
-            // For variable 'x' passed dynamically
-            if (token.toLowerCase() === 'x' && extra.x !== undefined) {
+            
+            // Handle variable 'x' passed dynamically
+            if (lowerToken === 'x' && extra.x !== undefined) {
                 return extra.x;
             }
 
-            // Handle variables and dot notation (e.g., pos.x)
-            let current = context[lowerToken] !== undefined ? context[lowerToken] : extra[lowerToken];
-            if (current !== undefined) {
+            if (context[lowerToken] !== undefined) {
+                let current = context[lowerToken];
+                // Dot notation
                 while (peek() === ".") {
-                    consume(); // consume "."
+                    consume();
                     const prop = consume();
                     if (!prop) throw new Error("Expected property name after '.'");
                     current = current[prop];
@@ -168,8 +144,21 @@ export class MathParser {
                         if (consume() !== ")") throw new Error(`Expected ')' after arguments for ${token}`);
                         return current(...args);
                     } else {
+                        // If it's a constant function (like pi or e)
                         try { return current(); } catch(e) { return current; }
                     }
+                } else {
+                    return current;
+                }
+            }
+
+            // Handle variables from extra context
+            if (extra[lowerToken] !== undefined) {
+                let current = extra[lowerToken];
+                while (peek() === ".") {
+                    consume();
+                    const prop = consume();
+                    current = current[prop];
                 }
                 return current;
             }
@@ -177,39 +166,33 @@ export class MathParser {
             throw new Error(`Unexpected token: '${token}'`);
         };
 
-        const parseImplicitMul = () => {
-            let left = parsePrimary();
-            // If next token is a number, variable, or "(", and not an operator, it's implicit multiplication
-            while (peek() && !["+", "-", "*", "/", "^", ",", ")", "<", ">", "=", "<=", ">="].includes(peek()) && !/^[0-9]/.test(peek()) === false) {
-                // Peek is a number, variable, or "("
-                const right = parsePrimary();
-                left = (typeof left === 'number' && typeof right === 'number') ? left * right : 
-                       (typeof left === 'object') ? Vec3.multiply(left, right) : Vec3.multiply(right, left);
-            }
-            // Simplified implicit mul check for x, pi, etc.
-            while (peek() && (peek() === "(" || /^[a-zA-Z_x]/.test(peek()))) {
-                const right = parsePrimary();
-                left = (typeof left === 'number' && typeof right === 'number') ? left * right : 
-                       (typeof left === 'object') ? Vec3.multiply(left, right) : Vec3.multiply(right, left);
-            }
-            return left;
-        };
-
         const parsePower = () => {
-            let left = parseImplicitMul();
+            let left = parsePrimary();
             while (peek() === "^") {
-                consume(); // consume "^"
-                const right = parseImplicitMul();
+                consume();
+                const right = parsePrimary();
                 left = Math.pow(left, right);
             }
             return left;
         };
 
-        const parseMulDiv = () => {
+        const parseImplicitMul = () => {
             let left = parsePower();
+            // Implicit multiplication support (e.g., 4x or 4(x+1))
+            // If next token is a number, variable, or "(", and not an operator, it's implicit multiplication
+            while (peek() && !["+", "-", "*", "/", "^", ",", ")", "<", ">", "=", "<=", ">="].includes(peek())) {
+                const right = parsePower();
+                left = (typeof left === 'number' && typeof right === 'number') ? left * right : 
+                       (typeof left === 'object') ? Vec3.multiply(left, right) : Vec3.multiply(right, left);
+            }
+            return left;
+        };
+
+        const parseMulDiv = () => {
+            let left = parseImplicitMul();
             while (peek() === "*" || peek() === "/") {
                 const op = consume();
-                const right = parsePower();
+                const right = parseImplicitMul();
                 if (op === "*") {
                     left = (typeof left === 'number' && typeof right === 'number') ? left * right : 
                            (typeof left === 'object') ? Vec3.multiply(left, right) : Vec3.multiply(right, left);
@@ -256,8 +239,8 @@ export class MathParser {
     }
 
     static tokenize(str) {
-        // Regex handles strings in quotes, numbers with scientific notation, identifiers, and operators
-        const regex = /"[^"]*"|'[^']*'|[a-zA-Z_]+|[0-9]*\.?[0-9]+(?:e[+-]?[0-9]+)?|\(|\)|,|\+|\-|\*|\/|\^|\<=|\>=|\<|\>|\=/gi;
+        // Regex handles strings in quotes, numbers with scientific notation, identifiers, . notation, and operators
+        const regex = /"[^"]*"|'[^']*'|[a-zA-Z_]+|[0-9]*\.?[0-9]+(?:e[+-]?[0-9]+)?|\.|\(|\)|,|\+|\-|\*|\/|\^|\<=|\>=|\<|\>|\=/gi;
         return str.match(regex) || [];
     }
 }

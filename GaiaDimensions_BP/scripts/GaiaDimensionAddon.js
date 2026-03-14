@@ -6378,37 +6378,11 @@ var MathParser = class _MathParser {
       }
       if (!isNaN(token)) return Number(token);
       const lowerToken = token.toLowerCase();
-      if (context[lowerToken] !== void 0) {
-        const entry = context[lowerToken];
-        if (typeof entry === "function") {
-          if (peek() === "(") {
-            consume();
-            const args = [];
-            if (peek() !== ")") {
-              args.push(parseExpr());
-              while (peek() === ",") {
-                consume();
-                args.push(parseExpr());
-              }
-            }
-            if (consume() !== ")") throw new Error(`Expected ')' after arguments for ${token}`);
-            return entry(...args);
-          } else {
-            try {
-              return entry();
-            } catch (e) {
-              return entry;
-            }
-          }
-        } else {
-          return entry;
-        }
-      }
-      if (token.toLowerCase() === "x" && extra.x !== void 0) {
+      if (lowerToken === "x" && extra.x !== void 0) {
         return extra.x;
       }
-      let current = context[lowerToken] !== void 0 ? context[lowerToken] : extra[lowerToken];
-      if (current !== void 0) {
+      if (context[lowerToken] !== void 0) {
+        let current = context[lowerToken];
         while (peek() === ".") {
           consume();
           const prop = consume();
@@ -6435,37 +6409,43 @@ var MathParser = class _MathParser {
               return current;
             }
           }
+        } else {
+          return current;
+        }
+      }
+      if (extra[lowerToken] !== void 0) {
+        let current = extra[lowerToken];
+        while (peek() === ".") {
+          consume();
+          const prop = consume();
+          current = current[prop];
         }
         return current;
       }
       throw new Error(`Unexpected token: '${token}'`);
     };
-    const parseImplicitMul = () => {
-      let left = parsePrimary();
-      while (peek() && !["+", "-", "*", "/", "^", ",", ")", "<", ">", "=", "<=", ">="].includes(peek()) && !/^[0-9]/.test(peek()) === false) {
-        const right = parsePrimary();
-        left = typeof left === "number" && typeof right === "number" ? left * right : typeof left === "object" ? Vec3.multiply(left, right) : Vec3.multiply(right, left);
-      }
-      while (peek() && (peek() === "(" || /^[a-zA-Z_x]/.test(peek()))) {
-        const right = parsePrimary();
-        left = typeof left === "number" && typeof right === "number" ? left * right : typeof left === "object" ? Vec3.multiply(left, right) : Vec3.multiply(right, left);
-      }
-      return left;
-    };
     const parsePower = () => {
-      let left = parseImplicitMul();
+      let left = parsePrimary();
       while (peek() === "^") {
         consume();
-        const right = parseImplicitMul();
+        const right = parsePrimary();
         left = Math.pow(left, right);
       }
       return left;
     };
-    const parseMulDiv = () => {
+    const parseImplicitMul = () => {
       let left = parsePower();
+      while (peek() && !["+", "-", "*", "/", "^", ",", ")", "<", ">", "=", "<=", ">="].includes(peek())) {
+        const right = parsePower();
+        left = typeof left === "number" && typeof right === "number" ? left * right : typeof left === "object" ? Vec3.multiply(left, right) : Vec3.multiply(right, left);
+      }
+      return left;
+    };
+    const parseMulDiv = () => {
+      let left = parseImplicitMul();
       while (peek() === "*" || peek() === "/") {
         const op = consume();
-        const right = parsePower();
+        const right = parseImplicitMul();
         if (op === "*") {
           left = typeof left === "number" && typeof right === "number" ? left * right : typeof left === "object" ? Vec3.multiply(left, right) : Vec3.multiply(right, left);
         } else {
@@ -6506,8 +6486,71 @@ var MathParser = class _MathParser {
     return result;
   }
   static tokenize(str) {
-    const regex = /"[^"]*"|'[^']*'|[a-zA-Z_]+|[0-9]*\.?[0-9]+(?:e[+-]?[0-9]+)?|\(|\)|,|\+|\-|\*|\/|\^|\<=|\>=|\<|\>|\=/gi;
+    const regex = /"[^"]*"|'[^']*'|[a-zA-Z_]+|[0-9]*\.?[0-9]+(?:e[+-]?[0-9]+)?|\.|\(|\)|,|\+|\-|\*|\/|\^|\<=|\>=|\<|\>|\=/gi;
     return str.match(regex) || [];
+  }
+};
+
+// GaiaDimensions_BP/src/systems/DataSystem.js
+var DataSystem = class {
+  /**
+   * Traverses an object using a path string (e.g., "inventory[0].id")
+   */
+  static getByPath(obj, path) {
+    if (!path) return obj;
+    const parts = path.split(/[.\[\]]+/).filter((p) => p !== "");
+    let current = obj;
+    for (const part of parts) {
+      if (current === void 0 || current === null) return void 0;
+      current = current[part];
+    }
+    return current;
+  }
+  /**
+   * Sets a value in an object using a path string.
+   */
+  static setByPath(obj, path, value) {
+    const parts = path.split(/[.\[\]]+/).filter((p) => p !== "");
+    let current = obj;
+    for (let i = 0; i < parts.length - 1; i++) {
+      const part = parts[i];
+      if (!(part in current)) {
+        current[part] = !isNaN(parts[i + 1]) ? [] : {};
+      }
+      current = current[part];
+    }
+    current[parts[parts.length - 1]] = value;
+    return obj;
+  }
+  /**
+   * Deep merges source into target
+   */
+  static deepMerge(target, source) {
+    for (const key in source) {
+      if (source[key] instanceof Object && key in target) {
+        Object.assign(source[key], this.deepMerge(target[key], source[key]));
+      }
+    }
+    Object.assign(target || {}, source);
+    return target;
+  }
+  /**
+   * Helper to read the "root" data object from a target's dynamic property
+   */
+  static getRoot(target, key = "nbt") {
+    const raw = target.getDynamicProperty(key);
+    if (!raw) return {};
+    try {
+      return JSON.parse(raw);
+    } catch (e) {
+      return {};
+    }
+  }
+  /**
+   * Helper to save the "root" data object
+   */
+  static saveRoot(target, data, key = "nbt") {
+    target.setDynamicProperty(key, JSON.stringify(data));
   }
 };
 
@@ -6538,10 +6581,28 @@ function registerGaiaCommands(registry) {
         const expression = [p1, p2, p3, p4, p5, p6, p7, p8].filter((p) => p !== void 0).join(" ");
         if (!expression) {
           player.sendMessage("\xA7cUsage: /gaiadimension:math <expression>");
-          player.sendMessage('\xA77Example: /gaiadimension:math "sub(v(1,0,0), v(0,1,0))"');
           return;
         }
-        const result = MathParser.evaluate(expression, { pos: player.location });
+        const pos = { x: player.location.x, y: player.location.y, z: player.location.z };
+        const view = player.getViewDirection();
+        const rot = player.getRotation();
+        const contextExtra = {
+          pos,
+          view,
+          rot,
+          self: player,
+          lp: pos,
+          // Location Pos shorthand
+          lx: pos.x,
+          ly: pos.y,
+          lz: pos.z,
+          vx: view.x,
+          vy: view.y,
+          vz: view.z,
+          rx: rot.x,
+          ry: rot.y
+        };
+        const result = MathParser.evaluate(expression, contextExtra);
         let output = "";
         if (typeof result === "object" && result !== null) {
           if ("x" in result && "y" in result && "z" in result) {
@@ -6581,16 +6642,32 @@ function registerGaiaCommands(registry) {
         const expression = [p1, p2, p3, p4, p5, p6, p7, p8].filter((p) => p !== void 0).join(" ");
         if (!expression) {
           player.sendMessage("\xA7cUsage: /gaiadimension:tpmath <expression>");
-          player.sendMessage('\xA77Example: /gaiadimension:tpmath "pos + v(10, 0, 10)"');
           return;
         }
-        const result = MathParser.evaluate(expression, { pos: player.location });
+        const pos = { x: player.location.x, y: player.location.y, z: player.location.z };
+        const view = player.getViewDirection();
+        const rot = player.getRotation();
+        const contextExtra = {
+          pos,
+          view,
+          rot,
+          self: player,
+          lp: pos,
+          lx: pos.x,
+          ly: pos.y,
+          lz: pos.z,
+          vx: view.x,
+          vy: view.y,
+          vz: view.z,
+          rx: rot.x,
+          ry: rot.y
+        };
+        const result = MathParser.evaluate(expression, contextExtra);
         if (typeof result === "object" && result !== null && "x" in result && "y" in result && "z" in result) {
           player.teleport(result);
           player.sendMessage(`\xA78[\xA76TPMath\xA78] \xA77Teleported to \xA7a${Vec3.toString(result)}`);
         } else {
-          player.sendMessage("\xA7cError: The expression must result in a Vector3 (v(x,y,z)).");
-          player.sendMessage(`\xA77Got: \xA7f${result}`);
+          player.sendMessage("\xA7cError: The expression must result in a Vector3.");
         }
       } catch (e) {
         player.sendMessage(`\xA78[\xA76TPMath\xA78] \xA7cError: ${e.message}`);
@@ -6600,80 +6677,108 @@ function registerGaiaCommands(registry) {
   });
   registry.registerCommand({
     name: "gaiadimension:data",
-    description: "Manage dynamic properties on blocks, entities, or yourself.",
+    description: "Java-like data manipulation command for Bedrock Port.",
     permissionLevel: CommandPermissionLevel.GameDirectors,
     optionalParameters: [
       { name: "op", type: CustomCommandParamType.String },
       { name: "target", type: CustomCommandParamType.String },
-      { name: "key", type: CustomCommandParamType.String },
+      { name: "path", type: CustomCommandParamType.String },
       { name: "v1", type: CustomCommandParamType.String },
       { name: "v2", type: CustomCommandParamType.String },
       { name: "v3", type: CustomCommandParamType.String },
       { name: "v4", type: CustomCommandParamType.String },
       { name: "v5", type: CustomCommandParamType.String }
     ]
-  }, (origin, op, target, key, v1, v2, v3, v4, v5) => {
+  }, (origin, op, target, path, v1, v2, v3, v4, v5) => {
     const player = origin.sourceEntity;
     if (!(player instanceof Player2)) return;
     system30.run(() => {
-      const operation = op ? op.toLowerCase() : "get";
-      const targetType = target ? target.toLowerCase() : "self";
-      let targetObj = null;
-      if (targetType === "block") {
-        const ray = player.getBlockFromViewDirection({ maxDistance: 10 });
-        targetObj = ray ? ray.block : null;
-      } else if (targetType === "entity") {
-        const ray = player.getEntitiesFromViewDirection({ maxDistance: 10 });
-        targetObj = ray && ray.length > 0 ? ray[0].entity : null;
-      } else if (targetType === "self") {
-        targetObj = player;
-      }
-      if (!targetObj) {
-        player.sendMessage(`\xA7cTarget '${targetType}' not found or out of range.`);
-        return;
-      }
       try {
+        const operation = op ? op.toLowerCase() : "get";
+        const targetType = target ? target.toLowerCase() : "self";
+        const getTarget = (type2) => {
+          if (type2 === "block") {
+            const ray = player.getBlockFromViewDirection({ maxDistance: 10 });
+            return ray ? ray.block : null;
+          } else if (type2 === "entity") {
+            const ray = player.getEntitiesFromViewDirection({ maxDistance: 10 });
+            return ray && ray.length > 0 ? ray[0].entity : null;
+          } else if (type2 === "self") {
+            return player;
+          }
+          return null;
+        };
+        let targetObj = getTarget(targetType);
+        if (!targetObj) throw new Error(`Target '${targetType}' not found or out of range.`);
+        const data = DataSystem.getRoot(targetObj);
         if (operation === "get") {
-          if (key) {
-            const val = targetObj.getDynamicProperty(key);
-            player.sendMessage(`\xA78[\xA76Data\xA78] \xA7a${key} \xA77= \xA7f${typeof val === "object" ? JSON.stringify(val) : val}`);
-          } else {
-            const ids = targetObj.getDynamicPropertyIds();
-            player.sendMessage(`\xA78[\xA76Data\xA78] \xA77Properties on \xA7f${targetType}:`);
-            ids.forEach((id) => {
-              const val = targetObj.getDynamicProperty(id);
-              player.sendMessage(`\xA77 - \xA7a${id}\xA77: \xA7f${typeof val === "object" ? JSON.stringify(val) : val}`);
-            });
+          const val = DataSystem.getByPath(data, path);
+          player.sendMessage(`\xA78[\xA76Data\xA78] \xA77Value at \xA7a${path || "root"}\xA77: \xA7f${JSON.stringify(val, null, 2)}`);
+        } else if (operation === "merge") {
+          const jsonStr = [path, v1, v2, v3, v4, v5].filter((p) => p !== void 0).join(" ");
+          const source = JSON.parse(jsonStr);
+          DataSystem.deepMerge(data, source);
+          DataSystem.saveRoot(targetObj, data);
+          player.sendMessage(`\xA78[\xA76Data\xA78] \xA77Merged data into \xA7f${targetType}`);
+        } else if (operation === "modify") {
+          const subOp = v1 ? v1.toLowerCase() : "set";
+          const sourceType = v2 ? v2.toLowerCase() : "value";
+          let finalVal = void 0;
+          if (sourceType === "value") {
+            const rawVal = [v3, v4, v5].filter((p) => p !== void 0).join(" ");
+            finalVal = rawVal;
+            try {
+              finalVal = JSON.parse(rawVal);
+            } catch (e) {
+            }
+            if (!isNaN(rawVal)) finalVal = Number(rawVal);
+            if (rawVal === "true") finalVal = true;
+            if (rawVal === "false") finalVal = false;
+          } else if (sourceType === "from") {
+            const fromSourceType = v3 ? v3.toLowerCase() : "self";
+            const fromSourcePath = v4;
+            const sourceObj = getTarget(fromSourceType);
+            if (!sourceObj) throw new Error(`Source '${fromSourceType}' not found.`);
+            const sourceData = DataSystem.getRoot(sourceObj);
+            finalVal = DataSystem.getByPath(sourceData, fromSourcePath);
           }
-        } else if (operation === "set") {
-          if (!key || v1 === void 0) {
-            player.sendMessage("\xA7cUsage: /data set <target> <key> <value>");
-            return;
+          if (subOp === "set") {
+            DataSystem.setByPath(data, path, finalVal);
           }
-          let value = v1;
-          if (v1 === "true") value = true;
-          else if (v1 === "false") value = false;
-          else if (!isNaN(v1)) value = Number(v1);
-          targetObj.setDynamicProperty(key, value);
-          player.sendMessage(`\xA78[\xA76Data\xA78] \xA77Set \xA7a${key} \xA77to \xA7f${value} \xA77on \xA7f${targetType}`);
+          DataSystem.saveRoot(targetObj, data);
+          player.sendMessage(`\xA78[\xA76Data\xA78] \xA77Modified \xA7a${path} \xA77on \xA7f${targetType}`);
         } else if (operation === "remove") {
-          if (!key) {
-            player.sendMessage("\xA7cUsage: /data remove <target> <key>");
-            return;
-          }
-          targetObj.setDynamicProperty(key, void 0);
-          player.sendMessage(`\xA78[\xA76Data\xA78] \xA77Removed \xA7a${key} \xA77from \xA7f${targetType}`);
+          if (!path) throw new Error("Path required for remove.");
+          DataSystem.setByPath(data, path, void 0);
+          DataSystem.saveRoot(targetObj, data);
+          player.sendMessage(`\xA78[\xA76Data\xA78] \xA77Removed \xA7a${path} \xA77from \xA7f${targetType}`);
         } else if (operation === "math") {
-          if (!key || v1 === void 0) {
-            player.sendMessage("\xA7cUsage: /data math <target> <key> <expression>");
-            return;
-          }
           const expression = [v1, v2, v3, v4, v5].filter((p) => p !== void 0).join(" ");
-          const result = MathParser.evaluate(expression, { pos: player.location });
-          targetObj.setDynamicProperty(key, result);
-          player.sendMessage(`\xA78[\xA76Data\xA78] \xA77Stored result of \xA7f'${expression}' \xA77into \xA7a${key} \xA77(Result: \xA7f${typeof result === "object" ? Vec3.toString(result) : result}\xA77)`);
+          const pos = { x: player.location.x, y: player.location.y, z: player.location.z };
+          const view = player.getViewDirection();
+          const rot = player.getRotation();
+          const contextExtra = {
+            pos,
+            view,
+            rot,
+            self: player,
+            lp: pos,
+            lx: pos.x,
+            ly: pos.y,
+            lz: pos.z,
+            vx: view.x,
+            vy: view.y,
+            vz: view.z,
+            rx: rot.x,
+            ry: rot.y,
+            ...data
+          };
+          const result = MathParser.evaluate(expression, contextExtra);
+          DataSystem.setByPath(data, path, result);
+          DataSystem.saveRoot(targetObj, data);
+          player.sendMessage(`\xA78[\xA76Data\xA78] \xA77Stored math result into \xA7a${path}`);
         } else {
-          player.sendMessage("\xA7cUnknown operation. Use get, set, remove, or math.");
+          throw new Error("Unknown operation. Use get, merge, modify, remove, or math.");
         }
       } catch (e) {
         player.sendMessage(`\xA78[\xA76Data\xA78] \xA7cError: ${e.message}`);
