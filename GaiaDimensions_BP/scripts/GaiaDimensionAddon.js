@@ -6786,7 +6786,7 @@ function registerGaiaCommands(registry) {
           throw new Error("Unknown operation. Use get, merge, modify, remove, or math.");
         }
       } catch (e) {
-        player.sendMessage(`\xA78[\xA76Data\xA78] \xA7cError: ${e.message}`);
+        player.sendMessage(`\xA7cError: ${e.message}`);
       }
     });
     return { status: 0 };
