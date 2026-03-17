@@ -40,7 +40,7 @@ interface PortalTask {
     state: "WAITING" | "PREPARING" | "BUILDING" | "TELEPORTING";
 }
 
-const pendingPortalTasks: PortalTask[] = [];
+export const PENDING_TASKS: PortalTask[] = [];
 
 export class DimensionSystem {
     static isInGaia(entity: { dimension: Dimension, location: Vector3, isValid: boolean }): boolean {
@@ -130,7 +130,7 @@ export class DimensionSystem {
             targetDim.runCommand(`tickingarea add circle ${Math.floor(targetX)} 100 ${Math.floor(targetZ)} 2 ${areaName}`);
         } catch(e) {}
 
-        pendingPortalTasks.push({
+        PENDING_TASKS.push({
             playerId: player.id,
             targetDimId: targetDimId,
             targetX: targetX,
@@ -161,15 +161,15 @@ export class DimensionSystem {
 
 // Sequential Task Processor
 system.runInterval(() => {
-    if (pendingPortalTasks.length === 0) return;
+    if (PENDING_TASKS.length === 0) return;
 
-    for (let i = pendingPortalTasks.length - 1; i >= 0; i--) {
-        const task = pendingPortalTasks[i];
+    for (let i = PENDING_TASKS.length - 1; i >= 0; i--) {
+        const task = PENDING_TASKS[i];
         const player = world.getEntity(task.playerId) as Player | undefined;
 
         if (!player || !player.isValid) {
             try { world.getDimension(task.targetDimId).runCommand(`tickingarea remove ${task.areaName}`); } catch(e) {}
-            pendingPortalTasks.splice(i, 1);
+            PENDING_TASKS.splice(i, 1);
             continue;
         }
 
@@ -276,7 +276,7 @@ system.runInterval(() => {
                 } catch(e) {}
             }, 100);
 
-            pendingPortalTasks.splice(i, 1);
+            PENDING_TASKS.splice(i, 1);
         }
     }
 }, 10);
@@ -383,3 +383,4 @@ world.afterEvents.gameRuleChange.subscribe(({rule, value}) => {
         world.getAllPlayers().forEach(player => player.onScreenDisplay.setActionBar(`§.`));
     }
 });
+

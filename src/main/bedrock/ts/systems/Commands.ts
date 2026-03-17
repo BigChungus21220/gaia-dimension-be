@@ -1,8 +1,9 @@
-import { Player, system, CommandPermissionLevel, CustomCommandParamType, CustomCommandRegistry, CommandOrigin } from "@minecraft/server";
+import { Player, system, world, CommandPermissionLevel, CustomCommandParamType, CustomCommandRegistry, CommandOrigin, BlockPermutation, Vector3 } from "@minecraft/server";
 import { DimensionSystem, GaiaDimension } from "../world/Gaia.js";
 import { Vec3 } from "../Vec3.js";
 import { MathParser } from "./MathParser.js";
 import { DataSystem } from "./DataSystem.js";
+import { BIOME_VISUALS } from "../config/biome_visuals.js";
 
 /**
  * Formats snake_case IDs to Title Case
@@ -16,6 +17,123 @@ function formatName(id: string): string {
  * @param {CustomCommandRegistry} registry 
  */
 export function registerGaiaCommands(registry: CustomCommandRegistry) {
+    // /gaiadimension:setbiome <biome: string> <radius: string> [shape: string] [epic: string]
+    registry.registerCommand({
+        name: "gaiadimension:setbiome",
+        description: 'Transform the biome. Usage: /gaiadimension:setbiome "crystal_plains" "20" "circle" "true"',
+        permissionLevel: CommandPermissionLevel.GameDirectors,
+        optionalParameters: [
+            { name: "biome", type: CustomCommandParamType.String },
+            { name: "radius", type: CustomCommandParamType.String },
+            { name: "shape", type: CustomCommandParamType.String },
+            { name: "epic", type: CustomCommandParamType.String }
+        ]
+    }, (origin: CommandOrigin, biome?: string, radiusStr?: string, shape: string = "circle", epic?: string) => {
+        const player = origin.sourceEntity;
+        if (!(player instanceof Player)) return;
+
+        if (!biome || !radiusStr) {
+            player.sendMessage('§cUsage: /gaiadimension:setbiome "biome" "radius" ["shape"] ["epic"]');
+            return { status: 0 };
+        }
+
+        // Strip quotes and parse
+        const cleanBiome = biome.replace(/["']/g, "");
+        const radius = Number(radiusStr.replace(/["']/g, ""));
+        const cleanShape = (shape || "circle").replace(/["']/g, "");
+        const isEpic = epic?.toLowerCase().replace(/["']/g, "") === "true" || epic?.toLowerCase().replace(/["']/g, "") === "epic";
+
+        if (isNaN(radius)) {
+            player.sendMessage("§cInvalid radius. Please provide a number.");
+            return { status: 0 };
+        }
+
+        const visuals = BIOME_VISUALS[cleanBiome];
+        if (!visuals) {
+            player.sendMessage(`§cUnknown biome: ${cleanBiome}. Valid: ${Object.keys(BIOME_VISUALS).join(", ")}`);
+            return { status: 0 };
+        }
+
+        const center = { x: Math.floor(player.location.x), y: Math.floor(player.location.y), z: Math.floor(player.location.z) };
+        const dim = player.dimension;
+
+        player.sendMessage(`§6[Gaia] §7Commencing transformation to §e${formatName(cleanBiome)}§7...`);
+
+        const transformLocation = (loc: Vector3) => {
+            try {
+                // 1. Change Metadata Bedrock
+                const metaBlock = dim.getBlock({ x: loc.x, y: 0, z: loc.z });
+                if (metaBlock) metaBlock.setType(visuals.bedrock);
+
+                // 2. Change Surface
+                const topY = DimensionSystem.getTopBlock(dim, loc.x, loc.z, loc.y + 10);
+                const surfaceBlock = dim.getBlock({ x: loc.x, y: topY - 1, z: loc.z });
+                if (surfaceBlock && !surfaceBlock.isAir) {
+                    surfaceBlock.setType(visuals.surface);
+                    
+                    // 3. Dirt Layer
+                    const dirtBlock = dim.getBlock({ x: loc.x, y: topY - 2, z: loc.z });
+                    if (dirtBlock) dirtBlock.setType(visuals.dirt);
+
+                    // 4. Random Foliage & Flowers
+                    const rand = Math.random();
+                    if (rand < 0.05 && visuals.foliage.length > 0) {
+                        const feature = visuals.foliage[Math.floor(Math.random() * visuals.foliage.length)];
+                        dim.runCommand(`execute positioned ${loc.x} ${topY} ${loc.z} run feature place ${feature}`);
+                    } else if (rand < 0.15 && visuals.groundCover.length > 0) {
+                        const feature = visuals.groundCover[Math.floor(Math.random() * visuals.groundCover.length)];
+                        dim.runCommand(`execute positioned ${loc.x} ${topY} ${loc.z} run feature place ${feature}`);
+                    } else if (rand < 0.25) {
+                        const flowers = ["gaiadimension:tilibl", "gaiadimension:tiligr", "gaiadimension:tilimy", "gaiadimension:tiliol", "gaiadimension:tiliou", "gaiadimension:tilipi", "gaiadimension:tilipu"];
+                        const flower = flowers[Math.floor(Math.random() * flowers.length)];
+                        const airBlock = dim.getBlock({ x: loc.x, y: topY, z: loc.z });
+                        if (airBlock && airBlock.isAir) airBlock.setType(flower);
+                    }
+                }
+            } catch (e) {}
+        };
+
+        if (!isEpic) {
+            system.run(() => {
+                for (let x = -radius; x <= radius; x++) {
+                    for (let z = -radius; z <= radius; z++) {
+                        const dist = Math.sqrt(x * x + z * z);
+                        if (cleanShape === "circle" && dist > radius) continue;
+                        transformLocation({ x: center.x + x, y: center.y, z: center.z + z });
+                    }
+                }
+                dim.spawnEntity("minecraft:lightning_bolt", center);
+                dim.playSound("ambient.weather.thunder", center);
+            });
+        } else {
+            let currentRadius = 0;
+            const interval = system.runInterval(() => {
+                const r = currentRadius;
+                for (let theta = 0; theta < 360; theta += 2) {
+                    const rad = (theta * Math.PI) / 180;
+                    const x = Math.round(r * Math.cos(rad));
+                    const z = Math.round(r * Math.sin(rad));
+                    transformLocation({ x: center.x + x, y: center.y, z: center.z + z });
+                }
+
+                if (r % 5 === 0) {
+                    const fxPos = { x: center.x + r, y: center.y, z: center.z };
+                    dim.playSound("item.trident.thunder", fxPos, { volume: 0.5 });
+                    if (Math.random() < 0.3) dim.spawnEntity("minecraft:lightning_bolt", { x: center.x + (Math.random() * r * 2 - r), y: center.y, z: center.z + (Math.random() * r * 2 - r) });
+                }
+
+                currentRadius++;
+                if (currentRadius > radius) {
+                    system.clearRun(interval);
+                    dim.playSound("ui.toast.challenge_complete", center);
+                    player.sendMessage("§6[Gaia] §aTransformation Complete.");
+                }
+            }, 1);
+        }
+
+        return { status: 0 };
+    });
+
     // /gaiadimension:math [expression...]
     registry.registerCommand({
         name: "gaiadimension:math",
@@ -43,14 +161,13 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
                     return;
                 }
 
-                // Robust player data context
                 const pos = { x: player.location.x, y: player.location.y, z: player.location.z };
                 const view = player.getViewDirection();
                 const rot = player.getRotation();
                 const contextExtra = { 
                     pos, view, rot, 
                     self: player,
-                    lp: pos, // Location Pos shorthand
+                    lp: pos,
                     lx: pos.x, ly: pos.y, lz: pos.z,
                     vx: view.x, vy: view.y, vz: view.z,
                     rx: rot.x, ry: rot.y
@@ -338,7 +455,6 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
             if (inGaia && GaiaDimension) {
                 const biome = DimensionSystem.getBiome(player);
                 player.sendMessage("§7Current Biome: §e" + formatName(biome));
-                // Map real world coordinates to Gaia-relative coordinates (250,000 -> 0)
                 coords = GaiaDimension.offset(player.location);
             }
             
@@ -379,4 +495,3 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
         return { status: 0 };
     });
 }
-
