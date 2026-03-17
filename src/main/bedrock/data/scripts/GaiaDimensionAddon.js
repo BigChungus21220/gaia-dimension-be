@@ -6749,32 +6749,37 @@ function registerGaiaCommands(registry) {
       try {
         const metaBlock = dim.getBlock({ x: loc.x, y: 0, z: loc.z });
         if (metaBlock) metaBlock.setType(visuals.bedrock);
-        let topY = DimensionSystem.getTopBlock(dim, loc.x, loc.z, loc.y + 20);
-        let surfaceBlock = dim.getBlock({ x: loc.x, y: topY - 1, z: loc.z });
-        while (surfaceBlock && !surfaceBlock.isAir) {
-          const tid = surfaceBlock.typeId;
-          if (tid.includes("log") || tid.includes("wood") || tid.includes("leaves") || tid.includes("stem")) {
-            topY--;
-            surfaceBlock = dim.getBlock({ x: loc.x, y: topY - 1, z: loc.z });
+        let currentY = DimensionSystem.getTopBlock(dim, loc.x, loc.z, loc.y + 40);
+        let surfaceBlock = null;
+        while (currentY > dim.heightRange.min) {
+          const b = dim.getBlock({ x: loc.x, y: currentY - 1, z: loc.z });
+          if (!b || b.isAir) {
+            currentY--;
             continue;
           }
+          const tid = b.typeId;
+          if (tid.includes("log") || tid.includes("wood") || tid.includes("leaves") || tid.includes("stem") || tid.includes("flower") || tid === "minecraft:tallgrass" || tid === "minecraft:grass" || tid.includes("crystal_growth") || tid.includes("agathum") || tid.includes("tucher") || tid.includes("sapling") || tid.includes("bush")) {
+            currentY--;
+            continue;
+          }
+          surfaceBlock = b;
           break;
         }
         if (surfaceBlock && !surfaceBlock.isAir) {
           surfaceBlock.setType(visuals.surface);
-          const dirtBlock = dim.getBlock({ x: loc.x, y: topY - 2, z: loc.z });
+          const dirtBlock = dim.getBlock({ x: loc.x, y: currentY - 2, z: loc.z });
           if (dirtBlock) dirtBlock.setType(visuals.dirt);
           const rand = Math.random();
           if (rand < 0.05 && visuals.foliage.length > 0) {
             const feature = visuals.foliage[Math.floor(Math.random() * visuals.foliage.length)];
-            dim.runCommand(`execute positioned ${loc.x} ${topY} ${loc.z} run feature place ${feature}`);
+            dim.runCommand(`execute positioned ${loc.x} ${currentY} ${loc.z} run feature place ${feature}`);
           } else if (rand < 0.15 && visuals.groundCover.length > 0) {
             const feature = visuals.groundCover[Math.floor(Math.random() * visuals.groundCover.length)];
-            dim.runCommand(`execute positioned ${loc.x} ${topY} ${loc.z} run feature place ${feature}`);
+            dim.runCommand(`execute positioned ${loc.x} ${currentY} ${loc.z} run feature place ${feature}`);
           } else if (rand < 0.25) {
             const flowers = ["gaiadimension:tilibl", "gaiadimension:tiligr", "gaiadimension:tilimy", "gaiadimension:tiliol", "gaiadimension:tiliou", "gaiadimension:tilipi", "gaiadimension:tilipu"];
             const flower = flowers[Math.floor(Math.random() * flowers.length)];
-            const airBlock = dim.getBlock({ x: loc.x, y: topY, z: loc.z });
+            const airBlock = dim.getBlock({ x: loc.x, y: currentY, z: loc.z });
             if (airBlock && airBlock.isAir) airBlock.setType(flower);
           }
         }
