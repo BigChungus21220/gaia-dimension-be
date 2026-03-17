@@ -177,21 +177,36 @@ export class WorldgenPipeline {
     }
 
     _genPickers() {
-        const maxDepth = Math.max(...this.biomes.map(b => b.layers.length));
+        // 1. Expand all biomes to have a flat array of 1-block-deep layers
+        const expandedBiomes = this.biomes.map(biome => {
+            const flatLayers = [];
+            biome.layers.forEach(layer => {
+                for (let i = 0; i < layer.depth; i++) {
+                    flatLayers.push(layer.block);
+                }
+            });
+            return { ...biome, flatLayers };
+        });
+
+        const maxDepth = Math.max(...expandedBiomes.map(b => b.flatLayers.length));
         const layerSelectors = [];
 
-        // 1. Generate Stone Catch-all (for t.layer > 13)
-        const stoneId = this._genCondition("stone_catchall", `${this.namespace}:gen/gaia_blocks/gaia_stone`, "t.layer > 13");
+        // 2. Water condition (t.layer < 1)
+        const waterId = this._genCondition("water_filling", "flakey:gen/blocks/water", "t.layer < 1");
+        layerSelectors.push(waterId);
+
+        // 3. Stone Catch-all (for t.layer > maxDepth)
+        const stoneId = this._genCondition("stone_catchall", `${this.namespace}:gen/gaia_blocks/gaia_stone`, `t.layer > ${maxDepth}`);
         layerSelectors.push(stoneId);
 
-        // 2. Generate Layer Aggregate Features (layer1.json, etc.)
+        // 4. Generate Layer Aggregate Features (layer1.json, etc.)
         for (let d = 0; d < maxDepth; d++) {
             const biomeConds = [];
-            this.biomes.forEach(biome => {
-                if (biome.layers[d]) {
+            expandedBiomes.forEach(biome => {
+                if (biome.flatLayers[d]) {
                     const condId = this._genCondition(
                         `${biome.name}_layer_${d}`,
-                        biome.layers[d].block,
+                        biome.flatLayers[d],
                         `t.biome_id == ${biome.id}`
                     );
                     biomeConds.push(condId);
@@ -208,7 +223,7 @@ export class WorldgenPipeline {
                 }
             });
 
-            // 3. Generate Condition Feature for this Layer (t.layer == X)
+            // 5. Generate Condition Feature for this Layer (t.layer == X)
             const layerCondId = this._genCondition(
                 `layer_selector_${d}`,
                 layerId,
@@ -217,7 +232,7 @@ export class WorldgenPipeline {
             layerSelectors.push(layerCondId);
         }
 
-        // 4. block_picker.json
+        // 6. block_picker.json
         this._write(`features/gen/base/block_picker.json`, {
             "format_version": "1.20.20",
             "minecraft:aggregate_feature": {

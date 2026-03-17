@@ -84,7 +84,8 @@ gaia.addLogic(`
     };
 `);
 
-// --- 2. BIOME REGISTRATION (REPLICATING THE 13-LAYER PATTERN) ---
+// --- 2. BIOME REGISTRATION ---
+// Standard Gaia Biomes with 13-layer depth expansion
 const biomes = [
     { id: 1,  name: 'mineral_river',      surface: 'salt',            dirt: 'salt_rock' },
     { id: 2,  name: 'volcanic_lands',     surface: 'charred_grass',    dirt: 'volcanic_rock' },
@@ -105,12 +106,9 @@ const biomes = [
 
 biomes.forEach(b => {
     const biome = new Biome(b.name, b.id)
-        .addLayer(`gaiadimension:gen/gaia_blocks/${b.surface}`, 1)  // Layer 1
-        .addLayer(`gaiadimension:gen/gaia_blocks/${b.dirt}`, 4)     // Layers 2-5
-        .addLayer(`gaiadimension:gen/gaia_blocks/${b.dirt}`, 1)
-        .addLayer(`gaiadimension:gen/gaia_blocks/${b.dirt}`, 1)
-        .addLayer(`gaiadimension:gen/gaia_blocks/${b.dirt}`, 1)
-        .addLayer('gaiadimension:gen/gaia_blocks/gaia_stone', 8);   // Layers 6-13
+        .addLayer(`gaiadimension:gen/gaia_blocks/${b.surface}`, 1)  // t.layer == 1
+        .addLayer(`gaiadimension:gen/gaia_blocks/${b.dirt}`, 4)     // t.layer == 2, 3, 4, 5
+        .addLayer('gaiadimension:gen/gaia_blocks/gaia_stone', 8);   // t.layer == 6, 7, 8, 9, 10, 11, 12, 13
     
     gaia.registerBiome(biome);
 });
