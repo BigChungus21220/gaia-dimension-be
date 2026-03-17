@@ -26,6 +26,7 @@ import { registerCustomTool } from "./durability.js";
 import { registerGaiaCommands } from "./systems/Commands.js";
 import { registerFireStarterComponent } from "./items/FireStarter.js";
 import { registerCleanerComponent } from "./systems/Cleaner.js";
+import { initializeGlitterGrassSync } from "./blocks/GlitterGrassSync.js";
 import "./world/CoordinateDisplay.js";
 import "./world/Biome.js";
 import "./world/Fog.js";
@@ -38,6 +39,7 @@ initializeEventManager();
 initializeScriptEvents();
 initializeGeyser();
 initializeLightMixin();
+initializeGlitterGrassSync();
 // initializeSkybox();
 registerCustomTool();
 
