@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "axis=x": { "model": "gaiadimension:block/gaia_portal_ns" },
+    "axis=z": { "model": "gaiadimension:block/gaia_portal_ew" }
+  }
+}

@@ -1,0 +1,14 @@
+{
+	"format_version": "1.20.20",
+	"minecraft:weighted_random_feature": {
+		"description": {
+			"identifier": "gaiadimension:ground_cover/gold_orb_tucher_randomizer"
+		},
+		"features": [
+			[ "gaiadimension:ground_cover/gold_orb_tucher_0", 1 ],
+			[ "gaiadimension:ground_cover/gold_orb_tucher_1", 1 ],
+			[ "gaiadimension:ground_cover/gold_orb_tucher_2", 1 ],
+			[ "gaiadimension:ground_cover/gold_orb_tucher_3", 1 ]
+		]
+	}
+}

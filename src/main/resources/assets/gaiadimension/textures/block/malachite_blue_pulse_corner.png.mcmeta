@@ -1,0 +1,19 @@
+{
+  "ctm": {
+    "ctm_version": 1,
+    "type": "CTM",
+    "layer": "CUTOUT",
+    "textures":[
+      "gaiadimension:block/malachite_blue_pulse_ctm"
+    ],
+    "extra": {
+      "ignore_states": true,
+      "light": 15,
+      "connect_inside": true,
+      "connect_to": [
+        { "block": "gaiadimension:malachite_pulsing_tiles" },
+        { "block": "gaiadimension:malachite_pulsing_floor_stairs" }
+      ]
+    }
+  }
+}

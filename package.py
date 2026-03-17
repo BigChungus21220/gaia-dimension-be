@@ -3,8 +3,8 @@ import zipfile
 import shutil
 
 # --- CONFIGURATION ---
-BP_PATH = "GaiaDimensions_BP"
-RP_PATH = "GaiaDimension_RP"
+BP_PATH = "data"
+RP_PATH = "resources"
 BUILD_DIR = "build"
 ADDON_NAME = "GaiaDimension"
 
@@ -44,8 +44,8 @@ def package():
         shutil.rmtree(BUILD_DIR)
     os.makedirs(BUILD_DIR)
 
-    bp_mcpack = os.path.join(BUILD_DIR, f"{BP_PATH}.mcpack")
-    rp_mcpack = os.path.join(BUILD_DIR, f"{RP_PATH}.mcpack")
+    bp_mcpack = os.path.join(BUILD_DIR, "GaiaDimensions_BP.mcpack")
+    rp_mcpack = os.path.join(BUILD_DIR, "GaiaDimension_RP.mcpack")
     addon_file = os.path.join(BUILD_DIR, f"{ADDON_NAME}.mcaddon")
 
     # 2. Create BP .mcpack

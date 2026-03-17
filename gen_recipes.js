@@ -2,9 +2,9 @@ const fs = require('fs');
 const path = require('path');
 
 const SOURCE_DIR = 'java recipes';
-const BP_RECIPES_DIR = 'GaiaDimensions_BP/recipes';
-const PURIFIER_OUT = 'GaiaDimensions_BP/src/furnace_recipes/purifier/PurifierRecipes.js';
-const RESTRUCTURER_OUT = 'GaiaDimensions_BP/src/furnace_recipes/restructurer/RestructurerRecipes.js';
+const BP_RECIPES_DIR = 'data/recipes';
+const PURIFIER_OUT = 'data/src/furnace_recipes/purifier/PurifierRecipes.js';
+const RESTRUCTURER_OUT = 'data/src/furnace_recipes/restructurer/RestructurerRecipes.js';
 
 const WOOD_TYPES = [
     'aura', 'blue_agate', 'burnt_agate', 'corrupted', 'fire_agate', 

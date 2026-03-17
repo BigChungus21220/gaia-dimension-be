@@ -1,0 +1,57 @@
+{
+  "format_version": "1.20.20",
+  "minecraft:tree_feature": {
+    "description": {
+      "identifier": "gaiadimension:foliage/pink_agate_tree"
+    },
+    "trunk": {
+      "trunk_block": "gaiadimension:pink_agate_log",
+      "trunk_height": 2,
+      "height_modifier": 3
+    },
+    "acacia_canopy": {
+      "canopy_size": 3,
+      "leaf_block": "gaiadimension:pink_agate_leaves"
+    },
+    "base_block": [
+      "gaiadimension:heavy_soil"
+    ],
+    "may_grow_on": [
+      "gaiadimension:pink_glitter_grass",
+      "gaiadimension:heavy_soil"
+    ],
+    "may_replace": [
+      "minecraft:air",
+      "gaiadimension:aura_leaves",
+      "gaiadimension:fire_agate_leaves",
+      "gaiadimension:burnt_agate_leaves",
+      "gaiadimension:corrupted_leaves",
+      "gaiadimension:fossilized_leaves",
+      "gaiadimension:green_agate_leaves",
+      "gaiadimension:blue_agate_leaves",
+      "gaiadimension:pink_agate_leaves",
+      "gaiadimension:purple_agate_leaves"
+    ],
+    "may_grow_through": [
+      "gaiadimension:orange_glitter_grass",
+      "gaiadimension:blue_glitter_grass",
+      "gaiadimension:green_glitter_grass",
+      "gaiadimension:charred_grass",
+      "gaiadimension:pale_green_glitter_grass",
+      "gaiadimension:purple_glitter_grass",
+      "gaiadimension:orange_glitter_grass",
+      "gaiadimension:soft_grass",
+      "gaiadimension:murky_grass",
+      "gaiadimension:corrupted_grass",
+      "gaiadimension:pink_glitter_grass",
+      "gaiadimension:peach_glitter_grass",
+      "gaiadimension:orange_glitter_grass",
+      "gaiadimension:light_soil",
+      "gaiadimension:heavy_soil",
+      "gaiadimension:cinder",
+      "gaiadimension:corrupted_soil",
+      "gaiadimension:boggy_soil",
+      "gaiadimension:light_soil"
+    ]
+  }
+}

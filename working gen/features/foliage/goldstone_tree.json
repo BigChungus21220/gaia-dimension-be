@@ -1,0 +1,68 @@
+{
+  "format_version": "1.20.20",
+  "minecraft:tree_feature": {
+    "description": {
+      "identifier": "gaiadimension:foliage/goldstone_tree"
+    },
+    "fancy_trunk": {
+      "trunk_height": {
+        "base": 8,
+        "variance": 10,
+        "scale": 0.618
+      },
+      "trunk_width": 1,
+      "trunk_block": "gaiadimension:corrupted_log",
+      "branches": {
+        "slope": 0.381,
+        "density": 0.0,
+        "min_altitude_factor": 0.2
+      },
+      "width_scale": 1.0,
+      "foliage_altitude_factor": 0.3
+    },
+    "fancy_canopy": {
+      "height": 3,
+      "radius": 2,
+      "leaf_block": "gaiadimension:corrupted_leaves"
+    },
+    "base_block": [
+      "gaiadimension:corrupted_soil"
+    ],
+    "may_grow_on": [
+      "gaiadimension:corrupted_grass"
+    ],
+    "may_replace": [
+      "minecraft:air",
+      "gaiadimension:aura_leaves",
+      "gaiadimension:fire_agate_leaves",
+      "gaiadimension:burnt_agate_leaves",
+      "gaiadimension:corrupted_leaves",
+      "gaiadimension:fossilized_leaves",
+      "gaiadimension:green_agate_leaves",
+      "gaiadimension:blue_agate_leaves",
+      "gaiadimension:pink_agate_leaves",
+      "gaiadimension:purple_agate_leaves"
+    ],
+    "may_grow_through": [
+      "gaiadimension:orange_glitter_grass",
+      "gaiadimension:blue_glitter_grass",
+      "gaiadimension:green_glitter_grass",
+      "gaiadimension:charred_grass",
+      "gaiadimension:pale_green_glitter_grass",
+      "gaiadimension:purple_glitter_grass",
+      "gaiadimension:orange_glitter_grass",
+      "gaiadimension:soft_grass",
+      "gaiadimension:murky_grass",
+      "gaiadimension:corrupted_grass",
+      "gaiadimension:pink_glitter_grass",
+      "gaiadimension:peach_glitter_grass",
+      "gaiadimension:orange_glitter_grass",
+      "gaiadimension:light_soil",
+      "gaiadimension:heavy_soil",
+      "gaiadimension:cinder",
+      "gaiadimension:corrupted_soil",
+      "gaiadimension:boggy_soil",
+      "gaiadimension:light_soil"
+    ]
+  }
+}

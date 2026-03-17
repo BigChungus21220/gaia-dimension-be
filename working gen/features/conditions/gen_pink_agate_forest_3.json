@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.20",
+    "minecraft:scatter_feature": {
+        "description": {
+            "identifier": "gaiadimension:conditions/gen_pink_agate_forest_3"
+        },
+        "places_feature": "gaiadimension:gen/gaia_blocks/bedrock_pink_agate_forest",
+        "iterations": "t.biome_id == 10 && t.layer >= 13",
+        "x": 0,
+        "z": 0,
+        "y": 0
+    }
+}

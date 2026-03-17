@@ -1,0 +1,26 @@
+{
+    "format_version": "1.20.20",
+    "minecraft:aggregate_feature": {
+        "description": {
+            "identifier": "gaiadimension:gen/base/bedrock_picker"
+        },
+        "features": [
+            "gaiadimension:conditions/condition_891399170",
+            "gaiadimension:conditions/condition_911000259",
+            "gaiadimension:conditions/condition_1808658656",
+            "gaiadimension:conditions/condition_1169697529",
+            "gaiadimension:conditions/condition_815389736",
+            "gaiadimension:conditions/condition_783650601",
+            "gaiadimension:conditions/condition_5945122",
+            "gaiadimension:conditions/condition_202407067",
+            "gaiadimension:conditions/condition_355096720",
+            "gaiadimension:conditions/condition_32065458",
+            "gaiadimension:conditions/condition_803303921",
+            "gaiadimension:conditions/condition_480371084",
+            "gaiadimension:conditions/condition_173043029",
+            "gaiadimension:conditions/condition_877304624",
+            "gaiadimension:conditions/condition_1714145731"
+        ],
+        "early_out": "first_success"
+    }
+}

@@ -8,14 +8,14 @@ import sys
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Source Project Folders
-BP_PATH = "GaiaDimensions_BP"
-RP_PATH = "GaiaDimension_RP"
+BP_PATH = "data"
+RP_PATH = "resources"
 
 # Updated Mojang Folder Configuration
 MOJANG_DIR = r"C:\Users\ADMIN\AppData\Roaming\Minecraft Bedrock\Users\Shared\games\com.mojang"
 
-DEV_BP_DIR = os.path.join(MOJANG_DIR, 'development_behavior_packs', BP_PATH)
-DEV_RP_DIR = os.path.join(MOJANG_DIR, 'development_resource_packs', RP_PATH)
+DEV_BP_DIR = os.path.join(MOJANG_DIR, 'development_behavior_packs', 'GaiaDimensions_BP')
+DEV_RP_DIR = os.path.join(MOJANG_DIR, 'development_resource_packs', 'GaiaDimension_RP')
 
 def deploy():
     print("--- Starting Gaia Dimension Deployment Script ---")

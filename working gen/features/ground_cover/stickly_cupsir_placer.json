@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.20",
+    "minecraft:aggregate_feature": {
+        "description": {
+            "identifier": "gaiadimension:ground_cover/stickly_cupsir_placer"
+        },
+        "features": [
+			"gaiadimension:ground_cover/stickly_cupsir_placement_test",
+            "gaiadimension:ground_cover/stickly_cupsir_randomizer"
+        ],
+        "early_out": "first_failure"
+    }
+}

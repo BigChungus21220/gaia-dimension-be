@@ -1,0 +1,51 @@
+{
+	"format_version": "1.20.20",
+	"minecraft:feature_rules": {
+		"description": {
+			"identifier": "gaiadimension:overworld_underground_red_opal_ore_feature",
+			"places_feature": "gaiadimension:gen/caves/red_opal_ore_feature"
+		},
+		"conditions": {
+			"placement_pass": "underground_pass",
+			"minecraft:biome_filter": [
+				{
+					"any_of": [
+						{
+							"test": "has_biome_tag",
+							"value": "overworld"
+						},
+						{
+							"test": "has_biome_tag",
+							"value": "overworld_generation"
+						}
+					]
+				}
+			]
+		},
+		"distribution": {
+			"iterations": 5,
+			"coordinate_eval_order": "zyx",
+			"x": {
+				"distribution": "uniform",
+				"extent": [
+					0,
+					16
+				]
+			},
+			"y": {
+				"distribution": "uniform",
+				"extent": [
+					0,
+					30
+				]
+			},
+			"z": {
+				"distribution": "uniform",
+				"extent": [
+					0,
+					16
+				]
+			}
+		}
+	}
+}

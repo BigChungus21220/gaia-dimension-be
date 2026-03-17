@@ -3,8 +3,8 @@ import json
 from PIL import Image
 
 # --- CONFIGURATION ---
-RP_PATH = "GaiaDimension_RP"
-BP_PATH = "GaiaDimensions_BP"
+RP_PATH = "resources"
+BP_PATH = "data"
 
 TEXTURE_SRC = os.path.join(RP_PATH, "textures/gaiadimension/androsa/item/magic_staff")
 TEXTURE_OUT = os.path.join(RP_PATH, "textures/gaiadimension/androsa/item/gen/magic_staff")

@@ -29,13 +29,13 @@ async function buildAndDeploy() {
     console.log('\n--- Starting Build & Deploy ---');
 
     try {
-        // 1. Generate staves
-        const genSuccess = await runCommand('python', ['magic_staff_gen.py']);
+        // 1. Generate staves (TypeScript)
+        const genSuccess = await runCommand('npx', ['tsx', 'datagen/MagicStaffGenerator.ts']);
         if (!genSuccess) throw new Error('Staff generation failed');
 
         // 2. Bundle JS
         await esbuild.build({
-            entryPoints: ['GaiaDimensions_BP/src/GaiaDimensionAddon.js'],
+            entryPoints: ['data/src/GaiaDimensionAddon.js'],
             bundle: true,
             format: 'esm',
             external: [
@@ -46,7 +46,7 @@ async function buildAndDeploy() {
                 '@minecraft/server-editor',
                 '@minecraft/server-net'
             ],
-            outfile: 'GaiaDimensions_BP/scripts/GaiaDimensionAddon.js',
+            outfile: 'data/scripts/GaiaDimensionAddon.js',
         });
         console.log('> JS Bundling complete');
 
@@ -72,8 +72,8 @@ async function buildAndDeploy() {
 
 // Initialize watcher
 const watcher = chokidar.watch([
-    'GaiaDimensions_BP',
-    'GaiaDimension_RP'
+    'data',
+    'resources'
 ], {
     ignored: [
         '**/scripts/GaiaDimensionAddon.js', // Ignore the output file to prevent loops
@@ -81,14 +81,14 @@ const watcher = chokidar.watch([
         '**/node_modules/**',
         '**/textures/gaiadimension/androsa/item/gen/**', // Ignore generated textures
         '**/items/androsa/magic_staff/**', // Ignore generated items
-        '**/textures/item_texture.json', // Ignore files modified by magic_staff_gen.py
-        '**/texts/en_US.lang' // Ignore language file modified by magic_staff_gen.py
+        '**/textures/item_texture.json', // Ignore files modified by MagicStaffGenerator.ts
+        '**/texts/en_US.lang' // Ignore language file modified by MagicStaffGenerator.ts
     ],
     persistent: true,
     ignoreInitial: true
 });
 
-console.log('Watching GaiaDimensions_BP and GaiaDimension_RP for changes...');
+console.log('Watching data and resources for changes...');
 
 watcher.on('all', (event, filePath) => {
     const fileName = path.basename(filePath);

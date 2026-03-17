@@ -2,7 +2,7 @@ const nbt = require('prismarine-nbt');
 const fs = require('fs');
 
 async function debug() {
-    const buffer = fs.readFileSync('GaiaDimensions_BP/structures/malachite_tower.mcstructure');
+    const buffer = fs.readFileSync('data/structures/malachite_tower.mcstructure');
     const { parsed } = await nbt.parse(buffer);
     
     // Recursive search for ANY key that might contain 'gaia' or 'EntityIdentifier'

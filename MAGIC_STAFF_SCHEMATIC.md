@@ -28,13 +28,13 @@ The generator layers the textures in this specific order to ensure visual integr
 The script performs the following steps when `npm run build` is executed:
 
 ### Step 1: Texture Stitching
-- Scans `GaiaDimension_RP/textures/gaiadimension/androsa/item/magic_staff/` for source PNGs.
+- Scans `resources/textures/gaiadimension/androsa/item/magic_staff/` for source PNGs.
 - Uses **Pillow (PIL)** to composite the three layers.
-- Outputs unique 16x16 PNGs to `GaiaDimension_RP/textures/gaiadimension/androsa/item/gen/magic_staff/`.
+- Outputs unique 16x16 PNGs to `resources/textures/gaiadimension/androsa/item/gen/magic_staff/`.
 - Naming format: `staff_[core]_[head]_[rod].png`
 
 ### Step 2: Item Definition (Behavior Pack)
-- Generates 252 JSON files in `GaiaDimensions_BP/items/magic_staff/`.
+- Generates 252 JSON files in `data/items/magic_staff/`.
 - **Identifier**: `gaiadimension:magic_staff_[core]_[head]_[rod]`
 - Sets stack size to 1 and moves them to the "Equipment" category.
 

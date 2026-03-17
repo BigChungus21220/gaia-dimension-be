@@ -3,8 +3,8 @@
 	"author": "Remember M9",
 	"name": "Gaia Addon",
 	"packs": {
-		"behaviorPack": "./GaiaDimensions_BP",
-		"resourcePack": "./GaiaDimension_RP"
+		"behaviorPack": "./data",
+		"resourcePack": "./resources"
 	},
 	"regolith": {
 		"dataPath": "./data/regolith",

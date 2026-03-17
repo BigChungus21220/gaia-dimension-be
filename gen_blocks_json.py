@@ -2,8 +2,8 @@ import os
 import json
 
 # --- CONFIGURATION ---
-BP_BLOCKS_PATH = "GaiaDimensions_BP/blocks/gaiadimension"
-RP_BLOCKS_JSON = "GaiaDimension_RP/blocks.json"
+BP_BLOCKS_PATH = "data/blocks/gaiadimension"
+RP_BLOCKS_JSON = "resources/blocks.json"
 
 def generate_blocks_json():
     print("--- Gaia blocks.json Generator ---")
@@ -55,7 +55,7 @@ def generate_blocks_json():
     with open(RP_BLOCKS_JSON, "w") as f:
         json.dump(blocks_data, f, indent=4)
     
-    print("-> Successfully updated GaiaDimension_RP/blocks.json")
+    print("-> Successfully updated resources/blocks.json")
 
 if __name__ == "__main__":
     generate_blocks_json()

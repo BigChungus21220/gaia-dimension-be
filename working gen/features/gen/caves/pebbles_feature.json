@@ -1,0 +1,15 @@
+{
+	"format_version": "1.20.20",
+	"minecraft:ore_feature": {
+		"description": {
+			"identifier": "gaiadimension:gen/caves/pebbles_feature"
+		},
+		"count": 25,
+		"replace_rules": [
+			{
+				"places_block": "gaiadimension:pebbles",
+				"may_replace": ["gaiadimension:gaia_stone"]
+			}
+		]
+	}
+}

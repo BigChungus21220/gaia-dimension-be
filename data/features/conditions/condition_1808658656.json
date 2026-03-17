@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.20",
+    "minecraft:scatter_feature": {
+        "description": {
+            "identifier": "gaiadimension:conditions/condition_1808658656"
+        },
+        "places_feature": "gaiadimension:gen/gaia_blocks/bedrock_shining_grove",
+        "iterations": "t.biome_id == 3",
+        "x": 0,
+        "z": 0,
+        "y": 0
+    }
+}

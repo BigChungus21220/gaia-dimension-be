@@ -7,6 +7,17 @@ import { Molang, q, v, t, Mth, molang, loop } from './molang_math.js';
  * A generic DSL for procedural dimension generation.
  */
 
+// Simple string hash for condition naming (matching WORKING GEN style)
+function hashString(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return Math.abs(hash);
+}
+
 export class Layer {
     constructor(block, depth = 1) {
         this.block = block;
@@ -30,53 +41,6 @@ export class Biome {
     when(expr) {
         this.condition = Molang.compile(expr);
         return this;
-    }
-}
-
-/**
- * Categorical Biome Selector
- * Mirrors Java's hierarchical selection logic (Common, Uncommon, Rare).
- */
-export class BiomePicker {
-    constructor() {
-        this.categories = [];
-        this.defaultBiomes = [];
-    }
-
-    /** Add a category with a 1/chance probability */
-    addCategory(chance, biomes) {
-        this.categories.push({ chance, biomes });
-        return this;
-    }
-
-    /** Set the fallback biomes (the 'common' category) */
-    default(biomes) {
-        this.defaultBiomes = biomes;
-        return this;
-    }
-
-    /** Compiles to a Molang expression that returns a biome ID */
-    compile(seedVar = "v.rx") {
-        // We use the seedVar (a 0-1 float) to derive random choices
-        const pick = (list) => {
-            if (list.length === 1) return list[0];
-            const index = `math.floor(${seedVar} * ${list.length})`;
-            let chain = `${list[0]}`;
-            for (let i = 1; i < list.length; i++) {
-                chain = `(${index} == ${i}) ? ${list[i]} : (${chain})`;
-            }
-            return chain;
-        };
-
-        let result = pick(this.defaultBiomes);
-
-        // Build from rarest to most common
-        for (const cat of this.categories.reverse()) {
-            const chanceCond = `math.random_integer(0, ${cat.chance - 1}) == 0`;
-            result = `${chanceCond} ? (${pick(cat.biomes)}) : (${result})`;
-        }
-
-        return result;
     }
 }
 
@@ -131,8 +95,21 @@ export class WorldgenPipeline {
 
     build() {
         console.log(`[WorldgenLib] Building Pipeline: ${this.namespace}`);
+        
+        // 1. Copy ALL files from WORKING GEN to data/features and data/feature_rules
+        const workingGenPath = path.resolve('WORKING GEN');
+        if (fs.existsSync(workingGenPath)) {
+            const featuresDest = path.join(this.bpPath, 'features');
+            const rulesDest = path.join(this.bpPath, 'feature_rules');
+            fs.cpSync(path.join(workingGenPath, 'features'), featuresDest, { recursive: true });
+            fs.cpSync(path.join(workingGenPath, 'feature_rules'), rulesDest, { recursive: true });
+            console.log(`[WorldgenLib] Synced static features from WORKING GEN.`);
+        }
+
+        // 2. Programmatic Regeneration
+        this._genBaseStructure();
         this._genHeight();
-        this._genPicker();
+        this._genPickers();
         this._genCarvers();
     }
 
@@ -142,52 +119,132 @@ export class WorldgenPipeline {
         fs.writeFileSync(p, JSON.stringify(data, null, 4));
     }
 
-    _genHeight() {
-        let script = [...this.logicSteps];
-        this.biomes.forEach(b => script.push(`${b.condition} ? { t.biome_id = ${b.id}; } : { 0; };`));
-        script.push(`t.height = ${this.heightLogic}; return 1;`);
+    _genBaseStructure() {
+        // main_sequence.json (exactly as WORKING GEN)
+        this._write(`features/gen/base/main_sequence.json`, {
+            "format_version": "1.20.20",
+            "minecraft:aggregate_feature": {
+                "description": { "identifier": `${this.namespace}:gen/base/main_sequence` },
+                "features": [
+                    "flakey:gen/void/private/chunk_erase",
+                    `${this.namespace}:gen/base/column_height`,
+                    `${this.namespace}:gen/caves/cave_layer_placer`,
+                    `${this.namespace}:gen/caves/magma_placer`,
+                    `${this.namespace}:gen/base/bedrock_picker`
+                ]
+            }
+        });
 
+        // column_stack.json (exactly as WORKING GEN)
+        this._write(`features/gen/base/column_stack.json`, {
+            "format_version": "1.20.20",
+            "minecraft:scatter_feature": {
+                "description": { "identifier": `${this.namespace}:gen/base/column_stack` },
+                "places_feature": `${this.namespace}:gen/base/block_picker`,
+                "iterations": "math.max(t.height,63) + 1",
+                "x": 0,
+                "z": "t.layer = t.layer + 1; return 0;",
+                "y": { "distribution": "fixed_grid", "extent": [0, "math.max(t.height,63)"] }
+            }
+        });
+    }
+
+    _genHeight() {
         this._write(`features/gen/base/column_height.json`, {
             "format_version": "1.20.20",
             "minecraft:scatter_feature": {
                 "description": { "identifier": `${this.namespace}:gen/base/column_height` },
                 "places_feature": `${this.namespace}:gen/base/column_stack`,
-                "iterations": script.join(" "),
+                "iterations": this.logicSteps.join(" ") + "; return 1;",
                 "x": 0, "z": 0, "y": 0
             }
         });
     }
 
-    _genPicker() {
-        const refs = [];
-        this.biomes.forEach(biome => {
-            let depth = 0;
-            biome.layers.forEach((layer, i) => {
-                const isLast = i === biome.layers.length - 1;
-                const cond = isLast 
-                    ? `t.biome_id == ${biome.id} && t.layer >= ${depth}`
-                    : `t.biome_id == ${biome.id} && t.layer >= ${depth} && t.layer < ${depth + layer.depth}`;
-
-                const id = `${this.namespace}:conditions/gen_${biome.name}_${i}`;
-                this._write(`features/conditions/gen_${biome.name}_${i}.json`, {
-                    "format_version": "1.20.20",
-                    "minecraft:scatter_feature": {
-                        "description": { "identifier": id },
-                        "places_feature": layer.block,
-                        "iterations": cond,
-                        "x": 0, "z": 0, "y": 0
-                    }
-                });
-                refs.push(id);
-                depth += layer.depth;
-            });
+    _genCondition(id, places, iterations) {
+        const hash = hashString(id + places + iterations);
+        const conditionId = `${this.namespace}:conditions/condition_${hash}`;
+        this._write(`features/conditions/condition_${hash}.json`, {
+            "format_version": "1.20.20",
+            "minecraft:scatter_feature": {
+                "description": { "identifier": conditionId },
+                "places_feature": places,
+                "iterations": iterations,
+                "x": 0, "z": 0, "y": 0
+            }
         });
+        return conditionId;
+    }
 
+    _genPickers() {
+        const maxDepth = Math.max(...this.biomes.map(b => b.layers.length));
+        const layerSelectors = [];
+
+        // 1. Generate Stone Catch-all (for t.layer > 13)
+        const stoneId = this._genCondition("stone_catchall", `${this.namespace}:gen/gaia_blocks/gaia_stone`, "t.layer > 13");
+        layerSelectors.push(stoneId);
+
+        // 2. Generate Layer Aggregate Features (layer1.json, etc.)
+        for (let d = 0; d < maxDepth; d++) {
+            const biomeConds = [];
+            this.biomes.forEach(biome => {
+                if (biome.layers[d]) {
+                    const condId = this._genCondition(
+                        `${biome.name}_layer_${d}`,
+                        biome.layers[d].block,
+                        `t.biome_id == ${biome.id}`
+                    );
+                    biomeConds.push(condId);
+                }
+            });
+
+            const layerId = `${this.namespace}:gen/base/layer${d + 1}`;
+            this._write(`features/gen/base/layer${d + 1}.json`, {
+                "format_version": "1.20.20",
+                "minecraft:aggregate_feature": {
+                    "description": { "identifier": layerId },
+                    "features": biomeConds,
+                    "early_out": "first_success"
+                }
+            });
+
+            // 3. Generate Condition Feature for this Layer (t.layer == X)
+            const layerCondId = this._genCondition(
+                `layer_selector_${d}`,
+                layerId,
+                `t.layer == ${d + 1}`
+            );
+            layerSelectors.push(layerCondId);
+        }
+
+        // 4. block_picker.json
         this._write(`features/gen/base/block_picker.json`, {
             "format_version": "1.20.20",
             "minecraft:aggregate_feature": {
                 "description": { "identifier": `${this.namespace}:gen/base/block_picker` },
-                "features": refs, "early_out": "first_success"
+                "features": layerSelectors, 
+                "early_out": "first_success"
+            }
+        });
+
+        // 5. bedrock_picker.json
+        const bedrockConds = [];
+        this.biomes.forEach(biome => {
+            const bedrockBlock = `${this.namespace}:gen/gaia_blocks/bedrock_${biome.name}`;
+            const condId = this._genCondition(
+                `${biome.name}_bedrock`,
+                bedrockBlock,
+                `t.biome_id == ${biome.id}`
+            );
+            bedrockConds.push(condId);
+        });
+
+        this._write(`features/gen/base/bedrock_picker.json`, {
+            "format_version": "1.20.20",
+            "minecraft:aggregate_feature": {
+                "description": { "identifier": `${this.namespace}:gen/base/bedrock_picker` },
+                "features": bedrockConds,
+                "early_out": "first_success"
             }
         });
     }

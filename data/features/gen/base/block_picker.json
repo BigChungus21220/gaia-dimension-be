@@ -1,0 +1,18 @@
+{
+    "format_version": "1.20.20",
+    "minecraft:aggregate_feature": {
+        "description": {
+            "identifier": "gaiadimension:gen/base/block_picker"
+        },
+        "features": [
+            "gaiadimension:conditions/condition_197511386",
+            "gaiadimension:conditions/condition_992109547",
+            "gaiadimension:conditions/condition_1161439306",
+            "gaiadimension:conditions/condition_1330769065",
+            "gaiadimension:conditions/condition_1500098824",
+            "gaiadimension:conditions/condition_1669428583",
+            "gaiadimension:conditions/condition_1838758342"
+        ],
+        "early_out": "first_success"
+    }
+}

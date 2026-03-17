@@ -43,7 +43,7 @@ const columnHeightJson = {
 
 // 3. Write it to the behavior pack
 fs.writeFileSync(
-    'GaiaDimensions_BP/features/gen/base/column_height.json', 
+    'data/features/gen/base/column_height.json', 
     JSON.stringify(columnHeightJson, null, 4)
 );
 

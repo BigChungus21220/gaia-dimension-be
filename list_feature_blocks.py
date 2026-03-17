@@ -2,7 +2,7 @@ import os
 import json
 import re
 
-FEATURES_DIR = "GaiaDimensions_BP/features"
+FEATURES_DIR = "data/features"
 OUTPUT_FILE = "feature_blocks_list.md"
 
 def extract_identifiers(data, identifiers):

@@ -2,8 +2,8 @@ import os
 import json
 import re
 
-BP_ITEMS_ROOT = "GaiaDimensions_BP/items/androsa"
-LANG_FILE = "GaiaDimension_RP/texts/en_US.lang"
+BP_ITEMS_ROOT = "data/items/androsa"
+LANG_FILE = "resources/texts/en_US.lang"
 KEEP_FOLDERS = ["weapons", "armor", "buckets", "flowers"]
 
 def strip_comments(json_str):

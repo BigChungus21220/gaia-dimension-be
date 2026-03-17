@@ -2,7 +2,7 @@ const nbt = require('prismarine-nbt');
 const fs = require('fs');
 const path = require('path');
 
-const structuresDir = path.join(__dirname, 'GaiaDimensions_BP/structures');
+const structuresDir = path.join(__dirname, 'data/structures');
 const towerFiles = [
     'amethyst_tower.mcstructure',
     'copal_tower.mcstructure',

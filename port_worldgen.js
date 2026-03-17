@@ -1,20 +1,16 @@
 import { WorldgenPipeline, Biome, q, v, t, Mth, loop } from './scripts/lib/worldgen.js';
 
-const gaia = new WorldgenPipeline('gaiadimension', 'GaiaDimensions_BP');
+const gaia = new WorldgenPipeline('gaiadimension', 'data');
 
-// --- 1. COORDINATES & BASE NOISE ---
-gaia.addLogic(() => {
-    v.x = v.originx / 256;
-    v.z = v.originz / 256;
-    
-    t.rivernoise = Mth.abs(q.noise(0.5 * v.x + 3167, 0.5 * v.z + 2396) * 0.25 + q.noise(0.05 * v.x - 1279, 0.05 * v.z - 1279));
-    t.mountainnoise = Mth.pow(q.noise(v.x * 0.1 + 3812, v.z * 0.1 + 4598), 2.0) * 4 + q.noise(v.x * 0.5 + t.rivernoise * 0.5 + 7843, v.x * 0.5 + t.rivernoise * 0.5 + 2364) * 0.5;
-    t.oceannoise = q.noise(0.05 * v.x - 1279, 0.05 * v.z - 2342) * 0.5 + 0.5;
-    t.heightmap = Mth.lerp(t.rivernoise - 0.05, t.mountainnoise * 0.7 - t.oceannoise * 0.25, t.rivernoise);
-});
-
-// --- 2. VORONOI CELL NOISE (BIOME DISTRIBUTION) ---
-gaia.addLogic(() => {
+// --- 1. THE BRAIN (column_height.json) ---
+// Replicating the exact working logic provided by the user.
+gaia.addLogic(`
+    v.x = v.originx/256;
+    v.z = v.originz/256;
+    t.rivernoise = math.abs(q.noise(0.5*v.x + 3167, 0.5*v.z + 2396)*0.25 + q.noise(0.05*v.x - 1279, 0.05*v.z - 1279));
+    t.mountainnoise = math.pow(q.noise(v.x*0.1 + 3812, v.z*0.1 + 4598), 2.0)*4 + q.noise(v.x*0.5 + t.rivernoise*0.5 + 7843, v.x*0.5 + t.rivernoise*0.5 + 2364)*0.5;
+    t.oceannoise = q.noise(0.05*v.x - 1279, 0.05*v.z - 2342)*0.5 + 0.5;
+    t.heightmap = math.lerp(t.rivernoise-0.05, t.mountainnoise*0.7 - t.oceannoise*0.25, t.rivernoise);
     t.biometyperivermin = -0.05; t.biometyperivermax = 0;
     t.biometypemountainmin = 0.95; t.biometypemountainmax = 999;
     t.biometypeplainmin = 0.1; t.biometypeplainmax = 0.7;
@@ -22,110 +18,73 @@ gaia.addLogic(() => {
     t.biometypeoceanmin = -2.0; t.biometypeoceanmax = -0.05;
     t.biometypeswampmin = 0.01; t.biometypeswampmax = 0.1;
     t.biometypebeachmin = 0; t.biometypebeachmax = 0.01;
-
     t.d1 = 999; t.d2 = 999; v.c1 = 0;
-    v.r = q.noise(v.originx / 16, v.originz / 16);
-    v.px = v.x + v.r * 0.05 + t.rivernoise;
-    v.pz = v.z + v.r * 0.05 + t.rivernoise;
+    v.r = q.noise(v.originx/16, v.originz/16);
+    v.px = v.x + v.r*0.05 + t.rivernoise;
+    v.pz = v.z + v.r*0.05 + t.rivernoise;
     v.i = 0;
-
-    loop(4, () => {
-        v.p2x = Mth.floor(v.px) + Mth.mod(v.i, 2);
-        v.p2z = Mth.floor(v.pz) + Mth.floor(v.i / 2);
-        v.rx = v.p2x * 127.1 + v.p2z * 311.7;
-        v.rz = v.p2z * 269.5 + v.p2x * 183.3;
-        v.rx = (2 * Mth.abs(v.rx / 3.14 - 2 * Mth.floor(v.rx / 6.28) - 1.0) - 1.0) * 43758.5453123;
-        v.rz = (2 * Mth.abs(v.rz / 3.14 - 2 * Mth.floor(v.rz / 6.28) - 1.0) - 1.0) * 43758.5453123;
-        v.rx = (v.rx - Mth.floor(v.rx)) / 2;
-        v.rz = (v.rz - Mth.floor(v.rz)) / 2;
-        v.d = Mth.pow(v.p2x + v.rx - v.px, 2) + Mth.pow(v.p2z + v.rz - v.pz, 2);
-        
-        if (v.d < t.d1) {
-            t.d2 = t.d1;
-            t.d1 = v.d;
-            v.c1 = v.rx;
-        } else {
-            if (v.d < t.d2) {
-                t.d2 = v.d;
-            }
-        }
+    loop(4, {
+        v.p2x = math.floor(v.px) + math.mod(v.i,2);
+        v.p2z = math.floor(v.pz) + math.floor(v.i/2);
+        v.rx = v.p2x*127.1 + v.p2z*311.7;
+        v.rz = v.p2z*269.5 + v.p2x*183.3;
+        v.rx = (2*math.abs(v.rx/3.14 - 2*math.floor(v.rx/6.28) - 1.0) - 1.0)*43758.5453123;
+        v.rz = (2*math.abs(v.rz/3.14 - 2*math.floor(v.rz/6.28) - 1.0) - 1.0)*43758.5453123;
+        v.rx = (v.rx - math.floor(v.rx))/2;
+        v.rz = (v.rz - math.floor(v.rz))/2;
+        v.d = math.pow(v.p2x + v.rx - v.px,2) + math.pow(v.p2z + v.rz - v.pz,2);
+        (v.d < t.d1) ? { t.d2 = t.d1; t.d1 = v.d; v.c1 = v.rx; } : { (v.d < t.d2) ? { t.d2 = v.d; }; };
         v.i = v.i + 1;
     });
-
-    t.d1 = Mth.sqrt(t.d1);
-    v.dist = Mth.abs(Mth.sqrt(t.d2) - t.d1);
-    v.dh = t.heightmap >= 0 ? t.heightmap + 0.005 * (2 - v.r) / (2 * v.r + 2) : t.heightmap;
-});
-
-// --- 3. NESTED BIOME SELECTION ---
-gaia.addLogic(() => {
+    t.d1 = math.sqrt(t.d1);
+    v.dist = math.abs(math.sqrt(t.d2) - t.d1);
     t.biome = 'mineral_resevoir'; t.biome_id = 14;
-
-    if (t.biometyperivermin <= v.dh && v.dh < t.biometyperivermax) {
+    v.determinant_height = t.heightmap >= 0 ? t.heightmap + 0.005*(2-v.r)/(2*v.r + 2) : t.heightmap;
+    (t.biometyperivermin <= v.determinant_height && v.determinant_height < t.biometyperivermax) ? {
         t.biome = 'mineral_river'; t.biome_id = 1;
-    } else {
-        if (t.biometypemountainmin <= v.dh && v.dh < t.biometypemountainmax) {
-            v.index = Mth.floor(v.c1 * 2);
-            if (v.index == 0) { t.biome = 'volcanic_lands'; t.biome_id = 2; }
-            if (v.index == 1) { t.biome = 'static_wasteland'; t.biome_id = 5; }
-        } else {
-            if (t.biometypeplainmin <= v.dh && v.dh < t.biometypeplainmax) {
-                v.index = Mth.floor(v.c1 * 6);
-                if (v.index == 0) { t.biome = 'fossil_woodland'; t.biome_id = 12; }
-                if (v.index == 1) { t.biome = 'goldstone_lands'; t.biome_id = 13; }
-                if (v.index == 2) { t.biome = 'pink_agate_forest'; t.biome_id = 10; }
-                if (v.index == 3) { t.biome = 'green_agate_jungle'; t.biome_id = 6; }
-                if (v.index == 4) { t.biome = 'crystal_plains'; t.biome_id = 7; }
-                if (v.index == 5) { t.biome = 'salt_dunes'; t.biome_id = 15; }
-            } else {
-                if (t.biometypetaigamin <= v.dh && v.dh < t.biometypetaigamax) {
-                    v.index = Mth.floor(v.c1 * 3);
-                    if (v.index == 0) { t.biome = 'blue_agate_taiga'; t.biome_id = 11; }
-                    if (v.index == 1) { t.biome = 'shining_grove'; t.biome_id = 3; }
-                    if (v.index == 2) { t.biome = 'mutant_agate_wildwood'; t.biome_id = 8; }
-                } else {
-                    if (t.biometypeoceanmin <= v.dh && v.dh < t.biometypeoceanmax) {
-                        t.biome = 'mineral_resevoir'; t.biome_id = 14;
-                    } else {
-                        if (t.biometypeswampmin <= v.dh && v.dh < t.biometypeswampmax) {
-                            v.index = Mth.floor(v.c1 * 3);
-                            if (v.index == 0) { t.biome = 'purple_agate_swamp'; t.biome_id = 9; }
-                            if (v.index == 1) { t.biome = 'smoldering_bog'; t.biome_id = 4; }
-                            if (v.index == 2) { t.biome = 'salt_dunes'; t.biome_id = 15; }
-                        } else {
-                            if (t.biometypebeachmin <= v.dh && v.dh < t.biometypebeachmax) {
-                                t.biome = 'salt_dunes'; t.biome_id = 15;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-});
-
-// --- 4. TERRAIN SHAPING ---
-gaia.addLogic(() => {
-    t.heightmap = t.heightmap <= 0 ? (t.heightmap > -0.05 ? -0.25 * Mth.sqrt(-t.heightmap) : -Mth.sqrt(-t.heightmap - 0.05) - 0.055901) : t.heightmap * t.heightmap * 2;
-    v.noise1 = q.noise(0.01 * v.originx + 2354, 0.01 * v.originz + 3798);
-    v.noise2 = q.noise(0.005 * v.originx - 1279 + v.noise1, 0.005 * v.originz - 1279 + v.noise1);
-    v.dist = Mth.abs(t.d1 - t.d2);
-    v.k = t.biome == 'static_wasteland' ? Mth.lerp(240, 160, v.dist) : 240;
+    } : { (t.biometypemountainmin <= v.determinant_height && v.determinant_height < t.biometypemountainmax) ? {
+        v.index = math.floor(v.c1*2);
+        (v.index == 0) ? { t.biome = 'volcanic_lands'; t.biome_id = 2; };
+        (v.index == 1) ? { t.biome = 'static_wasteland'; t.biome_id = 5; };
+    } : { (t.biometypeplainmin <= v.determinant_height && v.determinant_height < t.biometypeplainmax) ? {
+        v.index = math.floor(v.c1*6);
+        (v.index == 0) ? { t.biome = 'fossil_woodland'; t.biome_id = 12; };
+        (v.index == 1) ? { t.biome = 'goldstone_lands'; t.biome_id = 13; };
+        (v.index == 2) ? { t.biome = 'pink_agate_forest'; t.biome_id = 10; };
+        (v.index == 3) ? { t.biome = 'green_agate_jungle'; t.biome_id = 6; };
+        (v.index == 4) ? { t.biome = 'crystal_plains'; t.biome_id = 7; };
+        (v.index == 5) ? { t.biome = 'salt_dunes'; t.biome_id = 15; };
+    } : { (t.biometypetaigamin <= v.determinant_height && v.determinant_height < t.biometypetaigamax) ? {
+        v.index = math.floor(v.c1*3);
+        (v.index == 0) ? { t.biome = 'blue_agate_taiga'; t.biome_id = 11; };
+        (v.index == 1) ? { t.biome = 'shining_grove'; t.biome_id = 3; };
+        (v.index == 2) ? { t.biome = 'mutant_agate_wildwood'; t.biome_id = 8; };
+    } : { (t.biometypeoceanmin <= v.determinant_height && v.determinant_height < t.biometypeoceanmax) ? {
+        t.biome = 'mineral_resevoir'; t.biome_id = 14;
+    } : { (t.biometypeswampmin <= v.determinant_height && v.determinant_height < t.biometypeswampmax) ? {
+        v.index = math.floor(v.c1*3);
+        (v.index == 0) ? { t.biome = 'purple_agate_swamp'; t.biome_id = 9; };
+        (v.index == 1) ? { t.biome = 'smoldering_bog'; t.biome_id = 4; };
+        (v.index == 2) ? { t.biome = 'salt_dunes'; t.biome_id = 15; };
+    } : { (t.biometypebeachmin <= v.determinant_height && v.determinant_height < t.biometypebeachmax) ? {
+        t.biome = 'salt_dunes'; t.biome_id = 15;
+    } : { 0; }; }; }; }; }; }; };
+    t.heightmap = t.heightmap <= 0 ? (t.heightmap > -0.05 ? -0.25*math.sqrt(-t.heightmap) : -math.sqrt(-t.heightmap-0.05) - 0.055901) : t.heightmap*t.heightmap*2;
+    v.noise1 = q.noise(0.01*v.originx + 2354, 0.01*v.originz + 3798);
+    v.noise2 = q.noise(0.005*v.originx - 1279 + v.noise1, 0.005*v.originz - 1279 + v.noise1);
+    v.dist = math.abs(t.d1 - t.d2);
+    v.k = t.biome == 'static_wasteland' ? math.lerp(240,160,v.dist) : 240;
     v.n = 50;
-    t.height = t.heightmap * 40 + 90 + v.noise2 * 6 * t.heightmap;
-    v.h = Mth.max(Mth.min(0.5 + (t.height - v.k) / (2 * v.n), 1), 0);
-    t.height = t.height * (1 - v.h) + v.k * v.h - v.n * v.h * (1 - v.h);
-    t.layer = 90 > Mth.floor(t.height) ? Mth.floor(t.height) - 90 : 0;
-    
-    if (t.biome == 'salt_dunes') {
-        t.height = t.height + Mth.lerp(0, v.noise1 * 16, Mth.clamp(v.dist * t.heightmap * 30, 0, 1));
-    }
-});
+    t.height = t.heightmap*40 + 90 + v.noise2*6*t.heightmap;
+    v.h = math.max(math.min(0.5 + (t.height - v.k)/(2*v.n),1),0);
+    t.height = t.height*(1-v.h) + v.k*v.h - v.n*v.h*(1-v.h);
+    t.layer = 90 > math.floor(t.height) ? math.floor(t.height) - 90 : 0;
+    (t.biome == 'salt_dunes') ? {
+        t.height = t.height + math.lerp(0, v.noise1*16, math.clamp(v.dist*t.heightmap*30, 0, 1));
+    };
+`);
 
-// --- 5. HEIGHT OUTPUT ---
-gaia.setHeight(() => t.height);
-
-// --- 6. BIOME REGISTRATION ---
+// --- 2. BIOME REGISTRATION (REPLICATING THE 13-LAYER PATTERN) ---
 const biomes = [
     { id: 1,  name: 'mineral_river',      surface: 'salt',            dirt: 'salt_rock' },
     { id: 2,  name: 'volcanic_lands',     surface: 'charred_grass',    dirt: 'volcanic_rock' },
@@ -146,12 +105,13 @@ const biomes = [
 
 biomes.forEach(b => {
     const biome = new Biome(b.name, b.id)
-        .addLayer(`gaiadimension:gen/gaia_blocks/${b.surface}`, 1)
-        .addLayer(`gaiadimension:gen/gaia_blocks/${b.dirt}`, 4)
-        .addLayer('gaiadimension:gen/gaia_blocks/gaia_stone', 8)
-        .addLayer(`gaiadimension:gen/gaia_blocks/bedrock_${b.name}`, 999);
+        .addLayer(`gaiadimension:gen/gaia_blocks/${b.surface}`, 1)  // Layer 1
+        .addLayer(`gaiadimension:gen/gaia_blocks/${b.dirt}`, 4)     // Layers 2-5
+        .addLayer(`gaiadimension:gen/gaia_blocks/${b.dirt}`, 1)
+        .addLayer(`gaiadimension:gen/gaia_blocks/${b.dirt}`, 1)
+        .addLayer(`gaiadimension:gen/gaia_blocks/${b.dirt}`, 1)
+        .addLayer('gaiadimension:gen/gaia_blocks/gaia_stone', 8);   // Layers 6-13
     
-    biome.when(() => t.biome_id == b.id);
     gaia.registerBiome(biome);
 });
 
