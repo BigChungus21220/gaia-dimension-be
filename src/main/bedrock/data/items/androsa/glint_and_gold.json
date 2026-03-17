@@ -1,0 +1,30 @@
+{
+    "format_version": "1.21.30",
+    "minecraft:item": {
+        "description": {
+            "identifier": "gaiadimension:glint_and_gold",
+            "menu_category": {
+                "category": "items",
+                "group": "itemGroup.name.item"
+            }
+        },
+        "components": {
+            "minecraft:max_stack_size": 1,
+            "minecraft:icon":  "glint_and_gold",
+            "minecraft:display_name": {
+                "value": "Glint and Gold"
+            },
+            "minecraft:custom_components": [
+                "gaiadimension:fire_starter"
+            ],
+            "minecraft:durability": {
+                "max_durability": 64
+            },
+            "minecraft:tags": {
+                "tags": [
+                    "gaiadimension:glint_and_gold"
+                ]
+            }
+        }
+    }
+}

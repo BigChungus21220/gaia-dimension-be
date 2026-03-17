@@ -6,8 +6,8 @@ import { StaffCore } from "./components/StaffCore";
 import { StaffHead } from "./components/StaffHead";
 import { StaffRod } from "./components/StaffRod";
 
-const RP_PATH = "resources";
-const BP_PATH = "data";
+const RP_PATH = "src/main/bedrock/resources";
+const BP_PATH = "src/main/bedrock/data";
 
 const TEXTURE_SRC = path.join(RP_PATH, "textures/gaiadimension/androsa/item/magic_staff");
 const TEXTURE_OUT = path.join(RP_PATH, "textures/gaiadimension/androsa/item/gen/magic_staff");
@@ -18,13 +18,10 @@ const LANG_FILE = path.join(RP_PATH, "texts/en_US.lang");
 
 class MagicStaffGenerator {
     public static async generate() {
-        console.log("--- Magic Staff Generator (TypeScript) ---");
+        console.log("[INFO] Initializing Magic Staff Registry...");
         
         await fs.ensureDir(TEXTURE_OUT);
         await fs.ensureDir(ITEM_OUT);
-
-        // Clean up old generated items (optional but recommended)
-        // await fs.emptyDir(ITEM_OUT); 
 
         const generatedItems: string[] = [];
 
@@ -39,7 +36,6 @@ class MagicStaffGenerator {
         }
 
         await this.updateMetadata(generatedItems);
-        console.log(`-> Successfully generated ${generatedItems.length} magic staffs.`);
     }
 
     private static async generateStaff(core: StaffCore, head: StaffHead, rod: StaffRod, staffId: string) {
@@ -118,4 +114,7 @@ class MagicStaffGenerator {
     }
 }
 
-MagicStaffGenerator.generate().catch(console.error);
+MagicStaffGenerator.generate().catch(err => {
+    console.error(err);
+    process.exit(1);
+});

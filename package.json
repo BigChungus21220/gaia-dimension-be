@@ -1,7 +1,8 @@
 {
+  "type": "module",
   "scripts": {
     "bundle": "esbuild data/src/GaiaDimensionAddon.js --bundle --format=esm --external:@minecraft/server --external:@minecraft/server-ui --external:@minecraft/server-gametest --external:@minecraft/server-admin --external:@minecraft/server-editor --external:@minecraft/server-net --outfile=data/scripts/GaiaDimensionAddon.js",
-    "build": "npx tsx datagen/MagicStaffGenerator.ts && npm run bundle && python deploy.py && python package.py",
+    "build": "npx tsx build.ts",
     "watch": "node watch.js"
   },
   "dependencies": {

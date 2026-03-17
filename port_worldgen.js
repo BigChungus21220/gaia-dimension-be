@@ -1,6 +1,6 @@
 import { WorldgenPipeline, Biome, q, v, t, Mth, loop } from './scripts/lib/worldgen.js';
 
-const gaia = new WorldgenPipeline('gaiadimension', 'data');
+const gaia = new WorldgenPipeline('gaiadimension', 'src/main/bedrock/data');
 
 // --- 1. THE BRAIN (column_height.json) ---
 // Replicating the exact working logic provided by the user.
@@ -114,4 +114,4 @@ biomes.forEach(b => {
 });
 
 gaia.build();
-console.log("-> Gaia Worldgen 1:1 Port Complete.");
+console.log("[INFO] Initializing Gaia Worldgen Engine...");

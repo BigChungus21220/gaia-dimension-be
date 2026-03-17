@@ -94,8 +94,6 @@ export class WorldgenPipeline {
     }
 
     build() {
-        console.log(`[WorldgenLib] Building Pipeline: ${this.namespace}`);
-        
         // 1. Copy ALL files from WORKING GEN to data/features and data/feature_rules
         const workingGenPath = path.resolve('WORKING GEN');
         if (fs.existsSync(workingGenPath)) {
@@ -103,7 +101,6 @@ export class WorldgenPipeline {
             const rulesDest = path.join(this.bpPath, 'feature_rules');
             fs.cpSync(path.join(workingGenPath, 'features'), featuresDest, { recursive: true });
             fs.cpSync(path.join(workingGenPath, 'feature_rules'), rulesDest, { recursive: true });
-            console.log(`[WorldgenLib] Synced static features from WORKING GEN.`);
         }
 
         // 2. Programmatic Regeneration
