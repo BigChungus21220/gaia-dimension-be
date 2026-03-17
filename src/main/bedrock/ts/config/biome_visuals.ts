@@ -97,5 +97,26 @@ export const BIOME_VISUALS: Record<string, BiomeVisuals> = {
         bedrock: "gaiadimension:bedrock_goldstone_lands",
         foliage: ["gaiadimension:goldstone_tree"],
         groundCover: ["gaiadimension:corrupt_varloom_patch"]
+    },
+    "vanilla": {
+        surface: "minecraft:grass_block",
+        dirt: "minecraft:dirt",
+        bedrock: "minecraft:bedrock",
+        foliage: [],
+        groundCover: []
+    },
+    "desert": {
+        surface: "minecraft:sand",
+        dirt: "minecraft:sand",
+        bedrock: "minecraft:bedrock",
+        foliage: [],
+        groundCover: ["minecraft:cactus_feature"]
+    },
+    "mesa": {
+        surface: "minecraft:red_sand",
+        dirt: "minecraft:hardened_clay",
+        bedrock: "minecraft:bedrock",
+        foliage: [],
+        groundCover: []
     }
 };
