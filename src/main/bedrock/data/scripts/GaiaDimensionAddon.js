@@ -5077,15 +5077,13 @@ var DimensionSystem = class {
     if (entity.dimension.id !== GaiaDimension.inheritance.id) return false;
     return GaiaDimension.isInDimension(entity.location);
   }
-  static getBiome(entity) {
-    if (!entity || !entity.isValid) return "crystal_plains";
+  static getBiomeAt(dimension, location) {
     try {
-      const { x, z } = entity.location;
-      const px = Math.floor(x);
-      const pz = Math.floor(z);
-      let block = entity.dimension.getBlock({ x: px, y: 0, z: pz });
+      const px = Math.floor(location.x);
+      const pz = Math.floor(location.z);
+      let block = dimension.getBlock({ x: px, y: 0, z: pz });
       if (!block || !block.isValid || !BIOME_MAPPING.has(block.typeId)) {
-        block = entity.dimension.getBlock({ x: px, y: -64, z: pz });
+        block = dimension.getBlock({ x: px, y: -64, z: pz });
       }
       if (block && block.isValid && BIOME_MAPPING.has(block.typeId)) {
         return BIOME_MAPPING.get(block.typeId);
@@ -5093,6 +5091,10 @@ var DimensionSystem = class {
     } catch (e) {
     }
     return "crystal_plains";
+  }
+  static getBiome(entity) {
+    if (!entity || !entity.isValid) return "crystal_plains";
+    return this.getBiomeAt(entity.dimension, entity.location);
   }
   static findPortalBlock(dimension, center) {
     const px = Math.floor(center.x);
@@ -7096,7 +7098,7 @@ function registerCleanerComponent({ blockComponentRegistry }) {
 }
 
 // src/main/bedrock/ts/blocks/GlitterGrassSync.ts
-import { world as world27, system as system32 } from "@minecraft/server";
+import { world as world27, system as system32, ItemStack as ItemStack14 } from "@minecraft/server";
 var GLITTER_GRASS_TYPES = [
   "gaiadimension:green_glitter_grass",
   "gaiadimension:pink_glitter_grass",
@@ -7115,11 +7117,25 @@ var BIOME_TO_GRASS = {
   "blue_agate_taiga": "gaiadimension:blue_glitter_grass",
   "fossil_woodland": "gaiadimension:pale_green_glitter_grass"
 };
+function syncInventory(player) {
+  const inventory = player.getComponent("minecraft:inventory")?.container;
+  if (!inventory) return;
+  const biome = DimensionSystem.getBiome(player);
+  const targetGrassId = BIOME_TO_GRASS[biome];
+  if (!targetGrassId) return;
+  for (let i = 0; i < inventory.size; i++) {
+    const item = inventory.getItem(i);
+    if (item && GLITTER_GRASS_TYPES.includes(item.typeId) && item.typeId !== targetGrassId) {
+      const newItem = new ItemStack14(targetGrassId, item.amount);
+      inventory.setItem(i, newItem);
+    }
+  }
+}
 function initializeGlitterGrassSync() {
   world27.afterEvents.playerPlaceBlock.subscribe((event) => {
-    const { block, player } = event;
+    const { block } = event;
     if (GLITTER_GRASS_TYPES.includes(block.typeId)) {
-      const biome = DimensionSystem.getBiome(player);
+      const biome = DimensionSystem.getBiomeAt(block.dimension, block.location);
       const targetGrassId = BIOME_TO_GRASS[biome];
       if (targetGrassId && block.typeId !== targetGrassId) {
         system32.run(() => {
@@ -7128,6 +7144,19 @@ function initializeGlitterGrassSync() {
           }
         });
       }
+    }
+  });
+  system32.runInterval(() => {
+    for (const player of world27.getAllPlayers()) {
+      if (DimensionSystem.isInGaia(player)) {
+        syncInventory(player);
+      }
+    }
+  }, 40);
+  world27.afterEvents.playerInventoryItemChange.subscribe((event) => {
+    const { player } = event;
+    if (DimensionSystem.isInGaia(player)) {
+      syncInventory(player);
     }
   });
 }

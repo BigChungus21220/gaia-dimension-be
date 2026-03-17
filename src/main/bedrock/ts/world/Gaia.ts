@@ -49,21 +49,24 @@ export class DimensionSystem {
         return GaiaDimension.isInDimension(entity.location);
     }
 
-    static getBiome(entity: Entity | Player): string {
-        if (!entity || !entity.isValid) return "crystal_plains";
+    static getBiomeAt(dimension: Dimension, location: Vector3): string {
         try {
-            const { x, z } = entity.location;
-            const px = Math.floor(x);
-            const pz = Math.floor(z);
-            let block = entity.dimension.getBlock({ x: px, y: 0, z: pz });
+            const px = Math.floor(location.x);
+            const pz = Math.floor(location.z);
+            let block = dimension.getBlock({ x: px, y: 0, z: pz });
             if (!block || !block.isValid || !BIOME_MAPPING.has(block.typeId)) {
-                block = entity.dimension.getBlock({ x: px, y: -64, z: pz });
+                block = dimension.getBlock({ x: px, y: -64, z: pz });
             }
             if (block && block.isValid && BIOME_MAPPING.has(block.typeId)) {
                 return BIOME_MAPPING.get(block.typeId) as string;
             }
         } catch (e) {}
         return "crystal_plains";
+    }
+
+    static getBiome(entity: Entity | Player): string {
+        if (!entity || !entity.isValid) return "crystal_plains";
+        return this.getBiomeAt(entity.dimension, entity.location);
     }
 
     static findPortalBlock(dimension: Dimension, center: Vector3): Vector3 | null {

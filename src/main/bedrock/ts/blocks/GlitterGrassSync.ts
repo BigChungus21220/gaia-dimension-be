@@ -40,12 +40,12 @@ function syncInventory(player: Player): void {
 }
 
 export function initializeGlitterGrassSync(): void {
-    // 1. Sync on Place
+    // 1. Sync on Place (Using biome at placed location)
     world.afterEvents.playerPlaceBlock.subscribe((event: PlayerPlaceBlockAfterEvent) => {
-        const { block, player } = event;
+        const { block } = event;
         
         if (GLITTER_GRASS_TYPES.includes(block.typeId)) {
-            const biome = DimensionSystem.getBiome(player);
+            const biome = DimensionSystem.getBiomeAt(block.dimension, block.location);
             const targetGrassId = BIOME_TO_GRASS[biome];
 
             if (targetGrassId && block.typeId !== targetGrassId) {
