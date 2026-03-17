@@ -6722,7 +6722,7 @@ function registerGaiaCommands(registry) {
       { name: "shape", type: CustomCommandParamType.String },
       { name: "epic", type: CustomCommandParamType.String }
     ]
-  }, (origin, biome, radiusStr, shape = "circle", epic) => {
+  }, (origin, biome, radiusStr, shape, epic) => {
     const player = origin.sourceEntity;
     if (!(player instanceof Player15)) return;
     if (!biome || !radiusStr) {
@@ -6749,8 +6749,17 @@ function registerGaiaCommands(registry) {
       try {
         const metaBlock = dim.getBlock({ x: loc.x, y: 0, z: loc.z });
         if (metaBlock) metaBlock.setType(visuals.bedrock);
-        const topY = DimensionSystem.getTopBlock(dim, loc.x, loc.z, loc.y + 10);
-        const surfaceBlock = dim.getBlock({ x: loc.x, y: topY - 1, z: loc.z });
+        let topY = DimensionSystem.getTopBlock(dim, loc.x, loc.z, loc.y + 20);
+        let surfaceBlock = dim.getBlock({ x: loc.x, y: topY - 1, z: loc.z });
+        while (surfaceBlock && !surfaceBlock.isAir) {
+          const tid = surfaceBlock.typeId;
+          if (tid.includes("log") || tid.includes("wood") || tid.includes("leaves") || tid.includes("stem")) {
+            topY--;
+            surfaceBlock = dim.getBlock({ x: loc.x, y: topY - 1, z: loc.z });
+            continue;
+          }
+          break;
+        }
         if (surfaceBlock && !surfaceBlock.isAir) {
           surfaceBlock.setType(visuals.surface);
           const dirtBlock = dim.getBlock({ x: loc.x, y: topY - 2, z: loc.z });

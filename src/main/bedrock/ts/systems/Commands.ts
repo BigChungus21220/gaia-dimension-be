@@ -1,4 +1,4 @@
-import { Player, system, world, CommandPermissionLevel, CustomCommandParamType, CustomCommandRegistry, CommandOrigin, BlockPermutation, Vector3 } from "@minecraft/server";
+import { Player, system, world, CommandPermissionLevel, CustomCommandParamType, CustomCommandRegistry, CommandOrigin, BlockPermutation, Vector3, Dimension } from "@minecraft/server";
 import { DimensionSystem, GaiaDimension } from "../world/Gaia.js";
 import { Vec3 } from "../Vec3.js";
 import { MathParser } from "./MathParser.js";
@@ -17,7 +17,7 @@ function formatName(id: string): string {
  * @param {CustomCommandRegistry} registry 
  */
 export function registerGaiaCommands(registry: CustomCommandRegistry) {
-    // /gaiadimension:setbiome <biome: string> <radius: string> [shape: string] [epic: string]
+    // /gaiadimension:setbiome [biome: string] [radius: string] [shape: string] [epic: string]
     registry.registerCommand({
         name: "gaiadimension:setbiome",
         description: 'Transform the biome. Usage: /gaiadimension:setbiome "crystal_plains" "20" "circle" "true"',
@@ -28,7 +28,7 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
             { name: "shape", type: CustomCommandParamType.String },
             { name: "epic", type: CustomCommandParamType.String }
         ]
-    }, (origin: CommandOrigin, biome?: string, radiusStr?: string, shape: string = "circle", epic?: string) => {
+    }, (origin: CommandOrigin, biome?: string, radiusStr?: string, shape?: string, epic?: string) => {
         const player = origin.sourceEntity;
         if (!(player instanceof Player)) return;
 
@@ -37,7 +37,6 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
             return { status: 0 };
         }
 
-        // Strip quotes and parse
         const cleanBiome = biome.replace(/["']/g, "");
         const radius = Number(radiusStr.replace(/["']/g, ""));
         const cleanShape = (shape || "circle").replace(/["']/g, "");
@@ -61,21 +60,29 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
 
         const transformLocation = (loc: Vector3) => {
             try {
-                // 1. Change Metadata Bedrock
                 const metaBlock = dim.getBlock({ x: loc.x, y: 0, z: loc.z });
                 if (metaBlock) metaBlock.setType(visuals.bedrock);
 
-                // 2. Change Surface
-                const topY = DimensionSystem.getTopBlock(dim, loc.x, loc.z, loc.y + 10);
-                const surfaceBlock = dim.getBlock({ x: loc.x, y: topY - 1, z: loc.z });
+                let topY = DimensionSystem.getTopBlock(dim, loc.x, loc.z, loc.y + 20);
+                let surfaceBlock = dim.getBlock({ x: loc.x, y: topY - 1, z: loc.z });
+                
+                // CRITICAL: If we hit foliage, keep looking down for the ACTUAL ground
+                while (surfaceBlock && !surfaceBlock.isAir) {
+                    const tid = surfaceBlock.typeId;
+                    if (tid.includes("log") || tid.includes("wood") || tid.includes("leaves") || tid.includes("stem")) {
+                        topY--;
+                        surfaceBlock = dim.getBlock({ x: loc.x, y: topY - 1, z: loc.z });
+                        continue;
+                    }
+                    break;
+                }
+
                 if (surfaceBlock && !surfaceBlock.isAir) {
                     surfaceBlock.setType(visuals.surface);
                     
-                    // 3. Dirt Layer
                     const dirtBlock = dim.getBlock({ x: loc.x, y: topY - 2, z: loc.z });
                     if (dirtBlock) dirtBlock.setType(visuals.dirt);
 
-                    // 4. Random Foliage & Flowers
                     const rand = Math.random();
                     if (rand < 0.05 && visuals.foliage.length > 0) {
                         const feature = visuals.foliage[Math.floor(Math.random() * visuals.foliage.length)];
