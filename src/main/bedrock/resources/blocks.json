@@ -102,5 +102,77 @@
     "gaiadimension:crusted_amethyst_brick_slab": {
         "textures": "gaiadimension:crusted_amethyst_bricks",
         "sound": "stone"
+    },
+    "gaiadimension:vanilla_grass_plains": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_forest": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_jungle": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_swamp": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_desert": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_mesa": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_taiga": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_cold_taiga": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_the_void": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_beach": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_lush_caves": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_dripstone_caves": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_snowy_plains": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_badlands": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_dark_forest": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_birch_forest": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_old_growth_pine_taiga": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_windswept_hills": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_sparse_jungle": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_meadow": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_cherry_grove": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_stony_peaks": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_snowy_beach": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_mushroom_fields": {
+        "sound": "grass"
     }
 }

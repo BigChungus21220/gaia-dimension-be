@@ -6705,8 +6705,8 @@ var BIOME_VISUALS = {
     foliage: ["gaiadimension:goldstone_tree"],
     groundCover: ["gaiadimension:corrupt_varloom_patch"]
   },
-  "vanilla": {
-    surface: "minecraft:grass_block",
+  "plains": {
+    surface: "gaiadimension:vanilla_grass_plains",
     dirt: "minecraft:dirt",
     bedrock: "minecraft:bedrock",
     foliage: [],
@@ -6719,9 +6719,65 @@ var BIOME_VISUALS = {
     foliage: [],
     groundCover: ["minecraft:cactus_feature"]
   },
-  "mesa": {
+  "badlands": {
     surface: "minecraft:red_sand",
     dirt: "minecraft:hardened_clay",
+    bedrock: "minecraft:bedrock",
+    foliage: [],
+    groundCover: []
+  },
+  "swamp": {
+    surface: "gaiadimension:vanilla_grass_swamp",
+    dirt: "minecraft:dirt",
+    bedrock: "minecraft:bedrock",
+    foliage: [],
+    groundCover: []
+  },
+  "jungle": {
+    surface: "gaiadimension:vanilla_grass_jungle",
+    dirt: "minecraft:dirt",
+    bedrock: "minecraft:bedrock",
+    foliage: [],
+    groundCover: []
+  },
+  "forest": {
+    surface: "gaiadimension:vanilla_grass_forest",
+    dirt: "minecraft:dirt",
+    bedrock: "minecraft:bedrock",
+    foliage: [],
+    groundCover: []
+  },
+  "dark_forest": {
+    surface: "gaiadimension:vanilla_grass_dark_forest",
+    dirt: "minecraft:dirt",
+    bedrock: "minecraft:bedrock",
+    foliage: [],
+    groundCover: []
+  },
+  "taiga": {
+    surface: "gaiadimension:vanilla_grass_taiga",
+    dirt: "minecraft:dirt",
+    bedrock: "minecraft:bedrock",
+    foliage: [],
+    groundCover: []
+  },
+  "snowy_plains": {
+    surface: "gaiadimension:vanilla_grass_snowy_plains",
+    dirt: "minecraft:dirt",
+    bedrock: "minecraft:bedrock",
+    foliage: [],
+    groundCover: []
+  },
+  "mushroom_fields": {
+    surface: "minecraft:mycelium",
+    dirt: "minecraft:dirt",
+    bedrock: "minecraft:bedrock",
+    foliage: [],
+    groundCover: []
+  },
+  "cherry_grove": {
+    surface: "gaiadimension:vanilla_grass_cherry_grove",
+    dirt: "minecraft:dirt",
     bedrock: "minecraft:bedrock",
     foliage: [],
     groundCover: []
