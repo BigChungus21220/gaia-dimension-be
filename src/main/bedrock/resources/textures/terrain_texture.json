@@ -1848,6 +1848,84 @@
         },
         "grass_vanilla_mushroom_fields_side": {
             "textures": "textures/gaiadimension/gen/grass/grass_vanilla_mushroom_fields_side"
+        },
+        "grass_vanilla_old_growth_spruce_taiga_top": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_old_growth_spruce_taiga_top"
+        },
+        "grass_vanilla_old_growth_spruce_taiga_side": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_old_growth_spruce_taiga_side"
+        },
+        "grass_vanilla_savanna_top": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_savanna_top"
+        },
+        "grass_vanilla_savanna_side": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_savanna_side"
+        },
+        "grass_vanilla_savanna_plateau_top": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_savanna_plateau_top"
+        },
+        "grass_vanilla_savanna_plateau_side": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_savanna_plateau_side"
+        },
+        "grass_vanilla_windswept_savanna_top": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_windswept_savanna_top"
+        },
+        "grass_vanilla_windswept_savanna_side": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_windswept_savanna_side"
+        },
+        "grass_vanilla_mangrove_swamp_top": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_mangrove_swamp_top"
+        },
+        "grass_vanilla_mangrove_swamp_side": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_mangrove_swamp_side"
+        },
+        "grass_vanilla_flower_forest_top": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_flower_forest_top"
+        },
+        "grass_vanilla_flower_forest_side": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_flower_forest_side"
+        },
+        "grass_vanilla_deep_dark_top": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_deep_dark_top"
+        },
+        "grass_vanilla_deep_dark_side": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_deep_dark_side"
+        },
+        "grass_vanilla_river_top": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_river_top"
+        },
+        "grass_vanilla_river_side": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_river_side"
+        },
+        "grass_vanilla_ocean_top": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_ocean_top"
+        },
+        "grass_vanilla_ocean_side": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_ocean_side"
+        },
+        "grass_vanilla_grove_top": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_grove_top"
+        },
+        "grass_vanilla_grove_side": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_grove_side"
+        },
+        "grass_vanilla_snowy_slopes_top": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_snowy_slopes_top"
+        },
+        "grass_vanilla_snowy_slopes_side": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_snowy_slopes_side"
+        },
+        "grass_vanilla_frozen_peaks_top": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_frozen_peaks_top"
+        },
+        "grass_vanilla_frozen_peaks_side": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_frozen_peaks_side"
+        },
+        "grass_vanilla_jagged_peaks_top": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_jagged_peaks_top"
+        },
+        "grass_vanilla_jagged_peaks_side": {
+            "textures": "textures/gaiadimension/gen/grass/grass_vanilla_jagged_peaks_side"
         }
     }
 }

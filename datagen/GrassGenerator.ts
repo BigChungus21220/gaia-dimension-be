@@ -11,8 +11,8 @@ const BLOCK_OUT = path.join(SRC_DATA, 'blocks/gen/grass');
 
 const VANILLA_DIR = path.join(SRC_RESOURCES, 'textures/vanilla');
 const BASE_TOP = path.join(VANILLA_DIR, 'grass_top.png');
-const BASE_SIDE_BASE = path.join(VANILLA_DIR, 'grass_side_carried.png');
 const BASE_SIDE_OVERLAY = path.join(VANILLA_DIR, 'grass_side_overlay.png');
+const BASE_DIRT_SIDE = path.join(VANILLA_DIR, 'vanilla_dirt_base.png');
 
 interface BiomeColor {
     id: string;
@@ -28,12 +28,20 @@ const VANILLA_GRASS_BIOMES: BiomeColor[] = [
     { id: "snowy_plains", color: "#80b497" },
     { id: "desert", color: "#bfb755" },
     { id: "badlands", color: "#90814d" },
+    { id: "mesa", color: "#90814d" },
+    { id: "savanna", color: "#bfb755" },
+    { id: "savanna_plateau", color: "#bfb755" },
+    { id: "windswept_savanna", color: "#bfb755" },
     { id: "swamp", color: "#6a7039" },
+    { id: "mangrove_swamp", color: "#6a7039" },
     { id: "forest", color: "#79c05a" },
+    { id: "flower_forest", color: "#79c05a" },
     { id: "dark_forest", color: "#507a32" },
     { id: "birch_forest", color: "#88bb67" },
     { id: "taiga", color: "#86b783" },
+    { id: "old_growth_spruce_taiga", color: "#86b783" },
     { id: "old_growth_pine_taiga", color: "#86b87f" },
+    { id: "cold_taiga", color: "#82be71" },
     { id: "windswept_hills", color: "#8ab689" },
     { id: "jungle", color: "#59c93c" },
     { id: "sparse_jungle", color: "#64c73f" },
@@ -41,12 +49,30 @@ const VANILLA_GRASS_BIOMES: BiomeColor[] = [
     { id: "cherry_grove", color: "#b6db61" },
     { id: "stony_peaks", color: "#9abe4b" },
     { id: "snowy_beach", color: "#83b593" },
-    { id: "mushroom_fields", color: "#55c93f" }
+    { id: "mushroom_fields", color: "#55c93f" },
+    { id: "deep_dark", color: "#91bd59" },
+    { id: "river", color: "#8eb971" },
+    { id: "ocean", color: "#8eb971" },
+    { id: "grove", color: "#80b497" },
+    { id: "snowy_slopes", color: "#80b497" },
+    { id: "frozen_peaks", color: "#80b497" },
+    { id: "jagged_peaks", color: "#80b497" }
 ];
 
 export class GrassGenerator {
+    private static createColorBuffer(hex: string, width: number, height: number): Buffer {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        const buffer = Buffer.alloc(width * height * 4);
+        for (let i = 0; i < buffer.length; i += 4) {
+            buffer[i] = r; buffer[i+1] = g; buffer[i+2] = b; buffer[i+3] = 255;
+        }
+        return buffer;
+    }
+
     public static async generate() {
-        console.log("[INFO] Initializing Comprehensive Vanilla Grass Registry...");
+        console.log("[INFO] Initializing Clean Vanilla Grass Registry...");
         
         await fs.ensureDir(TEXTURE_GEN_DIR);
         await fs.ensureDir(BLOCK_OUT);
@@ -61,7 +87,6 @@ export class GrassGenerator {
         let newLangContent = langContent;
 
         terrainTexture.texture_data["dirt"] = { textures: "textures/vanilla/dirt" };
-        const greyscaleTop = await sharp(BASE_TOP).greyscale().toBuffer();
 
         for (const biome of VANILLA_GRASS_BIOMES) {
             const blockId = `gaiadimension:vanilla_grass_${biome.id}`;
@@ -70,16 +95,30 @@ export class GrassGenerator {
             const topOut = path.join(TEXTURE_GEN_DIR, `${textureName}_top.png`);
             const sideOut = path.join(TEXTURE_GEN_DIR, `${textureName}_side.png`);
 
-            await sharp(greyscaleTop).tint(biome.color).toFile(topOut);
-            const tintedOverlay = await sharp(BASE_SIDE_OVERLAY).tint(biome.color).toBuffer();
-            await sharp(BASE_SIDE_BASE).composite([{ input: tintedOverlay, blend: 'over' }]).toFile(sideOut);
+            const colorOverlay = this.createColorBuffer(biome.color, 16, 16);
+            const rawMeta = { raw: { width: 16, height: 16, channels: 4 } };
 
+            // 1. Top
+            await sharp(BASE_TOP)
+                .composite([{ input: colorOverlay, ...rawMeta, blend: 'multiply' }])
+                .toFile(topOut);
+
+            // 2. Side
+            const tintedSideOverlay = await sharp(BASE_SIDE_OVERLAY)
+                .composite([{ input: colorOverlay, ...rawMeta, blend: 'multiply' }])
+                .toBuffer();
+
+            await sharp(BASE_DIRT_SIDE)
+                .composite([{ input: tintedSideOverlay, blend: 'over' }])
+                .toFile(sideOut);
+
+            // 3. Block JSON (Hidden from Creative)
             const blockJson = {
                 format_version: "1.21.70",
                 "minecraft:block": {
                     description: {
                         identifier: blockId,
-                        menu_category: { category: "nature" },
+                        // REMOVED menu_category to hide from creative inventory
                         states: { "gaiadimension:perm_dim": [0, 1, 2] }
                     },
                     components: {

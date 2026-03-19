@@ -27,28 +27,16 @@
             "minecraft:map_color": "#90814d",
             "minecraft:geometry": "minecraft:geometry.full_block",
             "minecraft:material_instances": {
+                "*": {
+                    "texture": "grass_vanilla_mesa_side",
+                    "render_method": "opaque"
+                },
                 "up": {
                     "texture": "grass_vanilla_mesa_top",
                     "render_method": "opaque"
                 },
                 "down": {
                     "texture": "dirt",
-                    "render_method": "opaque"
-                },
-                "north": {
-                    "texture": "grass_vanilla_mesa_side",
-                    "render_method": "opaque"
-                },
-                "south": {
-                    "texture": "grass_vanilla_mesa_side",
-                    "render_method": "opaque"
-                },
-                "east": {
-                    "texture": "grass_vanilla_mesa_side",
-                    "render_method": "opaque"
-                },
-                "west": {
-                    "texture": "grass_vanilla_mesa_side",
                     "render_method": "opaque"
                 }
             },

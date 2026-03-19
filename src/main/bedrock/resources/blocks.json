@@ -174,5 +174,44 @@
     },
     "gaiadimension:vanilla_grass_mushroom_fields": {
         "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_old_growth_spruce_taiga": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_savanna": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_savanna_plateau": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_windswept_savanna": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_mangrove_swamp": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_flower_forest": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_deep_dark": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_river": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_ocean": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_grove": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_snowy_slopes": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_frozen_peaks": {
+        "sound": "grass"
+    },
+    "gaiadimension:vanilla_grass_jagged_peaks": {
+        "sound": "grass"
     }
 }
