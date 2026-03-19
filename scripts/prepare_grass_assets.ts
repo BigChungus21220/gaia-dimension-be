@@ -24,34 +24,30 @@ async function prepare() {
         const b = data[i + 2];
         const a = data[i + 3];
 
-        const pixelIndex = i / 4;
-        const y = Math.floor(pixelIndex / info.width);
+        // Greenish check for the fringe
+        const isGrass = g > b && g > (r - 20); 
 
-        // Positional + Color check
-        const isGreenish = g > b && g > (r - 30);
-        const isGrassArea = y < 10 && isGreenish;
-
-        if (isGrassArea && a > 0) {
-            // Grass Mask (Greyscale)
+        if (isGrass && a > 0) {
+            // Grass Fringe (Greyscale)
             const grey = Math.round(0.299 * r + 0.587 * g + 0.114 * b);
             grassMask[i] = grey;
             grassMask[i + 1] = grey;
             grassMask[i + 2] = grey;
             grassMask[i + 3] = a;
 
-            // Dirt Base is transparent here
+            // Dirt is transparent here
             dirtBase[i] = 0;
             dirtBase[i + 1] = 0;
             dirtBase[i + 2] = 0;
             dirtBase[i + 3] = 0;
         } else {
-            // Grass Mask is transparent
+            // Fringe is transparent
             grassMask[i] = 0;
             grassMask[i + 1] = 0;
             grassMask[i + 2] = 0;
             grassMask[i + 3] = 0;
 
-            // Dirt Base (Original colors)
+            // Dirt part (Keep original colors)
             dirtBase[i] = r;
             dirtBase[i + 1] = g;
             dirtBase[i + 2] = b;
@@ -67,7 +63,7 @@ async function prepare() {
         .png()
         .toFile(DIRT_BASE_OUT);
 
-    console.log("[INFO] Grass assets prepared: Mask and Dirt Base separated.");
+    console.log("[INFO] Grass assets restored and cleanly separated.");
 }
 
 prepare().catch(console.error);

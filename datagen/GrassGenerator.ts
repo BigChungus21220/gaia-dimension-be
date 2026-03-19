@@ -72,7 +72,7 @@ export class GrassGenerator {
     }
 
     public static async generate() {
-        console.log("[INFO] Initializing Clean Vanilla Grass Registry...");
+        console.log("[INFO] Initializing Ultimate Vanilla Grass Registry...");
         
         await fs.ensureDir(TEXTURE_GEN_DIR);
         await fs.ensureDir(BLOCK_OUT);
@@ -98,32 +98,30 @@ export class GrassGenerator {
             const colorOverlay = this.createColorBuffer(biome.color, 16, 16);
             const rawMeta = { raw: { width: 16, height: 16, channels: 4 } };
 
-            // 1. Top
+            // 1. TOP (Standard multiply)
             await sharp(BASE_TOP)
                 .composite([{ input: colorOverlay, ...rawMeta, blend: 'multiply' }])
                 .toFile(topOut);
 
-            // 2. Side
-            const tintedSideOverlay = await sharp(BASE_SIDE_OVERLAY)
+            // 2. SIDE (Slap dirt base onto tinted mask)
+            // Tint the fringe first
+            const tintedFringe = await sharp(BASE_SIDE_OVERLAY)
                 .composite([{ input: colorOverlay, ...rawMeta, blend: 'multiply' }])
                 .toBuffer();
 
-            await sharp(BASE_DIRT_SIDE)
-                .composite([{ input: tintedSideOverlay, blend: 'over' }])
+            // Slap the dirt base over it. Since dirt base has transparency where the fringe goes, 
+            // and the fringe is already clipped to its area, they should align perfectly.
+            await sharp(tintedFringe)
+                .composite([{ input: BASE_DIRT_SIDE, blend: 'over' }])
                 .toFile(sideOut);
 
-            // 3. Block JSON (Hidden from Creative)
+            // 3. Block JSON
             const blockJson = {
                 format_version: "1.21.70",
                 "minecraft:block": {
-                    description: {
-                        identifier: blockId,
-                        // REMOVED menu_category to hide from creative inventory
-                        states: { "gaiadimension:perm_dim": [0, 1, 2] }
-                    },
+                    description: { identifier: blockId, states: { "gaiadimension:perm_dim": [0, 1, 2] } },
                     components: {
-                        "tag:is_shovelable": {},
-                        "tag:dirt": {},
+                        "tag:is_shovelable": {}, "tag:dirt": {},
                         "minecraft:destructible_by_mining": { seconds_to_destroy: 1 },
                         "minecraft:destructible_by_explosion": { explosion_resistance: 1 },
                         "minecraft:light_emission": 0,
