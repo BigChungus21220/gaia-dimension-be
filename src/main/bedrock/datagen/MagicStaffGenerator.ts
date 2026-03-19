@@ -8,8 +8,9 @@ import { StaffRod } from "./components/StaffRod";
 
 const RP_PATH = "src/main/bedrock/resources";
 const BP_PATH = "src/main/bedrock/data";
+const DATAGEN_RES = "src/main/bedrock/datagen/resources/magic_staff";
 
-const TEXTURE_SRC = path.join(RP_PATH, "textures/gaiadimension/androsa/item/magic_staff");
+const TEXTURE_SRC = DATAGEN_RES;
 const TEXTURE_OUT = path.join(RP_PATH, "textures/gaiadimension/androsa/item/gen/magic_staff");
 const ITEM_OUT = path.join(BP_PATH, "items/androsa/magic_staff");
 

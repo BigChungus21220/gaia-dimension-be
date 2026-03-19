@@ -29,8 +29,8 @@ async function build() {
 
     // 1. Run Registries/Resources
     console.log('\x1b[32m> Task :processResources\x1b[0m');
-    await runCommand('npx tsx datagen/MagicStaffGenerator.ts');
-    await runCommand('npx tsx datagen/GrassGenerator.ts');
+    await runCommand('npx tsx src/main/bedrock/datagen/MagicStaffGenerator.ts');
+    await runCommand('npx tsx src/main/bedrock/datagen/GrassGenerator.ts');
     await runCommand('node port_worldgen.js');
 
     // 2. Bundle Scripts

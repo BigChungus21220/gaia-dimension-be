@@ -1,5 +1,5 @@
 // src/main/bedrock/ts/GaiaDimensionAddon.ts
-import { system as system37 } from "@minecraft/server";
+import { system as system38 } from "@minecraft/server";
 
 // src/main/bedrock/ts/blocks/leaves.ts
 import { system } from "@minecraft/server";
@@ -6612,294 +6612,8 @@ var DataSystem = class {
   }
 };
 
-// src/main/bedrock/ts/config/biome_visuals.ts
-var BIOME_VISUALS = {
-  "mineral_river": {
-    surface: "gaiadimension:salt",
-    dirt: "gaiadimension:salt_rock",
-    bedrock: "gaiadimension:bedrock_mineral_river",
-    foliage: [],
-    groundCover: []
-  },
-  "volcanic_lands": {
-    surface: "gaiadimension:charred_grass",
-    dirt: "gaiadimension:volcanic_rock",
-    bedrock: "gaiadimension:bedrock_volcanic_lands",
-    foliage: ["gaiadimension:burning_tree"],
-    groundCover: []
-  },
-  "shining_grove": {
-    surface: "gaiadimension:soft_grass",
-    dirt: "gaiadimension:light_soil",
-    bedrock: "gaiadimension:bedrock_shining_grove",
-    foliage: ["gaiadimension:golden_tree"],
-    groundCover: ["gaiadimension:gold_orb_tucher_patch"]
-  },
-  "smoldering_bog": {
-    surface: "gaiadimension:murky_grass",
-    dirt: "gaiadimension:boggy_soil",
-    bedrock: "gaiadimension:bedrock_smoldering_bog",
-    foliage: ["gaiadimension:burnt_tree"],
-    groundCover: []
-  },
-  "static_wasteland": {
-    surface: "gaiadimension:wasteland_stone",
-    dirt: "gaiadimension:impure_rock",
-    bedrock: "gaiadimension:bedrock_static_wasteland",
-    foliage: [],
-    groundCover: ["gaiadimension:static_stone_blob"]
-  },
-  "green_agate_jungle": {
-    surface: "gaiadimension:green_glitter_grass",
-    dirt: "gaiadimension:heavy_soil",
-    bedrock: "gaiadimension:bedrock_green_agate_jungle",
-    foliage: ["gaiadimension:green_agate_tree", "gaiadimension:green_bush"],
-    groundCover: ["gaiadimension:agathum_patch", "gaiadimension:green_crystal_growth_patch"]
-  },
-  "crystal_plains": {
-    surface: "gaiadimension:pink_glitter_grass",
-    dirt: "gaiadimension:heavy_soil",
-    bedrock: "gaiadimension:bedrock_crystal_plains",
-    foliage: ["gaiadimension:pink_agate_tree"],
-    groundCover: ["gaiadimension:pink_crystal_growth_patch"]
-  },
-  "mutant_agate_wildwood": {
-    surface: "gaiadimension:orange_glitter_grass",
-    dirt: "gaiadimension:heavy_soil",
-    bedrock: "gaiadimension:bedrock_mutant_agate_wildwood",
-    foliage: ["gaiadimension:pink_agate_tree_mutant"],
-    groundCover: ["gaiadimension:mutant_crystal_growth_patch"]
-  },
-  "purple_agate_swamp": {
-    surface: "gaiadimension:purple_glitter_grass",
-    dirt: "gaiadimension:heavy_soil",
-    bedrock: "gaiadimension:bedrock_purple_agate_swamp",
-    foliage: ["gaiadimension:purple_tree_randomizer"],
-    groundCover: ["gaiadimension:purple_crystal_growth_patch"]
-  },
-  "pink_agate_forest": {
-    surface: "gaiadimension:peach_glitter_grass",
-    dirt: "gaiadimension:heavy_soil",
-    bedrock: "gaiadimension:bedrock_pink_agate_forest",
-    foliage: ["gaiadimension:forest_pink_agate_tree"],
-    groundCover: ["gaiadimension:peach_crystal_growth_patch"]
-  },
-  "blue_agate_taiga": {
-    surface: "gaiadimension:blue_agate_taiga",
-    dirt: "gaiadimension:heavy_soil",
-    bedrock: "gaiadimension:bedrock_blue_agate_taiga",
-    foliage: ["gaiadimension:blue_agate_tree"],
-    groundCover: ["gaiadimension:blue_crystal_growth_patch"]
-  },
-  "fossil_woodland": {
-    surface: "gaiadimension:pale_green_glitter_grass",
-    dirt: "gaiadimension:heavy_soil",
-    bedrock: "gaiadimension:bedrock_fossil_woodland",
-    foliage: ["gaiadimension:fossilized_tree"],
-    groundCover: ["gaiadimension:agathum_patch"]
-  },
-  "goldstone_lands": {
-    surface: "gaiadimension:corrupt_grass",
-    dirt: "gaiadimension:corrupt_soil",
-    bedrock: "gaiadimension:bedrock_goldstone_lands",
-    foliage: ["gaiadimension:goldstone_tree"],
-    groundCover: ["gaiadimension:corrupt_varloom_patch"]
-  },
-  "plains": {
-    surface: "gaiadimension:vanilla_grass_plains",
-    dirt: "minecraft:dirt",
-    bedrock: "minecraft:bedrock",
-    foliage: [],
-    groundCover: []
-  },
-  "desert": {
-    surface: "minecraft:sand",
-    dirt: "minecraft:sand",
-    bedrock: "minecraft:bedrock",
-    foliage: [],
-    groundCover: ["minecraft:cactus_feature"]
-  },
-  "badlands": {
-    surface: "minecraft:red_sand",
-    dirt: "minecraft:hardened_clay",
-    bedrock: "minecraft:bedrock",
-    foliage: [],
-    groundCover: []
-  },
-  "swamp": {
-    surface: "gaiadimension:vanilla_grass_swamp",
-    dirt: "minecraft:dirt",
-    bedrock: "minecraft:bedrock",
-    foliage: [],
-    groundCover: []
-  },
-  "jungle": {
-    surface: "gaiadimension:vanilla_grass_jungle",
-    dirt: "minecraft:dirt",
-    bedrock: "minecraft:bedrock",
-    foliage: [],
-    groundCover: []
-  },
-  "forest": {
-    surface: "gaiadimension:vanilla_grass_forest",
-    dirt: "minecraft:dirt",
-    bedrock: "minecraft:bedrock",
-    foliage: [],
-    groundCover: []
-  },
-  "dark_forest": {
-    surface: "gaiadimension:vanilla_grass_dark_forest",
-    dirt: "minecraft:dirt",
-    bedrock: "minecraft:bedrock",
-    foliage: [],
-    groundCover: []
-  },
-  "taiga": {
-    surface: "gaiadimension:vanilla_grass_taiga",
-    dirt: "minecraft:dirt",
-    bedrock: "minecraft:bedrock",
-    foliage: [],
-    groundCover: []
-  },
-  "snowy_plains": {
-    surface: "gaiadimension:vanilla_grass_snowy_plains",
-    dirt: "minecraft:dirt",
-    bedrock: "minecraft:bedrock",
-    foliage: [],
-    groundCover: []
-  },
-  "mushroom_fields": {
-    surface: "minecraft:mycelium",
-    dirt: "minecraft:dirt",
-    bedrock: "minecraft:bedrock",
-    foliage: [],
-    groundCover: []
-  },
-  "cherry_grove": {
-    surface: "gaiadimension:vanilla_grass_cherry_grove",
-    dirt: "minecraft:dirt",
-    bedrock: "minecraft:bedrock",
-    foliage: [],
-    groundCover: []
-  }
-};
-
 // src/main/bedrock/ts/systems/Commands.ts
-function formatName(id) {
-  return id.split(/[:_]/).map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
-}
 function registerGaiaCommands(registry) {
-  registry.registerCommand({
-    name: "gaiadimension:setbiome",
-    description: 'Transform the biome. Usage: /gaiadimension:setbiome "crystal_plains" "20" "circle" "true"',
-    permissionLevel: CommandPermissionLevel.GameDirectors,
-    optionalParameters: [
-      { name: "biome", type: CustomCommandParamType.String },
-      { name: "radius", type: CustomCommandParamType.String },
-      { name: "shape", type: CustomCommandParamType.String },
-      { name: "epic", type: CustomCommandParamType.String }
-    ]
-  }, (origin, biome, radiusStr, shape, epic) => {
-    const player = origin.sourceEntity;
-    if (!(player instanceof Player15)) return;
-    if (!biome || !radiusStr) {
-      player.sendMessage('\xA7cUsage: /gaiadimension:setbiome "biome" "radius" ["shape"] ["epic"]');
-      return { status: 0 };
-    }
-    const cleanBiome = biome.replace(/["']/g, "");
-    const radius = Number(radiusStr.replace(/["']/g, ""));
-    const cleanShape = (shape || "circle").replace(/["']/g, "");
-    const isEpic = epic?.toLowerCase().replace(/["']/g, "") === "true" || epic?.toLowerCase().replace(/["']/g, "") === "epic";
-    if (isNaN(radius)) {
-      player.sendMessage("\xA7cInvalid radius. Please provide a number.");
-      return { status: 0 };
-    }
-    const visuals = BIOME_VISUALS[cleanBiome];
-    if (!visuals) {
-      player.sendMessage(`\xA7cUnknown biome: ${cleanBiome}. Valid: ${Object.keys(BIOME_VISUALS).join(", ")}`);
-      return { status: 0 };
-    }
-    const center = { x: Math.floor(player.location.x), y: Math.floor(player.location.y), z: Math.floor(player.location.z) };
-    const dim = player.dimension;
-    player.sendMessage(`\xA76[Gaia] \xA77Commencing transformation to \xA7e${formatName(cleanBiome)}\xA77...`);
-    const transformLocation = (loc) => {
-      try {
-        const metaBlock = dim.getBlock({ x: loc.x, y: 0, z: loc.z });
-        if (metaBlock) metaBlock.setType(visuals.bedrock);
-        let currentY = DimensionSystem.getTopBlock(dim, loc.x, loc.z, loc.y + 40);
-        let surfaceBlock = null;
-        while (currentY > dim.heightRange.min) {
-          const b = dim.getBlock({ x: loc.x, y: currentY - 1, z: loc.z });
-          if (!b || b.isAir) {
-            currentY--;
-            continue;
-          }
-          const tid = b.typeId;
-          if (tid.includes("log") || tid.includes("wood") || tid.includes("leaves") || tid.includes("stem") || tid.includes("flower") || tid === "minecraft:tallgrass" || tid === "minecraft:grass" || tid.includes("crystal_growth") || tid.includes("agathum") || tid.includes("tucher") || tid.includes("sapling") || tid.includes("bush")) {
-            currentY--;
-            continue;
-          }
-          surfaceBlock = b;
-          break;
-        }
-        if (surfaceBlock && !surfaceBlock.isAir) {
-          surfaceBlock.setType(visuals.surface);
-          const dirtBlock = dim.getBlock({ x: loc.x, y: currentY - 2, z: loc.z });
-          if (dirtBlock) dirtBlock.setType(visuals.dirt);
-          const rand = Math.random();
-          if (rand < 0.05 && visuals.foliage.length > 0) {
-            const feature = visuals.foliage[Math.floor(Math.random() * visuals.foliage.length)];
-            dim.runCommand(`execute positioned ${loc.x} ${currentY} ${loc.z} run feature place ${feature}`);
-          } else if (rand < 0.15 && visuals.groundCover.length > 0) {
-            const feature = visuals.groundCover[Math.floor(Math.random() * visuals.groundCover.length)];
-            dim.runCommand(`execute positioned ${loc.x} ${currentY} ${loc.z} run feature place ${feature}`);
-          } else if (rand < 0.25) {
-            const flowers = ["gaiadimension:tilibl", "gaiadimension:tiligr", "gaiadimension:tilimy", "gaiadimension:tiliol", "gaiadimension:tiliou", "gaiadimension:tilipi", "gaiadimension:tilipu"];
-            const flower = flowers[Math.floor(Math.random() * flowers.length)];
-            const airBlock = dim.getBlock({ x: loc.x, y: currentY, z: loc.z });
-            if (airBlock && airBlock.isAir) airBlock.setType(flower);
-          }
-        }
-      } catch (e) {
-      }
-    };
-    if (!isEpic) {
-      system30.run(() => {
-        for (let x = -radius; x <= radius; x++) {
-          for (let z = -radius; z <= radius; z++) {
-            const dist = Math.sqrt(x * x + z * z);
-            if (cleanShape === "circle" && dist > radius) continue;
-            transformLocation({ x: center.x + x, y: center.y, z: center.z + z });
-          }
-        }
-        dim.spawnEntity("minecraft:lightning_bolt", center);
-        dim.playSound("ambient.weather.thunder", center);
-      });
-    } else {
-      let currentRadius = 0;
-      const interval = system30.runInterval(() => {
-        const r = currentRadius;
-        for (let theta = 0; theta < 360; theta += 2) {
-          const rad = theta * Math.PI / 180;
-          const x = Math.round(r * Math.cos(rad));
-          const z = Math.round(r * Math.sin(rad));
-          transformLocation({ x: center.x + x, y: center.y, z: center.z + z });
-        }
-        if (r % 5 === 0) {
-          const fxPos = { x: center.x + r, y: center.y, z: center.z };
-          dim.playSound("item.trident.thunder", fxPos, { volume: 0.5 });
-          if (Math.random() < 0.3) dim.spawnEntity("minecraft:lightning_bolt", { x: center.x + (Math.random() * r * 2 - r), y: center.y, z: center.z + (Math.random() * r * 2 - r) });
-        }
-        currentRadius++;
-        if (currentRadius > radius) {
-          system30.clearRun(interval);
-          dim.playSound("ui.toast.challenge_complete", center);
-          player.sendMessage("\xA76[Gaia] \xA7aTransformation Complete.");
-        }
-      }, 1);
-    }
-    return { status: 0 };
-  });
   registry.registerCommand({
     name: "gaiadimension:math",
     description: "Evaluates a mathematical expression with Vec3 and Math support.",
@@ -7230,14 +6944,310 @@ function registerGaiaCommands(registry) {
     return { status: 0 };
   });
 }
+function formatName(id) {
+  return id.split(/[:_]/).map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+}
+
+// src/main/bedrock/ts/systems/SetBiomeCommand.ts
+import { Player as Player16, system as system31, CommandPermissionLevel as CommandPermissionLevel2, CustomCommandParamType as CustomCommandParamType2 } from "@minecraft/server";
+
+// src/main/bedrock/ts/config/biome_visuals.ts
+var BIOME_VISUALS = {
+  "mineral_river": {
+    surface: "gaiadimension:salt",
+    dirt: "gaiadimension:salt_rock",
+    bedrock: "gaiadimension:bedrock_mineral_river",
+    foliage: [],
+    groundCover: []
+  },
+  "volcanic_lands": {
+    surface: "gaiadimension:charred_grass",
+    dirt: "gaiadimension:volcanic_rock",
+    bedrock: "gaiadimension:bedrock_volcanic_lands",
+    foliage: ["gaiadimension:burning_tree"],
+    groundCover: []
+  },
+  "shining_grove": {
+    surface: "gaiadimension:soft_grass",
+    dirt: "gaiadimension:light_soil",
+    bedrock: "gaiadimension:bedrock_shining_grove",
+    foliage: ["gaiadimension:golden_tree"],
+    groundCover: ["gaiadimension:gold_orb_tucher_patch"]
+  },
+  "smoldering_bog": {
+    surface: "gaiadimension:murky_grass",
+    dirt: "gaiadimension:boggy_soil",
+    bedrock: "gaiadimension:bedrock_smoldering_bog",
+    foliage: ["gaiadimension:burnt_tree"],
+    groundCover: []
+  },
+  "static_wasteland": {
+    surface: "gaiadimension:wasteland_stone",
+    dirt: "gaiadimension:impure_rock",
+    bedrock: "gaiadimension:bedrock_static_wasteland",
+    foliage: [],
+    groundCover: ["gaiadimension:static_stone_blob"]
+  },
+  "green_agate_jungle": {
+    surface: "gaiadimension:green_glitter_grass",
+    dirt: "gaiadimension:heavy_soil",
+    bedrock: "gaiadimension:bedrock_green_agate_jungle",
+    foliage: ["gaiadimension:green_agate_tree", "gaiadimension:green_bush"],
+    groundCover: ["gaiadimension:agathum_patch", "gaiadimension:green_crystal_growth_patch"]
+  },
+  "crystal_plains": {
+    surface: "gaiadimension:pink_glitter_grass",
+    dirt: "gaiadimension:heavy_soil",
+    bedrock: "gaiadimension:bedrock_crystal_plains",
+    foliage: ["gaiadimension:pink_agate_tree"],
+    groundCover: ["gaiadimension:pink_crystal_growth_patch"]
+  },
+  "mutant_agate_wildwood": {
+    surface: "gaiadimension:orange_glitter_grass",
+    dirt: "gaiadimension:heavy_soil",
+    bedrock: "gaiadimension:bedrock_mutant_agate_wildwood",
+    foliage: ["gaiadimension:pink_agate_tree_mutant"],
+    groundCover: ["gaiadimension:mutant_crystal_growth_patch"]
+  },
+  "purple_agate_swamp": {
+    surface: "gaiadimension:purple_glitter_grass",
+    dirt: "gaiadimension:heavy_soil",
+    bedrock: "gaiadimension:bedrock_purple_agate_swamp",
+    foliage: ["gaiadimension:purple_tree_randomizer"],
+    groundCover: ["gaiadimension:purple_crystal_growth_patch"]
+  },
+  "pink_agate_forest": {
+    surface: "gaiadimension:peach_glitter_grass",
+    dirt: "gaiadimension:heavy_soil",
+    bedrock: "gaiadimension:bedrock_pink_agate_forest",
+    foliage: ["gaiadimension:forest_pink_agate_tree"],
+    groundCover: ["gaiadimension:peach_crystal_growth_patch"]
+  },
+  "blue_agate_taiga": {
+    surface: "gaiadimension:blue_agate_taiga",
+    dirt: "gaiadimension:heavy_soil",
+    bedrock: "gaiadimension:bedrock_blue_agate_taiga",
+    foliage: ["gaiadimension:blue_agate_tree"],
+    groundCover: ["gaiadimension:blue_crystal_growth_patch"]
+  },
+  "fossil_woodland": {
+    surface: "gaiadimension:pale_green_glitter_grass",
+    dirt: "gaiadimension:heavy_soil",
+    bedrock: "gaiadimension:bedrock_fossil_woodland",
+    foliage: ["gaiadimension:fossilized_tree"],
+    groundCover: ["gaiadimension:agathum_patch"]
+  },
+  "goldstone_lands": {
+    surface: "gaiadimension:corrupt_grass",
+    dirt: "gaiadimension:corrupt_soil",
+    bedrock: "gaiadimension:bedrock_goldstone_lands",
+    foliage: ["gaiadimension:goldstone_tree"],
+    groundCover: ["gaiadimension:corrupt_varloom_patch"]
+  },
+  "plains": {
+    surface: "gaiadimension:vanilla_grass_plains",
+    dirt: "minecraft:dirt",
+    bedrock: "minecraft:bedrock",
+    foliage: [],
+    groundCover: []
+  },
+  "desert": {
+    surface: "minecraft:sand",
+    dirt: "minecraft:sand",
+    bedrock: "minecraft:bedrock",
+    foliage: [],
+    groundCover: ["minecraft:cactus_feature"]
+  },
+  "badlands": {
+    surface: "minecraft:red_sand",
+    dirt: "minecraft:hardened_clay",
+    bedrock: "minecraft:bedrock",
+    foliage: [],
+    groundCover: []
+  },
+  "swamp": {
+    surface: "gaiadimension:vanilla_grass_swamp",
+    dirt: "minecraft:dirt",
+    bedrock: "minecraft:bedrock",
+    foliage: [],
+    groundCover: []
+  },
+  "jungle": {
+    surface: "gaiadimension:vanilla_grass_jungle",
+    dirt: "minecraft:dirt",
+    bedrock: "minecraft:bedrock",
+    foliage: [],
+    groundCover: []
+  },
+  "forest": {
+    surface: "gaiadimension:vanilla_grass_forest",
+    dirt: "minecraft:dirt",
+    bedrock: "minecraft:bedrock",
+    foliage: [],
+    groundCover: []
+  },
+  "dark_forest": {
+    surface: "gaiadimension:vanilla_grass_dark_forest",
+    dirt: "minecraft:dirt",
+    bedrock: "minecraft:bedrock",
+    foliage: [],
+    groundCover: []
+  },
+  "taiga": {
+    surface: "gaiadimension:vanilla_grass_taiga",
+    dirt: "minecraft:dirt",
+    bedrock: "minecraft:bedrock",
+    foliage: [],
+    groundCover: []
+  },
+  "snowy_plains": {
+    surface: "gaiadimension:vanilla_grass_snowy_plains",
+    dirt: "minecraft:dirt",
+    bedrock: "minecraft:bedrock",
+    foliage: [],
+    groundCover: []
+  },
+  "mushroom_fields": {
+    surface: "minecraft:mycelium",
+    dirt: "minecraft:dirt",
+    bedrock: "minecraft:bedrock",
+    foliage: [],
+    groundCover: []
+  },
+  "cherry_grove": {
+    surface: "gaiadimension:vanilla_grass_cherry_grove",
+    dirt: "minecraft:dirt",
+    bedrock: "minecraft:bedrock",
+    foliage: [],
+    groundCover: []
+  }
+};
+
+// src/main/bedrock/ts/systems/SetBiomeCommand.ts
+function formatName2(id) {
+  return id.split(/[:_]/).map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+}
+function registerSetBiomeCommand(registry) {
+  registry.registerCommand({
+    name: "gaiadimension:setbiome",
+    description: 'Transform the biome. Usage: /gaiadimension:setbiome "crystal_plains" "20" "circle" "true"',
+    permissionLevel: CommandPermissionLevel2.GameDirectors,
+    optionalParameters: [
+      { name: "biome", type: CustomCommandParamType2.String },
+      { name: "radius", type: CustomCommandParamType2.String },
+      { name: "shape", type: CustomCommandParamType2.String },
+      { name: "epic", type: CustomCommandParamType2.String }
+    ]
+  }, (origin, biome, radiusStr, shape, epic) => {
+    const player = origin.sourceEntity;
+    if (!(player instanceof Player16)) return;
+    if (!biome || !radiusStr) {
+      player.sendMessage('\xA7cUsage: /gaiadimension:setbiome "biome" "radius" ["shape"] ["epic"]');
+      return { status: 0 };
+    }
+    const cleanBiome = biome.replace(/["']/g, "");
+    const radius = Number(radiusStr.replace(/["']/g, ""));
+    const cleanShape = (shape || "circle").replace(/["']/g, "");
+    const isEpic = epic?.toLowerCase().replace(/["']/g, "") === "true" || epic?.toLowerCase().replace(/["']/g, "") === "epic";
+    if (isNaN(radius)) {
+      player.sendMessage("\xA7cInvalid radius. Please provide a number.");
+      return { status: 0 };
+    }
+    const visuals = BIOME_VISUALS[cleanBiome];
+    if (!visuals) {
+      player.sendMessage(`\xA7cUnknown biome: ${cleanBiome}. Valid: ${Object.keys(BIOME_VISUALS).join(", ")}`);
+      return { status: 0 };
+    }
+    const center = { x: Math.floor(player.location.x), y: Math.floor(player.location.y), z: Math.floor(player.location.z) };
+    const dim = player.dimension;
+    player.sendMessage(`\xA76[Gaia] \xA77Commencing transformation to \xA7e${formatName2(cleanBiome)}\xA77...`);
+    const transformLocation = (loc) => {
+      try {
+        const metaBlock = dim.getBlock({ x: loc.x, y: 0, z: loc.z });
+        if (metaBlock) metaBlock.setType(visuals.bedrock);
+        let currentY = DimensionSystem.getTopBlock(dim, loc.x, loc.z, loc.y + 40);
+        let surfaceBlock = null;
+        while (currentY > dim.heightRange.min) {
+          const b = dim.getBlock({ x: loc.x, y: currentY - 1, z: loc.z });
+          if (!b || b.isAir) {
+            currentY--;
+            continue;
+          }
+          const tid = b.typeId;
+          if (tid.includes("log") || tid.includes("wood") || tid.includes("leaves") || tid.includes("stem") || tid.includes("flower") || tid === "minecraft:tallgrass" || tid === "minecraft:grass" || tid === "minecraft:mycelium" || tid.includes("crystal_growth") || tid.includes("agathum") || tid.includes("tucher") || tid.includes("sapling") || tid.includes("bush")) {
+            currentY--;
+            continue;
+          }
+          surfaceBlock = b;
+          break;
+        }
+        if (surfaceBlock && !surfaceBlock.isAir) {
+          surfaceBlock.setType(visuals.surface);
+          const dirtBlock = dim.getBlock({ x: loc.x, y: currentY - 2, z: loc.z });
+          if (dirtBlock) dirtBlock.setType(visuals.dirt);
+          const rand = Math.random();
+          if (rand < 0.05 && visuals.foliage.length > 0) {
+            const feature = visuals.foliage[Math.floor(Math.random() * visuals.foliage.length)];
+            dim.runCommand(`execute positioned ${loc.x} ${currentY} ${loc.z} run feature place ${feature}`);
+          } else if (rand < 0.15 && visuals.groundCover.length > 0) {
+            const feature = visuals.groundCover[Math.floor(Math.random() * visuals.groundCover.length)];
+            dim.runCommand(`execute positioned ${loc.x} ${currentY} ${loc.z} run feature place ${feature}`);
+          } else if (rand < 0.25) {
+            const flowers = ["gaiadimension:tilibl", "gaiadimension:tiligr", "gaiadimension:tilimy", "gaiadimension:tiliol", "gaiadimension:tiliou", "gaiadimension:tilipi", "gaiadimension:tilipu"];
+            const flower = flowers[Math.floor(Math.random() * flowers.length)];
+            const airBlock = dim.getBlock({ x: loc.x, y: currentY, z: loc.z });
+            if (airBlock && airBlock.isAir) airBlock.setType(flower);
+          }
+        }
+      } catch (e) {
+      }
+    };
+    if (!isEpic) {
+      system31.run(() => {
+        for (let x = -radius; x <= radius; x++) {
+          for (let z = -radius; z <= radius; z++) {
+            const dist = Math.sqrt(x * x + z * z);
+            if (cleanShape === "circle" && dist > radius) continue;
+            transformLocation({ x: center.x + x, y: center.y, z: center.z + z });
+          }
+        }
+        dim.spawnEntity("minecraft:lightning_bolt", center);
+        dim.playSound("ambient.weather.thunder", center);
+      });
+    } else {
+      let currentRadius = 0;
+      const interval = system31.runInterval(() => {
+        const r = currentRadius;
+        for (let theta = 0; theta < 360; theta += 2) {
+          const rad = theta * Math.PI / 180;
+          const x = Math.round(r * Math.cos(rad));
+          const z = Math.round(r * Math.sin(rad));
+          transformLocation({ x: center.x + x, y: center.y, z: center.z + z });
+        }
+        if (r % 5 === 0) {
+          const fxPos = { x: center.x + r, y: center.y, z: center.z };
+          dim.playSound("item.trident.thunder", fxPos, { volume: 0.5 });
+          if (Math.random() < 0.3) dim.spawnEntity("minecraft:lightning_bolt", { x: center.x + (Math.random() * r * 2 - r), y: center.y, z: center.z + (Math.random() * r * 2 - r) });
+        }
+        currentRadius++;
+        if (currentRadius > radius) {
+          system31.clearRun(interval);
+          dim.playSound("ui.toast.challenge_complete", center);
+          player.sendMessage("\xA76[Gaia] \xA7aTransformation Complete.");
+        }
+      }, 1);
+    }
+    return { status: 0 };
+  });
+}
 
 // src/main/bedrock/ts/items/FireStarter.ts
-import { Player as Player16 } from "@minecraft/server";
+import { Player as Player17 } from "@minecraft/server";
 function registerFireStarterComponent({ itemComponentRegistry }) {
   itemComponentRegistry.registerCustomComponent("gaiadimension:fire_starter", {
     onUseOn: (event) => {
       const { source: player, block, blockFace, itemStack } = event;
-      if (!(player instanceof Player16)) return;
+      if (!(player instanceof Player17)) return;
       const targetLocation = block.location;
       const placeLocation = {
         x: targetLocation.x + (blockFace === "East" ? 1 : blockFace === "West" ? -1 : 0),
@@ -7271,7 +7281,7 @@ function registerFireStarterComponent({ itemComponentRegistry }) {
 }
 
 // src/main/bedrock/ts/systems/Cleaner.ts
-import { world as world27, system as system31, BlockVolume as BlockVolume3, BlockPermutation as BlockPermutation14 } from "@minecraft/server";
+import { world as world28, system as system32, BlockVolume as BlockVolume3, BlockPermutation as BlockPermutation14 } from "@minecraft/server";
 var CLUTTER_TAGS = [
   "grass",
   "plant",
@@ -7309,17 +7319,17 @@ var SHARED_VOL;
 var QUEUE = [];
 var CACHE = /* @__PURE__ */ new Set();
 var QUEUED = /* @__PURE__ */ new Set();
-system31.run(() => {
+system32.run(() => {
   try {
     AIR = BlockPermutation14.resolve("minecraft:air");
-    DIM = world27.getDimension("minecraft:overworld");
+    DIM = world28.getDimension("minecraft:overworld");
     SHARED_VOL = new BlockVolume3({ x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 0 });
   } catch (e) {
   }
 });
-system31.runInterval(() => {
+system32.runInterval(() => {
   if (QUEUE.length < 2) return;
-  const players = world27.getAllPlayers().filter((p) => p.dimension.id === "minecraft:overworld");
+  const players = world28.getAllPlayers().filter((p) => p.dimension.id === "minecraft:overworld");
   if (players.length === 0) return;
   const pLoc = players[0].location;
   QUEUE.sort((a, b) => {
@@ -7328,10 +7338,10 @@ system31.runInterval(() => {
     return dA - dB;
   });
 }, 100);
-system31.runInterval(() => {
+system32.runInterval(() => {
   if (QUEUE.length === 0 || !SHARED_VOL || !DIM || !AIR) return;
   const t = QUEUE[0];
-  const players = world27.getAllPlayers();
+  const players = world28.getAllPlayers();
   const isAnyPlayerNear = players.some((p) => {
     if (p.dimension.id !== "minecraft:overworld") return false;
     const loc = p.location;
@@ -7380,7 +7390,7 @@ function registerCleanerComponent({ blockComponentRegistry }) {
 }
 
 // src/main/bedrock/ts/blocks/GlitterGrassSync.ts
-import { world as world28, system as system32, ItemStack as ItemStack14 } from "@minecraft/server";
+import { world as world29, system as system33, ItemStack as ItemStack14 } from "@minecraft/server";
 var GLITTER_GRASS_TYPES = [
   "gaiadimension:green_glitter_grass",
   "gaiadimension:pink_glitter_grass",
@@ -7414,13 +7424,13 @@ function syncInventory(player) {
   }
 }
 function initializeGlitterGrassSync() {
-  world28.afterEvents.playerPlaceBlock.subscribe((event) => {
+  world29.afterEvents.playerPlaceBlock.subscribe((event) => {
     const { block } = event;
     if (GLITTER_GRASS_TYPES.includes(block.typeId)) {
       const biome = DimensionSystem.getBiomeAt(block.dimension, block.location);
       const targetGrassId = BIOME_TO_GRASS[biome];
       if (targetGrassId && block.typeId !== targetGrassId) {
-        system32.run(() => {
+        system33.run(() => {
           if (block.isValid) {
             block.setType(targetGrassId);
           }
@@ -7428,14 +7438,14 @@ function initializeGlitterGrassSync() {
       }
     }
   });
-  system32.runInterval(() => {
-    for (const player of world28.getAllPlayers()) {
+  system33.runInterval(() => {
+    for (const player of world29.getAllPlayers()) {
       if (DimensionSystem.isInGaia(player)) {
         syncInventory(player);
       }
     }
   }, 40);
-  world28.afterEvents.playerInventoryItemChange.subscribe((event) => {
+  world29.afterEvents.playerInventoryItemChange.subscribe((event) => {
     const { player } = event;
     if (DimensionSystem.isInGaia(player)) {
       syncInventory(player);
@@ -7444,10 +7454,10 @@ function initializeGlitterGrassSync() {
 }
 
 // src/main/bedrock/ts/world/CoordinateDisplay.ts
-import { world as world29, system as system33 } from "@minecraft/server";
+import { world as world30, system as system34 } from "@minecraft/server";
 function updateAllCoordinateDisplays() {
-  const showCoords = world29.gameRules.showCoordinates;
-  for (const player of world29.getAllPlayers()) {
+  const showCoords = world30.gameRules.showCoordinates;
+  for (const player of world30.getAllPlayers()) {
     if (!player.isValid) continue;
     if (!showCoords) {
       if (player.hasTag("gaiadimension:showing_coords")) {
@@ -7476,7 +7486,7 @@ function updateAllCoordinateDisplays() {
     if (!player.hasTag("gaiadimension:showing_coords")) player.addTag("gaiadimension:showing_coords");
   }
 }
-system33.runInterval(() => {
+system34.runInterval(() => {
   try {
     updateAllCoordinateDisplays();
   } catch (e) {
@@ -7484,7 +7494,7 @@ system33.runInterval(() => {
 }, 1);
 
 // src/main/bedrock/ts/world/Events.ts
-import { world as world30, system as system34 } from "@minecraft/server";
+import { world as world31, system as system35 } from "@minecraft/server";
 var EventHandler = class {
   handlers = [];
   constructor() {
@@ -7505,8 +7515,8 @@ var EventHandler = class {
 var playerChangeBiome = new EventHandler();
 var playerChangeBlock = new EventHandler();
 var lastPlayerPositions = /* @__PURE__ */ new Map();
-system34.runInterval(() => {
-  for (const player of world30.getAllPlayers()) {
+system35.runInterval(() => {
+  for (const player of world31.getAllPlayers()) {
     if (!player.isValid) {
       lastPlayerPositions.delete(player.id);
       continue;
@@ -7646,7 +7656,7 @@ playerChangeBlock.subscribe((eventData) => {
 });
 
 // src/main/bedrock/ts/API/lib/EnchantmentLib.ts
-import { world as world31, system as system35 } from "@minecraft/server";
+import { world as world32, system as system36 } from "@minecraft/server";
 import { ActionFormData } from "@minecraft/server-ui";
 var EnchantmentManager = class {
   registry;
@@ -7672,17 +7682,17 @@ var EnchantmentManager = class {
     });
   }
   initEvents() {
-    system35.runInterval(() => this.manageVisuals(), 5);
-    world31.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
+    system36.runInterval(() => this.manageVisuals(), 5);
+    world32.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
       const { block, player } = ev;
       if (block.typeId === "minecraft:enchanting_table" && player.isSneaking) {
         ev.cancel = true;
-        system35.run(() => {
+        system36.run(() => {
           this.openEnchantmentUI(player);
         });
       }
     });
-    world31.afterEvents.entityHitEntity.subscribe((ev) => {
+    world32.afterEvents.entityHitEntity.subscribe((ev) => {
       const { damagingEntity } = ev;
       if (!damagingEntity || !damagingEntity.getComponent("minecraft:equippable")) return;
       const equippable = damagingEntity.getComponent("minecraft:equippable");
@@ -7691,7 +7701,7 @@ var EnchantmentManager = class {
         this.triggerEnchants(mainHand, "onHit", ev);
       }
     });
-    world31.afterEvents.playerBreakBlock.subscribe((ev) => {
+    world32.afterEvents.playerBreakBlock.subscribe((ev) => {
       const { itemStack } = ev;
       if (itemStack) {
         this.triggerEnchants(itemStack, "onMine", ev);
@@ -7822,7 +7832,7 @@ ${color}Cost: ${e.cost} Lvl`);
    * Scans players to toggle glint state (Clean in cursor, Glint in inventory).
    */
   manageVisuals() {
-    for (const player of world31.getAllPlayers()) {
+    for (const player of world32.getAllPlayers()) {
       const cursorComp = player.getComponent("minecraft:cursor_inventory");
       if (cursorComp && cursorComp.item) {
         const item = cursorComp.item;
@@ -7925,20 +7935,20 @@ enchantmentManager.register("gaia:thunder_strike", {
 });
 
 // src/main/bedrock/ts/entities/MalachiteGuard.ts
-import { world as world32, system as system36 } from "@minecraft/server";
+import { world as world33, system as system37 } from "@minecraft/server";
 var MalachiteGuardSystem = class {
   constructor() {
     this.init();
   }
   init() {
-    world32.afterEvents.entitySpawn.subscribe((event) => {
+    world33.afterEvents.entitySpawn.subscribe((event) => {
       const { entity } = event;
       if (entity.typeId === "gaiadimension:malachite_guard") {
         this.setupGuard(entity);
       }
     });
-    system36.runInterval(() => {
-      const overworld = world32.getDimension("overworld");
+    system37.runInterval(() => {
+      const overworld = world33.getDimension("overworld");
       const guards = overworld.getEntities({
         type: "gaiadimension:malachite_guard"
       });
@@ -7969,7 +7979,7 @@ var MalachiteGuardSystem = class {
     const guardId = `mg_${Date.now()}_${Math.floor(Math.random() * 1e3)}`;
     guard.setDynamicProperty("gaiadimension:guard_id", guardId);
     guard.addTag("gaiadimension:has_active_drones");
-    system36.run(() => {
+    system37.run(() => {
       if (!guard.isValid) return;
       guard.triggerEvent("mg_defend");
       this.spawnDrones(guard, guardId);
@@ -8017,7 +8027,7 @@ var MalachiteGuardSystem = class {
     if (!hasDrones && currentlyFlagged) {
       guard.removeTag("gaiadimension:has_active_drones");
       guard.triggerEvent("no_mg_defend");
-      world32.sendMessage("\xA7c[Malachite Guard] \xA77The drones have fallen! The Guard's core is exposed!");
+      world33.sendMessage("\xA7c[Malachite Guard] \xA77The drones have fallen! The Guard's core is exposed!");
     } else if (hasDrones && !currentlyFlagged) {
       guard.addTag("gaiadimension:has_active_drones");
       guard.triggerEvent("mg_defend");
@@ -8034,7 +8044,7 @@ initializeGeyser();
 initializeLightMixin();
 initializeGlitterGrassSync();
 registerCustomTool();
-system37.beforeEvents.startup.subscribe((event) => {
+system38.beforeEvents.startup.subscribe((event) => {
   const { blockComponentRegistry, customCommandRegistry, itemComponentRegistry } = event;
   registerLeavesComponent({ blockComponentRegistry });
   registerInvisibleComponent({ blockComponentRegistry });
@@ -8057,5 +8067,6 @@ system37.beforeEvents.startup.subscribe((event) => {
   registerFluidComponent({ blockComponentRegistry });
   registerFireStarterComponent({ itemComponentRegistry });
   registerGaiaCommands(customCommandRegistry);
+  registerSetBiomeCommand(customCommandRegistry);
 });
 //# sourceMappingURL=GaiaDimensionAddon.js.map

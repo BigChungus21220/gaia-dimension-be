@@ -24,6 +24,7 @@ import { initializeScriptEvents } from "./systems/scriptevents.js";
 import { registerFluidComponent } from "./fluids/fluids.js";
 import { registerCustomTool } from "./durability.js";
 import { registerGaiaCommands } from "./systems/Commands.js";
+import { registerSetBiomeCommand } from "./systems/SetBiomeCommand.js";
 import { registerFireStarterComponent } from "./items/FireStarter.js";
 import { registerCleanerComponent } from "./systems/Cleaner.js";
 import { initializeGlitterGrassSync } from "./blocks/GlitterGrassSync.js";
@@ -69,4 +70,5 @@ system.beforeEvents.startup.subscribe((event: any) => {
     
     // Register custom commands
     registerGaiaCommands(customCommandRegistry);
+    registerSetBiomeCommand(customCommandRegistry);
 });

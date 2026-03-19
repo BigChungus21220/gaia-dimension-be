@@ -9,10 +9,11 @@ const SRC_RESOURCES = path.join(ROOT, 'src/main/bedrock/resources');
 const TEXTURE_GEN_DIR = path.join(SRC_RESOURCES, 'textures/gaiadimension/gen/grass');
 const BLOCK_OUT = path.join(SRC_DATA, 'blocks/gen/grass');
 
-const VANILLA_DIR = path.join(SRC_RESOURCES, 'textures/vanilla');
-const BASE_TOP = path.join(VANILLA_DIR, 'grass_top.png');
-const BASE_SIDE_OVERLAY = path.join(VANILLA_DIR, 'grass_side_overlay.png');
-const BASE_DIRT_SIDE = path.join(VANILLA_DIR, 'vanilla_dirt_base.png');
+const DATAGEN_RES = path.join(ROOT, 'src/main/bedrock/datagen/resources/grass');
+const BASE_TOP = path.join(DATAGEN_RES, 'grass_top.png');
+const FRINGE_MASK = path.join(DATAGEN_RES, 'grass_side_fringe_mask.png');
+const DIRT_BASE_SIDE = path.join(DATAGEN_RES, 'vanilla_dirt_base.png');
+const DIRT_SOURCE = path.join(DATAGEN_RES, 'dirt.png');
 
 interface BiomeColor {
     id: string;
@@ -105,14 +106,14 @@ export class GrassGenerator {
 
             // 2. SIDE (Slap dirt base onto tinted mask)
             // Tint the fringe first
-            const tintedFringe = await sharp(BASE_SIDE_OVERLAY)
+            const tintedFringe = await sharp(FRINGE_MASK)
                 .composite([{ input: colorOverlay, ...rawMeta, blend: 'multiply' }])
                 .toBuffer();
 
             // Slap the dirt base over it. Since dirt base has transparency where the fringe goes, 
             // and the fringe is already clipped to its area, they should align perfectly.
             await sharp(tintedFringe)
-                .composite([{ input: BASE_DIRT_SIDE, blend: 'over' }])
+                .composite([{ input: DIRT_BASE_SIDE, blend: 'over' }])
                 .toFile(sideOut);
 
             // 3. Block JSON
