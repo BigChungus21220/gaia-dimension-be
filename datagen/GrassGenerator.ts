@@ -11,8 +11,8 @@ const BLOCK_OUT = path.join(SRC_DATA, 'blocks/gen/grass');
 
 const VANILLA_DIR = path.join(SRC_RESOURCES, 'textures/vanilla');
 const BASE_TOP = path.join(VANILLA_DIR, 'grass_top.png');
-const FRINGE_MASK = path.join(VANILLA_DIR, 'grass_side_fringe_mask.png');
-const DIRT_BASE_SIDE = path.join(VANILLA_DIR, 'vanilla_dirt_base.png');
+const BASE_SIDE_OVERLAY = path.join(VANILLA_DIR, 'grass_side_overlay.png');
+const BASE_DIRT_SIDE = path.join(VANILLA_DIR, 'vanilla_dirt_base.png');
 
 interface BiomeColor {
     id: string;
@@ -20,18 +20,42 @@ interface BiomeColor {
 }
 
 const VANILLA_GRASS_BIOMES: BiomeColor[] = [
-    { id: "the_void", color: "#8eb971" }, { id: "plains", color: "#91bd59" }, { id: "beach", color: "#91bd59" },
-    { id: "lush_caves", color: "#b9b75b" }, { id: "dripstone_caves", color: "#8bd58a" }, { id: "snowy_plains", color: "#80b497" },
-    { id: "desert", color: "#bfb755" }, { id: "badlands", color: "#90814d" }, { id: "mesa", color: "#90814d" },
-    { id: "savanna", color: "#bfb755" }, { id: "savanna_plateau", color: "#bfb755" }, { id: "windswept_savanna", color: "#bfb755" },
-    { id: "swamp", color: "#6a7039" }, { id: "mangrove_swamp", color: "#6a7039" }, { id: "forest", color: "#79c05a" },
-    { id: "flower_forest", color: "#79c05a" }, { id: "dark_forest", color: "#507a32" }, { id: "birch_forest", color: "#88bb67" },
-    { id: "taiga", color: "#86b783" }, { id: "old_growth_spruce_taiga", color: "#86b783" }, { id: "old_growth_pine_taiga", color: "#86b87f" },
-    { id: "cold_taiga", color: "#82be71" }, { id: "windswept_hills", color: "#8ab689" }, { id: "jungle", color: "#59c93c" },
-    { id: "sparse_jungle", color: "#64c73f" }, { id: "meadow", color: "#83bb6d" }, { id: "cherry_grove", color: "#b6db61" },
-    { id: "stony_peaks", color: "#9abe4b" }, { id: "snowy_beach", color: "#83b593" }, { id: "mushroom_fields", color: "#55c93f" },
-    { id: "deep_dark", color: "#91bd59" }, { id: "river", color: "#8eb971" }, { id: "ocean", color: "#8eb971" },
-    { id: "grove", color: "#80b497" }, { id: "snowy_slopes", color: "#80b497" }, { id: "frozen_peaks", color: "#80b497" },
+    { id: "the_void", color: "#8eb971" },
+    { id: "plains", color: "#91bd59" },
+    { id: "beach", color: "#91bd59" },
+    { id: "lush_caves", color: "#b9b75b" },
+    { id: "dripstone_caves", color: "#8bd58a" },
+    { id: "snowy_plains", color: "#80b497" },
+    { id: "desert", color: "#bfb755" },
+    { id: "badlands", color: "#90814d" },
+    { id: "mesa", color: "#90814d" },
+    { id: "savanna", color: "#bfb755" },
+    { id: "savanna_plateau", color: "#bfb755" },
+    { id: "windswept_savanna", color: "#bfb755" },
+    { id: "swamp", color: "#6a7039" },
+    { id: "mangrove_swamp", color: "#6a7039" },
+    { id: "forest", color: "#79c05a" },
+    { id: "flower_forest", color: "#79c05a" },
+    { id: "dark_forest", color: "#507a32" },
+    { id: "birch_forest", color: "#88bb67" },
+    { id: "taiga", color: "#86b783" },
+    { id: "old_growth_spruce_taiga", color: "#86b783" },
+    { id: "old_growth_pine_taiga", color: "#86b87f" },
+    { id: "cold_taiga", color: "#82be71" },
+    { id: "windswept_hills", color: "#8ab689" },
+    { id: "jungle", color: "#59c93c" },
+    { id: "sparse_jungle", color: "#64c73f" },
+    { id: "meadow", color: "#83bb6d" },
+    { id: "cherry_grove", color: "#b6db61" },
+    { id: "stony_peaks", color: "#9abe4b" },
+    { id: "snowy_beach", color: "#83b593" },
+    { id: "mushroom_fields", color: "#55c93f" },
+    { id: "deep_dark", color: "#91bd59" },
+    { id: "river", color: "#8eb971" },
+    { id: "ocean", color: "#8eb971" },
+    { id: "grove", color: "#80b497" },
+    { id: "snowy_slopes", color: "#80b497" },
+    { id: "frozen_peaks", color: "#80b497" },
     { id: "jagged_peaks", color: "#80b497" }
 ];
 
@@ -48,7 +72,7 @@ export class GrassGenerator {
     }
 
     public static async generate() {
-        console.log("[INFO] Initializing Slapped Vanilla Grass Registry...");
+        console.log("[INFO] Initializing Ultimate Vanilla Grass Registry...");
         
         await fs.ensureDir(TEXTURE_GEN_DIR);
         await fs.ensureDir(BLOCK_OUT);
@@ -74,33 +98,28 @@ export class GrassGenerator {
             const colorOverlay = this.createColorBuffer(biome.color, 16, 16);
             const rawMeta = { raw: { width: 16, height: 16, channels: 4 } };
 
-            // 1. TOP (Multiply)
+            // 1. TOP (Standard multiply)
             await sharp(BASE_TOP)
                 .composite([{ input: colorOverlay, ...rawMeta, blend: 'multiply' }])
                 .toFile(topOut);
 
-            // 2. SIDE (Tint Fringe then slap on transparent base with Dirt Base)
-            const tintedFringe = await sharp(FRINGE_MASK)
+            // 2. SIDE (Slap dirt base onto tinted mask)
+            // Tint the fringe first
+            const tintedFringe = await sharp(BASE_SIDE_OVERLAY)
                 .composite([{ input: colorOverlay, ...rawMeta, blend: 'multiply' }])
                 .toBuffer();
 
-            // Slap both onto a fresh canvas to ensure transparency is correct
-            await sharp({ create: { width: 16, height: 16, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
-                .composite([
-                    { input: tintedFringe, blend: 'over' },
-                    { input: DIRT_BASE_SIDE, blend: 'over' }
-                ])
+            // Slap the dirt base over it. Since dirt base has transparency where the fringe goes, 
+            // and the fringe is already clipped to its area, they should align perfectly.
+            await sharp(tintedFringe)
+                .composite([{ input: BASE_DIRT_SIDE, blend: 'over' }])
                 .toFile(sideOut);
 
-            // 3. Block JSON (Hidden from Creative)
+            // 3. Block JSON
             const blockJson = {
                 format_version: "1.21.70",
                 "minecraft:block": {
-                    description: { 
-                        identifier: blockId, 
-                        states: { "gaiadimension:perm_dim": [0, 1, 2] },
-                        menu_category: { category: "none" }
-                    },
+                    description: { identifier: blockId, states: { "gaiadimension:perm_dim": [0, 1, 2] } },
                     components: {
                         "tag:is_shovelable": {}, "tag:dirt": {},
                         "minecraft:destructible_by_mining": { seconds_to_destroy: 1 },
