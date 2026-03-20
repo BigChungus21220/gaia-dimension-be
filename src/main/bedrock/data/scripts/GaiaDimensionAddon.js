@@ -7345,65 +7345,75 @@ function spawnProjectile(player, location, direction, element, behavior) {
 
 // src/main/bedrock/ts/systems/MagicStaffBehaviors.ts
 import { world as world28, system as system32 } from "@minecraft/server";
-var lastVelocities = /* @__PURE__ */ new Map();
+var projectileCache = /* @__PURE__ */ new Map();
 function initializeMagicStaffBehaviors() {
   system32.runInterval(() => {
-    const projectiles = world28.getDimension("overworld").getEntities({ type: "gaiadimension:staff_projectile" });
-    const activeIds = new Set(projectiles.map((p) => p.id));
-    for (const id of lastVelocities.keys()) {
-      if (!activeIds.has(id)) lastVelocities.delete(id);
-    }
-    for (const proj of projectiles) {
-      const vel = proj.getVelocity();
-      if (vel.x !== 0 || vel.y !== 0 || vel.z !== 0) {
-        lastVelocities.set(proj.id, vel);
+    for (const dim of ["overworld", "nether", "the_end", "gaiadimension"]) {
+      try {
+        const dimension = world28.getDimension(dim);
+        const projectiles = dimension.getEntities({ type: "gaiadimension:staff_projectile" });
+        const activeIds = new Set(projectiles.map((p) => p.id));
+        for (const proj of projectiles) {
+          const vel = proj.getVelocity();
+          if (vel.x !== 0 || vel.y !== 0 || vel.z !== 0 || !projectileCache.has(proj.id)) {
+            projectileCache.set(proj.id, {
+              velocity: vel,
+              element: proj.getProperty("gaiadimension:element") ?? 0,
+              behavior: proj.getProperty("gaiadimension:behavior") ?? 0,
+              bounceCount: proj.getProperty("gaiadimension:bounce_count") ?? 0
+            });
+          }
+        }
+      } catch (e) {
       }
+    }
+    if (system32.currentTick % 100 === 0) {
     }
   }, 1);
   world28.afterEvents.projectileHitBlock.subscribe((event) => {
     if (event.projectile.typeId !== "gaiadimension:staff_projectile") return;
-    handleHit(event.projectile, event.location, event.face);
+    const data = projectileCache.get(event.projectile.id);
+    handleHit(event.projectile, data, event.location, event.face);
+    projectileCache.delete(event.projectile.id);
   });
   world28.afterEvents.projectileHitEntity.subscribe((event) => {
     if (event.projectile.typeId !== "gaiadimension:staff_projectile") return;
-    handleHit(event.projectile, event.location);
+    const data = projectileCache.get(event.projectile.id);
+    handleHit(event.projectile, data, event.location);
+    projectileCache.delete(event.projectile.id);
   });
 }
-function handleHit(projectile, location, face) {
-  const behavior = projectile.getProperty("gaiadimension:behavior") ?? 0;
-  const element = projectile.getProperty("gaiadimension:element") ?? 0;
-  const bounceCount = projectile.getProperty("gaiadimension:bounce_count") ?? 0;
+function handleHit(projectile, data, location, face) {
+  if (!data) return;
+  const { element, behavior, bounceCount, velocity } = data;
   if (behavior === 4 /* RICOCHET */ && face && bounceCount > 0) {
-    const velocity = lastVelocities.get(projectile.id);
-    if (velocity) {
-      let newVel = { x: velocity.x, y: velocity.y, z: velocity.z };
-      if (face === "North" || face === "South") newVel.z *= -1;
-      if (face === "East" || face === "West") newVel.x *= -1;
-      if (face === "Up" || face === "Down") newVel.y *= -1;
-      const speed = Math.sqrt(velocity.x ** 2 + velocity.y ** 2 + velocity.z ** 2);
-      const currentSpeed = Math.sqrt(newVel.x ** 2 + newVel.y ** 2 + newVel.z ** 2);
-      if (currentSpeed > 0) {
-        const ratio = speed / currentSpeed;
-        newVel.x *= ratio;
-        newVel.y *= ratio;
-        newVel.z *= ratio;
-      }
-      const offsetLoc = {
-        x: location.x + (face === "East" ? 0.1 : face === "West" ? -0.1 : 0),
-        y: location.y + (face === "Up" ? 0.1 : face === "Down" ? -0.1 : 0),
-        z: location.z + (face === "South" ? 0.1 : face === "North" ? -0.1 : 0)
-      };
-      const newProj = projectile.dimension.spawnEntity("gaiadimension:staff_projectile", offsetLoc);
-      newProj.setProperty("gaiadimension:element", element);
-      newProj.setProperty("gaiadimension:behavior", 4 /* RICOCHET */);
-      newProj.setProperty("gaiadimension:bounce_count", bounceCount - 1);
-      const projComp = newProj.getComponent("minecraft:projectile");
-      if (projComp) {
-        projComp.shoot(newVel);
-      }
-      projectile.dimension.playSound("random.bowhit", location, { pitch: 1.2 });
-      return;
+    let newVel = { x: velocity.x, y: velocity.y, z: velocity.z };
+    if (face === "North" || face === "South") newVel.z *= -1;
+    if (face === "East" || face === "West") newVel.x *= -1;
+    if (face === "Up" || face === "Down") newVel.y *= -1;
+    const speed = Math.sqrt(velocity.x ** 2 + velocity.y ** 2 + velocity.z ** 2);
+    const currentSpeed = Math.sqrt(newVel.x ** 2 + newVel.y ** 2 + newVel.z ** 2);
+    if (currentSpeed > 0) {
+      const ratio = speed / currentSpeed;
+      newVel.x *= ratio;
+      newVel.y *= ratio;
+      newVel.z *= ratio;
     }
+    const offsetLoc = {
+      x: location.x + (face === "East" ? 0.1 : face === "West" ? -0.1 : 0),
+      y: location.y + (face === "Up" ? 0.1 : face === "Down" ? -0.1 : 0),
+      z: location.z + (face === "South" ? 0.1 : face === "North" ? -0.1 : 0)
+    };
+    const newProj = projectile.dimension.spawnEntity("gaiadimension:staff_projectile", offsetLoc);
+    newProj.setProperty("gaiadimension:element", element);
+    newProj.setProperty("gaiadimension:behavior", 4 /* RICOCHET */);
+    newProj.setProperty("gaiadimension:bounce_count", bounceCount - 1);
+    const projComp = newProj.getComponent("minecraft:projectile");
+    if (projComp) {
+      projComp.shoot(newVel);
+    }
+    projectile.dimension.playSound("random.bowhit", location, { pitch: 1.2 });
+    return;
   }
   switch (behavior) {
     case 1 /* BLAST */:
