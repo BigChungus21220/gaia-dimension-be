@@ -1630,6 +1630,51 @@
         },
         "magic_staff_poison_scatter_sustain": {
             "textures": "textures/gaiadimension/androsa/item/gen/magic_staff/staff_poison_scatter_sustain"
+        },
+        "textures/gaiadimension/androsa/item/blank_kit": {
+            "textures": "textures/gaiadimension/androsa/item/blank_kit"
+        },
+        "textures/gaiadimension/androsa/item/repair_kit": {
+            "textures": "textures/gaiadimension/androsa/item/repair_kit"
+        },
+        "textures/gaiadimension/androsa/item/scarlet_augment_kit": {
+            "textures": "textures/gaiadimension/androsa/item/scarlet_augment_kit"
+        },
+        "textures/gaiadimension/androsa/item/auburn_augment_kit": {
+            "textures": "textures/gaiadimension/androsa/item/auburn_augment_kit"
+        },
+        "textures/gaiadimension/androsa/item/gold_augment_kit": {
+            "textures": "textures/gaiadimension/androsa/item/gold_augment_kit"
+        },
+        "textures/gaiadimension/androsa/item/mauve_augment_kit": {
+            "textures": "textures/gaiadimension/androsa/item/mauve_augment_kit"
+        },
+        "textures/gaiadimension/androsa/item/beige_augment_kit": {
+            "textures": "textures/gaiadimension/androsa/item/beige_augment_kit"
+        },
+        "textures/gaiadimension/androsa/item/ivory_augment_kit": {
+            "textures": "textures/gaiadimension/androsa/item/ivory_augment_kit"
+        },
+        "textures/gaiadimension/androsa/item/scarlet_replace_kit": {
+            "textures": "textures/gaiadimension/androsa/item/scarlet_replace_kit"
+        },
+        "textures/gaiadimension/androsa/item/auburn_replace_kit": {
+            "textures": "textures/gaiadimension/androsa/item/auburn_replace_kit"
+        },
+        "textures/gaiadimension/androsa/item/gold_replace_kit": {
+            "textures": "textures/gaiadimension/androsa/item/gold_replace_kit"
+        },
+        "textures/gaiadimension/androsa/item/mauve_replace_kit": {
+            "textures": "textures/gaiadimension/androsa/item/mauve_replace_kit"
+        },
+        "textures/gaiadimension/androsa/item/beige_replace_kit": {
+            "textures": "textures/gaiadimension/androsa/item/beige_replace_kit"
+        },
+        "textures/gaiadimension/androsa/item/ivory_replace_kit": {
+            "textures": "textures/gaiadimension/androsa/item/ivory_replace_kit"
+        },
+        "textures/gaiadimension/androsa/item/construct_charm": {
+            "textures": "textures/gaiadimension/androsa/item/construct_charm"
         }
     }
 }
