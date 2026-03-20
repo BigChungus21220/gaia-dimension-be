@@ -1,5 +1,5 @@
 // src/main/bedrock/ts/GaiaDimensionAddon.ts
-import { system as system38 } from "@minecraft/server";
+import { system as system39 } from "@minecraft/server";
 
 // src/main/bedrock/ts/blocks/leaves.ts
 import { system } from "@minecraft/server";
@@ -7343,8 +7343,95 @@ function spawnProjectile(player, location, direction, element, behavior) {
   }
 }
 
+// src/main/bedrock/ts/systems/MagicStaffBehaviors.ts
+import { world as world28, system as system32 } from "@minecraft/server";
+var lastVelocities = /* @__PURE__ */ new Map();
+function initializeMagicStaffBehaviors() {
+  system32.runInterval(() => {
+    const projectiles = world28.getDimension("overworld").getEntities({ type: "gaiadimension:staff_projectile" });
+    const activeIds = new Set(projectiles.map((p) => p.id));
+    for (const id of lastVelocities.keys()) {
+      if (!activeIds.has(id)) lastVelocities.delete(id);
+    }
+    for (const proj of projectiles) {
+      const vel = proj.getVelocity();
+      if (vel.x !== 0 || vel.y !== 0 || vel.z !== 0) {
+        lastVelocities.set(proj.id, vel);
+      }
+    }
+  }, 1);
+  world28.afterEvents.projectileHitBlock.subscribe((event) => {
+    if (event.projectile.typeId !== "gaiadimension:staff_projectile") return;
+    handleHit(event.projectile, event.location, event.face);
+  });
+  world28.afterEvents.projectileHitEntity.subscribe((event) => {
+    if (event.projectile.typeId !== "gaiadimension:staff_projectile") return;
+    handleHit(event.projectile, event.location);
+  });
+}
+function handleHit(projectile, location, face) {
+  const behavior = projectile.getProperty("gaiadimension:behavior") ?? 0;
+  const element = projectile.getProperty("gaiadimension:element") ?? 0;
+  const bounceCount = projectile.getProperty("gaiadimension:bounce_count") ?? 0;
+  if (behavior === 4 /* RICOCHET */ && face && bounceCount > 0) {
+    const velocity = lastVelocities.get(projectile.id);
+    if (velocity) {
+      let newVel = { x: velocity.x, y: velocity.y, z: velocity.z };
+      if (face === "North" || face === "South") newVel.z *= -1;
+      if (face === "East" || face === "West") newVel.x *= -1;
+      if (face === "Up" || face === "Down") newVel.y *= -1;
+      const speed = Math.sqrt(velocity.x ** 2 + velocity.y ** 2 + velocity.z ** 2);
+      const currentSpeed = Math.sqrt(newVel.x ** 2 + newVel.y ** 2 + newVel.z ** 2);
+      if (currentSpeed > 0) {
+        const ratio = speed / currentSpeed;
+        newVel.x *= ratio;
+        newVel.y *= ratio;
+        newVel.z *= ratio;
+      }
+      const offsetLoc = {
+        x: location.x + (face === "East" ? 0.1 : face === "West" ? -0.1 : 0),
+        y: location.y + (face === "Up" ? 0.1 : face === "Down" ? -0.1 : 0),
+        z: location.z + (face === "South" ? 0.1 : face === "North" ? -0.1 : 0)
+      };
+      const newProj = projectile.dimension.spawnEntity("gaiadimension:staff_projectile", offsetLoc);
+      newProj.setProperty("gaiadimension:element", element);
+      newProj.setProperty("gaiadimension:behavior", 4 /* RICOCHET */);
+      newProj.setProperty("gaiadimension:bounce_count", bounceCount - 1);
+      const projComp = newProj.getComponent("minecraft:projectile");
+      if (projComp) {
+        projComp.shoot(newVel);
+      }
+      projectile.dimension.playSound("random.bowhit", location, { pitch: 1.2 });
+      return;
+    }
+  }
+  switch (behavior) {
+    case 1 /* BLAST */:
+      projectile.dimension.createExplosion(location, 2, { breaksBlocks: false, causesFire: false });
+      break;
+    case 2 /* BURST */:
+      const dirs = [
+        { x: 1, y: 0.5, z: 0 },
+        { x: -1, y: 0.5, z: 0 },
+        { x: 0, y: 0.5, z: 1 },
+        { x: 0, y: 0.5, z: -1 }
+      ];
+      for (const d of dirs) {
+        const sub = projectile.dimension.spawnEntity("gaiadimension:staff_projectile", location);
+        sub.setProperty("gaiadimension:element", element);
+        sub.setProperty("gaiadimension:behavior", 0 /* BASIC */);
+        const projComp = sub.getComponent("minecraft:projectile");
+        if (projComp) projComp.shoot(d);
+      }
+      break;
+    case 3 /* LINGER */:
+      projectile.dimension.spawnEntity("minecraft:area_effect_cloud", location);
+      break;
+  }
+}
+
 // src/main/bedrock/ts/systems/Cleaner.ts
-import { world as world28, system as system32, BlockVolume as BlockVolume3, BlockPermutation as BlockPermutation14 } from "@minecraft/server";
+import { world as world29, system as system33, BlockVolume as BlockVolume3, BlockPermutation as BlockPermutation14 } from "@minecraft/server";
 var CLUTTER_TAGS = [
   "grass",
   "plant",
@@ -7382,17 +7469,17 @@ var SHARED_VOL;
 var QUEUE = [];
 var CACHE = /* @__PURE__ */ new Set();
 var QUEUED = /* @__PURE__ */ new Set();
-system32.run(() => {
+system33.run(() => {
   try {
     AIR = BlockPermutation14.resolve("minecraft:air");
-    DIM = world28.getDimension("minecraft:overworld");
+    DIM = world29.getDimension("minecraft:overworld");
     SHARED_VOL = new BlockVolume3({ x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 0 });
   } catch (e) {
   }
 });
-system32.runInterval(() => {
+system33.runInterval(() => {
   if (QUEUE.length < 2) return;
-  const players = world28.getAllPlayers().filter((p) => p.dimension.id === "minecraft:overworld");
+  const players = world29.getAllPlayers().filter((p) => p.dimension.id === "minecraft:overworld");
   if (players.length === 0) return;
   const pLoc = players[0].location;
   QUEUE.sort((a, b) => {
@@ -7401,10 +7488,10 @@ system32.runInterval(() => {
     return dA - dB;
   });
 }, 100);
-system32.runInterval(() => {
+system33.runInterval(() => {
   if (QUEUE.length === 0 || !SHARED_VOL || !DIM || !AIR) return;
   const t = QUEUE[0];
-  const players = world28.getAllPlayers();
+  const players = world29.getAllPlayers();
   const isAnyPlayerNear = players.some((p) => {
     if (p.dimension.id !== "minecraft:overworld") return false;
     const loc = p.location;
@@ -7453,7 +7540,7 @@ function registerCleanerComponent({ blockComponentRegistry }) {
 }
 
 // src/main/bedrock/ts/blocks/GlitterGrassSync.ts
-import { world as world29, system as system33, ItemStack as ItemStack14 } from "@minecraft/server";
+import { world as world30, system as system34, ItemStack as ItemStack14 } from "@minecraft/server";
 var GLITTER_GRASS_TYPES = [
   "gaiadimension:green_glitter_grass",
   "gaiadimension:pink_glitter_grass",
@@ -7487,13 +7574,13 @@ function syncInventory(player) {
   }
 }
 function initializeGlitterGrassSync() {
-  world29.afterEvents.playerPlaceBlock.subscribe((event) => {
+  world30.afterEvents.playerPlaceBlock.subscribe((event) => {
     const { block } = event;
     if (GLITTER_GRASS_TYPES.includes(block.typeId)) {
       const biome = DimensionSystem.getBiomeAt(block.dimension, block.location);
       const targetGrassId = BIOME_TO_GRASS[biome];
       if (targetGrassId && block.typeId !== targetGrassId) {
-        system33.run(() => {
+        system34.run(() => {
           if (block.isValid) {
             block.setType(targetGrassId);
           }
@@ -7501,14 +7588,14 @@ function initializeGlitterGrassSync() {
       }
     }
   });
-  system33.runInterval(() => {
-    for (const player of world29.getAllPlayers()) {
+  system34.runInterval(() => {
+    for (const player of world30.getAllPlayers()) {
       if (DimensionSystem.isInGaia(player)) {
         syncInventory(player);
       }
     }
   }, 40);
-  world29.afterEvents.playerInventoryItemChange.subscribe((event) => {
+  world30.afterEvents.playerInventoryItemChange.subscribe((event) => {
     const { player } = event;
     if (DimensionSystem.isInGaia(player)) {
       syncInventory(player);
@@ -7517,10 +7604,10 @@ function initializeGlitterGrassSync() {
 }
 
 // src/main/bedrock/ts/world/CoordinateDisplay.ts
-import { world as world30, system as system34 } from "@minecraft/server";
+import { world as world31, system as system35 } from "@minecraft/server";
 function updateAllCoordinateDisplays() {
-  const showCoords = world30.gameRules.showCoordinates;
-  for (const player of world30.getAllPlayers()) {
+  const showCoords = world31.gameRules.showCoordinates;
+  for (const player of world31.getAllPlayers()) {
     if (!player.isValid) continue;
     if (!showCoords) {
       if (player.hasTag("gaiadimension:showing_coords")) {
@@ -7549,7 +7636,7 @@ function updateAllCoordinateDisplays() {
     if (!player.hasTag("gaiadimension:showing_coords")) player.addTag("gaiadimension:showing_coords");
   }
 }
-system34.runInterval(() => {
+system35.runInterval(() => {
   try {
     updateAllCoordinateDisplays();
   } catch (e) {
@@ -7557,7 +7644,7 @@ system34.runInterval(() => {
 }, 1);
 
 // src/main/bedrock/ts/world/Events.ts
-import { world as world31, system as system35 } from "@minecraft/server";
+import { world as world32, system as system36 } from "@minecraft/server";
 var EventHandler = class {
   handlers = [];
   constructor() {
@@ -7578,8 +7665,8 @@ var EventHandler = class {
 var playerChangeBiome = new EventHandler();
 var playerChangeBlock = new EventHandler();
 var lastPlayerPositions = /* @__PURE__ */ new Map();
-system35.runInterval(() => {
-  for (const player of world31.getAllPlayers()) {
+system36.runInterval(() => {
+  for (const player of world32.getAllPlayers()) {
     if (!player.isValid) {
       lastPlayerPositions.delete(player.id);
       continue;
@@ -7719,7 +7806,7 @@ playerChangeBlock.subscribe((eventData) => {
 });
 
 // src/main/bedrock/ts/API/lib/EnchantmentLib.ts
-import { world as world32, system as system36 } from "@minecraft/server";
+import { world as world33, system as system37 } from "@minecraft/server";
 import { ActionFormData } from "@minecraft/server-ui";
 var EnchantmentManager = class {
   registry;
@@ -7745,17 +7832,17 @@ var EnchantmentManager = class {
     });
   }
   initEvents() {
-    system36.runInterval(() => this.manageVisuals(), 5);
-    world32.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
+    system37.runInterval(() => this.manageVisuals(), 5);
+    world33.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
       const { block, player } = ev;
       if (block.typeId === "minecraft:enchanting_table" && player.isSneaking) {
         ev.cancel = true;
-        system36.run(() => {
+        system37.run(() => {
           this.openEnchantmentUI(player);
         });
       }
     });
-    world32.afterEvents.entityHitEntity.subscribe((ev) => {
+    world33.afterEvents.entityHitEntity.subscribe((ev) => {
       const { damagingEntity } = ev;
       if (!damagingEntity || !damagingEntity.getComponent("minecraft:equippable")) return;
       const equippable = damagingEntity.getComponent("minecraft:equippable");
@@ -7764,7 +7851,7 @@ var EnchantmentManager = class {
         this.triggerEnchants(mainHand, "onHit", ev);
       }
     });
-    world32.afterEvents.playerBreakBlock.subscribe((ev) => {
+    world33.afterEvents.playerBreakBlock.subscribe((ev) => {
       const { itemStack } = ev;
       if (itemStack) {
         this.triggerEnchants(itemStack, "onMine", ev);
@@ -7895,7 +7982,7 @@ ${color}Cost: ${e.cost} Lvl`);
    * Scans players to toggle glint state (Clean in cursor, Glint in inventory).
    */
   manageVisuals() {
-    for (const player of world32.getAllPlayers()) {
+    for (const player of world33.getAllPlayers()) {
       const cursorComp = player.getComponent("minecraft:cursor_inventory");
       if (cursorComp && cursorComp.item) {
         const item = cursorComp.item;
@@ -7998,20 +8085,20 @@ enchantmentManager.register("gaia:thunder_strike", {
 });
 
 // src/main/bedrock/ts/entities/MalachiteGuard.ts
-import { world as world33, system as system37 } from "@minecraft/server";
+import { world as world34, system as system38 } from "@minecraft/server";
 var MalachiteGuardSystem = class {
   constructor() {
     this.init();
   }
   init() {
-    world33.afterEvents.entitySpawn.subscribe((event) => {
+    world34.afterEvents.entitySpawn.subscribe((event) => {
       const { entity } = event;
       if (entity.typeId === "gaiadimension:malachite_guard") {
         this.setupGuard(entity);
       }
     });
-    system37.runInterval(() => {
-      const overworld = world33.getDimension("overworld");
+    system38.runInterval(() => {
+      const overworld = world34.getDimension("overworld");
       const guards = overworld.getEntities({
         type: "gaiadimension:malachite_guard"
       });
@@ -8042,7 +8129,7 @@ var MalachiteGuardSystem = class {
     const guardId = `mg_${Date.now()}_${Math.floor(Math.random() * 1e3)}`;
     guard.setDynamicProperty("gaiadimension:guard_id", guardId);
     guard.addTag("gaiadimension:has_active_drones");
-    system37.run(() => {
+    system38.run(() => {
       if (!guard.isValid) return;
       guard.triggerEvent("mg_defend");
       this.spawnDrones(guard, guardId);
@@ -8090,7 +8177,7 @@ var MalachiteGuardSystem = class {
     if (!hasDrones && currentlyFlagged) {
       guard.removeTag("gaiadimension:has_active_drones");
       guard.triggerEvent("no_mg_defend");
-      world33.sendMessage("\xA7c[Malachite Guard] \xA77The drones have fallen! The Guard's core is exposed!");
+      world34.sendMessage("\xA7c[Malachite Guard] \xA77The drones have fallen! The Guard's core is exposed!");
     } else if (hasDrones && !currentlyFlagged) {
       guard.addTag("gaiadimension:has_active_drones");
       guard.triggerEvent("mg_defend");
@@ -8106,8 +8193,9 @@ initializeScriptEvents();
 initializeGeyser();
 initializeLightMixin();
 initializeGlitterGrassSync();
+initializeMagicStaffBehaviors();
 registerCustomTool();
-system38.beforeEvents.startup.subscribe((event) => {
+system39.beforeEvents.startup.subscribe((event) => {
   const { blockComponentRegistry, customCommandRegistry, itemComponentRegistry } = event;
   registerLeavesComponent({ blockComponentRegistry });
   registerInvisibleComponent({ blockComponentRegistry });

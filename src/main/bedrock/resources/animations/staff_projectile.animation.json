@@ -8,6 +8,14 @@
           "rotation": ["-query.target_x_rotation", "-query.target_y_rotation", 0]
         }
       }
+    },
+    "animation.staff_projectile.trail": {
+      "loop": true,
+      "particle_effects": {
+        "0.0": {
+          "effect": "trail"
+        }
+      }
     }
   }
 }

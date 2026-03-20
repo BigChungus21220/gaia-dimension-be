@@ -18,13 +18,23 @@
       "geometry": {
         "default": "geometry.rosa_gd.staff_projectile"
       },
+      "particle_emitters": {
+        "trail": "gaiadimension:magic_staff_trail"
+      },
       "scripts": {
+        "pre_animation": [
+          "variable.color_r = q.property('gaiadimension:element') == 3 ? 0.6 : (q.property('gaiadimension:element') == 4 ? 0.4 : (q.property('gaiadimension:element') == 6 ? 0.6 : 1.0));",
+          "variable.color_g = q.property('gaiadimension:element') == 1 ? 0.4 : (q.property('gaiadimension:element') == 4 ? 0.8 : (q.property('gaiadimension:element') == 5 ? 0.6 : (q.property('gaiadimension:element') == 6 ? 0.4 : 1.0)));",
+          "variable.color_b = q.property('gaiadimension:element') == 1 ? 0.4 : (q.property('gaiadimension:element') == 2 ? 0.4 : (q.property('gaiadimension:element') == 3 ? 0.2 : (q.property('gaiadimension:element') == 6 ? 0.8 : 1.0)));"
+        ],
         "animate": [
-          "face_player"
+          "face_player",
+          "trail"
         ]
       },
       "animations": {
-        "face_player": "animation.staff_projectile.face_player"
+        "face_player": "animation.staff_projectile.face_player",
+        "trail": "animation.staff_projectile.trail"
       },
       "render_controllers": [
         "controller.render.staff_projectile"

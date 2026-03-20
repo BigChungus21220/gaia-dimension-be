@@ -27,6 +27,7 @@ import { registerGaiaCommands } from "./systems/Commands.js";
 import { registerSetBiomeCommand } from "./systems/SetBiomeCommand.js";
 import { registerFireStarterComponent } from "./items/FireStarter.js";
 import { registerMagicStaffComponent } from "./items/MagicStaff.js";
+import { initializeMagicStaffBehaviors } from "./systems/MagicStaffBehaviors.js";
 import { registerCleanerComponent } from "./systems/Cleaner.js";
 import { initializeGlitterGrassSync } from "./blocks/GlitterGrassSync.js";
 import "./world/CoordinateDisplay.js";
@@ -42,6 +43,7 @@ initializeScriptEvents();
 initializeGeyser();
 initializeLightMixin();
 initializeGlitterGrassSync();
+initializeMagicStaffBehaviors();
 // initializeSkybox();
 registerCustomTool();
 
