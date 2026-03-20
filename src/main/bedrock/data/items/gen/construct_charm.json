@@ -8,7 +8,7 @@
             }
         },
         "components": {
-            "minecraft:icon": "textures/gaiadimension/androsa/item/construct_charm",
+            "minecraft:icon": "construct_charm",
             "minecraft:display_name": {
                 "value": "item.gaiadimension:construct_charm.name"
             },

@@ -8,7 +8,7 @@
             }
         },
         "components": {
-            "minecraft:icon": "textures/gaiadimension/androsa/item/blank_kit",
+            "minecraft:icon": "blank_kit",
             "minecraft:display_name": {
                 "value": "item.gaiadimension:blank_kit.name"
             },

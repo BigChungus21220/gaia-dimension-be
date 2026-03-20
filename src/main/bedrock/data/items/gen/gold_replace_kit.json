@@ -8,7 +8,7 @@
             }
         },
         "components": {
-            "minecraft:icon": "textures/gaiadimension/androsa/item/gold_replace_kit",
+            "minecraft:icon": "gold_replace_kit",
             "minecraft:display_name": {
                 "value": "item.gaiadimension:gold_replace_kit.name"
             },

@@ -10,7 +10,7 @@
         "components": {
             "minecraft:max_stack_size": 1,
             "minecraft:hand_equipped": true,
-            "minecraft:icon": "textures/gaiadimension/androsa/item/gen/magic_staff/staff_frost_basic_sustain",
+            "minecraft:icon": "magic_staff_frost_basic_sustain",
             "minecraft:display_name": {
                 "value": "Magic Staff\n§r§dElement: §7Frost\n§dBehavior: §7Basic\n§dStat: §7Sustain"
             },

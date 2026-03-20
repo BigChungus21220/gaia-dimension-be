@@ -8,7 +8,7 @@
             }
         },
         "components": {
-            "minecraft:icon": "textures/gaiadimension/androsa/item/mauve_replace_kit",
+            "minecraft:icon": "mauve_replace_kit",
             "minecraft:display_name": {
                 "value": "item.gaiadimension:mauve_replace_kit.name"
             },

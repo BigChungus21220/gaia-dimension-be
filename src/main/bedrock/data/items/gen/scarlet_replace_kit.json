@@ -8,7 +8,7 @@
             }
         },
         "components": {
-            "minecraft:icon": "textures/gaiadimension/androsa/item/scarlet_replace_kit",
+            "minecraft:icon": "scarlet_replace_kit",
             "minecraft:display_name": {
                 "value": "item.gaiadimension:scarlet_replace_kit.name"
             },

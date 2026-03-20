@@ -12,23 +12,30 @@ const LANG_FILE = path.join(RP_PATH, "texts/en_US.lang");
 
 class ItemGenerator {
     public static async generate() {
-        console.log("[INFO] Generating Items from Registry (Path-based Icons)...");
+        console.log("[INFO] Generating Items from Registry (Standard Icon Keys)...");
         
         await fs.ensureDir(ITEM_OUT);
 
         const itemTexture = await fs.readJson(ITEM_TEXTURE_JSON);
         let langContent = await fs.readFile(LANG_FILE, "utf-8");
 
+        // Cleanup: Remove old path-based keys if they exist from previous failed logic
+        for (const key of Object.keys(itemTexture.texture_data)) {
+            if (key.startsWith("textures/gaiadimension/androsa/item/")) {
+                delete itemTexture.texture_data[key];
+            }
+        }
+
         for (const item of ITEM_REGISTRY) {
-            // Construct the appropriate path
+            // Construct the path
             const texturePath = item.texture || `textures/gaiadimension/androsa/item/${item.id}`;
             
-            // Register using the path as the key to ensure the icon component can use the path
-            itemTexture.texture_data[texturePath] = {
+            // Register: Key is item ID, Value is the path
+            itemTexture.texture_data[item.id] = {
                 textures: texturePath
             };
 
-            await this.generateItemJson(item, texturePath);
+            await this.generateItemJson(item);
 
             // Update language
             const langKey = `item.gaiadimension:${item.id}.name=${item.name}`;
@@ -45,7 +52,7 @@ class ItemGenerator {
         console.log("[INFO] Item Generation Complete.");
     }
 
-    private static async generateItemJson(item: ItemDefinition, texturePath: string) {
+    private static async generateItemJson(item: ItemDefinition) {
         const itemJson: any = {
             "format_version": "1.21.30",
             "minecraft:item": {
@@ -56,7 +63,7 @@ class ItemGenerator {
                     }
                 },
                 "components": {
-                    "minecraft:icon": texturePath,
+                    "minecraft:icon": item.id, // Use the ID which is now the key in item_texture.json
                     "minecraft:display_name": {
                         "value": `item.gaiadimension:${item.id}.name`
                     },

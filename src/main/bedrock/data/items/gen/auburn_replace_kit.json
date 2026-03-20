@@ -8,7 +8,7 @@
             }
         },
         "components": {
-            "minecraft:icon": "textures/gaiadimension/androsa/item/auburn_replace_kit",
+            "minecraft:icon": "auburn_replace_kit",
             "minecraft:display_name": {
                 "value": "item.gaiadimension:auburn_replace_kit.name"
             },

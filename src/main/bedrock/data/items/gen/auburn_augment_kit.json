@@ -8,7 +8,7 @@
             }
         },
         "components": {
-            "minecraft:icon": "textures/gaiadimension/androsa/item/auburn_augment_kit",
+            "minecraft:icon": "auburn_augment_kit",
             "minecraft:display_name": {
                 "value": "item.gaiadimension:auburn_augment_kit.name"
             },
