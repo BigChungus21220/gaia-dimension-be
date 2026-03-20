@@ -7280,6 +7280,69 @@ function registerFireStarterComponent({ itemComponentRegistry }) {
   });
 }
 
+// src/main/bedrock/ts/items/MagicStaff.ts
+import { Player as Player18 } from "@minecraft/server";
+function registerMagicStaffComponent({ itemComponentRegistry }) {
+  itemComponentRegistry.registerCustomComponent("gaiadimension:magic_staff", {
+    onUse: (event) => {
+      const { source: player, itemStack } = event;
+      if (!(player instanceof Player18)) return;
+      const idParts = itemStack.typeId.split("_");
+      if (idParts.length < 4) return;
+      const elementStr = idParts[2];
+      const behaviorStr = idParts[3];
+      const element = {
+        "physical": 0 /* PHYSICAL */,
+        "fire": 1 /* FIRE */,
+        "electric": 2 /* ELECTRIC */,
+        "poison": 3 /* POISON */,
+        "frost": 4 /* FROST */,
+        "magic": 5 /* MAGIC */,
+        "energy": 6 /* ENERGY */
+      }[elementStr] ?? 0 /* PHYSICAL */;
+      const behavior = {
+        "basic": 0 /* BASIC */,
+        "blast": 1 /* BLAST */,
+        "burst": 2 /* BURST */,
+        "linger": 3 /* LINGER */,
+        "ricochet": 4 /* RICOCHET */,
+        "scatter": 5 /* SCATTER */
+      }[behaviorStr] ?? 0 /* BASIC */;
+      const viewDir = player.getViewDirection();
+      const spawnLoc = {
+        x: player.location.x + viewDir.x * 1.5,
+        y: player.location.y + player.getHeadLocation().y - player.location.y + viewDir.y * 1.5,
+        z: player.location.z + viewDir.z * 1.5
+      };
+      if (behavior === 5 /* SCATTER */) {
+        for (let i = -1; i <= 1; i++) {
+          const angle = i * 0.2;
+          const cos = Math.cos(angle);
+          const sin = Math.sin(angle);
+          const scatterDir = {
+            x: viewDir.x * cos - viewDir.z * sin,
+            y: viewDir.y,
+            z: viewDir.x * sin + viewDir.z * cos
+          };
+          spawnProjectile(player, spawnLoc, scatterDir, element, behavior);
+        }
+      } else {
+        spawnProjectile(player, spawnLoc, viewDir, element, behavior);
+      }
+      player.dimension.playSound("random.bow", player.location, { pitch: 0.5 });
+    }
+  });
+}
+function spawnProjectile(player, location, direction, element, behavior) {
+  const projectile = player.dimension.spawnEntity("gaiadimension:staff_projectile", location);
+  projectile.setProperty("gaiadimension:element", element);
+  projectile.setProperty("gaiadimension:behavior", behavior);
+  const projectileComp = projectile.getComponent("minecraft:projectile");
+  if (projectileComp) {
+    projectileComp.shoot(direction);
+  }
+}
+
 // src/main/bedrock/ts/systems/Cleaner.ts
 import { world as world28, system as system32, BlockVolume as BlockVolume3, BlockPermutation as BlockPermutation14 } from "@minecraft/server";
 var CLUTTER_TAGS = [
@@ -8066,6 +8129,7 @@ system38.beforeEvents.startup.subscribe((event) => {
   registerMegaStorageCrateComponent({ blockComponentRegistry });
   registerFluidComponent({ blockComponentRegistry });
   registerFireStarterComponent({ itemComponentRegistry });
+  registerMagicStaffComponent({ itemComponentRegistry });
   registerGaiaCommands(customCommandRegistry);
   registerSetBiomeCommand(customCommandRegistry);
 });

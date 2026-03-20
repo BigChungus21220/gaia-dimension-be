@@ -1630,6 +1630,27 @@
         },
         "magic_staff_poison_scatter_sustain": {
             "textures": "textures/gaiadimension/androsa/item/gen/magic_staff/staff_poison_scatter_sustain"
+        },
+        "staff_projectile_physical": {
+            "textures": "textures/gaiadimension/androsa/entity/gen/projectiles/staff_projectile_physical"
+        },
+        "staff_projectile_fire": {
+            "textures": "textures/gaiadimension/androsa/entity/gen/projectiles/staff_projectile_fire"
+        },
+        "staff_projectile_electric": {
+            "textures": "textures/gaiadimension/androsa/entity/gen/projectiles/staff_projectile_electric"
+        },
+        "staff_projectile_poison": {
+            "textures": "textures/gaiadimension/androsa/entity/gen/projectiles/staff_projectile_poison"
+        },
+        "staff_projectile_frost": {
+            "textures": "textures/gaiadimension/androsa/entity/gen/projectiles/staff_projectile_frost"
+        },
+        "staff_projectile_magic": {
+            "textures": "textures/gaiadimension/androsa/entity/gen/projectiles/staff_projectile_magic"
+        },
+        "staff_projectile_energy": {
+            "textures": "textures/gaiadimension/androsa/entity/gen/projectiles/staff_projectile_energy"
         }
     }
 }

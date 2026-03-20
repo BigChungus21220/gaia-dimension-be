@@ -1,0 +1,52 @@
+{
+  "format_version": "1.16.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "gaiadimension:staff_projectile",
+      "is_spawnable": false,
+      "is_summonable": true,
+      "is_experimental": false,
+      "runtime_identifier": "minecraft:snowball",
+      "properties": {
+        "gaiadimension:element": {
+          "type": "int",
+          "range": [0, 6],
+          "default": 0
+        },
+        "gaiadimension:behavior": {
+          "type": "int",
+          "range": [0, 5],
+          "default": 0
+        }
+      }
+    },
+    "components": {
+      "minecraft:collision_box": {
+        "width": 0.25,
+        "height": 0.25
+      },
+      "minecraft:projectile": {
+        "on_hit": {
+          "impact_damage": {
+            "damage": 1,
+            "knockback": true,
+            "destroy_on_hit": true
+          }
+        },
+        "power": 2.0,
+        "gravity": 0.0,
+        "uncertainty_base": 1.0,
+        "anchor": 1,
+        "should_bounce": false,
+        "offset": [0, 0, 0]
+      },
+      "minecraft:physics": {
+        "has_gravity": false
+      },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      }
+    }
+  }
+}

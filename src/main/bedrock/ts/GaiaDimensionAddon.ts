@@ -26,6 +26,7 @@ import { registerCustomTool } from "./durability.js";
 import { registerGaiaCommands } from "./systems/Commands.js";
 import { registerSetBiomeCommand } from "./systems/SetBiomeCommand.js";
 import { registerFireStarterComponent } from "./items/FireStarter.js";
+import { registerMagicStaffComponent } from "./items/MagicStaff.js";
 import { registerCleanerComponent } from "./systems/Cleaner.js";
 import { initializeGlitterGrassSync } from "./blocks/GlitterGrassSync.js";
 import "./world/CoordinateDisplay.js";
@@ -67,6 +68,7 @@ system.beforeEvents.startup.subscribe((event: any) => {
     registerMegaStorageCrateComponent({ blockComponentRegistry });
     registerFluidComponent({ blockComponentRegistry });
     registerFireStarterComponent({ itemComponentRegistry });
+    registerMagicStaffComponent({ itemComponentRegistry });
     
     // Register custom commands
     registerGaiaCommands(customCommandRegistry);

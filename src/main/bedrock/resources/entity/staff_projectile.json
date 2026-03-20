@@ -1,0 +1,48 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "gaiadimension:staff_projectile",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "physical": "textures/gaiadimension/androsa/entity/gen/projectiles/staff_projectile_physical",
+        "fire": "textures/gaiadimension/androsa/entity/gen/projectiles/staff_projectile_fire",
+        "electric": "textures/gaiadimension/androsa/entity/gen/projectiles/staff_projectile_electric",
+        "poison": "textures/gaiadimension/androsa/entity/gen/projectiles/staff_projectile_poison",
+        "frost": "textures/gaiadimension/androsa/entity/gen/projectiles/staff_projectile_frost",
+        "magic": "textures/gaiadimension/androsa/entity/gen/projectiles/staff_projectile_magic",
+        "energy": "textures/gaiadimension/androsa/entity/gen/projectiles/staff_projectile_energy"
+      },
+      "geometry": {
+        "default": "geometry.staff_projectile"
+      },
+      "scripts": {
+        "animate": [
+          "face_player"
+        ],
+        "variables": {
+          "Array.Textures": [
+            "Texture.physical",
+            "Texture.fire",
+            "Texture.electric",
+            "Texture.poison",
+            "Texture.frost",
+            "Texture.magic",
+            "Texture.energy"
+          ]
+        }
+      },
+      "animations": {
+        "face_player": "animation.staff_projectile.face_player"
+      },
+      "render_controllers": [
+        "controller.render.staff_projectile"
+      ],
+      "spawn_egg": {
+        "texture": "staff_projectile_physical"
+      }
+    }
+  }
+}

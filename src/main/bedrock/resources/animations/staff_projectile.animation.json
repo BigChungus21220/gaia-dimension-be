@@ -1,0 +1,13 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.staff_projectile.face_player": {
+      "loop": true,
+      "bones": {
+        "main": {
+          "rotation": ["-query.target_x_rotation", "-query.target_y_rotation", 0]
+        }
+      }
+    }
+  }
+}

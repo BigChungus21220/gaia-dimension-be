@@ -78,7 +78,10 @@ class MagicStaffGenerator {
                     "minecraft:max_stack_size": 1,
                     "minecraft:hand_equipped": true,
                     "minecraft:icon": staffId, // Use the ID as key
-                    "minecraft:display_name": { "value": lore }
+                    "minecraft:display_name": { "value": lore },
+                    "minecraft:custom_components": [
+                        "gaiadimension:magic_staff"
+                    ]
                 }
             }
         };

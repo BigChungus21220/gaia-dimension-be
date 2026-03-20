@@ -14,6 +14,9 @@
             "minecraft:display_name": {
                 "value": "Magic Staff\n§r§dElement: §7Frost\n§dBehavior: §7Basic\n§dStat: §7Power"
             },
+            "minecraft:custom_components": [
+                "gaiadimension:magic_staff"
+            ],
             "minecraft:cooldown": {
                 "category": "magic_staff",
                 "duration": 1.5

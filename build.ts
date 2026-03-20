@@ -31,6 +31,7 @@ async function build() {
     console.log('\x1b[32m> Task :processResources\x1b[0m');
     await runCommand('npx tsx src/main/bedrock/datagen/ItemGenerator.ts');
     await runCommand('npx tsx src/main/bedrock/datagen/MagicStaffGenerator.ts');
+    await runCommand('npx tsx src/main/bedrock/datagen/ProjectileGenerator.ts');
     await runCommand('npx tsx src/main/bedrock/datagen/GrassGenerator.ts');
     await runCommand('node port_worldgen.js');
 
