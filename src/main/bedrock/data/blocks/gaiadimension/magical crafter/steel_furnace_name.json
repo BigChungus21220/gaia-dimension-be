@@ -2,7 +2,7 @@
     "format_version": "1.21.60",
     "minecraft:block": {
         "description": {
-            "identifier": "gaiadimension:gaia_stone_furnace_name",
+            "identifier": "gaiadimension:steel_furnace_name",
             "menu_category": {
                 "category": "none",
                 "is_hidden_in_commands": true
@@ -11,7 +11,7 @@
         "components": {
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "gaiadimension:gaia_stone_furnace_name",
+                    "texture": "gaiadimension:steel_furnace_name",
                     "render_method": "opaque",
                     "face_dimming": false,
                     "ambient_occlusion": false

@@ -97,7 +97,7 @@ export class GrassGenerator {
             const sideOut = path.join(TEXTURE_GEN_DIR, `${textureName}_side.png`);
 
             const colorOverlay = this.createColorBuffer(biome.color, 16, 16);
-            const rawMeta = { raw: { width: 16, height: 16, channels: 4 } };
+            const rawMeta = { raw: { width: 16, height: 16, channels: 4 as const } };
 
             // 1. TOP (Standard multiply)
             await sharp(BASE_TOP)

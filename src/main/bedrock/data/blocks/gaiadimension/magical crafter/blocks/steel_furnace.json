@@ -1,0 +1,97 @@
+{
+    "format_version": "1.21.60",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:steel_furnace",
+            "menu_category": {
+                "category": "nature"
+            },
+            "states": {
+                "gaiadimension:furnace_on": [ false, true ],
+                "gaiadimension:pocket_ui": [ false, true ],
+                "gaiadimension:placed": [ false, true ]
+            },
+            "traits": {
+                "minecraft:placement_direction": {
+                    "enabled_states": [ "minecraft:cardinal_direction" ],
+                    "y_rotation_offset": 180
+                }
+            }
+        },
+        "components": {
+            "minecraft:tick": {
+                "interval_range": [ 5, 6 ]
+            },
+            "minecraft:redstone_conductivity": {
+                "redstone_conductor": true,
+                "allows_wire_to_step_down": true
+            },
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "gaiadimension:steel_furnace_off",
+                    "render_method": "opaque",
+                    "ambient_occlusion": 1
+                }
+            },
+            "minecraft:selection_box": true,
+            "minecraft:collision_box": true,
+            "minecraft:geometry": "geometry.bftr.steel_furnace",
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 6
+            },
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 5
+            },
+            "minecraft:light_dampening": 0,
+            "minecraft:map_color": "#a2b8a5",
+            "tag:minecraft:is_pickaxe_item_destructible": {}
+        },
+        "permutations": [
+            {
+                "condition": "q.block_state('gaiadimension:furnace_on')",
+                "components": {
+                    "minecraft:light_emission": 13,
+                    "minecraft:material_instances": {
+                        "*": {
+                            "texture": "gaiadimension:steel_furnace_on",
+                            "render_method": "opaque",
+                            "ambient_occlusion": 0
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'north'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [ 0, 0, 0 ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'south'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [ 0, 180, 0 ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'east'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [ 0, -90, 0 ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:cardinal_direction') == 'west'",
+                "components": {
+                    "minecraft:transformation": {
+                        "rotation": [ 0, 90, 0 ]
+                    }
+                }
+            }
+        ]
+    }
+}
