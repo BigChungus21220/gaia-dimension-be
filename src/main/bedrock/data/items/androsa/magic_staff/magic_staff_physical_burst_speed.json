@@ -14,6 +14,10 @@
             "minecraft:display_name": {
                 "value": "Magic Staff\n§r§dElement: §7Physical\n§dBehavior: §7Burst\n§dStat: §7Speed"
             },
+            "minecraft:use_animation": "bow",
+            "minecraft:use_modifiers": {
+                "use_duration": 0.1
+            },
             "minecraft:custom_components": [
                 "gaiadimension:magic_staff"
             ],

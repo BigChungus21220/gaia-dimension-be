@@ -4,7 +4,10 @@
     "controller.render.staff_projectile": {
       "geometry": "Geometry.default",
       "materials": [ { "*": "Material.default" } ],
-      "textures": [ "Array.Textures[query.property('gaiadimension:element')]" ]
+      "textures": [
+        "q.property('gaiadimension:element') == 1 ? Texture.fire : (q.property('gaiadimension:element') == 2 ? Texture.electric : (q.property('gaiadimension:element') == 3 ? Texture.poison : (q.property('gaiadimension:element') == 4 ? Texture.frost : (q.property('gaiadimension:element') == 5 ? Texture.magic : (q.property('gaiadimension:element') == 6 ? Texture.energy : Texture.physical)))))"
+      ],
+      "ignore_lighting": true
     }
   }
 }

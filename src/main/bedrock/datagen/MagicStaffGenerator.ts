@@ -79,6 +79,10 @@ class MagicStaffGenerator {
                     "minecraft:hand_equipped": true,
                     "minecraft:icon": staffId, // Use the ID as key
                     "minecraft:display_name": { "value": lore },
+                    "minecraft:use_animation": "bow",
+                    "minecraft:use_modifiers": {
+                        "use_duration": 0.1
+                    },
                     "minecraft:custom_components": [
                         "gaiadimension:magic_staff"
                     ]

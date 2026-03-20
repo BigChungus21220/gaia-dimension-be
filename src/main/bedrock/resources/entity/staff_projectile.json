@@ -16,23 +16,12 @@
         "energy": "textures/gaiadimension/androsa/entity/gen/projectiles/staff_projectile_energy"
       },
       "geometry": {
-        "default": "geometry.staff_projectile"
+        "default": "geometry.rosa_gd.staff_projectile"
       },
       "scripts": {
         "animate": [
           "face_player"
-        ],
-        "variables": {
-          "Array.Textures": [
-            "Texture.physical",
-            "Texture.fire",
-            "Texture.electric",
-            "Texture.poison",
-            "Texture.frost",
-            "Texture.magic",
-            "Texture.energy"
-          ]
-        }
+        ]
       },
       "animations": {
         "face_player": "animation.staff_projectile.face_player"

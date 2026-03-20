@@ -81,7 +81,7 @@ export function registerMagicStaffComponent({ itemComponentRegistry }: { itemCom
 function spawnProjectile(player: Player, location: any, direction: any, element: Element, behavior: Behavior) {
     const projectile = player.dimension.spawnEntity("gaiadimension:staff_projectile", location);
     
-    // Use Actor Properties to set element and behavior
+    // Set properties
     projectile.setProperty("gaiadimension:element", element);
     projectile.setProperty("gaiadimension:behavior", behavior);
 
