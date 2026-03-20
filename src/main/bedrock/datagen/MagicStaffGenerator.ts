@@ -18,8 +18,37 @@ const ITEM_TEXTURE_JSON = path.join(RP_PATH, "textures/item_texture.json");
 const LANG_FILE = path.join(RP_PATH, "texts/en_US.lang");
 
 class MagicStaffGenerator {
+    // Hardcoded Java-based lore mappings
+    private static readonly ELEMENT_LORE: Record<string, string> = {
+        "physical": "Physical",
+        "fire": "Fire",
+        "electric": "Electric",
+        "poison": "Poison",
+        "frost": "Frost",
+        "magic": "Magic",
+        "energy": "Energy"
+    };
+
+    private static readonly BEHAVIOR_LORE: Record<string, string> = {
+        "basic": "Basic",
+        "scatter": "Scatter",
+        "ricochet": "Ricochet",
+        "blast": "Blast",
+        "linger": "Linger",
+        "burst": "Burst"
+    };
+
+    private static readonly STAT_LORE: Record<string, string> = {
+        "standard": "Standard",
+        "power": "Power",
+        "speed": "Speed",
+        "recharge": "Recharge",
+        "force": "Force",
+        "sustain": "Sustain"
+    };
+
     public static async generate() {
-        console.log("[INFO] Initializing Magic Staff Registry...");
+        console.log("[INFO] Initializing Magic Staff Registry with Lore Generator...");
         
         await fs.ensureDir(TEXTURE_OUT);
         await fs.ensureDir(ITEM_OUT);
@@ -42,6 +71,7 @@ class MagicStaffGenerator {
     private static async generateStaff(core: StaffCore, head: StaffHead, rod: StaffRod, staffId: string) {
         const texFilename = `staff_${core.id}_${head.id}_${rod.id}.png`;
         const outTexPath = path.join(TEXTURE_OUT, texFilename);
+        const iconPath = `textures/gaiadimension/androsa/item/gen/magic_staff/staff_${core.id}_${head.id}_${rod.id}`;
 
         // 1. Texture Composition (Rod -> Core -> Head)
         await sharp(path.join(TEXTURE_SRC, rod.texturePath))
@@ -51,9 +81,16 @@ class MagicStaffGenerator {
             ])
             .toFile(outTexPath);
 
-        // 2. Item JSON
+        // 2. Lore Generation
+        const element = this.ELEMENT_LORE[core.id] || "Unknown";
+        const behavior = this.BEHAVIOR_LORE[head.id] || "Unknown";
+        const stat = this.STAT_LORE[rod.id] || "Unknown";
+
+        const lore = `Magic Staff\n§r§dElement: §7${element}\n§dBehavior: §7${behavior}\n§dStat: §7${stat}`;
+
+        // 3. Item JSON
         const itemJson = {
-            "format_version": "1.21.10",
+            "format_version": "1.21.30",
             "minecraft:item": {
                 "description": {
                     "identifier": `gaiadimension:${staffId}`,
@@ -64,15 +101,14 @@ class MagicStaffGenerator {
                 "components": {
                     "minecraft:max_stack_size": 1,
                     "minecraft:hand_equipped": true,
-                    "minecraft:icon": staffId,
+                    "minecraft:icon": iconPath,
                     "minecraft:display_name": {
-                        "value": `item.gaiadimension:${staffId}.name`
+                        "value": lore
                     }
                 }
             }
         };
 
-        // Add dynamic stats if desired (example: cooldown)
         if (rod.stats.cooldown) {
             // @ts-ignore
             itemJson["minecraft:item"].components["minecraft:cooldown"] = {
@@ -90,22 +126,21 @@ class MagicStaffGenerator {
             const texData = await fs.readJson(ITEM_TEXTURE_JSON);
             for (const staffId of generatedItems) {
                 const shortName = staffId.replace("magic_staff_", "");
-                texData.texture_data[staffId] = {
-                    textures: `textures/gaiadimension/androsa/item/gen/magic_staff/staff_${shortName}`
+                const iconPath = `textures/gaiadimension/androsa/item/gen/magic_staff/staff_${shortName}`;
+                texData.texture_data[iconPath] = {
+                    textures: iconPath
                 };
             }
             await fs.writeJson(ITEM_TEXTURE_JSON, texData, { spaces: 4 });
         }
 
-        // Update en_US.lang
+        // Update en_US.lang (Optional now that we use raw display_name, but good for completeness)
         if (await fs.pathExists(LANG_FILE)) {
             let langContent = await fs.readFile(LANG_FILE, "utf-8");
             let lines = langContent.split("\n");
 
-            // Filter out old magic staff translations
             lines = lines.filter(line => !line.includes("item.gaiadimension:magic_staff_"));
 
-            // Append new translations
             for (const staffId of generatedItems) {
                 lines.push(`item.gaiadimension:${staffId}.name=Magic Staff`);
             }

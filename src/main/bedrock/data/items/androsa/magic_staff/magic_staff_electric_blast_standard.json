@@ -1,5 +1,5 @@
 {
-    "format_version": "1.21.10",
+    "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
             "identifier": "gaiadimension:magic_staff_electric_blast_standard",
@@ -10,9 +10,9 @@
         "components": {
             "minecraft:max_stack_size": 1,
             "minecraft:hand_equipped": true,
-            "minecraft:icon": "magic_staff_electric_blast_standard",
+            "minecraft:icon": "textures/gaiadimension/androsa/item/gen/magic_staff/staff_electric_blast_standard",
             "minecraft:display_name": {
-                "value": "item.gaiadimension:magic_staff_electric_blast_standard.name"
+                "value": "Magic Staff\n§r§dElement: §7Electric\n§dBehavior: §7Blast\n§dStat: §7Standard"
             },
             "minecraft:cooldown": {
                 "category": "magic_staff",

@@ -1,5 +1,5 @@
 {
-    "format_version": "1.21.10",
+    "format_version": "1.21.30",
     "minecraft:item": {
         "description": {
             "identifier": "gaiadimension:magic_staff_poison_linger_speed",
@@ -10,9 +10,9 @@
         "components": {
             "minecraft:max_stack_size": 1,
             "minecraft:hand_equipped": true,
-            "minecraft:icon": "magic_staff_poison_linger_speed",
+            "minecraft:icon": "textures/gaiadimension/androsa/item/gen/magic_staff/staff_poison_linger_speed",
             "minecraft:display_name": {
-                "value": "item.gaiadimension:magic_staff_poison_linger_speed.name"
+                "value": "Magic Staff\n§r§dElement: §7Poison\n§dBehavior: §7Linger\n§dStat: §7Speed"
             },
             "minecraft:cooldown": {
                 "category": "magic_staff",
