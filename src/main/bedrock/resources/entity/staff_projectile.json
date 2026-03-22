@@ -29,12 +29,12 @@
         ],
         "animate": [
           "face_player",
-          "trail"
+          { "death": "q.property('gaiadimension:is_dead')" }
         ]
       },
       "animations": {
         "face_player": "animation.staff_projectile.face_player",
-        "trail": "animation.staff_projectile.trail"
+        "death": "animation.staff_projectile.death"
       },
       "render_controllers": [
         "controller.render.staff_projectile"

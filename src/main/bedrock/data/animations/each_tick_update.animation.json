@@ -1,0 +1,12 @@
+{
+    "format_version": "1.10.0",
+    "animations": {
+        "animation.gaiadimension.entity.each_tick_update": {
+            "loop": true,
+            "animation_length": 0.1,
+            "timeline": {
+                "0.0": "particle gaiadimension:magic_staff_trail"
+            }
+        }
+    }
+}

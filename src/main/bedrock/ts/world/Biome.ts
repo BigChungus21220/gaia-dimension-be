@@ -1,6 +1,7 @@
-import { Player } from "@minecraft/server";
+import { Player, world } from "@minecraft/server";
 import { DimensionSystem } from "./Gaia.js"
 import * as Events from "./Events.js"
+import { ModConfig } from "../config/mod_config.js";
 
 /**
  * Handles biome changes
@@ -17,6 +18,10 @@ class BiomeSystem {
      */
     static updateBiome(player: Player): void {
         const biome = DimensionSystem.getBiome(player);
+        
+        // Track for config management
+        if (biome) ModConfig.registerDiscoveredBiome(biome);
+
         if (DimensionSystem.isInGaia(player)) {
             if (this.#playerBiomes[player.id] !== biome){
                 // world.sendMessage(`§b[BiomeSystem] Biome change for ${player.name}: ${biome}`);

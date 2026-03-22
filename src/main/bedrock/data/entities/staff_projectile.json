@@ -25,6 +25,11 @@
           "range": [0, 5],
           "default": 5,
           "client_sync": true
+        },
+        "gaiadimension:is_dead": {
+          "type": "bool",
+          "default": false,
+          "client_sync": true
         }
       }
     },
@@ -38,7 +43,10 @@
           "impact_damage": {
             "damage": 1,
             "knockback": true,
-            "destroy_on_hit": true
+            "destroy_on_hit": false
+          },
+          "definition_event": {
+            "event": "gaiadimension:on_death"
           }
         },
         "power": 2.0,
@@ -54,6 +62,29 @@
       "minecraft:pushable": {
         "is_pushable": false,
         "is_pushable_by_piston": false
+      },
+      "minecraft:timer": {
+        "time": 30.0,
+        "looping": false,
+        "time_down_event": {
+          "event": "gaiadimension:on_death"
+        }
+      }
+    },
+    "events": {
+      "gaiadimension:on_death": {
+        "sequence": [
+          {
+            "set_actor_property": {
+              "gaiadimension:is_dead": true
+            }
+          },
+          {
+            "queue_command": {
+              "command": "schedule on_death 0.1s"
+            }
+          }
+        ]
       }
     }
   }

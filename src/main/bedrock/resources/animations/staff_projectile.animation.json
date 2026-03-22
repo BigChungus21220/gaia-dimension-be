@@ -16,6 +16,15 @@
           "effect": "trail"
         }
       }
+    },
+    "animation.staff_projectile.death": {
+      "loop": false,
+      "animation_length": 0.1,
+      "bones": {
+        "main": {
+          "scale": [0, 0, 0]
+        }
+      }
     }
   }
 }

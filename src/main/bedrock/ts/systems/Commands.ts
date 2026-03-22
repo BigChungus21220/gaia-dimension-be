@@ -1,8 +1,10 @@
 import { Player, system, world, CommandPermissionLevel, CustomCommandParamType, CustomCommandRegistry, CommandOrigin, BlockPermutation, Vector3 } from "@minecraft/server";
+import { ModalFormData } from "@minecraft/server-ui";
 import { DimensionSystem, GaiaDimension } from "../world/Gaia.js";
 import { Vec3 } from "../Vec3.js";
 import { MathParser } from "./MathParser.js";
 import { DataSystem } from "./DataSystem.js";
+import { ModConfig } from "../config/mod_config.js";
 
 /**
  * Registers Gaia Utility Commands
@@ -352,6 +354,65 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
             player.sendMessage("§d[Gaia Creator] §7She's the primordial architect who birthed the original Java realm. If you see crystals, thank her. If you see bugs, it's definitely the porter's fault.");
             player.sendMessage("§b🔗 https://www.curseforge.com/minecraft/mc-mods/gaia-dimension");
         });
+        return { status: 0 };
+    });
+
+    // /gaiadimension:settings
+    registry.registerCommand({
+        name: "gaiadimension:settings",
+        description: "Configure Gaia Dimension settings.",
+        permissionLevel: CommandPermissionLevel.GameDirectors,
+    }, (origin: CommandOrigin) => {
+        const player = origin.sourceEntity;
+        if (!(player instanceof Player)) return;
+
+        system.run(() => {
+            const currentConfig = ModConfig.getAll();
+            const form = new ModalFormData();
+            form.title("§6Gaia Settings");
+            
+            form.toggle("Portal Biome Restriction\n§7(Only allowed biomes)", { defaultValue: currentConfig.portalBiomeRestriction });
+            form.toggle("Allow All Biomes\n§7(Bypass restriction)", { defaultValue: currentConfig.allowAllBiomes });
+            
+            form.textField("Manually Add Biome ID", "Enter identifier...", { defaultValue: "" });
+
+            // Sorted list of all discovered biomes for the toggle list
+            const discovered = currentConfig.discoveredBiomes;
+            const hotBiomes = new Set(currentConfig.hotBiomes);
+
+            for (const biomeId of discovered) {
+                const isAllowed = hotBiomes.has(biomeId);
+                const label = isAllowed ? `§aAllowed: §f${biomeId}` : `§7Restricted: §f${biomeId}`;
+                form.toggle(label, { defaultValue: isAllowed });
+            }
+
+            form.show(player).then(response => {
+                if (response.canceled) return;
+                
+                const [portalRestriction, allowAll, manualBiome, ...biomeToggles] = response.formValues as [boolean, boolean, string, ...boolean[]];
+                
+                ModConfig.portalBiomeRestriction = portalRestriction;
+                ModConfig.allowAllBiomes = allowAll;
+                
+                if (manualBiome && manualBiome.trim().length > 0) {
+                    ModConfig.addHotBiome(manualBiome.trim());
+                }
+
+                // Process toggles
+                const newHotBiomes: string[] = [];
+                for (let i = 0; i < discovered.length; i++) {
+                    if (biomeToggles[i]) {
+                        newHotBiomes.push(discovered[i]);
+                    }
+                }
+                ModConfig.hotBiomes = newHotBiomes;
+                
+                player.sendMessage(`§6[Gaia] §7Settings updated.`);
+            }).catch(e => {
+                console.error("Failed to show settings form: " + e);
+            });
+        });
+
         return { status: 0 };
     });
 

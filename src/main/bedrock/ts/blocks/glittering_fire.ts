@@ -1,5 +1,6 @@
 import { world, system, Player, Entity, Block, Dimension, Vector3, EntityHitEntityAfterEvent, PlayerLeaveAfterEvent, PlayerPlaceBlockAfterEvent, PlayerBreakBlockBeforeEvent, PlayerBreakBlockAfterEvent } from "@minecraft/server";
 import { PortalManager } from "../API/lib/PortalLib.js";
+import { ModConfig } from "../config/mod_config.js";
 
 // Register the Gaia Dimension Portal
 PortalManager.register("gaiadimension:gaia_dimension_portal", "gaiadimension:keystone_block");
@@ -97,6 +98,22 @@ export function registerGlitteringFireComponent(): void {
                 try {
                     const dimension: Dimension = block.dimension;
                     const location: Vector3 = block.location;
+                    
+                    if (dimension.id === "minecraft:overworld" && ModConfig.portalBiomeRestriction && !ModConfig.allowAllBiomes) {
+                        // Check if in a hot/equatorial vanilla biome
+                        const biome = dimension.getBiome(location);
+                        const hotBiomes = ModConfig.hotBiomes;
+
+                        if (!hotBiomes.includes(biome.id)) {
+                            const currentBlock = dimension.getBlock(location);
+                            if (currentBlock && currentBlock.typeId === "gaiadimension:glittering_fire") {
+                                currentBlock.setType("minecraft:air");
+                                dimension.playSound("random.fizz", location);
+                            }
+                            return;
+                        }
+                    }
+
                     const currentBlock = dimension.getBlock(location);
                     if (currentBlock && currentBlock.typeId === "gaiadimension:glittering_fire") {
                          PortalManager.tryIgnite(currentBlock);
