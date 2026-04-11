@@ -1,4 +1,4 @@
-import { world, system, BlockPermutation, GameMode, Direction, Player, Block, ItemStack, BlockComponentRegistry, EntityEquippableComponent } from "@minecraft/server";
+import { EquipmentSlot, world, system, BlockPermutation, GameMode, Direction, Player, Block, ItemStack, BlockComponentRegistry, EntityEquippableComponent } from "@minecraft/server";
 
 /**
  * Handles the creation of double sandstone slabs.
@@ -16,9 +16,9 @@ function handleDoubleSandstoneSlab(player: Player, block: Block, mainhandItem: I
             const equippable = player.getComponent("equippable") as EntityEquippableComponent;
             if (mainhandItem.amount > 1) {
                 mainhandItem.amount--;
-                equippable.setEquipment("Mainhand", mainhandItem);
+                equippable.setEquipment("Mainhand" as EquipmentSlot , mainhandItem);
             } else {
-                equippable.setEquipment("Mainhand");
+                equippable.setEquipment("Mainhand" as EquipmentSlot);
             }
         }
     } catch (e) {

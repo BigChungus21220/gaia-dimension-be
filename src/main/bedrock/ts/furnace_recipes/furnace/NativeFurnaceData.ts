@@ -172,7 +172,7 @@ export const nativeRecipes: Record<string, NativeRecipe> = {
     "minecraft:polished_blackstone_bricks":{
         output: "minecraft:cracked_polished_blackstone_bricks"
     },
-    "minecraft:coobled_deepslate":{
+    "minecraft:cobbled_deepslate":{
         output: "minecraft:deepslate"
     },
     "minecraft:deepslate_bricks":{
@@ -183,17 +183,23 @@ export const nativeRecipes: Record<string, NativeRecipe> = {
     },
     "minecraft:stained_hardened_clay":{
         //hardcoded
-        scriptedOutput: function(item=MC.ItemStack("air")){
-            let colorValues = MC.BlockStates.get("color").validValues
+        scriptedOutput: function(item: MC.ItemStack){
+            if (!item) return undefined;
+            // @ts-ignore
+            const colorState = MC.world.getBlockStates().get("color");
+            if (!colorState) return undefined;
+            
+            const colorValues = colorState.validValues;
             for(let i = 0; i < colorValues.length; i++){
-                let condition = `{"color": "${colorValues[i]}"}`
-                let block = MC.BlockPermutation.resolve(item.typeId, JSON.parse(condition))
-                let itemCompare = block.getItemStack(1)
-                if(item.isStackableWith(itemCompare)){
-                    let output = new MC.ItemStack(`minecraft:${colorValues[i]}_glazed_terracotta`) 
-                    return output
+                const color = colorValues[i];
+                const block = MC.BlockPermutation.resolve(item.typeId, { "color": color });
+                // @ts-ignore
+                const itemCompare = block.getItemStack(1);
+                if(itemCompare && item.isStackableWith(itemCompare)){
+                    return new MC.ItemStack(`minecraft:${color}_glazed_terracotta`);
                 }
             }
+            return undefined;
         }
     },
     "minecraft:cactus":{

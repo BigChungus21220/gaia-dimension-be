@@ -1,6 +1,6 @@
 import { Player, system, world, CommandPermissionLevel, CustomCommandParamType, CustomCommandRegistry, CommandOrigin, BlockPermutation, Vector3 } from "@minecraft/server";
 import { ModalFormData } from "@minecraft/server-ui";
-import { DimensionSystem, GaiaDimension } from "../world/Gaia.js";
+import { DimensionSystem } from "../world/Gaia.js";
 import { Vec3 } from "../Vec3.js";
 import { MathParser } from "./MathParser.js";
 import { DataSystem } from "./DataSystem.js";
@@ -329,10 +329,9 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
             player.sendMessage("§7Synchronization: " + (inGaia ? "§aStable" : "§cExternal"));
             
             let coords = player.location;
-            if (inGaia && GaiaDimension) {
+            if (inGaia) {
                 const biome = DimensionSystem.getBiome(player);
                 player.sendMessage("§7Current Biome: §e" + formatName(biome));
-                coords = GaiaDimension.offset(player.location);
             }
             
             player.sendMessage("§7Coordinates: §f" + Math.floor(coords.x) + ", " + Math.floor(coords.y) + ", " + Math.floor(coords.z));

@@ -8,6 +8,8 @@
   "dependencies": {
     "@minecraft/server": "^2.5.0",
     "@minecraft/server-ui": "^2.0.0",
+    "@minecraft/vanilla-data": "^1.26.13",
+    "fastnoise-lite": "^1.1.1",
     "npm": "^11.3.2",
     "prismarine-nbt": "^2.8.0"
   },

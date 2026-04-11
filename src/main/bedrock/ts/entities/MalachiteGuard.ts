@@ -31,7 +31,7 @@ class MalachiteGuardSystem {
                 const guardId = guard.getDynamicProperty("gaiadimension:guard_id");
                 if (guardId) {
                     activeGuardIds.add(guardId);
-                    this.updateGuardState(guard, guardId);
+                    this.updateGuardState(guard, guardId as string);
                 }
             }
 

@@ -1,534 +1,413 @@
-import { world, system, BlockPermutation, ItemStack, BlockVolume, GameMode } from "@minecraft/server";
+import { world, system, BlockPermutation, ItemStack, BlockVolume, Block, Dimension, Player, Entity, Vector3, BlockComponentRegistry, BlockCustomComponent, BlockComponentTickEvent, GameMode, ItemComponentUseOnEvent, ItemCustomComponent, ItemUseAfterEvent, ItemComponentUseEvent } from "@minecraft/server";
+import { FluidTemplate } from "./lib/FluidTemplate.js";
+import { LavaTemplate } from "./templates/LavaTemplate.js";
+import { WaterTemplate } from "./templates/WaterTemplate.js";
 
-const fluids = [
-    "gaiadimension:liquid_bismuth",
-    "gaiadimension:liquid_bismuth_down",
-    "gaiadimension:liquid_bismuth1",
-    "gaiadimension:liquid_bismuth2",
-    "gaiadimension:liquid_bismuth3",
+// --- Globals ---
+const blockCache = new Map<string, Block | undefined>();
+const playersInFluids = new Set<string>();
+const typeInfoCache = new Map<string, { stage: number, baseId: string }>();
 
-    "gaiadimension:liquid_aura",
-    "gaiadimension:liquid_aura_down",
-    "gaiadimension:liquid_aura1",
-    "gaiadimension:liquid_aura2",
-    "gaiadimension:liquid_aura3",
+const REPLACABLE_IDS = new Set([
+    "minecraft:snow_layer", "minecraft:fire", "minecraft:soul_fire",
+    "minecraft:double_plant", "minecraft:tallgrass", "minecraft:short_grass",
+    "minecraft:deadbush", "minecraft:web", "minecraft:dandelion", "minecraft:oxeye_daisy", "minecraft:poppy", "minecraft:azure_bluet", "minecraft:cornflower"
+]);
 
-    "gaiadimension:mineral_water",
-    "gaiadimension:mineral_water_down",
-    "gaiadimension:mineral_water1",
-    "gaiadimension:mineral_water2",
-    "gaiadimension:mineral_water3",
-
-    "gaiadimension:superhot_magma",
-    "gaiadimension:superhot_magma_down",
-    "gaiadimension:superhot_magma1",
-    "gaiadimension:superhot_magma2",
-    "gaiadimension:superhot_magma3",
-
-    "gaiadimension:sweet_muck",
-    "gaiadimension:sweet_muck_down",
-    "gaiadimension:sweet_muck1",
-    "gaiadimension:sweet_muck2",
-    "gaiadimension:sweet_muck3"
-];
-
-const fluidIDs = new Set(fluids);
-
-interface FluidInteraction {
-    directions: "adjacent" | "below" | "all";
-    targetBlock: string | string[];
-    action: "transformTarget" | "transformSelf";
-    resultBlock: string;
-    sound: string;
+function getCachedBlock(dimension: Dimension, x: number, y: number, z: number): Block | undefined {
+    const fx = Math.floor(x), fy = Math.floor(y), fz = Math.floor(z);
+    if (fy < dimension.heightRange.min || fy > dimension.heightRange.max) return undefined;
+    const key = `${dimension.id}:${fx},${fy},${fz}`;
+    let blk = blockCache.get(key);
+    if (blk !== undefined) return blk;
+    blk = dimension.getBlock({ x: fx, y: fy, z: fz });
+    blockCache.set(key, blk);
+    return blk;
 }
 
-class FluidTemplate {
-    private baseId: string;
-    private interactions: FluidInteraction[];
+function getTypeInfo(typeId: string) {
+    let info = typeInfoCache.get(typeId);
+    if (info) return info;
 
-    constructor(baseId: string) {
-        this.baseId = baseId;
-        this.interactions = [];
-    }
-
-    addInteraction(directions: "adjacent" | "below" | "all", targetBlock: string | string[], action: "transformTarget" | "transformSelf", resultBlock: string, sound: string): void {
-        this.interactions.push({ directions, targetBlock, action, resultBlock, sound });
-    }
-
-    getInteractions(): FluidInteraction[] {
-        return this.interactions;
-    }
-}
-
-const idToTemplate: Map<string, FluidTemplate> = new Map();
-
-function getFluidVariants(baseId: string): string[] {
-    return [
-        baseId,
-        baseId + "_down",
-        baseId + "1",
-        baseId + "2",
-        baseId + "3"
-    ];
-}
-
-function registerFluidInteraction(selfId: string, targetId: string | string[], resultId: string, sound: string): void {
-    let template = idToTemplate.get(selfId);
-    if (!template) {
-        template = new FluidTemplate(selfId);
-        idToTemplate.set(selfId, template);
-    }
-    // Normalize targetId to array
-    const targets = Array.isArray(targetId) ? targetId : [targetId];
-    template.addInteraction("adjacent", targets, "transformTarget", resultId, sound);
-}
-
-// --- Interaction Rules ---
-const MAGMA = "gaiadimension:superhot_magma";
-const AURA = "gaiadimension:liquid_aura";
-const MINERAL = "gaiadimension:mineral_water";
-const MUCK = "gaiadimension:sweet_muck";
-const PRIMAL = "gaiadimension:primal_mass";
-const AURA_CRYSTAL_BLOCK = "gaiadimension:aura_crystal_block";
-const WATER_VARIANTS = ["minecraft:water", "minecraft:flowing_water"];
-
-// 1. Superhot Magma + Liquid Aura = Block of Aura Crystal
-registerFluidInteraction(MAGMA, getFluidVariants(AURA), AURA_CRYSTAL_BLOCK, "random.fizz");
-registerFluidInteraction(AURA, getFluidVariants(MAGMA), AURA_CRYSTAL_BLOCK, "random.fizz");
-
-// 2. Superhot Magma + Mineral Water / Normal Water = Primal Mass
-registerFluidInteraction(MAGMA, [...getFluidVariants(MINERAL), ...WATER_VARIANTS], PRIMAL, "random.fizz");
-registerFluidInteraction(MINERAL, getFluidVariants(MAGMA), PRIMAL, "random.fizz");
-
-// 3. Sweet Muck + Superhot Magma = Primal Mass
-registerFluidInteraction(MUCK, getFluidVariants(MAGMA), PRIMAL, "random.fizz");
-registerFluidInteraction(MAGMA, getFluidVariants(MUCK), PRIMAL, "random.fizz");
-
-
-const hot_fluids = [
-    "gaiadimension:superhot_magma",
-    "gaiadimension:superhot_magma_down",
-    "gaiadimension:superhot_magma1",
-    "gaiadimension:superhot_magma2",
-    "gaiadimension:superhot_magma3",
-
-    "gaiadimension:liquid_bismuth",
-    "gaiadimension:liquid_bismuth_down",
-    "gaiadimension:liquid_bismuth1",
-    "gaiadimension:liquid_bismuth2",
-    "gaiadimension:liquid_bismuth3",
-];
-
-// --- Fluid Processing System (Budgeted) ---
-const BUDGET = 15; // Target max ms usage per tick
-const MAX_QUEUE_SIZE = 500; // Hard limit on pending blocks to prevent memory/lag spikes
-const IDLE_TIMEOUT = 40; // Ticks before a fluid goes idle (~2 seconds)
-
-interface PendingBlock {
-    block: any; // using any because block.isValid check is required and @minecraft/server types might be strict
-    dimension: any;
-}
-
-const PENDING_BLOCKS: Map<string, PendingBlock> = new Map(); // Key: "x,y,z,dim", Value: {block, dimension}
-const ACTIVE_FLUIDS: Map<string, number> = new Map(); // Key: "x,y,z,dim", Value: lastActiveTick
-
-// Directions for flow checks
-const DIRECTIONS = [
-    { x: 0, y: 0, z: -1, name: "North" },
-    { x: 0, y: 0, z: 1, name: "South" },
-    { x: 1, y: 0, z: 0, name: "East" },
-    { x: -1, y: 0, z: 0, name: "West" }
-];
-
-const playerFluidState: Map<string, { head: boolean; feet: boolean }> = new Map(); // Key: player.id, Value: { head: boolean, feet: boolean }
-
-system.runInterval(() => {
-    const start = Date.now();
-    
-    // Player Effects Logic
-    runPlayerEffects();
-    if (Date.now() - start > BUDGET) return;
-
-    runBoatLogic();
-    if (Date.now() - start > BUDGET) return;
-
-    // Fluid Flow Logic (Budgeted)
-    if (PENDING_BLOCKS.size === 0) return;
-
-    // Use iterator to process manually so we can stop mid-loop
-    for (const [key, data] of PENDING_BLOCKS) {
-        if (Date.now() - start > BUDGET) break;
-
-        PENDING_BLOCKS.delete(key);
-
-        try {
-            const { block, dimension } = data;
-            if (block.isValid) {
-                const didChange = processFluidBlock(block, dimension);
-                if (didChange) {
-                    ACTIVE_FLUIDS.set(key, system.currentTick);
-                }
-            }
-        } catch (e) {
-            // Handle error silently or log
-        }
-    }
-});
-
-function runPlayerEffects(): void {
-    const players = world.getPlayers();
-    for (const player of players) {
-      const dimension = player.dimension;
-      const location = player.location;
-      
-      const blockAt = dimension.getBlock(location);
-      const blockAbove = dimension.getBlock({ x: location.x, y: location.y + 1, z: location.z });
-      const blockHead = dimension.getBlock({ x: location.x, y: location.y + 1.63, z: location.z });
-      
-      const inFluidAt = blockAt && fluids.includes(blockAt.typeId);
-      const inFluidAbove = blockAbove && fluids.includes(blockAbove.typeId);
-
-      // --- 1. Viscosity Effects (Slow Falling + Levitation) ---
-      if (inFluidAt || inFluidAbove) {
-        let depth = 0;
-        if (inFluidAt) depth++;
-        if (inFluidAbove) depth++;
-        if (depth === 2) {
-             const blockWayAbove = dimension.getBlock({ x: location.x, y: location.y + 2, z: location.z });
-             if (blockWayAbove && fluids.includes(blockWayAbove.typeId)) {
-                 depth++;
-             }
-        }
-        
-        let amplifier = 0;
-        if (depth >= 3) amplifier = 2;
-        else if (depth === 2) amplifier = 1;
-        
-        if (player.isSneaking) {
-            amplifier = Math.min(2, amplifier + 1);
-        }
-
-        player.addEffect("slow_falling", 4, { amplifier: amplifier, showParticles: false });
-        
-        if (player.isJumping) {
-          player.addEffect("levitation", 3, { amplifier: 2, showParticles: false });
-        }
-
-        if (
-          (blockAbove && hot_fluids.includes(blockAbove.typeId)) ||
-          (blockAt && hot_fluids.includes(blockAt.typeId))
-        ) {
-          player.setOnFire(10, true);
-        } else {
-          player.extinguishFire(true);
-        }
-      }
-
-      // --- 2. Fluid Sounds & Particles (Mineral Water) ---
-      const prevState = playerFluidState.get(player.id) || { head: false, feet: false };
-      const isHeadInMineralWater = !!(blockHead && blockHead.typeId.includes("mineral_water"));
-      const isFeetInMineralWater = !!(blockAt && blockAt.typeId.includes("mineral_water"));
-      
-      // Sound logic (Head)
-      if (isHeadInMineralWater && !prevState.head) {
-          // Enter
-          player.playSound("ambient.underwater.enter", { volume: 0.5, pitch: 1 });
-          player.playSound("ambient.underwater.loop", { volume: 1, pitch: 1 });
-      } else if (!isHeadInMineralWater && prevState.head) {
-          // Exit
-          player.playSound("ambient.underwater.exit", { volume: 0.5, pitch: 1 });
-          player.runCommand("stopsound @s ambient.underwater.loop");
-      }
-
-      // Surface Paddle Sound (Mineral Water)
-      const isOnSurfaceMineralWater = isFeetInMineralWater && !isHeadInMineralWater;
-      if (isOnSurfaceMineralWater) {
-          const velocity = player.getVelocity();
-          const speed = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
-          if (speed > 0.08 && system.currentTick % 8 === 0) {
-              player.playSound("entity.boat.paddle_water", { volume: 0.25, pitch: 1 });
-          }
-      }
-      
-      // Particle logic (Feet)
-      if (isFeetInMineralWater && !prevState.feet) {
-          dimension.spawnParticle("minecraft:water_splash_particle", { x: location.x, y: location.y, z: location.z });
-      }
-      
-      playerFluidState.set(player.id, { head: isHeadInMineralWater, feet: isFeetInMineralWater });
-
-      // --- 3. Fog Effect ---
-      if (blockHead) {
-          const typeId = blockHead.typeId;
-          if (typeId.includes("mineral_water")) {
-              player.runCommand("fog @s push gaiadimension:mineral_water_fog mineral_water_fog");
-          } else if (typeId.includes("superhot_magma")) {
-              player.runCommand("fog @s push gaiadimension:superhot_magma_fog superhot_magma_fog");
-          } else if (fluids.includes(typeId)) {
-              player.runCommand("fog @s push fluid:water_fog fluid_fog");
-          } else {
-              player.runCommand("fog @s remove mineral_water_fog");
-              player.runCommand("fog @s remove superhot_magma_fog");
-              player.runCommand("fog @s remove fluid_fog");
-          }
-      }
-    }
-}
-
-function isReplaceable(blk: any): boolean {
-    if (!blk || !blk.isValid) return false;
-    if (blk.isAir) return true;
-    if (blk.isLiquid) return false; 
-    if (fluidIDs.has(blk.typeId)) return false;
-
-    const id = blk.typeId;
-
-    if (id === "minecraft:snow_layer" || 
-        id === "minecraft:light_block" ||
-        id === "minecraft:fire" || 
-        id === "minecraft:soul_fire" ||
-        id === "minecraft:double_plant" || 
-        id === "minecraft:tallgrass" ||
-        id === "minecraft:short_grass" ||
-        id === "minecraft:deadbush" ||
-        id === "minecraft:web") return true;
-
-    const vegetationTags = [
-        "minecraft:is_plant",
-        "flower",
-        "plant",
-        "double_plant",
-        "minecraft:crop"
-    ];
-    if (vegetationTags.some(tag => blk.hasTag(tag))) return true;
-    
-// Core Fluid Logic
-    if (id.includes("flower") || id.includes("sapling") || id.includes("bush") || id.includes("plant") || id.includes("leaf_litter")) return true;
-    
-    return false;
-}
-
-// Core Fluid Logic
-function processFluidBlock(block: any, dimension: any): boolean {
-    const typeId = block.typeId;
-    let changesHappened = false;
-
-    // ... (stage logic) ...
-    let currentStage = 0; // 0 = source, -1 = down
+    let currentStage = 0; 
     let baseId = typeId;
     
     if (typeId.endsWith("_down")) {
         currentStage = -1;
-        baseId = typeId.slice(0, -5); 
-    } else if (typeId.endsWith("3")) {
-        currentStage = 3;
-        baseId = typeId.slice(0, -1);
-    } else if (typeId.endsWith("2")) {
-        currentStage = 2;
-        baseId = typeId.slice(0, -1);
-    } else if (typeId.endsWith("1")) {
-        currentStage = 1;
-        baseId = typeId.slice(0, -1);
+        baseId = typeId.replace("_down", "");
     } else {
-        currentStage = 0; // Source
-        baseId = typeId;
+        const match = typeId.match(/(\d+)$/);
+        if (match) {
+            currentStage = parseInt(match[1]);
+            baseId = typeId.slice(0, -match[1].length);
+        } else {
+            // Check if it's a source block by comparing against known base IDs
+            for (const template of templates) {
+                if (typeId === template.baseName) {
+                    currentStage = 0;
+                    baseId = typeId;
+                    break;
+                }
+            }
+        }
     }
+    info = { stage: currentStage, baseId };
+    typeInfoCache.set(typeId, info);
+    return info;
+}
 
+// --- Configuration ---
+const templates: FluidTemplate[] = [
+    new LavaTemplate("gaiadimension:superhot_magma"),
+    new LavaTemplate("gaiadimension:liquid_bismuth"),
+    new WaterTemplate({ 
+        baseName: "gaiadimension:liquid_aura", 
+        fogId: "gaiadimension:liquid_aura_fog",
+        interactions: [
+            {
+                targetBlock: ["gaiadimension:superhot_magma", "gaiadimension:superhot_magma_down", "gaiadimension:superhot_magma1", "gaiadimension:superhot_magma2", "gaiadimension:superhot_magma3", "gaiadimension:superhot_magma4", "gaiadimension:superhot_magma5", "gaiadimension:superhot_magma6", "gaiadimension:superhot_magma7"],
+                action: "transformTarget",
+                resultBlock: "gaiadimension:aura_crystal_block",
+                directions: "adjacent"
+            }
+        ]
+    }),
+    new WaterTemplate({ 
+        baseName: "gaiadimension:mineral_water", 
+        fogId: "gaiadimension:mineral_water_fog",
+        hasBoatPhysics: true,
+        interactions: [
+            {
+                targetBlock: ["gaiadimension:superhot_magma", "gaiadimension:superhot_magma_down", "gaiadimension:superhot_magma1", "gaiadimension:superhot_magma2", "gaiadimension:superhot_magma3", "gaiadimension:superhot_magma4", "gaiadimension:superhot_magma5", "gaiadimension:superhot_magma6", "gaiadimension:superhot_magma7"],
+                action: "transformTarget",
+                resultBlock: "gaiadimension:primal_mass",
+                directions: "adjacent"
+            }
+        ]
+    }),
+    new WaterTemplate({ 
+        baseName: "gaiadimension:sweet_muck", 
+        viscosity: 5,
+        spreadDelay: 10,
+        fogId: "gaiadimension:sweet_muck_fog",
+        interactions: [
+            {
+                targetBlock: ["gaiadimension:superhot_magma", "gaiadimension:superhot_magma_down", "gaiadimension:superhot_magma1", "gaiadimension:superhot_magma2", "gaiadimension:superhot_magma3", "gaiadimension:superhot_magma4", "gaiadimension:superhot_magma5", "gaiadimension:superhot_magma6", "gaiadimension:superhot_magma7"],
+                action: "transformTarget",
+                resultBlock: "gaiadimension:primal_mass",
+                directions: "adjacent"
+            }
+        ]
+    }),
+];
+
+const fluidIDs = new Set<string>();
+const idToTemplate = new Map<string, FluidTemplate>();
+
+for (const template of templates) {
+    for (const id of template.fluidIDs) {
+        fluidIDs.add(id);
+        idToTemplate.set(id, template);
+    }
+}
+
+// --- Fluid Processing System (Budgeted) ---
+const BUDGET = 4; 
+const MAX_QUEUE_SIZE = 1000; 
+
+const playerInteractionDummies = new Map<string, Entity>();
+
+interface PendingBlockData {
+    block: Block;
+    dimension: Dimension;
+    scheduledTick: number;
+}
+
+const PENDING_BLOCKS: Map<string, PendingBlockData> = new Map(); 
+let taskIndex = 0;
+
+const DIRECTIONS = [
+    { x: 0, y: 0, z: -1, name: "north", straight: 1 },
+    { x: 0, y: 0, z: 1, name: "south", straight: 5 },
+    { x: 1, y: 0, z: 0, name: "east", straight: 3 },
+    { x: -1, y: 0, z: 0, name: "west", straight: 7 }
+];
+
+system.runInterval(() => {
+    blockCache.clear();
+    const start = Date.now();
+    const players = world.getAllPlayers();
+    
+    const tasks = [
+        () => runPlayerEffects(players),
+        () => runBoatLogic(players),
+        () => runFluidFlowLogic(start),
+        () => runFluidInteractionDummies(players)
+    ];
+
+    const priorityTask = taskIndex % tasks.length;
+    tasks[priorityTask]();
+    
+    for (let i = 0; i < tasks.length; i++) {
+        if (i === priorityTask) continue;
+        if (Date.now() - start > BUDGET) break;
+        tasks[i]();
+    }
+    taskIndex++;
+}, 1);
+
+function runFluidInteractionDummies(players: Player[]) {
+    for (const player of players) {
+        const inventory = player.getComponent("inventory")?.container;
+        if (!inventory) continue;
+        const heldItem = inventory.getItem(player.selectedSlotIndex);
+        const isHoldingBucket = heldItem?.typeId === "minecraft:bucket" || (heldItem?.typeId.startsWith("gaiadimension:") && heldItem?.typeId.endsWith("_bucket"));
+        const isHoldingBlock = heldItem && (heldItem.typeId.includes("planks") || heldItem.typeId.includes("log") || heldItem.typeId.includes("stairs") || heldItem.typeId.includes("slab") || heldItem.typeId.includes("fence") || heldItem.typeId.includes("stone") || heldItem.typeId.includes("dirt") || heldItem.typeId.includes("sand") || heldItem.typeId.includes("glass") || heldItem.typeId.includes("cobblestone"));
+
+        if (!isHoldingBucket && !isHoldingBlock) {
+            const existing = playerInteractionDummies.get(player.id);
+            if (existing) { if (existing.isValid) existing.remove(); playerInteractionDummies.delete(player.id); }
+            continue;
+        }
+
+        const viewVec = player.getViewDirection();
+        const headLoc = player.getHeadLocation();
+        let targetFluid: Block | undefined;
+        for (let d = 0.5; d <= 5; d += 0.5) {
+            const checkPos = { x: headLoc.x + viewVec.x * d, y: headLoc.y + viewVec.y * d, z: headLoc.z + viewVec.z * d };
+            const block = getCachedBlock(player.dimension, checkPos.x, checkPos.y, checkPos.z);
+            if (block) {
+                if (fluidIDs.has(block.typeId)) { targetFluid = block; break; }
+                if (!block.isAir && !isReplaceable(block)) break;
+            }
+        }
+
+        if (targetFluid) {
+            let dummy = playerInteractionDummies.get(player.id);
+            const center = targetFluid.center();
+            const targetPos = { x: center.x, y: center.y - 0.5, z: center.z };
+            if (!dummy || !dummy.isValid) { dummy = player.dimension.spawnEntity("gaiadimension:fluid_interaction_dummy", targetPos); playerInteractionDummies.set(player.id, dummy); }
+            else { const distSq = Math.pow(dummy.location.x - targetPos.x, 2) + Math.pow(dummy.location.y - targetPos.y, 2) + Math.pow(dummy.location.z - targetPos.z, 2); if (distSq > 0.01) dummy.teleport(targetPos); }
+        } else {
+            const existing = playerInteractionDummies.get(player.id);
+            if (existing) { if (existing.isValid) existing.remove(); playerInteractionDummies.delete(player.id); }
+        }
+    }
+}
+
+function runFluidFlowLogic(startTime: number) {
+    if (PENDING_BLOCKS.size === 0) return;
+    const currentTick = system.currentTick;
+    const iterator = PENDING_BLOCKS.entries();
+    let processedCount = 0;
+    const MAX_PER_TICK = 50;
+
+    for (let entry = iterator.next(); !entry.done; entry = iterator.next()) {
+        const timeSpent = Date.now() - startTime;
+        if (timeSpent > BUDGET && processedCount > 0) break;
+        if (processedCount >= MAX_PER_TICK) break;
+        const [key, data] = entry.value;
+        if (currentTick < data.scheduledTick) continue;
+        PENDING_BLOCKS.delete(key);
+        try {
+            const { block, dimension } = data;
+            if (block.isValid) { if (processFluidBlock(block, dimension)) wakeNeighbors(block.location, dimension); processedCount++; }
+        } catch (e) {}
+    }
+}
+
+function runPlayerEffects(players: Player[]) {
+    for (const player of players) {
+        try {
+            const dim = player.dimension;
+            const loc = player.location;
+            const blockAt = getCachedBlock(dim, loc.x, loc.y, loc.z);
+            const blockHead = getCachedBlock(dim, loc.x, loc.y + 1.63, loc.z);
+            let template: FluidTemplate | undefined;
+            let isHead = false;
+            let isFeet = false;
+            if (blockHead && fluidIDs.has(blockHead.typeId)) { template = idToTemplate.get(blockHead.typeId); isHead = true; }
+            if (blockAt && fluidIDs.has(blockAt.typeId)) { const t = idToTemplate.get(blockAt.typeId); if (!template) template = t; isFeet = true; }
+            if (template) { playersInFluids.add(player.id); template.onPlayerTick(player, blockAt || blockHead!, isHead, isFeet); }
+            else if (playersInFluids.has(player.id)) { player.runCommand("fog @s remove fluid_fog"); playersInFluids.delete(player.id); }
+        } catch {}
+    }
+}
+
+function runBoatLogic(players: Player[]) {
+    if (players.length === 0) return;
+    const activeDimensions = new Set(players.map(p => p.dimension));
+    for (const dimension of activeDimensions) {
+        const boats = dimension.getEntities({ families: ["boat"] });
+        for (const boat of boats) {
+            if (!boat.isValid) continue;
+            const loc = boat.location;
+            const blockAt = getCachedBlock(dimension, loc.x, loc.y, loc.z);
+            const blockBelow = getCachedBlock(dimension, loc.x, loc.y - 0.1, loc.z);
+            let template: FluidTemplate | undefined;
+            let isDeep = false;
+            if (blockAt && fluidIDs.has(blockAt.typeId)) { template = idToTemplate.get(blockAt.typeId); isDeep = true; }
+            else if (blockBelow && fluidIDs.has(blockBelow.typeId)) { template = idToTemplate.get(blockBelow.typeId); }
+            if (template) template.processBoat(boat, dimension, isDeep);
+            else { const holders = dimension.getEntities({ type: "gaiadimension:boat_holder", location: loc, maxDistance: 2 }); for (const h of holders) if (h.isValid) h.remove(); }
+        }
+    }
+}
+
+function isReplaceable(blk: Block | undefined): boolean {
+    if (!blk || !blk.isValid) return false;
+    if (blk.isAir) return true;
+    const id = blk.typeId;
+    if (blk.isLiquid || fluidIDs.has(id)) return false;
+    if (REPLACABLE_IDS.has(id)) return true;
+    if (id.includes("flower") || id.includes("sapling") || id.includes("bush") || id.includes("plant") || id.includes("leaf_litter")) return true;
+    const vegetationTags = ["minecraft:is_plant", "flower", "plant", "double_plant", "minecraft:crop"];
+    for (const tag of vegetationTags) { if (blk.hasTag(tag)) return true; }
+    return false;
+}
+
+function findClosestSlope(dimension: Dimension, startLoc: Vector3, searchDist: number, baseId: string): Vector3[] {
+    const queue: { loc: Vector3, dist: number }[] = [{ loc: startLoc, dist: 0 }];
+    const visited = new Set<string>();
+    const foundSlopes: Vector3[] = [];
+    let minDist = 999;
+
+    while (queue.length > 0) {
+        const { loc, dist } = queue.shift()!;
+        if (dist > searchDist) continue;
+        if (dist > minDist) break;
+
+        for (const dir of DIRECTIONS) {
+            const next = { x: loc.x + dir.x, y: loc.y, z: loc.z + dir.z };
+            const key = `${next.x},${next.y},${next.z}`;
+            if (visited.has(key)) continue;
+            visited.add(key);
+
+            const block = getCachedBlock(dimension, next.x, next.y, next.z);
+            if (!block) continue;
+
+            const below = getCachedBlock(dimension, next.x, next.y - 1, next.z);
+            if (below && isReplaceable(below)) {
+                if (dist + 1 < minDist) { minDist = dist + 1; foundSlopes.length = 0; }
+                if (dist + 1 === minDist) foundSlopes.push({ x: next.x, y: next.y, z: next.z });
+            } else if (isReplaceable(block)) {
+                queue.push({ loc: next, dist: dist + 1 });
+            }
+        }
+    }
+    return foundSlopes;
+}
+
+function processFluidBlock(block: Block, dimension: Dimension): boolean {
+    const typeId = block.typeId;
+    let changesHappened = false;
+    const { stage: currentStage, baseId } = getTypeInfo(typeId);
     if (!fluidIDs.has(baseId)) return false; 
     
-    // Interaction Logic (Generic)
-    const currentTemplate = idToTemplate.get(baseId);
-    if (currentTemplate) {
-        const interactions = currentTemplate.getInteractions();
-        for (const rule of interactions) {
-            // Determine blocks to check based on direction
-            const blocksToCheck = [];
-            
-            if (rule.directions === "adjacent" || rule.directions === "all") {
-                blocksToCheck.push(
-                    dimension.getBlock({ x: block.location.x + 1, y: block.location.y, z: block.location.z }),
-                    dimension.getBlock({ x: block.location.x - 1, y: block.location.y, z: block.location.z }),
-                    dimension.getBlock({ x: block.location.x, y: block.location.y, z: block.location.z + 1 }),
-                    dimension.getBlock({ x: block.location.x, y: block.location.y, z: block.location.z - 1 }),
-                    dimension.getBlock({ x: block.location.x, y: block.location.y + 1, z: block.location.z })
-                );
-            }
-            if (rule.directions === "below" || rule.directions === "all") {
-                blocksToCheck.push(
-                    dimension.getBlock({ x: block.location.x, y: block.location.y - 1, z: block.location.z })
-                );
-            }
-
-            let triggered = false;
-            for (const checkBlock of blocksToCheck) {
-                if (!checkBlock) continue;
-                
-                const isMatch = Array.isArray(rule.targetBlock) 
-                    ? rule.targetBlock.includes(checkBlock.typeId)
-                    : checkBlock.typeId === rule.targetBlock;
-
-                if (isMatch) {
-                    if (rule.action === "transformTarget" && checkBlock.isValid) {
-                        checkBlock.setType(rule.resultBlock);
-                        triggered = true;
-                    } else if (rule.action === "transformSelf") {
-                        triggered = true;
-                        break; 
+    const template = idToTemplate.get(baseId);
+    if (template) {
+        const interactions = template.getInteractions();
+        if (interactions.length > 0) {
+            const neighbors = [{x:1,y:0,z:0},{x:-1,y:0,z:0},{x:0,y:0,z:1},{x:0,y:0,z:-1},{x:0,y:1,z:0},{x:0,y:-1,z:0}];
+            for (const rule of interactions) {
+                const checkIndices = rule.directions === "below" ? [5] : (rule.directions === "all" ? [0,1,2,3,4,5] : [0,1,2,3,4]);
+                let triggered = false;
+                for (const idx of checkIndices) {
+                    const off = neighbors[idx];
+                    const nb = getCachedBlock(dimension, block.x + off.x, block.y + off.y, block.z + off.z);
+                    if (nb && (Array.isArray(rule.targetBlock) ? rule.targetBlock.includes(nb.typeId) : nb.typeId === rule.targetBlock)) {
+                        if (rule.action === "transformTarget") { dimension.fillBlocks(new BlockVolume(nb.location, nb.location), rule.resultBlock); triggered = true; }
+                        else if (rule.action === "transformSelf") { triggered = true; break; }
                     }
                 }
-            }
-
-            if (triggered) {
-                changesHappened = true;
-                if (rule.sound) {
-                    dimension.playSound(rule.sound, block.location, { volume: 0.5, pitch: 1 });
-                }
-                if (rule.action === "transformSelf" && block.isValid) {
-                    block.setType(rule.resultBlock);
-                    return true; // Stop processing this block (it changed)
+                if (triggered) {
+                    changesHappened = true;
+                    if (rule.sound) dimension.playSound(rule.sound, block.location, { volume: 0.5, pitch: 1 });
+                    if (rule.action === "transformSelf") { dimension.fillBlocks(new BlockVolume(block.location, block.location), rule.resultBlock); return true; }
                 }
             }
         }
     }
-    
-    let requiredParentTag = "";
-    if (currentStage === 1) requiredParentTag = "template_full";
-    else if (currentStage === 2) requiredParentTag = "template1";
-    else if (currentStage === 3) requiredParentTag = "template2";
-    
-    // Special Rule: Merge with Half Fluids or Down blocks above
-    if (currentStage > 0) {
-         const above = dimension.getBlock({ x: block.location.x, y: block.location.y + 1, z: block.location.z });
-         if (above) {
-             const aboveId = above.typeId;
-             const isAboveDown = (aboveId === baseId + "_down");
-             const isAboveHalf = (aboveId === baseId + "1" || aboveId === baseId + "2" || aboveId === baseId + "3");
-             
-             if (isAboveDown || isAboveHalf) {
-                 const downId = baseId + "_down";
-                 if (block.isValid) {
-                     const vol = new BlockVolume(block.location, block.location);
-                     dimension.fillBlocks(vol, BlockPermutation.resolve(downId));
-                     changesHappened = true;
-                 }
-                 return changesHappened;
-             }
-         }
-    }
-    
-    // 1. Survival Check
+
     if (currentStage > 0) {
         let hasParent = false;
+        const parentTag = currentStage === 1 ? "template" : `template${currentStage-1}`;
         for (const dir of DIRECTIONS) {
-            const neighbor = dimension.getBlock({ x: block.location.x + dir.x, y: block.location.y, z: block.location.z + dir.z });
-            if (neighbor && neighbor.hasTag(requiredParentTag)) {
-                hasParent = true;
-                break;
-            }
+            const neighbor = getCachedBlock(dimension, block.x + dir.x, block.y, block.z + dir.z);
+            if (neighbor && (neighbor.typeId === baseId || neighbor.hasTag(parentTag))) { hasParent = true; break; }
         }
         if (!hasParent) {
-            if (block.isValid) {
-                const vol = new BlockVolume(block.location, block.location);
-                dimension.fillBlocks(vol, BlockPermutation.resolve("minecraft:air"));
-                changesHappened = true;
+            const above = getCachedBlock(dimension, block.x, block.y + 1, block.z);
+            if (!(above && (above.typeId === baseId || above.typeId === baseId + "_down"))) {
+                dimension.fillBlocks(new BlockVolume(block.location, block.location), "minecraft:air");
+                return true;
             }
-            return changesHappened;
-        }
-    } else if (currentStage === -1) {
-        const above = dimension.getBlock({ x: block.location.x, y: block.location.y + 1, z: block.location.z });
-        if (!above) {
-             if (block.isValid) {
-                 const vol = new BlockVolume(block.location, block.location);
-                 dimension.fillBlocks(vol, BlockPermutation.resolve("minecraft:air"));
-                 changesHappened = true;
-             }
-             return changesHappened;
-        }
-        
-        const aboveId = above.typeId;
-        const validParents = [ baseId, baseId + "_down", baseId + "1", baseId + "2", baseId + "3" ];
-        
-        if (!validParents.includes(aboveId)) {
-            if (block.isValid) {
-                const vol = new BlockVolume(block.location, block.location);
-                dimension.fillBlocks(vol, BlockPermutation.resolve("minecraft:air"));
-                changesHappened = true;
-            }
-            return changesHappened;
         }
     }
 
-    // 2. Flow Down
-    const below = dimension.getBlock({ x: block.location.x, y: block.location.y - 1, z: block.location.z });
+    if (currentStage <= 0) {
+        const states = block.permutation.getAllStates();
+        let changedStates = false;
+        const neighbors = [
+            { x: 1, y: 0, z: 0, state: "gaiadimension:x" },
+            { x: -1, y: 0, z: 0, state: "gaiadimension:nx" },
+            { x: 0, y: 0, z: 1, state: "gaiadimension:z" },
+            { x: 0, y: 0, z: -1, state: "gaiadimension:nz" },
+            { x: 0, y: 1, z: 0, state: "gaiadimension:top" },
+            { x: 0, y: -1, z: 0, state: "gaiadimension:bottom" }
+        ];
+
+        for (const nbDef of neighbors) {
+            const nb = getCachedBlock(dimension, block.x + nbDef.x, block.y + nbDef.y, block.z + nbDef.z);
+            const isFluid = nb && (nb.typeId.startsWith(baseId) || nb.isLiquid);
+            const newState = isFluid ? 1 : 0;
+            if (states[nbDef.state] !== newState) {
+                states[nbDef.state] = newState;
+                changedStates = true;
+            }
+        }
+
+        if (changedStates) {
+            dimension.fillBlocks(new BlockVolume(block.location, block.location), BlockPermutation.resolve(block.typeId, states));
+            // Visual changes do not wake neighbors
+        }
+    }
+
+    const below = getCachedBlock(dimension, block.location.x, block.location.y - 1, block.location.z);
     let flowedDown = false;
-    
-    if (below && isReplaceable(below)) {
-         const downId = baseId + "_down";
-         const isDestructible = below.typeId !== "minecraft:air";
-         
-         if (below.isValid) {
-             if (isDestructible) {
-                 below.dimension.runCommand(`setblock ${below.location.x} ${below.location.y} ${below.location.z} air destroy`);
-             }
-             const vol = new BlockVolume(below.location, below.location);
-             dimension.fillBlocks(vol, BlockPermutation.resolve(downId));
-             changesHappened = true;
-         }
-         flowedDown = true;
-    } else if (below && (below.typeId === baseId + "_down" || below.typeId === baseId)) {
-        flowedDown = true;
-    }
+    if (below && isReplaceable(below)) { dimension.fillBlocks(new BlockVolume(below.location, below.location), baseId + "_down"); flowedDown = true; changesHappened = true; }
+    else if (below && (below.typeId === baseId + "_down" || below.typeId === baseId)) flowedDown = true;
 
-    // 3. Flow Sideways (Next Stage)
-    const canSpread = (currentStage === 0) || 
-                      (currentStage === -1 && !flowedDown) || 
-                      (currentStage > 0 && currentStage < 3);
+    const maxStages = 7;
+    const canSpread = (currentStage === 0) || (currentStage === -1 && !flowedDown) || (currentStage > 0 && currentStage < maxStages);
 
     if (canSpread) {
-        const nextStageId = (currentStage === 0 || currentStage === -1) ? baseId + "1" : baseId + (currentStage + 1).toString();
+        const nextStageNum = (currentStage <= 0) ? 1 : currentStage + 1;
+        const nextId = baseId + nextStageNum;
+        const searchDist = template?.slopeFindDistance ?? 4;
+        const slopes = findClosestSlope(dimension, block.location, searchDist, baseId);
         
         for (const dir of DIRECTIONS) {
-            const neighbor = dimension.getBlock({ x: block.location.x + dir.x, y: block.location.y, z: block.location.z + dir.z });
+            const neighbor = getCachedBlock(dimension, block.x + dir.x, block.y, block.z + dir.z);
             if (neighbor) {
-                let canOverwrite = false;
-                
-                if (isReplaceable(neighbor)) {
-                    canOverwrite = true;
-                } else if (neighbor.typeId.startsWith(baseId)) {
-                    // Check if neighbor is a flow stage of the same fluid
-                    let neighborStage = 0; // Default to source (0)
-                    if (neighbor.typeId.endsWith("_down")) neighborStage = -1;
-                    else {
-                        const match = neighbor.typeId.match(/(\d)$/);
-                        if (match) neighborStage = parseInt(match[1]);
-                        else if (neighbor.typeId === baseId) neighborStage = 0; // Explicit source check
-                        else neighborStage = -999; // Not a valid flow stage
-                    }
-
-                    // We want to replace if our new stage (nextStageId suffix) is "fuller" (lower number) than neighbor.
-                    // nextStageId is e.g. "liquid_magma1".
-                    const nextStageNum = parseInt(nextStageId.slice(-1)); 
-                    
-                    if (neighborStage > 0 && nextStageNum < neighborStage) {
-                        canOverwrite = true;
-                    }
+                let shouldFlow = slopes.length === 0;
+                if (slopes.length > 0) {
+                    const distToSlope = (s: Vector3) => Math.abs(s.x - (block.x + dir.x)) + Math.abs(s.z - (block.z + dir.z));
+                    shouldFlow = slopes.some(s => distToSlope(s) < Math.abs(s.x - block.x) + Math.abs(s.z - block.z));
                 }
 
-                if (canOverwrite) {
-                    const isDestructible = neighbor.typeId !== "minecraft:air";
-                    if (neighbor.isValid) {
-                        if (isDestructible) {
-                            neighbor.dimension.runCommand(`setblock ${neighbor.location.x} ${neighbor.location.y} ${neighbor.location.z} air destroy`);
-                        }
-                        const vol = new BlockVolume(neighbor.location, neighbor.location);
+                if (shouldFlow) {
+                    let canOverwrite = false;
+                    if (isReplaceable(neighbor)) canOverwrite = true;
+                    else if (neighbor.typeId.startsWith(baseId)) {
+                        const nInfo = getTypeInfo(neighbor.typeId);
+                        if (nInfo.stage > 0 && nextStageNum < nInfo.stage) canOverwrite = true;
+                    }
 
-                        let direction = "north";
-                        if (dir.z === 1) direction = "south";
-                        else if (dir.x === 1) direction = "east";
-                        else if (dir.x === -1) direction = "west";
-
-                        const perm = BlockPermutation.resolve(nextStageId, { "minecraft:cardinal_direction": direction });
-                        dimension.fillBlocks(vol, perm);
+                    if (canOverwrite) {
+                        const perm = BlockPermutation.resolve(nextId, { "gaiadimension:flow_dir": dir.straight });
+                        dimension.fillBlocks(new BlockVolume(neighbor.location, neighbor.location), perm);
+                        PENDING_BLOCKS.set(`${neighbor.x},${neighbor.y},${neighbor.z},${dimension.id}`, { block: neighbor, dimension, scheduledTick: system.currentTick + (template?.spreadDelay ?? 5) });
                         changesHappened = true;
                     }
                 }
@@ -536,309 +415,234 @@ function processFluidBlock(block: any, dimension: any): boolean {
         }
     }
     
-    // 4. Update Source Visuals
-    if (currentStage === 0 || currentStage === -1) {
-        const perms = block.permutation.getAllStates();
-        let changed = false;
-        
-        const checkDir = (dx, dy, dz, stateName) => {
-             const neighbor = dimension.getBlock({ x: block.location.x + dx, y: block.location.y + dy, z: block.location.z + dz });
-             const hasTag = neighbor && neighbor.hasTag("template_full");
-             const val = hasTag ? 1 : 0;
-             if (perms[stateName] !== undefined && perms[stateName] !== val) {
-                 perms[stateName] = val;
-                 changed = true;
-             }
-        };
-
-        checkDir(1, 0, 0, "gaiadimension:x");
-        checkDir(-1, 0, 0, "gaiadimension:nx");
-        checkDir(0, 0, 1, "gaiadimension:z");
-        checkDir(0, 0, -1, "gaiadimension:nz");
-        checkDir(0, 1, 0, "gaiadimension:top");
-        checkDir(0, -1, 0, "gaiadimension:bottom");
-        
-        if (changed) {
-            const newPerm = BlockPermutation.resolve(typeId, perms);
-            if (block.isValid) {
-                const vol = new BlockVolume(block.location, block.location);
-                dimension.fillBlocks(vol, newPerm);
-                changesHappened = true;
+    if (currentStage > 0) {
+        let flowX = 0, flowZ = 0;
+        for (const dir of DIRECTIONS) {
+            const nb = getCachedBlock(dimension, block.x + dir.x, block.y, block.z + dir.z);
+            let nLevel = 999;
+            if (nb && isReplaceable(nb) && !fluidIDs.has(nb.typeId)) nLevel = 99;
+            else if (nb && nb.typeId.startsWith(baseId)) { 
+                const nInfo = getTypeInfo(nb.typeId); 
+                nLevel = nInfo.stage === -1 ? 0 : nInfo.stage; 
             }
+            
+            // Flow AWAY from higher blocks (downhill)
+            if (nLevel < currentStage) { flowX += dir.x; flowZ += dir.z; }
+            else if (nLevel > currentStage) { flowX -= dir.x; flowZ -= dir.z; }
+        }
+        
+        flowX = flowX > 0 ? 1 : (flowX < 0 ? -1 : 0);
+        flowZ = flowZ > 0 ? 1 : (flowZ < 0 ? -1 : 0);
+        
+        let dirState = 5; // Default South
+        if (flowX === 0 && flowZ === -1) dirState = 1;      // North
+        else if (flowX === 1 && flowZ === -1) dirState = 2; // North-East
+        else if (flowX === 1 && flowZ === 0) dirState = 3;  // East
+        else if (flowX === 1 && flowZ === 1) dirState = 4;  // South-East
+        else if (flowX === 0 && flowZ === 1) dirState = 5;  // South
+        else if (flowX === -1 && flowZ === 1) dirState = 6; // South-West
+        else if (flowX === -1 && flowZ === 0) dirState = 7; // West
+        else if (flowX === -1 && flowZ === -1) dirState = 8;// North-West
+
+        const perms = block.permutation.getAllStates();
+        if (perms["gaiadimension:flow_dir"] !== dirState) {
+            perms["gaiadimension:flow_dir"] = dirState;
+            dimension.fillBlocks(new BlockVolume(block.location, block.location), BlockPermutation.resolve(typeId, perms));
+            changesHappened = true;
         }
     }
     return changesHappened;
 }
 
-class FluidFlowComponent {
-    constructor() {
-        this.onTick = this.onTick.bind(this);
+export class BucketItemComponent implements ItemCustomComponent {
+    onUse(event: ItemComponentUseEvent) {
+        const { source, itemStack } = event;
+        if (!source || !(source instanceof Player) || !itemStack || itemStack.typeId !== "minecraft:bucket") return;
+        const player = source as Player;
+        const viewVec = player.getViewDirection();
+        const headLoc = player.getHeadLocation();
+        const dimension = player.dimension;
+        for (let d = 1; d <= 5; d++) {
+            const checkPos = { x: headLoc.x + viewVec.x * d, y: headLoc.y + viewVec.y * d, z: headLoc.z + viewVec.z * d };
+            const block = getCachedBlock(dimension, checkPos.x, checkPos.y, checkPos.z);
+            if (block && fluidIDs.has(block.typeId)) {
+                const info = getTypeInfo(block.typeId);
+                if (info.stage !== 0) continue;
+                const bucketId = info.baseId + "_bucket";
+                const filledBucket = new ItemStack(bucketId, 1);
+                const inventory = player.getComponent("inventory")?.container;
+                if (inventory) {
+                    const slot = player.selectedSlotIndex;
+                    if (itemStack.amount > 1) { itemStack.amount--; inventory.setItem(slot, itemStack); const remainder = inventory.addItem(filledBucket); if (remainder) dimension.spawnItem(remainder, player.location); }
+                    else inventory.setItem(slot, filledBucket);
+                }
+                const isHot = block.typeId.includes("magma") || block.typeId.includes("bismuth");
+                dimension.playSound(isHot ? "bucket.fill_lava" : "bucket.fill_water", block.location);
+                block.setType("minecraft:air");
+                wakeNeighbors(block.location, dimension);
+                return;
+            }
+            if (block && !block.isAir && !isReplaceable(block)) break;
+        }
     }
+    onUseOn(event: ItemComponentUseOnEvent) {
+        const { source, block, itemStack, blockFace } = event;
+        if (!itemStack || !source || !(source instanceof Player)) return;
+        const player = source as Player;
+        const fluidId = itemStack.typeId.replace("_bucket", "");
+        if (!fluidIDs.has(fluidId)) return;
+        const targetLoc = block.location;
+        const offset = { x: 0, y: 0, z: 0 };
+        if (blockFace === "Up") offset.y = 1; else if (blockFace === "Down") offset.y = -1; else if (blockFace === "North") offset.z = -1; else if (blockFace === "South") offset.z = 1; else if (blockFace === "West") offset.x = -1; else if (blockFace === "East") offset.x = 1;
+        const finalLoc = { x: targetLoc.x + offset.x, y: targetLoc.y + offset.y, z: targetLoc.z + offset.z };
+        const dimension = player.dimension;
+        const targetBlock = dimension.getBlock(finalLoc);
+        if (targetBlock && (targetBlock.isAir || isReplaceable(targetBlock))) {
+            targetBlock.setPermutation(BlockPermutation.resolve(fluidId));
+            wakeNeighbors(targetBlock.location, dimension);
+            const isHot = fluidId.includes("magma") || fluidId.includes("bismuth");
+            player.playSound(isHot ? "bucket.empty_lava" : "bucket.empty_water", { pitch: 1, volume: 1 });
+            if (player.getGameMode() !== GameMode.Creative) {
+                const container = player.getComponent("inventory")?.container;
+                if (container) { const slot = player.selectedSlotIndex; if (itemStack.amount > 1) { itemStack.amount--; container.setItem(slot, itemStack); const emptyBucket = new ItemStack("minecraft:bucket", 1); const remainder = container.addItem(emptyBucket); if (remainder) dimension.spawnItem(remainder, player.location); } else container.setItem(slot, new ItemStack("minecraft:bucket", 1)); }
+            }
+        }
+    }
+}
 
-    onTick(event: any): void {
+export class FluidFlowComponent implements BlockCustomComponent {
+    constructor() { this.onTick = this.onTick.bind(this); this.onPlayerDestroy = this.onPlayerDestroy.bind(this); }
+    onPlayerDestroy(event: any) { wakeNeighbors(event.block.location, event.dimension); }
+    onTick(event: BlockComponentTickEvent) {
         if (PENDING_BLOCKS.size >= MAX_QUEUE_SIZE) return;
         const { block } = event;
-        const key = `${block.location.x},${block.location.y},${block.location.z},${block.dimension.id}`;
-        
-        const lastActive = ACTIVE_FLUIDS.get(key);
-
-        if (!lastActive) {
-            ACTIVE_FLUIDS.set(key, system.currentTick);
-        }
+        const key = `${block.x},${block.y},${block.z},${block.dimension.id}`;
         if (!PENDING_BLOCKS.has(key)) {
-            PENDING_BLOCKS.set(key, { block, dimension: block.dimension });
+            let delay = 5;
+            const info = getTypeInfo(block.typeId);
+            const template = idToTemplate.get(info.baseId);
+            if (template) delay = template.spreadDelay;
+            PENDING_BLOCKS.set(key, { block, dimension: block.dimension, scheduledTick: system.currentTick + delay });
         }
     }
 }
 
-// Wake up fluids on block interactions
-function wakeNeighbors(location: { x: number, y: number, z: number }, dimension: any): void {
-    const locations = [
-        { x: 0, y: 1, z: 0 }, { x: 0, y: -1, z: 0 },
-        { x: 1, y: 0, z: 0 }, { x: -1, y: 0, z: 0 },
-        { x: 0, y: 0, z: 1 }, { x: 0, y: 0, z: -1 }
-    ];
-    
+function wakeNeighbors(location: Vector3, dimension: Dimension) {
+    const { x, y, z } = location;
+    const centerBlock = getCachedBlock(dimension, x, y, z);
+    if (!centerBlock) return;
+    let delay = 5;
+    const info = getTypeInfo(centerBlock.typeId);
+    const template = idToTemplate.get(info.baseId);
+    if (template) delay = template.spreadDelay;
+    const locations = [{x:0,y:1,z:0},{x:0,y:-1,z:0},{x:1,y:0,z:0},{x:-1,y:0,z:0},{x:0,y:0,z:1},{x:0,y:0,z:-1}];
+    const scheduledTick = system.currentTick + delay;
     for (const offset of locations) {
-        const nx = location.x + offset.x;
-        const ny = location.y + offset.y;
-        const nz = location.z + offset.z;
+        const nx = x + offset.x, ny = y + offset.y, nz = z + offset.z;
         const key = `${nx},${ny},${nz},${dimension.id}`;
-        // Force update timestamp to wake it up if it's a fluid
-        ACTIVE_FLUIDS.set(key, system.currentTick);
+        if (!PENDING_BLOCKS.has(key)) {
+            const neighbor = getCachedBlock(dimension, nx, ny, nz);
+            if (neighbor && neighbor.isValid && fluidIDs.has(neighbor.typeId)) PENDING_BLOCKS.set(key, { block: neighbor, dimension, scheduledTick });
+        }
     }
 }
 
-world.afterEvents.playerPlaceBlock.subscribe((event) => {
-    wakeNeighbors(event.block.location, event.block.dimension);
-});
-
-world.afterEvents.playerBreakBlock.subscribe((event) => {
-    wakeNeighbors(event.block.location, event.block.dimension);
-});
+world.afterEvents.playerPlaceBlock.subscribe((e) => wakeNeighbors(e.block.location, e.block.dimension));
+world.afterEvents.playerBreakBlock.subscribe((e) => wakeNeighbors(e.block.location, e.block.dimension));
 
 world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     const { player, block, itemStack } = event;
-    if (!itemStack) return;
-
-    if (itemStack.typeId.startsWith("gaiadimension:") && itemStack.typeId.endsWith("_bucket")) {
-        const fluidId = itemStack.typeId.replace("_bucket", "");
-        
-        // Logic 1:/Case 1 Replace flowing fluid directly if clicking on it
-        const isFlowingVariant = (blk: any): boolean => {
-            return blk.typeId === fluidId + "1" || 
-                   blk.typeId === fluidId + "2" || 
-                   blk.typeId === fluidId + "3" || 
-                   blk.typeId === fluidId + "_down";
-        };
-
-        if (isFlowingVariant(block)) {
-            event.cancel = true;
-            system.run(() => {
-                if (block.isValid) {
-                    const perm = BlockPermutation.resolve(fluidId);
-                    block.setPermutation(perm);
-                    wakeNeighbors(block.location, block.dimension);
-                    
-                    const isHot = fluidId.includes("magma") || fluidId.includes("bismuth");
-                    const sound = isHot ? "bucket.empty_lava" : "bucket.empty_water";
-                    player.playSound(sound, { pitch: 1, volume: 1 });
-                    
-                    if (player.getGameMode() !== GameMode.Creative) {
-                        const container = (player.getComponent("minecraft:inventory") as any)?.container;
-                        if (container) {
-                            const slot = player.selectedSlotIndex;
-                            const currentItem = container.getItem(slot);
-                            if (currentItem && currentItem.typeId === itemStack.typeId) {
-                                if (currentItem.amount > 1) {
-                                    currentItem.amount--;
-                                    container.setItem(slot, currentItem);
-                                    const emptyBucket = new ItemStack("minecraft:bucket", 1);
-                                    const remainder = container.addItem(emptyBucket);
-                                    if (remainder) {
-                                        player.dimension.spawnItem(remainder, player.location);
-                                    }                                
-                                } else {
-                                    container.setItem(slot, new ItemStack("minecraft:bucket", 1));
-                                }
-                            }
+    if (!itemStack || !itemStack.typeId.startsWith("gaiadimension:") || !itemStack.typeId.endsWith("_bucket")) return;
+    const fluidId = itemStack.typeId.replace("_bucket", "");
+    const isFlowingVariant = (blk: Block) => blk.typeId.startsWith(fluidId) && (blk.typeId.endsWith("_down") || /\d+$/.test(blk.typeId));
+    if (isFlowingVariant(block)) {
+        event.cancel = true;
+        system.run(() => {
+            if (block.isValid) {
+                block.setPermutation(BlockPermutation.resolve(fluidId));
+                wakeNeighbors(block.location, block.dimension);
+                const isHot = fluidId.includes("magma") || fluidId.includes("bismuth");
+                player.playSound(isHot ? "bucket.empty_lava" : "bucket.empty_water", { pitch: 1, volume: 1 });
+                if (player.getGameMode() !== GameMode.Creative) {
+                    const container = player.getComponent("inventory")?.container;
+                    if (container) {
+                        const slot = player.selectedSlotIndex;
+                        const currentItem = container.getItem(slot);
+                        if (currentItem && currentItem.typeId === itemStack.typeId) {
+                            if (currentItem.amount > 1) { currentItem.amount--; container.setItem(slot, currentItem); const emptyBucket = new ItemStack("minecraft:bucket", 1); const remainder = container.addItem(emptyBucket); if (remainder) player.dimension.spawnItem(remainder, player.location); }
+                            else container.setItem(slot, new ItemStack("minecraft:bucket", 1));
                         }
                     }
                 }
-            });
-            return;
-        }
+            }
+        });
+        return;
+    }
+});
 
-        // Logic 2:/ Case 2 Standard placement via offset
-        const raycast = player.getBlockFromViewDirection({ maxDistance: 10 });
-        if (!raycast) return;
-        const { face } = raycast;
+world.afterEvents.playerInteractWithEntity.subscribe((event) => {
+    const { player, target, itemStack } = event;
+    if (target.typeId !== "gaiadimension:fluid_interaction_dummy" || !(player instanceof Player)) return;
+    const dimension = player.dimension;
+    const location = { x: Math.floor(target.location.x), y: Math.floor(target.location.y), z: Math.floor(target.location.z) };
+    const fluidBlock = getCachedBlock(dimension, location.x, location.y, location.z);
+    if (!fluidBlock || !fluidIDs.has(fluidBlock.typeId)) return;
 
-        let targetLoc = { x: block.location.x, y: block.location.y, z: block.location.z };
-        switch (face) {
-            case "Up": targetLoc.y += 1; break;
-            case "Down": targetLoc.y -= 1; break;
-            case "North": targetLoc.z -= 1; break;
-            case "South": targetLoc.z += 1; break;
-            case "West": targetLoc.x -= 1; break;
-            case "East": targetLoc.x += 1; break;
-        }
-
-        const dimension = player.dimension;
-        const targetBlock = dimension.getBlock(targetLoc);
-
-        if (targetBlock && (targetBlock.isAir || isReplaceable(targetBlock) || isFlowingVariant(targetBlock))) {
-             if (targetBlock.typeId === fluidId) {
-                event.cancel = true;
-                system.run(() => {
-                    targetBlock.setType("minecraft:air");
-                    wakeNeighbors(targetBlock.location, dimension);
-                });
-                return;
-             }
-
-             event.cancel = true;
-             
-             system.run(() => {
-                 if (targetBlock.isValid) {
-                     const perm = BlockPermutation.resolve(fluidId);
-                     targetBlock.setPermutation(perm);
-                     wakeNeighbors(targetBlock.location, dimension);
-                     
-                     const isHot = fluidId.includes("magma") || fluidId.includes("bismuth");
-                     const sound = isHot ? "bucket.empty_lava" : "bucket.empty_water";
-                     player.playSound(sound, { pitch: 1, volume: 1 });
-                     
-                     if (player.getGameMode() !== GameMode.Creative) {
-                         const container = (player.getComponent("minecraft:inventory") as any)?.container;
-                         if (container) {
-                             const slot = player.selectedSlotIndex;
-                             const currentItem = container.getItem(slot);
-                             if (currentItem && currentItem.typeId === itemStack.typeId) {
-                                 if (currentItem.amount > 1) {
-                                     currentItem.amount--;
-                                     container.setItem(slot, currentItem);
-                                     const emptyBucket = new ItemStack("minecraft:bucket", 1);
-                                     const remainder = container.addItem(emptyBucket);
-                                     if (remainder) {
-                                         player.dimension.spawnItem(remainder, player.location);
-                                     }                                 
-                                 } else {
-                                     container.setItem(slot, new ItemStack("minecraft:bucket", 1));
-                                 }
-                             }
-                         }
-                     }
-                 }
-             });
+    if (itemStack?.typeId === "minecraft:bucket") {
+        const info = getTypeInfo(fluidBlock.typeId);
+        if (info.stage === 0) {
+            const bucketId = info.baseId + "_bucket", filledBucket = new ItemStack(bucketId, 1);
+            const inventory = player.getComponent("inventory")?.container;
+            if (inventory) {
+                const slot = player.selectedSlotIndex;
+                if (itemStack.amount > 1) { itemStack.amount--; inventory.setItem(slot, itemStack); const remainder = inventory.addItem(filledBucket); if (remainder) dimension.spawnItem(remainder, player.location); }
+                else inventory.setItem(slot, filledBucket);
+            }
+            const isHot = fluidBlock.typeId.includes("magma") || fluidBlock.typeId.includes("bismuth");
+            dimension.playSound(isHot ? "bucket.fill_lava" : "bucket.fill_water", location);
+            dimension.fillBlocks(new BlockVolume(location, location), "minecraft:air");
+            wakeNeighbors(location, dimension);
         }
         return;
     }
 
-    // Pickup Fluid (Empty Bucket on Source)
-    if (fluidIDs.has(block.typeId) && itemStack.typeId === "minecraft:bucket") {
-        const typeId = block.typeId;
-        const isFlowing = typeId.endsWith("_down") || /[1-3]$/.test(typeId);
-        
-        if (!isFlowing) {
-            let bucketId = typeId + "_bucket";
-            
-            event.cancel = true; // Stop native behavior
-
-            system.run(() => {
+    if (itemStack) {
+        const fluidId = itemStack.typeId.replace("_bucket", "");
+        if (fluidIDs.has(fluidId)) {
+            const viewVec = player.getViewDirection();
+            const absX = Math.abs(viewVec.x), absY = Math.abs(viewVec.y), absZ = Math.abs(viewVec.z);
+            let offset = { x: 0, y: 0, z: 0 };
+            if (absY > absX && absY > absZ) offset.y = viewVec.y > 0 ? 1 : -1; else if (absX > absZ) offset.x = viewVec.x > 0 ? 1 : -1; else offset.z = viewVec.z > 0 ? 1 : -1;
+            const placeLoc = { x: location.x + offset.x, y: location.y + offset.y, z: location.z + offset.z };
+            const targetBlock = dimension.getBlock(placeLoc);
+            if (targetBlock && (targetBlock.isAir || isReplaceable(targetBlock))) {
+                dimension.fillBlocks(new BlockVolume(placeLoc, placeLoc), fluidId);
+                wakeNeighbors(placeLoc, dimension);
+                const isHot = fluidId.includes("magma") || fluidId.includes("bismuth");
+                player.playSound(isHot ? "bucket.empty_lava" : "bucket.empty_water");
                 if (player.getGameMode() !== GameMode.Creative) {
-                    const container = (player.getComponent("minecraft:inventory") as any)?.container;
-                    if (container) {
-                        const slot = player.selectedSlotIndex;
-                        const currentItem = container.getItem(slot);
-                        
-                        if (currentItem && currentItem.typeId === "minecraft:bucket") {
-                            const filledBucket = new ItemStack(bucketId, 1);
-                            if (currentItem.amount > 1) {
-                                currentItem.amount -= 1;
-                                container.setItem(slot, currentItem);
-                                const remainder = container.addItem(filledBucket);
-                                if (remainder && remainder.amount > 0) {
-                                    player.dimension.spawnItem(remainder, player.location);
-                                }
-                            } else {
-                                container.setItem(slot, filledBucket);
-                            }
-                        }
-                    }
+                    const inventory = player.getComponent("inventory")?.container;
+                    if (inventory) { const slot = player.selectedSlotIndex; if (itemStack.amount > 1) { itemStack.amount--; inventory.setItem(slot, itemStack); const emptyBucket = new ItemStack("minecraft:bucket", 1); const remainder = container.addItem(emptyBucket); if (remainder) dimension.spawnItem(remainder, player.location); } else inventory.setItem(slot, new ItemStack("minecraft:bucket", 1)); }
                 }
-
-                // Sound
-                const isHot = typeId.includes("magma") || typeId.includes("bismuth");
-                const sound = isHot ? "bucket.fill_lava" : "bucket.fill_water";
-                player.dimension.playSound(sound, block.location, { pitch: 1, volume: 1 });
-
-                block.setType("minecraft:air");
-                wakeNeighbors(block.location, block.dimension);
-            });
-            return;
+            }
+        } else {
+            try {
+                const perm = BlockPermutation.resolve(itemStack.typeId);
+                if (perm) { dimension.fillBlocks(new BlockVolume(location, location), perm); player.playSound("stone.dig", { location: location }); if (player.getGameMode() !== GameMode.Creative) { const inventory = player.getComponent("inventory")?.container; if (inventory) { const slot = player.selectedSlotIndex; if (itemStack.amount > 1) { itemStack.amount--; inventory.setItem(slot, itemStack); } else inventory.setItem(slot, undefined); } } wakeNeighbors(location, dimension); }
+            } catch {}
         }
     }
-    
-    if (fluidIDs.has(block.typeId)) {
-        if (itemStack.typeId === "minecraft:bucket" || itemStack.typeId.endsWith("_bucket")) return;
-
-        event.cancel = true;
-        system.run(() => {
-            if (block.isValid && itemStack) {
-                try {
-                    const blockPerm = BlockPermutation.resolve(itemStack.typeId);
-                    block.setPermutation(blockPerm);
-                    wakeNeighbors(block.location, block.dimension);
-                    player.playSound("stone.dig", { location: block.location });
-                    
-                    if (player.getGameMode() !== GameMode.Creative) {
-                         const container = (player.getComponent("minecraft:inventory") as any)?.container;
-                         if (container) {
-                             const slot = player.selectedSlotIndex;
-                             if (itemStack.amount > 1) {
-                                 itemStack.amount--;
-                                 container.setItem(slot, itemStack);
-                             } else {
-                                 container.setItem(slot, undefined as any);
-                             }
-                         }
-                    }
-                } catch (e) {}
-            }
-        });
-    }
 });
 
-world.beforeEvents.playerBreakBlock.subscribe((event) => {
-    const { player, block, itemStack } = event;
-    if (fluidIDs.has(block.typeId)) {
-        event.cancel = true;
-    }
-});
-
-// (QOL:) Replace Fluid Blocks with Buckets
 system.runInterval(() => {
     for (const player of world.getAllPlayers()) {
-        const container = (player.getComponent("minecraft:inventory") as any)?.container;
+        const container = player.getComponent("inventory")?.container;
         if (!container) continue;
-
         for (let i = 0; i < container.size; i++) {
             const item = container.getItem(i);
             if (!item) continue;
-
-            if (fluidIDs.has(item.typeId)) {
-                let baseId = item.typeId;
-                if (baseId.endsWith("_down")) baseId = baseId.slice(0, -5);
-                else if (/[1-3]$/.test(baseId)) baseId = baseId.slice(0, -1);
-                
-                const bucketId = baseId + "_bucket";
-                try {
-                    const bucket = new ItemStack(bucketId, item.amount);
-                    container.setItem(i, bucket);
-                } catch (e) {
-                }
-            }
+            if (item.typeId === "gaiadimension:tar_cauldron") { try { container.setItem(i, new ItemStack("minecraft:cauldron", item.amount)); } catch (e) {} continue; }
+            if (fluidIDs.has(item.typeId)) { let baseId = item.typeId; if (baseId.endsWith("_down")) baseId = baseId.slice(0, -5); else { const m = baseId.match(/(\d+)$/); if (m) baseId = baseId.slice(0, -m[1].length); } try { container.setItem(i, new ItemStack(baseId + "_bucket", item.amount)); } catch (e) {} }
         }
     }
 }, 80);
@@ -846,102 +650,3 @@ system.runInterval(() => {
 export function registerFluidComponent({ blockComponentRegistry }: { blockComponentRegistry: any }): void {
     blockComponentRegistry.registerCustomComponent("gaiadimension:fluid_flow", new FluidFlowComponent());
 }
-
-function runBoatLogic(): void {
-    const players = world.getPlayers();
-    if (players.length === 0) return;
-    
-    const activeDimensions = new Set(players.map(p => p.dimension));
-    for (const dimension of activeDimensions) {
-        const boats = dimension.getEntities({ families: ["boat"] });
-        for (const boat of boats) {
-             processBoat(boat, dimension);
-        }
-    }
-}
-
-function processBoat(boat: any, dimension: any): void {
-    if (!boat.isValid) return;
-
-    const location = boat.location;
-    // Check if boat is in mineral water
-    const blockAt = dimension.getBlock(location);
-    const blockBelow = dimension.getBlock({ x: location.x, y: location.y - 0.1, z: location.z });
-    
-    const isMineralWater = (blockAt && blockAt.typeId.includes("mineral_water")) || 
-                           (blockBelow && blockBelow.typeId.includes("mineral_water"));
-
-    if (isMineralWater) {
-        // Buoyancy: Only if deep in water (blockAt is water)
-        if (blockAt && blockAt.typeId.includes("mineral_water")) {
-            boat.applyImpulse({ x: 0, y: 0.2, z: 0 });
-        }
-
-        // Jank Movement Logic
-        // Calculate forward vector from rotation
-        const rotation = boat.getRotation().y;
-        const rad = (rotation + 90) * (Math.PI / 180);
-        // We need to simulate ice-like sliding or just push it.
-        
-        // Let's try pushing it in its facing direction constantly.
-        const dirX = -Math.sin(rotation * (Math.PI / 180));
-        const dirZ = Math.cos(rotation * (Math.PI / 180));
-        
-        const vel = boat.getVelocity();
-        const speed = Math.sqrt(vel.x * vel.x + vel.z * vel.z);
-        
-        if (speed > 0.01) {
-             // Boost
-             boat.applyImpulse({ x: dirX * 0.15, y: 0, z: dirZ * 0.15 });
-        }
-
-        // Calculate surface Y
-        let waterTopY = Math.floor(location.y);
-        const bAt = dimension.getBlock({ x: Math.floor(location.x), y: Math.floor(location.y), z: Math.floor(location.z) });
-        
-        if (bAt && bAt.typeId.includes("mineral_water")) {
-             waterTopY = Math.floor(location.y) + 1; 
-        } else if (blockBelow && blockBelow.typeId.includes("mineral_water")) {
-             waterTopY = Math.floor(location.y);
-        }
-        
-        // Find or spawn holder
-        const holders = dimension.getEntities({
-            type: "gaiadimension:boat_holder",
-            location: location,
-            maxDistance: 2
-        });
-        
-        let holder = holders.length > 0 ? holders[0] : null;
-        
-        // Target Y for holder
-        const targetHolderY = waterTopY - 0.55; 
-
-        if (!holder) {
-            holder = dimension.spawnEntity("gaiadimension:boat_holder", { x: location.x, y: targetHolderY, z: location.z });
-        }
-        
-        // Update Holder
-        try {
-            if (holder && holder.isValid) {
-                holder.teleport(
-                    { x: location.x, y: targetHolderY, z: location.z }, 
-                    { dimension: dimension, rotation: { x: 0, y: boat.getRotation().y } }
-                );
-            }
-        } catch (e) {}
-        
-    } else {
-        // Not in water, remove nearby holders
-        const holders = dimension.getEntities({
-            type: "gaiadimension:boat_holder",
-            location: location,
-            maxDistance: 2
-        });
-        
-        for (const h of holders) {
-            if (h.isValid) h.remove();
-        }
-    }
-}
-

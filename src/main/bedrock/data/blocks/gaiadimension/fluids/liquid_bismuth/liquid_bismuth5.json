@@ -1,0 +1,173 @@
+{
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:liquid_bismuth5",
+            "states": {
+                "gaiadimension:perm_dim": [
+                    0,
+                    1,
+                    2
+                ],
+                "gaiadimension:flow_dir": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
+                ]
+            }
+        },
+        "components": {
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "gaiadimension:liquid_bismuth_still",
+                    "render_method": "blend"
+                }
+            },
+            "minecraft:loot": "loot_tables/msc/empty.json",
+            "tag:template5": {},
+            "tag:template": {},
+            "minecraft:selection_box": false,
+            "tag:fluid": {},
+            "minecraft:light_dampening": 0,
+            "minecraft:light_emission": 15,
+            "minecraft:destructible_by_mining": false,
+            "minecraft:collision_box": false,
+            "minecraft:destructible_by_explosion": false,
+            "minecraft:flammable": false,
+            "gaiadimension:fluid_flow": {},
+            "minecraft:tick": {
+                "interval_range": [
+                    4,
+                    4
+                ],
+                "looping": true
+            },
+            "minecraft:geometry": "geometry.gaiadimension.fluid_stage_5_straight"
+        },
+        "permutations": [
+            {
+                "condition": "q.block_state('gaiadimension:flow_dir') == 0",
+                "components": {
+                    "minecraft:geometry": "geometry.gaiadimension.fluid_stage_5_straight",
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            0,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:flow_dir') == 1",
+                "components": {
+                    "minecraft:geometry": "geometry.gaiadimension.fluid_stage_5_straight",
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            180,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:flow_dir') == 2",
+                "components": {
+                    "minecraft:geometry": "geometry.gaiadimension.fluid_stage_5_diagonal",
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            180,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:flow_dir') == 3",
+                "components": {
+                    "minecraft:geometry": "geometry.gaiadimension.fluid_stage_5_straight",
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            270,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:flow_dir') == 4",
+                "components": {
+                    "minecraft:geometry": "geometry.gaiadimension.fluid_stage_5_diagonal",
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            270,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:flow_dir') == 5",
+                "components": {
+                    "minecraft:geometry": "geometry.gaiadimension.fluid_stage_5_straight",
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            0,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:flow_dir') == 6",
+                "components": {
+                    "minecraft:geometry": "geometry.gaiadimension.fluid_stage_5_diagonal",
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            0,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:flow_dir') == 7",
+                "components": {
+                    "minecraft:geometry": "geometry.gaiadimension.fluid_stage_5_straight",
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            90,
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:flow_dir') == 8",
+                "components": {
+                    "minecraft:geometry": "geometry.gaiadimension.fluid_stage_5_diagonal",
+                    "minecraft:transformation": {
+                        "rotation": [
+                            0,
+                            90,
+                            0
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}

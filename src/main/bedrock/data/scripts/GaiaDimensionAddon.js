@@ -1,5 +1,5 @@
 // src/main/bedrock/ts/GaiaDimensionAddon.ts
-import { system as system39 } from "@minecraft/server";
+import { system as system37 } from "@minecraft/server";
 
 // src/main/bedrock/ts/blocks/leaves.ts
 import { system } from "@minecraft/server";
@@ -883,14 +883,14 @@ function registerWallComponent({ blockComponentRegistry }) {
               updateWallConnections(blockBelow);
               if (player.getGameMode() !== GameMode3.Creative) {
                 const inventory = player.getComponent("minecraft:inventory");
-                const container = inventory.container;
-                const item = container.getItem(player.selectedSlot);
+                const container2 = inventory.container;
+                const item = container2.getItem(player.selectedSlot);
                 if (item) {
                   if (item.amount === 1) {
-                    container.setItem(player.selectedSlot, void 0);
+                    container2.setItem(player.selectedSlot, void 0);
                   } else {
                     item.amount--;
-                    container.setItem(player.selectedSlot, item);
+                    container2.setItem(player.selectedSlot, item);
                   }
                 }
               }
@@ -913,14 +913,14 @@ function registerWallComponent({ blockComponentRegistry }) {
               player.playSound("dig.stone", { location: blockAbove.location });
               if (player.getGameMode() !== GameMode3.Creative) {
                 const inventory = player.getComponent("minecraft:inventory");
-                const container = inventory.container;
-                const item = container.getItem(player.selectedSlot);
+                const container2 = inventory.container;
+                const item = container2.getItem(player.selectedSlot);
                 if (item) {
                   if (item.amount === 1) {
-                    container.setItem(player.selectedSlot, void 0);
+                    container2.setItem(player.selectedSlot, void 0);
                   } else {
                     item.amount--;
-                    container.setItem(player.selectedSlot, item);
+                    container2.setItem(player.selectedSlot, item);
                   }
                 }
               }
@@ -1092,14 +1092,14 @@ function registerFenceComponent({ blockComponentRegistry }) {
               player.playSound("dig.wood", { location: block.location });
               if (player.gameMode !== GameMode4.Creative) {
                 const inventory = player.getComponent("minecraft:inventory");
-                const container = inventory.container;
-                const item = container.getItem(player.selectedSlot);
+                const container2 = inventory.container;
+                const item = container2.getItem(player.selectedSlot);
                 if (item) {
                   if (item.amount === 1) {
-                    container.setItem(player.selectedSlot, void 0);
+                    container2.setItem(player.selectedSlot, void 0);
                   } else {
                     item.amount--;
-                    container.setItem(player.selectedSlot, item);
+                    container2.setItem(player.selectedSlot, item);
                   }
                 }
               }
@@ -1122,14 +1122,14 @@ function registerFenceComponent({ blockComponentRegistry }) {
               player.playSound("dig.wood", { location: blockAbove.location });
               if (player.gameMode !== GameMode4.Creative) {
                 const inventory = player.getComponent("minecraft:inventory");
-                const container = inventory.container;
-                const item = container.getItem(player.selectedSlot);
+                const container2 = inventory.container;
+                const item = container2.getItem(player.selectedSlot);
                 if (item) {
                   if (item.amount === 1) {
-                    container.setItem(player.selectedSlot, void 0);
+                    container2.setItem(player.selectedSlot, void 0);
                   } else {
                     item.amount--;
-                    container.setItem(player.selectedSlot, item);
+                    container2.setItem(player.selectedSlot, item);
                   }
                 }
               }
@@ -2665,11 +2665,11 @@ var Machine = class {
     for (const player of players) {
       const inventory = player.getComponent("minecraft:inventory");
       if (!inventory) continue;
-      const container = inventory.container;
-      for (let i = 0; i < container.size; i++) {
-        const item = container.getItem(i);
+      const container2 = inventory.container;
+      for (let i = 0; i < container2.size; i++) {
+        const item = container2.getItem(i);
         if (this.isUiItem(item)) {
-          container.setItem(i, void 0);
+          container2.setItem(i, void 0);
         }
       }
     }
@@ -3213,7 +3213,7 @@ var nativeRecipes = {
   "minecraft:polished_blackstone_bricks": {
     output: "minecraft:cracked_polished_blackstone_bricks"
   },
-  "minecraft:coobled_deepslate": {
+  "minecraft:cobbled_deepslate": {
     output: "minecraft:deepslate"
   },
   "minecraft:deepslate_bricks": {
@@ -3224,17 +3224,20 @@ var nativeRecipes = {
   },
   "minecraft:stained_hardened_clay": {
     //hardcoded
-    scriptedOutput: function(item = MC.ItemStack("air")) {
-      let colorValues = MC.BlockStates.get("color").validValues;
+    scriptedOutput: function(item) {
+      if (!item) return void 0;
+      const colorState = MC.world.getBlockStates().get("color");
+      if (!colorState) return void 0;
+      const colorValues = colorState.validValues;
       for (let i = 0; i < colorValues.length; i++) {
-        let condition = `{"color": "${colorValues[i]}"}`;
-        let block = MC.BlockPermutation.resolve(item.typeId, JSON.parse(condition));
-        let itemCompare = block.getItemStack(1);
-        if (item.isStackableWith(itemCompare)) {
-          let output = new MC.ItemStack(`minecraft:${colorValues[i]}_glazed_terracotta`);
-          return output;
+        const color = colorValues[i];
+        const block = MC.BlockPermutation.resolve(item.typeId, { "color": color });
+        const itemCompare = block.getItemStack(1);
+        if (itemCompare && item.isStackableWith(itemCompare)) {
+          return new MC.ItemStack(`minecraft:${color}_glazed_terracotta`);
         }
       }
+      return void 0;
     }
   },
   "minecraft:cactus": {
@@ -3429,7 +3432,7 @@ var nativeFuels = {
 };
 
 // src/main/bedrock/ts/furnace_recipes/furnace/RecipeDiscovery.ts
-import { world as world17, system as system20, ItemStack as ItemStack9 } from "@minecraft/server";
+import { world as world18, system as system20, ItemStack as ItemStack9 } from "@minecraft/server";
 var DB_PREFIX = "luminiae:fn_";
 var ENTITY_ID = "luminiae:recipe_check";
 var TICK_BUDGET_MS = 3;
@@ -3449,7 +3452,7 @@ var RecipeDiscoverySystem = class {
     this.loadState();
     system20.runInterval(() => this.tick(), 1);
     system20.runTimeout(() => this.resumeTests(), 40);
-    world17.afterEvents.entityLoad.subscribe((ev) => {
+    world18.afterEvents.entityLoad.subscribe((ev) => {
       if (ev.entity.typeId === ENTITY_ID) {
         if (ev.entity.hasTag("luminiae:checked")) {
           if (!this.runtimeTests.has(ev.entity.nameTag)) {
@@ -3613,7 +3616,7 @@ var RecipeDiscoverySystem = class {
     for (const [inputId, data] of this.activeTests) {
       if (this.runtimeTests.has(inputId)) continue;
       try {
-        const dim = world17.getDimension(data.dimId);
+        const dim = world18.getDimension(data.dimId);
         if (dim) this.startTest(inputId, data.location, dim);
       } catch (e) {
       }
@@ -3621,12 +3624,12 @@ var RecipeDiscoverySystem = class {
   }
   loadState() {
     try {
-      const activeRaw = world17.getDynamicProperty(`${DB_PREFIX}tests`);
+      const activeRaw = world18.getDynamicProperty(`${DB_PREFIX}tests`);
       if (activeRaw) {
         const parsed = JSON.parse(activeRaw);
         for (const [k, v] of Object.entries(parsed)) this.activeTests.set(k, v);
       }
-      const customRaw = world17.getDynamicProperty(`${DB_PREFIX}recipes`);
+      const customRaw = world18.getDynamicProperty(`${DB_PREFIX}recipes`);
       if (customRaw) {
         this.customRecipes = JSON.parse(customRaw);
         this.applyRecipes();
@@ -3636,8 +3639,8 @@ var RecipeDiscoverySystem = class {
   }
   saveState(key) {
     try {
-      if (key === "tests") world17.setDynamicProperty(`${DB_PREFIX}tests`, JSON.stringify(Object.fromEntries(this.activeTests)));
-      else if (key === "recipes") world17.setDynamicProperty(`${DB_PREFIX}recipes`, JSON.stringify(this.customRecipes));
+      if (key === "tests") world18.setDynamicProperty(`${DB_PREFIX}tests`, JSON.stringify(Object.fromEntries(this.activeTests)));
+      else if (key === "recipes") world18.setDynamicProperty(`${DB_PREFIX}recipes`, JSON.stringify(this.customRecipes));
     } catch (e) {
     }
   }
@@ -3650,7 +3653,7 @@ var RecipeDiscoverySystem = class {
 var recipeDiscovery = new RecipeDiscoverySystem();
 
 // src/main/bedrock/ts/API/lib/BlockEntity.ts
-import { world as world18, system as system21 } from "@minecraft/server";
+import { world as world19, system as system21 } from "@minecraft/server";
 var BlockEntityManager = class {
   registeredMachineClasses = /* @__PURE__ */ new Map();
   activeMachineInstances = /* @__PURE__ */ new Map();
@@ -3684,13 +3687,13 @@ var BlockEntityManager = class {
     }
   }
   registerEventListeners() {
-    world18.afterEvents.playerPlaceBlock.subscribe(this.handlePlayerPlaceBlock.bind(this));
-    world18.beforeEvents.playerBreakBlock.subscribe(this.handlePlayerBreakBlock.bind(this));
-    world18.afterEvents.explosion.subscribe(this.handleExplosion.bind(this));
+    world19.afterEvents.playerPlaceBlock.subscribe(this.handlePlayerPlaceBlock.bind(this));
+    world19.beforeEvents.playerBreakBlock.subscribe(this.handlePlayerBreakBlock.bind(this));
+    world19.afterEvents.explosion.subscribe(this.handleExplosion.bind(this));
     system21.runInterval(this.handlePlayerViewCheck.bind(this), 5);
     system21.runInterval(this.handleMachineTick.bind(this), 1);
-    world18.afterEvents.worldLoad.subscribe(this.handleWorldLoad.bind(this));
-    world18.afterEvents.entityLoad.subscribe(this.handleEntityLoad.bind(this));
+    world19.afterEvents.worldLoad.subscribe(this.handleWorldLoad.bind(this));
+    world19.afterEvents.entityLoad.subscribe(this.handleEntityLoad.bind(this));
   }
   handleExplosion(event) {
     const impactedBlocks = event.getImpactedBlocks();
@@ -3848,7 +3851,7 @@ var BlockEntityManager = class {
       machine.isViewed = false;
     }
     const machinesToShrink = /* @__PURE__ */ new Set();
-    for (const player of world18.getAllPlayers()) {
+    for (const player of world19.getAllPlayers()) {
       const blockHit = player.getBlockFromViewDirection({ maxDistance: 7 });
       let targetMachine = null;
       if (blockHit) {
@@ -3992,7 +3995,7 @@ var BlockEntityManager = class {
   }
   handleWorldLoad() {
     console.warn("[BlockEntity] World load handling started...");
-    const dimensions = ["overworld", "nether", "the_end"].map((id) => world18.getDimension(id));
+    const dimensions = ["overworld", "nether", "the_end"].map((id) => world19.getDimension(id));
     dimensions.forEach((dimension) => {
       const entities = dimension.getEntities({ families: ["luminiae_generic"] });
       console.warn(`[BlockEntity] Found ${entities.length} generic block entities in ${dimension.id}`);
@@ -4190,7 +4193,7 @@ function registerGaiaFurnaceComponent({ blockComponentRegistry }) {
 }
 
 // src/main/bedrock/ts/blocks/glittering_fire.ts
-import { world as world21, system as system23 } from "@minecraft/server";
+import { world as world22, system as system23 } from "@minecraft/server";
 
 // src/main/bedrock/ts/API/lib/PortalLib.ts
 import { BlockPermutation as BlockPermutation9, BlockVolume } from "@minecraft/server";
@@ -4668,7 +4671,7 @@ var PortalManager = class {
 };
 
 // src/main/bedrock/ts/config/mod_config.ts
-import { world as world20 } from "@minecraft/server";
+import { world as world21 } from "@minecraft/server";
 
 // src/main/bedrock/ts/systems/DataSystem.ts
 var DataSystem = class {
@@ -4762,50 +4765,50 @@ var ModConfig = class {
    * Portal Biome Restriction Setting
    */
   static get portalBiomeRestriction() {
-    const root = DataSystem.getRoot(world20, CONFIG_KEY);
+    const root = DataSystem.getRoot(world21, CONFIG_KEY);
     return root.portalBiomeRestriction ?? true;
   }
   static set portalBiomeRestriction(value) {
-    const root = DataSystem.getRoot(world20, CONFIG_KEY);
+    const root = DataSystem.getRoot(world21, CONFIG_KEY);
     root.portalBiomeRestriction = value;
-    DataSystem.saveRoot(world20, root, CONFIG_KEY);
+    DataSystem.saveRoot(world21, root, CONFIG_KEY);
   }
   /**
    * Allow All Biomes Setting
    */
   static get allowAllBiomes() {
-    const root = DataSystem.getRoot(world20, CONFIG_KEY);
+    const root = DataSystem.getRoot(world21, CONFIG_KEY);
     return root.allowAllBiomes ?? false;
   }
   static set allowAllBiomes(value) {
-    const root = DataSystem.getRoot(world20, CONFIG_KEY);
+    const root = DataSystem.getRoot(world21, CONFIG_KEY);
     root.allowAllBiomes = value;
-    DataSystem.saveRoot(world20, root, CONFIG_KEY);
+    DataSystem.saveRoot(world21, root, CONFIG_KEY);
   }
   /**
    * List of biomes where the portal can be ignited
    */
   static get hotBiomes() {
-    const root = DataSystem.getRoot(world20, CONFIG_KEY);
+    const root = DataSystem.getRoot(world21, CONFIG_KEY);
     return root.hotBiomes ?? [...DEFAULT_HOT_BIOMES];
   }
   static set hotBiomes(value) {
-    const root = DataSystem.getRoot(world20, CONFIG_KEY);
+    const root = DataSystem.getRoot(world21, CONFIG_KEY);
     root.hotBiomes = value;
-    DataSystem.saveRoot(world20, root, CONFIG_KEY);
+    DataSystem.saveRoot(world21, root, CONFIG_KEY);
   }
   /**
    * Comprehensive list of all biomes encountered by players
    */
   static get discoveredBiomes() {
-    const root = DataSystem.getRoot(world20, CONFIG_KEY);
+    const root = DataSystem.getRoot(world21, CONFIG_KEY);
     const discovered = root.discoveredBiomes ?? [...DEFAULT_HOT_BIOMES];
     return discovered;
   }
   static set discoveredBiomes(value) {
-    const root = DataSystem.getRoot(world20, CONFIG_KEY);
+    const root = DataSystem.getRoot(world21, CONFIG_KEY);
     root.discoveredBiomes = value;
-    DataSystem.saveRoot(world20, root, CONFIG_KEY);
+    DataSystem.saveRoot(world21, root, CONFIG_KEY);
   }
   static registerDiscoveredBiome(biomeId) {
     const discovered = this.discoveredBiomes;
@@ -4842,7 +4845,7 @@ PortalManager.register("gaiadimension:gaia_dimension_portal", "gaiadimension:key
 var playerHitboxes = /* @__PURE__ */ new Map();
 function registerGlitteringFireComponent() {
   system23.runInterval(() => {
-    for (const player of world21.getAllPlayers()) {
+    for (const player of world22.getAllPlayers()) {
       const raycast = player.getBlockFromViewDirection({ maxDistance: 5 });
       const currentHitbox = playerHitboxes.get(player.id);
       if (raycast && raycast.block.typeId === "gaiadimension:glittering_fire") {
@@ -4874,7 +4877,7 @@ function registerGlitteringFireComponent() {
       }
     }
   }, 2);
-  world21.afterEvents.playerLeave.subscribe((event) => {
+  world22.afterEvents.playerLeave.subscribe((event) => {
     const { playerId } = event;
     const currentHitbox = playerHitboxes.get(playerId);
     if (currentHitbox) {
@@ -4885,7 +4888,7 @@ function registerGlitteringFireComponent() {
       playerHitboxes.delete(playerId);
     }
   });
-  world21.afterEvents.entityHitEntity.subscribe((event) => {
+  world22.afterEvents.entityHitEntity.subscribe((event) => {
     const { hitEntity } = event;
     if (hitEntity.typeId === "gaiadimension:fire_hitbox") {
       const loc = hitEntity.location;
@@ -4910,7 +4913,7 @@ function registerGlitteringFireComponent() {
       });
     }
   });
-  world21.afterEvents.playerPlaceBlock.subscribe((event) => {
+  world22.afterEvents.playerPlaceBlock.subscribe((event) => {
     const { block } = event;
     if (block.typeId === "gaiadimension:glittering_fire") {
       system23.run(() => {
@@ -4938,13 +4941,13 @@ function registerGlitteringFireComponent() {
       });
     }
   });
-  world21.beforeEvents.playerBreakBlock.subscribe((event) => {
+  world22.beforeEvents.playerBreakBlock.subscribe((event) => {
     const { block } = event;
     if (block.typeId === "gaiadimension:glittering_fire") {
       event.cancel = true;
     }
   });
-  world21.afterEvents.playerBreakBlock.subscribe((event) => {
+  world22.afterEvents.playerBreakBlock.subscribe((event) => {
     const { block, brokenBlockPermutation, dimension } = event;
     const brokenId = brokenBlockPermutation.type.id;
     if (PortalManager.registeredPortals.has(brokenId)) {
@@ -5062,500 +5065,38 @@ function registerMegaStorageCrateComponent({ blockComponentRegistry }) {
 }
 
 // src/main/bedrock/ts/mixins/LightMixin.ts
-import { world as world24, system as system26, BlockPermutation as BlockPermutation11 } from "@minecraft/server";
+import { world as world24, system as system25, BlockPermutation as BlockPermutation10 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/Gaia.ts
-import { world as world23, system as system25, BlockPermutation as BlockPermutation10 } from "@minecraft/server";
-
-// src/main/bedrock/ts/world/ModDimension.ts
-import { world as world22, system as system24 } from "@minecraft/server";
-var ALL_MOD_DIMENSIONS = {};
-var ModDimension = class _ModDimension {
-  type;
-  range;
-  center;
-  _inheritanceId;
-  _inheritance;
-  eventsHandler;
-  constructor({ type: type2, range, inheritance }) {
-    this.type = type2;
-    this.range = range;
-    this.center = {
-      x: (this.range.start.x + this.range.end.x) / 2,
-      z: (this.range.start.z + this.range.end.z) / 2
-    };
-    this._inheritanceId = inheritance;
-    this._inheritance = void 0;
-    this.eventsHandler = new DimensionEvents(this);
-  }
-  get inheritance() {
-    if (!this._inheritance) {
-      this._inheritance = world22.getDimension(this._inheritanceId);
-    }
-    return this._inheritance;
-  }
-  getCenter() {
-    return {
-      x: this.center.x,
-      z: this.center.z
-    };
-  }
-  getEvents() {
-    return this.eventsHandler;
-  }
-  isInDimension(location) {
-    return this.range.start.x <= location.x && location.x <= this.range.end.x && this.range.start.z <= location.z && location.z <= this.range.end.z;
-  }
-  getEntities(entityQueryOptions) {
-    return this.inheritance.getEntities(entityQueryOptions).filter(
-      (entity) => this.isInDimension(entity.location)
-    );
-  }
-  getPlayers(entityQueryOptions) {
-    return this.inheritance.getPlayers(entityQueryOptions).filter(
-      (player) => this.isInDimension(player.location)
-    );
-  }
-  offset(location) {
-    return {
-      x: location.x - this.getCenter().x,
-      y: location.y,
-      z: location.z - this.getCenter().z
-    };
-  }
-  static register(id, options) {
-    if (_ModDimension.get(id) !== void 0) {
-      throw new Error('Dimension with id "' + id + '" is already registered');
-    }
-    const range = options.range || { start: { x: -1, z: -1 }, end: { x: 1, z: 1 } };
-    const inheritance = options.inheritance || "the_end";
-    const dim = new _ModDimension({
-      type: id,
-      range,
-      inheritance
-    });
-    ALL_MOD_DIMENSIONS[id] = dim;
-    return dim;
-  }
-  static get(id) {
-    return ALL_MOD_DIMENSIONS[id];
-  }
-  static getAll() {
-    return Object.values(ALL_MOD_DIMENSIONS);
-  }
-};
-var DimensionEvents = class {
-  dimension;
-  players = {};
-  events = {};
-  constructor(dimension) {
-    this.dimension = dimension;
-    system24.runInterval(() => {
-      const currentPlayers = this.dimension.getPlayers();
-      const newPlayers = currentPlayers.filter((player) => !this.players[player.id]);
-      const leavingPlayers = Object.keys(this.players).filter((id) => !currentPlayers.some((player) => player.id === id));
-      leavingPlayers.forEach((id, index) => {
-        const player = world22.getEntity(id);
-        if (player && player.isValid) {
-          delete this.players[id];
-          system24.runTimeout(() => {
-            this.triggerEvent("onLeave", player);
-          }, index + 1);
-        }
-      });
-      newPlayers.forEach((player, index) => {
-        this.players[player.id] = player;
-        system24.runTimeout(() => {
-          this.triggerEvent("onJoin", player);
-        }, leavingPlayers.length + index + 1);
-      });
-    }, 20);
-  }
-  addEvent(id, type2, callback) {
-    if (this.events[id]) throw new Error("Event with ID " + id + " has already been registered");
-    const event = new DimensionEvent(id, type2, callback, this);
-    this.events[id] = event;
-    return event;
-  }
-  removeEvent(eventId) {
-    delete this.events[eventId];
-  }
-  getEvent(id) {
-    return this.events[id];
-  }
-  getAllEvents() {
-    return Object.values(this.events);
-  }
-  onJoin(id, callback) {
-    return this.addEvent(id, "onJoin", callback);
-  }
-  onLeave(id, callback) {
-    return this.addEvent(id, "onLeave", callback);
-  }
-  triggerEvent(type2, player) {
-    for (const event of this.getAllEvents()) {
-      if (event.type === type2) {
-        event.callback(event, player);
-      }
-    }
-  }
-};
-var DimensionEvent = class {
-  id;
-  type;
-  callback;
-  handler;
-  constructor(id, type2, callback, handler) {
-    this.id = id;
-    this.type = type2;
-    this.callback = callback;
-    this.handler = handler;
-  }
-  remove() {
-    this.handler.removeEvent(this.id);
-  }
-};
-
-// src/main/bedrock/ts/config/biome_config.ts
-var BIOME_MAPPING = /* @__PURE__ */ new Map([
-  ["gaiadimension:bedrock_blue_agate_taiga", "blue_agate_taiga"],
-  ["gaiadimension:bedrock_crystal_plains", "crystal_plains"],
-  ["gaiadimension:bedrock_fossil_woodland", "fossil_woodland"],
-  ["gaiadimension:bedrock_goldstone_lands", "goldstone_lands"],
-  ["gaiadimension:bedrock_green_agate_jungle", "green_agate_jungle"],
-  ["gaiadimension:bedrock_mineral_resevoir", "mineral_resevoir"],
-  ["gaiadimension:bedrock_mineral_river", "mineral_river"],
-  ["gaiadimension:bedrock_mutant_agate_wildwood", "mutant_agate_wildwood"],
-  ["gaiadimension:bedrock_pink_agate_forest", "pink_agate_forest"],
-  ["gaiadimension:bedrock_purple_agate_swamp", "purple_agate_swamp"],
-  ["gaiadimension:bedrock_salt_dunes", "salt_dunes"],
-  ["gaiadimension:bedrock_shining_grove", "shining_grove"],
-  ["gaiadimension:bedrock_smoldering_bog", "smoldering_bog"],
-  ["gaiadimension:bedrock_static_wasteland", "static_wasteland"],
-  ["gaiadimension:bedrock_volcanic_lands", "volcanic_lands"]
-]);
-
-// src/main/bedrock/ts/world/Gaia.ts
-var GAIA_DIMENSION_ID = "gaia_dimension";
-var RANGE_START = 1e5;
-var RANGE_END = 4e5;
-var GaiaDimension;
-var PortalLinker = class {
-  static getLink(dimensionId, x, y, z) {
-    const key = `link_${dimensionId}_${Math.floor(x)}_${Math.floor(y)}_${Math.floor(z)}`;
-    const data = world23.getDynamicProperty(key);
-    return data ? JSON.parse(data) : null;
-  }
-  static setLink(fromDim, fromX, fromY, fromZ, toDim, toX, toY, toZ) {
-    const key = `link_${fromDim}_${Math.floor(fromX)}_${Math.floor(fromY)}_${Math.floor(fromZ)}`;
-    const value = JSON.stringify({ dimensionId: toDim, x: toX, y: toY, z: toZ });
-    world23.setDynamicProperty(key, value);
-  }
-};
-var PENDING_TASKS = [];
+import { world as world23 } from "@minecraft/server";
+var GAIA_DIMENSION_ID = "gaiadimension:gaia";
 var DimensionSystem = class {
+  /**
+   * Checks if the given entity is currently in the Gaia Dimension.
+   */
   static isInGaia(entity) {
-    if (!entity || !entity.isValid || !GaiaDimension) return false;
-    if (entity.dimension.id !== GaiaDimension.inheritance.id) return false;
-    return GaiaDimension.isInDimension(entity.location);
+    if (!entity || !entity.isValid) return false;
+    return entity.dimension.id === GAIA_DIMENSION_ID;
   }
+  /**
+   * Gets the biome ID at the specified location in the given dimension.
+   */
   static getBiomeAt(dimension, location) {
     try {
-      const px = Math.floor(location.x);
-      const pz = Math.floor(location.z);
-      let block = dimension.getBlock({ x: px, y: 0, z: pz });
-      if (!block || !block.isValid || !BIOME_MAPPING.has(block.typeId)) {
-        block = dimension.getBlock({ x: px, y: -64, z: pz });
-      }
-      if (block && block.isValid && BIOME_MAPPING.has(block.typeId)) {
-        return BIOME_MAPPING.get(block.typeId);
-      }
+      const biome = dimension.getBiome(location);
+      return biome ? biome.id.replace("minecraft:", "").replace("gaiadimension:", "") : "crystal_plains";
     } catch (e) {
+      return "crystal_plains";
     }
-    return "crystal_plains";
   }
+  /**
+   * Gets the biome ID where the entity is currently located.
+   */
   static getBiome(entity) {
     if (!entity || !entity.isValid) return "crystal_plains";
     return this.getBiomeAt(entity.dimension, entity.location);
   }
-  static findPortalBlock(dimension, center) {
-    const px = Math.floor(center.x);
-    const py = Math.floor(center.y);
-    const pz = Math.floor(center.z);
-    for (let dx = -2; dx <= 2; dx++) {
-      for (let dz = -2; dz <= 2; dz++) {
-        for (let dy = -16; dy <= 16; dy++) {
-          const y = py + dy;
-          if (y < dimension.heightRange.min || y > dimension.heightRange.max) continue;
-          try {
-            const b = dimension.getBlock({ x: px + dx, y, z: pz + dz });
-            if (b && b.typeId === "gaiadimension:gaia_dimension_portal") return { x: px + dx, y, z: pz + dz };
-          } catch (e) {
-          }
-        }
-      }
-    }
-    return null;
-  }
-  static getTopBlock(dimension, x, z, startY = 319) {
-    for (let y = startY; y > dimension.heightRange.min; y--) {
-      try {
-        const block = dimension.getBlock({ x, y, z });
-        if (block && !block.isAir && !block.typeId.includes("liquid") && block.typeId !== "gaiadimension:gaia_dimension_portal") {
-          return y + 1;
-        }
-      } catch (e) {
-      }
-    }
-    return 100;
-  }
-  static handleTeleport(player, sourceDim, targetDimId, isToGaia) {
-    if (!player.isValid || !GaiaDimension) return;
-    const inGaiaCurrently = this.isInGaia(player);
-    if (sourceDim.id === targetDimId && inGaiaCurrently === isToGaia) return;
-    player.setDynamicProperty("gaiadimension:last_teleport", system25.currentTick);
-    player.addTag("gaiadimension:teleport_cooldown");
-    if (isToGaia) player.addTag("gaiadimension:in_gaia");
-    else player.removeTag("gaiadimension:in_gaia");
-    const sourceLoc = player.location;
-    const sourcePortalLoc = this.findPortalBlock(sourceDim, sourceLoc) || sourceLoc;
-    const center = GaiaDimension.getCenter();
-    let targetX, targetZ;
-    if (isToGaia) {
-      targetX = Math.max(RANGE_START, Math.min(RANGE_END, sourceLoc.x / 4 + center.x));
-      targetZ = Math.max(RANGE_START, Math.min(RANGE_END, sourceLoc.z / 4 + center.z));
-    } else {
-      targetX = (sourceLoc.x - center.x) * 4;
-      targetZ = (sourceLoc.z - center.z) * 4;
-    }
-    const targetDim = world23.getDimension(targetDimId);
-    const areaName = `portal_${player.id}`;
-    try {
-      targetDim.runCommand(`tickingarea add circle ${Math.floor(targetX)} 100 ${Math.floor(targetZ)} 2 ${areaName}`);
-    } catch (e) {
-    }
-    PENDING_TASKS.push({
-      playerId: player.id,
-      targetDimId,
-      targetX,
-      targetZ,
-      sourcePortalLoc: { x: sourcePortalLoc.x, y: sourcePortalLoc.y, z: sourcePortalLoc.z },
-      sourceDimId: sourceDim.id,
-      rotationY: player.getRotation().y,
-      createdAt: system25.currentTick,
-      areaName,
-      state: "WAITING"
-    });
-    player.addEffect("blindness", 220, { amplifier: 0, showParticles: false });
-    player.addEffect("slowness", 220, { amplifier: 255, showParticles: false });
-    player.addEffect("resistance", 250, { amplifier: 255, showParticles: false });
-  }
-  static teleportToGaia(player) {
-    if (!GaiaDimension) return;
-    this.handleTeleport(player, player.dimension, GaiaDimension.inheritance.id, true);
-  }
-  static returnFromGaia(player) {
-    this.handleTeleport(player, player.dimension, "minecraft:overworld", false);
-  }
 };
-system25.runInterval(() => {
-  if (PENDING_TASKS.length === 0) return;
-  for (let i = PENDING_TASKS.length - 1; i >= 0; i--) {
-    const task = PENDING_TASKS[i];
-    const player = world23.getEntity(task.playerId);
-    if (!player || !player.isValid) {
-      try {
-        world23.getDimension(task.targetDimId).runCommand(`tickingarea remove ${task.areaName}`);
-      } catch (e) {
-      }
-      PENDING_TASKS.splice(i, 1);
-      continue;
-    }
-    const targetDim = world23.getDimension(task.targetDimId);
-    if (task.state === "WAITING") {
-      if (system25.currentTick - task.createdAt < 200) continue;
-      task.state = "PREPARING";
-    }
-    if (task.state === "PREPARING") {
-      const savedLink = PortalLinker.getLink(task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z);
-      if (savedLink) {
-        task.finalPos = { x: savedLink.x + 1, y: savedLink.y + 1, z: savedLink.z };
-        task.state = "TELEPORTING";
-      } else {
-        let targetY = DimensionSystem.getTopBlock(targetDim, Math.floor(task.targetX), Math.floor(task.targetZ), 319);
-        if (targetY >= 318) targetY = 100;
-        task.targetY = targetY;
-        const landingPortal = DimensionSystem.findPortalBlock(targetDim, { x: task.targetX, y: targetY, z: task.targetZ });
-        if (landingPortal) {
-          PortalLinker.setLink(task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z, task.targetDimId, landingPortal.x, landingPortal.y, landingPortal.z);
-          PortalLinker.setLink(task.targetDimId, landingPortal.x, landingPortal.y, landingPortal.z, task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z);
-          task.finalPos = { x: landingPortal.x + 1, y: landingPortal.y + 1, z: landingPortal.z };
-          task.state = "TELEPORTING";
-        } else {
-          task.state = "BUILDING";
-        }
-      }
-    }
-    if (task.state === "BUILDING") {
-      const px = Math.floor(task.targetX);
-      const py = task.targetY;
-      const pz = Math.floor(task.targetZ);
-      for (let dx = -3; dx <= 3; dx++) {
-        for (let dz = -3; dz <= 3; dz++) {
-          for (let dy = -1; dy <= 6; dy++) {
-            const b = targetDim.getBlock({ x: px + dx, y: py + dy, z: pz + dz });
-            if (b) {
-              if (dy === -1) b.setType("minecraft:obsidian");
-              else b.setType("minecraft:air");
-            }
-          }
-        }
-      }
-      let rotation = task.rotationY;
-      while (rotation < 0) rotation += 360;
-      rotation = rotation % 360;
-      let direction = "north", axis = "x";
-      if (rotation >= 45 && rotation < 135) {
-        direction = "east";
-        axis = "z";
-      } else if (rotation >= 135 && rotation < 225) {
-        direction = "south";
-        axis = "x";
-      } else if (rotation >= 225 && rotation < 315) {
-        direction = "west";
-        axis = "z";
-      }
-      const frameBlock = "gaiadimension:keystone_block";
-      const portalBlockId = "gaiadimension:gaia_dimension_portal";
-      const portalPerm = BlockPermutation10.resolve(portalBlockId, { "gaiadimension:perm_dim": 0, "minecraft:cardinal_direction": direction });
-      const build = (dx, dy, dz, type2, perm) => {
-        const b = targetDim.getBlock({ x: px + dx, y: py + dy, z: pz + dz });
-        if (b) {
-          b.setType(type2);
-          if (perm) b.setPermutation(perm);
-        }
-      };
-      if (axis === "x") {
-        for (let i2 = -1; i2 <= 2; i2++) {
-          build(i2, 0, 0, frameBlock);
-          build(i2, 4, 0, frameBlock);
-        }
-        for (let y = 1; y <= 3; y++) {
-          build(-1, y, 0, frameBlock);
-          build(2, y, 0, frameBlock);
-        }
-        for (let i2 = 0; i2 <= 1; i2++) for (let y = 1; y <= 3; y++) build(i2, y, 0, portalBlockId, portalPerm);
-      } else {
-        for (let i2 = -1; i2 <= 2; i2++) {
-          build(0, 0, i2, frameBlock);
-          build(0, 4, i2, frameBlock);
-        }
-        for (let y = 1; y <= 3; y++) {
-          build(0, y, -1, frameBlock);
-          build(0, y, 2, frameBlock);
-        }
-        for (let i2 = 0; i2 <= 1; i2++) for (let y = 1; y <= 3; y++) build(0, y, i2, portalBlockId, portalPerm);
-      }
-      PortalLinker.setLink(task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z, task.targetDimId, px, py, pz);
-      PortalLinker.setLink(task.targetDimId, px, py, pz, task.sourceDimId, task.sourcePortalLoc.x, task.sourcePortalLoc.y, task.sourcePortalLoc.z);
-      task.finalPos = { x: px + 1, y: py + 1, z: pz };
-      task.state = "TELEPORTING";
-    }
-    if (task.state === "TELEPORTING") {
-      if (task.finalPos) player.teleport(task.finalPos, { dimension: targetDim });
-      player.setDynamicProperty("gaiadimension:last_teleport", system25.currentTick);
-      const areaName = task.areaName;
-      const targetDimId = task.targetDimId;
-      system25.runTimeout(() => {
-        try {
-          world23.getDimension(targetDimId).runCommand(`tickingarea remove ${areaName}`);
-        } catch (e) {
-        }
-      }, 100);
-      PENDING_TASKS.splice(i, 1);
-    }
-  }
-}, 10);
-world23.beforeEvents.weatherChange.subscribe((event) => {
-  let anyPlayerInGaia = false;
-  for (const player of world23.getAllPlayers()) {
-    if (player.isValid && DimensionSystem.isInGaia(player)) {
-      anyPlayerInGaia = true;
-      break;
-    }
-  }
-  if (anyPlayerInGaia) {
-    event.cancel = true;
-  }
-});
-system25.run(() => {
-  try {
-    GaiaDimension = ModDimension.register(GAIA_DIMENSION_ID, {
-      range: { start: { x: RANGE_START, z: RANGE_START }, end: { x: RANGE_END, z: RANGE_END } },
-      inheritance: "minecraft:overworld"
-    });
-  } catch (e) {
-  }
-});
-var isAlwaysDayActive = false;
-system25.runInterval(() => {
-  const players = world23.getAllPlayers();
-  let anyPlayerInGaia = false;
-  for (const player of players) {
-    if (!player.isValid) continue;
-    const inGaia = DimensionSystem.isInGaia(player);
-    if (inGaia) anyPlayerInGaia = true;
-    const lastTeleport = player.getDynamicProperty("gaiadimension:last_teleport") || 0;
-    const timeDiff = system25.currentTick - lastTeleport;
-    if (timeDiff > 300 && player.hasTag("gaiadimension:teleport_cooldown")) player.removeTag("gaiadimension:teleport_cooldown");
-    if (timeDiff < 100) continue;
-    if (player.hasTag("gaiadimension:teleport_cooldown")) continue;
-    if (player.hasTag("gaiadimension:in_gaia") && player.dimension.id === "minecraft:overworld") {
-      if (!inGaia && GaiaDimension) {
-        const center = GaiaDimension.getCenter();
-        const targetX = Math.max(RANGE_START + 10, Math.min(RANGE_END - 10, player.location.x + center.x));
-        const targetZ = Math.max(RANGE_START + 10, Math.min(RANGE_END - 10, player.location.z + center.z));
-        player.teleport({ x: targetX, y: player.location.y, z: targetZ }, { dimension: player.dimension });
-        continue;
-      }
-    } else if (player.dimension.id === "minecraft:overworld" && inGaia && GaiaDimension) {
-      const center = GaiaDimension.getCenter();
-      const targetX = player.location.x - center.x;
-      const targetZ = player.location.z - center.z;
-      player.teleport({ x: targetX, y: player.location.y, z: targetZ }, { dimension: player.dimension });
-      continue;
-    }
-    const dimension = player.dimension;
-    const loc = player.location;
-    const px = Math.floor(loc.x), py = Math.floor(loc.y), pz = Math.floor(loc.z);
-    let inPortal = false;
-    const b1 = dimension.getBlock({ x: px, y: py, z: pz });
-    const b2 = dimension.getBlock({ x: px, y: py + 1, z: pz });
-    if (b1?.typeId === "gaiadimension:gaia_dimension_portal" || b2?.typeId === "gaiadimension:gaia_dimension_portal") inPortal = true;
-    if (inPortal) {
-      if (inGaia) DimensionSystem.returnFromGaia(player);
-      else if (dimension.id === "minecraft:overworld") DimensionSystem.teleportToGaia(player);
-    }
-  }
-  if (anyPlayerInGaia && !isAlwaysDayActive) {
-    const overworld = world23.getDimension("minecraft:overworld");
-    overworld.runCommand("alwaysday true");
-    overworld.runCommand("weather clear");
-    isAlwaysDayActive = true;
-  } else if (!anyPlayerInGaia && isAlwaysDayActive) {
-    world23.getDimension("minecraft:overworld").runCommand("alwaysday false");
-    isAlwaysDayActive = false;
-  }
-}, 10);
-world23.afterEvents.entitySpawn.subscribe((event) => {
-  const { entity } = event;
-  if (!entity || !entity.isValid) return;
-  if (entity.typeId === "minecraft:enderman" && DimensionSystem.isInGaia(entity)) {
-    if (Math.random() < 0.95) system25.run(() => {
-      if (entity.isValid) entity.remove();
-    });
-  }
-});
 world23.afterEvents.gameRuleChange.subscribe(({ rule, value }) => {
   if (rule === "showCoordinates" && value === false) {
     world23.getAllPlayers().forEach((player) => player.onScreenDisplay.setActionBar(`\xA7.`));
@@ -5564,9 +5105,9 @@ world23.afterEvents.gameRuleChange.subscribe(({ rule, value }) => {
 
 // src/main/bedrock/ts/mixins/LightMixin.ts
 var lightBlockPermutation;
-system26.run(() => {
+system25.run(() => {
   try {
-    lightBlockPermutation = BlockPermutation11.resolve("minecraft:light_block", { "minecraft:block_light_level": 15 });
+    lightBlockPermutation = BlockPermutation10.resolve("minecraft:light_block", { "minecraft:block_light_level": 15 });
   } catch (e) {
   }
 });
@@ -5651,9 +5192,9 @@ function initializeLightMixin() {
 }
 
 // src/main/bedrock/ts/systems/scriptevents.ts
-import { system as system27, ItemStack as ItemStack11 } from "@minecraft/server";
+import { system as system26, ItemStack as ItemStack11 } from "@minecraft/server";
 function initializeScriptEvents() {
-  system27.afterEvents.scriptEventReceive.subscribe((event) => {
+  system26.afterEvents.scriptEventReceive.subscribe((event) => {
     if (event.id === "gaiadimension:give_agate_arrow") {
       const arrow = event.sourceEntity;
       if (!arrow) return;
@@ -5675,196 +5216,666 @@ function initializeScriptEvents() {
 }
 
 // src/main/bedrock/ts/fluids/fluids.ts
-import { world as world26, system as system28, BlockPermutation as BlockPermutation12, ItemStack as ItemStack12, BlockVolume as BlockVolume2, GameMode as GameMode8 } from "@minecraft/server";
-var fluids = [
-  "gaiadimension:liquid_bismuth",
-  "gaiadimension:liquid_bismuth_down",
-  "gaiadimension:liquid_bismuth1",
-  "gaiadimension:liquid_bismuth2",
-  "gaiadimension:liquid_bismuth3",
-  "gaiadimension:liquid_aura",
-  "gaiadimension:liquid_aura_down",
-  "gaiadimension:liquid_aura1",
-  "gaiadimension:liquid_aura2",
-  "gaiadimension:liquid_aura3",
-  "gaiadimension:mineral_water",
-  "gaiadimension:mineral_water_down",
-  "gaiadimension:mineral_water1",
-  "gaiadimension:mineral_water2",
-  "gaiadimension:mineral_water3",
-  "gaiadimension:superhot_magma",
-  "gaiadimension:superhot_magma_down",
-  "gaiadimension:superhot_magma1",
-  "gaiadimension:superhot_magma2",
-  "gaiadimension:superhot_magma3",
-  "gaiadimension:sweet_muck",
-  "gaiadimension:sweet_muck_down",
-  "gaiadimension:sweet_muck1",
-  "gaiadimension:sweet_muck2",
-  "gaiadimension:sweet_muck3"
-];
-var fluidIDs = new Set(fluids);
+import { world as world26, system as system29, BlockPermutation as BlockPermutation11, ItemStack as ItemStack12, BlockVolume as BlockVolume2, Player as Player15, GameMode as GameMode8 } from "@minecraft/server";
+
+// src/main/bedrock/ts/fluids/lib/FluidTemplate.ts
 var FluidTemplate = class {
-  baseId;
-  interactions;
-  constructor(baseId) {
-    this.baseId = baseId;
-    this.interactions = [];
+  /**
+   * The amount the level decreases for each horizontal block spread.
+   */
+  get decayPerBlock() {
+    return 1;
   }
-  addInteraction(directions, targetBlock, action, resultBlock, sound) {
-    this.interactions.push({ directions, targetBlock, action, resultBlock, sound });
+  /**
+   * How far to search for a slope/hole when spreading horizontally.
+   */
+  get slopeFindDistance() {
+    return 4;
   }
-  getInteractions() {
-    return this.interactions;
+  /**
+   * The delay in ticks between each spread operation.
+   * Higher values result in slower flow.
+   */
+  get spreadDelay() {
+    return 5;
   }
 };
-var idToTemplate = /* @__PURE__ */ new Map();
-function getFluidVariants(baseId) {
+
+// src/main/bedrock/ts/fluids/lib/utils.ts
+function generateFluidIDs(baseName) {
   return [
-    baseId,
-    baseId + "_down",
-    baseId + "1",
-    baseId + "2",
-    baseId + "3"
+    baseName,
+    baseName + "_down",
+    baseName + "1",
+    baseName + "2",
+    baseName + "3",
+    baseName + "4",
+    baseName + "5",
+    baseName + "6",
+    baseName + "7"
   ];
 }
-function registerFluidInteraction(selfId, targetId, resultId, sound) {
-  let template = idToTemplate.get(selfId);
-  if (!template) {
-    template = new FluidTemplate(selfId);
-    idToTemplate.set(selfId, template);
-  }
-  const targets = Array.isArray(targetId) ? targetId : [targetId];
-  template.addInteraction("adjacent", targets, "transformTarget", resultId, sound);
-}
-var MAGMA = "gaiadimension:superhot_magma";
-var AURA = "gaiadimension:liquid_aura";
-var MINERAL = "gaiadimension:mineral_water";
-var MUCK = "gaiadimension:sweet_muck";
-var PRIMAL = "gaiadimension:primal_mass";
-var AURA_CRYSTAL_BLOCK = "gaiadimension:aura_crystal_block";
-var WATER_VARIANTS = ["minecraft:water", "minecraft:flowing_water"];
-registerFluidInteraction(MAGMA, getFluidVariants(AURA), AURA_CRYSTAL_BLOCK, "random.fizz");
-registerFluidInteraction(AURA, getFluidVariants(MAGMA), AURA_CRYSTAL_BLOCK, "random.fizz");
-registerFluidInteraction(MAGMA, [...getFluidVariants(MINERAL), ...WATER_VARIANTS], PRIMAL, "random.fizz");
-registerFluidInteraction(MINERAL, getFluidVariants(MAGMA), PRIMAL, "random.fizz");
-registerFluidInteraction(MUCK, getFluidVariants(MAGMA), PRIMAL, "random.fizz");
-registerFluidInteraction(MAGMA, getFluidVariants(MUCK), PRIMAL, "random.fizz");
-var hot_fluids = [
-  "gaiadimension:superhot_magma",
-  "gaiadimension:superhot_magma_down",
-  "gaiadimension:superhot_magma1",
-  "gaiadimension:superhot_magma2",
-  "gaiadimension:superhot_magma3",
-  "gaiadimension:liquid_bismuth",
-  "gaiadimension:liquid_bismuth_down",
-  "gaiadimension:liquid_bismuth1",
-  "gaiadimension:liquid_bismuth2",
-  "gaiadimension:liquid_bismuth3"
-];
-var BUDGET = 15;
-var MAX_QUEUE_SIZE = 500;
-var PENDING_BLOCKS = /* @__PURE__ */ new Map();
-var ACTIVE_FLUIDS = /* @__PURE__ */ new Map();
-var DIRECTIONS = [
-  { x: 0, y: 0, z: -1, name: "North" },
-  { x: 0, y: 0, z: 1, name: "South" },
-  { x: 1, y: 0, z: 0, name: "East" },
-  { x: -1, y: 0, z: 0, name: "West" }
-];
-var playerFluidState = /* @__PURE__ */ new Map();
-system28.runInterval(() => {
-  const start = Date.now();
-  runPlayerEffects();
-  if (Date.now() - start > BUDGET) return;
-  runBoatLogic();
-  if (Date.now() - start > BUDGET) return;
-  if (PENDING_BLOCKS.size === 0) return;
-  for (const [key, data] of PENDING_BLOCKS) {
-    if (Date.now() - start > BUDGET) break;
-    PENDING_BLOCKS.delete(key);
+
+// src/main/bedrock/ts/fluids/lib/FogManager.ts
+var FogManager = class {
+  static pushFog(player, fogId, userFogId) {
     try {
-      const { block, dimension } = data;
-      if (block.isValid) {
-        const didChange = processFluidBlock(block, dimension);
-        if (didChange) {
-          ACTIVE_FLUIDS.set(key, system28.currentTick);
-        }
-      }
+      player.runCommand(`fog @s push "${fogId}" "${userFogId}"`);
     } catch (e) {
     }
   }
-});
-function runPlayerEffects() {
-  const players = world26.getPlayers();
-  for (const player of players) {
-    const dimension = player.dimension;
-    const location = player.location;
-    const blockAt = dimension.getBlock(location);
-    const blockAbove = dimension.getBlock({ x: location.x, y: location.y + 1, z: location.z });
-    const blockHead = dimension.getBlock({ x: location.x, y: location.y + 1.63, z: location.z });
-    const inFluidAt = blockAt && fluids.includes(blockAt.typeId);
-    const inFluidAbove = blockAbove && fluids.includes(blockAbove.typeId);
-    if (inFluidAt || inFluidAbove) {
-      let depth = 0;
-      if (inFluidAt) depth++;
-      if (inFluidAbove) depth++;
-      if (depth === 2) {
-        const blockWayAbove = dimension.getBlock({ x: location.x, y: location.y + 2, z: location.z });
-        if (blockWayAbove && fluids.includes(blockWayAbove.typeId)) {
-          depth++;
-        }
+  static popFog(player, userFogId) {
+    try {
+      player.runCommand(`fog @s remove "${userFogId}"`);
+    } catch (e) {
+    }
+  }
+};
+
+// src/main/bedrock/ts/fluids/templates/LavaTemplate.ts
+import { system as system28 } from "@minecraft/server";
+
+// src/main/bedrock/ts/API/MotionEngine.ts
+import { system as system27 } from "@minecraft/server";
+var Geo = new class {
+  distance(vector1, vector2) {
+    return Math.sqrt(Math.abs(vector1.x - vector2.x) ** 2 + Math.abs(vector1.y - vector2.y) ** 2 + Math.abs(vector1.z - vector2.z) ** 2);
+  }
+  getDirection3D(vector1, vector2) {
+    let dist = this.distance(vector1, vector2) || 1;
+    return {
+      x: (vector2.x - vector1.x) / dist,
+      y: (vector2.y - vector1.y) / dist,
+      z: (vector2.z - vector1.z) / dist
+    };
+  }
+  rotate(offset, angle, axis = ["x", "z"]) {
+    const [primaryAxis, secondaryAxis] = axis;
+    const flatOffset = {
+      [primaryAxis]: offset[primaryAxis] ?? 0,
+      [secondaryAxis]: offset[secondaryAxis] ?? 0
+    };
+    let offsetDir = this.getDirection3D({ x: 0, y: 0, z: 0 }, sumObjects({}, flatOffset));
+    let offsetDist = this.distance({ x: 0, y: 0, z: 0 }, sumObjects({}, flatOffset));
+    angle += Math.acos(offsetDir[primaryAxis]) * 57.2958 * (offsetDir[secondaryAxis] < 0 ? -1 : 1);
+    let direction = {
+      [primaryAxis]: Math.cos(angle / 57.2958),
+      [secondaryAxis]: Math.sin(angle / 57.2958)
+    };
+    return sumObjects({}, direction, offsetDist);
+  }
+}();
+function sumObjects(vector1, vector2, multi = 1) {
+  return {
+    x: (vector1.x || 0) + (vector2.x || 0) * multi,
+    y: (vector1.y || 0) + (vector2.y || 0) * multi,
+    z: (vector1.z || 0) + (vector2.z || 0) * multi
+  };
+}
+function getXZVelocity(player, forceZeroSprint = false) {
+  let vector = { x: 0, z: 0 };
+  const input = player.inputInfo.getMovementVector();
+  const strafeInput = input.y;
+  const forwardInput = -input.x;
+  vector = sumObjects(vector, Geo.rotate({ x: strafeInput, z: forwardInput }, player.getRotation().y + 90));
+  const speedModifier = (player.getEffect("speed")?.amplifier ?? -1) + 1 - ((player.getEffect("slowness")?.amplifier ?? -1) + 1);
+  const baseSpeed = forceZeroSprint ? 0.37 : 0.37 + (player.isSprinting ? 0.13 : 0) + speedModifier / 10;
+  vector = sumObjects({}, vector, baseSpeed);
+  return vector;
+}
+var MotionEngine = class {
+  static tickPlayer(player, gravityValue, speedMultiplier = 1, resistance = 5, forceZeroSprint = false, viscosity = 0) {
+    const p = player;
+    if (player.isOnGround) {
+      if (p.fallingVelocity > 0.5 && !player.getEffect("slow_falling")) {
+        let damage = (p.fallingVelocity * 2) ** 1.7;
+        if (damage >= 1) player.applyDamage(damage, { cause: "fall" });
       }
-      let amplifier = 0;
-      if (depth >= 3) amplifier = 2;
-      else if (depth === 2) amplifier = 1;
-      if (player.isSneaking) {
-        amplifier = Math.min(2, amplifier + 1);
+      p.fallVelocity = 0;
+      p.fallingVelocity = 0;
+      p.onGroundTick = system27.currentTick;
+    }
+    if (p.isJumping && p.onGroundTick >= system27.currentTick - 1) {
+      if (viscosity < 5) {
+        p.fallVelocity -= 0.2 * 9.8 / ((gravityValue + 9.8 * 0.2) / 1.2) + ((player.getEffect("jump_boost")?.amplifier ?? -1) + 1) / 10;
+      } else {
+        p.fallVelocity = 0.05;
       }
+    }
+    if (player.isOnGround && viscosity === 0 || player.isFlying || player.isGliding) {
+      p.fallVelocity = 0;
+      p.fallingTime = 0;
+      p.savedXZ = void 0;
+      return;
+    }
+    p.fallVelocity = p.fallVelocity || 0;
+    p.fallingTime = (p.fallingTime || 0) + 1;
+    if (viscosity > 0) {
+      const sinkSpeed = 5e-3 * viscosity;
+      p.fallVelocity = p.fallVelocity * 0.5 + sinkSpeed * 0.5;
+    } else {
+      p.fallVelocity += (9.8 * 1.5 + gravityValue) / 2.5 / Math.min(300, 190 + p.fallingTime * (9.8 - gravityValue));
+    }
+    let xz = getXZVelocity(player, forceZeroSprint || viscosity > 5);
+    const effectiveMultiplier = speedMultiplier / (1 + viscosity);
+    xz.x *= effectiveMultiplier;
+    xz.z *= effectiveMultiplier;
+    p.savedXZ = sumObjects({}, sumObjects(xz, p.savedXZ || xz, resistance), 1 / (resistance + 1));
+    xz = p.savedXZ;
+    const xzPower = Geo.distance({ x: 0, y: 0, z: 0 }, xz);
+    const xzDir = Geo.getDirection3D({ x: 0, y: 0, z: 0 }, xz);
+    if (player.isOnGround && p.fallVelocity < 0) p.fallVelocity = 0;
+    if (player.dimension.heightRange.min <= player.location.y || player.dimension.heightRange.max - 2 >= player.location.y) {
+      let above = player.dimension.getBlockFromRay(player.getHeadLocation(), { x: 0, y: 1, z: 0 }, { maxDistance: 1 });
+      if (above && !above.block.isAir && !above.block.isLiquid && p.fallVelocity < 0) p.fallVelocity = 0;
+      const locations = [sumObjects(player.location, { y: 0.55 }), player.getHeadLocation()];
+      if (locations.map((loc) => player.dimension.getBlockFromRay(loc, xzDir)).some((ray2, index) => {
+        if (ray2 == void 0) return false;
+        if (Geo.distance(sumObjects(ray2.faceLocation, ray2.block.location), locations[index]) < 0.6 && !ray2.block.isAir) return true;
+      })) {
+        xz = { x: 0, z: 0 };
+        p.savedXZ = xz;
+      }
+    }
+    if (p.fallVelocity != 0) player.applyKnockback({ x: 0, z: 0 }, 0);
+    player.applyKnockback({ x: xzDir.x * xzPower, z: xzDir.z * xzPower }, -p.fallVelocity);
+    let ray = player.dimension.getBlockFromRay(player.location, { x: 0, y: -1, z: 0 });
+    if (ray != void 0) {
+      let distance = player.location.y - sumObjects(ray.block.location, ray.faceLocation).y;
+      p.distance = distance;
+      if (distance < -player.getVelocity().y * 3) player.addEffect("slow_falling", 5, { amplifier: 0, showParticles: false });
+    }
+    p.fallingVelocity = p.fallVelocity / 2;
+  }
+};
+
+// src/main/bedrock/ts/fluids/templates/LavaTemplate.ts
+var LavaTemplate = class extends FluidTemplate {
+  _ids;
+  playerState = /* @__PURE__ */ new Map();
+  constructor(baseName) {
+    super();
+    this._ids = generateFluidIDs(baseName);
+  }
+  get fluidIDs() {
+    return this._ids;
+  }
+  get spreadDelay() {
+    return 15;
+  }
+  get decayPerBlock() {
+    return 2;
+  }
+  get slopeFindDistance() {
+    return 2;
+  }
+  getInteractions() {
+    return [
+      {
+        targetBlock: ["minecraft:water", "minecraft:flowing_water"],
+        action: "transformSelf",
+        resultBlock: "gaiadimension:primal_mass",
+        directions: "adjacent",
+        sound: "random.fizz"
+      },
+      {
+        targetBlock: ["minecraft:water", "minecraft:flowing_water"],
+        action: "transformTarget",
+        resultBlock: "gaiadimension:primal_mass",
+        directions: "below",
+        sound: "random.fizz"
+      },
+      {
+        targetBlock: ["minecraft:water", "minecraft:flowing_water"],
+        action: "transformSelf",
+        resultBlock: "gaiadimension:primal_mass",
+        directions: "below",
+        sound: "random.fizz"
+      }
+    ];
+  }
+  onPlayerTick(player, block, isHeadInside, isFeetInside) {
+    const prevState = this.playerState.get(player.id) || { head: false, fovSet: false };
+    let gravityVal = 9.8;
+    let slownessLevel = 0;
+    let amplifier = 0;
+    if (isHeadInside) {
+      gravityVal = 0.5;
+      slownessLevel = 10;
+      amplifier = 2;
+    } else if (isFeetInside) {
+      const blockMid = player.dimension.getBlock({ x: player.location.x, y: player.location.y + 0.8, z: player.location.z });
+      if (blockMid && this._ids.includes(blockMid.typeId)) {
+        gravityVal = 2;
+        slownessLevel = 8;
+        amplifier = 1;
+      } else {
+        gravityVal = 5;
+        slownessLevel = 6;
+        amplifier = 0;
+      }
+    }
+    if (player.isSneaking) {
+      gravityVal = Math.max(0.2, gravityVal - 1);
+      slownessLevel = Math.min(15, slownessLevel + 2);
+      amplifier = Math.min(2, amplifier + 1);
+    }
+    if (isHeadInside || isFeetInside) {
+      MotionEngine.tickPlayer(player, gravityVal, 0.1, 25, true);
+      player.addEffect("slowness", 5, { amplifier: slownessLevel, showParticles: false });
       player.addEffect("slow_falling", 4, { amplifier, showParticles: false });
       if (player.isJumping) {
         player.addEffect("levitation", 3, { amplifier: 2, showParticles: false });
       }
-      if (blockAbove && hot_fluids.includes(blockAbove.typeId) || blockAt && hot_fluids.includes(blockAt.typeId)) {
-        player.setOnFire(10, true);
-      } else {
-        player.extinguishFire(true);
+      const fovAdjustment = Math.min(170, 70 + slownessLevel * 21);
+      player.runCommand(`camera @s set minecraft:first_person fov ${fovAdjustment}`);
+      prevState.fovSet = true;
+    } else if (prevState.fovSet) {
+      player.runCommand("camera @s clear");
+      prevState.fovSet = false;
+    }
+    player.setOnFire(10, true);
+    if (system28.currentTick % 20 === 0) {
+      player.applyDamage(4, { cause: "lava" });
+    }
+    const userFogId = "fluid_fog";
+    if (isHeadInside) {
+      FogManager.pushFog(player, "gaiadimension:liquid_magma_fog", userFogId);
+    } else if (prevState.head) {
+      FogManager.popFog(player, userFogId);
+    }
+    this.playerState.set(player.id, { head: isHeadInside, fovSet: prevState.fovSet });
+  }
+  onEntityTick(entity, block) {
+    if (entity.typeId === "minecraft:item") {
+      entity.setOnFire(5, true);
+      return;
+    }
+    entity.setOnFire(10, true);
+    if (system28.currentTick % 20 === 0) {
+      entity.applyDamage(4, { cause: "lava" });
+    }
+    entity.addEffect("slow_falling", 4, { amplifier: 1, showParticles: false });
+  }
+  processBoat(boat, dimension, isDeep) {
+  }
+};
+
+// src/main/bedrock/ts/fluids/templates/WaterTemplate.ts
+var WaterTemplate = class extends FluidTemplate {
+  _ids;
+  config;
+  playerState = /* @__PURE__ */ new Map();
+  constructor(config) {
+    super();
+    this.config = config;
+    this._ids = generateFluidIDs(config.baseName);
+  }
+  get fluidIDs() {
+    return this._ids;
+  }
+  get spreadDelay() {
+    return this.config.spreadDelay ?? 5;
+  }
+  get decayPerBlock() {
+    return this.config.decayPerBlock ?? 1;
+  }
+  get slopeFindDistance() {
+    return this.config.slopeFindDistance ?? 4;
+  }
+  getInteractions() {
+    return this.config.interactions || [];
+  }
+  onPlayerTick(player, block, isHeadInside, isFeetInside) {
+    const prevState = this.playerState.get(player.id) || { head: false, feet: false, fovSet: false };
+    let gravityVal = 9.8;
+    let slownessLevel = 0;
+    let amplifier = 0;
+    let viscosity = 0;
+    if (this.config.viscosity !== void 0 && this.config.viscosity > 1) {
+      viscosity = this.config.viscosity;
+      gravityVal = 0.5;
+      slownessLevel = Math.min(10, viscosity);
+      amplifier = 2;
+    } else {
+      if (isHeadInside) {
+        gravityVal = 0.5;
+        slownessLevel = 4;
+        amplifier = 2;
+      } else if (isFeetInside) {
+        const blockMid = player.dimension.getBlock({ x: player.location.x, y: player.location.y + 0.8, z: player.location.z });
+        if (blockMid && this._ids.includes(blockMid.typeId)) {
+          gravityVal = 2;
+          slownessLevel = 3;
+          amplifier = 1;
+        } else {
+          gravityVal = 5;
+          slownessLevel = 2;
+          amplifier = 0;
+        }
       }
     }
-    const prevState = playerFluidState.get(player.id) || { head: false, feet: false };
-    const isHeadInMineralWater = !!(blockHead && blockHead.typeId.includes("mineral_water"));
-    const isFeetInMineralWater = !!(blockAt && blockAt.typeId.includes("mineral_water"));
-    if (isHeadInMineralWater && !prevState.head) {
+    if (player.isSneaking) {
+      gravityVal = Math.max(0.2, gravityVal - 1);
+      slownessLevel = Math.min(6, slownessLevel + 1);
+      amplifier = Math.min(2, amplifier + 1);
+    }
+    if (isHeadInside || isFeetInside) {
+      MotionEngine.tickPlayer(player, gravityVal, 0.2, 15, true, viscosity);
+      player.addEffect("slowness", 5, { amplifier: slownessLevel, showParticles: false });
+      player.addEffect("slow_falling", 4, { amplifier, showParticles: false });
+      if (player.isJumping && viscosity < 5) {
+        player.addEffect("levitation", 3, { amplifier: 2, showParticles: false });
+      }
+      const fovAdjustment = Math.min(170, 70 + slownessLevel * 21);
+      player.runCommand(`camera @s set minecraft:first_person fov ${fovAdjustment}`);
+      prevState.fovSet = true;
+    } else if (prevState.fovSet) {
+      player.runCommand("camera @s clear");
+      prevState.fovSet = false;
+    }
+    const userFogId = "fluid_fog";
+    if (isHeadInside) {
+      if (this.config.fogId) FogManager.pushFog(player, this.config.fogId, userFogId);
+    } else if (prevState.head) {
+      FogManager.popFog(player, userFogId);
+    }
+    if (isHeadInside && !prevState.head) {
       player.playSound("ambient.underwater.enter", { volume: 0.5, pitch: 1 });
       player.playSound("ambient.underwater.loop", { volume: 1, pitch: 1 });
-    } else if (!isHeadInMineralWater && prevState.head) {
+    } else if (!isHeadInside && prevState.head) {
       player.playSound("ambient.underwater.exit", { volume: 0.5, pitch: 1 });
       player.runCommand("stopsound @s ambient.underwater.loop");
     }
-    const isOnSurfaceMineralWater = isFeetInMineralWater && !isHeadInMineralWater;
-    if (isOnSurfaceMineralWater) {
-      const velocity = player.getVelocity();
-      const speed = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
-      if (speed > 0.08 && system28.currentTick % 8 === 0) {
-        player.playSound("entity.boat.paddle_water", { volume: 0.25, pitch: 1 });
+    this.playerState.set(player.id, { head: isHeadInside, feet: isFeetInside, fovSet: prevState.fovSet });
+  }
+  processBoat(boat, dimension, isDeep) {
+    if (!this.config.hasBoatPhysics) return;
+    if (isDeep) boat.applyImpulse({ x: 0, y: 0.2, z: 0 });
+    const rotation = boat.getRotation().y;
+    const dirX = -Math.sin(rotation * (Math.PI / 180));
+    const dirZ = Math.cos(rotation * (Math.PI / 180));
+    const vel = boat.getVelocity();
+    const speed = Math.sqrt(vel.x * vel.x + vel.z * vel.z);
+    if (speed > 0.01) boat.applyImpulse({ x: dirX * 0.15, y: 0, z: dirZ * 0.15 });
+    this.manageBoatHolder(boat, dimension);
+  }
+  manageBoatHolder(boat, dimension) {
+    const location = boat.location;
+    const holders = dimension.getEntities({ type: "gaiadimension:boat_holder", location, maxDistance: 2 });
+    let holder = holders.length > 0 ? holders[0] : null;
+    const targetHolderY = Math.floor(location.y) + 1 - 0.55;
+    if (!holder) holder = dimension.spawnEntity("gaiadimension:boat_holder", { x: location.x, y: targetHolderY, z: location.z });
+    if (holder && holder.isValid) {
+      try {
+        holder.teleport({ x: location.x, y: targetHolderY, z: location.z }, { dimension, rotation: { x: 0, y: boat.getRotation().y } });
+      } catch {
       }
     }
-    if (isFeetInMineralWater && !prevState.feet) {
-      dimension.spawnParticle("minecraft:water_splash_particle", { x: location.x, y: location.y, z: location.z });
+  }
+};
+
+// src/main/bedrock/ts/fluids/fluids.ts
+var blockCache = /* @__PURE__ */ new Map();
+var playersInFluids = /* @__PURE__ */ new Set();
+var typeInfoCache = /* @__PURE__ */ new Map();
+var REPLACABLE_IDS = /* @__PURE__ */ new Set([
+  "minecraft:snow_layer",
+  "minecraft:fire",
+  "minecraft:soul_fire",
+  "minecraft:double_plant",
+  "minecraft:tallgrass",
+  "minecraft:short_grass",
+  "minecraft:deadbush",
+  "minecraft:web",
+  "minecraft:dandelion",
+  "minecraft:oxeye_daisy",
+  "minecraft:poppy",
+  "minecraft:azure_bluet",
+  "minecraft:cornflower"
+]);
+function getCachedBlock(dimension, x, y, z) {
+  const fx = Math.floor(x), fy = Math.floor(y), fz = Math.floor(z);
+  if (fy < dimension.heightRange.min || fy > dimension.heightRange.max) return void 0;
+  const key = `${dimension.id}:${fx},${fy},${fz}`;
+  let blk = blockCache.get(key);
+  if (blk !== void 0) return blk;
+  blk = dimension.getBlock({ x: fx, y: fy, z: fz });
+  blockCache.set(key, blk);
+  return blk;
+}
+function getTypeInfo(typeId) {
+  let info = typeInfoCache.get(typeId);
+  if (info) return info;
+  let currentStage = 0;
+  let baseId = typeId;
+  if (typeId.endsWith("_down")) {
+    currentStage = -1;
+    baseId = typeId.replace("_down", "");
+  } else {
+    const match = typeId.match(/(\d+)$/);
+    if (match) {
+      currentStage = parseInt(match[1]);
+      baseId = typeId.slice(0, -match[1].length);
+    } else {
+      for (const template of templates) {
+        if (typeId === template.baseName) {
+          currentStage = 0;
+          baseId = typeId;
+          break;
+        }
+      }
     }
-    playerFluidState.set(player.id, { head: isHeadInMineralWater, feet: isFeetInMineralWater });
-    if (blockHead) {
-      const typeId = blockHead.typeId;
-      if (typeId.includes("mineral_water")) {
-        player.runCommand("fog @s push gaiadimension:mineral_water_fog mineral_water_fog");
-      } else if (typeId.includes("superhot_magma")) {
-        player.runCommand("fog @s push gaiadimension:superhot_magma_fog superhot_magma_fog");
-      } else if (fluids.includes(typeId)) {
-        player.runCommand("fog @s push fluid:water_fog fluid_fog");
+  }
+  info = { stage: currentStage, baseId };
+  typeInfoCache.set(typeId, info);
+  return info;
+}
+var templates = [
+  new LavaTemplate("gaiadimension:superhot_magma"),
+  new LavaTemplate("gaiadimension:liquid_bismuth"),
+  new WaterTemplate({
+    baseName: "gaiadimension:liquid_aura",
+    fogId: "gaiadimension:liquid_aura_fog",
+    interactions: [
+      {
+        targetBlock: ["gaiadimension:superhot_magma", "gaiadimension:superhot_magma_down", "gaiadimension:superhot_magma1", "gaiadimension:superhot_magma2", "gaiadimension:superhot_magma3", "gaiadimension:superhot_magma4", "gaiadimension:superhot_magma5", "gaiadimension:superhot_magma6", "gaiadimension:superhot_magma7"],
+        action: "transformTarget",
+        resultBlock: "gaiadimension:aura_crystal_block",
+        directions: "adjacent"
+      }
+    ]
+  }),
+  new WaterTemplate({
+    baseName: "gaiadimension:mineral_water",
+    fogId: "gaiadimension:mineral_water_fog",
+    hasBoatPhysics: true,
+    interactions: [
+      {
+        targetBlock: ["gaiadimension:superhot_magma", "gaiadimension:superhot_magma_down", "gaiadimension:superhot_magma1", "gaiadimension:superhot_magma2", "gaiadimension:superhot_magma3", "gaiadimension:superhot_magma4", "gaiadimension:superhot_magma5", "gaiadimension:superhot_magma6", "gaiadimension:superhot_magma7"],
+        action: "transformTarget",
+        resultBlock: "gaiadimension:primal_mass",
+        directions: "adjacent"
+      }
+    ]
+  }),
+  new WaterTemplate({
+    baseName: "gaiadimension:sweet_muck",
+    viscosity: 5,
+    spreadDelay: 10,
+    fogId: "gaiadimension:sweet_muck_fog",
+    interactions: [
+      {
+        targetBlock: ["gaiadimension:superhot_magma", "gaiadimension:superhot_magma_down", "gaiadimension:superhot_magma1", "gaiadimension:superhot_magma2", "gaiadimension:superhot_magma3", "gaiadimension:superhot_magma4", "gaiadimension:superhot_magma5", "gaiadimension:superhot_magma6", "gaiadimension:superhot_magma7"],
+        action: "transformTarget",
+        resultBlock: "gaiadimension:primal_mass",
+        directions: "adjacent"
+      }
+    ]
+  })
+];
+var fluidIDs = /* @__PURE__ */ new Set();
+var idToTemplate = /* @__PURE__ */ new Map();
+for (const template of templates) {
+  for (const id of template.fluidIDs) {
+    fluidIDs.add(id);
+    idToTemplate.set(id, template);
+  }
+}
+var BUDGET = 4;
+var MAX_QUEUE_SIZE = 1e3;
+var playerInteractionDummies = /* @__PURE__ */ new Map();
+var PENDING_BLOCKS = /* @__PURE__ */ new Map();
+var taskIndex = 0;
+var DIRECTIONS = [
+  { x: 0, y: 0, z: -1, name: "north", straight: 1 },
+  { x: 0, y: 0, z: 1, name: "south", straight: 5 },
+  { x: 1, y: 0, z: 0, name: "east", straight: 3 },
+  { x: -1, y: 0, z: 0, name: "west", straight: 7 }
+];
+system29.runInterval(() => {
+  blockCache.clear();
+  const start = Date.now();
+  const players = world26.getAllPlayers();
+  const tasks = [
+    () => runPlayerEffects(players),
+    () => runBoatLogic(players),
+    () => runFluidFlowLogic(start),
+    () => runFluidInteractionDummies(players)
+  ];
+  const priorityTask = taskIndex % tasks.length;
+  tasks[priorityTask]();
+  for (let i = 0; i < tasks.length; i++) {
+    if (i === priorityTask) continue;
+    if (Date.now() - start > BUDGET) break;
+    tasks[i]();
+  }
+  taskIndex++;
+}, 1);
+function runFluidInteractionDummies(players) {
+  for (const player of players) {
+    const inventory = player.getComponent("inventory")?.container;
+    if (!inventory) continue;
+    const heldItem = inventory.getItem(player.selectedSlotIndex);
+    const isHoldingBucket = heldItem?.typeId === "minecraft:bucket" || heldItem?.typeId.startsWith("gaiadimension:") && heldItem?.typeId.endsWith("_bucket");
+    const isHoldingBlock = heldItem && (heldItem.typeId.includes("planks") || heldItem.typeId.includes("log") || heldItem.typeId.includes("stairs") || heldItem.typeId.includes("slab") || heldItem.typeId.includes("fence") || heldItem.typeId.includes("stone") || heldItem.typeId.includes("dirt") || heldItem.typeId.includes("sand") || heldItem.typeId.includes("glass") || heldItem.typeId.includes("cobblestone"));
+    if (!isHoldingBucket && !isHoldingBlock) {
+      const existing = playerInteractionDummies.get(player.id);
+      if (existing) {
+        if (existing.isValid) existing.remove();
+        playerInteractionDummies.delete(player.id);
+      }
+      continue;
+    }
+    const viewVec = player.getViewDirection();
+    const headLoc = player.getHeadLocation();
+    let targetFluid;
+    for (let d = 0.5; d <= 5; d += 0.5) {
+      const checkPos = { x: headLoc.x + viewVec.x * d, y: headLoc.y + viewVec.y * d, z: headLoc.z + viewVec.z * d };
+      const block = getCachedBlock(player.dimension, checkPos.x, checkPos.y, checkPos.z);
+      if (block) {
+        if (fluidIDs.has(block.typeId)) {
+          targetFluid = block;
+          break;
+        }
+        if (!block.isAir && !isReplaceable(block)) break;
+      }
+    }
+    if (targetFluid) {
+      let dummy = playerInteractionDummies.get(player.id);
+      const center = targetFluid.center();
+      const targetPos = { x: center.x, y: center.y - 0.5, z: center.z };
+      if (!dummy || !dummy.isValid) {
+        dummy = player.dimension.spawnEntity("gaiadimension:fluid_interaction_dummy", targetPos);
+        playerInteractionDummies.set(player.id, dummy);
       } else {
-        player.runCommand("fog @s remove mineral_water_fog");
-        player.runCommand("fog @s remove superhot_magma_fog");
+        const distSq = Math.pow(dummy.location.x - targetPos.x, 2) + Math.pow(dummy.location.y - targetPos.y, 2) + Math.pow(dummy.location.z - targetPos.z, 2);
+        if (distSq > 0.01) dummy.teleport(targetPos);
+      }
+    } else {
+      const existing = playerInteractionDummies.get(player.id);
+      if (existing) {
+        if (existing.isValid) existing.remove();
+        playerInteractionDummies.delete(player.id);
+      }
+    }
+  }
+}
+function runFluidFlowLogic(startTime) {
+  if (PENDING_BLOCKS.size === 0) return;
+  const currentTick = system29.currentTick;
+  const iterator = PENDING_BLOCKS.entries();
+  let processedCount = 0;
+  const MAX_PER_TICK = 50;
+  for (let entry = iterator.next(); !entry.done; entry = iterator.next()) {
+    const timeSpent = Date.now() - startTime;
+    if (timeSpent > BUDGET && processedCount > 0) break;
+    if (processedCount >= MAX_PER_TICK) break;
+    const [key, data] = entry.value;
+    if (currentTick < data.scheduledTick) continue;
+    PENDING_BLOCKS.delete(key);
+    try {
+      const { block, dimension } = data;
+      if (block.isValid) {
+        if (processFluidBlock(block, dimension)) wakeNeighbors(block.location, dimension);
+        processedCount++;
+      }
+    } catch (e) {
+    }
+  }
+}
+function runPlayerEffects(players) {
+  for (const player of players) {
+    try {
+      const dim = player.dimension;
+      const loc = player.location;
+      const blockAt = getCachedBlock(dim, loc.x, loc.y, loc.z);
+      const blockHead = getCachedBlock(dim, loc.x, loc.y + 1.63, loc.z);
+      let template;
+      let isHead = false;
+      let isFeet = false;
+      if (blockHead && fluidIDs.has(blockHead.typeId)) {
+        template = idToTemplate.get(blockHead.typeId);
+        isHead = true;
+      }
+      if (blockAt && fluidIDs.has(blockAt.typeId)) {
+        const t = idToTemplate.get(blockAt.typeId);
+        if (!template) template = t;
+        isFeet = true;
+      }
+      if (template) {
+        playersInFluids.add(player.id);
+        template.onPlayerTick(player, blockAt || blockHead, isHead, isFeet);
+      } else if (playersInFluids.has(player.id)) {
         player.runCommand("fog @s remove fluid_fog");
+        playersInFluids.delete(player.id);
+      }
+    } catch {
+    }
+  }
+}
+function runBoatLogic(players) {
+  if (players.length === 0) return;
+  const activeDimensions = new Set(players.map((p) => p.dimension));
+  for (const dimension of activeDimensions) {
+    const boats = dimension.getEntities({ families: ["boat"] });
+    for (const boat of boats) {
+      if (!boat.isValid) continue;
+      const loc = boat.location;
+      const blockAt = getCachedBlock(dimension, loc.x, loc.y, loc.z);
+      const blockBelow = getCachedBlock(dimension, loc.x, loc.y - 0.1, loc.z);
+      let template;
+      let isDeep = false;
+      if (blockAt && fluidIDs.has(blockAt.typeId)) {
+        template = idToTemplate.get(blockAt.typeId);
+        isDeep = true;
+      } else if (blockBelow && fluidIDs.has(blockBelow.typeId)) {
+        template = idToTemplate.get(blockBelow.typeId);
+      }
+      if (template) template.processBoat(boat, dimension, isDeep);
+      else {
+        const holders = dimension.getEntities({ type: "gaiadimension:boat_holder", location: loc, maxDistance: 2 });
+        for (const h of holders) if (h.isValid) h.remove();
       }
     }
   }
@@ -5872,231 +5883,198 @@ function runPlayerEffects() {
 function isReplaceable(blk) {
   if (!blk || !blk.isValid) return false;
   if (blk.isAir) return true;
-  if (blk.isLiquid) return false;
-  if (fluidIDs.has(blk.typeId)) return false;
   const id = blk.typeId;
-  if (id === "minecraft:snow_layer" || id === "minecraft:light_block" || id === "minecraft:fire" || id === "minecraft:soul_fire" || id === "minecraft:double_plant" || id === "minecraft:tallgrass" || id === "minecraft:short_grass" || id === "minecraft:deadbush" || id === "minecraft:web") return true;
-  const vegetationTags = [
-    "minecraft:is_plant",
-    "flower",
-    "plant",
-    "double_plant",
-    "minecraft:crop"
-  ];
-  if (vegetationTags.some((tag2) => blk.hasTag(tag2))) return true;
+  if (blk.isLiquid || fluidIDs.has(id)) return false;
+  if (REPLACABLE_IDS.has(id)) return true;
   if (id.includes("flower") || id.includes("sapling") || id.includes("bush") || id.includes("plant") || id.includes("leaf_litter")) return true;
+  const vegetationTags = ["minecraft:is_plant", "flower", "plant", "double_plant", "minecraft:crop"];
+  for (const tag2 of vegetationTags) {
+    if (blk.hasTag(tag2)) return true;
+  }
   return false;
+}
+function findClosestSlope(dimension, startLoc, searchDist, baseId) {
+  const queue = [{ loc: startLoc, dist: 0 }];
+  const visited = /* @__PURE__ */ new Set();
+  const foundSlopes = [];
+  let minDist = 999;
+  while (queue.length > 0) {
+    const { loc, dist } = queue.shift();
+    if (dist > searchDist) continue;
+    if (dist > minDist) break;
+    for (const dir of DIRECTIONS) {
+      const next = { x: loc.x + dir.x, y: loc.y, z: loc.z + dir.z };
+      const key = `${next.x},${next.y},${next.z}`;
+      if (visited.has(key)) continue;
+      visited.add(key);
+      const block = getCachedBlock(dimension, next.x, next.y, next.z);
+      if (!block) continue;
+      const below = getCachedBlock(dimension, next.x, next.y - 1, next.z);
+      if (below && isReplaceable(below)) {
+        if (dist + 1 < minDist) {
+          minDist = dist + 1;
+          foundSlopes.length = 0;
+        }
+        if (dist + 1 === minDist) foundSlopes.push({ x: next.x, y: next.y, z: next.z });
+      } else if (isReplaceable(block)) {
+        queue.push({ loc: next, dist: dist + 1 });
+      }
+    }
+  }
+  return foundSlopes;
 }
 function processFluidBlock(block, dimension) {
   const typeId = block.typeId;
   let changesHappened = false;
-  let currentStage = 0;
-  let baseId = typeId;
-  if (typeId.endsWith("_down")) {
-    currentStage = -1;
-    baseId = typeId.slice(0, -5);
-  } else if (typeId.endsWith("3")) {
-    currentStage = 3;
-    baseId = typeId.slice(0, -1);
-  } else if (typeId.endsWith("2")) {
-    currentStage = 2;
-    baseId = typeId.slice(0, -1);
-  } else if (typeId.endsWith("1")) {
-    currentStage = 1;
-    baseId = typeId.slice(0, -1);
-  } else {
-    currentStage = 0;
-    baseId = typeId;
-  }
+  const { stage: currentStage, baseId } = getTypeInfo(typeId);
   if (!fluidIDs.has(baseId)) return false;
-  const currentTemplate = idToTemplate.get(baseId);
-  if (currentTemplate) {
-    const interactions = currentTemplate.getInteractions();
-    for (const rule of interactions) {
-      const blocksToCheck = [];
-      if (rule.directions === "adjacent" || rule.directions === "all") {
-        blocksToCheck.push(
-          dimension.getBlock({ x: block.location.x + 1, y: block.location.y, z: block.location.z }),
-          dimension.getBlock({ x: block.location.x - 1, y: block.location.y, z: block.location.z }),
-          dimension.getBlock({ x: block.location.x, y: block.location.y, z: block.location.z + 1 }),
-          dimension.getBlock({ x: block.location.x, y: block.location.y, z: block.location.z - 1 }),
-          dimension.getBlock({ x: block.location.x, y: block.location.y + 1, z: block.location.z })
-        );
-      }
-      if (rule.directions === "below" || rule.directions === "all") {
-        blocksToCheck.push(
-          dimension.getBlock({ x: block.location.x, y: block.location.y - 1, z: block.location.z })
-        );
-      }
-      let triggered = false;
-      for (const checkBlock of blocksToCheck) {
-        if (!checkBlock) continue;
-        const isMatch = Array.isArray(rule.targetBlock) ? rule.targetBlock.includes(checkBlock.typeId) : checkBlock.typeId === rule.targetBlock;
-        if (isMatch) {
-          if (rule.action === "transformTarget" && checkBlock.isValid) {
-            checkBlock.setType(rule.resultBlock);
-            triggered = true;
-          } else if (rule.action === "transformSelf") {
-            triggered = true;
-            break;
+  const template = idToTemplate.get(baseId);
+  if (template) {
+    const interactions = template.getInteractions();
+    if (interactions.length > 0) {
+      const neighbors = [{ x: 1, y: 0, z: 0 }, { x: -1, y: 0, z: 0 }, { x: 0, y: 0, z: 1 }, { x: 0, y: 0, z: -1 }, { x: 0, y: 1, z: 0 }, { x: 0, y: -1, z: 0 }];
+      for (const rule of interactions) {
+        const checkIndices = rule.directions === "below" ? [5] : rule.directions === "all" ? [0, 1, 2, 3, 4, 5] : [0, 1, 2, 3, 4];
+        let triggered = false;
+        for (const idx of checkIndices) {
+          const off = neighbors[idx];
+          const nb = getCachedBlock(dimension, block.x + off.x, block.y + off.y, block.z + off.z);
+          if (nb && (Array.isArray(rule.targetBlock) ? rule.targetBlock.includes(nb.typeId) : nb.typeId === rule.targetBlock)) {
+            if (rule.action === "transformTarget") {
+              dimension.fillBlocks(new BlockVolume2(nb.location, nb.location), rule.resultBlock);
+              triggered = true;
+            } else if (rule.action === "transformSelf") {
+              triggered = true;
+              break;
+            }
           }
         }
-      }
-      if (triggered) {
-        changesHappened = true;
-        if (rule.sound) {
-          dimension.playSound(rule.sound, block.location, { volume: 0.5, pitch: 1 });
-        }
-        if (rule.action === "transformSelf" && block.isValid) {
-          block.setType(rule.resultBlock);
-          return true;
-        }
-      }
-    }
-  }
-  let requiredParentTag = "";
-  if (currentStage === 1) requiredParentTag = "template_full";
-  else if (currentStage === 2) requiredParentTag = "template1";
-  else if (currentStage === 3) requiredParentTag = "template2";
-  if (currentStage > 0) {
-    const above = dimension.getBlock({ x: block.location.x, y: block.location.y + 1, z: block.location.z });
-    if (above) {
-      const aboveId = above.typeId;
-      const isAboveDown = aboveId === baseId + "_down";
-      const isAboveHalf = aboveId === baseId + "1" || aboveId === baseId + "2" || aboveId === baseId + "3";
-      if (isAboveDown || isAboveHalf) {
-        const downId = baseId + "_down";
-        if (block.isValid) {
-          const vol = new BlockVolume2(block.location, block.location);
-          dimension.fillBlocks(vol, BlockPermutation12.resolve(downId));
+        if (triggered) {
           changesHappened = true;
+          if (rule.sound) dimension.playSound(rule.sound, block.location, { volume: 0.5, pitch: 1 });
+          if (rule.action === "transformSelf") {
+            dimension.fillBlocks(new BlockVolume2(block.location, block.location), rule.resultBlock);
+            return true;
+          }
         }
-        return changesHappened;
       }
     }
   }
   if (currentStage > 0) {
     let hasParent = false;
+    const parentTag = currentStage === 1 ? "template" : `template${currentStage - 1}`;
     for (const dir of DIRECTIONS) {
-      const neighbor = dimension.getBlock({ x: block.location.x + dir.x, y: block.location.y, z: block.location.z + dir.z });
-      if (neighbor && neighbor.hasTag(requiredParentTag)) {
+      const neighbor = getCachedBlock(dimension, block.x + dir.x, block.y, block.z + dir.z);
+      if (neighbor && (neighbor.typeId === baseId || neighbor.hasTag(parentTag))) {
         hasParent = true;
         break;
       }
     }
     if (!hasParent) {
-      if (block.isValid) {
-        const vol = new BlockVolume2(block.location, block.location);
-        dimension.fillBlocks(vol, BlockPermutation12.resolve("minecraft:air"));
-        changesHappened = true;
+      const above = getCachedBlock(dimension, block.x, block.y + 1, block.z);
+      if (!(above && (above.typeId === baseId || above.typeId === baseId + "_down"))) {
+        dimension.fillBlocks(new BlockVolume2(block.location, block.location), "minecraft:air");
+        return true;
       }
-      return changesHappened;
-    }
-  } else if (currentStage === -1) {
-    const above = dimension.getBlock({ x: block.location.x, y: block.location.y + 1, z: block.location.z });
-    if (!above) {
-      if (block.isValid) {
-        const vol = new BlockVolume2(block.location, block.location);
-        dimension.fillBlocks(vol, BlockPermutation12.resolve("minecraft:air"));
-        changesHappened = true;
-      }
-      return changesHappened;
-    }
-    const aboveId = above.typeId;
-    const validParents = [baseId, baseId + "_down", baseId + "1", baseId + "2", baseId + "3"];
-    if (!validParents.includes(aboveId)) {
-      if (block.isValid) {
-        const vol = new BlockVolume2(block.location, block.location);
-        dimension.fillBlocks(vol, BlockPermutation12.resolve("minecraft:air"));
-        changesHappened = true;
-      }
-      return changesHappened;
     }
   }
-  const below = dimension.getBlock({ x: block.location.x, y: block.location.y - 1, z: block.location.z });
+  if (currentStage <= 0) {
+    const states = block.permutation.getAllStates();
+    let changedStates = false;
+    const neighbors = [
+      { x: 1, y: 0, z: 0, state: "gaiadimension:x" },
+      { x: -1, y: 0, z: 0, state: "gaiadimension:nx" },
+      { x: 0, y: 0, z: 1, state: "gaiadimension:z" },
+      { x: 0, y: 0, z: -1, state: "gaiadimension:nz" },
+      { x: 0, y: 1, z: 0, state: "gaiadimension:top" },
+      { x: 0, y: -1, z: 0, state: "gaiadimension:bottom" }
+    ];
+    for (const nbDef of neighbors) {
+      const nb = getCachedBlock(dimension, block.x + nbDef.x, block.y + nbDef.y, block.z + nbDef.z);
+      const isFluid = nb && (nb.typeId.startsWith(baseId) || nb.isLiquid);
+      const newState = isFluid ? 1 : 0;
+      if (states[nbDef.state] !== newState) {
+        states[nbDef.state] = newState;
+        changedStates = true;
+      }
+    }
+    if (changedStates) {
+      dimension.fillBlocks(new BlockVolume2(block.location, block.location), BlockPermutation11.resolve(block.typeId, states));
+    }
+  }
+  const below = getCachedBlock(dimension, block.location.x, block.location.y - 1, block.location.z);
   let flowedDown = false;
   if (below && isReplaceable(below)) {
-    const downId = baseId + "_down";
-    const isDestructible = below.typeId !== "minecraft:air";
-    if (below.isValid) {
-      if (isDestructible) {
-        below.dimension.runCommand(`setblock ${below.location.x} ${below.location.y} ${below.location.z} air destroy`);
-      }
-      const vol = new BlockVolume2(below.location, below.location);
-      dimension.fillBlocks(vol, BlockPermutation12.resolve(downId));
-      changesHappened = true;
-    }
+    dimension.fillBlocks(new BlockVolume2(below.location, below.location), baseId + "_down");
     flowedDown = true;
-  } else if (below && (below.typeId === baseId + "_down" || below.typeId === baseId)) {
-    flowedDown = true;
-  }
-  const canSpread = currentStage === 0 || currentStage === -1 && !flowedDown || currentStage > 0 && currentStage < 3;
+    changesHappened = true;
+  } else if (below && (below.typeId === baseId + "_down" || below.typeId === baseId)) flowedDown = true;
+  const maxStages = 7;
+  const canSpread = currentStage === 0 || currentStage === -1 && !flowedDown || currentStage > 0 && currentStage < maxStages;
   if (canSpread) {
-    const nextStageId = currentStage === 0 || currentStage === -1 ? baseId + "1" : baseId + (currentStage + 1).toString();
+    const nextStageNum = currentStage <= 0 ? 1 : currentStage + 1;
+    const nextId = baseId + nextStageNum;
+    const searchDist = template?.slopeFindDistance ?? 4;
+    const slopes = findClosestSlope(dimension, block.location, searchDist, baseId);
     for (const dir of DIRECTIONS) {
-      const neighbor = dimension.getBlock({ x: block.location.x + dir.x, y: block.location.y, z: block.location.z + dir.z });
+      const neighbor = getCachedBlock(dimension, block.x + dir.x, block.y, block.z + dir.z);
       if (neighbor) {
-        let canOverwrite = false;
-        if (isReplaceable(neighbor)) {
-          canOverwrite = true;
-        } else if (neighbor.typeId.startsWith(baseId)) {
-          let neighborStage = 0;
-          if (neighbor.typeId.endsWith("_down")) neighborStage = -1;
-          else {
-            const match = neighbor.typeId.match(/(\d)$/);
-            if (match) neighborStage = parseInt(match[1]);
-            else if (neighbor.typeId === baseId) neighborStage = 0;
-            else neighborStage = -999;
-          }
-          const nextStageNum = parseInt(nextStageId.slice(-1));
-          if (neighborStage > 0 && nextStageNum < neighborStage) {
-            canOverwrite = true;
-          }
+        let shouldFlow = slopes.length === 0;
+        if (slopes.length > 0) {
+          const distToSlope = (s) => Math.abs(s.x - (block.x + dir.x)) + Math.abs(s.z - (block.z + dir.z));
+          shouldFlow = slopes.some((s) => distToSlope(s) < Math.abs(s.x - block.x) + Math.abs(s.z - block.z));
         }
-        if (canOverwrite) {
-          const isDestructible = neighbor.typeId !== "minecraft:air";
-          if (neighbor.isValid) {
-            if (isDestructible) {
-              neighbor.dimension.runCommand(`setblock ${neighbor.location.x} ${neighbor.location.y} ${neighbor.location.z} air destroy`);
-            }
-            const vol = new BlockVolume2(neighbor.location, neighbor.location);
-            let direction = "north";
-            if (dir.z === 1) direction = "south";
-            else if (dir.x === 1) direction = "east";
-            else if (dir.x === -1) direction = "west";
-            const perm = BlockPermutation12.resolve(nextStageId, { "minecraft:cardinal_direction": direction });
-            dimension.fillBlocks(vol, perm);
+        if (shouldFlow) {
+          let canOverwrite = false;
+          if (isReplaceable(neighbor)) canOverwrite = true;
+          else if (neighbor.typeId.startsWith(baseId)) {
+            const nInfo = getTypeInfo(neighbor.typeId);
+            if (nInfo.stage > 0 && nextStageNum < nInfo.stage) canOverwrite = true;
+          }
+          if (canOverwrite) {
+            const perm = BlockPermutation11.resolve(nextId, { "gaiadimension:flow_dir": dir.straight });
+            dimension.fillBlocks(new BlockVolume2(neighbor.location, neighbor.location), perm);
+            PENDING_BLOCKS.set(`${neighbor.x},${neighbor.y},${neighbor.z},${dimension.id}`, { block: neighbor, dimension, scheduledTick: system29.currentTick + (template?.spreadDelay ?? 5) });
             changesHappened = true;
           }
         }
       }
     }
   }
-  if (currentStage === 0 || currentStage === -1) {
+  if (currentStage > 0) {
+    let flowX = 0, flowZ = 0;
+    for (const dir of DIRECTIONS) {
+      const nb = getCachedBlock(dimension, block.x + dir.x, block.y, block.z + dir.z);
+      let nLevel = 999;
+      if (nb && isReplaceable(nb) && !fluidIDs.has(nb.typeId)) nLevel = 99;
+      else if (nb && nb.typeId.startsWith(baseId)) {
+        const nInfo = getTypeInfo(nb.typeId);
+        nLevel = nInfo.stage === -1 ? 0 : nInfo.stage;
+      }
+      if (nLevel < currentStage) {
+        flowX += dir.x;
+        flowZ += dir.z;
+      } else if (nLevel > currentStage) {
+        flowX -= dir.x;
+        flowZ -= dir.z;
+      }
+    }
+    flowX = flowX > 0 ? 1 : flowX < 0 ? -1 : 0;
+    flowZ = flowZ > 0 ? 1 : flowZ < 0 ? -1 : 0;
+    let dirState = 5;
+    if (flowX === 0 && flowZ === -1) dirState = 1;
+    else if (flowX === 1 && flowZ === -1) dirState = 2;
+    else if (flowX === 1 && flowZ === 0) dirState = 3;
+    else if (flowX === 1 && flowZ === 1) dirState = 4;
+    else if (flowX === 0 && flowZ === 1) dirState = 5;
+    else if (flowX === -1 && flowZ === 1) dirState = 6;
+    else if (flowX === -1 && flowZ === 0) dirState = 7;
+    else if (flowX === -1 && flowZ === -1) dirState = 8;
     const perms = block.permutation.getAllStates();
-    let changed = false;
-    const checkDir = (dx, dy, dz, stateName) => {
-      const neighbor = dimension.getBlock({ x: block.location.x + dx, y: block.location.y + dy, z: block.location.z + dz });
-      const hasTag = neighbor && neighbor.hasTag("template_full");
-      const val = hasTag ? 1 : 0;
-      if (perms[stateName] !== void 0 && perms[stateName] !== val) {
-        perms[stateName] = val;
-        changed = true;
-      }
-    };
-    checkDir(1, 0, 0, "gaiadimension:x");
-    checkDir(-1, 0, 0, "gaiadimension:nx");
-    checkDir(0, 0, 1, "gaiadimension:z");
-    checkDir(0, 0, -1, "gaiadimension:nz");
-    checkDir(0, 1, 0, "gaiadimension:top");
-    checkDir(0, -1, 0, "gaiadimension:bottom");
-    if (changed) {
-      const newPerm = BlockPermutation12.resolve(typeId, perms);
-      if (block.isValid) {
-        const vol = new BlockVolume2(block.location, block.location);
-        dimension.fillBlocks(vol, newPerm);
-        changesHappened = true;
-      }
+    if (perms["gaiadimension:flow_dir"] !== dirState) {
+      perms["gaiadimension:flow_dir"] = dirState;
+      dimension.fillBlocks(new BlockVolume2(block.location, block.location), BlockPermutation11.resolve(typeId, perms));
+      changesHappened = true;
     }
   }
   return changesHappened;
@@ -6104,239 +6082,183 @@ function processFluidBlock(block, dimension) {
 var FluidFlowComponent = class {
   constructor() {
     this.onTick = this.onTick.bind(this);
+    this.onPlayerDestroy = this.onPlayerDestroy.bind(this);
+  }
+  onPlayerDestroy(event) {
+    wakeNeighbors(event.block.location, event.dimension);
   }
   onTick(event) {
     if (PENDING_BLOCKS.size >= MAX_QUEUE_SIZE) return;
     const { block } = event;
-    const key = `${block.location.x},${block.location.y},${block.location.z},${block.dimension.id}`;
-    const lastActive = ACTIVE_FLUIDS.get(key);
-    if (!lastActive) {
-      ACTIVE_FLUIDS.set(key, system28.currentTick);
-    }
+    const key = `${block.x},${block.y},${block.z},${block.dimension.id}`;
     if (!PENDING_BLOCKS.has(key)) {
-      PENDING_BLOCKS.set(key, { block, dimension: block.dimension });
+      let delay = 5;
+      const info = getTypeInfo(block.typeId);
+      const template = idToTemplate.get(info.baseId);
+      if (template) delay = template.spreadDelay;
+      PENDING_BLOCKS.set(key, { block, dimension: block.dimension, scheduledTick: system29.currentTick + delay });
     }
   }
 };
 function wakeNeighbors(location, dimension) {
-  const locations = [
-    { x: 0, y: 1, z: 0 },
-    { x: 0, y: -1, z: 0 },
-    { x: 1, y: 0, z: 0 },
-    { x: -1, y: 0, z: 0 },
-    { x: 0, y: 0, z: 1 },
-    { x: 0, y: 0, z: -1 }
-  ];
+  const { x, y, z } = location;
+  const centerBlock = getCachedBlock(dimension, x, y, z);
+  if (!centerBlock) return;
+  let delay = 5;
+  const info = getTypeInfo(centerBlock.typeId);
+  const template = idToTemplate.get(info.baseId);
+  if (template) delay = template.spreadDelay;
+  const locations = [{ x: 0, y: 1, z: 0 }, { x: 0, y: -1, z: 0 }, { x: 1, y: 0, z: 0 }, { x: -1, y: 0, z: 0 }, { x: 0, y: 0, z: 1 }, { x: 0, y: 0, z: -1 }];
+  const scheduledTick = system29.currentTick + delay;
   for (const offset of locations) {
-    const nx = location.x + offset.x;
-    const ny = location.y + offset.y;
-    const nz = location.z + offset.z;
+    const nx = x + offset.x, ny = y + offset.y, nz = z + offset.z;
     const key = `${nx},${ny},${nz},${dimension.id}`;
-    ACTIVE_FLUIDS.set(key, system28.currentTick);
+    if (!PENDING_BLOCKS.has(key)) {
+      const neighbor = getCachedBlock(dimension, nx, ny, nz);
+      if (neighbor && neighbor.isValid && fluidIDs.has(neighbor.typeId)) PENDING_BLOCKS.set(key, { block: neighbor, dimension, scheduledTick });
+    }
   }
 }
-world26.afterEvents.playerPlaceBlock.subscribe((event) => {
-  wakeNeighbors(event.block.location, event.block.dimension);
-});
-world26.afterEvents.playerBreakBlock.subscribe((event) => {
-  wakeNeighbors(event.block.location, event.block.dimension);
-});
+world26.afterEvents.playerPlaceBlock.subscribe((e) => wakeNeighbors(e.block.location, e.block.dimension));
+world26.afterEvents.playerBreakBlock.subscribe((e) => wakeNeighbors(e.block.location, e.block.dimension));
 world26.beforeEvents.playerInteractWithBlock.subscribe((event) => {
   const { player, block, itemStack } = event;
-  if (!itemStack) return;
-  if (itemStack.typeId.startsWith("gaiadimension:") && itemStack.typeId.endsWith("_bucket")) {
-    const fluidId = itemStack.typeId.replace("_bucket", "");
-    const isFlowingVariant = (blk) => {
-      return blk.typeId === fluidId + "1" || blk.typeId === fluidId + "2" || blk.typeId === fluidId + "3" || blk.typeId === fluidId + "_down";
-    };
-    if (isFlowingVariant(block)) {
-      event.cancel = true;
-      system28.run(() => {
-        if (block.isValid) {
-          const perm = BlockPermutation12.resolve(fluidId);
-          block.setPermutation(perm);
-          wakeNeighbors(block.location, block.dimension);
-          const isHot = fluidId.includes("magma") || fluidId.includes("bismuth");
-          const sound = isHot ? "bucket.empty_lava" : "bucket.empty_water";
-          player.playSound(sound, { pitch: 1, volume: 1 });
-          if (player.getGameMode() !== GameMode8.Creative) {
-            const container = player.getComponent("minecraft:inventory")?.container;
-            if (container) {
-              const slot = player.selectedSlotIndex;
-              const currentItem = container.getItem(slot);
-              if (currentItem && currentItem.typeId === itemStack.typeId) {
-                if (currentItem.amount > 1) {
-                  currentItem.amount--;
-                  container.setItem(slot, currentItem);
-                  const emptyBucket = new ItemStack12("minecraft:bucket", 1);
-                  const remainder = container.addItem(emptyBucket);
-                  if (remainder) {
-                    player.dimension.spawnItem(remainder, player.location);
-                  }
-                } else {
-                  container.setItem(slot, new ItemStack12("minecraft:bucket", 1));
-                }
-              }
-            }
-          }
-        }
-      });
-      return;
-    }
-    const raycast = player.getBlockFromViewDirection({ maxDistance: 10 });
-    if (!raycast) return;
-    const { face } = raycast;
-    let targetLoc = { x: block.location.x, y: block.location.y, z: block.location.z };
-    switch (face) {
-      case "Up":
-        targetLoc.y += 1;
-        break;
-      case "Down":
-        targetLoc.y -= 1;
-        break;
-      case "North":
-        targetLoc.z -= 1;
-        break;
-      case "South":
-        targetLoc.z += 1;
-        break;
-      case "West":
-        targetLoc.x -= 1;
-        break;
-      case "East":
-        targetLoc.x += 1;
-        break;
-    }
-    const dimension = player.dimension;
-    const targetBlock = dimension.getBlock(targetLoc);
-    if (targetBlock && (targetBlock.isAir || isReplaceable(targetBlock) || isFlowingVariant(targetBlock))) {
-      if (targetBlock.typeId === fluidId) {
-        event.cancel = true;
-        system28.run(() => {
-          targetBlock.setType("minecraft:air");
-          wakeNeighbors(targetBlock.location, dimension);
-        });
-        return;
-      }
-      event.cancel = true;
-      system28.run(() => {
-        if (targetBlock.isValid) {
-          const perm = BlockPermutation12.resolve(fluidId);
-          targetBlock.setPermutation(perm);
-          wakeNeighbors(targetBlock.location, dimension);
-          const isHot = fluidId.includes("magma") || fluidId.includes("bismuth");
-          const sound = isHot ? "bucket.empty_lava" : "bucket.empty_water";
-          player.playSound(sound, { pitch: 1, volume: 1 });
-          if (player.getGameMode() !== GameMode8.Creative) {
-            const container = player.getComponent("minecraft:inventory")?.container;
-            if (container) {
-              const slot = player.selectedSlotIndex;
-              const currentItem = container.getItem(slot);
-              if (currentItem && currentItem.typeId === itemStack.typeId) {
-                if (currentItem.amount > 1) {
-                  currentItem.amount--;
-                  container.setItem(slot, currentItem);
-                  const emptyBucket = new ItemStack12("minecraft:bucket", 1);
-                  const remainder = container.addItem(emptyBucket);
-                  if (remainder) {
-                    player.dimension.spawnItem(remainder, player.location);
-                  }
-                } else {
-                  container.setItem(slot, new ItemStack12("minecraft:bucket", 1));
-                }
-              }
-            }
-          }
-        }
-      });
-    }
-    return;
-  }
-  if (fluidIDs.has(block.typeId) && itemStack.typeId === "minecraft:bucket") {
-    const typeId = block.typeId;
-    const isFlowing = typeId.endsWith("_down") || /[1-3]$/.test(typeId);
-    if (!isFlowing) {
-      let bucketId = typeId + "_bucket";
-      event.cancel = true;
-      system28.run(() => {
-        if (player.getGameMode() !== GameMode8.Creative) {
-          const container = player.getComponent("minecraft:inventory")?.container;
-          if (container) {
-            const slot = player.selectedSlotIndex;
-            const currentItem = container.getItem(slot);
-            if (currentItem && currentItem.typeId === "minecraft:bucket") {
-              const filledBucket = new ItemStack12(bucketId, 1);
-              if (currentItem.amount > 1) {
-                currentItem.amount -= 1;
-                container.setItem(slot, currentItem);
-                const remainder = container.addItem(filledBucket);
-                if (remainder && remainder.amount > 0) {
-                  player.dimension.spawnItem(remainder, player.location);
-                }
-              } else {
-                container.setItem(slot, filledBucket);
-              }
-            }
-          }
-        }
-        const isHot = typeId.includes("magma") || typeId.includes("bismuth");
-        const sound = isHot ? "bucket.fill_lava" : "bucket.fill_water";
-        player.dimension.playSound(sound, block.location, { pitch: 1, volume: 1 });
-        block.setType("minecraft:air");
-        wakeNeighbors(block.location, block.dimension);
-      });
-      return;
-    }
-  }
-  if (fluidIDs.has(block.typeId)) {
-    if (itemStack.typeId === "minecraft:bucket" || itemStack.typeId.endsWith("_bucket")) return;
+  if (!itemStack || !itemStack.typeId.startsWith("gaiadimension:") || !itemStack.typeId.endsWith("_bucket")) return;
+  const fluidId = itemStack.typeId.replace("_bucket", "");
+  const isFlowingVariant = (blk) => blk.typeId.startsWith(fluidId) && (blk.typeId.endsWith("_down") || /\d+$/.test(blk.typeId));
+  if (isFlowingVariant(block)) {
     event.cancel = true;
-    system28.run(() => {
-      if (block.isValid && itemStack) {
-        try {
-          const blockPerm = BlockPermutation12.resolve(itemStack.typeId);
-          block.setPermutation(blockPerm);
-          wakeNeighbors(block.location, block.dimension);
-          player.playSound("stone.dig", { location: block.location });
-          if (player.getGameMode() !== GameMode8.Creative) {
-            const container = player.getComponent("minecraft:inventory")?.container;
-            if (container) {
-              const slot = player.selectedSlotIndex;
-              if (itemStack.amount > 1) {
-                itemStack.amount--;
-                container.setItem(slot, itemStack);
-              } else {
-                container.setItem(slot, void 0);
-              }
+    system29.run(() => {
+      if (block.isValid) {
+        block.setPermutation(BlockPermutation11.resolve(fluidId));
+        wakeNeighbors(block.location, block.dimension);
+        const isHot = fluidId.includes("magma") || fluidId.includes("bismuth");
+        player.playSound(isHot ? "bucket.empty_lava" : "bucket.empty_water", { pitch: 1, volume: 1 });
+        if (player.getGameMode() !== GameMode8.Creative) {
+          const container2 = player.getComponent("inventory")?.container;
+          if (container2) {
+            const slot = player.selectedSlotIndex;
+            const currentItem = container2.getItem(slot);
+            if (currentItem && currentItem.typeId === itemStack.typeId) {
+              if (currentItem.amount > 1) {
+                currentItem.amount--;
+                container2.setItem(slot, currentItem);
+                const emptyBucket = new ItemStack12("minecraft:bucket", 1);
+                const remainder = container2.addItem(emptyBucket);
+                if (remainder) player.dimension.spawnItem(remainder, player.location);
+              } else container2.setItem(slot, new ItemStack12("minecraft:bucket", 1));
             }
           }
-        } catch (e) {
         }
       }
     });
+    return;
   }
 });
-world26.beforeEvents.playerBreakBlock.subscribe((event) => {
-  const { player, block, itemStack } = event;
-  if (fluidIDs.has(block.typeId)) {
-    event.cancel = true;
+world26.afterEvents.playerInteractWithEntity.subscribe((event) => {
+  const { player, target, itemStack } = event;
+  if (target.typeId !== "gaiadimension:fluid_interaction_dummy" || !(player instanceof Player15)) return;
+  const dimension = player.dimension;
+  const location = { x: Math.floor(target.location.x), y: Math.floor(target.location.y), z: Math.floor(target.location.z) };
+  const fluidBlock = getCachedBlock(dimension, location.x, location.y, location.z);
+  if (!fluidBlock || !fluidIDs.has(fluidBlock.typeId)) return;
+  if (itemStack?.typeId === "minecraft:bucket") {
+    const info = getTypeInfo(fluidBlock.typeId);
+    if (info.stage === 0) {
+      const bucketId = info.baseId + "_bucket", filledBucket = new ItemStack12(bucketId, 1);
+      const inventory = player.getComponent("inventory")?.container;
+      if (inventory) {
+        const slot = player.selectedSlotIndex;
+        if (itemStack.amount > 1) {
+          itemStack.amount--;
+          inventory.setItem(slot, itemStack);
+          const remainder = inventory.addItem(filledBucket);
+          if (remainder) dimension.spawnItem(remainder, player.location);
+        } else inventory.setItem(slot, filledBucket);
+      }
+      const isHot = fluidBlock.typeId.includes("magma") || fluidBlock.typeId.includes("bismuth");
+      dimension.playSound(isHot ? "bucket.fill_lava" : "bucket.fill_water", location);
+      dimension.fillBlocks(new BlockVolume2(location, location), "minecraft:air");
+      wakeNeighbors(location, dimension);
+    }
+    return;
+  }
+  if (itemStack) {
+    const fluidId = itemStack.typeId.replace("_bucket", "");
+    if (fluidIDs.has(fluidId)) {
+      const viewVec = player.getViewDirection();
+      const absX = Math.abs(viewVec.x), absY = Math.abs(viewVec.y), absZ = Math.abs(viewVec.z);
+      let offset = { x: 0, y: 0, z: 0 };
+      if (absY > absX && absY > absZ) offset.y = viewVec.y > 0 ? 1 : -1;
+      else if (absX > absZ) offset.x = viewVec.x > 0 ? 1 : -1;
+      else offset.z = viewVec.z > 0 ? 1 : -1;
+      const placeLoc = { x: location.x + offset.x, y: location.y + offset.y, z: location.z + offset.z };
+      const targetBlock = dimension.getBlock(placeLoc);
+      if (targetBlock && (targetBlock.isAir || isReplaceable(targetBlock))) {
+        dimension.fillBlocks(new BlockVolume2(placeLoc, placeLoc), fluidId);
+        wakeNeighbors(placeLoc, dimension);
+        const isHot = fluidId.includes("magma") || fluidId.includes("bismuth");
+        player.playSound(isHot ? "bucket.empty_lava" : "bucket.empty_water");
+        if (player.getGameMode() !== GameMode8.Creative) {
+          const inventory = player.getComponent("inventory")?.container;
+          if (inventory) {
+            const slot = player.selectedSlotIndex;
+            if (itemStack.amount > 1) {
+              itemStack.amount--;
+              inventory.setItem(slot, itemStack);
+              const emptyBucket = new ItemStack12("minecraft:bucket", 1);
+              const remainder = container.addItem(emptyBucket);
+              if (remainder) dimension.spawnItem(remainder, player.location);
+            } else inventory.setItem(slot, new ItemStack12("minecraft:bucket", 1));
+          }
+        }
+      }
+    } else {
+      try {
+        const perm = BlockPermutation11.resolve(itemStack.typeId);
+        if (perm) {
+          dimension.fillBlocks(new BlockVolume2(location, location), perm);
+          player.playSound("stone.dig", { location });
+          if (player.getGameMode() !== GameMode8.Creative) {
+            const inventory = player.getComponent("inventory")?.container;
+            if (inventory) {
+              const slot = player.selectedSlotIndex;
+              if (itemStack.amount > 1) {
+                itemStack.amount--;
+                inventory.setItem(slot, itemStack);
+              } else inventory.setItem(slot, void 0);
+            }
+          }
+          wakeNeighbors(location, dimension);
+        }
+      } catch {
+      }
+    }
   }
 });
-system28.runInterval(() => {
+system29.runInterval(() => {
   for (const player of world26.getAllPlayers()) {
-    const container = player.getComponent("minecraft:inventory")?.container;
-    if (!container) continue;
-    for (let i = 0; i < container.size; i++) {
-      const item = container.getItem(i);
+    const container2 = player.getComponent("inventory")?.container;
+    if (!container2) continue;
+    for (let i = 0; i < container2.size; i++) {
+      const item = container2.getItem(i);
       if (!item) continue;
+      if (item.typeId === "gaiadimension:tar_cauldron") {
+        try {
+          container2.setItem(i, new ItemStack12("minecraft:cauldron", item.amount));
+        } catch (e) {
+        }
+        continue;
+      }
       if (fluidIDs.has(item.typeId)) {
         let baseId = item.typeId;
         if (baseId.endsWith("_down")) baseId = baseId.slice(0, -5);
-        else if (/[1-3]$/.test(baseId)) baseId = baseId.slice(0, -1);
-        const bucketId = baseId + "_bucket";
+        else {
+          const m = baseId.match(/(\d+)$/);
+          if (m) baseId = baseId.slice(0, -m[1].length);
+        }
         try {
-          const bucket = new ItemStack12(bucketId, item.amount);
-          container.setItem(i, bucket);
+          container2.setItem(i, new ItemStack12(baseId + "_bucket", item.amount));
         } catch (e) {
         }
       }
@@ -6346,78 +6268,11 @@ system28.runInterval(() => {
 function registerFluidComponent({ blockComponentRegistry }) {
   blockComponentRegistry.registerCustomComponent("gaiadimension:fluid_flow", new FluidFlowComponent());
 }
-function runBoatLogic() {
-  const players = world26.getPlayers();
-  if (players.length === 0) return;
-  const activeDimensions = new Set(players.map((p) => p.dimension));
-  for (const dimension of activeDimensions) {
-    const boats = dimension.getEntities({ families: ["boat"] });
-    for (const boat of boats) {
-      processBoat(boat, dimension);
-    }
-  }
-}
-function processBoat(boat, dimension) {
-  if (!boat.isValid) return;
-  const location = boat.location;
-  const blockAt = dimension.getBlock(location);
-  const blockBelow = dimension.getBlock({ x: location.x, y: location.y - 0.1, z: location.z });
-  const isMineralWater = blockAt && blockAt.typeId.includes("mineral_water") || blockBelow && blockBelow.typeId.includes("mineral_water");
-  if (isMineralWater) {
-    if (blockAt && blockAt.typeId.includes("mineral_water")) {
-      boat.applyImpulse({ x: 0, y: 0.2, z: 0 });
-    }
-    const rotation = boat.getRotation().y;
-    const rad = (rotation + 90) * (Math.PI / 180);
-    const dirX = -Math.sin(rotation * (Math.PI / 180));
-    const dirZ = Math.cos(rotation * (Math.PI / 180));
-    const vel = boat.getVelocity();
-    const speed = Math.sqrt(vel.x * vel.x + vel.z * vel.z);
-    if (speed > 0.01) {
-      boat.applyImpulse({ x: dirX * 0.15, y: 0, z: dirZ * 0.15 });
-    }
-    let waterTopY = Math.floor(location.y);
-    const bAt = dimension.getBlock({ x: Math.floor(location.x), y: Math.floor(location.y), z: Math.floor(location.z) });
-    if (bAt && bAt.typeId.includes("mineral_water")) {
-      waterTopY = Math.floor(location.y) + 1;
-    } else if (blockBelow && blockBelow.typeId.includes("mineral_water")) {
-      waterTopY = Math.floor(location.y);
-    }
-    const holders = dimension.getEntities({
-      type: "gaiadimension:boat_holder",
-      location,
-      maxDistance: 2
-    });
-    let holder = holders.length > 0 ? holders[0] : null;
-    const targetHolderY = waterTopY - 0.55;
-    if (!holder) {
-      holder = dimension.spawnEntity("gaiadimension:boat_holder", { x: location.x, y: targetHolderY, z: location.z });
-    }
-    try {
-      if (holder && holder.isValid) {
-        holder.teleport(
-          { x: location.x, y: targetHolderY, z: location.z },
-          { dimension, rotation: { x: 0, y: boat.getRotation().y } }
-        );
-      }
-    } catch (e) {
-    }
-  } else {
-    const holders = dimension.getEntities({
-      type: "gaiadimension:boat_holder",
-      location,
-      maxDistance: 2
-    });
-    for (const h of holders) {
-      if (h.isValid) h.remove();
-    }
-  }
-}
 
 // src/main/bedrock/ts/durability.ts
-import { system as system29 } from "@minecraft/server";
+import { system as system30 } from "@minecraft/server";
 function registerCustomTool() {
-  system29.beforeEvents.startup.subscribe((event) => {
+  system30.beforeEvents.startup.subscribe((event) => {
     event.itemComponentRegistry.registerCustomComponent("luminiae:durability", {
       onUseOn(e, params) {
         const { source, itemStack, block } = e;
@@ -6458,7 +6313,7 @@ function applyCustomDamage(player, itemStack, damageAmount) {
 }
 
 // src/main/bedrock/ts/systems/Commands.ts
-import { Player as Player15, system as system30, CommandPermissionLevel, CustomCommandParamType } from "@minecraft/server";
+import { Player as Player17, system as system31, CommandPermissionLevel, CustomCommandParamType } from "@minecraft/server";
 import { ModalFormData } from "@minecraft/server-ui";
 
 // src/main/bedrock/ts/Vec3.ts
@@ -6750,8 +6605,8 @@ function registerGaiaCommands(registry) {
     ]
   }, (origin, p1, p2, p3, p4, p5, p6, p7, p8) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player15)) return;
-    system30.run(() => {
+    if (!(player instanceof Player17)) return;
+    system31.run(() => {
       try {
         const expression = [p1, p2, p3, p4, p5, p6, p7, p8].filter((p) => p !== void 0).join(" ");
         if (!expression) {
@@ -6810,8 +6665,8 @@ function registerGaiaCommands(registry) {
     ]
   }, (origin, p1, p2, p3, p4, p5, p6, p7, p8) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player15)) return;
-    system30.run(() => {
+    if (!(player instanceof Player17)) return;
+    system31.run(() => {
       try {
         const expression = [p1, p2, p3, p4, p5, p6, p7, p8].filter((p) => p !== void 0).join(" ");
         if (!expression) {
@@ -6865,8 +6720,8 @@ function registerGaiaCommands(registry) {
     ]
   }, (origin, op, target, path, v1, v2, v3, v4, v5) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player15)) return;
-    system30.run(() => {
+    if (!(player instanceof Player17)) return;
+    system31.run(() => {
       try {
         const operation = op ? op.toLowerCase() : "get";
         const targetType = target ? target.toLowerCase() : "self";
@@ -6971,8 +6826,8 @@ function registerGaiaCommands(registry) {
     permissionLevel: CommandPermissionLevel.Any
   }, (origin) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player15)) return;
-    system30.run(() => {
+    if (!(player instanceof Player17)) return;
+    system31.run(() => {
       player.sendMessage("\xA78\xA7l========================================");
       player.sendMessage("\xA76\xA7lGAIA DIMENSION BEDROCK PORT");
       player.sendMessage("\xA77Basked under an eternal sun, a world preserved in time, a land sprouting with crystals and minerals, the ground seeping a mysterious energy.");
@@ -6989,8 +6844,8 @@ function registerGaiaCommands(registry) {
     permissionLevel: CommandPermissionLevel.Any
   }, (origin) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player15)) return;
-    system30.run(() => {
+    if (!(player instanceof Player17)) return;
+    system31.run(() => {
       const inGaia = DimensionSystem.isInGaia(player);
       const dimId = player.dimension.id;
       let dimensionName = "\xA77" + dimId;
@@ -7013,8 +6868,8 @@ function registerGaiaCommands(registry) {
     permissionLevel: CommandPermissionLevel.Any
   }, (origin) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player15)) return;
-    system30.run(() => {
+    if (!(player instanceof Player17)) return;
+    system31.run(() => {
       const inGaia = DimensionSystem.isInGaia(player);
       const dimId = player.dimension.id;
       let dimensionName = "\xA77" + dimId;
@@ -7027,10 +6882,9 @@ function registerGaiaCommands(registry) {
       player.sendMessage("\xA77Location: " + dimensionName);
       player.sendMessage("\xA77Synchronization: " + (inGaia ? "\xA7aStable" : "\xA7cExternal"));
       let coords = player.location;
-      if (inGaia && GaiaDimension) {
+      if (inGaia) {
         const biome = DimensionSystem.getBiome(player);
         player.sendMessage("\xA77Current Biome: \xA7e" + formatName(biome));
-        coords = GaiaDimension.offset(player.location);
       }
       player.sendMessage("\xA77Coordinates: \xA7f" + Math.floor(coords.x) + ", " + Math.floor(coords.y) + ", " + Math.floor(coords.z));
       player.sendMessage("\xA78\xA7l========================================");
@@ -7043,8 +6897,8 @@ function registerGaiaCommands(registry) {
     permissionLevel: CommandPermissionLevel.Any
   }, (origin) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player15)) return;
-    system30.run(() => {
+    if (!(player instanceof Player17)) return;
+    system31.run(() => {
       player.sendMessage("\xA7d[Gaia Creator] \xA77She's the primordial architect who birthed the original Java realm. If you see crystals, thank her. If you see bugs, it's definitely the porter's fault.");
       player.sendMessage("\xA7b\u{1F517} https://www.curseforge.com/minecraft/mc-mods/gaia-dimension");
     });
@@ -7056,8 +6910,8 @@ function registerGaiaCommands(registry) {
     permissionLevel: CommandPermissionLevel.GameDirectors
   }, (origin) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player15)) return;
-    system30.run(() => {
+    if (!(player instanceof Player17)) return;
+    system31.run(() => {
       const currentConfig = ModConfig.getAll();
       const form = new ModalFormData();
       form.title("\xA76Gaia Settings");
@@ -7099,8 +6953,8 @@ function registerGaiaCommands(registry) {
     permissionLevel: CommandPermissionLevel.Any
   }, (origin) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player15)) return;
-    system30.run(() => {
+    if (!(player instanceof Player17)) return;
+    system31.run(() => {
       player.sendMessage("\xA76[The Porter] \xA77Behold the one who dragged this entire dimension into Bedrock by its crystal ears.");
       player.sendMessage("\xA7eIt only took 4 years, three gray hairs, and a questionable amount of sanity. Don't ask why it took so long... those gray hairs are just Albite dust, I promise.");
     });
@@ -7112,7 +6966,7 @@ function formatName(id) {
 }
 
 // src/main/bedrock/ts/systems/SetBiomeCommand.ts
-import { Player as Player16, system as system31, CommandPermissionLevel as CommandPermissionLevel2, CustomCommandParamType as CustomCommandParamType2 } from "@minecraft/server";
+import { Player as Player18, system as system32, CommandPermissionLevel as CommandPermissionLevel2, CustomCommandParamType as CustomCommandParamType2 } from "@minecraft/server";
 
 // src/main/bedrock/ts/config/biome_visuals.ts
 var BIOME_VISUALS = {
@@ -7303,7 +7157,7 @@ function registerSetBiomeCommand(registry) {
     ]
   }, (origin, biome, radiusStr, shape, epic) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player16)) return;
+    if (!(player instanceof Player18)) return;
     if (!biome || !radiusStr) {
       player.sendMessage('\xA7cUsage: /gaiadimension:setbiome "biome" "radius" ["shape"] ["epic"]');
       return { status: 0 };
@@ -7366,7 +7220,7 @@ function registerSetBiomeCommand(registry) {
       }
     };
     if (!isEpic) {
-      system31.run(() => {
+      system32.run(() => {
         for (let x = -radius; x <= radius; x++) {
           for (let z = -radius; z <= radius; z++) {
             const dist = Math.sqrt(x * x + z * z);
@@ -7379,7 +7233,7 @@ function registerSetBiomeCommand(registry) {
       });
     } else {
       let currentRadius = 0;
-      const interval = system31.runInterval(() => {
+      const interval = system32.runInterval(() => {
         const r = currentRadius;
         for (let theta = 0; theta < 360; theta += 2) {
           const rad = theta * Math.PI / 180;
@@ -7394,7 +7248,7 @@ function registerSetBiomeCommand(registry) {
         }
         currentRadius++;
         if (currentRadius > radius) {
-          system31.clearRun(interval);
+          system32.clearRun(interval);
           dim.playSound("ui.toast.challenge_complete", center);
           player.sendMessage("\xA76[Gaia] \xA7aTransformation Complete.");
         }
@@ -7405,12 +7259,12 @@ function registerSetBiomeCommand(registry) {
 }
 
 // src/main/bedrock/ts/items/FireStarter.ts
-import { Player as Player17 } from "@minecraft/server";
+import { Player as Player19 } from "@minecraft/server";
 function registerFireStarterComponent({ itemComponentRegistry }) {
   itemComponentRegistry.registerCustomComponent("gaiadimension:fire_starter", {
     onUseOn: (event) => {
       const { source: player, block, blockFace, itemStack } = event;
-      if (!(player instanceof Player17)) return;
+      if (!(player instanceof Player19)) return;
       const targetLocation = block.location;
       const placeLocation = {
         x: targetLocation.x + (blockFace === "East" ? 1 : blockFace === "West" ? -1 : 0),
@@ -7422,8 +7276,18 @@ function registerFireStarterComponent({ itemComponentRegistry }) {
       if (targetBlock.typeId === "gaiadimension:glittering_fire") return;
       if (block.typeId === "gaiadimension:glittering_fire" && blockFace === "Up") return;
       if (targetBlock.isAir || targetBlock.typeId === "minecraft:tallgrass" || targetBlock.typeId === "minecraft:yellow_flower" || targetBlock.typeId === "minecraft:red_flower") {
+        const dimension = player.dimension;
+        if (dimension.id === "minecraft:overworld" && ModConfig.portalBiomeRestriction && !ModConfig.allowAllBiomes) {
+          const biome = dimension.getBiome(placeLocation);
+          const hotBiomes = ModConfig.hotBiomes;
+          if (!hotBiomes.includes(biome.id)) {
+            dimension.playSound("random.fizz", placeLocation);
+            return;
+          }
+        }
         targetBlock.setType("gaiadimension:glittering_fire");
-        player.dimension.playSound("fire.ignite", placeLocation);
+        dimension.playSound("fire.ignite", placeLocation);
+        PortalManager.tryIgnite(targetBlock);
         if (player.getGameMode() !== "creative") {
           const durability = itemStack.getComponent("minecraft:durability");
           if (durability) {
@@ -7444,12 +7308,12 @@ function registerFireStarterComponent({ itemComponentRegistry }) {
 }
 
 // src/main/bedrock/ts/items/MagicStaff.ts
-import { Player as Player18 } from "@minecraft/server";
+import { Player as Player20 } from "@minecraft/server";
 function registerMagicStaffComponent({ itemComponentRegistry }) {
   itemComponentRegistry.registerCustomComponent("gaiadimension:magic_staff", {
     onUse: (event) => {
       const { source: player, itemStack } = event;
-      if (!(player instanceof Player18)) return;
+      if (!(player instanceof Player20)) return;
       const idParts = itemStack.typeId.split("_");
       if (idParts.length < 4) return;
       const elementStr = idParts[2];
@@ -7507,7 +7371,7 @@ function spawnProjectile(player, location, direction, element, behavior) {
 }
 
 // src/main/bedrock/ts/systems/MagicStaffBehaviors.ts
-import { world as world29, system as system32, MolangVariableMap } from "@minecraft/server";
+import { world as world29, system as system33, MolangVariableMap } from "@minecraft/server";
 var projectileCache = /* @__PURE__ */ new Map();
 var activeProjectiles = /* @__PURE__ */ new Set();
 var ELEMENT_COLORS = {
@@ -7525,7 +7389,7 @@ function initializeMagicStaffBehaviors() {
       activeProjectiles.add(event.entity.id);
     }
   });
-  system32.runInterval(() => {
+  system33.runInterval(() => {
     if (activeProjectiles.size === 0) return;
     for (const id of activeProjectiles) {
       const entity = world29.getEntity(id);
@@ -7548,7 +7412,7 @@ function initializeMagicStaffBehaviors() {
         activeProjectiles.delete(id);
       }
     }
-    if (system32.currentTick % 200 === 0) {
+    if (system33.currentTick % 200 === 0) {
       for (const id of projectileCache.keys()) {
         if (!activeProjectiles.has(id) && !world29.getEntity(id)) {
           projectileCache.delete(id);
@@ -7646,117 +7510,8 @@ function handleHit(projectile, data, location, face) {
   }
 }
 
-// src/main/bedrock/ts/systems/Cleaner.ts
-import { world as world30, system as system33, BlockVolume as BlockVolume3, BlockPermutation as BlockPermutation14 } from "@minecraft/server";
-var CLUTTER_TAGS = [
-  "grass",
-  "plant",
-  "leaves",
-  "log",
-  "wood",
-  "acacia",
-  "birch",
-  "dark_oak",
-  "jungle",
-  "oak",
-  "spruce",
-  "minecraft:is_shears_item_destructible",
-  "minecraft:is_hoe_item_destructible",
-  "minecraft:crop",
-  "flower",
-  "bush",
-  "vine",
-  "mushroom",
-  "coral",
-  "waterlily",
-  "reeds"
-];
-var CLUTTER_TYPES = ["minecraft:deadbush", "minecraft:snow_layer", "minecraft:sugar_cane", "minecraft:bamboo", "minecraft:kelp", "minecraft:glow_lichen"];
-var FILTER = {
-  blockFilter: {
-    includeTags: CLUTTER_TAGS,
-    includeTypes: CLUTTER_TYPES
-  },
-  ignoreChunkBoundErrors: true
-};
-var AIR;
-var DIM;
-var SHARED_VOL;
-var QUEUE = [];
-var CACHE = /* @__PURE__ */ new Set();
-var QUEUED = /* @__PURE__ */ new Set();
-system33.run(() => {
-  try {
-    AIR = BlockPermutation14.resolve("minecraft:air");
-    DIM = world30.getDimension("minecraft:overworld");
-    SHARED_VOL = new BlockVolume3({ x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 0 });
-  } catch (e) {
-  }
-});
-system33.runInterval(() => {
-  if (QUEUE.length < 2) return;
-  const players = world30.getAllPlayers().filter((p) => p.dimension.id === "minecraft:overworld");
-  if (players.length === 0) return;
-  const pLoc = players[0].location;
-  QUEUE.sort((a, b) => {
-    const dA = Math.abs(a.x - pLoc.x) + Math.abs(a.z - pLoc.z);
-    const dB = Math.abs(b.x - pLoc.x) + Math.abs(b.z - pLoc.z);
-    return dA - dB;
-  });
-}, 100);
-system33.runInterval(() => {
-  if (QUEUE.length === 0 || !SHARED_VOL || !DIM || !AIR) return;
-  const t = QUEUE[0];
-  const players = world30.getAllPlayers();
-  const isAnyPlayerNear = players.some((p) => {
-    if (p.dimension.id !== "minecraft:overworld") return false;
-    const loc = p.location;
-    return Math.abs(loc.x - (t.x + 8)) < 128 && Math.abs(loc.z - (t.z + 8)) < 128;
-  });
-  if (!isAnyPlayerNear) {
-    const item = QUEUE.shift();
-    if (item) QUEUE.push(item);
-    return;
-  }
-  const yMin = 85 + t.s * 32;
-  const yMax = Math.min(yMin + 31, 200);
-  SHARED_VOL.from = { x: t.x, y: yMin, z: t.z };
-  SHARED_VOL.to = { x: t.x + 15, y: yMax, z: t.z + 15 };
-  try {
-    DIM.fillBlocks(SHARED_VOL, AIR, FILTER);
-    t.s++;
-    if (yMax >= 200) {
-      CACHE.add(t.key);
-      QUEUED.delete(t.key);
-      QUEUE.shift();
-    }
-  } catch (e) {
-    const item = QUEUE.shift();
-    if (item) QUEUE.push(item);
-  }
-}, 1);
-function registerCleanerComponent({ blockComponentRegistry }) {
-  blockComponentRegistry.registerCustomComponent("gaiadimension:overworld_cleaner", {
-    onTick({ block }) {
-      const { x, z } = block.location;
-      const cx = Math.floor(x) >> 4 << 4;
-      const cz = Math.floor(z) >> 4 << 4;
-      const key = cx * 1e6 + cz;
-      if (CACHE.has(key)) {
-        if (AIR) block.setPermutation(AIR);
-        return;
-      }
-      if (QUEUED.has(key)) return;
-      if (GaiaDimension && GaiaDimension.isInDimension({ x, z })) {
-        QUEUED.add(key);
-        QUEUE.push({ x: cx, z: cz, s: 0, key });
-      }
-    }
-  });
-}
-
 // src/main/bedrock/ts/blocks/GlitterGrassSync.ts
-import { world as world31, system as system34, ItemStack as ItemStack14 } from "@minecraft/server";
+import { world as world30, system as system34, ItemStack as ItemStack14 } from "@minecraft/server";
 var GLITTER_GRASS_TYPES = [
   "gaiadimension:green_glitter_grass",
   "gaiadimension:pink_glitter_grass",
@@ -7790,7 +7545,7 @@ function syncInventory(player) {
   }
 }
 function initializeGlitterGrassSync() {
-  world31.afterEvents.playerPlaceBlock.subscribe((event) => {
+  world30.afterEvents.playerPlaceBlock.subscribe((event) => {
     const { block } = event;
     if (GLITTER_GRASS_TYPES.includes(block.typeId)) {
       const biome = DimensionSystem.getBiomeAt(block.dimension, block.location);
@@ -7805,13 +7560,13 @@ function initializeGlitterGrassSync() {
     }
   });
   system34.runInterval(() => {
-    for (const player of world31.getAllPlayers()) {
+    for (const player of world30.getAllPlayers()) {
       if (DimensionSystem.isInGaia(player)) {
         syncInventory(player);
       }
     }
   }, 40);
-  world31.afterEvents.playerInventoryItemChange.subscribe((event) => {
+  world30.afterEvents.playerInventoryItemChange.subscribe((event) => {
     const { player } = event;
     if (DimensionSystem.isInGaia(player)) {
       syncInventory(player);
@@ -7819,211 +7574,8 @@ function initializeGlitterGrassSync() {
   });
 }
 
-// src/main/bedrock/ts/world/CoordinateDisplay.ts
-import { world as world32, system as system35 } from "@minecraft/server";
-function updateAllCoordinateDisplays() {
-  const showCoords = world32.gameRules.showCoordinates;
-  for (const player of world32.getAllPlayers()) {
-    if (!player.isValid) continue;
-    if (!showCoords) {
-      if (player.hasTag("gaiadimension:showing_coords")) {
-        player.onScreenDisplay.setActionBar("");
-        player.removeTag("gaiadimension:showing_coords");
-      }
-      continue;
-    }
-    const location = player.location;
-    const currentDimId = player.dimension.id;
-    const modDim = ModDimension.getAll().find(
-      (dim) => dim.inheritance.id === currentDimId && dim.isInDimension(location)
-    );
-    let x, y, z;
-    if (modDim) {
-      const offset = modDim.offset(location);
-      x = Math.floor(offset.x);
-      y = Math.floor(offset.y);
-      z = Math.floor(offset.z);
-    } else {
-      x = Math.floor(location.x);
-      y = Math.floor(location.y);
-      z = Math.floor(location.z);
-    }
-    player.onScreenDisplay.setActionBar(`Position: ${x}, ${y}, ${z}`);
-    if (!player.hasTag("gaiadimension:showing_coords")) player.addTag("gaiadimension:showing_coords");
-  }
-}
-system35.runInterval(() => {
-  try {
-    updateAllCoordinateDisplays();
-  } catch (e) {
-  }
-}, 1);
-
-// src/main/bedrock/ts/world/Events.ts
-import { world as world33, system as system36 } from "@minecraft/server";
-var EventHandler = class {
-  handlers = [];
-  constructor() {
-    this.handlers = [];
-  }
-  subscribe(callback) {
-    this.handlers.push(callback);
-  }
-  trigger(data) {
-    for (const handler of this.handlers) {
-      try {
-        handler(data);
-      } catch (e) {
-      }
-    }
-  }
-};
-var playerChangeBiome = new EventHandler();
-var playerChangeBlock = new EventHandler();
-var lastPlayerPositions = /* @__PURE__ */ new Map();
-system36.runInterval(() => {
-  for (const player of world33.getAllPlayers()) {
-    if (!player.isValid) {
-      lastPlayerPositions.delete(player.id);
-      continue;
-    }
-    const currentPos = {
-      x: Math.floor(player.location.x),
-      y: Math.floor(player.location.y),
-      z: Math.floor(player.location.z),
-      dimension: player.dimension.id
-    };
-    const lastPos = lastPlayerPositions.get(player.id);
-    if (!lastPos || lastPos.x !== currentPos.x || lastPos.y !== currentPos.y || lastPos.z !== currentPos.z || lastPos.dimension !== currentPos.dimension) {
-      playerChangeBlock.trigger({ player });
-      lastPlayerPositions.set(player.id, currentPos);
-    }
-  }
-}, 5);
-
-// src/main/bedrock/ts/world/Biome.ts
-var BiomeSystem = class {
-  /**
-   * The biome each player is in
-   */
-  static #playerBiomes = {};
-  /**
-   * Checks and updates player biome
-   * @param {Player} player Player to update biome of
-   */
-  static updateBiome(player) {
-    const biome = DimensionSystem.getBiome(player);
-    if (biome) ModConfig.registerDiscoveredBiome(biome);
-    if (DimensionSystem.isInGaia(player)) {
-      if (this.#playerBiomes[player.id] !== biome) {
-        playerChangeBiome.trigger({ player, biome });
-      }
-    }
-    this.#playerBiomes[player.id] = biome;
-  }
-  /**
-   * Gets the biome a player is in
-   * @param {Player} player Player to get biome of
-   * @returns {string} Biome player is in
-   */
-  static getBiome(player) {
-    return this.#playerBiomes[player.id];
-  }
-};
-playerChangeBlock.subscribe((eventData) => {
-  BiomeSystem.updateBiome(eventData.player);
-});
-
-// src/main/bedrock/ts/world/Fog.ts
-var FogSystem = class {
-  /**
-   * The fogs the player has applied
-   */
-  static playerFogs = {};
-  /**
-   * Cache active biome to prevent command spam
-   */
-  static activeBiomes = {};
-  /**
-   * Track if the base Gaia fog is applied
-   */
-  static baseFogApplied = {};
-  /**
-   * Updates the fogs applied to the player
-   * @param {Player} player Player to update fogs of
-   * @param {string|null} biome Biome to update fog to
-   */
-  static updateFog(player, biome) {
-    if (DimensionSystem.isInGaia(player)) {
-      if (!this.baseFogApplied[player.id]) {
-        try {
-          player.runCommand(`fog @s push "gaiadimension:fog_gaia" "gaia_base"`);
-          this.baseFogApplied[player.id] = true;
-        } catch (e) {
-        }
-      }
-      if (biome && this.activeBiomes[player.id] !== biome) {
-        this.setBiomeFog(player, biome);
-      }
-    } else {
-      this.clearAllFogs(player);
-    }
-  }
-  /**
-   * Removes all fogs, including the base dimension fog
-   */
-  static clearAllFogs(player) {
-    this.clearBiomeFogs(player);
-    if (this.baseFogApplied[player.id]) {
-      try {
-        player.runCommand(`fog @s remove "gaia_base"`);
-      } catch (e) {
-      }
-      this.baseFogApplied[player.id] = false;
-    }
-  }
-  /**
-   * Removes only the biome-specific fogs
-   */
-  static clearBiomeFogs(player) {
-    if (!this.playerFogs[player.id] || this.playerFogs[player.id].length === 0) return;
-    for (const biome of this.playerFogs[player.id]) {
-      try {
-        player.runCommand(`fog @s remove "${biome}"`);
-      } catch (e) {
-      }
-    }
-    this.playerFogs[player.id] = [];
-    this.activeBiomes[player.id] = null;
-  }
-  /**
-   * Sets the biome-specific fog layer
-   */
-  static setBiomeFog(player, biome) {
-    this.clearBiomeFogs(player);
-    try {
-      player.runCommand(`fog @s push "gaiadimension:${biome}_fog" "${biome}"`);
-      if (!this.playerFogs[player.id]) this.playerFogs[player.id] = [];
-      this.playerFogs[player.id].push(biome);
-      this.activeBiomes[player.id] = biome;
-    } catch (e) {
-      console.warn(`[FogSystem] Failed to push fog for ${biome}: ${e}`);
-    }
-  }
-};
-playerChangeBiome.subscribe((eventData) => {
-  FogSystem.updateFog(eventData.player, eventData.biome);
-});
-playerChangeBlock.subscribe((eventData) => {
-  if (DimensionSystem.isInGaia(eventData.player) && !FogSystem.baseFogApplied[eventData.player.id]) {
-    FogSystem.updateFog(eventData.player, null);
-  } else if (!DimensionSystem.isInGaia(eventData.player) && FogSystem.baseFogApplied[eventData.player.id]) {
-    FogSystem.clearAllFogs(eventData.player);
-  }
-});
-
 // src/main/bedrock/ts/API/lib/EnchantmentLib.ts
-import { world as world34, system as system37 } from "@minecraft/server";
+import { world as world31, system as system35 } from "@minecraft/server";
 import { ActionFormData } from "@minecraft/server-ui";
 var EnchantmentManager = class {
   registry;
@@ -8049,17 +7601,17 @@ var EnchantmentManager = class {
     });
   }
   initEvents() {
-    system37.runInterval(() => this.manageVisuals(), 5);
-    world34.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
+    system35.runInterval(() => this.manageVisuals(), 5);
+    world31.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
       const { block, player } = ev;
       if (block.typeId === "minecraft:enchanting_table" && player.isSneaking) {
         ev.cancel = true;
-        system37.run(() => {
+        system35.run(() => {
           this.openEnchantmentUI(player);
         });
       }
     });
-    world34.afterEvents.entityHitEntity.subscribe((ev) => {
+    world31.afterEvents.entityHitEntity.subscribe((ev) => {
       const { damagingEntity } = ev;
       if (!damagingEntity || !damagingEntity.getComponent("minecraft:equippable")) return;
       const equippable = damagingEntity.getComponent("minecraft:equippable");
@@ -8068,7 +7620,7 @@ var EnchantmentManager = class {
         this.triggerEnchants(mainHand, "onHit", ev);
       }
     });
-    world34.afterEvents.playerBreakBlock.subscribe((ev) => {
+    world31.afterEvents.playerBreakBlock.subscribe((ev) => {
       const { itemStack } = ev;
       if (itemStack) {
         this.triggerEnchants(itemStack, "onMine", ev);
@@ -8199,7 +7751,7 @@ ${color}Cost: ${e.cost} Lvl`);
    * Scans players to toggle glint state (Clean in cursor, Glint in inventory).
    */
   manageVisuals() {
-    for (const player of world34.getAllPlayers()) {
+    for (const player of world31.getAllPlayers()) {
       const cursorComp = player.getComponent("minecraft:cursor_inventory");
       if (cursorComp && cursorComp.item) {
         const item = cursorComp.item;
@@ -8210,13 +7762,13 @@ ${color}Cost: ${e.cost} Lvl`);
       }
       const invComp = player.getComponent("minecraft:inventory");
       if (invComp && invComp.container) {
-        const container = invComp.container;
-        for (let i = 0; i < container.size; i++) {
-          const item = container.getItem(i);
+        const container2 = invComp.container;
+        for (let i = 0; i < container2.size; i++) {
+          const item = container2.getItem(i);
           if (item && this.hasCustomEnchants(item) && !item.getDynamicProperty("luminiae:dummy_glint")) {
             this.updateGlint(item, true);
             if (item.getDynamicProperty("luminiae:dummy_glint")) {
-              container.setItem(i, item);
+              container2.setItem(i, item);
             }
           }
         }
@@ -8302,20 +7854,20 @@ enchantmentManager.register("gaia:thunder_strike", {
 });
 
 // src/main/bedrock/ts/entities/MalachiteGuard.ts
-import { world as world35, system as system38 } from "@minecraft/server";
+import { world as world32, system as system36 } from "@minecraft/server";
 var MalachiteGuardSystem = class {
   constructor() {
     this.init();
   }
   init() {
-    world35.afterEvents.entitySpawn.subscribe((event) => {
+    world32.afterEvents.entitySpawn.subscribe((event) => {
       const { entity } = event;
       if (entity.typeId === "gaiadimension:malachite_guard") {
         this.setupGuard(entity);
       }
     });
-    system38.runInterval(() => {
-      const overworld = world35.getDimension("overworld");
+    system36.runInterval(() => {
+      const overworld = world32.getDimension("overworld");
       const guards = overworld.getEntities({
         type: "gaiadimension:malachite_guard"
       });
@@ -8346,7 +7898,7 @@ var MalachiteGuardSystem = class {
     const guardId = `mg_${Date.now()}_${Math.floor(Math.random() * 1e3)}`;
     guard.setDynamicProperty("gaiadimension:guard_id", guardId);
     guard.addTag("gaiadimension:has_active_drones");
-    system38.run(() => {
+    system36.run(() => {
       if (!guard.isValid) return;
       guard.triggerEvent("mg_defend");
       this.spawnDrones(guard, guardId);
@@ -8394,7 +7946,7 @@ var MalachiteGuardSystem = class {
     if (!hasDrones && currentlyFlagged) {
       guard.removeTag("gaiadimension:has_active_drones");
       guard.triggerEvent("no_mg_defend");
-      world35.sendMessage("\xA7c[Malachite Guard] \xA77The drones have fallen! The Guard's core is exposed!");
+      world32.sendMessage("\xA7c[Malachite Guard] \xA77The drones have fallen! The Guard's core is exposed!");
     } else if (hasDrones && !currentlyFlagged) {
       guard.addTag("gaiadimension:has_active_drones");
       guard.triggerEvent("mg_defend");
@@ -8412,7 +7964,7 @@ initializeLightMixin();
 initializeGlitterGrassSync();
 initializeMagicStaffBehaviors();
 registerCustomTool();
-system39.beforeEvents.startup.subscribe((event) => {
+system37.beforeEvents.startup.subscribe((event) => {
   const { blockComponentRegistry, customCommandRegistry, itemComponentRegistry } = event;
   registerLeavesComponent({ blockComponentRegistry });
   registerInvisibleComponent({ blockComponentRegistry });
@@ -8429,7 +7981,6 @@ system39.beforeEvents.startup.subscribe((event) => {
   registerStoneSlabComponent({ blockComponentRegistry });
   registerGaiaFurnaceComponent({ blockComponentRegistry });
   registerGlitteringFireComponent();
-  registerCleanerComponent({ blockComponentRegistry });
   registerCrudeStorageCrateComponent({ blockComponentRegistry });
   registerMegaStorageCrateComponent({ blockComponentRegistry });
   registerFluidComponent({ blockComponentRegistry });

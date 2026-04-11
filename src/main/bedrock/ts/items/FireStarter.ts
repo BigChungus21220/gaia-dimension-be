@@ -1,4 +1,6 @@
-import { Player, ItemComponentUseOnEvent, ItemComponentRegistry } from "@minecraft/server";
+import { Player, ItemComponentUseOnEvent, ItemComponentRegistry, Dimension, Vector3 } from "@minecraft/server";
+import { PortalManager } from "../API/lib/PortalLib.js";
+import { ModConfig } from "../config/mod_config.js";
 
 export function registerFireStarterComponent({ itemComponentRegistry }: { itemComponentRegistry: any }): void {
     itemComponentRegistry.registerCustomComponent("gaiadimension:fire_starter", {
@@ -22,8 +24,24 @@ export function registerFireStarterComponent({ itemComponentRegistry }: { itemCo
 
             // Only place if it's air or replaceable
             if (targetBlock.isAir || targetBlock.typeId === "minecraft:tallgrass" || targetBlock.typeId === "minecraft:yellow_flower" || targetBlock.typeId === "minecraft:red_flower") {
+                const dimension: Dimension = player.dimension;
+                
+                // Biome check
+                if (dimension.id === "minecraft:overworld" && ModConfig.portalBiomeRestriction && !ModConfig.allowAllBiomes) {
+                    const biome = dimension.getBiome(placeLocation);
+                    const hotBiomes = ModConfig.hotBiomes;
+
+                    if (!hotBiomes.includes(biome.id)) {
+                        dimension.playSound("random.fizz", placeLocation);
+                        return;
+                    }
+                }
+
                 targetBlock.setType("gaiadimension:glittering_fire");
-                player.dimension.playSound("fire.ignite", placeLocation);
+                dimension.playSound("fire.ignite", placeLocation);
+                
+                // Attempt to ignite portal
+                PortalManager.tryIgnite(targetBlock);
                 
                 // Damage the item if not in creative
                 if (player.getGameMode() !== "creative") {

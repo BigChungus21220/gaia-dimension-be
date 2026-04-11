@@ -28,11 +28,7 @@ import { registerSetBiomeCommand } from "./systems/SetBiomeCommand.js";
 import { registerFireStarterComponent } from "./items/FireStarter.js";
 import { registerMagicStaffComponent } from "./items/MagicStaff.js";
 import { initializeMagicStaffBehaviors } from "./systems/MagicStaffBehaviors.js";
-import { registerCleanerComponent } from "./systems/Cleaner.js";
 import { initializeGlitterGrassSync } from "./blocks/GlitterGrassSync.js";
-import "./world/CoordinateDisplay.js";
-import "./world/Biome.js";
-import "./world/Fog.js";
 import "./systems/enchantments.js";
 import "./entities/MalachiteGuard.js";
 
@@ -65,7 +61,6 @@ system.beforeEvents.startup.subscribe((event: any) => {
     registerStoneSlabComponent({ blockComponentRegistry });
     registerGaiaFurnaceComponent({ blockComponentRegistry });
     registerGlitteringFireComponent();
-    registerCleanerComponent({ blockComponentRegistry });
     registerCrudeStorageCrateComponent({ blockComponentRegistry });
     registerMegaStorageCrateComponent({ blockComponentRegistry });
     registerFluidComponent({ blockComponentRegistry });
