@@ -14,7 +14,12 @@ class Portal {
     /**
      * @private
      */
-    private static linked: Link[] = JSON.parse(world.getDynamicProperty('PortalLinked') as string ?? "[]");
+    private static linked: Link[] = [];
+    static {
+        system.run(() => {
+            this.linked = JSON.parse(world.getDynamicProperty('PortalLinked') as string ?? "[]");
+        });
+    }
     static LinkPositions: ('start' | 'end')[] = ['start', 'end'];
     /** @private */
     private static serialize = JSON.stringify;

@@ -1,0 +1,14 @@
+{
+    "format_version": "1.20.20",
+    "minecraft:aggregate_feature": {
+        "description": {
+            "identifier": "gaiadimension:decorations/spike_placer"
+        },
+        "features": [
+			"gaiadimension:decorations/spike_placement_test",
+			"gaiadimension:decorations/crystal_air",
+            "gaiadimension:decorations/spike_x"
+        ],
+        "early_out": "first_failure"
+    }
+}

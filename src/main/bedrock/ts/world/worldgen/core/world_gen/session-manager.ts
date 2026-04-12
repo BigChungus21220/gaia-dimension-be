@@ -5,7 +5,7 @@ import { ChunkGenerator } from "./generator";
 import { DEFINITION_MANAGER } from "../definitions/index";
 
 export class SessionManager {
-    public generators: Map<Dimension, ChunkGenerator>;
+    public generators: Map<string, ChunkGenerator>;
     public seed: number;
     public procedural: ProceduralRandom;
     public definition: any;
@@ -16,21 +16,29 @@ export class SessionManager {
         this.procedural = new ProceduralRandom(this.seed);
         this.definition = DEFINITION_MANAGER;
 
-        const dims = [
+        // Initialize standard dimensions
+        [
             MinecraftDimensionTypes.Overworld,
             MinecraftDimensionTypes.Nether,
             MinecraftDimensionTypes.TheEnd
-        ];
+        ].forEach(id => this.getOrCreateGenerator(id));
+    }
 
-        for (const dimensionId of dims) {
+    public getOrCreateGenerator(dimensionId: string): ChunkGenerator | undefined {
+        if (this.generators.has(dimensionId)) return this.generators.get(dimensionId);
+        
+        try {
             const dimension = world.getDimension(dimensionId);
-            this.generators.set(dimension, new ChunkGenerator(this as any, dimension, this.procedural));
+            const gen = new ChunkGenerator(this as any, dimension, this.procedural);
+            this.generators.set(dimensionId, gen);
+            return gen;
+        } catch (e) {
+            return undefined;
         }
     }
 
-    /**@param {Dimension} dimension @returns {ChunkGenerator}  */
     get(dimension: Dimension): ChunkGenerator | undefined { 
-        return this.generators.get(dimension); 
+        return this.getOrCreateGenerator(dimension.id);
     }
 
     isGenerated(hash: string): any { 

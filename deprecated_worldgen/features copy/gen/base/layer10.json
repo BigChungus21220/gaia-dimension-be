@@ -1,0 +1,26 @@
+{
+    "format_version": "1.20.20",
+    "minecraft:aggregate_feature": {
+        "description": {
+            "identifier": "gaiadimension:gen/base/layer10"
+        },
+        "features": [
+            "gaiadimension:conditions/condition_727785697",
+            "gaiadimension:conditions/condition_778903911",
+            "gaiadimension:conditions/condition_1338330690",
+            "gaiadimension:conditions/condition_1260564424",
+            "gaiadimension:conditions/condition_1433126328",
+            "gaiadimension:conditions/condition_185425071",
+            "gaiadimension:conditions/condition_1166222100",
+            "gaiadimension:conditions/condition_1556041905",
+            "gaiadimension:conditions/condition_1827285878",
+            "gaiadimension:conditions/condition_815127089",
+            "gaiadimension:conditions/condition_1661928119",
+            "gaiadimension:conditions/condition_28773339",
+            "gaiadimension:conditions/condition_903095767",
+            "gaiadimension:conditions/condition_1218792344",
+            "gaiadimension:conditions/condition_400253247"
+        ],
+        "early_out": "first_success"
+    }
+}

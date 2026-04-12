@@ -1,0 +1,11 @@
+{
+	"format_version": "1.20.20",
+	"minecraft:single_block_feature": {
+		"description": {
+			"identifier": "gaiadimension:gen/gaia_blocks/soft_grass"
+		},
+		"places_block": "gaiadimension:soft_grass",
+		"enforce_placement_rules": false,
+		"enforce_survivability_rules": false
+	}
+}

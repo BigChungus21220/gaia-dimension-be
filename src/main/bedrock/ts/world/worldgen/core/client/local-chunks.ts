@@ -1,48 +1,60 @@
-import { system } from "@minecraft/server";
+import { system, Player, Dimension } from "@minecraft/server";
 import { SessionManager } from "../world_gen/index";
 import { DEFINITION_MANAGER } from "../definitions/index";
 
-const CLIENT_CHUNKS = new WeakMap();
+const CLIENT_CHUNKS = new WeakMap<Player, ClientChunk>();
 export class ClientChunk {
     /**@param {Player} player @param {SessionManager} sessionManager @returns {ClientChunk} */
-    static open(sessionManager, player){
+    static open(sessionManager: SessionManager, player: Player){
         let m = CLIENT_CHUNKS.get(player);
         if(!m) CLIENT_CHUNKS.set(player, m = new this(player, sessionManager));
         return m;
     }
+
+    public player: Player;
+    public manager: SessionManager;
+    public biomes: any;
+    public lastChunks: any[] = [];
+    public viewDistance = 8;
+    public maxJobs = 4;
+    public lastVisitedChunk = "";
+    public tasks = new Set<any>();
+    public currentArea = new Set<string>();
+    public knownUnrenderedChunks = new Map<string, any>();
+    public id: number | undefined = undefined;
+    public runTick = 0n;
+    public priorities: string[][] = [];
+
     /**@param {Player} player @param {SessionManager} sessionManager */
-    constructor(player, sessionManager){ 
+    constructor(player: Player, sessionManager: SessionManager){ 
         this.player = player; 
         this.manager = sessionManager;
         this.biomes = DEFINITION_MANAGER.biomeManager;
     }
-    lastChunks = [];
-    viewDistance = 8;
-    maxJobs = 4;
-    lastVisitedChunk = "";
-    tasks = new Set();
-    currentArea = new Set();
-    knownUnrenderedChunks = new Map();
-    id = null;
-    runTick = 0n;
+
     get emptyTasks(){ return this.maxJobs - this.tasks.size; }
     get chunkXZ(){
         const {x,z} = this.player.location;
-        return {x: Math.ceil(x/16), z: Math.ceil(z/16)};
+        return {x: Math.floor(x/16), z: Math.floor(z/16)};
     }
     get isRunning(){return typeof this.id === "number";}
-    get currentGenerator(){return this.manager.get(this.player.dimension);}
-    isGenerated(){return this.currentGenerator.isGenerated(this.getKey(this.chunkXZ));}
-    getKey(loc){return `${loc.x};${loc.z}`;}
+    get currentGenerator(){
+        return this.manager.get(this.player.dimension);
+    }
+    isGenerated(){
+        const gen = this.currentGenerator;
+        return gen ? gen.isGenerated(this.getKey(this.chunkXZ)) : true;
+    }
+    getKey(loc: {x: number, z: number}){return `${loc.x};${loc.z}`;}
     start(){
         this.id = system.runInterval(()=>this._tick().catch(e=>console.error(e,e?.stack)));
     }
     stop(){
-        if(this.isRunning) system.clearRun(this.id);
+        if(this.isRunning && this.id !== undefined) system.clearRun(this.id);
     }
-    _recalc2(X, Z){
+    _recalc2(X: number, Z: number){
         this.priorities = [];
-        const newArea = new Set();
+        const newArea = new Set<string>();
         const r = this.viewDistance;
         let power = r ** 2;
         for (let x = -r; x < r; x++) {
@@ -63,39 +75,11 @@ export class ClientChunk {
         this.currentArea = newArea;
         return this.priorities; 
     }
-    _recalc(X, Z){
-        const newChunks = [];
-        const queue = [{x:0,z:0}];
-        const newArea = new Set();
-        const curArea = this.currentArea;
-        const P = this.viewDistance ** 2;
-        const t = {};
-        while(queue.length){
-            let loc = queue.shift();
-            const {x,z} = loc;
-            const R = x ** 2 + z ** 2;
-            if (R > P) continue;
-            const xx = X + x;
-            const zz = Z + z;
-            const key = `${xx};${zz}`;
-            if(t[key]) continue;
-            t[key] = true;
-            newArea.add(key);
-            let isNewChunk = !curArea.delete(key);
-            const newLoc = {x:xx, z:zz, key};
-            if(isNewChunk) this.knownUnrenderedChunks.set(key, newLoc);
-            if (isNewChunk || this.knownUnrenderedChunks.has(key)) newChunks.push(newLoc);
-            queue.push({x:x+1, z});
-            queue.push({x, z:z+1});
-            queue.push({x:x-1, z});
-            queue.push({x, z:z-1});
-        }
-        for(const key of curArea) this.knownUnrenderedChunks.delete(key);
-        this.currentArea = newArea;
-        return newChunks;
-    }
-    _generateChunk(x,z, hash){
-        const task = this.currentGenerator.buildChunk(x,z, hash).catch((e)=>console.error(e,e?.stack));
+    
+    _generateChunk(x: number, z: number, hash: string){
+        const gen = this.currentGenerator;
+        if (!gen) return Promise.resolve();
+        const task = gen.buildChunk(x,z, hash).catch((e)=>console.error(e,e?.stack));
         task.finally(()=>this.tasks.delete(task));
         this.tasks.add(task);
         return task;
@@ -105,11 +89,12 @@ export class ClientChunk {
         const key = `${X};${Z}`;
         let emptyTasks = this.emptyTasks;
 
-        
+        const gen = this.currentGenerator;
+        if (!gen) return;
+
         const {x,z} = this.player.location;
-        if(this.player._debug){
-            const a = this.currentGenerator.getStats(x, z);
-            //console.warn(JSON.stringify(a));
+        if((this.player as any)._debug){
+            const a = gen.getStats(x, z);
             const {temperature, humidity} = a;
             const biome = this.biomes.getBiome(temperature, humidity);
     
@@ -122,7 +107,7 @@ export class ClientChunk {
             const major = priorities[o]??[];
             while(major.length){
                 if(++i > emptyTasks) break main;
-                const key = major.shift();
+                const key = major.shift() as string;
                 const loc = this.knownUnrenderedChunks.get(key);
                 if(loc) {
                     this.knownUnrenderedChunks.delete(key);
@@ -131,7 +116,7 @@ export class ClientChunk {
             }
         }
     }
-    _showDebug(b){
+    _showDebug(b: any){
         this.player.onScreenDisplay.setActionBar([
             `§7Running Tasks:§n§l ${this.tasks.size} §7/§n§l ${this.maxJobs}`,
             `§7Queue: §n§l${this.knownUnrenderedChunks.size}§r§7 chunks`,

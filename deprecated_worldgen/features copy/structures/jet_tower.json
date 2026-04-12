@@ -1,0 +1,11 @@
+{
+	"format_version": "1.20.20",
+	"minecraft:aggregate_feature": {
+		"description": {
+			"identifier": "gaiadimension:structures/jet_tower"
+		},
+		"features": [
+			"gaiadimension:structures/jet_tower_template"
+		]
+	}
+}

@@ -1,0 +1,13 @@
+{
+    "format_version": "1.20.20",
+    "minecraft:scatter_feature": {
+        "description": {
+            "identifier": "gaiadimension:conditions/gen_crystal_plains_3"
+        },
+        "places_feature": "gaiadimension:gen/gaia_blocks/bedrock_crystal_plains",
+        "iterations": "t.biome_id == 7 && t.layer >= 13",
+        "x": 0,
+        "z": 0,
+        "y": 0
+    }
+}

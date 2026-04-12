@@ -1,8 +1,8 @@
-import { BlockPermutation, Dimension, ListBlockVolume, Vector3 } from "@minecraft/server";
+import { BlockPermutation, Dimension, ListBlockVolume, Vector3, system } from "@minecraft/server";
 import { PalettedPlacer, ProceduralRandom } from "../utils";
 
 export class CompiledTreeSmaple {
-    public lists: Map<BlockPermutation, Vector3[]>;
+    public lists: Map<BlockPermutation, import("@minecraft/server").Vector3[]>;
     constructor(){ 
         this.lists = new Map();
     }
@@ -58,7 +58,7 @@ export class PillarTreeDefinition extends TreeDefinition {
     constructor(id: string = "pillar"){
         super(id);
         this.height = [3, 10];
-        this.logPaletted = BlockPermutation.resolve("spruce_log");
+        this.logPaletted = "minecraft:spruce_log";
     }
 
     setCanPlaceValidator(p: (loc: any) => boolean){this.canPlaceValidator = p; return this;}
@@ -90,7 +90,7 @@ export class SpruceTreeDefinition extends PillarTreeDefinition {
     constructor(){
         super("spruce");
         this.offset = [1, 2];
-        this.leavesPaletted = BlockPermutation.resolve("spruce_leaves");
+        this.leavesPaletted = "minecraft:spruce_leaves";
     }
 
     setLeavesPaletted(p: any){
@@ -135,7 +135,7 @@ export class CuttedSpruceTreeDefinition extends PillarTreeDefinition {
 
     constructor(){
         super("cut_spruce");
-        this.carpetPaletted = BlockPermutation.resolve("moss_carpet");
+        this.carpetPaletted = "minecraft:moss_carpet";
     }
 
     setCarpetPaletted(p: any){

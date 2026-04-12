@@ -1,4 +1,4 @@
-import { world, system } from "@minecraft/server";
+import { world, system, StartupEvent, CommandPermissionLevel, Player, CustomCommandStatus } from "@minecraft/server";
 import { registerLeavesComponent } from "./blocks/leaves.js";
 import { registerInvisibleComponent } from "./blocks/invisible.js";
 import { registerCurtainComponent } from "./blocks/curtain.js";
@@ -17,7 +17,6 @@ import { registerGlitteringFireComponent } from "./blocks/glittering_fire.js";
 import { registerCrudeStorageCrateComponent } from "./blocks/crates/crude_storage_crate.js";
 import { registerMegaStorageCrateComponent } from "./blocks/crates/mega_storage_crate.js";
 import { initializeLightMixin } from "./mixins/LightMixin.js";
-// import { initializeSkybox } from "./mixins/skybox.js";
 import { initializeDestructionHandlers } from "./systems/destruction_handler.js";
 import { initializeEventManager } from "./systems/event_manager.js";
 import { initializeScriptEvents } from "./systems/scriptevents.js";
@@ -29,6 +28,7 @@ import { registerFireStarterComponent } from "./items/FireStarter.js";
 import { registerMagicStaffComponent } from "./items/MagicStaff.js";
 import { initializeMagicStaffBehaviors } from "./systems/MagicStaffBehaviors.js";
 import { initializeGlitterGrassSync } from "./blocks/GlitterGrassSync.js";
+import "./world/worldgen/core/index.js";
 import "./systems/enchantments.js";
 import "./entities/MalachiteGuard.js";
 
@@ -40,12 +40,14 @@ initializeGeyser();
 initializeLightMixin();
 initializeGlitterGrassSync();
 initializeMagicStaffBehaviors();
-// initializeSkybox();
 registerCustomTool();
 
-system.beforeEvents.startup.subscribe((event: any) => {
-    const { blockComponentRegistry, customCommandRegistry, itemComponentRegistry } = event;
+system.beforeEvents.startup.subscribe((event: StartupEvent) => {
+    const { blockComponentRegistry, customCommandRegistry, itemComponentRegistry, dimensionRegistry } = event;
     
+    // Register Native Gaia Dimension
+    dimensionRegistry.registerCustomDimension("gaiadimension:gaia");
+
     registerLeavesComponent({ blockComponentRegistry });
     registerInvisibleComponent({ blockComponentRegistry });
     registerCurtainComponent({ blockComponentRegistry });
@@ -67,7 +69,21 @@ system.beforeEvents.startup.subscribe((event: any) => {
     registerFireStarterComponent({ itemComponentRegistry });
     registerMagicStaffComponent({ itemComponentRegistry });
     
-    // Register custom commands
+    // Register travel command
+    customCommandRegistry.registerCommand({
+        name: "gaiadimension:travel",
+        description: "Travel to the Gaia Dimension",
+        permissionLevel: CommandPermissionLevel.Any,
+        cheatsRequired: false
+    }, (origin) => {
+        const player = origin.sourceEntity;
+        if (player instanceof Player) {
+            // Dimension Traveler Logic
+            return { status: CustomCommandStatus.Success };
+        }
+        return { status: CustomCommandStatus.Failure, message: "Only players can use this command." };
+    });
+
     registerGaiaCommands(customCommandRegistry);
     registerSetBiomeCommand(customCommandRegistry);
 });

@@ -2,10 +2,12 @@ import { execSync } from 'child_process';
 import fs from 'fs-extra';
 import * as path from 'path';
 import * as esbuild from 'esbuild';
+import AdmZip from 'adm-zip';
 
 const MOJANG_PATHS = [
     path.join(process.env.APPDATA || '', '..', 'Local/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/LocalState/games/com.mojang'),
-    "C:/Users/ADMIN/AppData/Roaming/Minecraft Bedrock/Users/Shared/games/com.mojang"
+    "C:/Users/ADMIN/AppData/Roaming/Minecraft Bedrock/Users/Shared/games/com.mojang",
+    "C:/Users/ADMIN/AppData/Roaming/Minecraft Bedrock Preview/Users/Shared/games/com.mojang"
 ].filter(p => fs.existsSync(p));
 
 const ROOT = process.cwd();
@@ -13,6 +15,7 @@ const SRC_BEDROCK = path.join(ROOT, 'src/main/bedrock');
 const SRC_DATA = path.join(SRC_BEDROCK, 'data');
 const SRC_RESOURCES = path.join(SRC_BEDROCK, 'resources');
 const SRC_TS = path.join(SRC_BEDROCK, 'ts');
+const BUILD_PATH = path.join(ROOT, 'build');
 
 async function runCommand(cmd: string, description?: string) {
     if (description) console.log(`[INFO] ${description}...`);
@@ -58,7 +61,30 @@ async function build() {
     });
     console.log(`[INFO] Bundled artifact to: ${outfile}`);
 
-    // 3. Deploy
+    // 3. Package mcaddon
+    console.log('\x1b[32m> Task :packagemcaddon\x1b[0m');
+    await fs.ensureDir(BUILD_PATH);
+    const addonFile = path.join(BUILD_PATH, 'GaiaDimension.mcaddon');
+    
+    const zip = new AdmZip();
+    
+    // Add BP
+    const bpZip = new AdmZip();
+    bpZip.addLocalFolder(SRC_DATA, undefined, (src) => {
+        const rel = path.relative(SRC_DATA, src);
+        return !rel.split(path.sep).includes('src');
+    });
+    zip.addFile('GaiaDimension_BP.mcpack', bpZip.toBuffer());
+
+    // Add RP
+    const rpZip = new AdmZip();
+    rpZip.addLocalFolder(SRC_RESOURCES);
+    zip.addFile('GaiaDimension_RP.mcpack', rpZip.toBuffer());
+
+    zip.writeZip(addonFile);
+    console.log(`[INFO] Generated mcaddon at: ${addonFile}`);
+
+    // 4. Deploy
     console.log('\x1b[32m> Task :compileAddon\x1b[0m');
     
     for (const mojangPath of MOJANG_PATHS) {

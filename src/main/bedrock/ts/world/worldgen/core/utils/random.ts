@@ -28,7 +28,7 @@ export class ProceduralRandom {
     getInt2(x: number, z: number): number { return this.getInt(x + z * 999999937); }
     nextInt(): number { return this.getInt(this.index++); }
     nextFloat(): number { return this.getFloat(this.index++); }
-    getSeqence(x: number, z: number): ProceduralRandom { return new ProceduralRandom(x + z * 999999937); }
+    getSeqence(x: number, z: number): ProceduralRandom { return new ProceduralRandom(this.getInt(x + z * 999999937)); }
 }
 
 // @ts-ignore

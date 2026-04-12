@@ -1,116 +1,137 @@
-import { BlockPermutation } from "@minecraft/server";
+import { BlockPermutation, system } from "@minecraft/server";
 import { BiomeDefinition } from "../definitions/definition-biome";
 import { DEFINITION_MANAGER } from "../definitions/index";
 import { PalettedBrush } from "../utils";
 import { CuttedSpruceTreeDefinition, PillarTreeDefinition, SpruceTreeDefinition, TreePalette } from "../definitions/definition-tree";
 
-DEFINITION_MANAGER.biomeManager.addBiome(
-    new BiomeDefinition("con:grassy_land")
-    .setGroundPalette(
-        new PalettedBrush()
-        .add("grass", 2)
-        .add("moss_block", 3)
-    )
-    .setUnderGroundPalette(
-        new PalettedBrush()
-        .add("stone", 2)
-        .add("cobblestone", 3)
-        .add("mossy_cobblestone", 4)
-    )
-    .setVegetationPalette(
-        new PalettedBrush()
-        .add("short_grass", 4)
-        .add("poppy")
-        .add("cornflower")
-    )
-    .setTemperature(0, 0.5)
-    .setHumidity(0, 0.5)
-    .setTrees(
-        new TreePalette()
-        .add(new SpruceTreeDefinition(), 5)
-        .add(new SpruceTreeDefinition().setHeight(3,12).setLeavesPaletted("oak_leaves"))
-    )
-);
-DEFINITION_MANAGER.biomeManager.addBiome(
-    new BiomeDefinition("con:deep_forest")
-    .setGroundPalette(
-        new PalettedBrush()
-        .add("mossy_cobblestone", 1)
-        .add("moss_block", 3)
-    )
-    .setUnderGroundPalette(
-        new PalettedBrush()
-        .add("stone", 2)
-        .add("cobblestone", 3)
-        .add("mossy_cobblestone", 4)
-    )
-    .setVegetationChance(0.4)
-    .setVegetationPalette(
-        new PalettedBrush()
-        .add("short_grass", 10)
-        .add("cornflower")
-    )
-    .setTemperature(0,0.5)
-    .setHumidity(0.5,1)
-    .setTreesChance(0.04)
-    .setTreesAreaChance(1)
-    .setTrees(
-        new TreePalette()
-        //.add(new SpruceTreeDefinition().setHeight(15, 45).setOffSet(10,15), 3)
-        .add(new SpruceTreeDefinition().setHeight(6, 12).setOffSet(5,8), 12)
-        .add(new CuttedSpruceTreeDefinition().setHeight(1, 3))
-    )
-);
-DEFINITION_MANAGER.biomeManager.addBiome(
-    new BiomeDefinition("con:hot_dry_land")
-    .setGroundPalette(
-        new PalettedBrush()
-        .add("dirt", 3)
-        .add("dirt_with_roots", 2)
-        .add(BlockPermutation.resolve("dirt", {dirt_type: "coarse"}), 1)
-    )
-    .setUnderGroundPalette(
-        new PalettedBrush()
-        .add("stone", 3)
-        .add("cobblestone", 2)
-        .add("mossy_cobblestone", 1)
-    )
-    .setVegetationChance(0.03)
-    .setVegetationPalette(
-        new PalettedBrush()
-        .add("deadbush", 20)
-        .add("hay_block")
-        .add(BlockPermutation.resolve("stone_block_slab", {stone_slab_type:"cobblestone"}))
-    )
-    .setTemperature(0.5,1)
-    .setHumidity(0,0.5)
+/**
+ * GAIA DIMENSION BIOMES
+ * 
+ * Layer structure (like vanilla Minecraft):
+ *   groundPaletted   = 1 block on TOP  (grass)
+ *   underGroundPaletted = 4 blocks BELOW (soil)
+ *   below that       = gaia_stone (auto-filled by generator)
+ * 
+ * ALL block IDs verified against behavior pack JSON definitions.
+ */
 
-);
+// Crystal Plains
 DEFINITION_MANAGER.biomeManager.addBiome(
-    new BiomeDefinition("con:desert")
-    .setGroundPalette(
-        new PalettedBrush()
-        .add("sand", 3)
-        .add("sandstone", 1)
-    )
-    .setUnderGroundPalette(
-        new PalettedBrush()
-        .add("sandstone")
-    )
-    .setVegetationChance(0.02)
-    .setVegetationPalette("deadbush")
-    .setTemperature(0.5,1)
-    .setHumidity(0,0.5)
-    .setTreesChance(0.015)
-    .setTrees(
-        new TreePalette()
-        .add(
-            new PillarTreeDefinition()
-            .setHeight(2,4)
-            .setLogPaletted("cactus")
-            .setCanPlaceValidator((loc)=>{
-                return loc.dimension.getBlock(loc)?.canPlace("cactus");
-            })
-        )
-    )
+    new BiomeDefinition("gaiadimension:crystal_plains")
+    .setGroundPalette(new PalettedBrush().add("gaiadimension:soft_grass"))
+    .setUnderGroundPalette(new PalettedBrush().add("gaiadimension:light_soil"))
+    .setVegetationPalette(new PalettedBrush().add("gaiadimension:aura_crystal_growth", 5).add("gaiadimension:thiscus", 1))
+    .setTemperature(0.5, 0.8)
+    .setHumidity(0.3, 0.6)
+    .setDepth(0.125).setScale(0.05)
+);
+
+// Pink Agate Forest
+DEFINITION_MANAGER.biomeManager.addBiome(
+    new BiomeDefinition("gaiadimension:pink_agate_forest")
+    .setGroundPalette(new PalettedBrush().add("gaiadimension:soft_grass"))
+    .setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil"))
+    .setTemperature(0.6, 0.9)
+    .setHumidity(0.6, 0.9)
+    .setDepth(0.2).setScale(0.2)
+);
+
+// Blue Agate Taiga
+DEFINITION_MANAGER.biomeManager.addBiome(
+    new BiomeDefinition("gaiadimension:blue_agate_taiga")
+    .setGroundPalette(new PalettedBrush().add("gaiadimension:soft_grass"))
+    .setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil"))
+    .setTemperature(0.1, 0.4)
+    .setHumidity(0.4, 0.7)
+    .setDepth(0.3).setScale(0.4)
+);
+
+// Green Agate Jungle
+DEFINITION_MANAGER.biomeManager.addBiome(
+    new BiomeDefinition("gaiadimension:green_agate_jungle")
+    .setGroundPalette(new PalettedBrush().add("gaiadimension:soft_grass"))
+    .setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil"))
+    .setTemperature(0.8, 1.0)
+    .setHumidity(0.8, 1.0)
+    .setDepth(0.1).setScale(0.4)
+);
+
+// Purple Agate Swamp
+DEFINITION_MANAGER.biomeManager.addBiome(
+    new BiomeDefinition("gaiadimension:purple_agate_swamp")
+    .setGroundPalette(new PalettedBrush().add("gaiadimension:corrupted_grass"))
+    .setUnderGroundPalette(new PalettedBrush().add("gaiadimension:corrupted_soil"))
+    .setTemperature(0.5, 0.8)
+    .setHumidity(0.7, 1.0)
+    .setDepth(-0.2).setScale(0.1)
+);
+
+// Volcanic Lands
+DEFINITION_MANAGER.biomeManager.addBiome(
+    new BiomeDefinition("gaiadimension:volcanic_lands")
+    .setGroundPalette(new PalettedBrush().add("gaiadimension:volcanic_rock"))
+    .setUnderGroundPalette(new PalettedBrush().add("gaiadimension:cinder"))
+    .setTemperature(0.9, 1.0)
+    .setHumidity(0.0, 0.2)
+    .setDepth(0.4).setScale(0.5)
+);
+
+// Static Wasteland
+DEFINITION_MANAGER.biomeManager.addBiome(
+    new BiomeDefinition("gaiadimension:static_wasteland")
+    .setGroundPalette(new PalettedBrush().add("gaiadimension:wasteland_stone"))
+    .setUnderGroundPalette(new PalettedBrush().add("gaiadimension:static_stone"))
+    .setTemperature(0.2, 0.5)
+    .setHumidity(0.0, 0.3)
+    .setDepth(0.1).setScale(0.1)
+);
+
+// Salt Dunes
+DEFINITION_MANAGER.biomeManager.addBiome(
+    new BiomeDefinition("gaiadimension:salt_dunes")
+    .setGroundPalette(new PalettedBrush().add("gaiadimension:salt"))
+    .setUnderGroundPalette(new PalettedBrush().add("gaiadimension:salt_rock"))
+    .setTemperature(0.8, 1.0)
+    .setHumidity(0.0, 0.1)
+    .setDepth(0.5).setScale(0.6)
+);
+
+// Mookaite Mesa
+DEFINITION_MANAGER.biomeManager.addBiome(
+    new BiomeDefinition("gaiadimension:mookaite_mesa")
+    .setGroundPalette(new PalettedBrush().add("gaiadimension:precious_rock"))
+    .setUnderGroundPalette(new PalettedBrush().add("gaiadimension:impure_rock"))
+    .setTemperature(0.7, 1.0)
+    .setHumidity(0.1, 0.4)
+    .setDepth(0.4).setScale(0.3)
+);
+
+// Shining Grove
+DEFINITION_MANAGER.biomeManager.addBiome(
+    new BiomeDefinition("gaiadimension:shining_grove")
+    .setGroundPalette(new PalettedBrush().add("gaiadimension:soft_grass"))
+    .setUnderGroundPalette(new PalettedBrush().add("gaiadimension:light_soil"))
+    .setTemperature(0.4, 0.7)
+    .setHumidity(0.5, 0.8)
+    .setDepth(0.125).setScale(0.05)
+);
+
+// Smoldering Bog
+DEFINITION_MANAGER.biomeManager.addBiome(
+    new BiomeDefinition("gaiadimension:smoldering_bog")
+    .setGroundPalette(new PalettedBrush().add("gaiadimension:murky_grass"))
+    .setUnderGroundPalette(new PalettedBrush().add("gaiadimension:boggy_soil"))
+    .setTemperature(0.6, 0.9)
+    .setHumidity(0.7, 1.0)
+    .setDepth(-0.1).setScale(0.1)
+);
+
+// Golden Forest
+DEFINITION_MANAGER.biomeManager.addBiome(
+    new BiomeDefinition("gaiadimension:golden_forest")
+    .setGroundPalette(new PalettedBrush().add("gaiadimension:charred_grass"))
+    .setUnderGroundPalette(new PalettedBrush().add("gaiadimension:aurum_soil"))
+    .setTemperature(0.7, 1.0)
+    .setHumidity(0.5, 0.8)
+    .setDepth(0.2).setScale(0.2)
 );
