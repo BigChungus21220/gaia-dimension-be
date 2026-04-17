@@ -1,6 +1,6 @@
 import { world, system, Dimension, Vector3, Player, BlockPermutation, BlockVolume } from "@minecraft/server";
 
-export const GAIA_DIMENSION_ID = "gaiadimension:gaia";
+export const GAIA_DIMENSION_ID = "gaiadimension:gaia_dimension";
 
 export class DimensionSystem {
     static isInGaia(player: Player): boolean {

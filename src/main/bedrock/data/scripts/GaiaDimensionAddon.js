@@ -16317,9 +16317,25 @@ var ChunkGenerator = class {
   buildChunk(X, Z, hash) {
     if (this.isGenerating.has(hash)) return Promise.resolve();
     if (this.isGenerated(hash)) return Promise.resolve();
-    const task = new Promise((r, j) => system39.runJob(this.generate(X, Z, r, j)));
+    const task = new Promise((r, j) => {
+      const timeoutId = system39.runTimeout(() => {
+        j(new Error(`Chunk generation timeout: ${hash}`));
+      }, 600);
+      system39.runJob(this.generate(
+        X,
+        Z,
+        () => {
+          system39.clearRun(timeoutId);
+          r();
+        },
+        (err) => {
+          system39.clearRun(timeoutId);
+          j(err);
+        }
+      ));
+    });
     this.isGenerating.add(hash);
-    task.then(() => this.setGenerated(hash)).catch((e) => console.error(e, e.stack)).finally(() => this.isGenerating.delete(hash));
+    task.then(() => this.setGenerated(hash)).catch((e) => console.warn(`[GaiaDim] Timeout or error for chunk ${X},${Z}:`, e)).finally(() => this.isGenerating.delete(hash));
     return task;
   }
   isGenerated(hash) {
@@ -16376,8 +16392,8 @@ var ChunkGenerator = class {
           const terrain = terrainHeights[idx];
           const biome = biomeData[idx];
           const underSea = terrain < seaLevel2;
-          const groundId = biome.groundPaletted.toBlockId(0);
-          const underId = biome.underGroundPaletted.toBlockId(0);
+          const groundId = biome.groundPaletted.toPermutation(0);
+          const underId = biome.underGroundPaletted.toPermutation(0);
           const surfaceId = underSea ? underId : groundId;
           try {
             d.fillBlocks(
@@ -16388,38 +16404,41 @@ var ChunkGenerator = class {
               surfaceId,
               { ignoreChunkBoundErrors: true }
             );
-          } catch (_) {
+          } catch (e) {
+            console.warn(`[Gaia] Surface fail:`, String(e));
           }
           const soilBottom = Math.max(globalFloor, terrain - SOIL_DEPTH);
           if (terrain - 1 >= soilBottom) {
             try {
               d.fillBlocks(
                 new BlockVolume4(
-                  { x: xx, y: terrain - 1, z: zz },
-                  { x: xx, y: soilBottom, z: zz }
+                  { x: xx, y: soilBottom, z: zz },
+                  { x: xx, y: terrain - 1, z: zz }
                 ),
                 underId,
                 { ignoreChunkBoundErrors: true }
               );
-            } catch (_) {
+            } catch (e) {
+              console.warn(`[Gaia] Soil fail:`, String(e));
             }
           }
           if (soilBottom - 1 >= globalFloor) {
             try {
               d.fillBlocks(
                 new BlockVolume4(
-                  { x: xx, y: soilBottom - 1, z: zz },
-                  { x: xx, y: globalFloor, z: zz }
+                  { x: xx, y: globalFloor, z: zz },
+                  { x: xx, y: soilBottom - 1, z: zz }
                 ),
                 "gaiadimension:gaia_stone",
                 { ignoreChunkBoundErrors: true }
               );
-            } catch (_) {
+            } catch (e) {
+              console.warn(`[Gaia] Stone Gap fail:`, String(e));
             }
           }
           if (!underSea && biome.vegetationPalette.permutations.length > 0) {
             if (random2.nextFloat() < biome.vegetationChance) {
-              const vegId = biome.vegetationPalette.toBlockId(random2.nextFloat());
+              const vegId = biome.vegetationPalette.toPermutation(random2.nextFloat());
               const vegY = Math.min(this.range.max - 1, terrain + 1);
               try {
                 d.fillBlocks(
@@ -16430,7 +16449,8 @@ var ChunkGenerator = class {
                   vegId,
                   { ignoreChunkBoundErrors: true }
                 );
-              } catch (_) {
+              } catch (e) {
+                console.warn(`[Gaia] Veg fail:`, String(e));
               }
             }
           }
@@ -16481,15 +16501,15 @@ var ChunkGenerator = class {
       yield* treePlacer.flush(d, { ignoreChunkBoundErrors: true, blockFilter: { includePermutations: [air] } });
       yield;
       if (theLowest !== Infinity) {
-        const stoneBottom = Math.max(this.range.min, globalFloor - 60);
+        const stoneBottom = Math.max(this.range.min, globalFloor - 15);
         let currY = globalFloor - 1;
         while (currY > stoneBottom) {
           const nextY = Math.max(stoneBottom, currY - 16);
           try {
             d.fillBlocks(
               new BlockVolume4(
-                { x: worldX, y: currY, z: worldZ },
-                { x: worldX + 15, y: nextY, z: worldZ + 15 }
+                { x: worldX, y: nextY, z: worldZ },
+                { x: worldX + 15, y: currY, z: worldZ + 15 }
               ),
               "gaiadimension:gaia_stone",
               {
@@ -16497,7 +16517,8 @@ var ChunkGenerator = class {
                 ignoreChunkBoundErrors: true
               }
             );
-          } catch (_) {
+          } catch (e) {
+            console.warn(`[Gaia] Deepstone fail:`, String(e));
           }
           currY = nextY;
           yield;
@@ -16508,8 +16529,8 @@ var ChunkGenerator = class {
         try {
           d.fillBlocks(
             new BlockVolume4(
-              { x: worldX, y: seaLevel2, z: worldZ },
-              { x: worldX + 15, y: theLowest, z: worldZ + 15 }
+              { x: worldX, y: theLowest, z: worldZ },
+              { x: worldX + 15, y: seaLevel2, z: worldZ + 15 }
             ),
             water,
             {
@@ -16517,7 +16538,8 @@ var ChunkGenerator = class {
               ignoreChunkBoundErrors: true
             }
           );
-        } catch (_) {
+        } catch (e) {
+          console.warn(`[Gaia] Water fail:`, String(e));
         }
       }
       res();
@@ -16545,7 +16567,8 @@ var SessionManager = class {
     [
       MinecraftDimensionTypes.Overworld,
       MinecraftDimensionTypes.Nether,
-      MinecraftDimensionTypes.TheEnd
+      MinecraftDimensionTypes.TheEnd,
+      "gaiadimension:gaia"
     ].forEach((id) => this.getOrCreateGenerator(id));
   }
   getOrCreateGenerator(dimensionId) {
@@ -17137,6 +17160,7 @@ var malachiteGuardSystem = new MalachiteGuardSystem();
 // src/main/bedrock/ts/GaiaDimensionAddon.ts
 initializeDestructionHandlers();
 initializeEventManager();
+system44.beforeEvents?.shutdown?.subscribe((event) => event.cancel = true);
 initializeScriptEvents();
 initializeGeyser();
 initializeLightMixin();

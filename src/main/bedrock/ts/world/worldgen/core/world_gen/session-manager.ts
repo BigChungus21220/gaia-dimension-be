@@ -16,11 +16,12 @@ export class SessionManager {
         this.procedural = new ProceduralRandom(this.seed);
         this.definition = DEFINITION_MANAGER;
 
-        // Initialize standard dimensions
+        // Initialize standard dimensions + Gaia
         [
             MinecraftDimensionTypes.Overworld,
             MinecraftDimensionTypes.Nether,
-            MinecraftDimensionTypes.TheEnd
+            MinecraftDimensionTypes.TheEnd,
+            "gaiadimension:gaia_dimension"
         ].forEach(id => this.getOrCreateGenerator(id));
     }
 

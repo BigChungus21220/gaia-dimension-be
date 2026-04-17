@@ -35,6 +35,9 @@ import "./entities/MalachiteGuard.js";
 // Initialize systems
 initializeDestructionHandlers();
 initializeEventManager();
+
+// @ts-ignore
+system.beforeEvents?.shutdown?.subscribe((event) => event.cancel = true);
 initializeScriptEvents();
 initializeGeyser();
 initializeLightMixin();
@@ -46,7 +49,7 @@ system.beforeEvents.startup.subscribe((event: StartupEvent) => {
     const { blockComponentRegistry, customCommandRegistry, itemComponentRegistry, dimensionRegistry } = event;
     
     // Register Native Gaia Dimension
-    dimensionRegistry.registerCustomDimension("gaiadimension:gaia");
+    dimensionRegistry.registerCustomDimension("gaiadimension:gaia_dimension");
 
     registerLeavesComponent({ blockComponentRegistry });
     registerInvisibleComponent({ blockComponentRegistry });

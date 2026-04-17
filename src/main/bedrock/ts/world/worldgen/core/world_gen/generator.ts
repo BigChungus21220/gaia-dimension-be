@@ -125,10 +125,19 @@ export class ChunkGenerator {
     buildChunk(X: number, Z: number, hash: string) {
         if (this.isGenerating.has(hash)) return Promise.resolve();
         if (this.isGenerated(hash)) return Promise.resolve();
-        const task = new Promise<void>((r, j) => (system as any).runJob(this.generate(X, Z, r, j)));
+        const task = new Promise<void>((r, j) => {
+            const timeoutId = system.runTimeout(() => {
+                j(new Error(`Chunk generation timeout: ${hash}`));
+            }, 600); // 30 seconds max bound
+
+            (system as any).runJob(this.generate(X, Z, 
+                () => { system.clearRun(timeoutId); r(); },
+                (err: any) => { system.clearRun(timeoutId); j(err); }
+            ));
+        });
         this.isGenerating.add(hash);
         task.then(() => this.setGenerated(hash))
-            .catch(e => console.error(e, e.stack))
+            .catch(e => console.warn(`[GaiaDim] Timeout or error for chunk ${X},${Z}:`, e))
             .finally(() => this.isGenerating.delete(hash));
         return task;
     }
@@ -181,7 +190,7 @@ export class ChunkGenerator {
                     terrainHeights[idx] = terrain;
                     biomeData[idx] = biome;
                 }
-                yield;
+                yield; // Yield once per row (16 times total instead of 256)
             }
 
             // Shared floor: everything is solid from every column's surface down to this Y
@@ -199,8 +208,8 @@ export class ChunkGenerator {
                     const underSea = terrain < seaLevel;
 
                     // Get block IDs — deterministic (first entry in palette, no random)
-                    const groundId = biome.groundPaletted.toBlockId(0);
-                    const underId = biome.underGroundPaletted.toBlockId(0);
+                    const groundId = biome.groundPaletted.toPermutation(0);
+                    const underId = biome.underGroundPaletted.toPermutation(0);
 
                     // 1. Surface — ALWAYS grass (or ground palette for underwater)
                     const surfaceId = underSea ? underId : groundId;
@@ -213,7 +222,7 @@ export class ChunkGenerator {
                             surfaceId,
                             { ignoreChunkBoundErrors: true }
                         );
-                    } catch(_) {}
+                    } catch(e: any) { console.warn(`[Gaia] Surface fail:`, String(e)) }
 
                     // 2. Soil layer — ALWAYS 4 blocks below surface
                     const soilBottom = Math.max(globalFloor, terrain - SOIL_DEPTH);
@@ -221,13 +230,13 @@ export class ChunkGenerator {
                         try {
                             d.fillBlocks(
                                 new BlockVolume(
-                                    { x: xx, y: terrain - 1, z: zz },
-                                    { x: xx, y: soilBottom, z: zz }
+                                    { x: xx, y: soilBottom, z: zz },
+                                    { x: xx, y: terrain - 1, z: zz }
                                 ),
                                 underId,
                                 { ignoreChunkBoundErrors: true }
                             );
-                        } catch(_) {}
+                        } catch(e: any) { console.warn(`[Gaia] Soil fail:`, String(e)) }
                     }
 
                     // 3. Stone gap — from soil bottom to globalFloor
@@ -235,19 +244,19 @@ export class ChunkGenerator {
                         try {
                             d.fillBlocks(
                                 new BlockVolume(
-                                    { x: xx, y: soilBottom - 1, z: zz },
-                                    { x: xx, y: globalFloor, z: zz }
+                                    { x: xx, y: globalFloor, z: zz },
+                                    { x: xx, y: soilBottom - 1, z: zz }
                                 ),
                                 "gaiadimension:gaia_stone",
                                 { ignoreChunkBoundErrors: true }
                             );
-                        } catch(_) {}
+                        } catch(e: any) { console.warn(`[Gaia] Stone Gap fail:`, String(e)) }
                     }
 
                     // 4. Vegetation (only above sea level, uses random)
                     if (!underSea && biome.vegetationPalette.permutations.length > 0) {
                         if (random.nextFloat() < biome.vegetationChance) {
-                            const vegId = biome.vegetationPalette.toBlockId(random.nextFloat());
+                            const vegId = biome.vegetationPalette.toPermutation(random.nextFloat());
                             const vegY = Math.min(this.range.max - 1, terrain + 1);
                             try {
                                 d.fillBlocks(
@@ -258,7 +267,7 @@ export class ChunkGenerator {
                                     vegId,
                                     { ignoreChunkBoundErrors: true }
                                 );
-                            } catch(_) {}
+                            } catch(e: any) { console.warn(`[Gaia] Veg fail:`, String(e)) }
                         }
                     }
 
@@ -273,8 +282,7 @@ export class ChunkGenerator {
                         }
                     }
                 }
-                // Yield after every row (16 columns = up to 64 fillBlocks)
-                yield;
+                yield; // Yield once per row to minimize context-switching lag
             }
             yield;
 
@@ -311,15 +319,15 @@ export class ChunkGenerator {
 
             // PASS 5: Deep stone filler (chunk-wide, ONLY below globalFloor)
             if (theLowest !== Infinity) {
-                const stoneBottom = Math.max(this.range.min, globalFloor - 60);
+                const stoneBottom = Math.max(this.range.min, globalFloor - 15);
                 let currY = globalFloor - 1;
                 while (currY > stoneBottom) {
                     const nextY = Math.max(stoneBottom, currY - 16);
                     try {
                         d.fillBlocks(
                             new BlockVolume(
-                                { x: worldX, y: currY, z: worldZ },
-                                { x: worldX + 15, y: nextY, z: worldZ + 15 }
+                                { x: worldX, y: nextY, z: worldZ },
+                                { x: worldX + 15, y: currY, z: worldZ + 15 }
                             ),
                             "gaiadimension:gaia_stone",
                             {
@@ -327,7 +335,7 @@ export class ChunkGenerator {
                                 ignoreChunkBoundErrors: true
                             }
                         );
-                    } catch(_) {}
+                    } catch(e: any) { console.warn(`[Gaia] Deepstone fail:`, String(e)) }
                     currY = nextY;
                     yield;
                 }
@@ -339,8 +347,8 @@ export class ChunkGenerator {
                 try {
                     d.fillBlocks(
                         new BlockVolume(
-                            { x: worldX, y: seaLevel, z: worldZ },
-                            { x: worldX + 15, y: theLowest, z: worldZ + 15 }
+                            { x: worldX, y: theLowest, z: worldZ },
+                            { x: worldX + 15, y: seaLevel, z: worldZ + 15 }
                         ),
                         water,
                         {
@@ -348,7 +356,7 @@ export class ChunkGenerator {
                             ignoreChunkBoundErrors: true
                         }
                     );
-                } catch(_) {}
+                } catch(e: any) { console.warn(`[Gaia] Water fail:`, String(e)) }
             }
 
             res();
