@@ -1,0 +1,40 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaiadimension:canopy_standing_sign",
+      "menu_category": {
+        "category": "items",
+        "group": "itemGroup.name.sign"
+      }
+    },
+    "components": {
+      "gaiadimension:sign": {},
+      "minecraft:geometry": "geometry.unknown",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "gaiadimension:canopy_sign",
+          "render_method": "alpha_test"
+        }
+      },
+      "minecraft:transformation": {
+        "scale": [0.615, 0.615, 0.615],
+        "translation": [0, -0.19, 0]
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1.0
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 1.0
+      },
+      "minecraft:collision_box": {
+        "origin": [-1, 0, -1],
+        "size": [2, 16, 2]
+      },
+      "minecraft:selection_box": {
+        "origin": [-8, 0, -1],
+        "size": [16, 16, 2]
+      }
+    }
+  }
+}

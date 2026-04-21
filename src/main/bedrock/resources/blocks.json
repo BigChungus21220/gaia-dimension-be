@@ -4,6 +4,10 @@
         1,
         0
     ],
+    "gaiadimension:canopy_standing_sign": {
+        "textures": "gaiadimension:canopy_sign",
+        "sound": "wood"
+    },
     "gaiadimension:charred_grass": {
         "sound": "grass"
     },

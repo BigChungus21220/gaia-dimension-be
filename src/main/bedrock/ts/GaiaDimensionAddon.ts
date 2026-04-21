@@ -9,6 +9,7 @@ import { registerWallComponent } from "./blocks/wall.js";
 import { registerButtonComponent } from "./blocks/button.js";
 import { registerPressurePlateComponent } from "./blocks/pressure_plate.js";
 import { registerStairsComponent } from "./blocks/stairs.js";
+import { registerSignComponent } from "./blocks/sign.js";
 import { registerGeyserComponent, initializeGeyser } from "./blocks/geyser.js";
 import { registerSandstoneComponent } from "./blocks/sandstone_slab.js";
 import { registerStoneSlabComponent } from "./blocks/stone_slab.js";
@@ -28,7 +29,7 @@ import { registerFireStarterComponent } from "./items/FireStarter.js";
 import { registerMagicStaffComponent } from "./items/MagicStaff.js";
 import { initializeMagicStaffBehaviors } from "./systems/MagicStaffBehaviors.js";
 import { initializeGlitterGrassSync } from "./blocks/GlitterGrassSync.js";
-import "./world/worldgen/core/index.js";
+// import "./world/worldgen/core/index.js";
 import "./systems/enchantments.js";
 import "./entities/MalachiteGuard.js";
 
@@ -46,10 +47,12 @@ initializeMagicStaffBehaviors();
 registerCustomTool();
 
 system.beforeEvents.startup.subscribe((event: StartupEvent) => {
-    const { blockComponentRegistry, customCommandRegistry, itemComponentRegistry, dimensionRegistry } = event;
+    const { blockComponentRegistry, customCommandRegistry, itemComponentRegistry /*, dimensionRegistry*/ } = event;
+    
+    // const { dimensionRegistry } = event; // Unplugged dimension registry
     
     // Register Native Gaia Dimension
-    dimensionRegistry.registerCustomDimension("gaiadimension:gaia_dimension");
+    // dimensionRegistry.registerCustomDimension("gaiadimension:gaia_dimension");
 
     registerLeavesComponent({ blockComponentRegistry });
     registerInvisibleComponent({ blockComponentRegistry });
@@ -61,6 +64,7 @@ system.beforeEvents.startup.subscribe((event: StartupEvent) => {
     registerButtonComponent({ blockComponentRegistry });
     registerPressurePlateComponent({ blockComponentRegistry });
     registerStairsComponent({ blockComponentRegistry });
+    registerSignComponent({ blockComponentRegistry });
     registerGeyserComponent({ blockComponentRegistry });
     registerSandstoneComponent({ blockComponentRegistry });
     registerStoneSlabComponent({ blockComponentRegistry });
@@ -73,6 +77,7 @@ system.beforeEvents.startup.subscribe((event: StartupEvent) => {
     registerMagicStaffComponent({ itemComponentRegistry });
     
     // Register travel command
+    /*
     customCommandRegistry.registerCommand({
         name: "gaiadimension:travel",
         description: "Travel to the Gaia Dimension",
@@ -86,6 +91,7 @@ system.beforeEvents.startup.subscribe((event: StartupEvent) => {
         }
         return { status: CustomCommandStatus.Failure, message: "Only players can use this command." };
     });
+    */
 
     registerGaiaCommands(customCommandRegistry);
     registerSetBiomeCommand(customCommandRegistry);

@@ -17,7 +17,9 @@
 		]
 	},
 	"metadata": {
-		"authors": [ "Sen" ],
+		"authors": [
+			"Sen"
+		],
 		"product_type": "addon"
 	},
 	"modules": [
@@ -35,7 +37,11 @@
 			"type": "script",
 			"language": "javascript",
 			"uuid": "dbcdfb66-073d-40a0-9abe-a644b98d327c",
-			"version": [ 1, 0, 0 ]
+			"version": [
+				1,
+				0,
+				0
+			]
 		}
 	],
 	"dependencies": [
@@ -49,7 +55,7 @@
 		},
 		{
 			"module_name": "@minecraft/server",
-			"version": "beta"
+			"version": "2.6.0"
 		},
 		{
 			"module_name": "@minecraft/server-ui",

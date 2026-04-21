@@ -4,6 +4,9 @@
     "padding": 8,
     "num_mip_levels": 4,
     "texture_data": {
+        "gaiadimension:canopy_sign": {
+            "textures": "textures/gaiadimension/androsa/signs/canopy"
+        },
         "gaiadimension:empty": {
             "textures": "textures/gaiadimension/androsa/absolute_void"
         },

@@ -1,0 +1,20 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "gaiadimension:sign_text",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/blocks/planks_oak"
+      },
+      "geometry": {
+        "default": "geometry.gaiadimension.sign_text"
+      },
+      "render_controllers": [
+        "controller.render.shulker"
+      ]
+    }
+  }
+}
