@@ -2121,12 +2121,11 @@ import { ModalFormData } from "@minecraft/server-ui";
 var SIGN_CHAR_ENTITY = "gaiadimension:sign_char";
 var CHARS_PER_LINE = 10;
 var MAX_LINES = 4;
-var BOARD_WIDTH = 0.92;
 var BOARD_HEIGHT = 0.46;
-var BOARD_BOTTOM_Y = 0.45;
+var BOARD_BOTTOM_Y = 0.495;
 var BOARD_Z_OFFSET = -0.04;
-var CHAR_WIDTH = 0.09;
-var CHAR_HEIGHT = 0.09;
+var CHAR_WIDTH = 0.05;
+var CHAR_HEIGHT = 0.07;
 function findSignChars(block) {
   const center = {
     x: block.location.x + 0.5,
@@ -2177,12 +2176,12 @@ function spawnSignText(block, text) {
   const blockZ = block.location.z + 0.5;
   for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
     const line = lines[lineIdx];
-    const boardLeft = BOARD_WIDTH / 2 - CHAR_WIDTH / 2;
+    const lineOffsetX = line.length * CHAR_WIDTH / 2 - CHAR_WIDTH / 2;
     for (let charIdx = 0; charIdx < line.length; charIdx++) {
       const char = line[charIdx];
       if (char === " ") continue;
       const asciiCode = char.charCodeAt(0);
-      const x = blockX + boardLeft - charIdx * CHAR_WIDTH;
+      const x = blockX + lineOffsetX - charIdx * CHAR_WIDTH;
       const y = blockY + BOARD_BOTTOM_Y + BOARD_HEIGHT - lineIdx * CHAR_HEIGHT - CHAR_HEIGHT / 2;
       const z = blockZ + BOARD_Z_OFFSET;
       try {

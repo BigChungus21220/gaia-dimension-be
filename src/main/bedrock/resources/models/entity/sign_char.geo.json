@@ -4,8 +4,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.32",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -38,21 +38,21 @@
                 "north": {
                   "uv": [
                     0,
-                    16
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
                     0,
-                    16
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -104,8 +104,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.33",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -137,22 +137,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    8,
-                    16
+                    32,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    8,
-                    16
+                    32,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -204,8 +204,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.34",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -237,22 +237,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    16,
-                    16
+                    64,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    16,
-                    16
+                    64,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -304,8 +304,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.35",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -337,22 +337,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    24,
-                    16
+                    96,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    24,
-                    16
+                    96,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -404,8 +404,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.36",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -437,22 +437,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    32,
-                    16
+                    128,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    32,
-                    16
+                    128,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -504,8 +504,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.37",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -537,22 +537,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    40,
-                    16
+                    160,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    40,
-                    16
+                    160,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -604,8 +604,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.38",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -637,22 +637,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    48,
-                    16
+                    192,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    48,
-                    16
+                    192,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -704,8 +704,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.39",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -737,22 +737,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    56,
-                    16
+                    224,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    56,
-                    16
+                    224,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -804,8 +804,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.40",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -837,22 +837,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    64,
-                    16
+                    256,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    64,
-                    16
+                    256,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -904,8 +904,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.41",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -937,22 +937,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    72,
-                    16
+                    288,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    72,
-                    16
+                    288,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -1004,8 +1004,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.42",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -1037,22 +1037,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    80,
-                    16
+                    320,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    80,
-                    16
+                    320,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -1104,8 +1104,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.43",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -1137,22 +1137,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    88,
-                    16
+                    352,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    88,
-                    16
+                    352,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -1204,8 +1204,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.44",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -1237,22 +1237,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    96,
-                    16
+                    384,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    96,
-                    16
+                    384,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -1304,8 +1304,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.45",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -1337,22 +1337,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    104,
-                    16
+                    416,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    104,
-                    16
+                    416,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -1404,8 +1404,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.46",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -1437,22 +1437,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    112,
-                    16
+                    448,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    112,
-                    16
+                    448,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -1504,8 +1504,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.47",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -1537,22 +1537,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    120,
-                    16
+                    480,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    120,
-                    16
+                    480,
+                    64
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -1604,8 +1604,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.48",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -1638,21 +1638,21 @@
                 "north": {
                   "uv": [
                     0,
-                    24
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
                     0,
-                    24
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -1704,8 +1704,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.49",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -1737,22 +1737,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    8,
-                    24
+                    32,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    8,
-                    24
+                    32,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -1804,8 +1804,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.50",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -1837,22 +1837,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    16,
-                    24
+                    64,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    16,
-                    24
+                    64,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -1904,8 +1904,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.51",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -1937,22 +1937,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    24,
-                    24
+                    96,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    24,
-                    24
+                    96,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -2004,8 +2004,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.52",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -2037,22 +2037,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    32,
-                    24
+                    128,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    32,
-                    24
+                    128,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -2104,8 +2104,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.53",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -2137,22 +2137,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    40,
-                    24
+                    160,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    40,
-                    24
+                    160,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -2204,8 +2204,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.54",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -2237,22 +2237,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    48,
-                    24
+                    192,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    48,
-                    24
+                    192,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -2304,8 +2304,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.55",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -2337,22 +2337,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    56,
-                    24
+                    224,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    56,
-                    24
+                    224,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -2404,8 +2404,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.56",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -2437,22 +2437,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    64,
-                    24
+                    256,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    64,
-                    24
+                    256,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -2504,8 +2504,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.57",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -2537,22 +2537,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    72,
-                    24
+                    288,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    72,
-                    24
+                    288,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -2604,8 +2604,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.58",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -2637,22 +2637,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    80,
-                    24
+                    320,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    80,
-                    24
+                    320,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -2704,8 +2704,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.59",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -2737,22 +2737,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    88,
-                    24
+                    352,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    88,
-                    24
+                    352,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -2804,8 +2804,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.60",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -2837,22 +2837,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    96,
-                    24
+                    384,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    96,
-                    24
+                    384,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -2904,8 +2904,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.61",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -2937,22 +2937,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    104,
-                    24
+                    416,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    104,
-                    24
+                    416,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -3004,8 +3004,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.62",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -3037,22 +3037,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    112,
-                    24
+                    448,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    112,
-                    24
+                    448,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -3104,8 +3104,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.63",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -3137,22 +3137,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    120,
-                    24
+                    480,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    120,
-                    24
+                    480,
+                    96
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -3204,8 +3204,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.64",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -3238,21 +3238,21 @@
                 "north": {
                   "uv": [
                     0,
-                    32
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
                     0,
-                    32
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -3304,8 +3304,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.65",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -3337,22 +3337,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    8,
-                    32
+                    32,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    8,
-                    32
+                    32,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -3404,8 +3404,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.66",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -3437,22 +3437,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    16,
-                    32
+                    64,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    16,
-                    32
+                    64,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -3504,8 +3504,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.67",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -3537,22 +3537,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    24,
-                    32
+                    96,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    24,
-                    32
+                    96,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -3604,8 +3604,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.68",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -3637,22 +3637,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    32,
-                    32
+                    128,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    32,
-                    32
+                    128,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -3704,8 +3704,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.69",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -3737,22 +3737,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    40,
-                    32
+                    160,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    40,
-                    32
+                    160,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -3804,8 +3804,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.70",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -3837,22 +3837,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    48,
-                    32
+                    192,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    48,
-                    32
+                    192,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -3904,8 +3904,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.71",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -3937,22 +3937,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    56,
-                    32
+                    224,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    56,
-                    32
+                    224,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -4004,8 +4004,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.72",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -4037,22 +4037,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    64,
-                    32
+                    256,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    64,
-                    32
+                    256,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -4104,8 +4104,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.73",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -4137,22 +4137,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    72,
-                    32
+                    288,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    72,
-                    32
+                    288,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -4204,8 +4204,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.74",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -4237,22 +4237,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    80,
-                    32
+                    320,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    80,
-                    32
+                    320,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -4304,8 +4304,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.75",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -4337,22 +4337,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    88,
-                    32
+                    352,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    88,
-                    32
+                    352,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -4404,8 +4404,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.76",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -4437,22 +4437,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    96,
-                    32
+                    384,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    96,
-                    32
+                    384,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -4504,8 +4504,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.77",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -4537,22 +4537,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    104,
-                    32
+                    416,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    104,
-                    32
+                    416,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -4604,8 +4604,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.78",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -4637,22 +4637,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    112,
-                    32
+                    448,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    112,
-                    32
+                    448,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -4704,8 +4704,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.79",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -4737,22 +4737,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    120,
-                    32
+                    480,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    120,
-                    32
+                    480,
+                    128
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -4804,8 +4804,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.80",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -4838,21 +4838,21 @@
                 "north": {
                   "uv": [
                     0,
-                    40
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
                     0,
-                    40
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -4904,8 +4904,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.81",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -4937,22 +4937,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    8,
-                    40
+                    32,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    8,
-                    40
+                    32,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -5004,8 +5004,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.82",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -5037,22 +5037,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    16,
-                    40
+                    64,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    16,
-                    40
+                    64,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -5104,8 +5104,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.83",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -5137,22 +5137,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    24,
-                    40
+                    96,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    24,
-                    40
+                    96,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -5204,8 +5204,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.84",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -5237,22 +5237,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    32,
-                    40
+                    128,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    32,
-                    40
+                    128,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -5304,8 +5304,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.85",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -5337,22 +5337,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    40,
-                    40
+                    160,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    40,
-                    40
+                    160,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -5404,8 +5404,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.86",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -5437,22 +5437,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    48,
-                    40
+                    192,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    48,
-                    40
+                    192,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -5504,8 +5504,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.87",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -5537,22 +5537,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    56,
-                    40
+                    224,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    56,
-                    40
+                    224,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -5604,8 +5604,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.88",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -5637,22 +5637,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    64,
-                    40
+                    256,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    64,
-                    40
+                    256,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -5704,8 +5704,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.89",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -5737,22 +5737,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    72,
-                    40
+                    288,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    72,
-                    40
+                    288,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -5804,8 +5804,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.90",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -5837,22 +5837,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    80,
-                    40
+                    320,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    80,
-                    40
+                    320,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -5904,8 +5904,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.91",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -5937,22 +5937,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    88,
-                    40
+                    352,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    88,
-                    40
+                    352,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -6004,8 +6004,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.92",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -6037,22 +6037,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    96,
-                    40
+                    384,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    96,
-                    40
+                    384,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -6104,8 +6104,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.93",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -6137,22 +6137,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    104,
-                    40
+                    416,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    104,
-                    40
+                    416,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -6204,8 +6204,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.94",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -6237,22 +6237,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    112,
-                    40
+                    448,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    112,
-                    40
+                    448,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -6304,8 +6304,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.95",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -6337,22 +6337,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    120,
-                    40
+                    480,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    120,
-                    40
+                    480,
+                    160
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -6404,8 +6404,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.96",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -6438,21 +6438,21 @@
                 "north": {
                   "uv": [
                     0,
-                    48
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
                     0,
-                    48
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -6504,8 +6504,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.97",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -6537,22 +6537,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    8,
-                    48
+                    32,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    8,
-                    48
+                    32,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -6604,8 +6604,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.98",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -6637,22 +6637,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    16,
-                    48
+                    64,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    16,
-                    48
+                    64,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -6704,8 +6704,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.99",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -6737,22 +6737,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    24,
-                    48
+                    96,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    24,
-                    48
+                    96,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -6804,8 +6804,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.100",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -6837,22 +6837,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    32,
-                    48
+                    128,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    32,
-                    48
+                    128,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -6904,8 +6904,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.101",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -6937,22 +6937,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    40,
-                    48
+                    160,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    40,
-                    48
+                    160,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -7004,8 +7004,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.102",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -7037,22 +7037,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    48,
-                    48
+                    192,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    48,
-                    48
+                    192,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -7104,8 +7104,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.103",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -7137,22 +7137,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    56,
-                    48
+                    224,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    56,
-                    48
+                    224,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -7204,8 +7204,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.104",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -7237,22 +7237,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    64,
-                    48
+                    256,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    64,
-                    48
+                    256,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -7304,8 +7304,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.105",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -7337,22 +7337,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    72,
-                    48
+                    288,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    72,
-                    48
+                    288,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -7404,8 +7404,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.106",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -7437,22 +7437,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    80,
-                    48
+                    320,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    80,
-                    48
+                    320,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -7504,8 +7504,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.107",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -7537,22 +7537,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    88,
-                    48
+                    352,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    88,
-                    48
+                    352,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -7604,8 +7604,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.108",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -7637,22 +7637,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    96,
-                    48
+                    384,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    96,
-                    48
+                    384,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -7704,8 +7704,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.109",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -7737,22 +7737,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    104,
-                    48
+                    416,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    104,
-                    48
+                    416,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -7804,8 +7804,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.110",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -7837,22 +7837,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    112,
-                    48
+                    448,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    112,
-                    48
+                    448,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -7904,8 +7904,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.111",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -7937,22 +7937,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    120,
-                    48
+                    480,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    120,
-                    48
+                    480,
+                    192
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -8004,8 +8004,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.112",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -8038,21 +8038,21 @@
                 "north": {
                   "uv": [
                     0,
-                    56
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
                     0,
-                    56
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -8104,8 +8104,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.113",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -8137,22 +8137,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    8,
-                    56
+                    32,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    8,
-                    56
+                    32,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -8204,8 +8204,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.114",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -8237,22 +8237,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    16,
-                    56
+                    64,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    16,
-                    56
+                    64,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -8304,8 +8304,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.115",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -8337,22 +8337,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    24,
-                    56
+                    96,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    24,
-                    56
+                    96,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -8404,8 +8404,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.116",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -8437,22 +8437,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    32,
-                    56
+                    128,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    32,
-                    56
+                    128,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -8504,8 +8504,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.117",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -8537,22 +8537,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    40,
-                    56
+                    160,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    40,
-                    56
+                    160,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -8604,8 +8604,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.118",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -8637,22 +8637,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    48,
-                    56
+                    192,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    48,
-                    56
+                    192,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -8704,8 +8704,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.119",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -8737,22 +8737,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    56,
-                    56
+                    224,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    56,
-                    56
+                    224,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -8804,8 +8804,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.120",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -8837,22 +8837,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    64,
-                    56
+                    256,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    64,
-                    56
+                    256,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -8904,8 +8904,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.121",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -8937,22 +8937,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    72,
-                    56
+                    288,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    72,
-                    56
+                    288,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -9004,8 +9004,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.122",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -9037,22 +9037,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    80,
-                    56
+                    320,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    80,
-                    56
+                    320,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -9104,8 +9104,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.123",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -9137,22 +9137,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    88,
-                    56
+                    352,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    88,
-                    56
+                    352,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -9204,8 +9204,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.124",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -9237,22 +9237,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    96,
-                    56
+                    384,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    96,
-                    56
+                    384,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -9304,8 +9304,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.125",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -9337,22 +9337,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    104,
-                    56
+                    416,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    104,
-                    56
+                    416,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {
@@ -9404,8 +9404,8 @@
     {
       "description": {
         "identifier": "geometry.sign_char.126",
-        "texture_width": 128,
-        "texture_height": 128,
+        "texture_width": 512,
+        "texture_height": 512,
         "visible_bounds_width": 1,
         "visible_bounds_height": 1,
         "visible_bounds_offset": [
@@ -9437,22 +9437,22 @@
               "uv": {
                 "north": {
                   "uv": [
-                    112,
-                    56
+                    448,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "south": {
                   "uv": [
-                    112,
-                    56
+                    448,
+                    224
                   ],
                   "uv_size": [
-                    8,
-                    8
+                    32,
+                    32
                   ]
                 },
                 "east": {

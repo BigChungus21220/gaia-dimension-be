@@ -12,15 +12,15 @@ const MAX_LINES = 4;
 const BOARD_WIDTH = 0.92;  // 24 * 0.615 / 16
 const BOARD_HEIGHT = 0.46; // 12 * 0.615 / 16
 /** Y position of board bottom relative to block origin (after transform) */
-const BOARD_BOTTOM_Y = 0.45;
+const BOARD_BOTTOM_Y = 0.495;
 /** Z offset of the board's front face from block center */
 const BOARD_Z_OFFSET = -0.04;
 
 /** Size of each character cell = entity visual width (0.5 blocks * scale 0.18) */
-const CHAR_WIDTH = 0.09;
-const CHAR_HEIGHT = 0.09;
+const CHAR_WIDTH = 0.05;
+const CHAR_HEIGHT = 0.07;
 /** Entity scale to make the 0.5-block geometry fit into one character cell */
-const CHAR_SCALE = 0.18;
+const CHAR_SCALE = 0.14;
 
 /**
  * Finds all sign_char entities belonging to a specific sign block.
@@ -86,8 +86,8 @@ function spawnSignText(block: Block, text: string): void {
 
     for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
         const line = lines[lineIdx];
-        // Left-align: start from the left edge of the board
-        const boardLeft = BOARD_WIDTH / 2 - CHAR_WIDTH / 2;
+        // Center the line horizontally on the board (like vanilla signs)
+        const lineOffsetX = (line.length * CHAR_WIDTH) / 2 - CHAR_WIDTH / 2;
 
         for (let charIdx = 0; charIdx < line.length; charIdx++) {
             const char = line[charIdx];
@@ -96,7 +96,7 @@ function spawnSignText(block: Block, text: string): void {
 
             const asciiCode = char.charCodeAt(0);
 
-            const x = blockX + boardLeft - charIdx * CHAR_WIDTH;
+            const x = blockX + lineOffsetX - charIdx * CHAR_WIDTH;
             // Top-align: line 0 at top of board, going down
             const y = blockY + BOARD_BOTTOM_Y + BOARD_HEIGHT - (lineIdx * CHAR_HEIGHT) - CHAR_HEIGHT / 2;
             const z = blockZ + BOARD_Z_OFFSET;
