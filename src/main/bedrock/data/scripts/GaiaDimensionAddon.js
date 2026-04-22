@@ -2119,6 +2119,7 @@ function registerStairsComponent({ blockComponentRegistry }) {
 import { system as system16, world as world13 } from "@minecraft/server";
 import { ModalFormData } from "@minecraft/server-ui";
 var SIGN_CHAR_ENTITY = "gaiadimension:sign_char";
+var editingPlayers = /* @__PURE__ */ new Set();
 var CHARS_PER_LINE = 10;
 var MAX_LINES = 4;
 var BOARD_HEIGHT = 0.46;
@@ -2127,6 +2128,7 @@ var BOARD_Z_OFFSET = -0.04;
 var CHAR_WIDTH = 0.05;
 var CHAR_HEIGHT = 0.07;
 function findSignChars(block) {
+  const tag2 = `sign:${block.location.x},${block.location.y},${block.location.z}`;
   const center = {
     x: block.location.x + 0.5,
     y: block.location.y + 0.5,
@@ -2135,7 +2137,8 @@ function findSignChars(block) {
   return Array.from(block.dimension.getEntities({
     location: center,
     maxDistance: 2,
-    type: SIGN_CHAR_ENTITY
+    type: SIGN_CHAR_ENTITY,
+    tags: [tag2]
   }));
 }
 function clearSignChars(block) {
@@ -2187,8 +2190,6 @@ function spawnSignText(block, text) {
       try {
         const entity = block.dimension.spawnEntity(SIGN_CHAR_ENTITY, { x, y, z });
         entity.setProperty("gaiadimension:char_index", asciiCode);
-        entity.nameTag = `${char}=${asciiCode}`;
-        console.warn(`[Sign] Spawned '${char}' at index ${asciiCode} (col=${asciiCode % 16}, row=${Math.floor(asciiCode / 16)})`);
         entity.addTag(`sign:${block.location.x},${block.location.y},${block.location.z}`);
       } catch (e) {
         console.warn(`Failed to spawn sign char: ${e}`);
@@ -2200,22 +2201,28 @@ function spawnSignText(block, text) {
   world13.setDynamicProperty(signKey, text);
 }
 function openSignUI(player, block) {
+  const playerId = player.id;
+  if (editingPlayers.has(playerId)) return;
+  editingPlayers.add(playerId);
   const signKey = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
   const ui = new ModalFormData();
   ui.title("Edit Sign");
   ui.textField("Sign Text", "Type here...");
   ui.show(player).then((response) => {
+    editingPlayers.delete(playerId);
     if (response.canceled || !response.formValues) return;
     const rawInput = String(response.formValues[0] || "");
     if (rawInput.trim().length === 0) return;
     clearSignChars(block);
     spawnSignText(block, rawInput.trim());
+  }).catch(() => {
+    editingPlayers.delete(playerId);
   });
 }
 function registerSignComponent({ blockComponentRegistry }) {
   blockComponentRegistry.registerCustomComponent("gaiadimension:sign", {});
   registerPlaceHandler({
-    check: (block) => block.typeId.includes("sign"),
+    check: (block) => block.typeId.includes("gaiadimension") && block.typeId.includes("sign"),
     execute: (event) => {
       const { block, player } = event;
       system16.runTimeout(() => {
@@ -2225,7 +2232,7 @@ function registerSignComponent({ blockComponentRegistry }) {
   });
   registerBreakHandler({
     event: "before",
-    check: (block) => block.typeId.includes("sign"),
+    check: (block) => block.typeId.includes("gaiadimension") && block.typeId.includes("sign"),
     execute: (event) => {
       const { block } = event;
       system16.run(() => {
@@ -2236,7 +2243,7 @@ function registerSignComponent({ blockComponentRegistry }) {
     }
   });
   registerInteractHandler({
-    check: (block) => block.typeId.includes("sign"),
+    check: (block) => block.typeId.includes("gaiadimension") && block.typeId.includes("sign"),
     execute: (event) => {
       const { player, block } = event;
       if (player.isSneaking) return;

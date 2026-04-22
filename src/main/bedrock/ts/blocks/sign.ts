@@ -4,6 +4,9 @@ import { registerPlaceHandler, registerBreakHandler, registerInteractHandler } f
 
 const SIGN_CHAR_ENTITY = "gaiadimension:sign_char";
 
+/** Set of players currently editing a sign (prevents form stacking) */
+const editingPlayers = new Set<string>();
+
 /** Characters per line on the sign */
 const CHARS_PER_LINE = 10;
 /** Max lines on the sign */
@@ -26,6 +29,7 @@ const CHAR_SCALE = 0.14;
  * Finds all sign_char entities belonging to a specific sign block.
  */
 function findSignChars(block: Block): Entity[] {
+    const tag = `sign:${block.location.x},${block.location.y},${block.location.z}`;
     const center = {
         x: block.location.x + 0.5,
         y: block.location.y + 0.5,
@@ -34,7 +38,8 @@ function findSignChars(block: Block): Entity[] {
     return Array.from(block.dimension.getEntities({
         location: center,
         maxDistance: 2.0,
-        type: SIGN_CHAR_ENTITY
+        type: SIGN_CHAR_ENTITY,
+        tags: [tag]
     }));
 }
 
@@ -104,8 +109,6 @@ function spawnSignText(block: Block, text: string): void {
             try {
                 const entity = block.dimension.spawnEntity(SIGN_CHAR_ENTITY, { x, y, z });
                 entity.setProperty("gaiadimension:char_index", asciiCode);
-                entity.nameTag = `${char}=${asciiCode}`; // DEBUG: visual confirmation
-                console.warn(`[Sign] Spawned '${char}' at index ${asciiCode} (col=${asciiCode % 16}, row=${Math.floor(asciiCode / 16)})`);
                 // Store the sign's block location as a tag for easy lookup
                 entity.addTag(`sign:${block.location.x},${block.location.y},${block.location.z}`);
             } catch (e) {
@@ -125,6 +128,10 @@ function spawnSignText(block: Block, text: string): void {
  * Opens the sign edit UI for the player.
  */
 function openSignUI(player: any, block: Block): void {
+    const playerId = player.id;
+    if (editingPlayers.has(playerId)) return; // Already editing
+    editingPlayers.add(playerId);
+
     const signKey = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
     
     const ui = new ModalFormData();
@@ -132,6 +139,7 @@ function openSignUI(player: any, block: Block): void {
     ui.textField("Sign Text", "Type here...");
 
     ui.show(player).then(response => {
+        editingPlayers.delete(playerId);
         if (response.canceled || !response.formValues) return;
 
         const rawInput = String(response.formValues[0] || "");
@@ -141,6 +149,8 @@ function openSignUI(player: any, block: Block): void {
         clearSignChars(block);
         // Spawn new characters
         spawnSignText(block, rawInput.trim());
+    }).catch(() => {
+        editingPlayers.delete(playerId);
     });
 }
 
@@ -149,7 +159,7 @@ export function registerSignComponent({ blockComponentRegistry }: { blockCompone
 
     // --- PLACE: Show edit UI immediately ---
     registerPlaceHandler({
-        check: (block: Block) => block.typeId.includes("sign"),
+        check: (block: Block) => block.typeId.includes("gaiadimension") && block.typeId.includes("sign"),
         execute: (event: PlayerPlaceBlockAfterEvent) => {
             const { block, player } = event;
             system.runTimeout(() => {
@@ -161,7 +171,7 @@ export function registerSignComponent({ blockComponentRegistry }: { blockCompone
     // --- BREAK: Kill all sign_char entities ---
     registerBreakHandler({
         event: "before",
-        check: (block: Block) => block.typeId.includes("sign"),
+        check: (block: Block) => block.typeId.includes("gaiadimension") && block.typeId.includes("sign"),
         execute: (event: PlayerBreakBlockBeforeEvent) => {
             const { block } = event;
             system.run(() => {
@@ -175,7 +185,7 @@ export function registerSignComponent({ blockComponentRegistry }: { blockCompone
 
     // --- INTERACT: Re-edit sign text ---
     registerInteractHandler({
-        check: (block: Block) => block.typeId.includes("sign"),
+        check: (block: Block) => block.typeId.includes("gaiadimension") && block.typeId.includes("sign"),
         execute: (event: PlayerInteractWithBlockBeforeEvent) => {
             const { player, block } = event;
 
