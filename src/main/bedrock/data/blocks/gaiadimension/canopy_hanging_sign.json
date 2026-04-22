@@ -10,9 +10,26 @@
       "states": {
         "gaiadimension:rotation": [
           0,
+          1,
+          2,
+          3,
           4,
+          5,
+          6,
+          7,
           8,
-          12
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "gaiadimension:attach_type": [
+          0,
+          1,
+          2
         ]
       }
     },
@@ -34,12 +51,12 @@
       "minecraft:collision_box": false,
       "minecraft:selection_box": {
         "origin": [
-          -5,
+          -7,
           0,
           -1
         ],
         "size": [
-          10,
+          14,
           16,
           2
         ]
@@ -47,21 +64,158 @@
     },
     "permutations": [
       {
-        "condition": "q.block_state('gaiadimension:rotation') == 4",
+        "condition": "q.block_state('gaiadimension:attach_type') == 0 && q.block_state('gaiadimension:rotation') == 1",
+        "components": {
+          "minecraft:geometry": "geometry.hanging_sign_1"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 0 && q.block_state('gaiadimension:rotation') == 2",
+        "components": {
+          "minecraft:geometry": "geometry.hanging_sign_2"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 0 && q.block_state('gaiadimension:rotation') == 3",
+        "components": {
+          "minecraft:geometry": "geometry.hanging_sign_3"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 0 && q.block_state('gaiadimension:rotation') == 4",
         "components": {
           "minecraft:geometry": "geometry.hanging_sign_4"
         }
       },
       {
-        "condition": "q.block_state('gaiadimension:rotation') == 8",
+        "condition": "q.block_state('gaiadimension:attach_type') == 0 && q.block_state('gaiadimension:rotation') == 5",
+        "components": {
+          "minecraft:geometry": "geometry.hanging_sign_5"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 0 && q.block_state('gaiadimension:rotation') == 6",
+        "components": {
+          "minecraft:geometry": "geometry.hanging_sign_6"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 0 && q.block_state('gaiadimension:rotation') == 7",
+        "components": {
+          "minecraft:geometry": "geometry.hanging_sign_7"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 0 && q.block_state('gaiadimension:rotation') == 8",
         "components": {
           "minecraft:geometry": "geometry.hanging_sign_8"
         }
       },
       {
-        "condition": "q.block_state('gaiadimension:rotation') == 12",
+        "condition": "q.block_state('gaiadimension:attach_type') == 0 && q.block_state('gaiadimension:rotation') == 9",
+        "components": {
+          "minecraft:geometry": "geometry.hanging_sign_9"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 0 && q.block_state('gaiadimension:rotation') == 10",
+        "components": {
+          "minecraft:geometry": "geometry.hanging_sign_10"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 0 && q.block_state('gaiadimension:rotation') == 11",
+        "components": {
+          "minecraft:geometry": "geometry.hanging_sign_11"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 0 && q.block_state('gaiadimension:rotation') == 12",
         "components": {
           "minecraft:geometry": "geometry.hanging_sign_12"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 0 && q.block_state('gaiadimension:rotation') == 13",
+        "components": {
+          "minecraft:geometry": "geometry.hanging_sign_13"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 0 && q.block_state('gaiadimension:rotation') == 14",
+        "components": {
+          "minecraft:geometry": "geometry.hanging_sign_14"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 0 && q.block_state('gaiadimension:rotation') == 15",
+        "components": {
+          "minecraft:geometry": "geometry.hanging_sign_15"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 1 && q.block_state('gaiadimension:rotation') == 0",
+        "components": {
+          "minecraft:geometry": "geometry.parallel_hanging_sign_0"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 1 && q.block_state('gaiadimension:rotation') == 4",
+        "components": {
+          "minecraft:geometry": "geometry.parallel_hanging_sign_4"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 1 && q.block_state('gaiadimension:rotation') == 8",
+        "components": {
+          "minecraft:geometry": "geometry.parallel_hanging_sign_8"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 1 && q.block_state('gaiadimension:rotation') == 12",
+        "components": {
+          "minecraft:geometry": "geometry.parallel_hanging_sign_12"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 2 && q.block_state('gaiadimension:rotation') == 0",
+        "components": {
+          "minecraft:geometry": "geometry.wall_hanging_sign_0"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 2 && q.block_state('gaiadimension:rotation') == 4",
+        "components": {
+          "minecraft:geometry": "geometry.wall_hanging_sign_4"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 2 && q.block_state('gaiadimension:rotation') == 8",
+        "components": {
+          "minecraft:geometry": "geometry.wall_hanging_sign_8"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:attach_type') == 2 && q.block_state('gaiadimension:rotation') == 12",
+        "components": {
+          "minecraft:geometry": "geometry.wall_hanging_sign_12"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:rotation') == 4 || q.block_state('gaiadimension:rotation') == 12",
+        "components": {
+          "minecraft:selection_box": {
+            "origin": [
+              -1,
+              0,
+              -7
+            ],
+            "size": [
+              2,
+              16,
+              14
+            ]
+          }
         }
       }
     ]

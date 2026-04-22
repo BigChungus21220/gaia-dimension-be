@@ -24,8 +24,8 @@ const WALL_BOARD_Z = 0.10; // text on player side (flipped with board)
 
 // Hanging sign: board at model Y=0-10, scale 0.615, translation Y=+0.3
 // Hanging sign: board at model Y=0-10, NO scale (full size)
-const HANGING_BOARD_BOTTOM_Y = 0.0;
-const HANGING_BOARD_Z = -0.05;
+const HANGING_BOARD_BOTTOM_Y = -0.03;
+const HANGING_BOARD_Z = -0.08; // in front of board face (-0.0625)
 const HANGING_BOARD_HEIGHT = 0.625;
 
 /** Size of each character cell */
@@ -57,16 +57,20 @@ function rotationIndexToDegrees(index: number): number {
     return (index * 22.5) % 360;
 }
 
-/** Get the sign's stored text */
-function getSignText(block: Block): string {
-    const key = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
-    return (world.getDynamicProperty(key) as string) ?? "";
+/** Get the sign's stored text (front and back) */
+function getSignText(block: Block): { front: string; back: string } {
+    const base = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
+    return {
+        front: (world.getDynamicProperty(`${base}_front`) as string) ?? "",
+        back: (world.getDynamicProperty(`${base}_back`) as string) ?? ""
+    };
 }
 
-/** Store the sign's text */
-function setSignText(block: Block, text: string): void {
-    const key = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
-    world.setDynamicProperty(key, text);
+/** Store the sign's text (front and back) */
+function setSignText(block: Block, front: string, back: string): void {
+    const base = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
+    world.setDynamicProperty(`${base}_front`, front);
+    world.setDynamicProperty(`${base}_back`, back);
 }
 
 /**
@@ -93,7 +97,7 @@ function findSignChars(block: Block): Entity[] {
 function clearSignChars(block: Block): void {
     const chars = findSignChars(block);
     for (const entity of chars) {
-        try { entity.remove(); } catch (e) {}
+        try { entity.remove(); } catch (e) { }
     }
 }
 
@@ -128,21 +132,20 @@ function wrapText(input: string): string[] {
  * Spawns sign_char entities for each character of the given text on the sign.
  * Characters are rotated to face toward the player (same direction as sign face).
  */
-function spawnSignText(block: Block, text: string): void {
-    const lines = wrapText(text);
+function spawnSignText(block: Block, frontText: string, backText: string): void {
     const blockX = block.location.x + 0.5;
     const blockY = block.location.y;
     const blockZ = block.location.z + 0.5;
 
     // Get rotation from block state
     const rotIndex = block.permutation.getState("gaiadimension:rotation") as number ?? 0;
-    const isWall = block.permutation.getState("gaiadimension:wall_attached") as boolean ?? false;
+    let isWall = false;
+    try { isWall = block.permutation.getState("gaiadimension:wall_attached") as boolean ?? false; } catch (_) {}
     const isHanging = block.typeId.includes("hanging");
 
     // Block rotation: state N → bone rotation = -N*22.5 degrees
     const blockRotDeg = rotationIndexToDegrees(rotIndex);
     const boneRotDeg = -blockRotDeg;
-    // Both standing and wall: entity faces opposite to bone rotation (+180)
     const entityRotDeg = ((boneRotDeg + 180) % 360 + 360) % 360;
     const boneRotRad = (boneRotDeg * Math.PI) / 180;
 
@@ -151,25 +154,44 @@ function spawnSignText(block: Block, text: string): void {
     const boardZ = isHanging ? HANGING_BOARD_Z : (isWall ? WALL_BOARD_Z : STANDING_BOARD_Z);
     const boardHeight = isHanging ? HANGING_BOARD_HEIGHT : (isWall ? 0.36 : BOARD_HEIGHT);
 
+    // Front face
+    if (frontText.length > 0) {
+        const frontLines = wrapText(frontText);
+        spawnFaceChars(block, frontLines, boardBottomY, boardHeight, boardZ, entityRotDeg, boneRotRad, blockX, blockY, blockZ, false);
+    }
+
+    // Back face (opposite Z, 180° rotated entity, mirrored X for correct reading order)
+    if (backText.length > 0) {
+        const backLines = wrapText(backText);
+        const backEntityRot = (entityRotDeg + 180) % 360;
+        spawnFaceChars(block, backLines, boardBottomY, boardHeight, -boardZ, backEntityRot, boneRotRad, blockX, blockY, blockZ, true);
+    }
+
+    setSignText(block, frontText, backText);
+}
+
+/** Spawns characters for one face of the sign */
+function spawnFaceChars(
+    block: Block, lines: string[], boardBottomY: number, boardHeight: number,
+    boardZ: number, entityRotDeg: number, boneRotRad: number,
+    blockX: number, blockY: number, blockZ: number, mirrorX: boolean
+): void {
+    const cosR = Math.cos(boneRotRad);
+    const sinR = Math.sin(boneRotRad);
+
     for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
         const line = lines[lineIdx];
-        // Center the line horizontally on the board
         const lineOffsetX = (line.length * CHAR_WIDTH) / 2 - CHAR_WIDTH / 2;
 
         for (let charIdx = 0; charIdx < line.length; charIdx++) {
             const char = line[charIdx];
             if (char === " ") continue;
-
             const asciiCode = char.charCodeAt(0);
 
-            // Local position relative to block center (before rotation)
-            const localX = lineOffsetX - charIdx * CHAR_WIDTH;
+            const localX = mirrorX ? -(lineOffsetX - charIdx * CHAR_WIDTH) : (lineOffsetX - charIdx * CHAR_WIDTH);
             const localY = boardBottomY + boardHeight - (lineIdx * CHAR_HEIGHT) - CHAR_HEIGHT / 2;
             const localZ = boardZ;
 
-            // Rotate local X,Z by BONE rotation angle (negative of state angle)
-            const cosR = Math.cos(boneRotRad);
-            const sinR = Math.sin(boneRotRad);
             const worldX = blockX + localX * cosR - localZ * sinR;
             const worldZ = blockZ + localX * sinR + localZ * cosR;
             const worldY = blockY + localY;
@@ -179,11 +201,9 @@ function spawnSignText(block: Block, text: string): void {
                 entity.setProperty("gaiadimension:char_index", asciiCode);
                 entity.setRotation({ x: 0, y: entityRotDeg });
                 entity.addTag(`sign:${block.location.x},${block.location.y},${block.location.z}`);
-            } catch (e) {}
+            } catch (e) { console.warn(`[Sign] Failed to spawn char: ${e}`); }
         }
     }
-
-    setSignText(block, text);
 }
 
 /**
@@ -194,31 +214,56 @@ function openSignUI(player: Player, block: Block): void {
     if (editingPlayers.has(playerId)) return;
     editingPlayers.add(playerId);
 
-    const existingText = getSignText(block);
+    const existing = getSignText(block);
+    const isHanging = block.typeId.includes("hanging");
+
+    // For hanging signs, detect which side the player is facing
+    let editingBack = false;
+    if (isHanging) {
+        const rotIndex = block.permutation.getState("gaiadimension:rotation") as number ?? 0;
+        const entityRotDeg = ((-rotIndex * 22.5 + 180) % 360 + 360) % 360;
+        const entityRotRad = entityRotDeg * Math.PI / 180;
+        // Sign front face normal vector points in direction of text entity
+        const nx = -Math.sin(entityRotRad);
+        const nz = Math.cos(entityRotRad);
+        // Vector from sign center to player
+        const dx = player.location.x - (block.location.x + 0.5);
+        const dz = player.location.z - (block.location.z + 0.5);
+        // Dot product: positive = player is on front side, negative = back side
+        editingBack = (dx * nx + dz * nz) < 0;
+    }
+
+    const currentText = editingBack ? existing.back : existing.front;
 
     const ui = new ModalFormData();
-    ui.title("Edit Sign");
-    ui.textField("Sign Text", "Type here...", { defaultValue: existingText || "" });
+    ui.title(isHanging && editingBack ? "Edit Sign (Back)" : "Edit Sign");
+    ui.textField("Sign Text", "Type here...", { defaultValue: currentText || "" });
 
     ui.show(player).then(response => {
         editingPlayers.delete(playerId);
         if (response.canceled || !response.formValues) return;
 
-        const rawInput = String(response.formValues[0] || "");
-        if (rawInput.trim().length === 0) return;
+        const newText = String(response.formValues[0] || "").trim();
+
+        // Update only the side being edited
+        const frontText = editingBack ? existing.front : newText;
+        const backText = editingBack ? newText : existing.back;
 
         clearSignChars(block);
-        spawnSignText(block, rawInput.trim());
+        spawnSignText(block, frontText, backText);
     }).catch(() => {
         editingPlayers.delete(playerId);
     });
 }
 
+
 /**
  * Cleans up all stored data for a sign block.
  */
 function cleanupSignData(loc: { x: number; y: number; z: number }): void {
-    world.setDynamicProperty(`sign_${loc.x}_${loc.y}_${loc.z}`, undefined);
+    const base = `sign_${loc.x}_${loc.y}_${loc.z}`;
+    world.setDynamicProperty(`${base}_front`, undefined);
+    world.setDynamicProperty(`${base}_back`, undefined);
 }
 
 // ============================================================
@@ -239,12 +284,52 @@ export function registerSignComponent({ blockComponentRegistry }: { blockCompone
         const isHanging = block.typeId.includes("hanging");
 
         if (isHanging) {
-            // Hanging signs: 4 cardinal directions from player yaw
-            const cardinalIndex = Math.round(rotIndex / 4) * 4 % 16;
-            rotIndex = cardinalIndex;
-            const perm = block.permutation
-                .withState("gaiadimension:rotation", rotIndex);
-            block.setPermutation(perm);
+            // Check block above to determine hanging mode
+            const blockAbove = block.dimension.getBlock({
+                x: block.location.x,
+                y: block.location.y + 1,
+                z: block.location.z
+            });
+
+            const isFullBlockAbove = blockAbove && !blockAbove.isAir && !blockAbove.typeId.includes("fence") && !blockAbove.typeId.includes("chain") && !blockAbove.typeId.includes("iron_bars");
+
+            if (isFullBlockAbove && !player.isSneaking) {
+                // Full block above, not sneaking → parallel chains, 4 cardinal directions
+                const cardinalIndex = Math.round(rotIndex / 4) * 4 % 16;
+                const perm = block.permutation
+                    .withState("gaiadimension:rotation", cardinalIndex)
+                    .withState("gaiadimension:attach_type", 1);
+                block.setPermutation(perm);
+            } else if (blockAbove && !blockAbove.isAir) {
+                // Narrow block above → V-chains, 16 rotations
+                const perm = block.permutation
+                    .withState("gaiadimension:rotation", rotIndex)
+                    .withState("gaiadimension:attach_type", 0);
+                block.setPermutation(perm);
+            } else {
+                // No block above → wall-attached, find adjacent wall
+                const dirs = [
+                    { dx: 0, dz: -1, rot: 8 },
+                    { dx: 1, dz: 0, rot: 4 },
+                    { dx: 0, dz: 1, rot: 0 },
+                    { dx: -1, dz: 0, rot: 12 },
+                ];
+                for (const d of dirs) {
+                    const adj = block.dimension.getBlock({
+                        x: block.location.x + d.dx,
+                        y: block.location.y,
+                        z: block.location.z + d.dz
+                    });
+                    if (adj && !adj.isAir) {
+                        rotIndex = d.rot;
+                        break;
+                    }
+                }
+                const perm = block.permutation
+                    .withState("gaiadimension:rotation", rotIndex)
+                    .withState("gaiadimension:attach_type", 2);
+                block.setPermutation(perm);
+            }
         } else {
             // Check if block below is air — if so, it's a wall placement
             const blockBelow = block.dimension.getBlock({
@@ -304,7 +389,7 @@ export function registerSignComponent({ blockComponentRegistry }: { blockCompone
                 tags: [tag]
             });
             for (const entity of entities) {
-                try { entity.remove(); } catch (e) {}
+                try { entity.remove(); } catch (e) { }
             }
             cleanupSignData(loc);
         });

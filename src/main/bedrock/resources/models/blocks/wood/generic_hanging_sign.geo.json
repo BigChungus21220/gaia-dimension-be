@@ -22,6 +22,11 @@
             10,
             0
           ],
+          "rotation": [
+            0,
+            -0.0,
+            0
+          ],
           "cubes": [
             {
               "origin": [
@@ -42,32 +47,6 @@
           ]
         },
         {
-          "name": "plank",
-          "pivot": [
-            0,
-            10,
-            0
-          ],
-          "cubes": [
-            {
-              "origin": [
-                -8,
-                14,
-                -2
-              ],
-              "size": [
-                16,
-                2,
-                4
-              ],
-              "uv": [
-                0,
-                0
-              ]
-            }
-          ]
-        },
-        {
           "name": "chain_left1",
           "pivot": [
             -5,
@@ -76,7 +55,7 @@
           ],
           "rotation": [
             0,
-            -45,
+            -45.0,
             0
           ],
           "cubes": [
@@ -107,7 +86,7 @@
           ],
           "rotation": [
             0,
-            45,
+            45.0,
             0
           ],
           "cubes": [
@@ -138,7 +117,7 @@
           ],
           "rotation": [
             0,
-            -45,
+            -45.0,
             0
           ],
           "cubes": [
@@ -169,7 +148,7 @@
           ],
           "rotation": [
             0,
-            45,
+            45.0,
             0
           ],
           "cubes": [
@@ -196,6 +175,617 @@
           "pivot": [
             0,
             10,
+            0
+          ],
+          "rotation": [
+            0,
+            -0.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                10,
+                0
+              ],
+              "size": [
+                12,
+                6,
+                0
+              ],
+              "uv": [
+                14,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.hanging_sign_1",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -22.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left1",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -67.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left2",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            22.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right1",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -67.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right2",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            22.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chains_v",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -22.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                10,
+                0
+              ],
+              "size": [
+                12,
+                6,
+                0
+              ],
+              "uv": [
+                14,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.hanging_sign_2",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -45.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left1",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -90.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left2",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            0.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right1",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -90.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right2",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            0.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chains_v",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -45.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                10,
+                0
+              ],
+              "size": [
+                12,
+                6,
+                0
+              ],
+              "uv": [
+                14,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.hanging_sign_3",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -67.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left1",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -112.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left2",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -22.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right1",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -112.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right2",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -22.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chains_v",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -67.5,
             0
           ],
           "cubes": [
@@ -240,6 +830,11 @@
             10,
             0
           ],
+          "rotation": [
+            0,
+            -90.0,
+            0
+          ],
           "cubes": [
             {
               "origin": [
@@ -257,42 +852,6 @@
                 12
               ]
             }
-          ],
-          "rotation": [
-            0,
-            -90,
-            0
-          ]
-        },
-        {
-          "name": "plank",
-          "pivot": [
-            0,
-            10,
-            0
-          ],
-          "cubes": [
-            {
-              "origin": [
-                -8,
-                14,
-                -2
-              ],
-              "size": [
-                16,
-                2,
-                4
-              ],
-              "uv": [
-                0,
-                0
-              ]
-            }
-          ],
-          "rotation": [
-            0,
-            -90,
-            0
           ]
         },
         {
@@ -304,7 +863,7 @@
           ],
           "rotation": [
             0,
-            -135,
+            -135.0,
             0
           ],
           "cubes": [
@@ -335,7 +894,7 @@
           ],
           "rotation": [
             0,
-            -45,
+            -45.0,
             0
           ],
           "cubes": [
@@ -366,7 +925,7 @@
           ],
           "rotation": [
             0,
-            -135,
+            -135.0,
             0
           ],
           "cubes": [
@@ -397,7 +956,7 @@
           ],
           "rotation": [
             0,
-            -45,
+            -45.0,
             0
           ],
           "cubes": [
@@ -426,6 +985,11 @@
             10,
             0
           ],
+          "rotation": [
+            0,
+            -90.0,
+            0
+          ],
           "cubes": [
             {
               "origin": [
@@ -443,11 +1007,612 @@
                 6
               ]
             }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.hanging_sign_5",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
           ],
           "rotation": [
             0,
-            -90,
+            -112.5,
             0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left1",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -157.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left2",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -67.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right1",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -157.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right2",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -67.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chains_v",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -112.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                10,
+                0
+              ],
+              "size": [
+                12,
+                6,
+                0
+              ],
+              "uv": [
+                14,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.hanging_sign_6",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -135.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left1",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -180.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left2",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -90.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right1",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -180.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right2",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -90.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chains_v",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -135.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                10,
+                0
+              ],
+              "size": [
+                12,
+                6,
+                0
+              ],
+              "uv": [
+                14,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.hanging_sign_7",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -157.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left1",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -202.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left2",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -112.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right1",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -202.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right2",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -112.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chains_v",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -157.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                10,
+                0
+              ],
+              "size": [
+                12,
+                6,
+                0
+              ],
+              "uv": [
+                14,
+                6
+              ]
+            }
           ]
         }
       ]
@@ -473,6 +1638,11 @@
             10,
             0
           ],
+          "rotation": [
+            0,
+            -180.0,
+            0
+          ],
           "cubes": [
             {
               "origin": [
@@ -490,42 +1660,6 @@
                 12
               ]
             }
-          ],
-          "rotation": [
-            0,
-            -180,
-            0
-          ]
-        },
-        {
-          "name": "plank",
-          "pivot": [
-            0,
-            10,
-            0
-          ],
-          "cubes": [
-            {
-              "origin": [
-                -8,
-                14,
-                -2
-              ],
-              "size": [
-                16,
-                2,
-                4
-              ],
-              "uv": [
-                0,
-                0
-              ]
-            }
-          ],
-          "rotation": [
-            0,
-            -180,
-            0
           ]
         },
         {
@@ -537,7 +1671,7 @@
           ],
           "rotation": [
             0,
-            -225,
+            -225.0,
             0
           ],
           "cubes": [
@@ -568,7 +1702,7 @@
           ],
           "rotation": [
             0,
-            -135,
+            -135.0,
             0
           ],
           "cubes": [
@@ -599,7 +1733,7 @@
           ],
           "rotation": [
             0,
-            -225,
+            -225.0,
             0
           ],
           "cubes": [
@@ -630,7 +1764,7 @@
           ],
           "rotation": [
             0,
-            -135,
+            -135.0,
             0
           ],
           "cubes": [
@@ -659,6 +1793,11 @@
             10,
             0
           ],
+          "rotation": [
+            0,
+            -180.0,
+            0
+          ],
           "cubes": [
             {
               "origin": [
@@ -676,11 +1815,612 @@
                 6
               ]
             }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.hanging_sign_9",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
           ],
           "rotation": [
             0,
-            -180,
+            -202.5,
             0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left1",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -247.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left2",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -157.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right1",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -247.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right2",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -157.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chains_v",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -202.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                10,
+                0
+              ],
+              "size": [
+                12,
+                6,
+                0
+              ],
+              "uv": [
+                14,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.hanging_sign_10",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -225.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left1",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -270.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left2",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -180.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right1",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -270.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right2",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -180.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chains_v",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -225.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                10,
+                0
+              ],
+              "size": [
+                12,
+                6,
+                0
+              ],
+              "uv": [
+                14,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.hanging_sign_11",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -247.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left1",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -292.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left2",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -202.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right1",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -292.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right2",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -202.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chains_v",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -247.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                10,
+                0
+              ],
+              "size": [
+                12,
+                6,
+                0
+              ],
+              "uv": [
+                14,
+                6
+              ]
+            }
           ]
         }
       ]
@@ -706,6 +2446,11 @@
             10,
             0
           ],
+          "rotation": [
+            0,
+            -270.0,
+            0
+          ],
           "cubes": [
             {
               "origin": [
@@ -723,42 +2468,6 @@
                 12
               ]
             }
-          ],
-          "rotation": [
-            0,
-            -270,
-            0
-          ]
-        },
-        {
-          "name": "plank",
-          "pivot": [
-            0,
-            10,
-            0
-          ],
-          "cubes": [
-            {
-              "origin": [
-                -8,
-                14,
-                -2
-              ],
-              "size": [
-                16,
-                2,
-                4
-              ],
-              "uv": [
-                0,
-                0
-              ]
-            }
-          ],
-          "rotation": [
-            0,
-            -270,
-            0
           ]
         },
         {
@@ -770,7 +2479,7 @@
           ],
           "rotation": [
             0,
-            -315,
+            -315.0,
             0
           ],
           "cubes": [
@@ -801,7 +2510,7 @@
           ],
           "rotation": [
             0,
-            -225,
+            -225.0,
             0
           ],
           "cubes": [
@@ -832,7 +2541,7 @@
           ],
           "rotation": [
             0,
-            -315,
+            -315.0,
             0
           ],
           "cubes": [
@@ -863,7 +2572,7 @@
           ],
           "rotation": [
             0,
-            -225,
+            -225.0,
             0
           ],
           "cubes": [
@@ -892,6 +2601,11 @@
             10,
             0
           ],
+          "rotation": [
+            0,
+            -270.0,
+            0
+          ],
           "cubes": [
             {
               "origin": [
@@ -909,11 +2623,1608 @@
                 6
               ]
             }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.hanging_sign_13",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -292.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left1",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -337.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left2",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -247.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right1",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -337.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right2",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -247.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chains_v",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -292.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                10,
+                0
+              ],
+              "size": [
+                12,
+                6,
+                0
+              ],
+              "uv": [
+                14,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.hanging_sign_14",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -315.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left1",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -360.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left2",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -270.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right1",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -360.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right2",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -270.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chains_v",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -315.0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                10,
+                0
+              ],
+              "size": [
+                12,
+                6,
+                0
+              ],
+              "uv": [
+                14,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.hanging_sign_15",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -337.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left1",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -382.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left2",
+          "pivot": [
+            -5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -292.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right1",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -382.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right2",
+          "pivot": [
+            5,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -292.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                3.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chains_v",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -337.5,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                10,
+                0
+              ],
+              "size": [
+                12,
+                6,
+                0
+              ],
+              "uv": [
+                14,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.parallel_hanging_sign_0",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "plank",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -8,
+                14,
+                -2
+              ],
+              "size": [
+                16,
+                2,
+                4
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                10,
+                0
+              ],
+              "size": [
+                1,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                5,
+                10,
+                0
+              ],
+              "size": [
+                1,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.parallel_hanging_sign_4",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -90,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "plank",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -90,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -8,
+                14,
+                -2
+              ],
+              "size": [
+                16,
+                2,
+                4
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -90,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                10,
+                0
+              ],
+              "size": [
+                1,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -90,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                5,
+                10,
+                0
+              ],
+              "size": [
+                1,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.parallel_hanging_sign_8",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -180,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "plank",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -180,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -8,
+                14,
+                -2
+              ],
+              "size": [
+                16,
+                2,
+                4
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -180,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                10,
+                0
+              ],
+              "size": [
+                1,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -180,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                5,
+                10,
+                0
+              ],
+              "size": [
+                1,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.parallel_hanging_sign_12",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
           ],
           "rotation": [
             0,
             -270,
             0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "plank",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -270,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -8,
+                14,
+                -2
+              ],
+              "size": [
+                16,
+                2,
+                4
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_left",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -270,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                10,
+                0
+              ],
+              "size": [
+                1,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain_right",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -270,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                5,
+                10,
+                0
+              ],
+              "size": [
+                1,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.wall_hanging_sign_0",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain1",
+          "pivot": [
+            0,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -45,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -1.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain2",
+          "pivot": [
+            0,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            45,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -1.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.wall_hanging_sign_4",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -90,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain1",
+          "pivot": [
+            0,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -135,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -1.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain2",
+          "pivot": [
+            0,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -45,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -1.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.wall_hanging_sign_8",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -180,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain1",
+          "pivot": [
+            0,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -225,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -1.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain2",
+          "pivot": [
+            0,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -135,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -1.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": {
+        "identifier": "geometry.wall_hanging_sign_12",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 2,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [
+          0,
+          0.75,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "board",
+          "pivot": [
+            0,
+            10,
+            0
+          ],
+          "rotation": [
+            0,
+            -270,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -1
+              ],
+              "size": [
+                14,
+                10,
+                2
+              ],
+              "uv": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain1",
+          "pivot": [
+            0,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -315,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -1.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                0,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "name": "chain2",
+          "pivot": [
+            0,
+            16,
+            0
+          ],
+          "rotation": [
+            0,
+            -225,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -1.5,
+                10,
+                0
+              ],
+              "size": [
+                3,
+                6,
+                0
+              ],
+              "uv": [
+                6,
+                6
+              ]
+            }
           ]
         }
       ]

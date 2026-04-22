@@ -2127,8 +2127,8 @@ var STANDING_BOARD_BOTTOM_Y = 0.495;
 var STANDING_BOARD_Z = -0.05;
 var WALL_BOARD_BOTTOM_Y = 0.19;
 var WALL_BOARD_Z = 0.1;
-var HANGING_BOARD_BOTTOM_Y = 0;
-var HANGING_BOARD_Z = -0.05;
+var HANGING_BOARD_BOTTOM_Y = -0.03;
+var HANGING_BOARD_Z = -0.08;
 var HANGING_BOARD_HEIGHT = 0.625;
 var CHAR_WIDTH = 0.05;
 var CHAR_HEIGHT = 0.07;
@@ -2144,12 +2144,16 @@ function rotationIndexToDegrees(index) {
   return index * 22.5 % 360;
 }
 function getSignText(block) {
-  const key = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
-  return world13.getDynamicProperty(key) ?? "";
+  const base = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
+  return {
+    front: world13.getDynamicProperty(`${base}_front`) ?? "",
+    back: world13.getDynamicProperty(`${base}_back`) ?? ""
+  };
 }
-function setSignText(block, text) {
-  const key = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
-  world13.setDynamicProperty(key, text);
+function setSignText(block, front, back) {
+  const base = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
+  world13.setDynamicProperty(`${base}_front`, front);
+  world13.setDynamicProperty(`${base}_back`, back);
 }
 function findSignChars(block) {
   const tag2 = `sign:${block.location.x},${block.location.y},${block.location.z}`;
@@ -2196,13 +2200,16 @@ function wrapText(input) {
   }
   return lines;
 }
-function spawnSignText(block, text) {
-  const lines = wrapText(text);
+function spawnSignText(block, frontText, backText) {
   const blockX = block.location.x + 0.5;
   const blockY = block.location.y;
   const blockZ = block.location.z + 0.5;
   const rotIndex = block.permutation.getState("gaiadimension:rotation") ?? 0;
-  const isWall = block.permutation.getState("gaiadimension:wall_attached") ?? false;
+  let isWall = false;
+  try {
+    isWall = block.permutation.getState("gaiadimension:wall_attached") ?? false;
+  } catch (_) {
+  }
   const isHanging = block.typeId.includes("hanging");
   const blockRotDeg = rotationIndexToDegrees(rotIndex);
   const boneRotDeg = -blockRotDeg;
@@ -2211,6 +2218,20 @@ function spawnSignText(block, text) {
   const boardBottomY = isHanging ? HANGING_BOARD_BOTTOM_Y : isWall ? WALL_BOARD_BOTTOM_Y : STANDING_BOARD_BOTTOM_Y;
   const boardZ = isHanging ? HANGING_BOARD_Z : isWall ? WALL_BOARD_Z : STANDING_BOARD_Z;
   const boardHeight = isHanging ? HANGING_BOARD_HEIGHT : isWall ? 0.36 : BOARD_HEIGHT;
+  if (frontText.length > 0) {
+    const frontLines = wrapText(frontText);
+    spawnFaceChars(block, frontLines, boardBottomY, boardHeight, boardZ, entityRotDeg, boneRotRad, blockX, blockY, blockZ, false);
+  }
+  if (backText.length > 0) {
+    const backLines = wrapText(backText);
+    const backEntityRot = (entityRotDeg + 180) % 360;
+    spawnFaceChars(block, backLines, boardBottomY, boardHeight, -boardZ, backEntityRot, boneRotRad, blockX, blockY, blockZ, true);
+  }
+  setSignText(block, frontText, backText);
+}
+function spawnFaceChars(block, lines, boardBottomY, boardHeight, boardZ, entityRotDeg, boneRotRad, blockX, blockY, blockZ, mirrorX) {
+  const cosR = Math.cos(boneRotRad);
+  const sinR = Math.sin(boneRotRad);
   for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
     const line = lines[lineIdx];
     const lineOffsetX = line.length * CHAR_WIDTH / 2 - CHAR_WIDTH / 2;
@@ -2218,11 +2239,9 @@ function spawnSignText(block, text) {
       const char = line[charIdx];
       if (char === " ") continue;
       const asciiCode = char.charCodeAt(0);
-      const localX = lineOffsetX - charIdx * CHAR_WIDTH;
+      const localX = mirrorX ? -(lineOffsetX - charIdx * CHAR_WIDTH) : lineOffsetX - charIdx * CHAR_WIDTH;
       const localY = boardBottomY + boardHeight - lineIdx * CHAR_HEIGHT - CHAR_HEIGHT / 2;
       const localZ = boardZ;
-      const cosR = Math.cos(boneRotRad);
-      const sinR = Math.sin(boneRotRad);
       const worldX = blockX + localX * cosR - localZ * sinR;
       const worldZ = blockZ + localX * sinR + localZ * cosR;
       const worldY = blockY + localY;
@@ -2232,32 +2251,48 @@ function spawnSignText(block, text) {
         entity.setRotation({ x: 0, y: entityRotDeg });
         entity.addTag(`sign:${block.location.x},${block.location.y},${block.location.z}`);
       } catch (e) {
+        console.warn(`[Sign] Failed to spawn char: ${e}`);
       }
     }
   }
-  setSignText(block, text);
 }
 function openSignUI(player, block) {
   const playerId = player.id;
   if (editingPlayers.has(playerId)) return;
   editingPlayers.add(playerId);
-  const existingText = getSignText(block);
+  const existing = getSignText(block);
+  const isHanging = block.typeId.includes("hanging");
+  let editingBack = false;
+  if (isHanging) {
+    const rotIndex = block.permutation.getState("gaiadimension:rotation") ?? 0;
+    const entityRotDeg = ((-rotIndex * 22.5 + 180) % 360 + 360) % 360;
+    const entityRotRad = entityRotDeg * Math.PI / 180;
+    const nx = -Math.sin(entityRotRad);
+    const nz = Math.cos(entityRotRad);
+    const dx = player.location.x - (block.location.x + 0.5);
+    const dz = player.location.z - (block.location.z + 0.5);
+    editingBack = dx * nx + dz * nz < 0;
+  }
+  const currentText = editingBack ? existing.back : existing.front;
   const ui = new ModalFormData();
-  ui.title("Edit Sign");
-  ui.textField("Sign Text", "Type here...", { defaultValue: existingText || "" });
+  ui.title(isHanging && editingBack ? "Edit Sign (Back)" : "Edit Sign");
+  ui.textField("Sign Text", "Type here...", { defaultValue: currentText || "" });
   ui.show(player).then((response) => {
     editingPlayers.delete(playerId);
     if (response.canceled || !response.formValues) return;
-    const rawInput = String(response.formValues[0] || "");
-    if (rawInput.trim().length === 0) return;
+    const newText = String(response.formValues[0] || "").trim();
+    const frontText = editingBack ? existing.front : newText;
+    const backText = editingBack ? newText : existing.back;
     clearSignChars(block);
-    spawnSignText(block, rawInput.trim());
+    spawnSignText(block, frontText, backText);
   }).catch(() => {
     editingPlayers.delete(playerId);
   });
 }
 function cleanupSignData(loc) {
-  world13.setDynamicProperty(`sign_${loc.x}_${loc.y}_${loc.z}`, void 0);
+  const base = `sign_${loc.x}_${loc.y}_${loc.z}`;
+  world13.setDynamicProperty(`${base}_front`, void 0);
+  world13.setDynamicProperty(`${base}_back`, void 0);
 }
 function registerSignComponent({ blockComponentRegistry }) {
   blockComponentRegistry.registerCustomComponent("gaiadimension:sign", {});
@@ -2269,10 +2304,40 @@ function registerSignComponent({ blockComponentRegistry }) {
     let rotIndex = playerYawToRotationIndex(yaw);
     const isHanging = block.typeId.includes("hanging");
     if (isHanging) {
-      const cardinalIndex = Math.round(rotIndex / 4) * 4 % 16;
-      rotIndex = cardinalIndex;
-      const perm = block.permutation.withState("gaiadimension:rotation", rotIndex);
-      block.setPermutation(perm);
+      const blockAbove = block.dimension.getBlock({
+        x: block.location.x,
+        y: block.location.y + 1,
+        z: block.location.z
+      });
+      const isFullBlockAbove = blockAbove && !blockAbove.isAir && !blockAbove.typeId.includes("fence") && !blockAbove.typeId.includes("chain") && !blockAbove.typeId.includes("iron_bars");
+      if (isFullBlockAbove && !player.isSneaking) {
+        const cardinalIndex = Math.round(rotIndex / 4) * 4 % 16;
+        const perm = block.permutation.withState("gaiadimension:rotation", cardinalIndex).withState("gaiadimension:attach_type", 1);
+        block.setPermutation(perm);
+      } else if (blockAbove && !blockAbove.isAir) {
+        const perm = block.permutation.withState("gaiadimension:rotation", rotIndex).withState("gaiadimension:attach_type", 0);
+        block.setPermutation(perm);
+      } else {
+        const dirs = [
+          { dx: 0, dz: -1, rot: 8 },
+          { dx: 1, dz: 0, rot: 4 },
+          { dx: 0, dz: 1, rot: 0 },
+          { dx: -1, dz: 0, rot: 12 }
+        ];
+        for (const d of dirs) {
+          const adj = block.dimension.getBlock({
+            x: block.location.x + d.dx,
+            y: block.location.y,
+            z: block.location.z + d.dz
+          });
+          if (adj && !adj.isAir) {
+            rotIndex = d.rot;
+            break;
+          }
+        }
+        const perm = block.permutation.withState("gaiadimension:rotation", rotIndex).withState("gaiadimension:attach_type", 2);
+        block.setPermutation(perm);
+      }
     } else {
       const blockBelow = block.dimension.getBlock({
         x: block.location.x,
