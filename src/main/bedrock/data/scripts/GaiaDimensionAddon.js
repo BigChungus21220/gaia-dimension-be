@@ -2404,21 +2404,11 @@ function registerSignComponent({ blockComponentRegistry }) {
     event.cancel = true;
     system16.run(() => {
       const equip = player.getComponent("minecraft:equippable");
-      if (!equip) {
-        console.warn("[Sign] No equip component");
-        return openSignUI(player, block);
-      }
+      if (!equip) return openSignUI(player, block);
       const mainHand = equip.getEquipment("Mainhand");
-      if (!mainHand) {
-        console.warn("[Sign] No mainhand item");
-        return openSignUI(player, block);
-      }
-      console.warn(`[Sign] Holding: ${mainHand.typeId}`);
+      if (!mainHand) return openSignUI(player, block);
       const dyeColor = DYE_MAP[mainHand.typeId];
-      if (dyeColor === void 0) {
-        console.warn("[Sign] Not a dye");
-        return openSignUI(player, block);
-      }
+      if (dyeColor === void 0) return openSignUI(player, block);
       const tag2 = `sign:${block.location.x},${block.location.y},${block.location.z}`;
       const entities = block.dimension.getEntities({
         location: { x: block.location.x + 0.5, y: block.location.y + 0.5, z: block.location.z + 0.5 },
@@ -2426,12 +2416,10 @@ function registerSignComponent({ blockComponentRegistry }) {
         type: SIGN_CHAR_ENTITY,
         tags: [tag2]
       });
-      console.warn(`[Sign] Found ${entities.length} char entities, applying color ${dyeColor}`);
       for (const entity of entities) {
         try {
           entity.setProperty("gaiadimension:text_color", dyeColor);
-        } catch (e) {
-          console.warn(`[Sign] color set fail: ${e}`);
+        } catch (_) {
         }
       }
       if (mainHand.amount > 1) {

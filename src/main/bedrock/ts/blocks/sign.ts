@@ -406,14 +406,13 @@ export function registerSignComponent({ blockComponentRegistry }: { blockCompone
         system.run(() => {
             // Check if player is holding a dye
             const equip = player.getComponent("minecraft:equippable");
-            if (!equip) { console.warn("[Sign] No equip component"); return openSignUI(player, block); }
+            if (!equip) return openSignUI(player, block);
 
             const mainHand = equip.getEquipment("Mainhand");
-            if (!mainHand) { console.warn("[Sign] No mainhand item"); return openSignUI(player, block); }
+            if (!mainHand) return openSignUI(player, block);
 
-            console.warn(`[Sign] Holding: ${mainHand.typeId}`);
             const dyeColor = DYE_MAP[mainHand.typeId];
-            if (dyeColor === undefined) { console.warn("[Sign] Not a dye"); return openSignUI(player, block); }
+            if (dyeColor === undefined) return openSignUI(player, block);
 
             // Apply dye color to all sign chars
             const tag = `sign:${block.location.x},${block.location.y},${block.location.z}`;
@@ -423,9 +422,8 @@ export function registerSignComponent({ blockComponentRegistry }: { blockCompone
                 type: SIGN_CHAR_ENTITY,
                 tags: [tag]
             });
-            console.warn(`[Sign] Found ${entities.length} char entities, applying color ${dyeColor}`);
             for (const entity of entities) {
-                try { entity.setProperty("gaiadimension:text_color", dyeColor); } catch (e) { console.warn(`[Sign] color set fail: ${e}`); }
+                try { entity.setProperty("gaiadimension:text_color", dyeColor); } catch (_) {}
             }
 
             // Consume one dye
