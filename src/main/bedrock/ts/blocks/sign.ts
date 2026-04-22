@@ -197,7 +197,7 @@ function openSignUI(player: Player, block: Block): void {
 
     const ui = new ModalFormData();
     ui.title("Edit Sign");
-    ui.textField("Sign Text", "Type here...", existingText || undefined);
+    ui.textField("Sign Text", "Type here...", { defaultValue: existingText || "" });
 
     ui.show(player).then(response => {
         editingPlayers.delete(playerId);

@@ -2240,7 +2240,7 @@ function openSignUI(player, block) {
   const existingText = getSignText(block);
   const ui = new ModalFormData();
   ui.title("Edit Sign");
-  ui.textField("Sign Text", "Type here...", existingText || void 0);
+  ui.textField("Sign Text", "Type here...", { defaultValue: existingText || "" });
   ui.show(player).then((response) => {
     editingPlayers.delete(playerId);
     if (response.canceled || !response.formValues) return;
