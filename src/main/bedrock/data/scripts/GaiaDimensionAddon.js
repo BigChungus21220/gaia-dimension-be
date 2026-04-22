@@ -2123,15 +2123,17 @@ var editingPlayers = /* @__PURE__ */ new Set();
 var CHARS_PER_LINE = 10;
 var MAX_LINES = 4;
 var BOARD_HEIGHT = 0.46;
-var BOARD_BOTTOM_Y = 0.495;
-var BOARD_Z_OFFSET = -0.04;
+var STANDING_BOARD_BOTTOM_Y = 0.495;
+var STANDING_BOARD_Z = -0.04;
+var WALL_BOARD_BOTTOM_Y = 0.1;
+var WALL_BOARD_Z = -0.28;
 var CHAR_WIDTH = 0.05;
 var CHAR_HEIGHT = 0.07;
 function isGaiaSign(block) {
   return block.typeId.includes("gaiadimension") && block.typeId.includes("sign");
 }
 function playerYawToRotationIndex(yaw) {
-  const facing = ((yaw + 180) % 360 + 360) % 360;
+  const facing = (yaw % 360 + 360) % 360;
   const index = Math.round(facing / 22.5) % 16;
   return index;
 }
@@ -2198,9 +2200,11 @@ function spawnSignText(block, text) {
   const blockZ = block.location.z + 0.5;
   const rotIndex = block.permutation.getState("gaiadimension:rotation") ?? 0;
   const isWall = block.permutation.getState("gaiadimension:wall_attached") ?? false;
-  const rotDeg = rotationIndexToDegrees(rotIndex);
-  const rotRad = rotDeg * Math.PI / 180;
-  const yBase = isWall ? 0.3 : BOARD_BOTTOM_Y;
+  const blockRotDeg = rotationIndexToDegrees(rotIndex);
+  const entityRotDeg = blockRotDeg;
+  const blockRotRad = blockRotDeg * Math.PI / 180;
+  const boardBottomY = isWall ? WALL_BOARD_BOTTOM_Y : STANDING_BOARD_BOTTOM_Y;
+  const boardZ = isWall ? WALL_BOARD_Z : STANDING_BOARD_Z;
   const boardHeight = isWall ? 0.36 : BOARD_HEIGHT;
   for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
     const line = lines[lineIdx];
@@ -2210,17 +2214,17 @@ function spawnSignText(block, text) {
       if (char === " ") continue;
       const asciiCode = char.charCodeAt(0);
       const localX = lineOffsetX - charIdx * CHAR_WIDTH;
-      const localY = yBase + boardHeight - lineIdx * CHAR_HEIGHT - CHAR_HEIGHT / 2;
-      const localZ = isWall ? 0.22 : BOARD_Z_OFFSET;
-      const cosR = Math.cos(rotRad);
-      const sinR = Math.sin(rotRad);
+      const localY = boardBottomY + boardHeight - lineIdx * CHAR_HEIGHT - CHAR_HEIGHT / 2;
+      const localZ = boardZ;
+      const cosR = Math.cos(blockRotRad);
+      const sinR = Math.sin(blockRotRad);
       const worldX = blockX + localX * cosR - localZ * sinR;
       const worldZ = blockZ + localX * sinR + localZ * cosR;
       const worldY = blockY + localY;
       try {
         const entity = block.dimension.spawnEntity(SIGN_CHAR_ENTITY, { x: worldX, y: worldY, z: worldZ });
         entity.setProperty("gaiadimension:char_index", asciiCode);
-        entity.setRotation({ x: 0, y: rotDeg });
+        entity.setRotation({ x: 0, y: entityRotDeg });
         entity.addTag(`sign:${block.location.x},${block.location.y},${block.location.z}`);
       } catch (e) {
       }
@@ -2278,9 +2282,10 @@ function registerSignComponent({ blockComponentRegistry }) {
     const { block } = event;
     if (!isGaiaSign(block)) return;
     const loc = { x: block.location.x, y: block.location.y, z: block.location.z };
+    const dim = block.dimension;
     system16.run(() => {
       const tag2 = `sign:${loc.x},${loc.y},${loc.z}`;
-      const entities = block.dimension.getEntities({
+      const entities = dim.getEntities({
         location: { x: loc.x + 0.5, y: loc.y + 0.5, z: loc.z + 0.5 },
         maxDistance: 2,
         type: SIGN_CHAR_ENTITY,

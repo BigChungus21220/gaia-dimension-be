@@ -13,10 +13,14 @@ const MAX_LINES = 4;
 /** Total size of the sign board after scaling (in blocks) */
 const BOARD_WIDTH = 0.92;
 const BOARD_HEIGHT = 0.46;
-/** Y position of board bottom relative to block origin (after transform) */
-const BOARD_BOTTOM_Y = 0.495;
-/** Z offset of the board's front face from block center */
-const BOARD_Z_OFFSET = -0.04;
+
+// Standing sign: board Y range is 0.348 to 0.809 (model Y 14-26, scale 0.615, translation -0.19)
+const STANDING_BOARD_BOTTOM_Y = 0.495;
+const STANDING_BOARD_Z = -0.04; // board front face Z offset from block center
+
+// Wall sign: board Y range is 0.041 to 0.502 (model Y 6-18, scale 0.615, translation -0.19)  
+const WALL_BOARD_BOTTOM_Y = 0.10;
+const WALL_BOARD_Z = -0.28; // board front face at Z=-8 model, scaled = -8*0.615/16 = -0.307
 
 /** Size of each character cell */
 const CHAR_WIDTH = 0.05;
@@ -29,27 +33,15 @@ function isGaiaSign(block: Block): boolean {
 
 /**
  * Converts a player's Y rotation (yaw) to the nearest 16-step sign rotation index (0-15).
- * The sign faces TOWARD the player.
+ * Maps so that the sign's TEXT faces toward the player.
  */
 function playerYawToRotationIndex(yaw: number): number {
-    // Player yaw: 0=south, 90=west, 180/-180=north, -90=east
-    // Sign should face toward the player
-    const facing = ((yaw + 180) % 360 + 360) % 360;
+    // Sign board text face is +Z (south) at rotation 0
+    // State N rotates by -N*22.5 degrees
+    // Direct mapping: player yaw to rotation index
+    const facing = ((yaw) % 360 + 360) % 360;
     const index = Math.round(facing / 22.5) % 16;
     return index;
-}
-
-/**
- * Converts a block face direction to a wall rotation index (0-15).
- * The sign board faces AWAY from the wall.
- */
-function faceToWallRotation(faceX: number, faceZ: number): number {
-    // Determine which face the sign was placed on
-    if (faceZ === -1) return 0;   // Placed on north face -> sign faces south (rot 0)
-    if (faceX === 1)  return 4;   // Placed on east face  -> sign faces west  (rot 4)
-    if (faceZ === 1)  return 8;   // Placed on south face -> sign faces north (rot 8)
-    if (faceX === -1) return 12;  // Placed on west face  -> sign faces east  (rot 12)
-    return 0;
 }
 
 /**
@@ -128,7 +120,7 @@ function wrapText(input: string): string[] {
 
 /**
  * Spawns sign_char entities for each character of the given text on the sign.
- * Characters are rotated to face the sign's direction.
+ * Characters are rotated to face toward the player (same direction as sign face).
  */
 function spawnSignText(block: Block, text: string): void {
     const lines = wrapText(text);
@@ -139,11 +131,17 @@ function spawnSignText(block: Block, text: string): void {
     // Get rotation from block state
     const rotIndex = block.permutation.getState("gaiadimension:rotation") as number ?? 0;
     const isWall = block.permutation.getState("gaiadimension:wall_attached") as boolean ?? false;
-    const rotDeg = rotationIndexToDegrees(rotIndex);
-    const rotRad = (rotDeg * Math.PI) / 180;
 
-    // Adjust Y offset for wall signs (board is lower on wall signs)
-    const yBase = isWall ? 0.3 : BOARD_BOTTOM_Y;
+    // Block rotation: state N → block geometry rotated by -N*22.5 degrees
+    // Sign text face is +Z (south) at state 0
+    // Entity south face is textured → rotation matches block rotation directly
+    const blockRotDeg = rotationIndexToDegrees(rotIndex);
+    const entityRotDeg = blockRotDeg;
+    const blockRotRad = (blockRotDeg * Math.PI) / 180;
+
+    // Pick board parameters
+    const boardBottomY = isWall ? WALL_BOARD_BOTTOM_Y : STANDING_BOARD_BOTTOM_Y;
+    const boardZ = isWall ? WALL_BOARD_Z : STANDING_BOARD_Z;
     const boardHeight = isWall ? 0.36 : BOARD_HEIGHT;
 
     for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
@@ -157,14 +155,15 @@ function spawnSignText(block: Block, text: string): void {
 
             const asciiCode = char.charCodeAt(0);
 
-            // Local position relative to sign center (before rotation)
+            // Local position relative to block center (before rotation)
+            // X = horizontal across the board, Z = depth (front face offset)
             const localX = lineOffsetX - charIdx * CHAR_WIDTH;
-            const localY = yBase + boardHeight - (lineIdx * CHAR_HEIGHT) - CHAR_HEIGHT / 2;
-            const localZ = isWall ? 0.22 : BOARD_Z_OFFSET;
+            const localY = boardBottomY + boardHeight - (lineIdx * CHAR_HEIGHT) - CHAR_HEIGHT / 2;
+            const localZ = boardZ;
 
-            // Rotate around the Y axis based on sign facing direction
-            const cosR = Math.cos(rotRad);
-            const sinR = Math.sin(rotRad);
+            // Rotate local X,Z around Y axis by the BLOCK's rotation angle
+            const cosR = Math.cos(blockRotRad);
+            const sinR = Math.sin(blockRotRad);
             const worldX = blockX + localX * cosR - localZ * sinR;
             const worldZ = blockZ + localX * sinR + localZ * cosR;
             const worldY = blockY + localY;
@@ -172,7 +171,8 @@ function spawnSignText(block: Block, text: string): void {
             try {
                 const entity = block.dimension.spawnEntity(SIGN_CHAR_ENTITY, { x: worldX, y: worldY, z: worldZ });
                 entity.setProperty("gaiadimension:char_index", asciiCode);
-                entity.setRotation({ x: 0, y: rotDeg });
+                // Entity faces same direction as sign's front face
+                entity.setRotation({ x: 0, y: entityRotDeg });
                 entity.addTag(`sign:${block.location.x},${block.location.y},${block.location.z}`);
             } catch (e) {}
         }
@@ -228,28 +228,25 @@ export function registerSignComponent({ blockComponentRegistry }: { blockCompone
         const { block, player } = event;
         if (!isGaiaSign(block)) return;
 
-        // Determine if placed on a wall or on the ground
-        // Check if the block below is air — if so, it's likely a wall placement
+        // Check if the block below is solid — if not, it's a wall placement
         const blockBelow = block.dimension.getBlock({
             x: block.location.x,
             y: block.location.y - 1,
             z: block.location.z
         });
-        
-        // Detect wall attachment by checking adjacent blocks in cardinal directions
+
         const yaw = player.getRotation().y;
         let isWall = false;
         let rotIndex = playerYawToRotationIndex(yaw);
-        
-        // Check if the block below is NOT solid (means placed on a wall)
+
         if (blockBelow && (blockBelow.typeId === "minecraft:air" || blockBelow.isAir)) {
             isWall = true;
-            // For wall signs, snap to 4 cardinal directions based on player facing
+            // Wall signs snap to 4 cardinal directions
             const cardinalIndex = Math.round(rotIndex / 4) * 4 % 16;
             rotIndex = cardinalIndex;
         }
 
-        // Set block states
+        // Set block states for rotation + wall attachment
         const perm = block.permutation
             .withState("gaiadimension:rotation", rotIndex)
             .withState("gaiadimension:wall_attached", isWall);
@@ -267,10 +264,10 @@ export function registerSignComponent({ blockComponentRegistry }: { blockCompone
         if (!isGaiaSign(block)) return;
 
         const loc = { x: block.location.x, y: block.location.y, z: block.location.z };
+        const dim = block.dimension;
         system.run(() => {
-            // Find and remove entities by tag (block may be gone by now)
             const tag = `sign:${loc.x},${loc.y},${loc.z}`;
-            const entities = block.dimension.getEntities({
+            const entities = dim.getEntities({
                 location: { x: loc.x + 0.5, y: loc.y + 0.5, z: loc.z + 0.5 },
                 maxDistance: 2.0,
                 type: SIGN_CHAR_ENTITY,
