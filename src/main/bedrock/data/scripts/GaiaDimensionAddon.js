@@ -2125,11 +2125,11 @@ var MAX_LINES = 4;
 var BOARD_HEIGHT = 0.46;
 var STANDING_BOARD_BOTTOM_Y = 0.495;
 var STANDING_BOARD_Z = -0.05;
-var WALL_BOARD_BOTTOM_Y = 0.19;
-var WALL_BOARD_Z = 0.1;
-var HANGING_BOARD_BOTTOM_Y = -0.03;
+var WALL_BOARD_BOTTOM_Y = 0.22;
+var WALL_BOARD_Z = 0.41;
+var HANGING_BOARD_BOTTOM_Y = 0.05;
 var HANGING_BOARD_Z = -0.08;
-var HANGING_BOARD_HEIGHT = 0.625;
+var HANGING_BOARD_HEIGHT = 0.55;
 var CHAR_WIDTH = 0.05;
 var CHAR_HEIGHT = 0.07;
 function isGaiaSign(block) {
@@ -2217,30 +2217,33 @@ function spawnSignText(block, frontText, backText) {
   const boneRotRad = boneRotDeg * Math.PI / 180;
   const boardBottomY = isHanging ? HANGING_BOARD_BOTTOM_Y : isWall ? WALL_BOARD_BOTTOM_Y : STANDING_BOARD_BOTTOM_Y;
   const boardZ = isHanging ? HANGING_BOARD_Z : isWall ? WALL_BOARD_Z : STANDING_BOARD_Z;
-  const boardHeight = isHanging ? HANGING_BOARD_HEIGHT : isWall ? 0.36 : BOARD_HEIGHT;
+  const boardHeight = isHanging ? HANGING_BOARD_HEIGHT : isWall ? 0.46 : BOARD_HEIGHT;
   if (frontText.length > 0) {
     const frontLines = wrapText(frontText);
-    spawnFaceChars(block, frontLines, boardBottomY, boardHeight, boardZ, entityRotDeg, boneRotRad, blockX, blockY, blockZ, false);
+    spawnFaceChars(block, frontLines, boardBottomY, boardHeight, boardZ, entityRotDeg, boneRotRad, blockX, blockY, blockZ, false, isHanging);
   }
   if (backText.length > 0) {
     const backLines = wrapText(backText);
     const backEntityRot = (entityRotDeg + 180) % 360;
-    spawnFaceChars(block, backLines, boardBottomY, boardHeight, -boardZ, backEntityRot, boneRotRad, blockX, blockY, blockZ, true);
+    spawnFaceChars(block, backLines, boardBottomY, boardHeight, -boardZ, backEntityRot, boneRotRad, blockX, blockY, blockZ, true, isHanging);
   }
   setSignText(block, frontText, backText);
 }
-function spawnFaceChars(block, lines, boardBottomY, boardHeight, boardZ, entityRotDeg, boneRotRad, blockX, blockY, blockZ, mirrorX) {
+function spawnFaceChars(block, lines, boardBottomY, boardHeight, boardZ, entityRotDeg, boneRotRad, blockX, blockY, blockZ, mirrorX, isHanging) {
   const cosR = Math.cos(boneRotRad);
   const sinR = Math.sin(boneRotRad);
+  const scaleFactor = isHanging ? 2 : 1;
+  const charW = CHAR_WIDTH * scaleFactor;
+  const charH = CHAR_HEIGHT * scaleFactor;
   for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
     const line = lines[lineIdx];
-    const lineOffsetX = line.length * CHAR_WIDTH / 2 - CHAR_WIDTH / 2;
+    const lineOffsetX = line.length * charW / 2 - charW / 2;
     for (let charIdx = 0; charIdx < line.length; charIdx++) {
       const char = line[charIdx];
       if (char === " ") continue;
       const asciiCode = char.charCodeAt(0);
-      const localX = mirrorX ? -(lineOffsetX - charIdx * CHAR_WIDTH) : lineOffsetX - charIdx * CHAR_WIDTH;
-      const localY = boardBottomY + boardHeight - lineIdx * CHAR_HEIGHT - CHAR_HEIGHT / 2;
+      const localX = mirrorX ? -(lineOffsetX - charIdx * charW) : lineOffsetX - charIdx * charW;
+      const localY = boardBottomY + boardHeight - lineIdx * charH - charH / 2;
       const localZ = boardZ;
       const worldX = blockX + localX * cosR - localZ * sinR;
       const worldZ = blockZ + localX * sinR + localZ * cosR;
@@ -2250,6 +2253,9 @@ function spawnFaceChars(block, lines, boardBottomY, boardHeight, boardZ, entityR
         entity.setProperty("gaiadimension:char_index", asciiCode);
         entity.setRotation({ x: 0, y: entityRotDeg });
         entity.addTag(`sign:${block.location.x},${block.location.y},${block.location.z}`);
+        if (isHanging) {
+          entity.setProperty("gaiadimension:sign_scale", 0.28);
+        }
       } catch (e) {
         console.warn(`[Sign] Failed to spawn char: ${e}`);
       }

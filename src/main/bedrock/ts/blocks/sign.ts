@@ -18,15 +18,16 @@ const BOARD_HEIGHT = 0.46;
 const STANDING_BOARD_BOTTOM_Y = 0.495;
 const STANDING_BOARD_Z = -0.05; // text face (-Z side at rotation 0)
 
-// Wall sign: board at Z=+5 model, faces player
-const WALL_BOARD_BOTTOM_Y = 0.19;
-const WALL_BOARD_Z = 0.10; // text on player side (flipped with board)
+// Wall sign: board at model Y=6..18, scale 0.615, translation Y=-0.19
+// Scaled Y: (6*0.615/16)-0.19 = 0.04, top = (18*0.615/16)-0.19 = 0.50
+const WALL_BOARD_BOTTOM_Y = 0.22;
+const WALL_BOARD_Z = 0.41; // matched to the push-back translation of the wall sign
 
 // Hanging sign: board at model Y=0-10, scale 0.615, translation Y=+0.3
 // Hanging sign: board at model Y=0-10, NO scale (full size)
-const HANGING_BOARD_BOTTOM_Y = -0.03;
+const HANGING_BOARD_BOTTOM_Y = 0.05;
 const HANGING_BOARD_Z = -0.08; // in front of board face (-0.0625)
-const HANGING_BOARD_HEIGHT = 0.625;
+const HANGING_BOARD_HEIGHT = 0.55;
 
 /** Size of each character cell */
 const CHAR_WIDTH = 0.05;
@@ -152,19 +153,19 @@ function spawnSignText(block: Block, frontText: string, backText: string): void 
     // Pick board parameters based on sign type
     const boardBottomY = isHanging ? HANGING_BOARD_BOTTOM_Y : (isWall ? WALL_BOARD_BOTTOM_Y : STANDING_BOARD_BOTTOM_Y);
     const boardZ = isHanging ? HANGING_BOARD_Z : (isWall ? WALL_BOARD_Z : STANDING_BOARD_Z);
-    const boardHeight = isHanging ? HANGING_BOARD_HEIGHT : (isWall ? 0.36 : BOARD_HEIGHT);
+    const boardHeight = isHanging ? HANGING_BOARD_HEIGHT : (isWall ? 0.46 : BOARD_HEIGHT);
 
     // Front face
     if (frontText.length > 0) {
         const frontLines = wrapText(frontText);
-        spawnFaceChars(block, frontLines, boardBottomY, boardHeight, boardZ, entityRotDeg, boneRotRad, blockX, blockY, blockZ, false);
+        spawnFaceChars(block, frontLines, boardBottomY, boardHeight, boardZ, entityRotDeg, boneRotRad, blockX, blockY, blockZ, false, isHanging);
     }
 
     // Back face (opposite Z, 180° rotated entity, mirrored X for correct reading order)
     if (backText.length > 0) {
         const backLines = wrapText(backText);
         const backEntityRot = (entityRotDeg + 180) % 360;
-        spawnFaceChars(block, backLines, boardBottomY, boardHeight, -boardZ, backEntityRot, boneRotRad, blockX, blockY, blockZ, true);
+        spawnFaceChars(block, backLines, boardBottomY, boardHeight, -boardZ, backEntityRot, boneRotRad, blockX, blockY, blockZ, true, isHanging);
     }
 
     setSignText(block, frontText, backText);
@@ -174,22 +175,26 @@ function spawnSignText(block: Block, frontText: string, backText: string): void 
 function spawnFaceChars(
     block: Block, lines: string[], boardBottomY: number, boardHeight: number,
     boardZ: number, entityRotDeg: number, boneRotRad: number,
-    blockX: number, blockY: number, blockZ: number, mirrorX: boolean
+    blockX: number, blockY: number, blockZ: number, mirrorX: boolean, isHanging: boolean
 ): void {
     const cosR = Math.cos(boneRotRad);
     const sinR = Math.sin(boneRotRad);
+    // Hanging signs: 2x scale for vanilla-sized text
+    const scaleFactor = isHanging ? 2.0 : 1.0;
+    const charW = CHAR_WIDTH * scaleFactor;
+    const charH = CHAR_HEIGHT * scaleFactor;
 
     for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
         const line = lines[lineIdx];
-        const lineOffsetX = (line.length * CHAR_WIDTH) / 2 - CHAR_WIDTH / 2;
+        const lineOffsetX = (line.length * charW) / 2 - charW / 2;
 
         for (let charIdx = 0; charIdx < line.length; charIdx++) {
             const char = line[charIdx];
             if (char === " ") continue;
             const asciiCode = char.charCodeAt(0);
 
-            const localX = mirrorX ? -(lineOffsetX - charIdx * CHAR_WIDTH) : (lineOffsetX - charIdx * CHAR_WIDTH);
-            const localY = boardBottomY + boardHeight - (lineIdx * CHAR_HEIGHT) - CHAR_HEIGHT / 2;
+            const localX = mirrorX ? -(lineOffsetX - charIdx * charW) : (lineOffsetX - charIdx * charW);
+            const localY = boardBottomY + boardHeight - (lineIdx * charH) - charH / 2;
             const localZ = boardZ;
 
             const worldX = blockX + localX * cosR - localZ * sinR;
@@ -201,6 +206,9 @@ function spawnFaceChars(
                 entity.setProperty("gaiadimension:char_index", asciiCode);
                 entity.setRotation({ x: 0, y: entityRotDeg });
                 entity.addTag(`sign:${block.location.x},${block.location.y},${block.location.z}`);
+                if (isHanging) {
+                    entity.setProperty("gaiadimension:sign_scale", 0.28);
+                }
             } catch (e) { console.warn(`[Sign] Failed to spawn char: ${e}`); }
         }
     }

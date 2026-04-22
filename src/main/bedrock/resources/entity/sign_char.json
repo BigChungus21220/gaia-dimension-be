@@ -204,7 +204,11 @@
       "render_controllers": [
         "controller.render.gaiadimension.sign_char"
       ],
+      "animations": {
+        "scale": "animation.sign_char.scale"
+      },
       "scripts": {
+        "animate": ["scale"],
         "pre_animation": [
           "variable.char_offset = query.property('gaiadimension:char_index') - 32;",
           "variable.tc = query.property('gaiadimension:text_color');",

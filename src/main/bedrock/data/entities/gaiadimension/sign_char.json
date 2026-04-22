@@ -18,6 +18,12 @@
           "range": [0, 16],
           "default": 0,
           "client_sync": true
+        },
+        "gaiadimension:sign_scale": {
+          "type": "float",
+          "range": [0.05, 1.0],
+          "default": 0.14,
+          "client_sync": true
         }
       }
     },
@@ -46,7 +52,7 @@
         "is_pushable_by_piston": false
       },
       "minecraft:scale": {
-        "value": 0.14
+        "value": 1.0
       },
       "minecraft:damage_sensor": {
         "triggers": [

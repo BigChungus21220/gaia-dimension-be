@@ -1,193 +1,84 @@
 {
-  "format_version": "1.12.0",
-  "minecraft:geometry": [
-    {
-      "description": {
-        "identifier": "geometry.sign_wall_0",
-        "texture_width": 64,
-        "texture_height": 32,
-        "visible_bounds_width": 3,
-        "visible_bounds_height": 3.5,
-        "visible_bounds_offset": [
-          0,
-          1.25,
-          0
-        ]
-      },
-      "bones": [
-        {
-          "name": "board",
-          "pivot": [
-            0,
-            12,
-            0
-          ],
-          "rotation": [
-            0,
-            0,
-            0
-          ],
-          "cubes": [
-            {
-              "origin": [
-                -12,
-                6,
-                5
-              ],
-              "size": [
-                24,
-                12,
-                2
-              ],
-              "uv": [
-                0,
-                0
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "description": {
-        "identifier": "geometry.sign_wall_4",
-        "texture_width": 64,
-        "texture_height": 32,
-        "visible_bounds_width": 3,
-        "visible_bounds_height": 3.5,
-        "visible_bounds_offset": [
-          0,
-          1.25,
-          0
-        ]
-      },
-      "bones": [
-        {
-          "name": "board",
-          "pivot": [
-            0,
-            12,
-            0
-          ],
-          "rotation": [
-            0,
-            -90,
-            0
-          ],
-          "cubes": [
-            {
-              "origin": [
-                -12,
-                6,
-                5
-              ],
-              "size": [
-                24,
-                12,
-                2
-              ],
-              "uv": [
-                0,
-                0
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "description": {
-        "identifier": "geometry.sign_wall_8",
-        "texture_width": 64,
-        "texture_height": 32,
-        "visible_bounds_width": 3,
-        "visible_bounds_height": 3.5,
-        "visible_bounds_offset": [
-          0,
-          1.25,
-          0
-        ]
-      },
-      "bones": [
-        {
-          "name": "board",
-          "pivot": [
-            0,
-            12,
-            0
-          ],
-          "rotation": [
-            0,
-            -180,
-            0
-          ],
-          "cubes": [
-            {
-              "origin": [
-                -12,
-                6,
-                5
-              ],
-              "size": [
-                24,
-                12,
-                2
-              ],
-              "uv": [
-                0,
-                0
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "description": {
-        "identifier": "geometry.sign_wall_12",
-        "texture_width": 64,
-        "texture_height": 32,
-        "visible_bounds_width": 3,
-        "visible_bounds_height": 3.5,
-        "visible_bounds_offset": [
-          0,
-          1.25,
-          0
-        ]
-      },
-      "bones": [
-        {
-          "name": "board",
-          "pivot": [
-            0,
-            12,
-            0
-          ],
-          "rotation": [
-            0,
-            -270,
-            0
-          ],
-          "cubes": [
-            {
-              "origin": [
-                -12,
-                6,
-                5
-              ],
-              "size": [
-                24,
-                12,
-                2
-              ],
-              "uv": [
-                0,
-                0
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.sign_wall_0",
+				"texture_width": 64,
+				"texture_height": 32,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "board",
+					"pivot": [0, 12, 0],
+					"cubes": [
+						{"origin": [-12, 7, 6], "size": [24, 12, 2], "uv": [0, 0]}
+					]
+				}
+			]
+		},
+		{
+			"description": {
+				"identifier": "geometry.sign_wall_4",
+				"texture_width": 64,
+				"texture_height": 32,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "board",
+					"pivot": [0, 12, 0],
+					"rotation": [0, -90, 0],
+					"cubes": [
+						{"origin": [-12, 7, 6], "size": [24, 12, 2], "uv": [0, 0]}
+					]
+				}
+			]
+		},
+		{
+			"description": {
+				"identifier": "geometry.sign_wall_8",
+				"texture_width": 64,
+				"texture_height": 32,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "board",
+					"pivot": [0, 12, 0],
+					"rotation": [0, -180, 0],
+					"cubes": [
+						{"origin": [-12, 7, 6], "size": [24, 12, 2], "uv": [0, 0]}
+					]
+				}
+			]
+		},
+		{
+			"description": {
+				"identifier": "geometry.sign_wall_12",
+				"texture_width": 64,
+				"texture_height": 32,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "board",
+					"pivot": [0, 12, 0],
+					"rotation": [0, -270, 0],
+					"cubes": [
+						{"origin": [-12, 7, 6], "size": [24, 12, 2], "uv": [0, 0]}
+					]
+				}
+			]
+		}
+	]
 }

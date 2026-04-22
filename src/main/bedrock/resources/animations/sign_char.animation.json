@@ -1,0 +1,13 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.sign_char.scale": {
+      "loop": true,
+      "bones": {
+        "root": {
+          "scale": ["query.property('gaiadimension:sign_scale')", "query.property('gaiadimension:sign_scale')", "query.property('gaiadimension:sign_scale')"]
+        }
+      }
+    }
+  }
+}
