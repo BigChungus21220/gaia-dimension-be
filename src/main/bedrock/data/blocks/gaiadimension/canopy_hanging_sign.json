@@ -1,0 +1,69 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:block": {
+    "description": {
+      "identifier": "gaiadimension:canopy_hanging_sign",
+      "menu_category": {
+        "category": "items",
+        "group": "itemGroup.name.sign"
+      },
+      "states": {
+        "gaiadimension:rotation": [
+          0,
+          4,
+          8,
+          12
+        ]
+      }
+    },
+    "components": {
+      "gaiadimension:sign": {},
+      "minecraft:geometry": "geometry.hanging_sign_0",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "gaiadimension:canopy_hanging_sign",
+          "render_method": "alpha_test"
+        }
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1.0
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 1.0
+      },
+      "minecraft:collision_box": false,
+      "minecraft:selection_box": {
+        "origin": [
+          -5,
+          0,
+          -1
+        ],
+        "size": [
+          10,
+          16,
+          2
+        ]
+      }
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('gaiadimension:rotation') == 4",
+        "components": {
+          "minecraft:geometry": "geometry.hanging_sign_4"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:rotation') == 8",
+        "components": {
+          "minecraft:geometry": "geometry.hanging_sign_8"
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:rotation') == 12",
+        "components": {
+          "minecraft:geometry": "geometry.hanging_sign_12"
+        }
+      }
+    ]
+  }
+}

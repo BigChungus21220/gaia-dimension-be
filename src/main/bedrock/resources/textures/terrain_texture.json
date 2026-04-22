@@ -1929,6 +1929,9 @@
         },
         "grass_vanilla_jagged_peaks_side": {
             "textures": "textures/gaiadimension/gen/grass/grass_vanilla_jagged_peaks_side"
+        },
+        "gaiadimension:canopy_hanging_sign": {
+            "textures": "textures/gaiadimension/androsa/signs/hanging/canopy"
         }
     }
 }

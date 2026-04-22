@@ -18,9 +18,15 @@ const BOARD_HEIGHT = 0.46;
 const STANDING_BOARD_BOTTOM_Y = 0.495;
 const STANDING_BOARD_Z = -0.05; // text face (-Z side at rotation 0)
 
-// Wall sign: board at Z=-9 model, rotated +180 to face player
+// Wall sign: board at Z=+5 model, faces player
 const WALL_BOARD_BOTTOM_Y = 0.19;
 const WALL_BOARD_Z = 0.10; // text on player side (flipped with board)
+
+// Hanging sign: board at model Y=0-10, scale 0.615, translation Y=+0.3
+// Hanging sign: board at model Y=0-10, NO scale (full size)
+const HANGING_BOARD_BOTTOM_Y = 0.0;
+const HANGING_BOARD_Z = -0.05;
+const HANGING_BOARD_HEIGHT = 0.625;
 
 /** Size of each character cell */
 const CHAR_WIDTH = 0.05;
@@ -131,6 +137,7 @@ function spawnSignText(block: Block, text: string): void {
     // Get rotation from block state
     const rotIndex = block.permutation.getState("gaiadimension:rotation") as number ?? 0;
     const isWall = block.permutation.getState("gaiadimension:wall_attached") as boolean ?? false;
+    const isHanging = block.typeId.includes("hanging");
 
     // Block rotation: state N → bone rotation = -N*22.5 degrees
     const blockRotDeg = rotationIndexToDegrees(rotIndex);
@@ -139,10 +146,10 @@ function spawnSignText(block: Block, text: string): void {
     const entityRotDeg = ((boneRotDeg + 180) % 360 + 360) % 360;
     const boneRotRad = (boneRotDeg * Math.PI) / 180;
 
-    // Pick board parameters
-    const boardBottomY = isWall ? WALL_BOARD_BOTTOM_Y : STANDING_BOARD_BOTTOM_Y;
-    const boardZ = isWall ? WALL_BOARD_Z : STANDING_BOARD_Z;
-    const boardHeight = isWall ? 0.36 : BOARD_HEIGHT;
+    // Pick board parameters based on sign type
+    const boardBottomY = isHanging ? HANGING_BOARD_BOTTOM_Y : (isWall ? WALL_BOARD_BOTTOM_Y : STANDING_BOARD_BOTTOM_Y);
+    const boardZ = isHanging ? HANGING_BOARD_Z : (isWall ? WALL_BOARD_Z : STANDING_BOARD_Z);
+    const boardHeight = isHanging ? HANGING_BOARD_HEIGHT : (isWall ? 0.36 : BOARD_HEIGHT);
 
     for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
         const line = lines[lineIdx];
@@ -229,41 +236,51 @@ export function registerSignComponent({ blockComponentRegistry }: { blockCompone
         const yaw = player.getRotation().y;
         let isWall = false;
         let rotIndex = playerYawToRotationIndex(yaw);
+        const isHanging = block.typeId.includes("hanging");
 
-        // Check if block below is air — if so, it's a wall placement
-        const blockBelow = block.dimension.getBlock({
-            x: block.location.x,
-            y: block.location.y - 1,
-            z: block.location.z
-        });
+        if (isHanging) {
+            // Hanging signs: 4 cardinal directions from player yaw
+            const cardinalIndex = Math.round(rotIndex / 4) * 4 % 16;
+            rotIndex = cardinalIndex;
+            const perm = block.permutation
+                .withState("gaiadimension:rotation", rotIndex);
+            block.setPermutation(perm);
+        } else {
+            // Check if block below is air — if so, it's a wall placement
+            const blockBelow = block.dimension.getBlock({
+                x: block.location.x,
+                y: block.location.y - 1,
+                z: block.location.z
+            });
 
-        if (!blockBelow || blockBelow.isAir) {
-            isWall = true;
-            // Find adjacent solid block (the wall) and orient sign facing away from it
-            const dirs = [
-                { dx: 0, dz: -1, rot: 8 },   // Wall to north → face south (rot 8)
-                { dx: 1, dz: 0, rot: 4 },    // Wall to east → face west (rot 4)
-                { dx: 0, dz: 1, rot: 0 },    // Wall to south → face north (rot 0)
-                { dx: -1, dz: 0, rot: 12 },  // Wall to west → face east (rot 12)
-            ];
-            for (const d of dirs) {
-                const adj = block.dimension.getBlock({
-                    x: block.location.x + d.dx,
-                    y: block.location.y,
-                    z: block.location.z + d.dz
-                });
-                if (adj && !adj.isAir) {
-                    rotIndex = d.rot;
-                    break;
+            if (!blockBelow || blockBelow.isAir) {
+                isWall = true;
+                // Find adjacent solid block (the wall) and orient sign facing away from it
+                const dirs = [
+                    { dx: 0, dz: -1, rot: 8 },   // Wall to north → face south (rot 8)
+                    { dx: 1, dz: 0, rot: 4 },    // Wall to east → face west (rot 4)
+                    { dx: 0, dz: 1, rot: 0 },    // Wall to south → face north (rot 0)
+                    { dx: -1, dz: 0, rot: 12 },  // Wall to west → face east (rot 12)
+                ];
+                for (const d of dirs) {
+                    const adj = block.dimension.getBlock({
+                        x: block.location.x + d.dx,
+                        y: block.location.y,
+                        z: block.location.z + d.dz
+                    });
+                    if (adj && !adj.isAir) {
+                        rotIndex = d.rot;
+                        break;
+                    }
                 }
             }
-        }
 
-        // Set block states for rotation + wall attachment
-        const perm = block.permutation
-            .withState("gaiadimension:rotation", rotIndex)
-            .withState("gaiadimension:wall_attached", isWall);
-        block.setPermutation(perm);
+            // Set block states for rotation + wall attachment
+            const perm = block.permutation
+                .withState("gaiadimension:rotation", rotIndex)
+                .withState("gaiadimension:wall_attached", isWall);
+            block.setPermutation(perm);
+        }
 
         // Open sign edit form
         system.runTimeout(() => {

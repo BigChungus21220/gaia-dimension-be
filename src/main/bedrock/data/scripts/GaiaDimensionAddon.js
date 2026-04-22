@@ -2127,6 +2127,9 @@ var STANDING_BOARD_BOTTOM_Y = 0.495;
 var STANDING_BOARD_Z = -0.05;
 var WALL_BOARD_BOTTOM_Y = 0.19;
 var WALL_BOARD_Z = 0.1;
+var HANGING_BOARD_BOTTOM_Y = 0;
+var HANGING_BOARD_Z = -0.05;
+var HANGING_BOARD_HEIGHT = 0.625;
 var CHAR_WIDTH = 0.05;
 var CHAR_HEIGHT = 0.07;
 function isGaiaSign(block) {
@@ -2200,13 +2203,14 @@ function spawnSignText(block, text) {
   const blockZ = block.location.z + 0.5;
   const rotIndex = block.permutation.getState("gaiadimension:rotation") ?? 0;
   const isWall = block.permutation.getState("gaiadimension:wall_attached") ?? false;
+  const isHanging = block.typeId.includes("hanging");
   const blockRotDeg = rotationIndexToDegrees(rotIndex);
   const boneRotDeg = -blockRotDeg;
   const entityRotDeg = ((boneRotDeg + 180) % 360 + 360) % 360;
   const boneRotRad = boneRotDeg * Math.PI / 180;
-  const boardBottomY = isWall ? WALL_BOARD_BOTTOM_Y : STANDING_BOARD_BOTTOM_Y;
-  const boardZ = isWall ? WALL_BOARD_Z : STANDING_BOARD_Z;
-  const boardHeight = isWall ? 0.36 : BOARD_HEIGHT;
+  const boardBottomY = isHanging ? HANGING_BOARD_BOTTOM_Y : isWall ? WALL_BOARD_BOTTOM_Y : STANDING_BOARD_BOTTOM_Y;
+  const boardZ = isHanging ? HANGING_BOARD_Z : isWall ? WALL_BOARD_Z : STANDING_BOARD_Z;
+  const boardHeight = isHanging ? HANGING_BOARD_HEIGHT : isWall ? 0.36 : BOARD_HEIGHT;
   for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
     const line = lines[lineIdx];
     const lineOffsetX = line.length * CHAR_WIDTH / 2 - CHAR_WIDTH / 2;
@@ -2263,37 +2267,45 @@ function registerSignComponent({ blockComponentRegistry }) {
     const yaw = player.getRotation().y;
     let isWall = false;
     let rotIndex = playerYawToRotationIndex(yaw);
-    const blockBelow = block.dimension.getBlock({
-      x: block.location.x,
-      y: block.location.y - 1,
-      z: block.location.z
-    });
-    if (!blockBelow || blockBelow.isAir) {
-      isWall = true;
-      const dirs = [
-        { dx: 0, dz: -1, rot: 8 },
-        // Wall to north → face south (rot 8)
-        { dx: 1, dz: 0, rot: 4 },
-        // Wall to east → face west (rot 4)
-        { dx: 0, dz: 1, rot: 0 },
-        // Wall to south → face north (rot 0)
-        { dx: -1, dz: 0, rot: 12 }
-        // Wall to west → face east (rot 12)
-      ];
-      for (const d of dirs) {
-        const adj = block.dimension.getBlock({
-          x: block.location.x + d.dx,
-          y: block.location.y,
-          z: block.location.z + d.dz
-        });
-        if (adj && !adj.isAir) {
-          rotIndex = d.rot;
-          break;
+    const isHanging = block.typeId.includes("hanging");
+    if (isHanging) {
+      const cardinalIndex = Math.round(rotIndex / 4) * 4 % 16;
+      rotIndex = cardinalIndex;
+      const perm = block.permutation.withState("gaiadimension:rotation", rotIndex);
+      block.setPermutation(perm);
+    } else {
+      const blockBelow = block.dimension.getBlock({
+        x: block.location.x,
+        y: block.location.y - 1,
+        z: block.location.z
+      });
+      if (!blockBelow || blockBelow.isAir) {
+        isWall = true;
+        const dirs = [
+          { dx: 0, dz: -1, rot: 8 },
+          // Wall to north → face south (rot 8)
+          { dx: 1, dz: 0, rot: 4 },
+          // Wall to east → face west (rot 4)
+          { dx: 0, dz: 1, rot: 0 },
+          // Wall to south → face north (rot 0)
+          { dx: -1, dz: 0, rot: 12 }
+          // Wall to west → face east (rot 12)
+        ];
+        for (const d of dirs) {
+          const adj = block.dimension.getBlock({
+            x: block.location.x + d.dx,
+            y: block.location.y,
+            z: block.location.z + d.dz
+          });
+          if (adj && !adj.isAir) {
+            rotIndex = d.rot;
+            break;
+          }
         }
       }
+      const perm = block.permutation.withState("gaiadimension:rotation", rotIndex).withState("gaiadimension:wall_attached", isWall);
+      block.setPermutation(perm);
     }
-    const perm = block.permutation.withState("gaiadimension:rotation", rotIndex).withState("gaiadimension:wall_attached", isWall);
-    block.setPermutation(perm);
     system16.runTimeout(() => {
       openSignUI(player, block);
     }, 5);

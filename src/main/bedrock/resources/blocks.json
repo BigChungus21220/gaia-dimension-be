@@ -217,5 +217,9 @@
     },
     "gaiadimension:vanilla_grass_jagged_peaks": {
         "sound": "grass"
+    },
+    "gaiadimension:canopy_hanging_sign": {
+        "textures": "gaiadimension:canopy_hanging_sign",
+        "sound": "wood"
     }
 }
