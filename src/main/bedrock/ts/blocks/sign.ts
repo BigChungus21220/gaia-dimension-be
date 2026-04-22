@@ -1,6 +1,5 @@
-import { system, world, Block, Entity, PlayerPlaceBlockAfterEvent, PlayerInteractWithBlockBeforeEvent, BlockComponentRegistry, PlayerBreakBlockBeforeEvent } from "@minecraft/server";
+import { system, world, Block, Entity, Player, BlockPermutation, BlockComponentRegistry } from "@minecraft/server";
 import { ModalFormData } from "@minecraft/server-ui";
-import { registerPlaceHandler, registerBreakHandler, registerInteractHandler } from "../systems/event_manager.js";
 
 const SIGN_CHAR_ENTITY = "gaiadimension:sign_char";
 
@@ -12,18 +11,65 @@ const CHARS_PER_LINE = 10;
 /** Max lines on the sign */
 const MAX_LINES = 4;
 /** Total size of the sign board after scaling (in blocks) */
-const BOARD_WIDTH = 0.92;  // 24 * 0.615 / 16
-const BOARD_HEIGHT = 0.46; // 12 * 0.615 / 16
+const BOARD_WIDTH = 0.92;
+const BOARD_HEIGHT = 0.46;
 /** Y position of board bottom relative to block origin (after transform) */
 const BOARD_BOTTOM_Y = 0.495;
 /** Z offset of the board's front face from block center */
 const BOARD_Z_OFFSET = -0.04;
 
-/** Size of each character cell = entity visual width (0.5 blocks * scale 0.18) */
+/** Size of each character cell */
 const CHAR_WIDTH = 0.05;
 const CHAR_HEIGHT = 0.07;
-/** Entity scale to make the 0.5-block geometry fit into one character cell */
-const CHAR_SCALE = 0.14;
+
+/** Checks if a block is a Gaia Dimension sign */
+function isGaiaSign(block: Block): boolean {
+    return block.typeId.includes("gaiadimension") && block.typeId.includes("sign");
+}
+
+/**
+ * Converts a player's Y rotation (yaw) to the nearest 16-step sign rotation index (0-15).
+ * The sign faces TOWARD the player.
+ */
+function playerYawToRotationIndex(yaw: number): number {
+    // Player yaw: 0=south, 90=west, 180/-180=north, -90=east
+    // Sign should face toward the player
+    const facing = ((yaw + 180) % 360 + 360) % 360;
+    const index = Math.round(facing / 22.5) % 16;
+    return index;
+}
+
+/**
+ * Converts a block face direction to a wall rotation index (0-15).
+ * The sign board faces AWAY from the wall.
+ */
+function faceToWallRotation(faceX: number, faceZ: number): number {
+    // Determine which face the sign was placed on
+    if (faceZ === -1) return 0;   // Placed on north face -> sign faces south (rot 0)
+    if (faceX === 1)  return 4;   // Placed on east face  -> sign faces west  (rot 4)
+    if (faceZ === 1)  return 8;   // Placed on south face -> sign faces north (rot 8)
+    if (faceX === -1) return 12;  // Placed on west face  -> sign faces east  (rot 12)
+    return 0;
+}
+
+/**
+ * Gets the rotation angle in degrees from a rotation index (0-15).
+ */
+function rotationIndexToDegrees(index: number): number {
+    return (index * 22.5) % 360;
+}
+
+/** Get the sign's stored text */
+function getSignText(block: Block): string {
+    const key = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
+    return (world.getDynamicProperty(key) as string) ?? "";
+}
+
+/** Store the sign's text */
+function setSignText(block: Block, text: string): void {
+    const key = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
+    world.setDynamicProperty(key, text);
+}
 
 /**
  * Finds all sign_char entities belonging to a specific sign block.
@@ -82,6 +128,7 @@ function wrapText(input: string): string[] {
 
 /**
  * Spawns sign_char entities for each character of the given text on the sign.
+ * Characters are rotated to face the sign's direction.
  */
 function spawnSignText(block: Block, text: string): void {
     const lines = wrapText(text);
@@ -89,54 +136,64 @@ function spawnSignText(block: Block, text: string): void {
     const blockY = block.location.y;
     const blockZ = block.location.z + 0.5;
 
+    // Get rotation from block state
+    const rotIndex = block.permutation.getState("gaiadimension:rotation") as number ?? 0;
+    const isWall = block.permutation.getState("gaiadimension:wall_attached") as boolean ?? false;
+    const rotDeg = rotationIndexToDegrees(rotIndex);
+    const rotRad = (rotDeg * Math.PI) / 180;
+
+    // Adjust Y offset for wall signs (board is lower on wall signs)
+    const yBase = isWall ? 0.3 : BOARD_BOTTOM_Y;
+    const boardHeight = isWall ? 0.36 : BOARD_HEIGHT;
+
     for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
         const line = lines[lineIdx];
-        // Center the line horizontally on the board (like vanilla signs)
+        // Center the line horizontally on the board
         const lineOffsetX = (line.length * CHAR_WIDTH) / 2 - CHAR_WIDTH / 2;
 
         for (let charIdx = 0; charIdx < line.length; charIdx++) {
             const char = line[charIdx];
-            // Skip spaces — no need to spawn an invisible entity
             if (char === " ") continue;
 
             const asciiCode = char.charCodeAt(0);
 
-            const x = blockX + lineOffsetX - charIdx * CHAR_WIDTH;
-            // Top-align: line 0 at top of board, going down
-            const y = blockY + BOARD_BOTTOM_Y + BOARD_HEIGHT - (lineIdx * CHAR_HEIGHT) - CHAR_HEIGHT / 2;
-            const z = blockZ + BOARD_Z_OFFSET;
+            // Local position relative to sign center (before rotation)
+            const localX = lineOffsetX - charIdx * CHAR_WIDTH;
+            const localY = yBase + boardHeight - (lineIdx * CHAR_HEIGHT) - CHAR_HEIGHT / 2;
+            const localZ = isWall ? 0.22 : BOARD_Z_OFFSET;
+
+            // Rotate around the Y axis based on sign facing direction
+            const cosR = Math.cos(rotRad);
+            const sinR = Math.sin(rotRad);
+            const worldX = blockX + localX * cosR - localZ * sinR;
+            const worldZ = blockZ + localX * sinR + localZ * cosR;
+            const worldY = blockY + localY;
 
             try {
-                const entity = block.dimension.spawnEntity(SIGN_CHAR_ENTITY, { x, y, z });
+                const entity = block.dimension.spawnEntity(SIGN_CHAR_ENTITY, { x: worldX, y: worldY, z: worldZ });
                 entity.setProperty("gaiadimension:char_index", asciiCode);
-                // Store the sign's block location as a tag for easy lookup
+                entity.setRotation({ x: 0, y: rotDeg });
                 entity.addTag(`sign:${block.location.x},${block.location.y},${block.location.z}`);
-            } catch (e) {
-                console.warn(`Failed to spawn sign char: ${e}`);
-            }
+            } catch (e) {}
         }
     }
 
-    // Store the raw text on the block so we can re-edit later
-    block.setPermutation(block.permutation);
-    // Use a dynamic property on the block dimension for the text
-    const signKey = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
-    world.setDynamicProperty(signKey, text);
+    setSignText(block, text);
 }
 
 /**
  * Opens the sign edit UI for the player.
  */
-function openSignUI(player: any, block: Block): void {
+function openSignUI(player: Player, block: Block): void {
     const playerId = player.id;
-    if (editingPlayers.has(playerId)) return; // Already editing
+    if (editingPlayers.has(playerId)) return;
     editingPlayers.add(playerId);
 
-    const signKey = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
-    
+    const existingText = getSignText(block);
+
     const ui = new ModalFormData();
     ui.title("Edit Sign");
-    ui.textField("Sign Text", "Type here...");
+    ui.textField("Sign Text", "Type here...", existingText || undefined);
 
     ui.show(player).then(response => {
         editingPlayers.delete(playerId);
@@ -145,57 +202,97 @@ function openSignUI(player: any, block: Block): void {
         const rawInput = String(response.formValues[0] || "");
         if (rawInput.trim().length === 0) return;
 
-        // Clear old characters
         clearSignChars(block);
-        // Spawn new characters
         spawnSignText(block, rawInput.trim());
     }).catch(() => {
         editingPlayers.delete(playerId);
     });
 }
 
+/**
+ * Cleans up all stored data for a sign block.
+ */
+function cleanupSignData(loc: { x: number; y: number; z: number }): void {
+    world.setDynamicProperty(`sign_${loc.x}_${loc.y}_${loc.z}`, undefined);
+}
+
+// ============================================================
+// World Event Listeners
+// ============================================================
+
 export function registerSignComponent({ blockComponentRegistry }: { blockComponentRegistry: BlockComponentRegistry }): void {
     blockComponentRegistry.registerCustomComponent("gaiadimension:sign", {});
 
-    // --- PLACE: Show edit UI immediately ---
-    registerPlaceHandler({
-        check: (block: Block) => block.typeId.includes("gaiadimension") && block.typeId.includes("sign"),
-        execute: (event: PlayerPlaceBlockAfterEvent) => {
-            const { block, player } = event;
-            system.runTimeout(() => {
-                openSignUI(player, block);
-            }, 5);
+    // --- PLACE: Detect ground/wall, set rotation + open edit UI ---
+    world.afterEvents.playerPlaceBlock.subscribe((event) => {
+        const { block, player } = event;
+        if (!isGaiaSign(block)) return;
+
+        // Determine if placed on a wall or on the ground
+        // Check if the block below is air — if so, it's likely a wall placement
+        const blockBelow = block.dimension.getBlock({
+            x: block.location.x,
+            y: block.location.y - 1,
+            z: block.location.z
+        });
+        
+        // Detect wall attachment by checking adjacent blocks in cardinal directions
+        const yaw = player.getRotation().y;
+        let isWall = false;
+        let rotIndex = playerYawToRotationIndex(yaw);
+        
+        // Check if the block below is NOT solid (means placed on a wall)
+        if (blockBelow && (blockBelow.typeId === "minecraft:air" || blockBelow.isAir)) {
+            isWall = true;
+            // For wall signs, snap to 4 cardinal directions based on player facing
+            const cardinalIndex = Math.round(rotIndex / 4) * 4 % 16;
+            rotIndex = cardinalIndex;
         }
+
+        // Set block states
+        const perm = block.permutation
+            .withState("gaiadimension:rotation", rotIndex)
+            .withState("gaiadimension:wall_attached", isWall);
+        block.setPermutation(perm);
+
+        // Open sign edit form
+        system.runTimeout(() => {
+            openSignUI(player, block);
+        }, 5);
     });
 
-    // --- BREAK: Kill all sign_char entities ---
-    registerBreakHandler({
-        event: "before",
-        check: (block: Block) => block.typeId.includes("gaiadimension") && block.typeId.includes("sign"),
-        execute: (event: PlayerBreakBlockBeforeEvent) => {
-            const { block } = event;
-            system.run(() => {
-                clearSignChars(block);
-                // Clean up stored text
-                const signKey = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
-                world.setDynamicProperty(signKey, undefined);
+    // --- BREAK: Kill all sign_char entities + cleanup data ---
+    world.beforeEvents.playerBreakBlock.subscribe((event) => {
+        const { block } = event;
+        if (!isGaiaSign(block)) return;
+
+        const loc = { x: block.location.x, y: block.location.y, z: block.location.z };
+        system.run(() => {
+            // Find and remove entities by tag (block may be gone by now)
+            const tag = `sign:${loc.x},${loc.y},${loc.z}`;
+            const entities = block.dimension.getEntities({
+                location: { x: loc.x + 0.5, y: loc.y + 0.5, z: loc.z + 0.5 },
+                maxDistance: 2.0,
+                type: SIGN_CHAR_ENTITY,
+                tags: [tag]
             });
-        }
+            for (const entity of entities) {
+                try { entity.remove(); } catch (e) {}
+            }
+            cleanupSignData(loc);
+        });
     });
 
     // --- INTERACT: Re-edit sign text ---
-    registerInteractHandler({
-        check: (block: Block) => block.typeId.includes("gaiadimension") && block.typeId.includes("sign"),
-        execute: (event: PlayerInteractWithBlockBeforeEvent) => {
-            const { player, block } = event;
+    world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
+        const { player, block } = event;
+        if (!isGaiaSign(block)) return;
+        if (player.isSneaking) return;
 
-            if (player.isSneaking) return;
+        event.cancel = true;
 
-            event.cancel = true;
-
-            system.run(() => {
-                openSignUI(player, block);
-            });
-        }
+        system.run(() => {
+            openSignUI(player, block);
+        });
     });
 }

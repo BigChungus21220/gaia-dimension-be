@@ -6,6 +6,10 @@
       "menu_category": {
         "category": "items",
         "group": "itemGroup.name.sign"
+      },
+      "states": {
+        "gaiadimension:rotation": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+        "gaiadimension:wall_attached": [false, true]
       }
     },
     "components": {
@@ -35,6 +39,172 @@
         "origin": [-8, 0, -1],
         "size": [16, 16, 2]
       }
-    }
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('gaiadimension:wall_attached') == true",
+        "components": {
+          "minecraft:geometry": "geometry.sign_wall",
+          "minecraft:collision_box": {
+            "origin": [-8, -2, 5],
+            "size": [16, 10, 2]
+          },
+          "minecraft:selection_box": {
+            "origin": [-8, -2, 5],
+            "size": [16, 10, 2]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:rotation') == 1",
+        "components": {
+          "minecraft:transformation": {
+            "scale": [0.615, 0.615, 0.615],
+            "translation": [0, -0.19, 0],
+            "rotation": [0, -22.5, 0]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:rotation') == 2",
+        "components": {
+          "minecraft:transformation": {
+            "scale": [0.615, 0.615, 0.615],
+            "translation": [0, -0.19, 0],
+            "rotation": [0, -45, 0]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:rotation') == 3",
+        "components": {
+          "minecraft:transformation": {
+            "scale": [0.615, 0.615, 0.615],
+            "translation": [0, -0.19, 0],
+            "rotation": [0, -67.5, 0]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:rotation') == 4",
+        "components": {
+          "minecraft:transformation": {
+            "scale": [0.615, 0.615, 0.615],
+            "translation": [0, -0.19, 0],
+            "rotation": [0, -90, 0]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:rotation') == 5",
+        "components": {
+          "minecraft:transformation": {
+            "scale": [0.615, 0.615, 0.615],
+            "translation": [0, -0.19, 0],
+            "rotation": [0, -112.5, 0]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:rotation') == 6",
+        "components": {
+          "minecraft:transformation": {
+            "scale": [0.615, 0.615, 0.615],
+            "translation": [0, -0.19, 0],
+            "rotation": [0, -135, 0]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:rotation') == 7",
+        "components": {
+          "minecraft:transformation": {
+            "scale": [0.615, 0.615, 0.615],
+            "translation": [0, -0.19, 0],
+            "rotation": [0, -157.5, 0]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:rotation') == 8",
+        "components": {
+          "minecraft:transformation": {
+            "scale": [0.615, 0.615, 0.615],
+            "translation": [0, -0.19, 0],
+            "rotation": [0, -180, 0]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:rotation') == 9",
+        "components": {
+          "minecraft:transformation": {
+            "scale": [0.615, 0.615, 0.615],
+            "translation": [0, -0.19, 0],
+            "rotation": [0, -202.5, 0]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:rotation') == 10",
+        "components": {
+          "minecraft:transformation": {
+            "scale": [0.615, 0.615, 0.615],
+            "translation": [0, -0.19, 0],
+            "rotation": [0, -225, 0]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:rotation') == 11",
+        "components": {
+          "minecraft:transformation": {
+            "scale": [0.615, 0.615, 0.615],
+            "translation": [0, -0.19, 0],
+            "rotation": [0, -247.5, 0]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:rotation') == 12",
+        "components": {
+          "minecraft:transformation": {
+            "scale": [0.615, 0.615, 0.615],
+            "translation": [0, -0.19, 0],
+            "rotation": [0, -270, 0]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:rotation') == 13",
+        "components": {
+          "minecraft:transformation": {
+            "scale": [0.615, 0.615, 0.615],
+            "translation": [0, -0.19, 0],
+            "rotation": [0, -292.5, 0]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:rotation') == 14",
+        "components": {
+          "minecraft:transformation": {
+            "scale": [0.615, 0.615, 0.615],
+            "translation": [0, -0.19, 0],
+            "rotation": [0, -315, 0]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('gaiadimension:rotation') == 15",
+        "components": {
+          "minecraft:transformation": {
+            "scale": [0.615, 0.615, 0.615],
+            "translation": [0, -0.19, 0],
+            "rotation": [0, -337.5, 0]
+          }
+        }
+      }
+    ]
   }
 }

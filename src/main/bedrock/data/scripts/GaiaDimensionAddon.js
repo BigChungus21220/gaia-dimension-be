@@ -2127,6 +2127,25 @@ var BOARD_BOTTOM_Y = 0.495;
 var BOARD_Z_OFFSET = -0.04;
 var CHAR_WIDTH = 0.05;
 var CHAR_HEIGHT = 0.07;
+function isGaiaSign(block) {
+  return block.typeId.includes("gaiadimension") && block.typeId.includes("sign");
+}
+function playerYawToRotationIndex(yaw) {
+  const facing = ((yaw + 180) % 360 + 360) % 360;
+  const index = Math.round(facing / 22.5) % 16;
+  return index;
+}
+function rotationIndexToDegrees(index) {
+  return index * 22.5 % 360;
+}
+function getSignText(block) {
+  const key = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
+  return world13.getDynamicProperty(key) ?? "";
+}
+function setSignText(block, text) {
+  const key = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
+  world13.setDynamicProperty(key, text);
+}
 function findSignChars(block) {
   const tag2 = `sign:${block.location.x},${block.location.y},${block.location.z}`;
   const center = {
@@ -2177,6 +2196,12 @@ function spawnSignText(block, text) {
   const blockX = block.location.x + 0.5;
   const blockY = block.location.y;
   const blockZ = block.location.z + 0.5;
+  const rotIndex = block.permutation.getState("gaiadimension:rotation") ?? 0;
+  const isWall = block.permutation.getState("gaiadimension:wall_attached") ?? false;
+  const rotDeg = rotationIndexToDegrees(rotIndex);
+  const rotRad = rotDeg * Math.PI / 180;
+  const yBase = isWall ? 0.3 : BOARD_BOTTOM_Y;
+  const boardHeight = isWall ? 0.36 : BOARD_HEIGHT;
   for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
     const line = lines[lineIdx];
     const lineOffsetX = line.length * CHAR_WIDTH / 2 - CHAR_WIDTH / 2;
@@ -2184,30 +2209,33 @@ function spawnSignText(block, text) {
       const char = line[charIdx];
       if (char === " ") continue;
       const asciiCode = char.charCodeAt(0);
-      const x = blockX + lineOffsetX - charIdx * CHAR_WIDTH;
-      const y = blockY + BOARD_BOTTOM_Y + BOARD_HEIGHT - lineIdx * CHAR_HEIGHT - CHAR_HEIGHT / 2;
-      const z = blockZ + BOARD_Z_OFFSET;
+      const localX = lineOffsetX - charIdx * CHAR_WIDTH;
+      const localY = yBase + boardHeight - lineIdx * CHAR_HEIGHT - CHAR_HEIGHT / 2;
+      const localZ = isWall ? 0.22 : BOARD_Z_OFFSET;
+      const cosR = Math.cos(rotRad);
+      const sinR = Math.sin(rotRad);
+      const worldX = blockX + localX * cosR - localZ * sinR;
+      const worldZ = blockZ + localX * sinR + localZ * cosR;
+      const worldY = blockY + localY;
       try {
-        const entity = block.dimension.spawnEntity(SIGN_CHAR_ENTITY, { x, y, z });
+        const entity = block.dimension.spawnEntity(SIGN_CHAR_ENTITY, { x: worldX, y: worldY, z: worldZ });
         entity.setProperty("gaiadimension:char_index", asciiCode);
+        entity.setRotation({ x: 0, y: rotDeg });
         entity.addTag(`sign:${block.location.x},${block.location.y},${block.location.z}`);
       } catch (e) {
-        console.warn(`Failed to spawn sign char: ${e}`);
       }
     }
   }
-  block.setPermutation(block.permutation);
-  const signKey = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
-  world13.setDynamicProperty(signKey, text);
+  setSignText(block, text);
 }
 function openSignUI(player, block) {
   const playerId = player.id;
   if (editingPlayers.has(playerId)) return;
   editingPlayers.add(playerId);
-  const signKey = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
+  const existingText = getSignText(block);
   const ui = new ModalFormData();
   ui.title("Edit Sign");
-  ui.textField("Sign Text", "Type here...");
+  ui.textField("Sign Text", "Type here...", existingText || void 0);
   ui.show(player).then((response) => {
     editingPlayers.delete(playerId);
     if (response.canceled || !response.formValues) return;
@@ -2219,39 +2247,62 @@ function openSignUI(player, block) {
     editingPlayers.delete(playerId);
   });
 }
+function cleanupSignData(loc) {
+  world13.setDynamicProperty(`sign_${loc.x}_${loc.y}_${loc.z}`, void 0);
+}
 function registerSignComponent({ blockComponentRegistry }) {
   blockComponentRegistry.registerCustomComponent("gaiadimension:sign", {});
-  registerPlaceHandler({
-    check: (block) => block.typeId.includes("gaiadimension") && block.typeId.includes("sign"),
-    execute: (event) => {
-      const { block, player } = event;
-      system16.runTimeout(() => {
-        openSignUI(player, block);
-      }, 5);
+  world13.afterEvents.playerPlaceBlock.subscribe((event) => {
+    const { block, player } = event;
+    if (!isGaiaSign(block)) return;
+    const blockBelow = block.dimension.getBlock({
+      x: block.location.x,
+      y: block.location.y - 1,
+      z: block.location.z
+    });
+    const yaw = player.getRotation().y;
+    let isWall = false;
+    let rotIndex = playerYawToRotationIndex(yaw);
+    if (blockBelow && (blockBelow.typeId === "minecraft:air" || blockBelow.isAir)) {
+      isWall = true;
+      const cardinalIndex = Math.round(rotIndex / 4) * 4 % 16;
+      rotIndex = cardinalIndex;
     }
+    const perm = block.permutation.withState("gaiadimension:rotation", rotIndex).withState("gaiadimension:wall_attached", isWall);
+    block.setPermutation(perm);
+    system16.runTimeout(() => {
+      openSignUI(player, block);
+    }, 5);
   });
-  registerBreakHandler({
-    event: "before",
-    check: (block) => block.typeId.includes("gaiadimension") && block.typeId.includes("sign"),
-    execute: (event) => {
-      const { block } = event;
-      system16.run(() => {
-        clearSignChars(block);
-        const signKey = `sign_${block.location.x}_${block.location.y}_${block.location.z}`;
-        world13.setDynamicProperty(signKey, void 0);
+  world13.beforeEvents.playerBreakBlock.subscribe((event) => {
+    const { block } = event;
+    if (!isGaiaSign(block)) return;
+    const loc = { x: block.location.x, y: block.location.y, z: block.location.z };
+    system16.run(() => {
+      const tag2 = `sign:${loc.x},${loc.y},${loc.z}`;
+      const entities = block.dimension.getEntities({
+        location: { x: loc.x + 0.5, y: loc.y + 0.5, z: loc.z + 0.5 },
+        maxDistance: 2,
+        type: SIGN_CHAR_ENTITY,
+        tags: [tag2]
       });
-    }
+      for (const entity of entities) {
+        try {
+          entity.remove();
+        } catch (e) {
+        }
+      }
+      cleanupSignData(loc);
+    });
   });
-  registerInteractHandler({
-    check: (block) => block.typeId.includes("gaiadimension") && block.typeId.includes("sign"),
-    execute: (event) => {
-      const { player, block } = event;
-      if (player.isSneaking) return;
-      event.cancel = true;
-      system16.run(() => {
-        openSignUI(player, block);
-      });
-    }
+  world13.beforeEvents.playerInteractWithBlock.subscribe((event) => {
+    const { player, block } = event;
+    if (!isGaiaSign(block)) return;
+    if (player.isSneaking) return;
+    event.cancel = true;
+    system16.run(() => {
+      openSignUI(player, block);
+    });
   });
 }
 
@@ -2361,14 +2412,14 @@ function registerSandstoneComponent({ blockComponentRegistry }) {
 }
 
 // src/main/bedrock/ts/blocks/stone_slab.ts
-import { world as world16, system as system19, BlockPermutation as BlockPermutation7, GameMode as GameMode7, Direction as Direction5 } from "@minecraft/server";
+import { world as world16, system as system19, BlockPermutation as BlockPermutation8, GameMode as GameMode7, Direction as Direction5 } from "@minecraft/server";
 function handleDoubleOreSlab(player, block, mainhandItem) {
   const baseId = block.typeId.replace("_slab", "");
   const possibleIds = [baseId, baseId + "s"];
   let success = false;
   for (const fullBlockId of possibleIds) {
     try {
-      BlockPermutation7.resolve(fullBlockId);
+      BlockPermutation8.resolve(fullBlockId);
       block.setType(fullBlockId);
       success = true;
       break;
@@ -4336,7 +4387,7 @@ function registerGaiaFurnaceComponent({ blockComponentRegistry }) {
 import { world as world23, system as system24 } from "@minecraft/server";
 
 // src/main/bedrock/ts/API/lib/PortalLib.ts
-import { BlockPermutation as BlockPermutation9, BlockVolume } from "@minecraft/server";
+import { BlockPermutation as BlockPermutation10, BlockVolume } from "@minecraft/server";
 var PortalManager = class {
   static registeredPortals = /* @__PURE__ */ new Map();
   static register(portalBlockId, frameBlockId, options = {}) {
@@ -4506,7 +4557,7 @@ var PortalManager = class {
     const { minX, maxX, minZ, maxZ, minY, maxY } = bounds;
     let blockPerm = null;
     try {
-      const perm = BlockPermutation9.resolve(portalId);
+      const perm = BlockPermutation10.resolve(portalId);
       try {
         const dir = axis === "x" ? "north" : "east";
         blockPerm = perm.withState("minecraft:cardinal_direction", dir);
@@ -4642,7 +4693,7 @@ var PortalManager = class {
               z: blockpos.z + fWidth * direction.z + fOffset * crossDir.z
             };
             const blk = dimension.getBlock(p);
-            if (blk) blk.setPermutation(BlockPermutation9.resolve(isFloor ? frameBlockId : "minecraft:air"));
+            if (blk) blk.setPermutation(BlockPermutation10.resolve(isFloor ? frameBlockId : "minecraft:air"));
           }
         }
       }
@@ -4656,11 +4707,11 @@ var PortalManager = class {
             z: blockpos.z + fWidth * direction.z
           };
           const blk = dimension.getBlock(p);
-          if (blk) blk.setPermutation(BlockPermutation9.resolve(frameBlockId));
+          if (blk) blk.setPermutation(BlockPermutation10.resolve(frameBlockId));
         }
       }
     }
-    const portalPerm = BlockPermutation9.resolve(portalBlockId);
+    const portalPerm = BlockPermutation10.resolve(portalBlockId);
     let orientedPerm;
     try {
       orientedPerm = portalPerm.withState("axis", axis);
@@ -5205,10 +5256,10 @@ function registerMegaStorageCrateComponent({ blockComponentRegistry }) {
 }
 
 // src/main/bedrock/ts/mixins/LightMixin.ts
-import { world as world25, system as system26, BlockPermutation as BlockPermutation11 } from "@minecraft/server";
+import { world as world25, system as system26, BlockPermutation as BlockPermutation12 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/Gaia.ts
-import { world as world24, system as system25, BlockPermutation as BlockPermutation10, BlockVolume as BlockVolume2 } from "@minecraft/server";
+import { world as world24, system as system25, BlockPermutation as BlockPermutation11, BlockVolume as BlockVolume2 } from "@minecraft/server";
 var GAIA_DIMENSION_ID = "gaiadimension:gaia_dimension";
 var DimensionSystem = class {
   static isInGaia(player) {
@@ -5255,7 +5306,7 @@ var DimensionSystem = class {
       targetDim.getBlock({ x: px - 1, y: py + i, z: pz })?.setType(keystone);
       targetDim.getBlock({ x: px + 2, y: py + i, z: pz })?.setType(keystone);
     }
-    const portalPerm = BlockPermutation10.resolve(portal, { "gaiadimension:perm_dim": 0 });
+    const portalPerm = BlockPermutation11.resolve(portal, { "gaiadimension:perm_dim": 0 });
     for (let ix = 0; ix <= 1; ix++) {
       for (let iy = 1; iy <= 3; iy++) {
         targetDim.getBlock({ x: px + ix, y: py + iy, z: pz })?.setPermutation(portalPerm);
@@ -5288,7 +5339,7 @@ system25.runInterval(() => {
 var lightBlockPermutation;
 system26.run(() => {
   try {
-    lightBlockPermutation = BlockPermutation11.resolve("minecraft:light_block", { "minecraft:block_light_level": 15 });
+    lightBlockPermutation = BlockPermutation12.resolve("minecraft:light_block", { "minecraft:block_light_level": 15 });
   } catch (e) {
   }
 });
@@ -5397,7 +5448,7 @@ function initializeScriptEvents() {
 }
 
 // src/main/bedrock/ts/fluids/fluids.ts
-import { world as world27, system as system30, BlockPermutation as BlockPermutation12, ItemStack as ItemStack12, BlockVolume as BlockVolume3, Player as Player15, GameMode as GameMode8 } from "@minecraft/server";
+import { world as world27, system as system30, BlockPermutation as BlockPermutation13, ItemStack as ItemStack12, BlockVolume as BlockVolume3, Player as Player16, GameMode as GameMode8 } from "@minecraft/server";
 
 // src/main/bedrock/ts/fluids/lib/FluidTemplate.ts
 var FluidTemplate = class {
@@ -6180,7 +6231,7 @@ function processFluidBlock(block, dimension) {
       }
     }
     if (changedStates) {
-      dimension.fillBlocks(new BlockVolume3(block.location, block.location), BlockPermutation12.resolve(block.typeId, states));
+      dimension.fillBlocks(new BlockVolume3(block.location, block.location), BlockPermutation13.resolve(block.typeId, states));
     }
   }
   const below = getCachedBlock(dimension, block.location.x, block.location.y - 1, block.location.z);
@@ -6213,7 +6264,7 @@ function processFluidBlock(block, dimension) {
             if (nInfo.stage > 0 && nextStageNum < nInfo.stage) canOverwrite = true;
           }
           if (canOverwrite) {
-            const perm = BlockPermutation12.resolve(nextId, { "gaiadimension:flow_dir": dir.straight });
+            const perm = BlockPermutation13.resolve(nextId, { "gaiadimension:flow_dir": dir.straight });
             dimension.fillBlocks(new BlockVolume3(neighbor.location, neighbor.location), perm);
             PENDING_BLOCKS.set(`${neighbor.x},${neighbor.y},${neighbor.z},${dimension.id}`, { block: neighbor, dimension, scheduledTick: system30.currentTick + (template?.spreadDelay ?? 5) });
             changesHappened = true;
@@ -6254,7 +6305,7 @@ function processFluidBlock(block, dimension) {
     const perms = block.permutation.getAllStates();
     if (perms["gaiadimension:flow_dir"] !== dirState) {
       perms["gaiadimension:flow_dir"] = dirState;
-      dimension.fillBlocks(new BlockVolume3(block.location, block.location), BlockPermutation12.resolve(typeId, perms));
+      dimension.fillBlocks(new BlockVolume3(block.location, block.location), BlockPermutation13.resolve(typeId, perms));
       changesHappened = true;
     }
   }
@@ -6311,7 +6362,7 @@ world27.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     event.cancel = true;
     system30.run(() => {
       if (block.isValid) {
-        block.setPermutation(BlockPermutation12.resolve(fluidId));
+        block.setPermutation(BlockPermutation13.resolve(fluidId));
         wakeNeighbors(block.location, block.dimension);
         const isHot = fluidId.includes("magma") || fluidId.includes("bismuth");
         player.playSound(isHot ? "bucket.empty_lava" : "bucket.empty_water", { pitch: 1, volume: 1 });
@@ -6338,7 +6389,7 @@ world27.beforeEvents.playerInteractWithBlock.subscribe((event) => {
 });
 world27.afterEvents.playerInteractWithEntity.subscribe((event) => {
   const { player, target, itemStack } = event;
-  if (target.typeId !== "gaiadimension:fluid_interaction_dummy" || !(player instanceof Player15)) return;
+  if (target.typeId !== "gaiadimension:fluid_interaction_dummy" || !(player instanceof Player16)) return;
   const dimension = player.dimension;
   const location = { x: Math.floor(target.location.x), y: Math.floor(target.location.y), z: Math.floor(target.location.z) };
   const fluidBlock = getCachedBlock(dimension, location.x, location.y, location.z);
@@ -6396,7 +6447,7 @@ world27.afterEvents.playerInteractWithEntity.subscribe((event) => {
       }
     } else {
       try {
-        const perm = BlockPermutation12.resolve(itemStack.typeId);
+        const perm = BlockPermutation13.resolve(itemStack.typeId);
         if (perm) {
           dimension.fillBlocks(new BlockVolume3(location, location), perm);
           player.playSound("stone.dig", { location });
@@ -6494,7 +6545,7 @@ function applyCustomDamage(player, itemStack, damageAmount) {
 }
 
 // src/main/bedrock/ts/systems/Commands.ts
-import { Player as Player17, system as system32, CommandPermissionLevel, CustomCommandParamType } from "@minecraft/server";
+import { Player as Player18, system as system32, CommandPermissionLevel, CustomCommandParamType } from "@minecraft/server";
 import { ModalFormData as ModalFormData2 } from "@minecraft/server-ui";
 
 // src/main/bedrock/ts/Vec3.ts
@@ -6786,7 +6837,7 @@ function registerGaiaCommands(registry) {
     ]
   }, (origin, p1, p2, p3, p4, p5, p6, p7, p8) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player17)) return;
+    if (!(player instanceof Player18)) return;
     system32.run(() => {
       try {
         const expression = [p1, p2, p3, p4, p5, p6, p7, p8].filter((p) => p !== void 0).join(" ");
@@ -6846,7 +6897,7 @@ function registerGaiaCommands(registry) {
     ]
   }, (origin, p1, p2, p3, p4, p5, p6, p7, p8) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player17)) return;
+    if (!(player instanceof Player18)) return;
     system32.run(() => {
       try {
         const expression = [p1, p2, p3, p4, p5, p6, p7, p8].filter((p) => p !== void 0).join(" ");
@@ -6901,7 +6952,7 @@ function registerGaiaCommands(registry) {
     ]
   }, (origin, op, target, path, v1, v2, v3, v4, v5) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player17)) return;
+    if (!(player instanceof Player18)) return;
     system32.run(() => {
       try {
         const operation = op ? op.toLowerCase() : "get";
@@ -7007,7 +7058,7 @@ function registerGaiaCommands(registry) {
     permissionLevel: CommandPermissionLevel.Any
   }, (origin) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player17)) return;
+    if (!(player instanceof Player18)) return;
     system32.run(() => {
       player.sendMessage("\xA78\xA7l========================================");
       player.sendMessage("\xA76\xA7lGAIA DIMENSION BEDROCK PORT");
@@ -7025,7 +7076,7 @@ function registerGaiaCommands(registry) {
     permissionLevel: CommandPermissionLevel.Any
   }, (origin) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player17)) return;
+    if (!(player instanceof Player18)) return;
     system32.run(() => {
       const inGaia = DimensionSystem.isInGaia(player);
       const dimId = player.dimension.id;
@@ -7049,7 +7100,7 @@ function registerGaiaCommands(registry) {
     permissionLevel: CommandPermissionLevel.Any
   }, (origin) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player17)) return;
+    if (!(player instanceof Player18)) return;
     system32.run(() => {
       const inGaia = DimensionSystem.isInGaia(player);
       const dimId = player.dimension.id;
@@ -7078,7 +7129,7 @@ function registerGaiaCommands(registry) {
     permissionLevel: CommandPermissionLevel.Any
   }, (origin) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player17)) return;
+    if (!(player instanceof Player18)) return;
     system32.run(() => {
       player.sendMessage("\xA7d[Gaia Creator] \xA77She's the primordial architect who birthed the original Java realm. If you see crystals, thank her. If you see bugs, it's definitely the porter's fault.");
       player.sendMessage("\xA7b\u{1F517} https://www.curseforge.com/minecraft/mc-mods/gaia-dimension");
@@ -7091,7 +7142,7 @@ function registerGaiaCommands(registry) {
     permissionLevel: CommandPermissionLevel.GameDirectors
   }, (origin) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player17)) return;
+    if (!(player instanceof Player18)) return;
     system32.run(() => {
       const currentConfig = ModConfig.getAll();
       const form = new ModalFormData2();
@@ -7134,7 +7185,7 @@ function registerGaiaCommands(registry) {
     permissionLevel: CommandPermissionLevel.Any
   }, (origin) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player17)) return;
+    if (!(player instanceof Player18)) return;
     system32.run(() => {
       player.sendMessage("\xA76[The Porter] \xA77Behold the one who dragged this entire dimension into Bedrock by its crystal ears.");
       player.sendMessage("\xA7eIt only took 4 years, three gray hairs, and a questionable amount of sanity. Don't ask why it took so long... those gray hairs are just Albite dust, I promise.");
@@ -7147,7 +7198,7 @@ function formatName(id) {
 }
 
 // src/main/bedrock/ts/systems/SetBiomeCommand.ts
-import { Player as Player18, system as system33, CommandPermissionLevel as CommandPermissionLevel2, CustomCommandParamType as CustomCommandParamType2 } from "@minecraft/server";
+import { Player as Player19, system as system33, CommandPermissionLevel as CommandPermissionLevel2, CustomCommandParamType as CustomCommandParamType2 } from "@minecraft/server";
 
 // src/main/bedrock/ts/config/biome_visuals.ts
 var BIOME_VISUALS = {
@@ -7338,7 +7389,7 @@ function registerSetBiomeCommand(registry) {
     ]
   }, (origin, biome, radiusStr, shape, epic) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player18)) return;
+    if (!(player instanceof Player19)) return;
     if (!biome || !radiusStr) {
       player.sendMessage('\xA7cUsage: /gaiadimension:setbiome "biome" "radius" ["shape"] ["epic"]');
       return { status: 0 };
@@ -7440,12 +7491,12 @@ function registerSetBiomeCommand(registry) {
 }
 
 // src/main/bedrock/ts/items/FireStarter.ts
-import { Player as Player19 } from "@minecraft/server";
+import { Player as Player20 } from "@minecraft/server";
 function registerFireStarterComponent({ itemComponentRegistry }) {
   itemComponentRegistry.registerCustomComponent("gaiadimension:fire_starter", {
     onUseOn: (event) => {
       const { source: player, block, blockFace, itemStack } = event;
-      if (!(player instanceof Player19)) return;
+      if (!(player instanceof Player20)) return;
       const targetLocation = block.location;
       const placeLocation = {
         x: targetLocation.x + (blockFace === "East" ? 1 : blockFace === "West" ? -1 : 0),
@@ -7489,12 +7540,12 @@ function registerFireStarterComponent({ itemComponentRegistry }) {
 }
 
 // src/main/bedrock/ts/items/MagicStaff.ts
-import { Player as Player20 } from "@minecraft/server";
+import { Player as Player21 } from "@minecraft/server";
 function registerMagicStaffComponent({ itemComponentRegistry }) {
   itemComponentRegistry.registerCustomComponent("gaiadimension:magic_staff", {
     onUse: (event) => {
       const { source: player, itemStack } = event;
-      if (!(player instanceof Player20)) return;
+      if (!(player instanceof Player21)) return;
       const idParts = itemStack.typeId.split("_");
       if (idParts.length < 4) return;
       const elementStr = idParts[2];
