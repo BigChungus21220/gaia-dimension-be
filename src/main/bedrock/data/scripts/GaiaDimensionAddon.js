@@ -2403,10 +2403,64 @@ function registerSignComponent({ blockComponentRegistry }) {
     if (player.isSneaking) return;
     event.cancel = true;
     system16.run(() => {
-      openSignUI(player, block);
+      const equip = player.getComponent("minecraft:equippable");
+      if (!equip) {
+        console.warn("[Sign] No equip component");
+        return openSignUI(player, block);
+      }
+      const mainHand = equip.getEquipment("Mainhand");
+      if (!mainHand) {
+        console.warn("[Sign] No mainhand item");
+        return openSignUI(player, block);
+      }
+      console.warn(`[Sign] Holding: ${mainHand.typeId}`);
+      const dyeColor = DYE_MAP[mainHand.typeId];
+      if (dyeColor === void 0) {
+        console.warn("[Sign] Not a dye");
+        return openSignUI(player, block);
+      }
+      const tag2 = `sign:${block.location.x},${block.location.y},${block.location.z}`;
+      const entities = block.dimension.getEntities({
+        location: { x: block.location.x + 0.5, y: block.location.y + 0.5, z: block.location.z + 0.5 },
+        maxDistance: 2,
+        type: SIGN_CHAR_ENTITY,
+        tags: [tag2]
+      });
+      console.warn(`[Sign] Found ${entities.length} char entities, applying color ${dyeColor}`);
+      for (const entity of entities) {
+        try {
+          entity.setProperty("gaiadimension:text_color", dyeColor);
+        } catch (e) {
+          console.warn(`[Sign] color set fail: ${e}`);
+        }
+      }
+      if (mainHand.amount > 1) {
+        mainHand.amount -= 1;
+        equip.setEquipment("Mainhand", mainHand);
+      } else {
+        equip.setEquipment("Mainhand", void 0);
+      }
     });
   });
 }
+var DYE_MAP = {
+  "minecraft:white_dye": 1,
+  "minecraft:red_dye": 2,
+  "minecraft:blue_dye": 3,
+  "minecraft:light_blue_dye": 4,
+  "minecraft:green_dye": 5,
+  "minecraft:yellow_dye": 6,
+  "minecraft:gray_dye": 7,
+  "minecraft:dark_gray_dye": 8,
+  "minecraft:cyan_dye": 9,
+  "minecraft:magenta_dye": 10,
+  "minecraft:lime_dye": 11,
+  "minecraft:brown_dye": 12,
+  "minecraft:black_dye": 13,
+  "minecraft:purple_dye": 14,
+  "minecraft:orange_dye": 15,
+  "minecraft:pink_dye": 16
+};
 
 // src/main/bedrock/ts/blocks/geyser.ts
 import { system as system17 } from "@minecraft/server";

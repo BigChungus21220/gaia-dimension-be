@@ -12,6 +12,12 @@
           "range": [0, 255],
           "default": 0,
           "client_sync": true
+        },
+        "gaiadimension:text_color": {
+          "type": "int",
+          "range": [0, 16],
+          "default": 0,
+          "client_sync": true
         }
       }
     },

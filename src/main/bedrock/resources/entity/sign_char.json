@@ -206,7 +206,11 @@
       ],
       "scripts": {
         "pre_animation": [
-          "variable.char_offset = query.property('gaiadimension:char_index') - 32;"
+          "variable.char_offset = query.property('gaiadimension:char_index') - 32;",
+          "variable.tc = query.property('gaiadimension:text_color');",
+          "variable.cr = (variable.tc==0?0.05:(variable.tc==1?0.95:(variable.tc==2?0.80:(variable.tc==3?0.20:(variable.tc==4?0.20:(variable.tc==5?0.13:(variable.tc==6?0.95:(variable.tc==7?0.60:(variable.tc==8?0.40:(variable.tc==9?0.06:(variable.tc==10?0.50:(variable.tc==11?0.12:(variable.tc==12?0.40:(variable.tc==13?0.25:(variable.tc==14?0.56:(variable.tc==15?0.94:0.97))))))))))))))));",
+          "variable.cg = (variable.tc==0?0.05:(variable.tc==1?0.95:(variable.tc==2?0.20:(variable.tc==3?0.40:(variable.tc==4?0.44:(variable.tc==5?0.55:(variable.tc==6?0.68:(variable.tc==7?0.60:(variable.tc==8?0.40:(variable.tc==9?0.44:(variable.tc==10?0.13:(variable.tc==11?0.56:(variable.tc==12?0.27:(variable.tc==13?0.36:(variable.tc==14?0.18:(variable.tc==15?0.47:0.97))))))))))))))));",
+          "variable.cb = (variable.tc==0?0.05:(variable.tc==1?0.95:(variable.tc==2?0.13:(variable.tc==3?0.55:(variable.tc==4?0.87:(variable.tc==5?0.20:(variable.tc==6?0.20:(variable.tc==7?0.60:(variable.tc==8?0.40:(variable.tc==9?0.65:(variable.tc==10?0.55:(variable.tc==11?0.16:(variable.tc==12?0.13:(variable.tc==13?0.06:(variable.tc==14?0.60:(variable.tc==15?0.14:0.97))))))))))))))));"
         ]
       }
     }

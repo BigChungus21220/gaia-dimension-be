@@ -208,10 +208,10 @@
         "Texture.default"
       ],
       "overlay_color": {
-        "r": 0.0,
-        "g": 0.0,
-        "b": 0.0,
-        "a": 0.35
+        "r": "variable.cr",
+        "g": "variable.cg",
+        "b": "variable.cb",
+        "a": 0.95
       }
     }
   }
