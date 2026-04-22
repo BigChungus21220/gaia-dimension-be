@@ -2124,9 +2124,9 @@ var CHARS_PER_LINE = 10;
 var MAX_LINES = 4;
 var BOARD_HEIGHT = 0.46;
 var STANDING_BOARD_BOTTOM_Y = 0.495;
-var STANDING_BOARD_Z = -0.04;
+var STANDING_BOARD_Z = -0.05;
 var WALL_BOARD_BOTTOM_Y = 0.1;
-var WALL_BOARD_Z = -0.28;
+var WALL_BOARD_Z = -0.22;
 var CHAR_WIDTH = 0.05;
 var CHAR_HEIGHT = 0.07;
 function isGaiaSign(block) {
@@ -2201,8 +2201,9 @@ function spawnSignText(block, text) {
   const rotIndex = block.permutation.getState("gaiadimension:rotation") ?? 0;
   const isWall = block.permutation.getState("gaiadimension:wall_attached") ?? false;
   const blockRotDeg = rotationIndexToDegrees(rotIndex);
-  const entityRotDeg = blockRotDeg;
-  const blockRotRad = blockRotDeg * Math.PI / 180;
+  const boneRotDeg = -blockRotDeg;
+  const entityRotDeg = ((boneRotDeg + 180) % 360 + 360) % 360;
+  const boneRotRad = boneRotDeg * Math.PI / 180;
   const boardBottomY = isWall ? WALL_BOARD_BOTTOM_Y : STANDING_BOARD_BOTTOM_Y;
   const boardZ = isWall ? WALL_BOARD_Z : STANDING_BOARD_Z;
   const boardHeight = isWall ? 0.36 : BOARD_HEIGHT;
@@ -2216,8 +2217,8 @@ function spawnSignText(block, text) {
       const localX = lineOffsetX - charIdx * CHAR_WIDTH;
       const localY = boardBottomY + boardHeight - lineIdx * CHAR_HEIGHT - CHAR_HEIGHT / 2;
       const localZ = boardZ;
-      const cosR = Math.cos(blockRotRad);
-      const sinR = Math.sin(blockRotRad);
+      const cosR = Math.cos(boneRotRad);
+      const sinR = Math.sin(boneRotRad);
       const worldX = blockX + localX * cosR - localZ * sinR;
       const worldZ = blockZ + localX * sinR + localZ * cosR;
       const worldY = blockY + localY;

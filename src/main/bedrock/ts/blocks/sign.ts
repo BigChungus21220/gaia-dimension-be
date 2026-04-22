@@ -16,11 +16,11 @@ const BOARD_HEIGHT = 0.46;
 
 // Standing sign: board Y range is 0.348 to 0.809 (model Y 14-26, scale 0.615, translation -0.19)
 const STANDING_BOARD_BOTTOM_Y = 0.495;
-const STANDING_BOARD_Z = -0.04; // board front face Z offset from block center
+const STANDING_BOARD_Z = -0.05; // text face (-Z side at rotation 0)
 
 // Wall sign: board Y range is 0.041 to 0.502 (model Y 6-18, scale 0.615, translation -0.19)  
 const WALL_BOARD_BOTTOM_Y = 0.10;
-const WALL_BOARD_Z = -0.28; // board front face at Z=-8 model, scaled = -8*0.615/16 = -0.307
+const WALL_BOARD_Z = -0.22; // slightly in front of wall board face
 
 /** Size of each character cell */
 const CHAR_WIDTH = 0.05;
@@ -132,12 +132,12 @@ function spawnSignText(block: Block, text: string): void {
     const rotIndex = block.permutation.getState("gaiadimension:rotation") as number ?? 0;
     const isWall = block.permutation.getState("gaiadimension:wall_attached") as boolean ?? false;
 
-    // Block rotation: state N → block geometry rotated by -N*22.5 degrees
-    // Sign text face is +Z (south) at state 0
-    // Entity south face is textured → rotation matches block rotation directly
+    // Block rotation: state N → bone rotation = -N*22.5 degrees
+    // Entity and position rotation must match bone rotation (NEGATIVE)
     const blockRotDeg = rotationIndexToDegrees(rotIndex);
-    const entityRotDeg = blockRotDeg;
-    const blockRotRad = (blockRotDeg * Math.PI) / 180;
+    const boneRotDeg = -blockRotDeg;
+    const entityRotDeg = ((boneRotDeg + 180) % 360 + 360) % 360;
+    const boneRotRad = (boneRotDeg * Math.PI) / 180;
 
     // Pick board parameters
     const boardBottomY = isWall ? WALL_BOARD_BOTTOM_Y : STANDING_BOARD_BOTTOM_Y;
@@ -156,14 +156,13 @@ function spawnSignText(block: Block, text: string): void {
             const asciiCode = char.charCodeAt(0);
 
             // Local position relative to block center (before rotation)
-            // X = horizontal across the board, Z = depth (front face offset)
             const localX = lineOffsetX - charIdx * CHAR_WIDTH;
             const localY = boardBottomY + boardHeight - (lineIdx * CHAR_HEIGHT) - CHAR_HEIGHT / 2;
             const localZ = boardZ;
 
-            // Rotate local X,Z around Y axis by the BLOCK's rotation angle
-            const cosR = Math.cos(blockRotRad);
-            const sinR = Math.sin(blockRotRad);
+            // Rotate local X,Z by BONE rotation angle (negative of state angle)
+            const cosR = Math.cos(boneRotRad);
+            const sinR = Math.sin(boneRotRad);
             const worldX = blockX + localX * cosR - localZ * sinR;
             const worldZ = blockZ + localX * sinR + localZ * cosR;
             const worldY = blockY + localY;
