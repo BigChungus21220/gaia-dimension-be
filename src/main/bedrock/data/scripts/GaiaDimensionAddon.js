@@ -2125,7 +2125,7 @@ var MAX_LINES = 4;
 var BOARD_HEIGHT = 0.46;
 var STANDING_BOARD_BOTTOM_Y = 0.495;
 var STANDING_BOARD_Z = -0.05;
-var WALL_BOARD_BOTTOM_Y = 0.1;
+var WALL_BOARD_BOTTOM_Y = 0.19;
 var WALL_BOARD_Z = -0.22;
 var CHAR_WIDTH = 0.05;
 var CHAR_HEIGHT = 0.07;
@@ -2202,7 +2202,7 @@ function spawnSignText(block, text) {
   const isWall = block.permutation.getState("gaiadimension:wall_attached") ?? false;
   const blockRotDeg = rotationIndexToDegrees(rotIndex);
   const boneRotDeg = -blockRotDeg;
-  const entityRotDeg = ((boneRotDeg + 180) % 360 + 360) % 360;
+  const entityRotDeg = isWall ? (boneRotDeg % 360 + 360) % 360 : ((boneRotDeg + 180) % 360 + 360) % 360;
   const boneRotRad = boneRotDeg * Math.PI / 180;
   const boardBottomY = isWall ? WALL_BOARD_BOTTOM_Y : STANDING_BOARD_BOTTOM_Y;
   const boardZ = isWall ? WALL_BOARD_Z : STANDING_BOARD_Z;
@@ -2214,7 +2214,7 @@ function spawnSignText(block, text) {
       const char = line[charIdx];
       if (char === " ") continue;
       const asciiCode = char.charCodeAt(0);
-      const localX = lineOffsetX - charIdx * CHAR_WIDTH;
+      const localX = isWall ? charIdx * CHAR_WIDTH - lineOffsetX : lineOffsetX - charIdx * CHAR_WIDTH;
       const localY = boardBottomY + boardHeight - lineIdx * CHAR_HEIGHT - CHAR_HEIGHT / 2;
       const localZ = boardZ;
       const cosR = Math.cos(boneRotRad);

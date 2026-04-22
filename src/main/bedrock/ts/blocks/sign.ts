@@ -18,9 +18,9 @@ const BOARD_HEIGHT = 0.46;
 const STANDING_BOARD_BOTTOM_Y = 0.495;
 const STANDING_BOARD_Z = -0.05; // text face (-Z side at rotation 0)
 
-// Wall sign: board Y range is 0.041 to 0.502 (model Y 6-18, scale 0.615, translation -0.19)  
-const WALL_BOARD_BOTTOM_Y = 0.10;
-const WALL_BOARD_Z = -0.22; // slightly in front of wall board face
+// Wall sign: board is same size but lower on the block
+const WALL_BOARD_BOTTOM_Y = 0.19;
+const WALL_BOARD_Z = -0.22; // in front of wall board face (same convention as standing)
 
 /** Size of each character cell */
 const CHAR_WIDTH = 0.05;
@@ -133,10 +133,13 @@ function spawnSignText(block: Block, text: string): void {
     const isWall = block.permutation.getState("gaiadimension:wall_attached") as boolean ?? false;
 
     // Block rotation: state N → bone rotation = -N*22.5 degrees
-    // Entity and position rotation must match bone rotation (NEGATIVE)
     const blockRotDeg = rotationIndexToDegrees(rotIndex);
     const boneRotDeg = -blockRotDeg;
-    const entityRotDeg = ((boneRotDeg + 180) % 360 + 360) % 360;
+    // Standing signs: entity faces opposite to bone rotation (+180)
+    // Wall signs: entity faces same as bone rotation (no +180)
+    const entityRotDeg = isWall
+        ? ((boneRotDeg) % 360 + 360) % 360
+        : ((boneRotDeg + 180) % 360 + 360) % 360;
     const boneRotRad = (boneRotDeg * Math.PI) / 180;
 
     // Pick board parameters
@@ -156,7 +159,10 @@ function spawnSignText(block: Block, text: string): void {
             const asciiCode = char.charCodeAt(0);
 
             // Local position relative to block center (before rotation)
-            const localX = lineOffsetX - charIdx * CHAR_WIDTH;
+            // Wall signs negate X to fix mirroring (viewed from opposite side)
+            const localX = isWall
+                ? charIdx * CHAR_WIDTH - lineOffsetX
+                : lineOffsetX - charIdx * CHAR_WIDTH;
             const localY = boardBottomY + boardHeight - (lineIdx * CHAR_HEIGHT) - CHAR_HEIGHT / 2;
             const localZ = boardZ;
 
@@ -170,7 +176,6 @@ function spawnSignText(block: Block, text: string): void {
             try {
                 const entity = block.dimension.spawnEntity(SIGN_CHAR_ENTITY, { x: worldX, y: worldY, z: worldZ });
                 entity.setProperty("gaiadimension:char_index", asciiCode);
-                // Entity faces same direction as sign's front face
                 entity.setRotation({ x: 0, y: entityRotDeg });
                 entity.addTag(`sign:${block.location.x},${block.location.y},${block.location.z}`);
             } catch (e) {}
