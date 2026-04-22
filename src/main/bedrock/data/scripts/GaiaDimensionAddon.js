@@ -2126,7 +2126,7 @@ var BOARD_HEIGHT = 0.46;
 var STANDING_BOARD_BOTTOM_Y = 0.495;
 var STANDING_BOARD_Z = -0.05;
 var WALL_BOARD_BOTTOM_Y = 0.19;
-var WALL_BOARD_Z = -0.28;
+var WALL_BOARD_Z = 0.1;
 var CHAR_WIDTH = 0.05;
 var CHAR_HEIGHT = 0.07;
 function isGaiaSign(block) {
@@ -2202,7 +2202,7 @@ function spawnSignText(block, text) {
   const isWall = block.permutation.getState("gaiadimension:wall_attached") ?? false;
   const blockRotDeg = rotationIndexToDegrees(rotIndex);
   const boneRotDeg = -blockRotDeg;
-  const entityRotDeg = isWall ? (boneRotDeg % 360 + 360) % 360 : ((boneRotDeg + 180) % 360 + 360) % 360;
+  const entityRotDeg = ((boneRotDeg + 180) % 360 + 360) % 360;
   const boneRotRad = boneRotDeg * Math.PI / 180;
   const boardBottomY = isWall ? WALL_BOARD_BOTTOM_Y : STANDING_BOARD_BOTTOM_Y;
   const boardZ = isWall ? WALL_BOARD_Z : STANDING_BOARD_Z;
@@ -2214,7 +2214,7 @@ function spawnSignText(block, text) {
       const char = line[charIdx];
       if (char === " ") continue;
       const asciiCode = char.charCodeAt(0);
-      const localX = isWall ? charIdx * CHAR_WIDTH - lineOffsetX : lineOffsetX - charIdx * CHAR_WIDTH;
+      const localX = lineOffsetX - charIdx * CHAR_WIDTH;
       const localY = boardBottomY + boardHeight - lineIdx * CHAR_HEIGHT - CHAR_HEIGHT / 2;
       const localZ = boardZ;
       const cosR = Math.cos(boneRotRad);
@@ -2224,7 +2224,7 @@ function spawnSignText(block, text) {
       const worldY = blockY + localY;
       try {
         const entity = block.dimension.spawnEntity(SIGN_CHAR_ENTITY, { x: worldX, y: worldY, z: worldZ });
-        entity.setProperty("gaiadimension:char_index", isWall ? asciiCode + 95 : asciiCode);
+        entity.setProperty("gaiadimension:char_index", asciiCode);
         entity.setRotation({ x: 0, y: entityRotDeg });
         entity.addTag(`sign:${block.location.x},${block.location.y},${block.location.z}`);
       } catch (e) {
@@ -2260,18 +2260,37 @@ function registerSignComponent({ blockComponentRegistry }) {
   world13.afterEvents.playerPlaceBlock.subscribe((event) => {
     const { block, player } = event;
     if (!isGaiaSign(block)) return;
+    const yaw = player.getRotation().y;
+    let isWall = false;
+    let rotIndex = playerYawToRotationIndex(yaw);
     const blockBelow = block.dimension.getBlock({
       x: block.location.x,
       y: block.location.y - 1,
       z: block.location.z
     });
-    const yaw = player.getRotation().y;
-    let isWall = false;
-    let rotIndex = playerYawToRotationIndex(yaw);
-    if (blockBelow && (blockBelow.typeId === "minecraft:air" || blockBelow.isAir)) {
+    if (!blockBelow || blockBelow.isAir) {
       isWall = true;
-      const cardinalIndex = Math.round(rotIndex / 4) * 4 % 16;
-      rotIndex = cardinalIndex;
+      const dirs = [
+        { dx: 0, dz: -1, rot: 8 },
+        // Wall to north → face south (rot 8)
+        { dx: 1, dz: 0, rot: 4 },
+        // Wall to east → face west (rot 4)
+        { dx: 0, dz: 1, rot: 0 },
+        // Wall to south → face north (rot 0)
+        { dx: -1, dz: 0, rot: 12 }
+        // Wall to west → face east (rot 12)
+      ];
+      for (const d of dirs) {
+        const adj = block.dimension.getBlock({
+          x: block.location.x + d.dx,
+          y: block.location.y,
+          z: block.location.z + d.dz
+        });
+        if (adj && !adj.isAir) {
+          rotIndex = d.rot;
+          break;
+        }
+      }
     }
     const perm = block.permutation.withState("gaiadimension:rotation", rotIndex).withState("gaiadimension:wall_attached", isWall);
     block.setPermutation(perm);

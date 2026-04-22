@@ -18,9 +18,9 @@ const BOARD_HEIGHT = 0.46;
 const STANDING_BOARD_BOTTOM_Y = 0.495;
 const STANDING_BOARD_Z = -0.05; // text face (-Z side at rotation 0)
 
-// Wall sign: board at Z=-2 to Z=0 model (inside block, near north face after 0.615 scale)
+// Wall sign: board at Z=-9 model, rotated +180 to face player
 const WALL_BOARD_BOTTOM_Y = 0.19;
-const WALL_BOARD_Z = -0.28; // text in front of wall board face
+const WALL_BOARD_Z = 0.10; // text on player side (flipped with board)
 
 /** Size of each character cell */
 const CHAR_WIDTH = 0.05;
@@ -135,11 +135,8 @@ function spawnSignText(block: Block, text: string): void {
     // Block rotation: state N → bone rotation = -N*22.5 degrees
     const blockRotDeg = rotationIndexToDegrees(rotIndex);
     const boneRotDeg = -blockRotDeg;
-    // Standing signs: entity faces opposite to bone rotation (+180)
-    // Wall signs: entity faces same as bone rotation (no +180)
-    const entityRotDeg = isWall
-        ? ((boneRotDeg) % 360 + 360) % 360
-        : ((boneRotDeg + 180) % 360 + 360) % 360;
+    // Both standing and wall: entity faces opposite to bone rotation (+180)
+    const entityRotDeg = ((boneRotDeg + 180) % 360 + 360) % 360;
     const boneRotRad = (boneRotDeg * Math.PI) / 180;
 
     // Pick board parameters
@@ -159,10 +156,7 @@ function spawnSignText(block: Block, text: string): void {
             const asciiCode = char.charCodeAt(0);
 
             // Local position relative to block center (before rotation)
-            // Wall signs negate X to fix mirroring (viewed from opposite side)
-            const localX = isWall
-                ? charIdx * CHAR_WIDTH - lineOffsetX
-                : lineOffsetX - charIdx * CHAR_WIDTH;
+            const localX = lineOffsetX - charIdx * CHAR_WIDTH;
             const localY = boardBottomY + boardHeight - (lineIdx * CHAR_HEIGHT) - CHAR_HEIGHT / 2;
             const localZ = boardZ;
 
@@ -175,8 +169,7 @@ function spawnSignText(block: Block, text: string): void {
 
             try {
                 const entity = block.dimension.spawnEntity(SIGN_CHAR_ENTITY, { x: worldX, y: worldY, z: worldZ });
-                // Wall chars: +95 offset selects wall geometry (normal UV, not mirrored)
-                entity.setProperty("gaiadimension:char_index", isWall ? asciiCode + 95 : asciiCode);
+                entity.setProperty("gaiadimension:char_index", asciiCode);
                 entity.setRotation({ x: 0, y: entityRotDeg });
                 entity.addTag(`sign:${block.location.x},${block.location.y},${block.location.z}`);
             } catch (e) {}
@@ -233,22 +226,37 @@ export function registerSignComponent({ blockComponentRegistry }: { blockCompone
         const { block, player } = event;
         if (!isGaiaSign(block)) return;
 
-        // Check if the block below is solid — if not, it's a wall placement
+        const yaw = player.getRotation().y;
+        let isWall = false;
+        let rotIndex = playerYawToRotationIndex(yaw);
+
+        // Check if block below is air — if so, it's a wall placement
         const blockBelow = block.dimension.getBlock({
             x: block.location.x,
             y: block.location.y - 1,
             z: block.location.z
         });
 
-        const yaw = player.getRotation().y;
-        let isWall = false;
-        let rotIndex = playerYawToRotationIndex(yaw);
-
-        if (blockBelow && (blockBelow.typeId === "minecraft:air" || blockBelow.isAir)) {
+        if (!blockBelow || blockBelow.isAir) {
             isWall = true;
-            // Wall signs snap to 4 cardinal directions
-            const cardinalIndex = Math.round(rotIndex / 4) * 4 % 16;
-            rotIndex = cardinalIndex;
+            // Find adjacent solid block (the wall) and orient sign facing away from it
+            const dirs = [
+                { dx: 0, dz: -1, rot: 8 },   // Wall to north → face south (rot 8)
+                { dx: 1, dz: 0, rot: 4 },    // Wall to east → face west (rot 4)
+                { dx: 0, dz: 1, rot: 0 },    // Wall to south → face north (rot 0)
+                { dx: -1, dz: 0, rot: 12 },  // Wall to west → face east (rot 12)
+            ];
+            for (const d of dirs) {
+                const adj = block.dimension.getBlock({
+                    x: block.location.x + d.dx,
+                    y: block.location.y,
+                    z: block.location.z + d.dz
+                });
+                if (adj && !adj.isAir) {
+                    rotIndex = d.rot;
+                    break;
+                }
+            }
         }
 
         // Set block states for rotation + wall attachment
