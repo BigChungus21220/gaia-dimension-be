@@ -39,7 +39,7 @@ function playerYawToRotationIndex(yaw: number): number {
     // Sign board text face is +Z (south) at rotation 0
     // State N rotates by -N*22.5 degrees
     // Direct mapping: player yaw to rotation index
-    const facing = ((yaw) % 360 + 360) % 360;
+    const facing = ((-yaw) % 360 + 360) % 360;
     const index = Math.round(facing / 22.5) % 16;
     return index;
 }

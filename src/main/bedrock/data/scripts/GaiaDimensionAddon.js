@@ -2133,7 +2133,7 @@ function isGaiaSign(block) {
   return block.typeId.includes("gaiadimension") && block.typeId.includes("sign");
 }
 function playerYawToRotationIndex(yaw) {
-  const facing = (yaw % 360 + 360) % 360;
+  const facing = (-yaw % 360 + 360) % 360;
   const index = Math.round(facing / 22.5) % 16;
   return index;
 }
