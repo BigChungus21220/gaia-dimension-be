@@ -2126,7 +2126,7 @@ var BOARD_HEIGHT = 0.46;
 var STANDING_BOARD_BOTTOM_Y = 0.495;
 var STANDING_BOARD_Z = -0.05;
 var WALL_BOARD_BOTTOM_Y = 0.19;
-var WALL_BOARD_Z = -0.22;
+var WALL_BOARD_Z = -0.28;
 var CHAR_WIDTH = 0.05;
 var CHAR_HEIGHT = 0.07;
 function isGaiaSign(block) {
@@ -2224,7 +2224,7 @@ function spawnSignText(block, text) {
       const worldY = blockY + localY;
       try {
         const entity = block.dimension.spawnEntity(SIGN_CHAR_ENTITY, { x: worldX, y: worldY, z: worldZ });
-        entity.setProperty("gaiadimension:char_index", asciiCode);
+        entity.setProperty("gaiadimension:char_index", isWall ? asciiCode + 95 : asciiCode);
         entity.setRotation({ x: 0, y: entityRotDeg });
         entity.addTag(`sign:${block.location.x},${block.location.y},${block.location.z}`);
       } catch (e) {

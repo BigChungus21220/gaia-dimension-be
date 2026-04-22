@@ -18,9 +18,9 @@ const BOARD_HEIGHT = 0.46;
 const STANDING_BOARD_BOTTOM_Y = 0.495;
 const STANDING_BOARD_Z = -0.05; // text face (-Z side at rotation 0)
 
-// Wall sign: board is same size but lower on the block
+// Wall sign: board at Z=-2 to Z=0 model (inside block, near north face after 0.615 scale)
 const WALL_BOARD_BOTTOM_Y = 0.19;
-const WALL_BOARD_Z = -0.22; // in front of wall board face (same convention as standing)
+const WALL_BOARD_Z = -0.28; // text in front of wall board face
 
 /** Size of each character cell */
 const CHAR_WIDTH = 0.05;
@@ -175,7 +175,8 @@ function spawnSignText(block: Block, text: string): void {
 
             try {
                 const entity = block.dimension.spawnEntity(SIGN_CHAR_ENTITY, { x: worldX, y: worldY, z: worldZ });
-                entity.setProperty("gaiadimension:char_index", asciiCode);
+                // Wall chars: +95 offset selects wall geometry (normal UV, not mirrored)
+                entity.setProperty("gaiadimension:char_index", isWall ? asciiCode + 95 : asciiCode);
                 entity.setRotation({ x: 0, y: entityRotDeg });
                 entity.addTag(`sign:${block.location.x},${block.location.y},${block.location.z}`);
             } catch (e) {}
