@@ -1,0 +1,68 @@
+{
+  "format_version": "1.16.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "gaiadimension:sign_char",
+      "is_spawnable": false,
+      "is_summonable": true,
+      "is_experimental": false,
+      "properties": {
+        "gaiadimension:char_index": {
+          "type": "int",
+          "range": [0, 255],
+          "default": 0,
+          "client_sync": true
+        },
+        "gaiadimension:text_color": {
+          "type": "int",
+          "range": [0, 16],
+          "default": 0,
+          "client_sync": true
+        },
+        "gaiadimension:sign_scale": {
+          "type": "float",
+          "range": [0.05, 1.0],
+          "default": 0.14,
+          "client_sync": true
+        }
+      }
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": ["inanimate", "sign_char"]
+      },
+      "minecraft:health": {
+        "value": 999,
+        "max": 999
+      },
+      "minecraft:knockback_resistance": {
+        "value": 100.0,
+        "max": 100.0
+      },
+      "minecraft:physics": {
+        "has_collision": false,
+        "has_gravity": false
+      },
+      "minecraft:collision_box": {
+        "width": 0.0,
+        "height": 0.0
+      },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      },
+      "minecraft:scale": {
+        "value": 1.0
+      },
+      "minecraft:damage_sensor": {
+        "triggers": [
+          {
+            "cause": "all",
+            "deals_damage": false
+          }
+        ]
+      },
+      "minecraft:persistent": {}
+    }
+  }
+}
