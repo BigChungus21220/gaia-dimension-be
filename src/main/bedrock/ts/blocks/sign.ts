@@ -18,10 +18,35 @@ const BOARD_HEIGHT = 0.46;
 const STANDING_BOARD_BOTTOM_Y = 0.495;
 const STANDING_BOARD_Z = -0.05; // text face (-Z side at rotation 0)
 
-// Wall sign: board at model Y=6..18, scale 0.615, translation Y=-0.19
-// Scaled Y: (6*0.615/16)-0.19 = 0.04, top = (18*0.615/16)-0.19 = 0.50
+// ─── Wall Sign Transformation Notes ─────────────────────────────────────────
+// Board geometry: model Y=6..18, scale 0.615, base translation Y=-0.19
+// Scaled Y range: (6*0.615/16)-0.19 = 0.04  →  (18*0.615/16)-0.19 = 0.50
+//
+// Each wall sign direction gets its own minecraft:transformation in the block
+// JSON permutations to push the scaled-down board flush against the wall.
+// The 0.615 scale shrinks from the block center (0.5), so the board floats
+// ~0.19 blocks away from the wall. We add a +0.19 translation on the axis
+// pointing TOWARD the wall to compensate.
+//
+// ⚠️  BEDROCK EAST/WEST AXIS GOTCHA:
+// Bedrock's minecraft:transformation translation is applied in WORLD SPACE,
+// but the wall sign geometry uses bone Y-rotation to face different walls.
+// A -90° Y rotation (sign_wall_4) rotates the board's local +Z to world +X,
+// meaning it faces EAST. A -270° Y rotation (sign_wall_12) maps +Z to -X,
+// facing WEST. This is counter-intuitive because negative Y rotation is
+// CLOCKWISE when viewed from above in Bedrock's coordinate system:
+//
+//   sign_wall_0  → rot   0° → faces South (+Z) → translation Z = +0.19
+//   sign_wall_4  → rot -90° → faces East  (+X) → translation X = +0.19
+//   sign_wall_8  → rot 180° → faces North (-Z) → translation Z = -0.19
+//   sign_wall_12 → rot 270° → faces West  (-X) → translation X = -0.19
+//
+// The east/west axis is always the one that breaks because the CW/CCW
+// rotation direction is unintuitive — people expect -90° to go left (west)
+// but Bedrock rotates clockwise from above, so -90° actually goes right (east).
+// ─────────────────────────────────────────────────────────────────────────────
 const WALL_BOARD_BOTTOM_Y = 0.22;
-const WALL_BOARD_Z = 0.41; // matched to the push-back translation of the wall sign
+const WALL_BOARD_Z = 0.41; // text Z offset, matched to the push-back translation
 
 // Hanging sign: board at model Y=0-10, scale 0.615, translation Y=+0.3
 // Hanging sign: board at model Y=0-10, NO scale (full size)
