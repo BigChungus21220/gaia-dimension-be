@@ -1651,6 +1651,12 @@
         },
         "staff_projectile_energy": {
             "textures": "textures/gaiadimension/androsa/entity/gen/projectiles/staff_projectile_energy"
+        },
+        "canopy_sign": {
+            "textures": "textures/gaiadimension/androsa/signs/items/canopy_sign"
+        },
+        "canopy_hanging_sign": {
+            "textures": "textures/gaiadimension/androsa/signs/items/canopy_hanging_sign"
         }
     }
 }

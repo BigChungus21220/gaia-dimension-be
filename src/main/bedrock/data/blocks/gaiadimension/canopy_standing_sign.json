@@ -4,8 +4,7 @@
         "description": {
             "identifier": "gaiadimension:canopy_standing_sign",
             "menu_category": {
-                "category": "items",
-                "group": "itemGroup.name.sign"
+                "category": "none"
             },
             "states": {
                 "gaiadimension:rotation": [
