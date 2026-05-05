@@ -1,0 +1,17 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.malachite_guard.shake": {
+			"loop": true,
+			"bones": {
+				"body": {
+					"position": [
+						"Math.sin(query.life_time * 400.0) * 0.5",
+						0,
+						"Math.cos(query.life_time * 400.0) * 0.5"
+					]
+				}
+			}
+		}
+	}
+}

@@ -3,6 +3,7 @@
   "minecraft:entity": {
     "description": {
       "identifier": "gaiadimension:malachite_drone",
+      "runtime_identifier": "minecraft:iron_golem",
       "is_spawnable": true,
       "is_summonable": true,
       "is_experimental": false

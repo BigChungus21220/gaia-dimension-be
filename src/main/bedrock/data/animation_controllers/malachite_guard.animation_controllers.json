@@ -1,0 +1,72 @@
+{
+  "format_version": "1.10.0",
+  "animation_controllers": {
+    "controller.animation.malachite_guard": {
+      "initial_state": "default",
+      "states": {
+        "default": {
+          "animations": ["idle_arms", "walk"],
+          "transitions": [
+            { "defence": "query.is_powered" },
+            { "stomp_windup": "query.mark_variant == 1" },
+            { "charge_crouch": "query.mark_variant == 2" }
+          ]
+        },
+        "defence": {
+          "animations": ["defence_pose"],
+          "transitions": [
+            { "default": "!query.is_powered" }
+          ]
+        },
+        "stomp_windup": {
+          "animations": ["stomp_windup"],
+          "transitions": [
+            { "stomp_execute": "query.mark_variant == 3" },
+            { "default": "query.mark_variant == 0" }
+          ]
+        },
+        "stomp_execute": {
+          "animations": ["charge_crouch"],
+          "on_entry": [
+            "/particle gaiadimension:malachite_stomp ~ ~ ~"
+          ],
+          "transitions": [
+            { "default": "query.mark_variant == 0" }
+          ]
+        },
+        "charge_crouch": {
+          "animations": ["charge_crouch"],
+          "transitions": [
+            { "blast_execute": "query.mark_variant == 4" },
+            { "default": "query.mark_variant == 0" }
+          ]
+        },
+        "blast_execute": {
+          "animations": ["blast_execute"],
+          "on_entry": [
+            "/particle gaiadimension:malachite_magic ~ ~1 ~"
+          ],
+          "transitions": [
+            { "default": "query.mark_variant == 0" }
+          ]
+        }
+      }
+    },
+    "controller.animation.malachite_guard.shake": {
+      "initial_state": "default",
+      "states": {
+        "default": {
+          "transitions": [
+            { "shaking": "query.mark_variant == 2" }
+          ]
+        },
+        "shaking": {
+          "animations": ["shake"],
+          "transitions": [
+            { "default": "query.mark_variant != 2" }
+          ]
+        }
+      }
+    }
+  }
+}
