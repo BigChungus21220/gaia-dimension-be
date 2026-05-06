@@ -1,5 +1,4 @@
 import { Dimension, world } from "@minecraft/server";
-import { MinecraftDimensionTypes } from "@minecraft/vanilla-data";
 import { ProceduralRandom } from "../utils";
 import { ChunkGenerator } from "./generator";
 import { DEFINITION_MANAGER } from "../definitions/index";
@@ -16,13 +15,8 @@ export class SessionManager {
         this.procedural = new ProceduralRandom(this.seed);
         this.definition = DEFINITION_MANAGER;
 
-        // Initialize standard dimensions + Gaia
-        [
-            MinecraftDimensionTypes.Overworld,
-            MinecraftDimensionTypes.Nether,
-            MinecraftDimensionTypes.TheEnd,
-            "gaiadimension:gaia_dimension"
-        ].forEach(id => this.getOrCreateGenerator(id));
+        // Initialize Gaia dimension generator only
+        this.getOrCreateGenerator("gaiadimension:gaia_dimension");
     }
 
     public getOrCreateGenerator(dimensionId: string): ChunkGenerator | undefined {

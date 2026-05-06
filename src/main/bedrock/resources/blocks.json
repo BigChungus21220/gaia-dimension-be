@@ -221,5 +221,23 @@
     "gaiadimension:canopy_hanging_sign": {
         "textures": "gaiadimension:canopy_hanging_sign",
         "sound": "wood"
+    },
+    "gaiadimension:gilded_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:glitter_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:fossil_glitter_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:mutant_glitter_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:volcanic_glitter_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:static_glitter_grass": {
+        "sound": "grass"
     }
 }

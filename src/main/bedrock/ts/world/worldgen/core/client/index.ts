@@ -1,53 +1,39 @@
-import { EasingType, GameMode, Player, system, TicksPerSecond, world } from "@minecraft/server";
-import { ModalFormData } from "@minecraft/server-ui";
+import { Player, system, world } from "@minecraft/server";
 import { ClientChunk } from "./local-chunks";
 import { SESSION_MANAGER } from "../world_gen/index";
-import { delay, Vec3 } from "../utils";
 import { DEFINITION_MANAGER } from "../definitions/index";
 
-world.afterEvents.worldLoad.subscribe(e=>{ for(const p of world.getAllPlayers()){ playerInitialize(p).catch(e=>console.error(e,e.stack)); } });
-world.beforeEvents.playerLeave.subscribe(e=>{ ClientChunk.open(SESSION_MANAGER, e.player).stop(); })
-world.afterEvents.worldLoad.subscribe(()=>(async ()=>{
-    await null;
-    DEFINITION_MANAGER.triggerFinialize(SESSION_MANAGER.procedural);
-})().catch(e=>console.error(e,e.stack)));
+// Track initialized players to avoid double-init
+const initializedPlayers = new Set<string>();
 
-/**@param {Player} player  */
-async function playerInitialize(player: Player){
-    await null;
+// Initialize session manager finalization once ready
+world.afterEvents.worldLoad.subscribe(() => (async () => {
+    await SESSION_MANAGER.ready;
+    DEFINITION_MANAGER.triggerFinialize(SESSION_MANAGER.procedural);
+    // Init any players already in world (handles /reload case)
+    for (const p of world.getAllPlayers()) {
+        playerInitialize(p).catch(e => console.error(e));
+    }
+})().catch(e => console.error(e, e.stack)));
+
+// Handle players joining after world load (new joins, respawns)
+world.afterEvents.playerSpawn.subscribe(e => {
+    if (e.initialSpawn) {
+        playerInitialize(e.player).catch(err => console.error(err));
+    }
+});
+
+// Cleanup on leave
+world.beforeEvents.playerLeave.subscribe(e => {
+    initializedPlayers.delete(e.player.id);
+    ClientChunk.open(SESSION_MANAGER, e.player).stop();
+});
+
+async function playerInitialize(player: Player) {
+    if (initializedPlayers.has(player.id)) return;
+    initializedPlayers.add(player.id);
+    await SESSION_MANAGER.ready;
     const local = ClientChunk.open(SESSION_MANAGER as any, player);
     local.start();
-    
-    // Simple teleport to surface on load if in a scripted dimension
-    const {x, z} = player.location;
-    const gen = local.currentGenerator;
-    if (gen) {
-        const y = gen.getHeight(x, z);
-        player.teleport({x, y: y + 1, z});
-    }
-
-    player.sendMessage("§7World generation initialized.");
-    player.sendMessage("§7Type §r§l!debug§r§7 to show debug stats.");
 }
 
-world.beforeEvents.chatSend.subscribe(async e=>{
-    const msg = e.message.toLowerCase();
-    const player = e.sender;
-    if(msg === "!stats") {
-        while(!player.isSneaking) await delay(1);
-        const form = new ModalFormData();
-        form.title("§t§lWorld Gen Settings");
-        form.textField("\nSeed", Date.now() + "", "" + SESSION_MANAGER.seed);
-        form.toggle("Precomputed Features", DEFINITION_MANAGER.IsPrecalculatedVariable);
-        form.slider("Precomputed Samples", 5, 30, 1, DEFINITION_MANAGER.IsPrecalculatedSamplesVariable);
-        const data = await form.show(player);
-        if(!data.canceled){
-            DEFINITION_MANAGER.IsPrecalculated = data.formValues[1] as boolean;
-            DEFINITION_MANAGER.PrecalculatedSamples = data.formValues[2] as number;
-            let newSeed = parseInt(data.formValues[0] as string);
-            if(isFinite(newSeed)) world.setDynamicProperty("seed", newSeed);
-            player.sendMessage("Successfully Updated\nRejoin to active these changes.");
-        }
-    }
-    else if(msg === "!debug"){ (player as any)._debug = !(player as any)._debug; }
-});

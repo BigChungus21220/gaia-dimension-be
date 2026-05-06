@@ -1932,6 +1932,102 @@
         },
         "gaiadimension:canopy_hanging_sign": {
             "textures": "textures/gaiadimension/androsa/signs/hanging/canopy"
+        },
+        "gaiadimension:gaia_pink_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_pink_glitter_grass_top"
+        },
+        "gaiadimension:gaia_pink_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_pink_glitter_grass_side"
+        },
+        "gaiadimension:gaia_peach_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_peach_glitter_grass_top"
+        },
+        "gaiadimension:gaia_peach_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_peach_glitter_grass_side"
+        },
+        "gaiadimension:gaia_orange_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_orange_glitter_grass_top"
+        },
+        "gaiadimension:gaia_orange_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_orange_glitter_grass_side"
+        },
+        "gaiadimension:gaia_blue_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_blue_glitter_grass_top"
+        },
+        "gaiadimension:gaia_blue_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_blue_glitter_grass_side"
+        },
+        "gaiadimension:gaia_green_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_green_glitter_grass_top"
+        },
+        "gaiadimension:gaia_green_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_green_glitter_grass_side"
+        },
+        "gaiadimension:gaia_pale_green_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_pale_green_glitter_grass_top"
+        },
+        "gaiadimension:gaia_pale_green_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_pale_green_glitter_grass_side"
+        },
+        "gaiadimension:gaia_purple_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_purple_glitter_grass_top"
+        },
+        "gaiadimension:gaia_purple_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_purple_glitter_grass_side"
+        },
+        "gaiadimension:gaia_murky_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_murky_grass_top"
+        },
+        "gaiadimension:gaia_murky_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_murky_grass_side"
+        },
+        "gaiadimension:gaia_soft_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_soft_grass_top"
+        },
+        "gaiadimension:gaia_soft_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_soft_grass_side"
+        },
+        "gaiadimension:gaia_corrupted_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_corrupted_grass_top"
+        },
+        "gaiadimension:gaia_corrupted_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_corrupted_grass_side"
+        },
+        "gaiadimension:gaia_gilded_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_gilded_grass_top"
+        },
+        "gaiadimension:gaia_gilded_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_gilded_grass_side"
+        },
+        "gaiadimension:gaia_fossil_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_fossil_glitter_grass_top"
+        },
+        "gaiadimension:gaia_fossil_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_fossil_glitter_grass_side"
+        },
+        "gaiadimension:gaia_mutant_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_mutant_glitter_grass_top"
+        },
+        "gaiadimension:gaia_mutant_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_mutant_glitter_grass_side"
+        },
+        "gaiadimension:gaia_volcanic_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_volcanic_glitter_grass_top"
+        },
+        "gaiadimension:gaia_volcanic_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_volcanic_glitter_grass_side"
+        },
+        "gaiadimension:gaia_static_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_static_glitter_grass_top"
+        },
+        "gaiadimension:gaia_static_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_static_glitter_grass_side"
+        },
+        "gaiadimension:gaia_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_glitter_grass_top"
+        },
+        "gaiadimension:gaia_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_glitter_grass_side"
         }
     }
 }

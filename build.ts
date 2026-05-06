@@ -36,6 +36,7 @@ async function build() {
     await runCommand('npx tsx src/main/bedrock/datagen/MagicStaffGenerator.ts');
     await runCommand('npx tsx src/main/bedrock/datagen/ProjectileGenerator.ts');
     await runCommand('npx tsx src/main/bedrock/datagen/GrassGenerator.ts');
+    await runCommand('npx tsx src/main/bedrock/datagen/GaiaGrassGenerator.ts');
 
     // 2. Bundle Scripts
     console.log('\x1b[32m> Task :compileScripts\x1b[0m');
