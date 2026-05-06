@@ -12,17 +12,18 @@ const BLOCK_OUT = path.join(SRC_DATA, 'blocks/gen/gaia_grass');
 const DATAGEN_RES = path.join(ROOT, 'src/main/bedrock/datagen/resources/gaia_grass');
 
 // ══════════════════════════════════════════════════
-//  GRASS DEFINITIONS
+//  GRASS DEFINITIONS — Named by BIOME, 1:1 Java parity
 //  Java uses BiomeColors.getAverageGrassColor() tintindex at runtime.
-//  Bedrock has no tintindex — we pre-compose each variant at build time.
+//  Bedrock has no tintindex — we pre-compose each biome's variant at build time.
+//  grassColorOverride values extracted from GaiaBiomeMaker.java createAmbience() calls.
 // ══════════════════════════════════════════════════
 
 interface GaiaGrass {
-    /** Block identifier suffix, e.g. "pink_glitter_grass" → gaiadimension:pink_glitter_grass */
+    /** Block identifier suffix → gaiadimension:{id} */
     id: string;
     /** Display name */
     name: string;
-    /** Soil texture key for the bottom face */
+    /** Soil block for the bottom/side base */
     soil: string;
     /** Source overlay basename (e.g. "glitter_grass") — null for pre-colored */
     overlay: string | null;
@@ -30,47 +31,50 @@ interface GaiaGrass {
     tint: string | null;
     /** Map color for the block */
     mapColor: string;
+    /** Source texture basename for pre-colored grasses (e.g. "corrupted_grass") */
+    srcBase?: string;
 }
 
-// Glitter grass variants — 1:1 Java grassColorOverride per biome
-// Java: createAmbience(grassColor, sky, fog) → grassColorOverride tints glitter_grass
+// ── GLITTER GRASS — one per biome that uses glitter_grass surface ──
+// From GaiaSurfaceRuleData.java: default surface = GLITTER_GRASS
+// Each biome tints it via its grassColorOverride (1st param of createAmbience)
 const GLITTER_VARIANTS: GaiaGrass[] = [
-    // pink_agate_forest / crystal_plains / salt_dunes / mookaite_mesa: grassColor = 15901620 = #F2A3B4
-    { id: "pink_glitter_grass",       name: "Pink Glitter Grass",       soil: "gaiadimension:heavy_soil",  overlay: "glitter_grass", tint: "#F2A3B4", mapColor: "#F2A3B4" },
-    // blue_agate_taiga: grassColor = 6851272 = #6895C8
-    { id: "blue_glitter_grass",       name: "Blue Glitter Grass",       soil: "gaiadimension:heavy_soil",  overlay: "glitter_grass", tint: "#6895C8", mapColor: "#6895C8" },
-    // green_agate_jungle: grassColor = 4961870 = #4BC24E
-    { id: "green_glitter_grass",      name: "Green Glitter Grass",      soil: "gaiadimension:heavy_soil",  overlay: "glitter_grass", tint: "#4BC24E", mapColor: "#4BC24E" },
-    // purple_agate_swamp: grassColor = 8417209 = #807BB9
-    { id: "purple_glitter_grass",     name: "Purple Glitter Grass",     soil: "gaiadimension:heavy_soil",  overlay: "glitter_grass", tint: "#807BB9", mapColor: "#807BB9" },
-    // fossil_woodland: grassColor = 12298105 = #BBB379
-    { id: "fossil_glitter_grass",     name: "Fossil Glitter Grass",     soil: "gaiadimension:heavy_soil",  overlay: "glitter_grass", tint: "#BBB379", mapColor: "#BBB379" },
-    // mutant_agate_wildwood: grassColor = 13948848 = #D4D3B0
-    { id: "mutant_glitter_grass",     name: "Mutant Glitter Grass",     soil: "gaiadimension:heavy_soil",  overlay: "glitter_grass", tint: "#D4D3B0", mapColor: "#D4D3B0" },
-    // volcanic_lands: grassColor = 2302755 = #232323
-    { id: "volcanic_glitter_grass",   name: "Volcanic Glitter Grass",   soil: "gaiadimension:heavy_soil",  overlay: "glitter_grass", tint: "#232323", mapColor: "#232323" },
-    // static_wasteland: grassColor = 2837910 = #2B4F96 (but uses wasteland_stone surface, not glitter_grass — kept for completeness)
-    { id: "static_glitter_grass",     name: "Static Glitter Grass",     soil: "gaiadimension:heavy_soil",  overlay: "glitter_grass", tint: "#2B4F96", mapColor: "#2B4F96" },
+    // pink_agate_forest: createAmbience(15901620, 13016408, 15381216) → 15901620 = #F2A3B4
+    { id: "pink_agate_forest_glitter_grass",       name: "Pink Agate Forest Grass",       soil: "gaiadimension:heavy_soil", overlay: "glitter_grass", tint: "#F2A3B4", mapColor: "#F2A3B4" },
+    // crystal_plains: createAmbience(15901620, 13016408, 15381216) → same tint
+    { id: "crystal_plains_glitter_grass",           name: "Crystal Plains Grass",           soil: "gaiadimension:heavy_soil", overlay: "glitter_grass", tint: "#F2A3B4", mapColor: "#F2A3B4" },
+    // blue_agate_taiga: createAmbience(6851272, 9815527, 15381216) → 6851272 = #688AC8
+    { id: "blue_agate_taiga_glitter_grass",         name: "Blue Agate Taiga Grass",         soil: "gaiadimension:heavy_soil", overlay: "glitter_grass", tint: "#688AC8", mapColor: "#688AC8" },
+    // green_agate_jungle: createAmbience(4961870, 8437662, 15381216) → 4961870 = #4BB64E
+    { id: "green_agate_jungle_glitter_grass",       name: "Green Agate Jungle Grass",       soil: "gaiadimension:heavy_soil", overlay: "glitter_grass", tint: "#4BB64E", mapColor: "#4BB64E" },
+    // purple_agate_swamp: createAmbience(8417209, 11234801, 15381216) → 8417209 = #806FB9
+    { id: "purple_agate_swamp_glitter_grass",       name: "Purple Agate Swamp Grass",       soil: "gaiadimension:heavy_soil", overlay: "glitter_grass", tint: "#806FB9", mapColor: "#806FB9" },
+    // fossil_woodland: createAmbience(12298105, 13016408, 15381216) → 12298105 = #BBA779
+    { id: "fossil_woodland_glitter_grass",          name: "Fossil Woodland Grass",          soil: "gaiadimension:heavy_soil", overlay: "glitter_grass", tint: "#BBA779", mapColor: "#BBA779" },
+    // mutant_agate_wildwood: createAmbience(13948848, 15833793, 15381216) → 13948848 = #D4D7B0
+    { id: "mutant_agate_wildwood_glitter_grass",    name: "Mutant Agate Wildwood Grass",    soil: "gaiadimension:heavy_soil", overlay: "glitter_grass", tint: "#D4D7B0", mapColor: "#D4D7B0" },
+    // mookaite_mesa: createAmbience(14646073, 16165141, 12793637) → 14646073 = #DF7B39
+    { id: "mookaite_mesa_glitter_grass",            name: "Mookaite Mesa Grass",            soil: "gaiadimension:heavy_soil", overlay: "glitter_grass", tint: "#DF7B39", mapColor: "#DF7B39" },
 ];
 
-// Other grass types — tints from Java biome grassColorOverride
+// ── SPECIAL GRASSES — biomes with unique grass blocks (not glitter_grass) ──
+// From GaiaSurfaceRuleData.java: goldstone→CORRUPT, bog→MURKY, grove→SOFT, golden→GILDED
 const OTHER_GRASSES: GaiaGrass[] = [
-    // smoldering_bog: createAmbience(2500135, 1118482, 3287859, 8284598) → grass=2500135=#262627, foliage=1118482
-    { id: "murky_grass",     name: "Murky Grass",     soil: "gaiadimension:boggy_soil",      overlay: "murky_grass",     tint: "#262627", mapColor: "#262627" },
-    // shining_grove: createAmbience(7982765, 14546943, 15004627, 16764489) → grass=7982765=#79C2AD
-    { id: "soft_grass",      name: "Soft Grass",      soil: "gaiadimension:light_soil",      overlay: "soft_grass",      tint: "#79C2AD", mapColor: "#79C2AD" },
-    // goldstone_lands: pre-colored texture
-    { id: "corrupted_grass", name: "Corrupted Grass",  soil: "gaiadimension:corrupted_soil",  overlay: null,              tint: null,      mapColor: "#232040" },
-    // golden biomes: pre-colored texture
-    { id: "gilded_grass",    name: "Gilded Grass",     soil: "gaiadimension:aurum_soil",      overlay: null,              tint: null,      mapColor: "#4C5B0B" },
+    // smoldering_bog: createAmbience(2500135, 1118482, 3287859, 8284598) → grass=2500135=#262627
+    { id: "smoldering_bog_murky_grass",    name: "Smoldering Bog Murky Grass",    soil: "gaiadimension:boggy_soil",     overlay: "murky_grass",  tint: "#262627", mapColor: "#262627" },
+    // shining_grove: createAmbience(7982765, 14546943, 15004627, 16764489) → grass=7982765=#79CEAD
+    { id: "shining_grove_soft_grass",      name: "Shining Grove Soft Grass",      soil: "gaiadimension:light_soil",     overlay: "soft_grass",   tint: "#79CEAD", mapColor: "#79CEAD" },
+    // goldstone_lands: createAmbience(2302755, 2236962, 12352044) → pre-colored corrupted texture
+    { id: "goldstone_lands_corrupted_grass", name: "Goldstone Corrupted Grass",   soil: "gaiadimension:corrupted_soil", overlay: null,           tint: null,      mapColor: "#232323", srcBase: "corrupted_grass" },
+    // golden biomes: createAmbience(4997150, 3415307, 13801728) → pre-colored gilded texture
+    { id: "golden_forest_gilded_grass",    name: "Golden Forest Gilded Grass",    soil: "gaiadimension:aurum_soil",     overlay: null,           tint: null,      mapColor: "#4C401E", srcBase: "gilded_grass" },
+    { id: "golden_hills_gilded_grass",     name: "Golden Hills Gilded Grass",     soil: "gaiadimension:aurum_soil",     overlay: null,           tint: null,      mapColor: "#4C401E", srcBase: "gilded_grass" },
+    { id: "golden_plains_gilded_grass",    name: "Golden Plains Gilded Grass",    soil: "gaiadimension:aurum_soil",     overlay: null,           tint: null,      mapColor: "#4C401E", srcBase: "gilded_grass" },
+    { id: "golden_marsh_gilded_grass",     name: "Golden Marsh Gilded Grass",     soil: "gaiadimension:aurum_soil",     overlay: null,           tint: null,      mapColor: "#4C401E", srcBase: "gilded_grass" },
 ];
 
-// Generic alias — "glitter_grass" defaults to the pink variant (Java's default grassColor for most biomes)
-const ALIASES: GaiaGrass[] = [
-    { id: "glitter_grass", name: "Glitter Grass", soil: "gaiadimension:heavy_soil", overlay: "glitter_grass", tint: "#F2A3B4", mapColor: "#F2A3B4" },
-];
+const ALL_GRASSES: GaiaGrass[] = [...GLITTER_VARIANTS, ...OTHER_GRASSES];
 
-const ALL_GRASSES: GaiaGrass[] = [...GLITTER_VARIANTS, ...OTHER_GRASSES, ...ALIASES];
 
 export class GaiaGrassGenerator {
 
@@ -156,38 +160,36 @@ export class GaiaGrassGenerator {
 
             } else {
                 // ── PRE-COLORED GRASS (copy directly from Java textures) ──
-                const srcTop = path.join(DATAGEN_RES, `${grass.id}_top.png`);
-                const srcSide = path.join(DATAGEN_RES, `${grass.id}_side.png`);
+                // srcBase maps biome-named IDs back to the actual source texture name
+                const base = grass.srcBase ?? grass.id;
+                const srcTop = path.join(DATAGEN_RES, `${base}_top.png`);
+                const srcSide = path.join(DATAGEN_RES, `${base}_side.png`);
 
                 if (await fs.pathExists(srcTop)) await fs.copy(srcTop, topOut);
+                else console.warn(`[WARN] Missing source texture: ${srcTop}`);
                 if (await fs.pathExists(srcSide)) await fs.copy(srcSide, sideOut);
+                else console.warn(`[WARN] Missing source texture: ${srcSide}`);
             }
 
-            // 3. Block JSON — matches existing format exactly
+            // 3. Block JSON — matches vanilla_grass format EXACTLY
             const blockJson = {
                 format_version: "1.21.70",
                 "minecraft:block": {
                     description: {
                         identifier: blockId,
-                        menu_category: { category: "nature" },
                         states: { "gaiadimension:perm_dim": [0, 1, 2] }
                     },
                     components: {
                         "tag:is_shovelable": {}, "tag:dirt": {},
                         "minecraft:destructible_by_mining": { seconds_to_destroy: 1 },
                         "minecraft:destructible_by_explosion": { explosion_resistance: 1 },
-                        "minecraft:light_emission": 15,
+                        "minecraft:light_emission": 0,
                         "minecraft:map_color": grass.mapColor,
                         "minecraft:geometry": "minecraft:geometry.full_block",
-                        "minecraft:selection_box": { origin: [-8, 0, -8], size: [16, 16, 16] },
-                        "minecraft:collision_box": { origin: [-8, 0, -8], size: [16, 16, 16] },
                         "minecraft:material_instances": {
-                            "up":    { texture: `gaiadimension:${texName}_top`,  render_method: "opaque" },
-                            "down":  { texture: grass.soil,                      render_method: "opaque" },
-                            "north": { texture: `gaiadimension:${texName}_side`, render_method: "opaque" },
-                            "south": { texture: `gaiadimension:${texName}_side`, render_method: "opaque" },
-                            "east":  { texture: `gaiadimension:${texName}_side`, render_method: "opaque" },
-                            "west":  { texture: `gaiadimension:${texName}_side`, render_method: "opaque" }
+                            "*":    { texture: `${texName}_side`, render_method: "opaque" },
+                            "up":   { texture: `${texName}_top`,  render_method: "opaque" },
+                            "down": { texture: grass.soil.replace('gaiadimension:', ''), render_method: "opaque" }
                         },
                         "minecraft:light_dampening": 0
                     },
@@ -200,11 +202,11 @@ export class GaiaGrassGenerator {
 
             await fs.writeJson(path.join(BLOCK_OUT, `${grass.id}.json`), blockJson, { spaces: 4 });
 
-            // 4. Terrain texture entries
-            terrainTexture.texture_data[`gaiadimension:${texName}_top`] = {
+            // 4. Terrain texture entries — NO gaiadimension: prefix, matches vanilla grass format
+            terrainTexture.texture_data[`${texName}_top`] = {
                 textures: `textures/gaiadimension/gen/gaia_grass/${texName}_top`
             };
-            terrainTexture.texture_data[`gaiadimension:${texName}_side`] = {
+            terrainTexture.texture_data[`${texName}_side`] = {
                 textures: `textures/gaiadimension/gen/gaia_grass/${texName}_side`
             };
 
@@ -216,55 +218,11 @@ export class GaiaGrassGenerator {
             if (!langContent.includes(langKey)) langContent += `\n${langKey}`;
         }
 
-        // Also register the glitter_grass identifier as an alias for the default pink variant
-        // so that worldgen using "gaiadimension:glitter_grass" still works
-        const defaultGlitter = "gaiadimension:pink_glitter_grass";
-        if (!blocksJson["gaiadimension:glitter_grass"]) {
-            // The block JSON for glitter_grass will point to the pink variant textures
-            const aliasJson = {
-                format_version: "1.21.70",
-                "minecraft:block": {
-                    description: {
-                        identifier: "gaiadimension:glitter_grass",
-                        menu_category: { category: "nature" },
-                        states: { "gaiadimension:perm_dim": [0, 1, 2] }
-                    },
-                    components: {
-                        "tag:is_shovelable": {}, "tag:dirt": {},
-                        "minecraft:destructible_by_mining": { seconds_to_destroy: 1 },
-                        "minecraft:destructible_by_explosion": { explosion_resistance: 1 },
-                        "minecraft:light_emission": 15,
-                        "minecraft:map_color": "#F2A3B4",
-                        "minecraft:geometry": "minecraft:geometry.full_block",
-                        "minecraft:selection_box": { origin: [-8, 0, -8], size: [16, 16, 16] },
-                        "minecraft:collision_box": { origin: [-8, 0, -8], size: [16, 16, 16] },
-                        "minecraft:material_instances": {
-                            "up":    { texture: "gaiadimension:gaia_pink_glitter_grass_top",  render_method: "opaque" },
-                            "down":  { texture: "gaiadimension:heavy_soil",                   render_method: "opaque" },
-                            "north": { texture: "gaiadimension:gaia_pink_glitter_grass_side", render_method: "opaque" },
-                            "south": { texture: "gaiadimension:gaia_pink_glitter_grass_side", render_method: "opaque" },
-                            "east":  { texture: "gaiadimension:gaia_pink_glitter_grass_side", render_method: "opaque" },
-                            "west":  { texture: "gaiadimension:gaia_pink_glitter_grass_side", render_method: "opaque" }
-                        },
-                        "minecraft:light_dampening": 0
-                    },
-                    permutations: [
-                        { condition: "q.block_state('gaiadimension:perm_dim') == 1", components: { "minecraft:light_emission": 5 } },
-                        { condition: "q.block_state('gaiadimension:perm_dim') == 2", components: { "minecraft:light_emission": 5 } }
-                    ]
-                }
-            };
-            await fs.writeJson(path.join(BLOCK_OUT, `glitter_grass.json`), aliasJson, { spaces: 4 });
-            blocksJson["gaiadimension:glitter_grass"] = { sound: "grass" };
-            const aliasLang = `tile.gaiadimension:glitter_grass.name=Glitter Grass`;
-            if (!langContent.includes(aliasLang)) langContent += `\n${aliasLang}`;
-        }
-
         await fs.writeJson(terrainTexturePath, terrainTexture, { spaces: 4 });
         await fs.writeJson(blocksJsonPath, blocksJson, { spaces: 4 });
         await fs.writeFile(langPath, langContent);
 
-        console.log(`[INFO] Gaia Grass Generation Complete. Generated ${ALL_GRASSES.length + 1} grass blocks.`);
+        console.log(`[INFO] Gaia Grass Generation Complete. Generated ${ALL_GRASSES.length} grass blocks.`);
     }
 }
 

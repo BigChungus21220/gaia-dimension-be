@@ -16,14 +16,8 @@ export class ClientChunk {
     public lastVisitedChunk = "";
     public id: number | undefined = undefined;
 
-    // Pass 1: Terrain queue
     private chunkQueue: { x: number, z: number, key: string, retries: number }[] = [];
     private queuedChunks = new Set<string>();
-
-    // Pass 2: Surface queue (vegetation + trees) — dispatched after terrain
-    private surfaceQueue: { x: number, z: number, key: string, retries: number }[] = [];
-    private queuedSurface = new Set<string>();
-
     private activeJobs = 0;
     private maxJobs = 3;
 
@@ -78,7 +72,6 @@ export class ClientChunk {
 
         chunks.sort((a, b) => a.dist - b.dist);
 
-        // Enqueue terrain (Pass 1)
         let added = 0;
         for (const entry of chunks) {
             if (gen.isGenerated(entry.key)) continue;
@@ -90,24 +83,10 @@ export class ClientChunk {
             if (added >= 6) break;
         }
 
-        // Enqueue surface (Pass 2) — only for chunks whose terrain is done
-        let surfAdded = 0;
-        for (const entry of chunks) {
-            if (!gen.isGenerated(entry.key)) continue;  // terrain must be done first
-            if (gen.isSurfaced(entry.key)) continue;    // already surfaced
-            if (this.queuedSurface.has(entry.key)) continue;
-
-            this.queuedSurface.add(entry.key);
-            this.surfaceQueue.push({ ...entry, retries: 0 });
-            surfAdded++;
-            if (surfAdded >= 4) break;
-        }
-
         this._processQueue(gen);
     }
 
     _processQueue(gen: any) {
-        // Prioritize terrain, then surface
         while (this.activeJobs < this.maxJobs && this.chunkQueue.length > 0) {
             const entry = this.chunkQueue.shift()!;
             this.queuedChunks.delete(entry.key);
@@ -127,33 +106,8 @@ export class ClientChunk {
                         }, 20);
                     }
                 })
-                .catch((e: any) => console.error(`[GaiaDim] Terrain error:`, e))
-                .finally(() => { this.activeJobs--; });
-        }
-
-        // Surface pass — lower priority, fills remaining job slots
-        while (this.activeJobs < this.maxJobs && this.surfaceQueue.length > 0) {
-            const entry = this.surfaceQueue.shift()!;
-            this.queuedSurface.delete(entry.key);
-
-            if (gen.isSurfaced(entry.key)) continue;
-
-            this.activeJobs++;
-
-            gen.buildSurface(entry.x, entry.z, entry.key)
-                .then((success: boolean) => {
-                    if (!success && entry.retries < MAX_RETRIES) {
-                        system.runTimeout(() => {
-                            if (!gen.isSurfaced(entry.key) && !this.queuedSurface.has(entry.key)) {
-                                this.queuedSurface.add(entry.key);
-                                this.surfaceQueue.push({ ...entry, retries: entry.retries + 1 });
-                            }
-                        }, 20);
-                    }
-                })
-                .catch((e: any) => console.error(`[GaiaDim] Surface error:`, e))
+                .catch((e: any) => console.error(`[GaiaDim] Chunk error:`, e))
                 .finally(() => { this.activeJobs--; });
         }
     }
 }
-

@@ -239,5 +239,50 @@
     },
     "gaiadimension:static_glitter_grass": {
         "sound": "grass"
+    },
+    "gaiadimension:pink_agate_forest_glitter_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:crystal_plains_glitter_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:blue_agate_taiga_glitter_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:green_agate_jungle_glitter_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:purple_agate_swamp_glitter_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:fossil_woodland_glitter_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:mutant_agate_wildwood_glitter_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:mookaite_mesa_glitter_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:smoldering_bog_murky_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:shining_grove_soft_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:goldstone_lands_corrupted_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:golden_forest_gilded_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:golden_hills_gilded_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:golden_plains_gilded_grass": {
+        "sound": "grass"
+    },
+    "gaiadimension:golden_marsh_gilded_grass": {
+        "sound": "grass"
     }
 }

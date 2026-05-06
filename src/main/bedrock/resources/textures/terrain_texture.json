@@ -2028,6 +2028,186 @@
         },
         "gaiadimension:gaia_glitter_grass_side": {
             "textures": "textures/gaiadimension/gen/gaia_grass/gaia_glitter_grass_side"
+        },
+        "gaiadimension:gaia_pink_agate_forest_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_pink_agate_forest_glitter_grass_top"
+        },
+        "gaiadimension:gaia_pink_agate_forest_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_pink_agate_forest_glitter_grass_side"
+        },
+        "gaiadimension:gaia_crystal_plains_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_crystal_plains_glitter_grass_top"
+        },
+        "gaiadimension:gaia_crystal_plains_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_crystal_plains_glitter_grass_side"
+        },
+        "gaiadimension:gaia_blue_agate_taiga_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_blue_agate_taiga_glitter_grass_top"
+        },
+        "gaiadimension:gaia_blue_agate_taiga_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_blue_agate_taiga_glitter_grass_side"
+        },
+        "gaiadimension:gaia_green_agate_jungle_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_green_agate_jungle_glitter_grass_top"
+        },
+        "gaiadimension:gaia_green_agate_jungle_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_green_agate_jungle_glitter_grass_side"
+        },
+        "gaiadimension:gaia_purple_agate_swamp_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_purple_agate_swamp_glitter_grass_top"
+        },
+        "gaiadimension:gaia_purple_agate_swamp_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_purple_agate_swamp_glitter_grass_side"
+        },
+        "gaiadimension:gaia_fossil_woodland_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_fossil_woodland_glitter_grass_top"
+        },
+        "gaiadimension:gaia_fossil_woodland_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_fossil_woodland_glitter_grass_side"
+        },
+        "gaiadimension:gaia_mutant_agate_wildwood_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_mutant_agate_wildwood_glitter_grass_top"
+        },
+        "gaiadimension:gaia_mutant_agate_wildwood_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_mutant_agate_wildwood_glitter_grass_side"
+        },
+        "gaiadimension:gaia_mookaite_mesa_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_mookaite_mesa_glitter_grass_top"
+        },
+        "gaiadimension:gaia_mookaite_mesa_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_mookaite_mesa_glitter_grass_side"
+        },
+        "gaiadimension:gaia_smoldering_bog_murky_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_smoldering_bog_murky_grass_top"
+        },
+        "gaiadimension:gaia_smoldering_bog_murky_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_smoldering_bog_murky_grass_side"
+        },
+        "gaiadimension:gaia_shining_grove_soft_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_shining_grove_soft_grass_top"
+        },
+        "gaiadimension:gaia_shining_grove_soft_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_shining_grove_soft_grass_side"
+        },
+        "gaiadimension:gaia_goldstone_lands_corrupted_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_goldstone_lands_corrupted_grass_top"
+        },
+        "gaiadimension:gaia_goldstone_lands_corrupted_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_goldstone_lands_corrupted_grass_side"
+        },
+        "gaiadimension:gaia_golden_forest_gilded_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_golden_forest_gilded_grass_top"
+        },
+        "gaiadimension:gaia_golden_forest_gilded_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_golden_forest_gilded_grass_side"
+        },
+        "gaiadimension:gaia_golden_hills_gilded_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_golden_hills_gilded_grass_top"
+        },
+        "gaiadimension:gaia_golden_hills_gilded_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_golden_hills_gilded_grass_side"
+        },
+        "gaiadimension:gaia_golden_plains_gilded_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_golden_plains_gilded_grass_top"
+        },
+        "gaiadimension:gaia_golden_plains_gilded_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_golden_plains_gilded_grass_side"
+        },
+        "gaiadimension:gaia_golden_marsh_gilded_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_golden_marsh_gilded_grass_top"
+        },
+        "gaiadimension:gaia_golden_marsh_gilded_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_golden_marsh_gilded_grass_side"
+        },
+        "gaia_pink_agate_forest_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_pink_agate_forest_glitter_grass_top"
+        },
+        "gaia_pink_agate_forest_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_pink_agate_forest_glitter_grass_side"
+        },
+        "gaia_crystal_plains_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_crystal_plains_glitter_grass_top"
+        },
+        "gaia_crystal_plains_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_crystal_plains_glitter_grass_side"
+        },
+        "gaia_blue_agate_taiga_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_blue_agate_taiga_glitter_grass_top"
+        },
+        "gaia_blue_agate_taiga_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_blue_agate_taiga_glitter_grass_side"
+        },
+        "gaia_green_agate_jungle_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_green_agate_jungle_glitter_grass_top"
+        },
+        "gaia_green_agate_jungle_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_green_agate_jungle_glitter_grass_side"
+        },
+        "gaia_purple_agate_swamp_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_purple_agate_swamp_glitter_grass_top"
+        },
+        "gaia_purple_agate_swamp_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_purple_agate_swamp_glitter_grass_side"
+        },
+        "gaia_fossil_woodland_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_fossil_woodland_glitter_grass_top"
+        },
+        "gaia_fossil_woodland_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_fossil_woodland_glitter_grass_side"
+        },
+        "gaia_mutant_agate_wildwood_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_mutant_agate_wildwood_glitter_grass_top"
+        },
+        "gaia_mutant_agate_wildwood_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_mutant_agate_wildwood_glitter_grass_side"
+        },
+        "gaia_mookaite_mesa_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_mookaite_mesa_glitter_grass_top"
+        },
+        "gaia_mookaite_mesa_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_mookaite_mesa_glitter_grass_side"
+        },
+        "gaia_smoldering_bog_murky_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_smoldering_bog_murky_grass_top"
+        },
+        "gaia_smoldering_bog_murky_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_smoldering_bog_murky_grass_side"
+        },
+        "gaia_shining_grove_soft_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_shining_grove_soft_grass_top"
+        },
+        "gaia_shining_grove_soft_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_shining_grove_soft_grass_side"
+        },
+        "gaia_goldstone_lands_corrupted_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_goldstone_lands_corrupted_grass_top"
+        },
+        "gaia_goldstone_lands_corrupted_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_goldstone_lands_corrupted_grass_side"
+        },
+        "gaia_golden_forest_gilded_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_golden_forest_gilded_grass_top"
+        },
+        "gaia_golden_forest_gilded_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_golden_forest_gilded_grass_side"
+        },
+        "gaia_golden_hills_gilded_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_golden_hills_gilded_grass_top"
+        },
+        "gaia_golden_hills_gilded_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_golden_hills_gilded_grass_side"
+        },
+        "gaia_golden_plains_gilded_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_golden_plains_gilded_grass_top"
+        },
+        "gaia_golden_plains_gilded_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_golden_plains_gilded_grass_side"
+        },
+        "gaia_golden_marsh_gilded_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_golden_marsh_gilded_grass_top"
+        },
+        "gaia_golden_marsh_gilded_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_golden_marsh_gilded_grass_side"
         }
     }
 }

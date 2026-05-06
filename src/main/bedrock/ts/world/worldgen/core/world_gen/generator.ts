@@ -118,7 +118,6 @@ export class ChunkGenerator {
         return Math.max(Math.floor(h), SEA_LEVEL + 1);
     }
 
-    // ── PASS 1: TERRAIN (stone + soil + surface grass) ──
     buildChunk(X: number, Z: number, hash: string): Promise<boolean> {
         if (this.isGenerating.has(hash)) return Promise.resolve(true);
         if (this.isGenerated(hash)) return Promise.resolve(true);
@@ -126,7 +125,7 @@ export class ChunkGenerator {
 
         return new Promise<boolean>((resolve) => {
             const failRef = { count: 0 };
-            (system as any).runJob(this.generateTerrain(X, Z, failRef, () => {
+            (system as any).runJob(this.generate(X, Z, failRef, () => {
                 this.isGenerating.delete(hash);
                 if (failRef.count === 0) {
                     this.setGenerated(hash);
@@ -138,93 +137,14 @@ export class ChunkGenerator {
         });
     }
 
-    // ── PASS 2: SURFACE (vegetation + trees) — deferred after terrain ──
-    buildSurface(X: number, Z: number, hash: string): Promise<boolean> {
-        const surfKey = hash + "_surf";
-        if (this.isGenerating.has(surfKey)) return Promise.resolve(true);
-        if (this.isSurfaced(hash)) return Promise.resolve(true);
-        this.isGenerating.add(surfKey);
-
-        return new Promise<boolean>((resolve) => {
-            const failRef = { count: 0 };
-            (system as any).runJob(this.generateSurface(X, Z, failRef, () => {
-                this.isGenerating.delete(surfKey);
-                if (failRef.count === 0) {
-                    this.setSurfaced(hash);
-                    resolve(true);
-                } else {
-                    resolve(false);
-                }
-            }));
-        });
-    }
-
     isGenerated(hash: string) { return this.manager.isGenerated(hash + this.dimensionId); }
     setGenerated(hash: string) { this.manager.setGenerated(hash + this.dimensionId); }
-    isSurfaced(hash: string) { return this.manager.isGenerated(hash + this.dimensionId + "_s"); }
-    setSurfaced(hash: string) { this.manager.setGenerated(hash + this.dimensionId + "_s"); }
 
     /**
-     * PASS 1: Terrain — stone shell, soil, surface grass block.
-     * No vegetation or trees — those are deferred to Pass 2.
+     * Single-pass chunk generator: stone → soil → surface grass → vegetation → trees.
+     * Yields every X-row to prevent watchdog timeout.
      */
-    *generateTerrain(X: number, Z: number, failRef: { count: number }, done: () => void) {
-        const { dimension: dim } = this;
-        const worldX = X * 16, worldZ = Z * 16;
-
-        try {
-            for (let x = 0; x < 16; x++) {
-                for (let z = 0; z < 16; z++) {
-                    const xx = worldX + x, zz = worldZ + z;
-
-                    const biome = this.getBiomeAt(xx, zz);
-
-                    // Blended height
-                    const rawH = this.getTerrainHeight(xx, zz);
-                    const BLEND_R = 8;
-                    const b0 = this.getBiomeAt(xx, zz);
-                    const b1 = this.getBiomeAt(xx + BLEND_R, zz);
-                    const b2 = this.getBiomeAt(xx, zz + BLEND_R);
-                    const b3 = this.getBiomeAt(xx - BLEND_R, zz);
-                    const b4 = this.getBiomeAt(xx, zz - BLEND_R);
-                    const avgDepth = (b0.depth + b1.depth + b2.depth + b3.depth + b4.depth) / 5;
-                    const avgScale = (b0.scale + b1.scale + b2.scale + b3.scale + b4.scale) / 5;
-
-                    let terrain = Math.floor(rawH * 10 * (1 + avgScale) + avgDepth * 40 + ENTRY);
-                    if (isNaN(terrain) || !isFinite(terrain)) terrain = ENTRY;
-                    terrain = Math.max(this.range.min, Math.min(this.range.max - 1, terrain));
-
-                    const groundId = biome.groundPaletted?.permutations?.[0] as string ?? "gaiadimension:pink_glitter_grass";
-                    const underId = biome.underGroundPaletted?.permutations?.[0] as string ?? "gaiadimension:heavy_soil";
-
-                    // Stone shell
-                    const stoneStart = Math.max(this.range.min, terrain - (STONE_DEPTH + SOIL_DEPTH));
-                    for (let y = stoneStart; y < terrain - SOIL_DEPTH; y++) {
-                        if (!setBlock(dim.getBlock({ x: xx, y, z: zz }), "gaiadimension:gaia_stone")) failRef.count++;
-                    }
-
-                    // Soil
-                    for (let y = terrain - SOIL_DEPTH; y < terrain; y++) {
-                        if (!setBlock(dim.getBlock({ x: xx, y, z: zz }), underId)) failRef.count++;
-                    }
-
-                    // Surface grass
-                    if (!setBlock(dim.getBlock({ x: xx, y: terrain, z: zz }), groundId)) failRef.count++;
-                }
-                yield;
-            }
-            done();
-        } catch (e) {
-            console.error(`[GaiaDim] Terrain ${X},${Z} error:`, e);
-            done();
-        }
-    }
-
-    /**
-     * PASS 2: Surface — vegetation and trees.
-     * Runs AFTER terrain pass to prevent adjacent chunk gen from overwriting plants.
-     */
-    *generateSurface(X: number, Z: number, failRef: { count: number }, done: () => void) {
+    *generate(X: number, Z: number, failRef: { count: number }, done: () => void) {
         const { dimension: dim } = this;
         const random = this.seed.getSeqence(X, Z);
         const worldX = X * 16, worldZ = Z * 16;
@@ -235,9 +155,9 @@ export class ChunkGenerator {
                     const xx = worldX + x, zz = worldZ + z;
                     const biome = this.getBiomeAt(xx, zz);
 
-                    // Recalculate terrain height (same formula as pass 1)
+                    // Blended height — average depth/scale over 5 sample points
                     const rawH = this.getTerrainHeight(xx, zz);
-                    const BLEND_R = 8;
+                    const BLEND_R = 4;
                     const b0 = this.getBiomeAt(xx, zz);
                     const b1 = this.getBiomeAt(xx + BLEND_R, zz);
                     const b2 = this.getBiomeAt(xx, zz + BLEND_R);
@@ -250,11 +170,27 @@ export class ChunkGenerator {
                     if (isNaN(terrain) || !isFinite(terrain)) terrain = ENTRY;
                     terrain = Math.max(this.range.min, Math.min(this.range.max - 1, terrain));
 
-                    // Check if this chunk is loaded — if we can't get a block, mark as fail
-                    const surfaceBlock = dim.getBlock({ x: xx, y: terrain, z: zz });
-                    if (!surfaceBlock) { failRef.count++; continue; }
+                    const groundId = biome.groundPaletted?.permutations?.[0] as string ?? "gaiadimension:crystal_plains_glitter_grass";
+                    const underId = biome.underGroundPaletted?.permutations?.[0] as string ?? "gaiadimension:heavy_soil";
 
-                    // Vegetation — failures here are NOT chunk-load issues, just skip
+                    // 1. Stone shell
+                    const stoneStart = Math.max(this.range.min, terrain - (STONE_DEPTH + SOIL_DEPTH));
+                    for (let y = stoneStart; y < terrain - SOIL_DEPTH; y++) {
+                        if (!setBlock(dim.getBlock({ x: xx, y, z: zz }), "gaiadimension:gaia_stone")) failRef.count++;
+                    }
+
+                    // 2. Soil
+                    for (let y = terrain - SOIL_DEPTH; y < terrain; y++) {
+                        if (!setBlock(dim.getBlock({ x: xx, y, z: zz }), underId)) failRef.count++;
+                    }
+
+                    // 3. Surface grass — non-fatal: if block ID doesn't exist, skip silently
+                    try {
+                        const grassBlock = dim.getBlock({ x: xx, y: terrain, z: zz });
+                        if (grassBlock) grassBlock.setType(groundId);
+                    } catch (_) { /* block ID not registered — skip, don't fail chunk */ }
+
+                    // 4. Vegetation — non-fatal
                     if (biome.vegetationPalette?.permutations?.length > 0) {
                         if (random.nextFloat() < biome.vegetationChance) {
                             const idx = Math.floor(random.nextFloat() * biome.vegetationPalette.permutations.length);
@@ -262,13 +198,13 @@ export class ChunkGenerator {
                             if (vegId) {
                                 const vBlock = dim.getBlock({ x: xx, y: terrain + 1, z: zz });
                                 if (vBlock && vBlock.typeId === "minecraft:air") {
-                                    try { vBlock.setType(vegId); } catch (_) { /* block ID may not exist, skip */ }
+                                    try { vBlock.setType(vegId); } catch (_) {}
                                 }
                             }
                         }
                     }
 
-                    // Trees
+                    // 5. Trees
                     if (biome.hasTrees) {
                         if (random.nextFloat() < biome.treesChance &&
                             easeOutQuad((this.trees.GetNoise(xx, zz) + 1) / 2) < biome.treeAreaChance) {
@@ -282,11 +218,11 @@ export class ChunkGenerator {
                         }
                     }
                 }
-                yield;
+                yield; // yield per X-row
             }
             done();
         } catch (e) {
-            console.error(`[GaiaDim] Surface ${X},${Z} error:`, e);
+            console.error(`[GaiaDim] Chunk ${X},${Z} error:`, e);
             done();
         }
     }
