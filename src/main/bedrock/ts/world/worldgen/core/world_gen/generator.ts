@@ -154,7 +154,11 @@ export class ChunkGenerator {
             for (let x = 0; x < 16; x++) {
                 for (let z = 0; z < 16; z++) {
                     const xx = worldX + x, zz = worldZ + z;
-                    const biome = this.getBiomeAt(xx, zz);
+                    
+                    // Domain warp (jitter) for biome boundaries to prevent cubical blending
+                    const jitterX = Math.round(this.spikes.GetNoise(xx * 2, zz * 2) * 5);
+                    const jitterZ = Math.round(this.spikes.GetNoise(xx * 2 + 1000, zz * 2 + 1000) * 5);
+                    const biome = this.getBiomeAt(xx + jitterX, zz + jitterZ);
 
                     // Blended height — average depth/scale over 5 sample points
                     const rawH = this.getTerrainHeight(xx, zz);
@@ -185,14 +189,30 @@ export class ChunkGenerator {
                         if (!setBlock(dim.getBlock({ x: xx, y, z: zz }), underId)) failRef.count++;
                     }
 
-                    // 3. Surface grass — non-fatal: if block ID doesn't exist, skip silently
+                    // 3. Surface block & Water Fill
+                    const isUnderwater = terrain < this.seaLevel;
                     try {
-                        const grassBlock = dim.getBlock({ x: xx, y: terrain, z: zz });
-                        if (grassBlock) grassBlock.setType(groundId);
-                    } catch (_) { /* block ID not registered — skip, don't fail chunk */ }
+                        const surfaceBlock = dim.getBlock({ x: xx, y: terrain, z: zz });
+                        if (surfaceBlock) {
+                            if (isUnderwater && groundId.includes("grass")) {
+                                surfaceBlock.setType(underId); // Use soil/pebbles underwater instead of grass
+                            } else {
+                                surfaceBlock.setType(groundId);
+                            }
+                        }
+                    } catch (_) { /* block ID not registered — skip */ }
+
+                    if (isUnderwater) {
+                        for (let y = terrain + 1; y <= this.seaLevel; y++) {
+                            const waterBlock = dim.getBlock({ x: xx, y, z: zz });
+                            if (waterBlock) {
+                                try { waterBlock.setType("gaiadimension:mineral_water"); } catch (_) {}
+                            }
+                        }
+                    }
 
                     // 4. Vegetation — non-fatal
-                    if (biome.vegetationPalette?.permutations?.length > 0) {
+                    if (!isUnderwater && biome.vegetationPalette?.permutations?.length > 0) {
                         if (random.nextFloat() < biome.vegetationChance) {
                             const idx = Math.floor(random.nextFloat() * biome.vegetationPalette.permutations.length);
                             const vegId = biome.vegetationPalette.permutations[idx] as string;
@@ -206,7 +226,7 @@ export class ChunkGenerator {
                     }
 
                     // 5. Trees
-                    if (biome.hasTrees) {
+                    if (!isUnderwater && biome.hasTrees) {
                         if (random.nextFloat() < biome.treesChance &&
                             easeOutQuad((this.trees.GetNoise(xx, zz) + 1) / 2) < biome.treeAreaChance) {
                             

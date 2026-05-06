@@ -16,7 +16,25 @@
                 "triggers": { "cause": "all", "deals_damage": false }
             },
             "minecraft:pushable": { "is_pushable": false, "is_pushable_by_piston": false },
-            "minecraft:type_family": { "family": [ "gaiadimension:fluid_interaction_dummy" ] }
+            "minecraft:type_family": { "family": [ "gaiadimension:fluid_interaction_dummy", "inanimate" ] },
+            "minecraft:custom_hit_test": {
+                "hitboxes": [
+                    { "pivot": [0, 0.5, 0], "width": 1.0, "height": 1.0 }
+                ]
+            },
+            "minecraft:interact": {
+                "interactions": [
+                    {
+                        "on_interact": {
+                            "filters": {
+                                "test": "is_family",
+                                "subject": "other",
+                                "value": "player"
+                            }
+                        }
+                    }
+                ]
+            }
         }
     }
 }

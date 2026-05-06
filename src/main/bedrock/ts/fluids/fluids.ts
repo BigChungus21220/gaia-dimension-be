@@ -2,6 +2,8 @@ import { world, system, BlockPermutation, ItemStack, BlockVolume, Block, Dimensi
 import { FluidTemplate } from "./lib/FluidTemplate.js";
 import { LavaTemplate } from "./templates/LavaTemplate.js";
 import { WaterTemplate } from "./templates/WaterTemplate.js";
+import { runEntityEffects } from "./EntityEffects.js";
+import { MotionEngine } from "../utils/MotionEngine.js";
 
 // --- Globals ---
 const blockCache = new Map<string, Block | undefined>();
@@ -140,6 +142,7 @@ system.runInterval(() => {
     
     const tasks = [
         () => runPlayerEffects(players),
+        () => runEntityEffects(idToTemplate, fluidIDs, players),
         () => runBoatLogic(players),
         () => runFluidFlowLogic(start),
         () => runFluidInteractionDummies(players)
@@ -155,6 +158,62 @@ system.runInterval(() => {
     }
     taskIndex++;
 }, 1);
+
+// --- Dedicated fluid-physics loop ---
+const _fluidPosTrack = new Map<string, { lx: number; lz: number; vx: number; vz: number }>();
+
+system.runInterval(() => {
+    for (const state of FluidTemplate.physicsStates.values()) {
+        try {
+            if (!state.player.isValid) {
+                FluidTemplate.physicsStates.delete(state.player.id);
+                _fluidPosTrack.delete(state.player.id);
+                continue;
+            }
+
+            const player = state.player;
+            const pos = player.location;
+            const pid = player.id;
+            const p = player as any;
+
+            const track = _fluidPosTrack.get(pid);
+            if (track) {
+                const rawExX = (pos.x - track.lx) - track.vx;
+                const rawExZ = (pos.z - track.lz) - track.vz;
+                const prevExX = p._walkExcessX ?? 0;
+                const prevExZ = p._walkExcessZ ?? 0;
+                const clampedExX = Math.max(-0.15, Math.min(0.15, rawExX));
+                const clampedExZ = Math.max(-0.15, Math.min(0.15, rawExZ));
+                p._walkExcessX = prevExX + 0.2 * (clampedExX - prevExX);
+                p._walkExcessZ = prevExZ + 0.2 * (clampedExZ - prevExZ);
+            } else {
+                p._walkExcessX = 0;
+                p._walkExcessZ = 0;
+            }
+
+            MotionEngine.tickPlayer(
+                player,
+                state.drag,
+                state.acceleration,
+                state.gravityScale,
+                state.canSprint,
+            );
+
+            _fluidPosTrack.set(pid, {
+                lx: pos.x,
+                lz: pos.z,
+                vx: p._fluidVX ?? 0,
+                vz: p._fluidVZ ?? 0,
+            });
+        } catch { }
+    }
+
+    for (const pid of _fluidPosTrack.keys()) {
+        if (!FluidTemplate.physicsStates.has(pid)) {
+            _fluidPosTrack.delete(pid);
+        }
+    }
+});
 
 function runFluidInteractionDummies(players: Player[]) {
     for (const player of players) {

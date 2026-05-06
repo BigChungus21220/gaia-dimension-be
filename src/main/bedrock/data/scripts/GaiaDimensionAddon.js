@@ -4576,12 +4576,10 @@ var PortalManager = class {
   }
   static tryIgnite(originBlock) {
     if (!originBlock || !originBlock.dimension) {
-      console.warn("[PortalLib] tryIgnite called with invalid block");
       return false;
     }
     for (const [portalId, config] of this.registeredPortals) {
       if (this.attemptPortalCreation(originBlock, portalId, config.frameId)) {
-        console.warn(`[PortalLib] Portal created successfully: ${portalId}`);
         return true;
       }
     }
@@ -4609,15 +4607,8 @@ var PortalManager = class {
     const fillerId = startBlock.typeId;
     const dx = axis === "x" ? 1 : 0;
     const dz = axis === "z" ? 1 : 0;
-    let minYLimit = -64;
-    let maxYLimit = 320;
-    try {
-      if (dim.heightRange) {
-        minYLimit = dim.heightRange.min;
-        maxYLimit = dim.heightRange.max;
-      }
-    } catch (e) {
-    }
+    const minYLimit = dim.heightRange ? dim.heightRange.min : -64;
+    const maxYLimit = dim.heightRange ? dim.heightRange.max : 320;
     let bottomY = y;
     while (true) {
       const checkY = bottomY - 1;
@@ -4659,7 +4650,6 @@ var PortalManager = class {
     }
     const height = topY - bottomY + 1;
     if (height < MIN_SIZE) {
-      console.warn(`[PortalLib] Height too small: ${height}`);
       return null;
     }
     let minSide = 0;
@@ -4672,7 +4662,6 @@ var PortalManager = class {
           minSide = -i;
           break;
         } else {
-          console.warn(`[PortalLib] MinSide check failed at i=${i}`);
           return null;
         }
       }
@@ -4685,7 +4674,6 @@ var PortalManager = class {
           maxSide = i;
           break;
         } else {
-          console.warn(`[PortalLib] MaxSide check failed at i=${i}`);
           return null;
         }
       }
@@ -4761,7 +4749,6 @@ var PortalManager = class {
         dimension.fillBlocks(volume, blockPerm, { matchingBlock: void 0 });
         filled = true;
       } catch (e) {
-        console.warn("PortalLib: fillBlocks failed: " + e);
       }
     }
     if (!filled) {
@@ -4800,16 +4787,7 @@ var PortalManager = class {
     const scanRange = 16;
     for (let x = startX - scanRange; x <= startX + scanRange; x += 16) {
       for (let z = startZ - scanRange; z <= startZ + scanRange; z += 16) {
-        let hMin = -64;
-        let hMax = 320;
-        try {
-          if (dimension.heightRange) {
-            hMin = dimension.heightRange.min;
-            hMax = dimension.heightRange.max;
-          }
-        } catch (e) {
-        }
-        for (let y = hMin; y < hMax; y += 16) {
+        for (let y = dimension.heightRange.min; y < dimension.heightRange.max; y += 16) {
           try {
             const block = dimension.getBlock({ x, y, z });
             if (block && block.typeId === portalBlockId) {
@@ -4828,15 +4806,8 @@ var PortalManager = class {
   static makePortal(pos, dimension, axis, portalBlockId, frameBlockId) {
     const origin = { x: Math.floor(pos.x), y: Math.floor(pos.y), z: Math.floor(pos.z) };
     const worldBorder = 3e7;
-    let heightMax = 320;
-    let heightMin = -64;
-    try {
-      if (dimension.heightRange) {
-        heightMax = dimension.heightRange.max;
-        heightMin = dimension.heightRange.min;
-      }
-    } catch (e) {
-    }
+    const heightMax = dimension.heightRange.max;
+    const heightMin = dimension.heightRange.min;
     const direction = axis === "x" ? { x: 1, y: 0, z: 0 } : { x: 0, y: 0, z: 1 };
     const crossDir = axis === "x" ? { x: 0, y: 0, z: 1 } : { x: 1, y: 0, z: 0 };
     let d0 = -1;
@@ -6001,6 +5972,279 @@ var WaterTemplate = class extends FluidTemplate {
   }
 };
 
+// src/main/bedrock/ts/fluids/EntityEffects.ts
+var ENTITY_EFFECT_QUERY_RADIUS = 32;
+var ENTITY_EFFECT_CLUSTER_JOIN_RADIUS = 32;
+var ENTITY_EFFECT_CLUSTER_FETCH_RADIUS = ENTITY_EFFECT_QUERY_RADIUS + ENTITY_EFFECT_CLUSTER_JOIN_RADIUS;
+var distanceSquared = (left, right) => {
+  const dx = left.x - right.x;
+  const dy = left.y - right.y;
+  const dz = left.z - right.z;
+  return dx * dx + dy * dy + dz * dz;
+};
+var buildEntityEffectClusters = (players) => {
+  const clusters = [];
+  const maxJoinDistanceSquared = ENTITY_EFFECT_CLUSTER_JOIN_RADIUS * ENTITY_EFFECT_CLUSTER_JOIN_RADIUS;
+  for (const player of players) {
+    if (!player?.isValid) continue;
+    let matchedCluster;
+    for (const cluster of clusters) {
+      if (cluster.dimensionId !== player.dimension.id) continue;
+      if (distanceSquared(cluster.anchor, player.location) > maxJoinDistanceSquared) continue;
+      matchedCluster = cluster;
+      break;
+    }
+    if (!matchedCluster) {
+      clusters.push({
+        dimensionId: player.dimension.id,
+        dimension: player.dimension,
+        anchor: { ...player.location }
+      });
+    }
+  }
+  return clusters;
+};
+function runEntityEffects(idToTemplate2, fluidIDs2, players) {
+  if (players.length === 0) return;
+  const entitiesToProcess = /* @__PURE__ */ new Set();
+  for (const cluster of buildEntityEffectClusters(players)) {
+    const entities = cluster.dimension.getEntities({
+      location: cluster.anchor,
+      maxDistance: ENTITY_EFFECT_CLUSTER_FETCH_RADIUS,
+      excludeFamilies: ["inanimate"]
+    });
+    for (const entity of entities) {
+      if (entity.typeId === "minecraft:player") continue;
+      entitiesToProcess.add(entity);
+    }
+  }
+  for (const entity of entitiesToProcess) {
+    try {
+      const dimension = entity.dimension;
+      const location = entity.location;
+      const blockAt = dimension.getBlock(location);
+      const blockTypeId = blockAt?.typeId;
+      if (blockAt && blockTypeId && fluidIDs2.has(blockTypeId)) {
+        const template = idToTemplate2.get(blockTypeId);
+        if (template && template.onEntityTick) {
+          template.onEntityTick(entity, blockAt);
+        }
+      }
+    } catch (e) {
+    }
+  }
+}
+
+// src/main/bedrock/ts/utils/MotionEngine.ts
+var DEG2RAD = Math.PI / 180;
+var FLUID_GRAVITY = 0.02;
+var SWIM_UP_FORCE = 0.04;
+var DEADZONE = 3e-3;
+var MAX_H_SPEED = 0.45;
+var MAX_H_SPEED_SPRINT = 0.6;
+var MAX_V_SPEED = 2;
+var MotionEngine2 = class {
+  /**
+   * Java-parity fluid physics tick.
+   *
+   * @param player         Target player
+   * @param drag           Per-tick XZ velocity multiplier — Java: 0.8 (water), 0.5 (lava)
+   * @param acceleration   Per-tick input acceleration — Java: 0.02
+   * @param gravityScale   Multiplier on FLUID_GRAVITY (0.02). 1.0 = vanilla water/lava
+   * @param canSprint      Whether sprinting boosts drag (Java: true for water, false for lava)
+   */
+  static tickPlayer(player, drag = 0.8, acceleration = 0.02, gravityScale = 1, canSprint = true) {
+    const p = player;
+    if (player.isFlying || player.isGliding) {
+      p._fluidVX = void 0;
+      p._fluidVZ = void 0;
+      p._fluidVY = void 0;
+      p._lastSmoothImpX = void 0;
+      p._lastSmoothImpZ = void 0;
+      p._lastSmoothImpY = void 0;
+      p._smoothDirX = void 0;
+      p._smoothDirZ = void 0;
+      p._walkExcessX = 0;
+      p._walkExcessZ = 0;
+      return;
+    }
+    if (p._fluidVX === void 0) {
+      const v = player.getVelocity();
+      p._fluidVX = v.x;
+      p._fluidVZ = v.z;
+      p._fluidVY = v.y;
+    }
+    let forward = 0;
+    let right = 0;
+    try {
+      const mv = p.inputInfo.getMovementVector();
+      forward = mv.y;
+      right = -mv.x;
+    } catch {
+    }
+    const yaw = player.getRotation().y * DEG2RAD;
+    const sinY = Math.sin(yaw);
+    const cosY = Math.cos(yaw);
+    const rawWorldX = right * cosY - forward * sinY;
+    const rawWorldZ = forward * cosY + right * sinY;
+    const inputLen = Math.sqrt(rawWorldX * rawWorldX + rawWorldZ * rawWorldZ);
+    const rawInputMag = Math.min(inputLen, 1);
+    const rawNormX = inputLen > 1e-4 ? rawWorldX / inputLen : 0;
+    const rawNormZ = inputLen > 1e-4 ? rawWorldZ / inputLen : 0;
+    const DIR_LERP = 0.35;
+    let normX, normZ, inputMag;
+    if (rawInputMag > 0.01) {
+      if (p._smoothDirX === void 0) {
+        p._smoothDirX = rawNormX * rawInputMag;
+        p._smoothDirZ = rawNormZ * rawInputMag;
+      } else {
+        p._smoothDirX += DIR_LERP * (rawNormX * rawInputMag - p._smoothDirX);
+        p._smoothDirZ += DIR_LERP * (rawNormZ * rawInputMag - p._smoothDirZ);
+      }
+    } else {
+      if (p._smoothDirX !== void 0) {
+        p._smoothDirX *= 0.7;
+        p._smoothDirZ *= 0.7;
+        if (p._smoothDirX * p._smoothDirX + p._smoothDirZ * p._smoothDirZ < 1e-4) {
+          p._smoothDirX = 0;
+          p._smoothDirZ = 0;
+        }
+      } else {
+        p._smoothDirX = 0;
+        p._smoothDirZ = 0;
+      }
+    }
+    const smoothLen = Math.sqrt(p._smoothDirX * p._smoothDirX + p._smoothDirZ * p._smoothDirZ);
+    inputMag = Math.min(smoothLen, 1);
+    normX = smoothLen > 1e-4 ? p._smoothDirX / smoothLen : 0;
+    normZ = smoothLen > 1e-4 ? p._smoothDirZ / smoothLen : 0;
+    let effectiveDrag = drag;
+    if (canSprint && player.isSprinting && drag >= 0.7) {
+      effectiveDrag = Math.min(drag + 0.1, 0.95);
+    }
+    let swimSpeed = acceleration;
+    if (canSprint && player.isSprinting) swimSpeed *= 1.3;
+    const speedAmp = (player.getEffect("speed")?.amplifier ?? -1) + 1;
+    const slowAmp = (player.getEffect("slowness")?.amplifier ?? -1) + 1;
+    swimSpeed *= Math.max(0.1, 1 + (speedAmp - slowAmp) * 0.2);
+    let isJumping = false;
+    try {
+      const jumpState = p.inputInfo?.getButtonState?.("Jump");
+      isJumping = jumpState === 1;
+    } catch {
+    }
+    if (!isJumping) {
+      try {
+        isJumping = !!p.isJumping;
+      } catch {
+      }
+    }
+    const onGround = player.isOnGround;
+    p._fluidVX += swimSpeed * normX * inputMag;
+    p._fluidVZ += swimSpeed * normZ * inputMag;
+    p._fluidVX *= effectiveDrag;
+    p._fluidVZ *= effectiveDrag;
+    const yDrag = drag >= 0.7 ? 0.8 : drag;
+    if (onGround) {
+      if (p._fluidVY < 0) p._fluidVY = 0;
+      if (p._fluidVY > 0) p._fluidVY *= yDrag;
+      if (isJumping) {
+        const targetRise = SWIM_UP_FORCE + effectiveDrag * 0.1;
+        p._fluidVY += (targetRise - p._fluidVY) * 0.4;
+      }
+    } else {
+      p._fluidVY *= yDrag;
+      p._fluidVY -= FLUID_GRAVITY * gravityScale;
+      if (isJumping) {
+        p._fluidVY += SWIM_UP_FORCE;
+      }
+      if (player.isSneaking) {
+        p._fluidVY -= FLUID_GRAVITY * 0.8;
+      }
+      if (!isJumping && !player.isSneaking && p._fluidVY < 0 && p._fluidVY > -0.1) {
+        const buoyancy = drag >= 0.7 ? 0.6 : 0.3;
+        p._fluidVY *= buoyancy;
+      }
+    }
+    if (Math.abs(p._fluidVX) < DEADZONE && inputMag < 0.01) p._fluidVX = 0;
+    if (Math.abs(p._fluidVZ) < DEADZONE && inputMag < 0.01) p._fluidVZ = 0;
+    if (Math.abs(p._fluidVY) < DEADZONE && !isJumping && (onGround || !player.isSneaking)) p._fluidVY = 0;
+    p._fluidVY = Math.max(-MAX_V_SPEED, Math.min(MAX_V_SPEED, p._fluidVY));
+    const maxH = canSprint && player.isSprinting ? MAX_H_SPEED_SPRINT : MAX_H_SPEED;
+    const hSpeed = Math.sqrt(p._fluidVX * p._fluidVX + p._fluidVZ * p._fluidVZ);
+    if (hSpeed > maxH) {
+      const scale = maxH / hSpeed;
+      p._fluidVX *= scale;
+      p._fluidVZ *= scale;
+    }
+    try {
+      const headLoc = player.getHeadLocation();
+      const hDir = Math.sqrt(p._fluidVX * p._fluidVX + p._fluidVZ * p._fluidVZ);
+      if (hDir > 0.01) {
+        const ray = player.dimension.getBlockFromRay(
+          headLoc,
+          { x: p._fluidVX / hDir, y: 0, z: p._fluidVZ / hDir },
+          { maxDistance: 0.45 }
+        );
+        if (ray && !ray.block.isAir && !ray.block.isLiquid) {
+          p._fluidVX *= 0.15;
+          p._fluidVZ *= 0.15;
+          if (p._fluidVY < 0.08) p._fluidVY += 0.04;
+        }
+      }
+    } catch {
+    }
+    const walkExX = p._walkExcessX ?? 0;
+    const walkExZ = p._walkExcessZ ?? 0;
+    let targetImpX = p._fluidVX - walkExX;
+    let targetImpZ = p._fluidVZ - walkExZ;
+    let targetImpY = p._fluidVY;
+    const IMPULSE_LERP = 0.6;
+    if (p._lastSmoothImpX !== void 0) {
+      targetImpX = p._lastSmoothImpX + IMPULSE_LERP * (targetImpX - p._lastSmoothImpX);
+      targetImpZ = p._lastSmoothImpZ + IMPULSE_LERP * (targetImpZ - p._lastSmoothImpZ);
+    }
+    p._lastSmoothImpX = targetImpX;
+    p._lastSmoothImpZ = targetImpZ;
+    const Y_LERP = 0.5;
+    if (p._lastSmoothImpY !== void 0) {
+      targetImpY = p._lastSmoothImpY + Y_LERP * (targetImpY - p._lastSmoothImpY);
+    }
+    p._lastSmoothImpY = targetImpY;
+    player.clearVelocity();
+    player.applyImpulse({
+      x: targetImpX,
+      y: targetImpY,
+      z: targetImpZ
+    });
+  }
+};
+var Geo2 = new class {
+  distance(v1, v2) {
+    return Math.sqrt((v1.x - v2.x) ** 2 + (v1.y - v2.y) ** 2 + (v1.z - v2.z) ** 2);
+  }
+  getDirection3D(v1, v2) {
+    const d = this.distance(v1, v2) || 1;
+    return { x: (v2.x - v1.x) / d, y: (v2.y - v1.y) / d, z: (v2.z - v1.z) / d };
+  }
+  rotate(offset, angle, axis = ["x", "z"]) {
+    const [pa, sa] = axis;
+    const flat = { [pa]: offset[pa] ?? 0, [sa]: offset[sa] ?? 0 };
+    let dir = this.getDirection3D({ x: 0, y: 0, z: 0 }, sumObjects2({}, flat));
+    let dist = this.distance({ x: 0, y: 0, z: 0 }, sumObjects2({}, flat));
+    angle += Math.acos(dir[pa]) * 57.2958 * ((dir[sa] ?? 0) < 0 ? -1 : 1);
+    let d = { [pa]: Math.cos(angle / 57.2958), [sa]: Math.sin(angle / 57.2958) };
+    return sumObjects2({}, d, dist);
+  }
+}();
+function sumObjects2(v1, v2, multi = 1) {
+  return {
+    x: (v1.x || 0) + (v2.x || 0) * multi,
+    y: (v1.y || 0) + (v2.y || 0) * multi,
+    z: (v1.z || 0) + (v2.z || 0) * multi
+  };
+}
+
 // src/main/bedrock/ts/fluids/fluids.ts
 var blockCache = /* @__PURE__ */ new Map();
 var playersInFluids = /* @__PURE__ */ new Set();
@@ -6125,6 +6369,7 @@ system30.runInterval(() => {
   const players = world27.getAllPlayers();
   const tasks = [
     () => runPlayerEffects(players),
+    () => runEntityEffects(idToTemplate, fluidIDs, players),
     () => runBoatLogic(players),
     () => runFluidFlowLogic(start),
     () => runFluidInteractionDummies(players)
@@ -6138,6 +6383,55 @@ system30.runInterval(() => {
   }
   taskIndex++;
 }, 1);
+var _fluidPosTrack = /* @__PURE__ */ new Map();
+system30.runInterval(() => {
+  for (const state of FluidTemplate.physicsStates.values()) {
+    try {
+      if (!state.player.isValid) {
+        FluidTemplate.physicsStates.delete(state.player.id);
+        _fluidPosTrack.delete(state.player.id);
+        continue;
+      }
+      const player = state.player;
+      const pos = player.location;
+      const pid = player.id;
+      const p = player;
+      const track = _fluidPosTrack.get(pid);
+      if (track) {
+        const rawExX = pos.x - track.lx - track.vx;
+        const rawExZ = pos.z - track.lz - track.vz;
+        const prevExX = p._walkExcessX ?? 0;
+        const prevExZ = p._walkExcessZ ?? 0;
+        const clampedExX = Math.max(-0.15, Math.min(0.15, rawExX));
+        const clampedExZ = Math.max(-0.15, Math.min(0.15, rawExZ));
+        p._walkExcessX = prevExX + 0.2 * (clampedExX - prevExX);
+        p._walkExcessZ = prevExZ + 0.2 * (clampedExZ - prevExZ);
+      } else {
+        p._walkExcessX = 0;
+        p._walkExcessZ = 0;
+      }
+      MotionEngine2.tickPlayer(
+        player,
+        state.drag,
+        state.acceleration,
+        state.gravityScale,
+        state.canSprint
+      );
+      _fluidPosTrack.set(pid, {
+        lx: pos.x,
+        lz: pos.z,
+        vx: p._fluidVX ?? 0,
+        vz: p._fluidVZ ?? 0
+      });
+    } catch {
+    }
+  }
+  for (const pid of _fluidPosTrack.keys()) {
+    if (!FluidTemplate.physicsStates.has(pid)) {
+      _fluidPosTrack.delete(pid);
+    }
+  }
+});
 function runFluidInteractionDummies(players) {
   for (const player of players) {
     const inventory = player.getComponent("inventory")?.container;
@@ -13651,7 +13945,9 @@ var ChunkGenerator = class {
       for (let x = 0; x < 16; x++) {
         for (let z = 0; z < 16; z++) {
           const xx = worldX + x, zz = worldZ + z;
-          const biome = this.getBiomeAt(xx, zz);
+          const jitterX = Math.round(this.spikes.GetNoise(xx * 2, zz * 2) * 5);
+          const jitterZ = Math.round(this.spikes.GetNoise(xx * 2 + 1e3, zz * 2 + 1e3) * 5);
+          const biome = this.getBiomeAt(xx + jitterX, zz + jitterZ);
           const rawH = this.getTerrainHeight(xx, zz);
           const BLEND_R = 4;
           const b0 = this.getBiomeAt(xx, zz);
@@ -13673,12 +13969,30 @@ var ChunkGenerator = class {
           for (let y = terrain - SOIL_DEPTH; y < terrain; y++) {
             if (!setBlock(dim.getBlock({ x: xx, y, z: zz }), underId)) failRef.count++;
           }
+          const isUnderwater = terrain < this.seaLevel;
           try {
-            const grassBlock = dim.getBlock({ x: xx, y: terrain, z: zz });
-            if (grassBlock) grassBlock.setType(groundId);
+            const surfaceBlock = dim.getBlock({ x: xx, y: terrain, z: zz });
+            if (surfaceBlock) {
+              if (isUnderwater && groundId.includes("grass")) {
+                surfaceBlock.setType(underId);
+              } else {
+                surfaceBlock.setType(groundId);
+              }
+            }
           } catch (_) {
           }
-          if (biome.vegetationPalette?.permutations?.length > 0) {
+          if (isUnderwater) {
+            for (let y = terrain + 1; y <= this.seaLevel; y++) {
+              const waterBlock = dim.getBlock({ x: xx, y, z: zz });
+              if (waterBlock) {
+                try {
+                  waterBlock.setType("gaiadimension:mineral_water");
+                } catch (_) {
+                }
+              }
+            }
+          }
+          if (!isUnderwater && biome.vegetationPalette?.permutations?.length > 0) {
             if (random2.nextFloat() < biome.vegetationChance) {
               const idx = Math.floor(random2.nextFloat() * biome.vegetationPalette.permutations.length);
               const vegId = biome.vegetationPalette.permutations[idx];
@@ -13693,7 +14007,7 @@ var ChunkGenerator = class {
               }
             }
           }
-          if (biome.hasTrees) {
+          if (!isUnderwater && biome.hasTrees) {
             if (random2.nextFloat() < biome.treesChance && easeOutQuad((this.trees.GetNoise(xx, zz) + 1) / 2) < biome.treeAreaChance) {
               let tooClose = false;
               for (const pt of placedTrees) {

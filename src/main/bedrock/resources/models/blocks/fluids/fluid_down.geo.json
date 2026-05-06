@@ -3,7 +3,7 @@
 	"minecraft:geometry": [
 		{
 			"description": {
-				"identifier": "geometry.gaiadimension.fluid",
+				"identifier": "geometry.gaiadimension.fluid_down",
 				"texture_width": 16,
 				"texture_height": 16,
 				"visible_bounds_width": 3,
@@ -40,7 +40,7 @@
 					"pivot": [0, 0, 0],
 					"cubes": [
 						{
-							"origin": [-8, 14, -8],
+							"origin": [-8, 16, -8],
 							"size": [16, 0, 16],
 							"uv": {
 								"north": {"uv": [0, 0], "uv_size": [4, 0]},
@@ -60,12 +60,12 @@
 					"cubes": [
 						{
 							"origin": [-8, 0, -8],
-							"size": [16, 14, 0],
+							"size": [16, 16, 0],
 							"uv": {
-								"north": {"uv": [0, 2], "uv_size": [16, 14], "material_instance": "flow_down"},
-								"east": {"uv": [0, 0], "uv_size": [0, 4], "material_instance": "flow_down"},
-								"south": {"uv": [0, 2], "uv_size": [16, 14], "material_instance": "flow_down"},
-								"west": {"uv": [0, 2], "uv_size": [16, 14], "material_instance": "flow_down"},
+								"north": {"uv": [0, 0], "uv_size": [16, 16]},
+								"east": {"uv": [0, 0], "uv_size": [0, 4]},
+								"south": {"uv": [0, 0], "uv_size": [16, 16]},
+								"west": {"uv": [0, 0], "uv_size": [16, 16]},
 								"up": {"uv": [4, 0], "uv_size": [-4, 0]},
 								"down": {"uv": [4, 0], "uv_size": [-4, 0]}
 							}
@@ -79,12 +79,12 @@
 					"cubes": [
 						{
 							"origin": [-8, 0, 8],
-							"size": [16, 14, 0],
+							"size": [16, 16, 0],
 							"uv": {
-								"north": {"uv": [0, 0], "uv_size": [16, 16], "material_instance": "flow_down"},
-								"east": {"uv": [0, 0], "uv_size": [0, 4], "material_instance": "flow_down"},
-								"south": {"uv": [0, 0], "uv_size": [16, 16], "material_instance": "flow_down"},
-								"west": {"uv": [0, 0], "uv_size": [16, 16], "material_instance": "flow_down"},
+								"north": {"uv": [0, 0], "uv_size": [16, 16]},
+								"east": {"uv": [0, 0], "uv_size": [0, 4]},
+								"south": {"uv": [0, 0], "uv_size": [16, 16]},
+								"west": {"uv": [0, 0], "uv_size": [16, 16]},
 								"up": {"uv": [4, 0], "uv_size": [-4, 0]},
 								"down": {"uv": [4, 0], "uv_size": [-4, 0]}
 							}
@@ -98,12 +98,12 @@
 					"cubes": [
 						{
 							"origin": [8, 0, -8],
-							"size": [0, 14, 16],
+							"size": [0, 16, 16],
 							"uv": {
-								"north": {"uv": [0, 0], "uv_size": [0, 4], "material_instance": "flow_down"},
-								"east": {"uv": [0, 2], "uv_size": [16, 14], "material_instance": "flow_down"},
-								"south": {"uv": [0, 0], "uv_size": [0, 4], "material_instance": "flow_down"},
-								"west": {"uv": [0, 2], "uv_size": [16, 14], "material_instance": "flow_down"},
+								"north": {"uv": [0, 0], "uv_size": [0, 4]},
+								"east": {"uv": [0, 0], "uv_size": [16, 16]},
+								"south": {"uv": [0, 0], "uv_size": [0, 4]},
+								"west": {"uv": [0, 0], "uv_size": [16, 16]},
 								"up": {"uv": [0, 4], "uv_size": [0, -4]},
 								"down": {"uv": [0, 4], "uv_size": [0, -4]}
 							}
@@ -117,12 +117,12 @@
 					"cubes": [
 						{
 							"origin": [-8, 0, -8],
-							"size": [0, 14, 16],
+							"size": [0, 16, 16],
 							"uv": {
-								"north": {"uv": [0, 0], "uv_size": [0, 4], "material_instance": "flow_down"},
-								"east": {"uv": [0, 2], "uv_size": [16, 14], "material_instance": "flow_down"},
-								"south": {"uv": [0, 0], "uv_size": [0, 4], "material_instance": "flow_down"},
-								"west": {"uv": [0, 2], "uv_size": [16, 14], "material_instance": "flow_down"},
+								"north": {"uv": [0, 0], "uv_size": [0, 4]},
+								"east": {"uv": [0, 0], "uv_size": [16, 16]},
+								"south": {"uv": [0, 0], "uv_size": [0, 4]},
+								"west": {"uv": [0, 0], "uv_size": [16, 16]},
 								"up": {"uv": [0, 4], "uv_size": [0, -4]},
 								"down": {"uv": [0, 4], "uv_size": [0, -4]}
 							}

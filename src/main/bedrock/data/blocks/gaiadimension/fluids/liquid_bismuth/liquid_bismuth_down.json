@@ -54,7 +54,7 @@
                 "looping": true
             },
             "minecraft:geometry": {
-                "identifier": "geometry.gaiadimension.fluid_source",
+                "identifier": "geometry.gaiadimension.fluid_down",
                 "bone_visibility": {
                     "x": "query.block_state('gaiadimension:x') == 0",
                     "nx": "query.block_state('gaiadimension:nx') == 0",

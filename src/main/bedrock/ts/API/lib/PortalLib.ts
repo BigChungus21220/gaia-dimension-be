@@ -16,14 +16,12 @@ export class PortalManager {
 
     static tryIgnite(originBlock) {
         if (!originBlock || !originBlock.dimension) {
-            console.warn("[PortalLib] tryIgnite called with invalid block");
             return false;
         }
         // console.warn(`[PortalLib] tryIgnite triggered at ${originBlock.location.x}, ${originBlock.location.y}, ${originBlock.location.z} in ${originBlock.dimension.id}`);
         
         for (const [portalId, config] of this.registeredPortals) {
             if (this.attemptPortalCreation(originBlock, portalId, config.frameId)) {
-                console.warn(`[PortalLib] Portal created successfully: ${portalId}`);
                 return true;
             }
         }
@@ -104,7 +102,6 @@ export class PortalManager {
 
         const height = topY - bottomY + 1;
         if (height < MIN_SIZE) {
-            console.warn(`[PortalLib] Height too small: ${height}`);
             return null;
         }
 
@@ -119,7 +116,6 @@ export class PortalManager {
                     minSide = -i;
                     break;
                 } else {
-                    console.warn(`[PortalLib] MinSide check failed at i=${i}`);
                     return null;
                 }
             }
@@ -133,7 +129,6 @@ export class PortalManager {
                     maxSide = i;
                     break;
                 } else {
-                    console.warn(`[PortalLib] MaxSide check failed at i=${i}`);
                     return null;
                 }
             }
@@ -217,7 +212,7 @@ export class PortalManager {
                 dimension.fillBlocks(volume, blockPerm, { matchingBlock: undefined });
                 filled = true;
             } catch (e) {
-                console.warn("PortalLib: fillBlocks failed: " + e);
+                // fillBlocks failed
             }
         }
 

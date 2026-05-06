@@ -163,7 +163,7 @@ function modeOrRandom(rng: LayerRNG, a: number, b: number, c: number, d: number)
 }
 
 function isOcean(v: number): boolean { return v === B.OCEAN; }
-function isGold(v: number): boolean { return v === B.GOLD_ISLAND || GOLD.includes(v); }
+function isGold(v: number): boolean { return v === B.GOLD_ISLAND || GOLD.includes(v as any); }
 
 function addIslandLayer(parent: LayerFn, seed: number): LayerFn {
     const rng = new LayerRNG(seed);
@@ -185,7 +185,7 @@ function addIslandLayer(parent: LayerFn, seed: number): LayerFn {
             }
             return center;
         } else {
-            let i = 1, j = B.LAND;
+            let i = 1, j: number = B.LAND;
             if (!isOcean(nw) && rng.nextRandom(i++) === 0) j = nw;
             if (!isOcean(ne) && rng.nextRandom(i++) === 0) j = ne;
             if (!isOcean(sw) && rng.nextRandom(i++) === 0) j = sw;
