@@ -23,7 +23,7 @@ export function registerFireStarterComponent({ itemComponentRegistry }: { itemCo
             if (block.typeId === "gaiadimension:glittering_fire" && blockFace === "Up") return;
 
             // Only place if it's air or replaceable
-            if (targetBlock.isAir || targetBlock.typeId === "minecraft:tallgrass" || targetBlock.typeId === "minecraft:yellow_flower" || targetBlock.typeId === "minecraft:red_flower") {
+            if (targetBlock.isAir || targetBlock.typeId.includes("minecraft:light_block") || targetBlock.typeId === "minecraft:tallgrass" || targetBlock.typeId === "minecraft:yellow_flower" || targetBlock.typeId === "minecraft:red_flower") {
                 const dimension: Dimension = player.dimension;
                 
                 // Biome check

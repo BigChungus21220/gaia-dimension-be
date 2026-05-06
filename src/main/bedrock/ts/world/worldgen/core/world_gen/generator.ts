@@ -148,6 +148,7 @@ export class ChunkGenerator {
         const { dimension: dim } = this;
         const random = this.seed.getSeqence(X, Z);
         const worldX = X * 16, worldZ = Z * 16;
+        const placedTrees: {x: number, z: number}[] = [];
 
         try {
             for (let x = 0; x < 16; x++) {
@@ -208,11 +209,25 @@ export class ChunkGenerator {
                     if (biome.hasTrees) {
                         if (random.nextFloat() < biome.treesChance &&
                             easeOutQuad((this.trees.GetNoise(xx, zz) + 1) / 2) < biome.treeAreaChance) {
-                            const treeDef = biome.trees.get(random.nextFloat());
-                            if (treeDef) {
-                                const above = dim.getBlock({ x: xx, y: terrain + 1, z: zz });
-                                if (above && above.typeId === "minecraft:air") {
-                                    try { yield* this.placeTree(dim, xx, terrain + 1, zz, treeDef, random); } catch (_) {}
+                            
+                            // Prevent tree fusion: enforce minimum spacing
+                            let tooClose = false;
+                            for (const pt of placedTrees) {
+                                if (Math.abs(pt.x - xx) < 3 && Math.abs(pt.z - zz) < 3) {
+                                    tooClose = true; break;
+                                }
+                            }
+
+                            if (!tooClose) {
+                                const treeDef = biome.trees.get(random.nextFloat());
+                                if (treeDef) {
+                                    const above = dim.getBlock({ x: xx, y: terrain + 1, z: zz });
+                                    if (above && above.typeId === "minecraft:air") {
+                                        try { 
+                                            yield* this.placeTree(dim, xx, terrain + 1, zz, treeDef, random); 
+                                            placedTrees.push({x: xx, z: zz});
+                                        } catch (_) {}
+                                    }
                                 }
                             }
                         }

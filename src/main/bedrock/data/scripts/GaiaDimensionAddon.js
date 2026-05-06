@@ -4609,8 +4609,15 @@ var PortalManager = class {
     const fillerId = startBlock.typeId;
     const dx = axis === "x" ? 1 : 0;
     const dz = axis === "z" ? 1 : 0;
-    const minYLimit = dim.heightRange ? dim.heightRange.min : -64;
-    const maxYLimit = dim.heightRange ? dim.heightRange.max : 320;
+    let minYLimit = -64;
+    let maxYLimit = 320;
+    try {
+      if (dim.heightRange) {
+        minYLimit = dim.heightRange.min;
+        maxYLimit = dim.heightRange.max;
+      }
+    } catch (e) {
+    }
     let bottomY = y;
     while (true) {
       const checkY = bottomY - 1;
@@ -4793,7 +4800,16 @@ var PortalManager = class {
     const scanRange = 16;
     for (let x = startX - scanRange; x <= startX + scanRange; x += 16) {
       for (let z = startZ - scanRange; z <= startZ + scanRange; z += 16) {
-        for (let y = dimension.heightRange.min; y < dimension.heightRange.max; y += 16) {
+        let hMin = -64;
+        let hMax = 320;
+        try {
+          if (dimension.heightRange) {
+            hMin = dimension.heightRange.min;
+            hMax = dimension.heightRange.max;
+          }
+        } catch (e) {
+        }
+        for (let y = hMin; y < hMax; y += 16) {
           try {
             const block = dimension.getBlock({ x, y, z });
             if (block && block.typeId === portalBlockId) {
@@ -4812,8 +4828,15 @@ var PortalManager = class {
   static makePortal(pos, dimension, axis, portalBlockId, frameBlockId) {
     const origin = { x: Math.floor(pos.x), y: Math.floor(pos.y), z: Math.floor(pos.z) };
     const worldBorder = 3e7;
-    const heightMax = dimension.heightRange.max;
-    const heightMin = dimension.heightRange.min;
+    let heightMax = 320;
+    let heightMin = -64;
+    try {
+      if (dimension.heightRange) {
+        heightMax = dimension.heightRange.max;
+        heightMin = dimension.heightRange.min;
+      }
+    } catch (e) {
+    }
     const direction = axis === "x" ? { x: 1, y: 0, z: 0 } : { x: 0, y: 0, z: 1 };
     const crossDir = axis === "x" ? { x: 0, y: 0, z: 1 } : { x: 1, y: 0, z: 0 };
     let d0 = -1;
@@ -5521,16 +5544,6 @@ system26.run(() => {
   } catch (e) {
   }
 });
-function placeLight(dimension, location) {
-  if (!lightBlockPermutation) return;
-  try {
-    const block = dimension.getBlock(location);
-    if (block && block.isAir) {
-      block.setPermutation(lightBlockPermutation);
-    }
-  } catch (e) {
-  }
-}
 function initializeLightMixin() {
   world25.afterEvents.playerPlaceBlock.subscribe((event) => {
     const { block, dimension, player } = event;
@@ -5538,31 +5551,6 @@ function initializeLightMixin() {
     let stateVal = 0;
     const typeId = block.typeId;
     const isExcluded = typeId === "gaiadimension:glittering_fire" || typeId === "gaiadimension:stairs_collision" || typeId.includes("curtain") || typeId.includes("door") || typeId.includes("fluid") || typeId.includes("liquid") || typeId.includes("water") || typeId.includes("magma") || typeId.includes("muck");
-    if (player && DimensionSystem.isInGaia(player) && !isExcluded) {
-      const { x, y, z } = block.location;
-      const possibleLightLocations = [
-        { x: x + 1, y, z },
-        { x: x - 1, y, z },
-        { x, y: y + 1, z },
-        { x, y: y - 1, z },
-        { x, y, z: z + 1 },
-        { x, y, z: z - 1 }
-      ];
-      for (const loc of possibleLightLocations) {
-        const targetBlock = dimension.getBlock(loc);
-        if (targetBlock && targetBlock.isAir) {
-          const { x: tx, y: ty, z: tz } = loc;
-          const stairNeighbors = [
-            dimension.getBlock({ x: tx, y: ty + 1, z: tz }),
-            dimension.getBlock({ x: tx, y: ty - 1, z: tz })
-          ];
-          const isNeededForStair = stairNeighbors.some((n) => n?.hasTag("gaiadimension:stairs"));
-          if (!isNeededForStair) {
-            placeLight(dimension, loc);
-          }
-        }
-      }
-    }
     try {
       const currentState = block.permutation.getState("gaiadimension:perm_dim");
       if (currentState === void 0) return;
@@ -5586,18 +5574,6 @@ function initializeLightMixin() {
     }
   });
   world25.afterEvents.playerBreakBlock.subscribe((event) => {
-    const { player, block, dimension } = event;
-    if (player && DimensionSystem.isInGaia(player)) {
-      const { x, y, z } = block.location;
-      const neighbors = [
-        dimension.getBlock({ x, y: y + 1, z }),
-        dimension.getBlock({ x, y: y - 1, z })
-      ];
-      const isNearStair = neighbors.some((n) => n?.hasTag("gaiadimension:stairs"));
-      if (!isNearStair) {
-        placeLight(dimension, block.location);
-      }
-    }
   });
 }
 
@@ -7685,7 +7661,7 @@ function registerFireStarterComponent({ itemComponentRegistry }) {
       if (!targetBlock) return;
       if (targetBlock.typeId === "gaiadimension:glittering_fire") return;
       if (block.typeId === "gaiadimension:glittering_fire" && blockFace === "Up") return;
-      if (targetBlock.isAir || targetBlock.typeId === "minecraft:tallgrass" || targetBlock.typeId === "minecraft:yellow_flower" || targetBlock.typeId === "minecraft:red_flower") {
+      if (targetBlock.isAir || targetBlock.typeId.includes("minecraft:light_block") || targetBlock.typeId === "minecraft:tallgrass" || targetBlock.typeId === "minecraft:yellow_flower" || targetBlock.typeId === "minecraft:red_flower") {
         const dimension = player.dimension;
         if (dimension.id === "minecraft:overworld" && ModConfig.portalBiomeRestriction && !ModConfig.allowAllBiomes) {
           const biome = dimension.getBiome(placeLocation);
@@ -13670,6 +13646,7 @@ var ChunkGenerator = class {
     const { dimension: dim } = this;
     const random2 = this.seed.getSeqence(X, Z);
     const worldX = X * 16, worldZ = Z * 16;
+    const placedTrees = [];
     try {
       for (let x = 0; x < 16; x++) {
         for (let z = 0; z < 16; z++) {
@@ -13718,13 +13695,23 @@ var ChunkGenerator = class {
           }
           if (biome.hasTrees) {
             if (random2.nextFloat() < biome.treesChance && easeOutQuad((this.trees.GetNoise(xx, zz) + 1) / 2) < biome.treeAreaChance) {
-              const treeDef = biome.trees.get(random2.nextFloat());
-              if (treeDef) {
-                const above = dim.getBlock({ x: xx, y: terrain + 1, z: zz });
-                if (above && above.typeId === "minecraft:air") {
-                  try {
-                    yield* this.placeTree(dim, xx, terrain + 1, zz, treeDef, random2);
-                  } catch (_) {
+              let tooClose = false;
+              for (const pt of placedTrees) {
+                if (Math.abs(pt.x - xx) < 3 && Math.abs(pt.z - zz) < 3) {
+                  tooClose = true;
+                  break;
+                }
+              }
+              if (!tooClose) {
+                const treeDef = biome.trees.get(random2.nextFloat());
+                if (treeDef) {
+                  const above = dim.getBlock({ x: xx, y: terrain + 1, z: zz });
+                  if (above && above.typeId === "minecraft:air") {
+                    try {
+                      yield* this.placeTree(dim, xx, terrain + 1, zz, treeDef, random2);
+                      placedTrees.push({ x: xx, z: zz });
+                    } catch (_) {
+                    }
                   }
                 }
               }
