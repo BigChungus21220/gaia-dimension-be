@@ -397,46 +397,181 @@ export class ChunkGenerator {
         const maxH = treeDef.height?.[1] ?? 11;
         const h = minH + Math.floor(random.nextFloat() * (maxH - minH + 1));
 
-        // Leaf-start offset: leaves begin from roughly the lower-third of the trunk
-        // This matches the SpruceTreeDefinition.build() "add" parameter
-        const leafStart = Math.max(1, Math.floor(h * 0.3));
-        const totalHeight = h;
+        // ── Trunk ────────────────────────────────────────────────────────
+        for (let i = 0; i < h; i++) {
+            setBlock(dim.getBlock({ x, y: baseY + i, z }), logId);
+        }
 
-        for (let Y = 0; Y < totalHeight; Y++) {
-            const yy = baseY + Y;
-            // Trunk (all but the very top block which becomes a leaf tip)
-            if (Y < totalHeight - 1) {
-                setBlock(dim.getBlock({ x, y: yy, z }), logId);
-            } else {
-                // Top of trunk: leaf block (like SpruceTreeDefinition)
-                if (leafId) {
-                    const b = dim.getBlock({ x, y: yy, z });
-                    if (b && b.typeId === "minecraft:air") {
-                        try { b.setType(leafId); } catch (_) {}
-                    }
+        if (!leafId) return;
+
+        // ── Foliage — exact Java FoliagePlacer port ──────────────────────
+        // Java FoliagePlacer.placeLeavesRow(pos, radius, yOffset):
+        //   for dx in [-radius..radius], dz in [-radius..radius]:
+        //     if !shouldSkipLocation(abs(dx), yOffset, abs(dz), radius): place leaf
+        //
+        // The foliage attachment point is at trunk top (baseY + h - 1).
+        // Each foliage placer type has its own createFoliage + shouldSkipLocation.
+
+        const topY = baseY + h - 1; // Java: attachment.pos() = trunk top
+
+        // Determine foliage type from tree ID
+        const treeId = treeDef.id || "";
+        if (treeId === "cut_spruce") {
+            // Fossilized trees use CuttedSpruceTreeDefinition — no leaf canopy from placeTree
+            // (their build() handles the carpet leaves on the stump tops)
+            return;
+        }
+
+        // Match Java foliage placer per tree config
+        // Config reference from GaiaFeatures.java lines 83-95:
+        //   pink_agate:  CappedFoliagePlacer(radius=3, offset=1)
+        //   blue_agate:  SpruceFoliagePlacer(radius=2-3, offset=0-2, crownHeight=1-2)
+        //   green_agate: ThickFoliagePlacer(radius=3, offset=1)
+        //   purple_agate:BulbFoliagePlacer(radius=1, offset=1)
+        //   corrupted:   PineFoliagePlacer(radius=1, offset=1, crownHeight=3-4)
+        //   burnt/fire:  CappedFoliagePlacer(radius=2, offset=1)
+        //   aura:        CappedFoliagePlacer(radius=2, offset=1)
+        //   golden:      CubeFoliagePlacer(radius=1, offset=1)
+
+        const logName = logId.replace("gaiadimension:", "");
+
+        if (logName === "green_agate_log") {
+            // ThickFoliagePlacer(radius=3, offset=1) — 5 manual layers
+            const r = 3;
+            placeLeavesRowThick(dim, x, topY, z, r - 2, -4, leafId, random);
+            placeLeavesRowThick(dim, x, topY, z, r - 1, -3, leafId, random);
+            placeLeavesRowThick(dim, x, topY, z, r,     -2, leafId, random);
+            placeLeavesRowThick(dim, x, topY, z, r,     -1, leafId, random);
+            placeLeavesRowThick(dim, x, topY, z, r - 1,  0, leafId, random);
+        } else if (logName === "purple_agate_log") {
+            // BulbFoliagePlacer(radius=1, offset=1) — 3 layers
+            const r = 1;
+            for (let y = 1; y >= -1; y--) {
+                placeLeavesRowBulb(dim, x, topY, z, r, -y, leafId, random);
+            }
+        } else if (logName === "blue_agate_log") {
+            // SpruceFoliagePlacer(radius=2-3, offset=0-2, crownHeight=1-2)
+            // Vanilla SpruceFoliagePlacer creates layered conifer shape
+            const crownHeight = 1 + Math.floor(random.nextFloat() * 2); // 1-2
+            const foliageHeight = h - Math.floor(random.nextFloat() * 3); // h - (0..2)
+            let currentRadius = 0;
+            for (let y = foliageHeight; y >= 0; y--) {
+                const yOff = topY - (foliageHeight - y);
+                if (yOff < baseY) break;
+                placeLeavesRowCapped(dim, x, yOff, z, currentRadius, 0, leafId, random);
+                if (currentRadius >= 1 && y > 0 && y < crownHeight) {
+                    currentRadius--;
+                } else if (currentRadius < (2 + Math.floor(random.nextFloat() * 2))) {
+                    currentRadius++;
                 }
             }
-
-            // Radial foliage layers (original polar-coordinate algorithm)
-            // Leaves start at 'leafStart' height and get wider toward the bottom
-            if (leafId && Y >= leafStart) {
-                const max = totalHeight - Y + 1; // wider at bottom, narrower at top
-                for (let i = 0.5; i < max; i += 0.8) {
-                    const count = Math.floor(i * Math.PI);
-                    for (let j = 0; j < count; j++) {
-                        const distance = random.nextFloat() * i / 3 + 0.2;
-                        const rot = random.nextFloat() * Math.PI * 2;
-                        const lx = x + Math.floor(Math.sin(rot) * distance + 0.5);
-                        const lz = z + Math.floor(Math.cos(rot) * distance + 0.5);
-                        const leaf = dim.getBlock({ x: lx, y: yy, z: lz });
-                        if (leaf && leaf.typeId === "minecraft:air") {
-                            try { leaf.setType(leafId); } catch (_) {}
-                        }
-                    }
-                }
+        } else if (logName === "corrupted_log") {
+            // PineFoliagePlacer(radius=1, offset=1, crownHeight=3-4)
+            // Pine shape: narrow column with small radius
+            const crownH = 3 + Math.floor(random.nextFloat() * 2);
+            const r = 1;
+            for (let y = 0; y <= crownH; y++) {
+                const yOff = -y;
+                const layerRadius = (y === 0 || y === crownH) ? 0 : r;
+                placeLeavesRowDefault(dim, x, topY, z, layerRadius, yOff, leafId, random);
             }
+        } else if (logName === "golden_log") {
+            // CubeFoliagePlacer(radius=1, offset=1) — full cube, no skipping
+            const r = 1;
+            for (let y = r; y >= -r; y--) {
+                placeLeavesRowCube(dim, x, topY, z, r, -y, leafId);
+            }
+        } else {
+            // Default: CappedFoliagePlacer — pink_agate(r=3), burnt/fire(r=2), aura(r=2)
+            const r = (logName === "pink_agate_log") ? 3 : 2;
+            // CappedFoliagePlacer.createFoliage: 2 layers
+            // Layer 1 (bottom): placeLeavesRow(radius, -1) with capped shouldSkip
+            // Layer 2 (top):    placeLeavesRow(radius - 1, 0) with capped shouldSkip
+            placeLeavesRowCapped(dim, x, topY, z, r,     -1, leafId, random);
+            placeLeavesRowCapped(dim, x, topY, z, r - 1,  0, leafId, random);
         }
         yield;
+    }
+}
+
+// ── Java FoliagePlacer.placeLeavesRow ports ──────────────────────────────
+
+/** CappedFoliagePlacer.shouldSkipLocation — Java line 40-45 */
+function placeLeavesRowCapped(dim: Dimension, cx: number, cy: number, cz: number, radius: number, yOff: number, leafId: string, random: ProceduralRandom) {
+    const y = cy + yOff;
+    for (let dx = -radius; dx <= radius; dx++) {
+        for (let dz = -radius; dz <= radius; dz++) {
+            const ax = Math.abs(dx), az = Math.abs(dz);
+            // shouldSkipLocation for CappedFoliagePlacer:
+            // if yOff == 0 (top layer): skip if (x>1 || z>1) && x!=0 && z!=0
+            // else: skip if x==radius && z==radius && radius>0
+            if (yOff === 0) {
+                if ((ax > 1 || az > 1) && ax !== 0 && az !== 0) continue;
+            } else {
+                if (ax === radius && az === radius && radius > 0) continue;
+            }
+            setLeaf(dim, cx + dx, y, cz + dz, leafId);
+        }
+    }
+}
+
+/** ThickFoliagePlacer.shouldSkipLocation — Java line 44-51 */
+function placeLeavesRowThick(dim: Dimension, cx: number, cy: number, cz: number, radius: number, yOff: number, leafId: string, random: ProceduralRandom) {
+    const y = cy + yOff;
+    for (let dx = -radius; dx <= radius; dx++) {
+        for (let dz = -radius; dz <= radius; dz++) {
+            const ax = Math.abs(dx), az = Math.abs(dz);
+            if (yOff === 0) {
+                if ((ax > 1 || az > 1) && ax !== 0 && az !== 0) continue;
+            } else if (yOff <= -4) {
+                // no skip
+            } else {
+                if (ax === radius && az === radius && radius > 0) continue;
+            }
+            setLeaf(dim, cx + dx, y, cz + dz, leafId);
+        }
+    }
+}
+
+/** BulbFoliagePlacer.shouldSkipLocation — Java line 42-43 */
+function placeLeavesRowBulb(dim: Dimension, cx: number, cy: number, cz: number, radius: number, yOff: number, leafId: string, random: ProceduralRandom) {
+    const y = cy + yOff;
+    for (let dx = -radius; dx <= radius; dx++) {
+        for (let dz = -radius; dz <= radius; dz++) {
+            // skip if abs(x)==radius && abs(y)==radius && abs(z)==radius
+            // Note: in Java, 'y' param to shouldSkipLocation is the yOff, not world y
+            if (Math.abs(dx) === radius && Math.abs(yOff) === radius && Math.abs(dz) === radius) continue;
+            setLeaf(dim, cx + dx, y, cz + dz, leafId);
+        }
+    }
+}
+
+/** CubeFoliagePlacer.shouldSkipLocation — always false (full cube) */
+function placeLeavesRowCube(dim: Dimension, cx: number, cy: number, cz: number, radius: number, yOff: number, leafId: string) {
+    const y = cy + yOff;
+    for (let dx = -radius; dx <= radius; dx++) {
+        for (let dz = -radius; dz <= radius; dz++) {
+            setLeaf(dim, cx + dx, y, cz + dz, leafId);
+        }
+    }
+}
+
+/** Default vanilla shouldSkipLocation (used by PineFoliagePlacer etc) */
+function placeLeavesRowDefault(dim: Dimension, cx: number, cy: number, cz: number, radius: number, yOff: number, leafId: string, random: ProceduralRandom) {
+    const y = cy + yOff;
+    for (let dx = -radius; dx <= radius; dx++) {
+        for (let dz = -radius; dz <= radius; dz++) {
+            const ax = Math.abs(dx), az = Math.abs(dz);
+            if (ax === radius && az === radius && radius > 0) continue;
+            setLeaf(dim, cx + dx, y, cz + dz, leafId);
+        }
+    }
+}
+
+function setLeaf(dim: Dimension, x: number, y: number, z: number, leafId: string) {
+    const block = dim.getBlock({ x, y, z });
+    if (block && block.typeId === "minecraft:air") {
+        try { block.setType(leafId); } catch (_) {}
     }
 }
 

@@ -14298,43 +14298,115 @@ var ChunkGenerator = class _ChunkGenerator {
       setBlock(dim.getBlock({ x, y: baseY + i, z }), logId);
     }
     if (!leafId) return;
-    const topY = baseY + h;
-    const foliageLayers = Math.min(6, Math.max(3, Math.floor(h * 0.4)));
-    const maxRadius = h >= 10 ? 3 : 2;
-    setLeaf(dim, x, topY, z, leafId);
-    for (let ox = -1; ox <= 1; ox++) {
-      for (let oz = -1; oz <= 1; oz++) {
-        if (ox === 0 && oz === 0) continue;
-        if (Math.abs(ox) + Math.abs(oz) > 1 && random2.nextFloat() > 0.6) continue;
-        setLeaf(dim, x + ox, topY, z + oz, leafId);
-      }
+    const topY = baseY + h - 1;
+    const treeId = treeDef.id || "";
+    if (treeId === "cut_spruce") {
+      return;
     }
-    for (let layer = 0; layer < foliageLayers; layer++) {
-      const ly = topY - 1 - layer;
-      if (ly <= baseY) break;
-      let radius;
-      if (layer < foliageLayers - 1) {
-        radius = Math.min(maxRadius, 1 + Math.floor((layer + 1) * maxRadius / foliageLayers));
-      } else {
-        radius = Math.max(1, maxRadius - 1);
+    const logName = logId.replace("gaiadimension:", "");
+    if (logName === "green_agate_log") {
+      const r = 3;
+      placeLeavesRowThick(dim, x, topY, z, r - 2, -4, leafId, random2);
+      placeLeavesRowThick(dim, x, topY, z, r - 1, -3, leafId, random2);
+      placeLeavesRowThick(dim, x, topY, z, r, -2, leafId, random2);
+      placeLeavesRowThick(dim, x, topY, z, r, -1, leafId, random2);
+      placeLeavesRowThick(dim, x, topY, z, r - 1, 0, leafId, random2);
+    } else if (logName === "purple_agate_log") {
+      const r = 1;
+      for (let y = 1; y >= -1; y--) {
+        placeLeavesRowBulb(dim, x, topY, z, r, -y, leafId, random2);
       }
-      for (let ox = -radius; ox <= radius; ox++) {
-        for (let oz = -radius; oz <= radius; oz++) {
-          const dist = Math.abs(ox) + Math.abs(oz);
-          if (dist > radius + 1) continue;
-          if (Math.abs(ox) === radius && Math.abs(oz) === radius) {
-            if (random2.nextFloat() > 0.4) continue;
-          }
-          if (dist === radius + 1) {
-            if (random2.nextFloat() > 0.3) continue;
-          }
-          setLeaf(dim, x + ox, ly, z + oz, leafId);
+    } else if (logName === "blue_agate_log") {
+      const crownHeight = 1 + Math.floor(random2.nextFloat() * 2);
+      const foliageHeight = h - Math.floor(random2.nextFloat() * 3);
+      let currentRadius = 0;
+      for (let y = foliageHeight; y >= 0; y--) {
+        const yOff = topY - (foliageHeight - y);
+        if (yOff < baseY) break;
+        placeLeavesRowCapped(dim, x, yOff, z, currentRadius, 0, leafId, random2);
+        if (currentRadius >= 1 && y > 0 && y < crownHeight) {
+          currentRadius--;
+        } else if (currentRadius < 2 + Math.floor(random2.nextFloat() * 2)) {
+          currentRadius++;
         }
       }
+    } else if (logName === "corrupted_log") {
+      const crownH = 3 + Math.floor(random2.nextFloat() * 2);
+      const r = 1;
+      for (let y = 0; y <= crownH; y++) {
+        const yOff = -y;
+        const layerRadius = y === 0 || y === crownH ? 0 : r;
+        placeLeavesRowDefault(dim, x, topY, z, layerRadius, yOff, leafId, random2);
+      }
+    } else if (logName === "golden_log") {
+      const r = 1;
+      for (let y = r; y >= -r; y--) {
+        placeLeavesRowCube(dim, x, topY, z, r, -y, leafId);
+      }
+    } else {
+      const r = logName === "pink_agate_log" ? 3 : 2;
+      placeLeavesRowCapped(dim, x, topY, z, r, -1, leafId, random2);
+      placeLeavesRowCapped(dim, x, topY, z, r - 1, 0, leafId, random2);
     }
     yield;
   }
 };
+function placeLeavesRowCapped(dim, cx, cy, cz, radius, yOff, leafId, random2) {
+  const y = cy + yOff;
+  for (let dx = -radius; dx <= radius; dx++) {
+    for (let dz = -radius; dz <= radius; dz++) {
+      const ax = Math.abs(dx), az = Math.abs(dz);
+      if (yOff === 0) {
+        if ((ax > 1 || az > 1) && ax !== 0 && az !== 0) continue;
+      } else {
+        if (ax === radius && az === radius && radius > 0) continue;
+      }
+      setLeaf(dim, cx + dx, y, cz + dz, leafId);
+    }
+  }
+}
+function placeLeavesRowThick(dim, cx, cy, cz, radius, yOff, leafId, random2) {
+  const y = cy + yOff;
+  for (let dx = -radius; dx <= radius; dx++) {
+    for (let dz = -radius; dz <= radius; dz++) {
+      const ax = Math.abs(dx), az = Math.abs(dz);
+      if (yOff === 0) {
+        if ((ax > 1 || az > 1) && ax !== 0 && az !== 0) continue;
+      } else if (yOff <= -4) {
+      } else {
+        if (ax === radius && az === radius && radius > 0) continue;
+      }
+      setLeaf(dim, cx + dx, y, cz + dz, leafId);
+    }
+  }
+}
+function placeLeavesRowBulb(dim, cx, cy, cz, radius, yOff, leafId, random2) {
+  const y = cy + yOff;
+  for (let dx = -radius; dx <= radius; dx++) {
+    for (let dz = -radius; dz <= radius; dz++) {
+      if (Math.abs(dx) === radius && Math.abs(yOff) === radius && Math.abs(dz) === radius) continue;
+      setLeaf(dim, cx + dx, y, cz + dz, leafId);
+    }
+  }
+}
+function placeLeavesRowCube(dim, cx, cy, cz, radius, yOff, leafId) {
+  const y = cy + yOff;
+  for (let dx = -radius; dx <= radius; dx++) {
+    for (let dz = -radius; dz <= radius; dz++) {
+      setLeaf(dim, cx + dx, y, cz + dz, leafId);
+    }
+  }
+}
+function placeLeavesRowDefault(dim, cx, cy, cz, radius, yOff, leafId, random2) {
+  const y = cy + yOff;
+  for (let dx = -radius; dx <= radius; dx++) {
+    for (let dz = -radius; dz <= radius; dz++) {
+      const ax = Math.abs(dx), az = Math.abs(dz);
+      if (ax === radius && az === radius && radius > 0) continue;
+      setLeaf(dim, cx + dx, y, cz + dz, leafId);
+    }
+  }
+}
 function setLeaf(dim, x, y, z, leafId) {
   const block = dim.getBlock({ x, y, z });
   if (block && block.typeId === "minecraft:air") {
