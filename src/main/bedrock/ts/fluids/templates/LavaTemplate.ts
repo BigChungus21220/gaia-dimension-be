@@ -2,15 +2,15 @@ import { FluidInteraction, FluidTemplate } from "../lib/FluidTemplate.js";
 import { generateFluidIDs } from "../lib/utils.js";
 import { FogManager } from "../lib/FogManager.js";
 import { Player, Entity, Dimension, Block, system } from "@minecraft/server";
-import { MotionEngine } from "../../API/MotionEngine.js";
-
 export class LavaTemplate extends FluidTemplate {
     private _ids: string[];
-    private playerState: Map<string, { head: boolean, fovSet: boolean }> = new Map();
+    private _idsSet: Set<string>;
+    private playerState: Map<string, { head: boolean }> = new Map();
 
     constructor(baseName: string) {
         super();
         this._ids = generateFluidIDs(baseName);
+        this._idsSet = new Set(this._ids);
     }
 
     get fluidIDs(): string[] {
@@ -36,21 +36,21 @@ export class LavaTemplate extends FluidTemplate {
             {
                 targetBlock: ["minecraft:water", "minecraft:flowing_water"],
                 action: "transformSelf",
-                resultBlock: "gaiadimension:primal_mass",
+                resultBlock: "pu_bn:fragile_magma",
                 directions: "adjacent",
                 sound: "random.fizz"
             },
             {
                 targetBlock: ["minecraft:water", "minecraft:flowing_water"],
                 action: "transformTarget",
-                resultBlock: "gaiadimension:primal_mass",
+                resultBlock: "pu_bn:fragile_magma",
                 directions: "below",
                 sound: "random.fizz"
             },
             {
                 targetBlock: ["minecraft:water", "minecraft:flowing_water"],
                 action: "transformSelf",
-                resultBlock: "gaiadimension:primal_mass",
+                resultBlock: "pu_bn:fragile_magma",
                 directions: "below",
                 sound: "random.fizz"
             }
@@ -58,57 +58,50 @@ export class LavaTemplate extends FluidTemplate {
     }
 
     onPlayerTick(player: Player, block: Block, isHeadInside: boolean, isFeetInside: boolean): void {
-        const prevState = this.playerState.get(player.id) || { head: false, fovSet: false };
+        const prevState = this.playerState.get(player.id) || { head: false };
 
-        // 1. Motion Engine Physics & Slowness
-        let gravityVal = 9.8;
-        let slownessLevel = 0;
+        // Depth-based gravity scaling
+        let gravityScale = 1.0;  // base gravity is 0.02 → effective 0.02 (vanilla lava parity)
         let amplifier = 0;
-        
+
         if (isHeadInside) {
-            gravityVal = 0.5;
-            slownessLevel = 10;
+            gravityScale = 0.6;  // Submerged: slow sinking (effective 0.012)
             amplifier = 2;
-        }
-        else if (isFeetInside) {
-            // Check waist depth
-            const blockMid = player.dimension.getBlock({ x: player.location.x, y: player.location.y + 0.8, z: player.location.z });
-            if (blockMid && this._ids.includes(blockMid.typeId)) {
-                gravityVal = 2.0; // Waist deep
-                slownessLevel = 8;
+
+        } else if (isFeetInside) {
+            const loc = player.location;
+            const resolver = FluidTemplate.blockResolver;
+            const midBlock = resolver
+                ? resolver(player.dimension, loc.x, loc.y + 0.8, loc.z)
+                : player.dimension.getBlock({ x: loc.x, y: loc.y + 0.8, z: loc.z });
+            if (midBlock && this._idsSet.has(midBlock.typeId)) {
+                gravityScale = 1.0;  // Waist deep (effective 0.02)
                 amplifier = 1;
+
             } else {
-                gravityVal = 5.0; // Ankle deep
-                slownessLevel = 6;
+                gravityScale = 1.6;  // Ankle deep (effective 0.032)
                 amplifier = 0;
+
             }
         }
 
         if (player.isSneaking) {
-            gravityVal = Math.max(0.2, gravityVal - 1.0);
-            slownessLevel = Math.min(15, slownessLevel + 2);
+            gravityScale = Math.max(0.2, gravityScale - 0.4);
             amplifier = Math.min(2, amplifier + 1);
+
         }
 
         if (isHeadInside || isFeetInside) {
-            MotionEngine.tickPlayer(player, gravityVal, 0.1, 25.0, true);
-            
-            // Apply slowness to physically restrict movement/sprint
-            player.addEffect("slowness", 5, { amplifier: slownessLevel, showParticles: false });
-            
-            // Normal fluid effects
-            player.addEffect("slow_falling", 4, { amplifier: amplifier, showParticles: false });
-            if ((player as any).isJumping) {
-                player.addEffect("levitation", 3, { amplifier: 2, showParticles: false });
-            }
+            // Java lava: drag = 0.5 (much more viscous than water's 0.8)
+            FluidTemplate.physicsStates.set(player.id, {
+                player,
+                drag: 0.5,
+                acceleration: 0.02,
+                gravityScale,
+                canSprint: false,
+            });
 
-            // Counteract FOV zoom (30% per level)
-            const fovAdjustment = Math.min(170, 70 + (slownessLevel * 21)); 
-            player.runCommand(`camera @s set minecraft:first_person fov ${fovAdjustment}`);
-            prevState.fovSet = true;
-        } else if (prevState.fovSet) {
-            player.runCommand("camera @s clear");
-            prevState.fovSet = false;
+            // All movement handled by MotionEngine — no effects needed.
         }
 
         // Heat Damage
@@ -120,12 +113,12 @@ export class LavaTemplate extends FluidTemplate {
         // Fog Logic
         const userFogId = "fluid_fog";
         if (isHeadInside) {
-            FogManager.pushFog(player, "gaiadimension:liquid_magma_fog", userFogId);
+            FogManager.pushFog(player, "pu_bn:liquid_magma_fog", userFogId);
         } else if (prevState.head) {
             FogManager.popFog(player, userFogId);
         }
 
-        this.playerState.set(player.id, { head: isHeadInside, fovSet: prevState.fovSet });
+        this.playerState.set(player.id, { head: isHeadInside });
     }
 
     onEntityTick(entity: Entity, block: Block): void {
@@ -134,6 +127,7 @@ export class LavaTemplate extends FluidTemplate {
             entity.setOnFire(5, true);
             return;
         }
+
 
         entity.setOnFire(10, true);
         if (system.currentTick % 20 === 0) {

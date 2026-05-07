@@ -1,5 +1,5 @@
 // src/main/bedrock/ts/GaiaDimensionAddon.ts
-import { system as system45 } from "@minecraft/server";
+import { system as system44 } from "@minecraft/server";
 
 // src/main/bedrock/ts/blocks/leaves.ts
 import { system } from "@minecraft/server";
@@ -5573,10 +5573,12 @@ function initializeScriptEvents() {
 }
 
 // src/main/bedrock/ts/fluids/fluids.ts
-import { world as world27, system as system30, BlockPermutation as BlockPermutation12, ItemStack as ItemStack12, BlockVolume as BlockVolume3, Player as Player16, GameMode as GameMode8 } from "@minecraft/server";
+import { world as world27, system as system29, BlockPermutation as BlockPermutation12, ItemStack as ItemStack12, BlockVolume as BlockVolume3, Player as Player15, GameMode as GameMode8 } from "@minecraft/server";
 
 // src/main/bedrock/ts/fluids/lib/FluidTemplate.ts
 var FluidTemplate = class {
+  static blockResolver;
+  static physicsStates = /* @__PURE__ */ new Map();
   /**
    * The amount the level decreases for each horizontal block spread.
    */
@@ -5605,11 +5607,7 @@ function generateFluidIDs(baseName) {
     baseName + "_down",
     baseName + "1",
     baseName + "2",
-    baseName + "3",
-    baseName + "4",
-    baseName + "5",
-    baseName + "6",
-    baseName + "7"
+    baseName + "3"
   ];
 }
 
@@ -5630,129 +5628,15 @@ var FogManager = class {
 };
 
 // src/main/bedrock/ts/fluids/templates/LavaTemplate.ts
-import { system as system29 } from "@minecraft/server";
-
-// src/main/bedrock/ts/API/MotionEngine.ts
 import { system as system28 } from "@minecraft/server";
-var Geo = new class {
-  distance(vector1, vector2) {
-    return Math.sqrt(Math.abs(vector1.x - vector2.x) ** 2 + Math.abs(vector1.y - vector2.y) ** 2 + Math.abs(vector1.z - vector2.z) ** 2);
-  }
-  getDirection3D(vector1, vector2) {
-    let dist = this.distance(vector1, vector2) || 1;
-    return {
-      x: (vector2.x - vector1.x) / dist,
-      y: (vector2.y - vector1.y) / dist,
-      z: (vector2.z - vector1.z) / dist
-    };
-  }
-  rotate(offset, angle, axis = ["x", "z"]) {
-    const [primaryAxis, secondaryAxis] = axis;
-    const flatOffset = {
-      [primaryAxis]: offset[primaryAxis] ?? 0,
-      [secondaryAxis]: offset[secondaryAxis] ?? 0
-    };
-    let offsetDir = this.getDirection3D({ x: 0, y: 0, z: 0 }, sumObjects({}, flatOffset));
-    let offsetDist = this.distance({ x: 0, y: 0, z: 0 }, sumObjects({}, flatOffset));
-    angle += Math.acos(offsetDir[primaryAxis]) * 57.2958 * (offsetDir[secondaryAxis] < 0 ? -1 : 1);
-    let direction = {
-      [primaryAxis]: Math.cos(angle / 57.2958),
-      [secondaryAxis]: Math.sin(angle / 57.2958)
-    };
-    return sumObjects({}, direction, offsetDist);
-  }
-}();
-function sumObjects(vector1, vector2, multi = 1) {
-  return {
-    x: (vector1.x || 0) + (vector2.x || 0) * multi,
-    y: (vector1.y || 0) + (vector2.y || 0) * multi,
-    z: (vector1.z || 0) + (vector2.z || 0) * multi
-  };
-}
-function getXZVelocity(player, forceZeroSprint = false) {
-  let vector = { x: 0, z: 0 };
-  const input = player.inputInfo.getMovementVector();
-  const strafeInput = input.y;
-  const forwardInput = -input.x;
-  vector = sumObjects(vector, Geo.rotate({ x: strafeInput, z: forwardInput }, player.getRotation().y + 90));
-  const speedModifier = (player.getEffect("speed")?.amplifier ?? -1) + 1 - ((player.getEffect("slowness")?.amplifier ?? -1) + 1);
-  const baseSpeed = forceZeroSprint ? 0.37 : 0.37 + (player.isSprinting ? 0.13 : 0) + speedModifier / 10;
-  vector = sumObjects({}, vector, baseSpeed);
-  return vector;
-}
-var MotionEngine = class {
-  static tickPlayer(player, gravityValue, speedMultiplier = 1, resistance = 5, forceZeroSprint = false, viscosity = 0) {
-    const p = player;
-    if (player.isOnGround) {
-      if (p.fallingVelocity > 0.5 && !player.getEffect("slow_falling")) {
-        let damage = (p.fallingVelocity * 2) ** 1.7;
-        if (damage >= 1) player.applyDamage(damage, { cause: "fall" });
-      }
-      p.fallVelocity = 0;
-      p.fallingVelocity = 0;
-      p.onGroundTick = system28.currentTick;
-    }
-    if (p.isJumping && p.onGroundTick >= system28.currentTick - 1) {
-      if (viscosity < 5) {
-        p.fallVelocity -= 0.2 * 9.8 / ((gravityValue + 9.8 * 0.2) / 1.2) + ((player.getEffect("jump_boost")?.amplifier ?? -1) + 1) / 10;
-      } else {
-        p.fallVelocity = 0.05;
-      }
-    }
-    if (player.isOnGround && viscosity === 0 || player.isFlying || player.isGliding) {
-      p.fallVelocity = 0;
-      p.fallingTime = 0;
-      p.savedXZ = void 0;
-      return;
-    }
-    p.fallVelocity = p.fallVelocity || 0;
-    p.fallingTime = (p.fallingTime || 0) + 1;
-    if (viscosity > 0) {
-      const sinkSpeed = 5e-3 * viscosity;
-      p.fallVelocity = p.fallVelocity * 0.5 + sinkSpeed * 0.5;
-    } else {
-      p.fallVelocity += (9.8 * 1.5 + gravityValue) / 2.5 / Math.min(300, 190 + p.fallingTime * (9.8 - gravityValue));
-    }
-    let xz = getXZVelocity(player, forceZeroSprint || viscosity > 5);
-    const effectiveMultiplier = speedMultiplier / (1 + viscosity);
-    xz.x *= effectiveMultiplier;
-    xz.z *= effectiveMultiplier;
-    p.savedXZ = sumObjects({}, sumObjects(xz, p.savedXZ || xz, resistance), 1 / (resistance + 1));
-    xz = p.savedXZ;
-    const xzPower = Geo.distance({ x: 0, y: 0, z: 0 }, xz);
-    const xzDir = Geo.getDirection3D({ x: 0, y: 0, z: 0 }, xz);
-    if (player.isOnGround && p.fallVelocity < 0) p.fallVelocity = 0;
-    if (player.dimension.heightRange.min <= player.location.y || player.dimension.heightRange.max - 2 >= player.location.y) {
-      let above = player.dimension.getBlockFromRay(player.getHeadLocation(), { x: 0, y: 1, z: 0 }, { maxDistance: 1 });
-      if (above && !above.block.isAir && !above.block.isLiquid && p.fallVelocity < 0) p.fallVelocity = 0;
-      const locations = [sumObjects(player.location, { y: 0.55 }), player.getHeadLocation()];
-      if (locations.map((loc) => player.dimension.getBlockFromRay(loc, xzDir)).some((ray2, index) => {
-        if (ray2 == void 0) return false;
-        if (Geo.distance(sumObjects(ray2.faceLocation, ray2.block.location), locations[index]) < 0.6 && !ray2.block.isAir) return true;
-      })) {
-        xz = { x: 0, z: 0 };
-        p.savedXZ = xz;
-      }
-    }
-    if (p.fallVelocity != 0) player.applyKnockback({ x: 0, z: 0 }, 0);
-    player.applyKnockback({ x: xzDir.x * xzPower, z: xzDir.z * xzPower }, -p.fallVelocity);
-    let ray = player.dimension.getBlockFromRay(player.location, { x: 0, y: -1, z: 0 });
-    if (ray != void 0) {
-      let distance = player.location.y - sumObjects(ray.block.location, ray.faceLocation).y;
-      p.distance = distance;
-      if (distance < -player.getVelocity().y * 3) player.addEffect("slow_falling", 5, { amplifier: 0, showParticles: false });
-    }
-    p.fallingVelocity = p.fallVelocity / 2;
-  }
-};
-
-// src/main/bedrock/ts/fluids/templates/LavaTemplate.ts
 var LavaTemplate = class extends FluidTemplate {
   _ids;
+  _idsSet;
   playerState = /* @__PURE__ */ new Map();
   constructor(baseName) {
     super();
     this._ids = generateFluidIDs(baseName);
+    this._idsSet = new Set(this._ids);
   }
   get fluidIDs() {
     return this._ids;
@@ -5771,77 +5655,69 @@ var LavaTemplate = class extends FluidTemplate {
       {
         targetBlock: ["minecraft:water", "minecraft:flowing_water"],
         action: "transformSelf",
-        resultBlock: "gaiadimension:primal_mass",
+        resultBlock: "pu_bn:fragile_magma",
         directions: "adjacent",
         sound: "random.fizz"
       },
       {
         targetBlock: ["minecraft:water", "minecraft:flowing_water"],
         action: "transformTarget",
-        resultBlock: "gaiadimension:primal_mass",
+        resultBlock: "pu_bn:fragile_magma",
         directions: "below",
         sound: "random.fizz"
       },
       {
         targetBlock: ["minecraft:water", "minecraft:flowing_water"],
         action: "transformSelf",
-        resultBlock: "gaiadimension:primal_mass",
+        resultBlock: "pu_bn:fragile_magma",
         directions: "below",
         sound: "random.fizz"
       }
     ];
   }
   onPlayerTick(player, block, isHeadInside, isFeetInside) {
-    const prevState = this.playerState.get(player.id) || { head: false, fovSet: false };
-    let gravityVal = 9.8;
-    let slownessLevel = 0;
+    const prevState = this.playerState.get(player.id) || { head: false };
+    let gravityScale = 1;
     let amplifier = 0;
     if (isHeadInside) {
-      gravityVal = 0.5;
-      slownessLevel = 10;
+      gravityScale = 0.6;
       amplifier = 2;
     } else if (isFeetInside) {
-      const blockMid = player.dimension.getBlock({ x: player.location.x, y: player.location.y + 0.8, z: player.location.z });
-      if (blockMid && this._ids.includes(blockMid.typeId)) {
-        gravityVal = 2;
-        slownessLevel = 8;
+      const loc = player.location;
+      const resolver = FluidTemplate.blockResolver;
+      const midBlock = resolver ? resolver(player.dimension, loc.x, loc.y + 0.8, loc.z) : player.dimension.getBlock({ x: loc.x, y: loc.y + 0.8, z: loc.z });
+      if (midBlock && this._idsSet.has(midBlock.typeId)) {
+        gravityScale = 1;
         amplifier = 1;
       } else {
-        gravityVal = 5;
-        slownessLevel = 6;
+        gravityScale = 1.6;
         amplifier = 0;
       }
     }
     if (player.isSneaking) {
-      gravityVal = Math.max(0.2, gravityVal - 1);
-      slownessLevel = Math.min(15, slownessLevel + 2);
+      gravityScale = Math.max(0.2, gravityScale - 0.4);
       amplifier = Math.min(2, amplifier + 1);
     }
     if (isHeadInside || isFeetInside) {
-      MotionEngine.tickPlayer(player, gravityVal, 0.1, 25, true);
-      player.addEffect("slowness", 5, { amplifier: slownessLevel, showParticles: false });
-      player.addEffect("slow_falling", 4, { amplifier, showParticles: false });
-      if (player.isJumping) {
-        player.addEffect("levitation", 3, { amplifier: 2, showParticles: false });
-      }
-      const fovAdjustment = Math.min(170, 70 + slownessLevel * 21);
-      player.runCommand(`camera @s set minecraft:first_person fov ${fovAdjustment}`);
-      prevState.fovSet = true;
-    } else if (prevState.fovSet) {
-      player.runCommand("camera @s clear");
-      prevState.fovSet = false;
+      FluidTemplate.physicsStates.set(player.id, {
+        player,
+        drag: 0.5,
+        acceleration: 0.02,
+        gravityScale,
+        canSprint: false
+      });
     }
     player.setOnFire(10, true);
-    if (system29.currentTick % 20 === 0) {
+    if (system28.currentTick % 20 === 0) {
       player.applyDamage(4, { cause: "lava" });
     }
     const userFogId = "fluid_fog";
     if (isHeadInside) {
-      FogManager.pushFog(player, "gaiadimension:liquid_magma_fog", userFogId);
+      FogManager.pushFog(player, "pu_bn:liquid_magma_fog", userFogId);
     } else if (prevState.head) {
       FogManager.popFog(player, userFogId);
     }
-    this.playerState.set(player.id, { head: isHeadInside, fovSet: prevState.fovSet });
+    this.playerState.set(player.id, { head: isHeadInside });
   }
   onEntityTick(entity, block) {
     if (entity.typeId === "minecraft:item") {
@@ -5849,7 +5725,7 @@ var LavaTemplate = class extends FluidTemplate {
       return;
     }
     entity.setOnFire(10, true);
-    if (system29.currentTick % 20 === 0) {
+    if (system28.currentTick % 20 === 0) {
       entity.applyDamage(4, { cause: "lava" });
     }
     entity.addEffect("slow_falling", 4, { amplifier: 1, showParticles: false });
@@ -5861,12 +5737,14 @@ var LavaTemplate = class extends FluidTemplate {
 // src/main/bedrock/ts/fluids/templates/WaterTemplate.ts
 var WaterTemplate = class extends FluidTemplate {
   _ids;
+  _idsSet;
   config;
   playerState = /* @__PURE__ */ new Map();
   constructor(config) {
     super();
     this.config = config;
     this._ids = generateFluidIDs(config.baseName);
+    this._idsSet = new Set(this._ids);
   }
   get fluidIDs() {
     return this._ids;
@@ -5884,56 +5762,48 @@ var WaterTemplate = class extends FluidTemplate {
     return this.config.interactions || [];
   }
   onPlayerTick(player, block, isHeadInside, isFeetInside) {
-    const prevState = this.playerState.get(player.id) || { head: false, feet: false, fovSet: false };
-    let gravityVal = 9.8;
-    let slownessLevel = 0;
+    const prevState = this.playerState.get(player.id) || { head: false, feet: false };
+    let gravityScale = 1;
     let amplifier = 0;
-    let viscosity = 0;
-    if (this.config.viscosity !== void 0 && this.config.viscosity > 1) {
-      viscosity = this.config.viscosity;
-      gravityVal = 0.5;
-      slownessLevel = Math.min(10, viscosity);
+    if (this.config.viscosity !== void 0) {
+      gravityScale = this.config.viscosity / 2;
       amplifier = 2;
     } else {
       if (isHeadInside) {
-        gravityVal = 0.5;
-        slownessLevel = 4;
+        gravityScale = 1;
         amplifier = 2;
       } else if (isFeetInside) {
-        const blockMid = player.dimension.getBlock({ x: player.location.x, y: player.location.y + 0.8, z: player.location.z });
-        if (blockMid && this._ids.includes(blockMid.typeId)) {
-          gravityVal = 2;
-          slownessLevel = 3;
+        const loc = player.location;
+        const resolver = FluidTemplate.blockResolver;
+        const midBlock = resolver ? resolver(player.dimension, loc.x, loc.y + 0.8, loc.z) : player.dimension.getBlock({ x: loc.x, y: loc.y + 0.8, z: loc.z });
+        if (midBlock && this._idsSet.has(midBlock.typeId)) {
+          gravityScale = 2;
           amplifier = 1;
         } else {
-          gravityVal = 5;
-          slownessLevel = 2;
+          gravityScale = 3;
           amplifier = 0;
         }
       }
-    }
-    if (player.isSneaking) {
-      gravityVal = Math.max(0.2, gravityVal - 1);
-      slownessLevel = Math.min(6, slownessLevel + 1);
-      amplifier = Math.min(2, amplifier + 1);
-    }
-    if (isHeadInside || isFeetInside) {
-      MotionEngine.tickPlayer(player, gravityVal, 0.2, 15, true, viscosity);
-      player.addEffect("slowness", 5, { amplifier: slownessLevel, showParticles: false });
-      player.addEffect("slow_falling", 4, { amplifier, showParticles: false });
-      if (player.isJumping && viscosity < 5) {
-        player.addEffect("levitation", 3, { amplifier: 2, showParticles: false });
+      if (player.isSneaking) {
+        gravityScale = Math.max(0.2, gravityScale - 0.6);
+        amplifier = Math.min(2, amplifier + 1);
       }
-      const fovAdjustment = Math.min(170, 70 + slownessLevel * 21);
-      player.runCommand(`camera @s set minecraft:first_person fov ${fovAdjustment}`);
-      prevState.fovSet = true;
-    } else if (prevState.fovSet) {
-      player.runCommand("camera @s clear");
-      prevState.fovSet = false;
+    }
+    const baseDrag = this.config.stickiness ? Math.max(0.3, 0.8 - this.config.stickiness * 0.1) : 0.8;
+    if (isHeadInside || isFeetInside) {
+      FluidTemplate.physicsStates.set(player.id, {
+        player,
+        drag: baseDrag,
+        acceleration: 0.02,
+        gravityScale,
+        canSprint: !this.config.stickiness
+      });
     }
     const userFogId = "fluid_fog";
     if (isHeadInside) {
-      if (this.config.fogId) FogManager.pushFog(player, this.config.fogId, userFogId);
+      if (this.config.fogId) {
+        FogManager.pushFog(player, this.config.fogId, userFogId);
+      }
     } else if (prevState.head) {
       FogManager.popFog(player, userFogId);
     }
@@ -5944,28 +5814,42 @@ var WaterTemplate = class extends FluidTemplate {
       player.playSound("ambient.underwater.exit", { volume: 0.5, pitch: 1 });
       player.runCommand("stopsound @s ambient.underwater.loop");
     }
-    this.playerState.set(player.id, { head: isHeadInside, feet: isFeetInside, fovSet: prevState.fovSet });
+    this.playerState.set(player.id, { head: isHeadInside, feet: isFeetInside });
   }
   processBoat(boat, dimension, isDeep) {
     if (!this.config.hasBoatPhysics) return;
-    if (isDeep) boat.applyImpulse({ x: 0, y: 0.2, z: 0 });
+    if (isDeep) {
+      boat.applyImpulse({ x: 0, y: 0.2, z: 0 });
+    }
     const rotation = boat.getRotation().y;
     const dirX = -Math.sin(rotation * (Math.PI / 180));
     const dirZ = Math.cos(rotation * (Math.PI / 180));
     const vel = boat.getVelocity();
     const speed = Math.sqrt(vel.x * vel.x + vel.z * vel.z);
-    if (speed > 0.01) boat.applyImpulse({ x: dirX * 0.15, y: 0, z: dirZ * 0.15 });
+    if (speed > 0.01) {
+      boat.applyImpulse({ x: dirX * 0.15, y: 0, z: dirZ * 0.15 });
+    }
     this.manageBoatHolder(boat, dimension);
   }
   manageBoatHolder(boat, dimension) {
     const location = boat.location;
-    const holders = dimension.getEntities({ type: "gaiadimension:boat_holder", location, maxDistance: 2 });
+    const holders = dimension.getEntities({
+      type: "pu_bn:boat_holder",
+      location,
+      maxDistance: 2
+    });
     let holder = holders.length > 0 ? holders[0] : null;
-    const targetHolderY = Math.floor(location.y) + 1 - 0.55;
-    if (!holder) holder = dimension.spawnEntity("gaiadimension:boat_holder", { x: location.x, y: targetHolderY, z: location.z });
+    let waterTopY = Math.floor(location.y) + 1;
+    const targetHolderY = waterTopY - 0.55;
+    if (!holder) {
+      holder = dimension.spawnEntity("pu_bn:boat_holder", { x: location.x, y: targetHolderY, z: location.z });
+    }
     if (holder && holder.isValid) {
       try {
-        holder.teleport({ x: location.x, y: targetHolderY, z: location.z }, { dimension, rotation: { x: 0, y: boat.getRotation().y } });
+        holder.teleport(
+          { x: location.x, y: targetHolderY, z: location.z },
+          { dimension, rotation: { x: 0, y: boat.getRotation().y } }
+        );
       } catch {
       }
     }
@@ -6043,7 +5927,7 @@ var DEADZONE = 3e-3;
 var MAX_H_SPEED = 0.45;
 var MAX_H_SPEED_SPRINT = 0.6;
 var MAX_V_SPEED = 2;
-var MotionEngine2 = class {
+var MotionEngine = class {
   /**
    * Java-parity fluid physics tick.
    *
@@ -6219,7 +6103,7 @@ var MotionEngine2 = class {
     });
   }
 };
-var Geo2 = new class {
+var Geo = new class {
   distance(v1, v2) {
     return Math.sqrt((v1.x - v2.x) ** 2 + (v1.y - v2.y) ** 2 + (v1.z - v2.z) ** 2);
   }
@@ -6230,14 +6114,14 @@ var Geo2 = new class {
   rotate(offset, angle, axis = ["x", "z"]) {
     const [pa, sa] = axis;
     const flat = { [pa]: offset[pa] ?? 0, [sa]: offset[sa] ?? 0 };
-    let dir = this.getDirection3D({ x: 0, y: 0, z: 0 }, sumObjects2({}, flat));
-    let dist = this.distance({ x: 0, y: 0, z: 0 }, sumObjects2({}, flat));
+    let dir = this.getDirection3D({ x: 0, y: 0, z: 0 }, sumObjects({}, flat));
+    let dist = this.distance({ x: 0, y: 0, z: 0 }, sumObjects({}, flat));
     angle += Math.acos(dir[pa]) * 57.2958 * ((dir[sa] ?? 0) < 0 ? -1 : 1);
     let d = { [pa]: Math.cos(angle / 57.2958), [sa]: Math.sin(angle / 57.2958) };
-    return sumObjects2({}, d, dist);
+    return sumObjects({}, d, dist);
   }
 }();
-function sumObjects2(v1, v2, multi = 1) {
+function sumObjects(v1, v2, multi = 1) {
   return {
     x: (v1.x || 0) + (v2.x || 0) * multi,
     y: (v1.y || 0) + (v2.y || 0) * multi,
@@ -6358,12 +6242,12 @@ var playerInteractionDummies = /* @__PURE__ */ new Map();
 var PENDING_BLOCKS = /* @__PURE__ */ new Map();
 var taskIndex = 0;
 var DIRECTIONS = [
-  { x: 0, y: 0, z: -1, name: "north", straight: 1 },
-  { x: 0, y: 0, z: 1, name: "south", straight: 5 },
-  { x: 1, y: 0, z: 0, name: "east", straight: 3 },
-  { x: -1, y: 0, z: 0, name: "west", straight: 7 }
+  { x: 0, y: 0, z: -1 },
+  { x: 0, y: 0, z: 1 },
+  { x: 1, y: 0, z: 0 },
+  { x: -1, y: 0, z: 0 }
 ];
-system30.runInterval(() => {
+system29.runInterval(() => {
   blockCache.clear();
   const start = Date.now();
   const players = world27.getAllPlayers();
@@ -6384,7 +6268,7 @@ system30.runInterval(() => {
   taskIndex++;
 }, 1);
 var _fluidPosTrack = /* @__PURE__ */ new Map();
-system30.runInterval(() => {
+system29.runInterval(() => {
   for (const state of FluidTemplate.physicsStates.values()) {
     try {
       if (!state.player.isValid) {
@@ -6410,7 +6294,7 @@ system30.runInterval(() => {
         p._walkExcessX = 0;
         p._walkExcessZ = 0;
       }
-      MotionEngine2.tickPlayer(
+      MotionEngine.tickPlayer(
         player,
         state.drag,
         state.acceleration,
@@ -6483,7 +6367,7 @@ function runFluidInteractionDummies(players) {
 }
 function runFluidFlowLogic(startTime) {
   if (PENDING_BLOCKS.size === 0) return;
-  const currentTick = system30.currentTick;
+  const currentTick = system29.currentTick;
   const iterator = PENDING_BLOCKS.entries();
   let processedCount = 0;
   const MAX_PER_TICK = 50;
@@ -6573,35 +6457,32 @@ function isReplaceable(blk) {
   }
   return false;
 }
-function findClosestSlope(dimension, startLoc, searchDist, baseId) {
-  const queue = [{ loc: startLoc, dist: 0 }];
+function getSlopeDistance(dimension, x, y, z, maxDistance, baseId) {
   const visited = /* @__PURE__ */ new Set();
-  const foundSlopes = [];
-  let minDist = 999;
-  while (queue.length > 0) {
-    const { loc, dist } = queue.shift();
-    if (dist > searchDist) continue;
-    if (dist > minDist) break;
+  const qX = [x], qZ = [z], qD = [0];
+  let head = 0, tail = 1;
+  const KEY_MUL = 200003;
+  visited.add(x * KEY_MUL + z);
+  while (head < tail) {
+    const cx = qX[head], cz = qZ[head], d = qD[head++];
+    if (d >= maxDistance) continue;
     for (const dir of DIRECTIONS) {
-      const next = { x: loc.x + dir.x, y: loc.y, z: loc.z + dir.z };
-      const key = `${next.x},${next.y},${next.z}`;
+      const nx = cx + dir.x, nz = cz + dir.z;
+      const key = nx * KEY_MUL + nz;
       if (visited.has(key)) continue;
       visited.add(key);
-      const block = getCachedBlock(dimension, next.x, next.y, next.z);
-      if (!block) continue;
-      const below = getCachedBlock(dimension, next.x, next.y - 1, next.z);
-      if (below && isReplaceable(below)) {
-        if (dist + 1 < minDist) {
-          minDist = dist + 1;
-          foundSlopes.length = 0;
-        }
-        if (dist + 1 === minDist) foundSlopes.push({ x: next.x, y: next.y, z: next.z });
-      } else if (isReplaceable(block)) {
-        queue.push({ loc: next, dist: dist + 1 });
-      }
+      const neighbor = getCachedBlock(dimension, nx, y, nz);
+      if (!neighbor) continue;
+      const isSameFluid = neighbor.typeId.startsWith(baseId);
+      if (!isSameFluid && !isReplaceable(neighbor)) continue;
+      const below = getCachedBlock(dimension, nx, y - 1, nz);
+      if (below && isReplaceable(below)) return d;
+      qX[tail] = nx;
+      qZ[tail] = nz;
+      qD[tail++] = d + 1;
     }
   }
-  return foundSlopes;
+  return 999;
 }
 function processFluidBlock(block, dimension) {
   const typeId = block.typeId;
@@ -6640,22 +6521,58 @@ function processFluidBlock(block, dimension) {
       }
     }
   }
+  let requiredParentTag = "";
+  if (currentStage === 1) requiredParentTag = "template_full";
+  else if (currentStage === 2) requiredParentTag = "template1";
+  else if (currentStage === 3) requiredParentTag = "template2";
+  if (currentStage > 0) {
+    const above = getCachedBlock(dimension, block.location.x, block.location.y + 1, block.location.z);
+    if (above) {
+      const aboveId = above.typeId;
+      const isAboveDown = aboveId === baseId + "_down";
+      const isAboveHalf = aboveId === baseId + "1" || aboveId === baseId + "2" || aboveId === baseId + "3";
+      if (isAboveDown || isAboveHalf) {
+        if (block.isValid) {
+          dimension.fillBlocks(new BlockVolume3(block.location, block.location), BlockPermutation12.resolve(baseId + "_down"));
+          changesHappened = true;
+        }
+        return changesHappened;
+      }
+    }
+  }
   if (currentStage > 0) {
     let hasParent = false;
-    const parentTag = currentStage === 1 ? "template" : `template${currentStage - 1}`;
     for (const dir of DIRECTIONS) {
-      const neighbor = getCachedBlock(dimension, block.x + dir.x, block.y, block.z + dir.z);
-      if (neighbor && (neighbor.typeId === baseId || neighbor.hasTag(parentTag))) {
+      const neighbor = getCachedBlock(dimension, block.location.x + dir.x, block.location.y, block.location.z + dir.z);
+      if (neighbor && neighbor.hasTag(requiredParentTag)) {
         hasParent = true;
         break;
       }
     }
     if (!hasParent) {
-      const above = getCachedBlock(dimension, block.x, block.y + 1, block.z);
-      if (!(above && (above.typeId === baseId || above.typeId === baseId + "_down"))) {
+      if (block.isValid) {
         dimension.fillBlocks(new BlockVolume3(block.location, block.location), "minecraft:air");
-        return true;
+        changesHappened = true;
       }
+      return changesHappened;
+    }
+  } else if (currentStage === -1) {
+    const above = getCachedBlock(dimension, block.location.x, block.location.y + 1, block.location.z);
+    if (!above) {
+      if (block.isValid) {
+        dimension.fillBlocks(new BlockVolume3(block.location, block.location), "minecraft:air");
+        changesHappened = true;
+      }
+      return changesHappened;
+    }
+    const aboveId = above.typeId;
+    const validAbove = [baseId, baseId + "_down", baseId + "1", baseId + "2", baseId + "3"];
+    if (!validAbove.includes(aboveId)) {
+      if (block.isValid) {
+        dimension.fillBlocks(new BlockVolume3(block.location, block.location), "minecraft:air");
+        changesHappened = true;
+      }
+      return changesHappened;
     }
   }
   if (currentStage <= 0) {
@@ -6689,32 +6606,47 @@ function processFluidBlock(block, dimension) {
     flowedDown = true;
     changesHappened = true;
   } else if (below && (below.typeId === baseId + "_down" || below.typeId === baseId)) flowedDown = true;
-  const maxStages = 7;
-  const canSpread = currentStage === 0 || currentStage === -1 && !flowedDown || currentStage > 0 && currentStage < maxStages;
+  const maxStages = 3;
+  const canSpread = currentStage === 0 || currentStage === -1 && !flowedDown || currentStage > 0 && !flowedDown && currentStage < maxStages;
   if (canSpread) {
-    const nextStageNum = currentStage <= 0 ? 1 : currentStage + 1;
-    const nextId = baseId + nextStageNum;
-    const searchDist = template?.slopeFindDistance ?? 4;
-    const slopes = findClosestSlope(dimension, block.location, searchDist, baseId);
-    for (const dir of DIRECTIONS) {
-      const neighbor = getCachedBlock(dimension, block.x + dir.x, block.y, block.z + dir.z);
+    if (!template) return changesHappened;
+    const nextStageId = currentStage === 0 || currentStage === -1 ? baseId + "1" : baseId + (currentStage + 1).toString();
+    const maxSearch = template.slopeFindDistance;
+    let minDistance = 999;
+    const distances = [];
+    for (let i = 0; i < DIRECTIONS.length; i++) {
+      const dir = DIRECTIONS[i];
+      const dist = getSlopeDistance(dimension, block.location.x + dir.x, block.location.y, block.location.z + dir.z, maxSearch, baseId);
+      distances[i] = dist;
+      if (dist < minDistance) minDistance = dist;
+    }
+    for (let i = 0; i < DIRECTIONS.length; i++) {
+      const dir = DIRECTIONS[i];
+      if (minDistance < 999 && distances[i] > minDistance) continue;
+      const nx = block.x + dir.x, ny = block.y, nz = block.z + dir.z;
+      const neighbor = getCachedBlock(dimension, nx, ny, nz);
       if (neighbor) {
-        let shouldFlow = slopes.length === 0;
-        if (slopes.length > 0) {
-          const distToSlope = (s) => Math.abs(s.x - (block.x + dir.x)) + Math.abs(s.z - (block.z + dir.z));
-          shouldFlow = slopes.some((s) => distToSlope(s) < Math.abs(s.x - block.x) + Math.abs(s.z - block.z));
-        }
-        if (shouldFlow) {
-          let canOverwrite = false;
-          if (isReplaceable(neighbor)) canOverwrite = true;
-          else if (neighbor.typeId.startsWith(baseId)) {
-            const nInfo = getTypeInfo(neighbor.typeId);
-            if (nInfo.stage > 0 && nextStageNum < nInfo.stage) canOverwrite = true;
+        let canOverwrite = false;
+        if (isReplaceable(neighbor)) {
+          canOverwrite = true;
+        } else if (neighbor.typeId.startsWith(baseId)) {
+          const nInfo = getTypeInfo(neighbor.typeId);
+          const neighborStage = nInfo.stage;
+          const nextStageNum = currentStage <= 0 ? 1 : currentStage + 1;
+          if (neighborStage > 0 && nextStageNum < neighborStage) {
+            canOverwrite = true;
           }
-          if (canOverwrite) {
-            const perm = BlockPermutation12.resolve(nextId, { "gaiadimension:flow_dir": dir.straight });
+        }
+        if (canOverwrite) {
+          if (neighbor.isValid) {
+            let dirState = 0;
+            if (dir.z === -1) dirState = 1;
+            else if (dir.x === 1) dirState = 7;
+            else if (dir.z === 1) dirState = 5;
+            else if (dir.x === -1) dirState = 3;
+            const perm = BlockPermutation12.resolve(nextStageId, { "gaiadimension:flow_dir": dirState });
             dimension.fillBlocks(new BlockVolume3(neighbor.location, neighbor.location), perm);
-            PENDING_BLOCKS.set(`${neighbor.x},${neighbor.y},${neighbor.z},${dimension.id}`, { block: neighbor, dimension, scheduledTick: system30.currentTick + (template?.spreadDelay ?? 5) });
+            PENDING_BLOCKS.set(`${neighbor.x},${neighbor.y},${neighbor.z},${dimension.id}`, { block: neighbor, dimension, scheduledTick: system29.currentTick + (template?.spreadDelay ?? 5) });
             changesHappened = true;
           }
         }
@@ -6722,34 +6654,45 @@ function processFluidBlock(block, dimension) {
     }
   }
   if (currentStage > 0) {
-    let flowX = 0, flowZ = 0;
+    let flowX = 0;
+    let flowZ = 0;
     for (const dir of DIRECTIONS) {
-      const nb = getCachedBlock(dimension, block.x + dir.x, block.y, block.z + dir.z);
-      let nLevel = 999;
-      if (nb && isReplaceable(nb) && !fluidIDs.has(nb.typeId)) nLevel = 99;
-      else if (nb && nb.typeId.startsWith(baseId)) {
-        const nInfo = getTypeInfo(nb.typeId);
+      const neighbor = getCachedBlock(dimension, block.x + dir.x, block.y, block.z + dir.z);
+      if (!neighbor) continue;
+      let nLevel = -999;
+      if (neighbor.typeId.startsWith(baseId)) {
+        const nInfo = getTypeInfo(neighbor.typeId);
         nLevel = nInfo.stage === -1 ? 0 : nInfo.stage;
+      } else {
+        const below2 = getCachedBlock(dimension, neighbor.x, neighbor.y - 1, neighbor.z);
+        if (isReplaceable(neighbor) && below2 && isReplaceable(below2)) {
+          nLevel = 99;
+        } else {
+          continue;
+        }
       }
       if (nLevel < currentStage) {
-        flowX += dir.x;
-        flowZ += dir.z;
-      } else if (nLevel > currentStage) {
         flowX -= dir.x;
         flowZ -= dir.z;
+      } else if (nLevel > currentStage) {
+        flowX += dir.x;
+        flowZ += dir.z;
       }
     }
     flowX = flowX > 0 ? 1 : flowX < 0 ? -1 : 0;
     flowZ = flowZ > 0 ? 1 : flowZ < 0 ? -1 : 0;
-    let dirState = 5;
-    if (flowX === 0 && flowZ === -1) dirState = 1;
-    else if (flowX === 1 && flowZ === -1) dirState = 2;
-    else if (flowX === 1 && flowZ === 0) dirState = 3;
-    else if (flowX === 1 && flowZ === 1) dirState = 4;
+    let dirState;
+    if (flowX === 0 && flowZ === 0) {
+      dirState = block.permutation.getAllStates()["gaiadimension:flow_dir"] ?? 0;
+    } else if (flowX === 0 && flowZ === -1) dirState = 1;
+    else if (flowX === -1 && flowZ === -1) dirState = 2;
+    else if (flowX === -1 && flowZ === 0) dirState = 3;
+    else if (flowX === -1 && flowZ === 1) dirState = 4;
     else if (flowX === 0 && flowZ === 1) dirState = 5;
-    else if (flowX === -1 && flowZ === 1) dirState = 6;
-    else if (flowX === -1 && flowZ === 0) dirState = 7;
-    else if (flowX === -1 && flowZ === -1) dirState = 8;
+    else if (flowX === 1 && flowZ === 1) dirState = 6;
+    else if (flowX === 1 && flowZ === 0) dirState = 7;
+    else if (flowX === 1 && flowZ === -1) dirState = 8;
+    else dirState = 0;
     const perms = block.permutation.getAllStates();
     if (perms["gaiadimension:flow_dir"] !== dirState) {
       perms["gaiadimension:flow_dir"] = dirState;
@@ -6776,7 +6719,7 @@ var FluidFlowComponent = class {
       const info = getTypeInfo(block.typeId);
       const template = idToTemplate.get(info.baseId);
       if (template) delay2 = template.spreadDelay;
-      PENDING_BLOCKS.set(key, { block, dimension: block.dimension, scheduledTick: system30.currentTick + delay2 });
+      PENDING_BLOCKS.set(key, { block, dimension: block.dimension, scheduledTick: system29.currentTick + delay2 });
     }
   }
 };
@@ -6789,7 +6732,7 @@ function wakeNeighbors(location, dimension) {
   const template = idToTemplate.get(info.baseId);
   if (template) delay2 = template.spreadDelay;
   const locations = [{ x: 0, y: 1, z: 0 }, { x: 0, y: -1, z: 0 }, { x: 1, y: 0, z: 0 }, { x: -1, y: 0, z: 0 }, { x: 0, y: 0, z: 1 }, { x: 0, y: 0, z: -1 }];
-  const scheduledTick = system30.currentTick + delay2;
+  const scheduledTick = system29.currentTick + delay2;
   for (const offset of locations) {
     const nx = x + offset.x, ny = y + offset.y, nz = z + offset.z;
     const key = `${nx},${ny},${nz},${dimension.id}`;
@@ -6808,7 +6751,7 @@ world27.beforeEvents.playerInteractWithBlock.subscribe((event) => {
   const isFlowingVariant = (blk) => blk.typeId.startsWith(fluidId) && (blk.typeId.endsWith("_down") || /\d+$/.test(blk.typeId));
   if (isFlowingVariant(block)) {
     event.cancel = true;
-    system30.run(() => {
+    system29.run(() => {
       if (block.isValid) {
         block.setPermutation(BlockPermutation12.resolve(fluidId));
         wakeNeighbors(block.location, block.dimension);
@@ -6837,7 +6780,7 @@ world27.beforeEvents.playerInteractWithBlock.subscribe((event) => {
 });
 world27.afterEvents.playerInteractWithEntity.subscribe((event) => {
   const { player, target, itemStack } = event;
-  if (target.typeId !== "gaiadimension:fluid_interaction_dummy" || !(player instanceof Player16)) return;
+  if (target.typeId !== "gaiadimension:fluid_interaction_dummy" || !(player instanceof Player15)) return;
   const dimension = player.dimension;
   const location = { x: Math.floor(target.location.x), y: Math.floor(target.location.y), z: Math.floor(target.location.z) };
   const fluidBlock = getCachedBlock(dimension, location.x, location.y, location.z);
@@ -6916,7 +6859,7 @@ world27.afterEvents.playerInteractWithEntity.subscribe((event) => {
     }
   }
 });
-system30.runInterval(() => {
+system29.runInterval(() => {
   for (const player of world27.getAllPlayers()) {
     const container2 = player.getComponent("inventory")?.container;
     if (!container2) continue;
@@ -6950,9 +6893,9 @@ function registerFluidComponent({ blockComponentRegistry }) {
 }
 
 // src/main/bedrock/ts/durability.ts
-import { system as system31 } from "@minecraft/server";
+import { system as system30 } from "@minecraft/server";
 function registerCustomTool() {
-  system31.beforeEvents.startup.subscribe((event) => {
+  system30.beforeEvents.startup.subscribe((event) => {
     event.itemComponentRegistry.registerCustomComponent("luminiae:durability", {
       onUseOn(e, params) {
         const { source, itemStack, block } = e;
@@ -6993,7 +6936,7 @@ function applyCustomDamage(player, itemStack, damageAmount) {
 }
 
 // src/main/bedrock/ts/systems/Commands.ts
-import { Player as Player18, system as system32, CommandPermissionLevel, CustomCommandParamType } from "@minecraft/server";
+import { Player as Player17, system as system31, CommandPermissionLevel, CustomCommandParamType } from "@minecraft/server";
 import { ModalFormData as ModalFormData2 } from "@minecraft/server-ui";
 
 // src/main/bedrock/ts/Vec3.ts
@@ -7285,8 +7228,8 @@ function registerGaiaCommands(registry) {
     ]
   }, (origin, p1, p2, p3, p4, p5, p6, p7, p8) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player18)) return;
-    system32.run(() => {
+    if (!(player instanceof Player17)) return;
+    system31.run(() => {
       try {
         const expression = [p1, p2, p3, p4, p5, p6, p7, p8].filter((p) => p !== void 0).join(" ");
         if (!expression) {
@@ -7345,8 +7288,8 @@ function registerGaiaCommands(registry) {
     ]
   }, (origin, p1, p2, p3, p4, p5, p6, p7, p8) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player18)) return;
-    system32.run(() => {
+    if (!(player instanceof Player17)) return;
+    system31.run(() => {
       try {
         const expression = [p1, p2, p3, p4, p5, p6, p7, p8].filter((p) => p !== void 0).join(" ");
         if (!expression) {
@@ -7400,8 +7343,8 @@ function registerGaiaCommands(registry) {
     ]
   }, (origin, op, target, path, v1, v2, v3, v4, v5) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player18)) return;
-    system32.run(() => {
+    if (!(player instanceof Player17)) return;
+    system31.run(() => {
       try {
         const operation = op ? op.toLowerCase() : "get";
         const targetType = target ? target.toLowerCase() : "self";
@@ -7506,8 +7449,8 @@ function registerGaiaCommands(registry) {
     permissionLevel: CommandPermissionLevel.Any
   }, (origin) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player18)) return;
-    system32.run(() => {
+    if (!(player instanceof Player17)) return;
+    system31.run(() => {
       player.sendMessage("\xA78\xA7l========================================");
       player.sendMessage("\xA76\xA7lGAIA DIMENSION BEDROCK PORT");
       player.sendMessage("\xA77Basked under an eternal sun, a world preserved in time, a land sprouting with crystals and minerals, the ground seeping a mysterious energy.");
@@ -7524,8 +7467,8 @@ function registerGaiaCommands(registry) {
     permissionLevel: CommandPermissionLevel.Any
   }, (origin) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player18)) return;
-    system32.run(() => {
+    if (!(player instanceof Player17)) return;
+    system31.run(() => {
       const inGaia = DimensionSystem.isInGaia(player);
       const dimId = player.dimension.id;
       let dimensionName = "\xA77" + dimId;
@@ -7548,8 +7491,8 @@ function registerGaiaCommands(registry) {
     permissionLevel: CommandPermissionLevel.Any
   }, (origin) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player18)) return;
-    system32.run(() => {
+    if (!(player instanceof Player17)) return;
+    system31.run(() => {
       const inGaia = DimensionSystem.isInGaia(player);
       const dimId = player.dimension.id;
       let dimensionName = "\xA77" + dimId;
@@ -7577,8 +7520,8 @@ function registerGaiaCommands(registry) {
     permissionLevel: CommandPermissionLevel.Any
   }, (origin) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player18)) return;
-    system32.run(() => {
+    if (!(player instanceof Player17)) return;
+    system31.run(() => {
       player.sendMessage("\xA7d[Gaia Creator] \xA77She's the primordial architect who birthed the original Java realm. If you see crystals, thank her. If you see bugs, it's definitely the porter's fault.");
       player.sendMessage("\xA7b\u{1F517} https://www.curseforge.com/minecraft/mc-mods/gaia-dimension");
     });
@@ -7590,8 +7533,8 @@ function registerGaiaCommands(registry) {
     permissionLevel: CommandPermissionLevel.GameDirectors
   }, (origin) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player18)) return;
-    system32.run(() => {
+    if (!(player instanceof Player17)) return;
+    system31.run(() => {
       const currentConfig = ModConfig.getAll();
       const form = new ModalFormData2();
       form.title("\xA76Gaia Settings");
@@ -7633,8 +7576,8 @@ function registerGaiaCommands(registry) {
     permissionLevel: CommandPermissionLevel.Any
   }, (origin) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player18)) return;
-    system32.run(() => {
+    if (!(player instanceof Player17)) return;
+    system31.run(() => {
       player.sendMessage("\xA76[The Porter] \xA77Behold the one who dragged this entire dimension into Bedrock by its crystal ears.");
       player.sendMessage("\xA7eIt only took 4 years, three gray hairs, and a questionable amount of sanity. Don't ask why it took so long... those gray hairs are just Albite dust, I promise.");
     });
@@ -7646,7 +7589,7 @@ function formatName(id) {
 }
 
 // src/main/bedrock/ts/systems/SetBiomeCommand.ts
-import { Player as Player19, system as system33, CommandPermissionLevel as CommandPermissionLevel2, CustomCommandParamType as CustomCommandParamType2 } from "@minecraft/server";
+import { Player as Player18, system as system32, CommandPermissionLevel as CommandPermissionLevel2, CustomCommandParamType as CustomCommandParamType2 } from "@minecraft/server";
 
 // src/main/bedrock/ts/config/biome_visuals.ts
 var BIOME_VISUALS = {
@@ -7837,7 +7780,7 @@ function registerSetBiomeCommand(registry) {
     ]
   }, (origin, biome, radiusStr, shape, epic) => {
     const player = origin.sourceEntity;
-    if (!(player instanceof Player19)) return;
+    if (!(player instanceof Player18)) return;
     if (!biome || !radiusStr) {
       player.sendMessage('\xA7cUsage: /gaiadimension:setbiome "biome" "radius" ["shape"] ["epic"]');
       return { status: 0 };
@@ -7900,7 +7843,7 @@ function registerSetBiomeCommand(registry) {
       }
     };
     if (!isEpic) {
-      system33.run(() => {
+      system32.run(() => {
         for (let x = -radius; x <= radius; x++) {
           for (let z = -radius; z <= radius; z++) {
             const dist = Math.sqrt(x * x + z * z);
@@ -7913,7 +7856,7 @@ function registerSetBiomeCommand(registry) {
       });
     } else {
       let currentRadius = 0;
-      const interval = system33.runInterval(() => {
+      const interval = system32.runInterval(() => {
         const r = currentRadius;
         for (let theta = 0; theta < 360; theta += 2) {
           const rad = theta * Math.PI / 180;
@@ -7928,7 +7871,7 @@ function registerSetBiomeCommand(registry) {
         }
         currentRadius++;
         if (currentRadius > radius) {
-          system33.clearRun(interval);
+          system32.clearRun(interval);
           dim.playSound("ui.toast.challenge_complete", center);
           player.sendMessage("\xA76[Gaia] \xA7aTransformation Complete.");
         }
@@ -7939,12 +7882,12 @@ function registerSetBiomeCommand(registry) {
 }
 
 // src/main/bedrock/ts/items/FireStarter.ts
-import { Player as Player20 } from "@minecraft/server";
+import { Player as Player19 } from "@minecraft/server";
 function registerFireStarterComponent({ itemComponentRegistry }) {
   itemComponentRegistry.registerCustomComponent("gaiadimension:fire_starter", {
     onUseOn: (event) => {
       const { source: player, block, blockFace, itemStack } = event;
-      if (!(player instanceof Player20)) return;
+      if (!(player instanceof Player19)) return;
       const targetLocation = block.location;
       const placeLocation = {
         x: targetLocation.x + (blockFace === "East" ? 1 : blockFace === "West" ? -1 : 0),
@@ -7988,12 +7931,12 @@ function registerFireStarterComponent({ itemComponentRegistry }) {
 }
 
 // src/main/bedrock/ts/items/MagicStaff.ts
-import { Player as Player21 } from "@minecraft/server";
+import { Player as Player20 } from "@minecraft/server";
 function registerMagicStaffComponent({ itemComponentRegistry }) {
   itemComponentRegistry.registerCustomComponent("gaiadimension:magic_staff", {
     onUse: (event) => {
       const { source: player, itemStack } = event;
-      if (!(player instanceof Player21)) return;
+      if (!(player instanceof Player20)) return;
       const idParts = itemStack.typeId.split("_");
       if (idParts.length < 4) return;
       const elementStr = idParts[2];
@@ -8051,7 +7994,7 @@ function spawnProjectile(player, location, direction, element, behavior) {
 }
 
 // src/main/bedrock/ts/systems/MagicStaffBehaviors.ts
-import { world as world30, system as system34, MolangVariableMap } from "@minecraft/server";
+import { world as world30, system as system33, MolangVariableMap } from "@minecraft/server";
 var projectileCache = /* @__PURE__ */ new Map();
 var activeProjectiles = /* @__PURE__ */ new Set();
 var ELEMENT_COLORS = {
@@ -8069,7 +8012,7 @@ function initializeMagicStaffBehaviors() {
       activeProjectiles.add(event.entity.id);
     }
   });
-  system34.runInterval(() => {
+  system33.runInterval(() => {
     if (activeProjectiles.size === 0) return;
     for (const id of activeProjectiles) {
       const entity = world30.getEntity(id);
@@ -8092,7 +8035,7 @@ function initializeMagicStaffBehaviors() {
         activeProjectiles.delete(id);
       }
     }
-    if (system34.currentTick % 200 === 0) {
+    if (system33.currentTick % 200 === 0) {
       for (const id of projectileCache.keys()) {
         if (!activeProjectiles.has(id) && !world30.getEntity(id)) {
           projectileCache.delete(id);
@@ -8191,7 +8134,7 @@ function handleHit(projectile, data, location, face) {
 }
 
 // src/main/bedrock/ts/blocks/GlitterGrassSync.ts
-import { world as world31, system as system35, ItemStack as ItemStack14 } from "@minecraft/server";
+import { world as world31, system as system34, ItemStack as ItemStack14 } from "@minecraft/server";
 var GLITTER_GRASS_TYPES = [
   "gaiadimension:green_glitter_grass",
   "gaiadimension:pink_glitter_grass",
@@ -8231,7 +8174,7 @@ function initializeGlitterGrassSync() {
       const biome = DimensionSystem.getBiomeAt(block.dimension, block.location);
       const targetGrassId = BIOME_TO_GRASS[biome];
       if (targetGrassId && block.typeId !== targetGrassId) {
-        system35.run(() => {
+        system34.run(() => {
           if (block.isValid) {
             block.setType(targetGrassId);
           }
@@ -8239,7 +8182,7 @@ function initializeGlitterGrassSync() {
       }
     }
   });
-  system35.runInterval(() => {
+  system34.runInterval(() => {
     for (const player of world31.getAllPlayers()) {
       if (DimensionSystem.isInGaia(player)) {
         syncInventory(player);
@@ -13138,14 +13081,14 @@ var NativeEvent = class extends PublicEvent {
 };
 
 // src/main/bedrock/ts/world/worldgen/core/utils/functions.ts
-import { system as system36 } from "@minecraft/server";
-var delay = system36.waitTicks.bind(system36);
+import { system as system35 } from "@minecraft/server";
+var delay = system35.waitTicks.bind(system35);
 
 // src/main/bedrock/ts/world/worldgen/core/client/index.ts
 import { world as world35 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/worldgen/core/client/local-chunks.ts
-import { system as system37 } from "@minecraft/server";
+import { system as system36 } from "@minecraft/server";
 var CLIENT_CHUNKS = /* @__PURE__ */ new WeakMap();
 var MAX_RETRIES = 3;
 var ClientChunk = class {
@@ -13180,7 +13123,7 @@ var ClientChunk = class {
     return `${loc.x};${loc.z}`;
   }
   start() {
-    this.id = system37.runInterval(() => {
+    this.id = system36.runInterval(() => {
       try {
         this._tick();
       } catch (e) {
@@ -13189,7 +13132,7 @@ var ClientChunk = class {
     });
   }
   stop() {
-    if (this.isRunning && this.id !== void 0) system37.clearRun(this.id);
+    if (this.isRunning && this.id !== void 0) system36.clearRun(this.id);
   }
   _tick() {
     if (this.player.dimension.id !== "gaiadimension:gaia_dimension") return;
@@ -13227,7 +13170,7 @@ var ClientChunk = class {
       this.activeJobs++;
       gen.buildChunk(entry.x, entry.z, entry.key).then((success) => {
         if (!success && entry.retries < MAX_RETRIES) {
-          system37.runTimeout(() => {
+          system36.runTimeout(() => {
             if (!gen.isGenerated(entry.key) && !this.queuedChunks.has(entry.key)) {
               this.queuedChunks.add(entry.key);
               this.chunkQueue.push({ ...entry, retries: entry.retries + 1 });
@@ -13242,13 +13185,13 @@ var ClientChunk = class {
 };
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/index.ts
-import { world as world34, system as system41 } from "@minecraft/server";
+import { world as world34, system as system40 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/session-manager.ts
 import { world as world33 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/generator.ts
-import { system as system39 } from "@minecraft/server";
+import { system as system38 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/gaia-layers.ts
 var BIOME_IDS = {
@@ -13507,7 +13450,6 @@ function buildGaiaLayers(worldSeed) {
   for (let i = 1e3; i <= 1005; i++) biomes = zoomLayer(biomes, worldSeed + i, false);
   let river = riverLayer(biomes, worldSeed + 1);
   river = smoothLayer(river, worldSeed + 1e3);
-  river = smoothLayer(river, worldSeed + 1001);
   biomes = smoothLayer(biomes, worldSeed + 1e3);
   biomes = riverMixLayer(biomes, river, worldSeed + 100);
   biomes = oceanMixLayer(biomes, ocean, worldSeed + 100);
@@ -13813,7 +13755,7 @@ var BiomeDefinition = class {
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/generator.ts
 var SEA_LEVEL = 63;
-var ENTRY = -64;
+var ENTRY = 0;
 var STONE_DEPTH = 10;
 var SOIL_DEPTH = 4;
 function setBlock(block, type2) {
@@ -13827,7 +13769,7 @@ function setBlock(block, type2) {
   }
   return true;
 }
-var ChunkGenerator = class {
+var ChunkGenerator = class _ChunkGenerator {
   seaLevel = SEA_LEVEL;
   entry = ENTRY;
   manager;
@@ -13836,6 +13778,16 @@ var ChunkGenerator = class {
   range;
   seed;
   isGenerating = /* @__PURE__ */ new Set();
+  // Java Edition 5x5 Parabolic Biome Weight Matrix
+  static biomeWeights = [];
+  static {
+    for (let rx = -2; rx <= 2; ++rx) {
+      for (let rz = -2; rz <= 2; ++rz) {
+        const weight = 10 / Math.sqrt(rx * rx + rz * rz + 0.2);
+        _ChunkGenerator.biomeWeights[rx + 2 + (rz + 2) * 5] = weight;
+      }
+    }
+  }
   // Noise layers for terrain shape
   base;
   spikes;
@@ -13903,11 +13855,38 @@ var ChunkGenerator = class {
     const height = (s * 2.5 * (0.8 + k) + b * Math.max(0, 0.5 + k) * 8 + o * (0.8 + k)) * (waterProp / 2 + 0.5) + waterProp * 3.5;
     return height;
   }
+  /**
+   * 1:1 Java port of GaiaTerrainWarp.fillNoiseColumn lines 61-86.
+   * Computes terrain height using the 5x5 parabolic biome weight matrix
+   * with the exact depth/scale blending formula.
+   */
   getHeight(x, z) {
     const raw = this.getTerrainHeight(x, z);
-    const biome = this.getBiomeAt(x, z);
-    const h = raw * 10 * (1 + biome.scale) + biome.depth * 40 + ENTRY;
-    return Math.max(Math.floor(h), SEA_LEVEL + 1);
+    const centerBiome = this.getBiomeAt(x, z);
+    const centerDepth = centerBiome.depth;
+    let scaleSum = 0;
+    let depthSum = 0;
+    let weightSum = 0;
+    for (let rx = -2; rx <= 2; rx++) {
+      for (let rz = -2; rz <= 2; rz++) {
+        const b = this.getBiomeAt(x + rx * 4, z + rz * 4);
+        const offD = b.depth;
+        const offS = b.scale;
+        const depthPenalty = offD > centerDepth ? 0.5 : 1;
+        const w = depthPenalty * _ChunkGenerator.biomeWeights[rx + 2 + (rz + 2) * 5] / (offD + 2);
+        scaleSum += offS * w;
+        depthSum += offD * w;
+        weightSum += w;
+      }
+    }
+    const avgDepth = depthSum / weightSum;
+    const avgScale = scaleSum / weightSum;
+    const depthOffset = (avgDepth * 0.5 - 0.125) * 0.265625;
+    const scaleFactor = 96 / (avgScale * 0.9 + 0.1);
+    let terrain = Math.floor(SEA_LEVEL + depthOffset * scaleFactor + raw * 10 * (avgScale * 0.9 + 0.1));
+    if (isNaN(terrain) || !isFinite(terrain)) terrain = SEA_LEVEL;
+    terrain = Math.max(this.range.min, Math.min(this.range.max - 1, terrain));
+    return terrain;
   }
   buildChunk(X, Z, hash) {
     if (this.isGenerating.has(hash)) return Promise.resolve(true);
@@ -13915,7 +13894,7 @@ var ChunkGenerator = class {
     this.isGenerating.add(hash);
     return new Promise((resolve) => {
       const failRef = { count: 0 };
-      system39.runJob(this.generate(X, Z, failRef, () => {
+      system38.runJob(this.generate(X, Z, failRef, () => {
         this.isGenerating.delete(hash);
         if (failRef.count === 0) {
           this.setGenerated(hash);
@@ -13942,26 +13921,36 @@ var ChunkGenerator = class {
     const worldX = X * 16, worldZ = Z * 16;
     const placedTrees = [];
     try {
+      const CELL = 4;
+      const CELLS_X = 16 / CELL;
+      const CELLS_Z = 16 / CELL;
+      const corners = [];
+      for (let cx = 0; cx <= CELLS_X; cx++) {
+        corners[cx] = [];
+        for (let cz = 0; cz <= CELLS_Z; cz++) {
+          corners[cx][cz] = this.getHeight(worldX + cx * CELL, worldZ + cz * CELL);
+        }
+      }
       for (let x = 0; x < 16; x++) {
         for (let z = 0; z < 16; z++) {
           const xx = worldX + x, zz = worldZ + z;
           const jitterX = Math.round(this.spikes.GetNoise(xx * 2, zz * 2) * 5);
           const jitterZ = Math.round(this.spikes.GetNoise(xx * 2 + 1e3, zz * 2 + 1e3) * 5);
           const biome = this.getBiomeAt(xx + jitterX, zz + jitterZ);
-          const rawH = this.getTerrainHeight(xx, zz);
-          const BLEND_R = 4;
-          const b0 = this.getBiomeAt(xx, zz);
-          const b1 = this.getBiomeAt(xx + BLEND_R, zz);
-          const b2 = this.getBiomeAt(xx, zz + BLEND_R);
-          const b3 = this.getBiomeAt(xx - BLEND_R, zz);
-          const b4 = this.getBiomeAt(xx, zz - BLEND_R);
-          const avgDepth = (b0.depth + b1.depth + b2.depth + b3.depth + b4.depth) / 5;
-          const avgScale = (b0.scale + b1.scale + b2.scale + b3.scale + b4.scale) / 5;
-          let terrain = Math.floor(rawH * 10 * (1 + avgScale) + avgDepth * 40 + ENTRY);
+          const cellX = Math.floor(x / CELL);
+          const cellZ = Math.floor(z / CELL);
+          const fracX = (x - cellX * CELL) / CELL;
+          const fracZ = (z - cellZ * CELL) / CELL;
+          const h00 = corners[cellX][cellZ];
+          const h10 = corners[cellX + 1][cellZ];
+          const h01 = corners[cellX][cellZ + 1];
+          const h11 = corners[cellX + 1][cellZ + 1];
+          let terrain = Math.floor(h00 + (h10 - h00) * fracX + (h01 - h00) * fracZ + (h00 - h10 - h01 + h11) * fracX * fracZ);
           if (isNaN(terrain) || !isFinite(terrain)) terrain = ENTRY;
           terrain = Math.max(this.range.min, Math.min(this.range.max - 1, terrain));
           const groundId = biome.groundPaletted?.permutations?.[0] ?? "gaiadimension:crystal_plains_glitter_grass";
           const underId = biome.underGroundPaletted?.permutations?.[0] ?? "gaiadimension:heavy_soil";
+          const isUnderwater = terrain < SEA_LEVEL;
           const stoneStart = Math.max(this.range.min, terrain - (STONE_DEPTH + SOIL_DEPTH));
           for (let y = stoneStart; y < terrain - SOIL_DEPTH; y++) {
             if (!setBlock(dim.getBlock({ x: xx, y, z: zz }), "gaiadimension:gaia_stone")) failRef.count++;
@@ -13969,20 +13958,16 @@ var ChunkGenerator = class {
           for (let y = terrain - SOIL_DEPTH; y < terrain; y++) {
             if (!setBlock(dim.getBlock({ x: xx, y, z: zz }), underId)) failRef.count++;
           }
-          const isUnderwater = terrain < this.seaLevel;
           try {
             const surfaceBlock = dim.getBlock({ x: xx, y: terrain, z: zz });
             if (surfaceBlock) {
-              if (isUnderwater && groundId.includes("grass")) {
-                surfaceBlock.setType(underId);
-              } else {
-                surfaceBlock.setType(groundId);
-              }
+              if (isUnderwater && groundId.includes("grass")) surfaceBlock.setType(underId);
+              else surfaceBlock.setType(groundId);
             }
           } catch (_) {
           }
           if (isUnderwater) {
-            for (let y = terrain + 1; y <= this.seaLevel; y++) {
+            for (let y = terrain + 1; y <= SEA_LEVEL; y++) {
               const waterBlock = dim.getBlock({ x: xx, y, z: zz });
               if (waterBlock) {
                 try {
@@ -14080,7 +14065,7 @@ var ChunkGenerator = class {
 };
 
 // src/main/bedrock/ts/world/worldgen/core/definitions/definition-manager.ts
-import { world as world32, system as system40 } from "@minecraft/server";
+import { world as world32, system as system39 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/worldgen/core/definitions/biome-manager.ts
 var BiomeManager = class {
@@ -14147,7 +14132,7 @@ var DefinitionManager = class {
     this.biomeManager = new BiomeManager(this, new BiomeDefinition("gaiadimension:crystal_plains"));
     this.__precalculated = true;
     this.__precalculatedSamples = 15;
-    system40.run(() => {
+    system39.run(() => {
       this.__precalculated = world32.getDynamicProperty("property-precalculated") ?? true;
       this.__precalculatedSamples = world32.getDynamicProperty("property-precalculated-sampling") ?? 15;
       if (this.__precalculatedSamples > 50) this.__precalculatedSamples = 50;
@@ -14174,7 +14159,7 @@ var DefinitionManager = class {
     return world32.getDynamicProperty("property-precalculated-sampling") ?? 10;
   }
   triggerFinialize(seed2) {
-    system40.run(() => {
+    system39.run(() => {
       this.finialize.subscribe(() => {
         let time = Date.now();
         this.biomeManager.selfFinialize();
@@ -14230,7 +14215,7 @@ var SessionManager = class {
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/index.ts
 var seed;
-system41.run(() => {
+system40.run(() => {
   let savedSeed = world34.getDynamicProperty("seed");
   if (!savedSeed) {
     savedSeed = Math.ceil(Date.now() * Math.random() * 2);
@@ -14359,10 +14344,10 @@ bm.addBiome(new BiomeDefinition("gaiadimension:golden_hills").setGroundPalette(n
 bm.addBiome(new BiomeDefinition("gaiadimension:golden_sands").setGroundPalette(new PalettedBrush().add("gaiadimension:golden_sand")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:brilliant_stone")).setVegetationPalette(new PalettedBrush().add("gaiadimension:golden_grass", 2)).setVegetationChance(0.03).setDepth(0.25).setScale(0.05));
 bm.addBiome(new BiomeDefinition("gaiadimension:golden_marsh").setGroundPalette(new PalettedBrush().add("gaiadimension:golden_marsh_gilded_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:aurum_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:golden_grass", 3).add("gaiadimension:twinkling_gilsri", 1)).setVegetationChance(0.1).setDepth(0.15).setScale(0.05));
 bm.addBiome(new BiomeDefinition("gaiadimension:mineral_reservoir").setGroundPalette(new PalettedBrush().add("gaiadimension:pebbles")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:saltstone")).setVegetationPalette(new PalettedBrush()).setVegetationChance(0).setDepth(-1.8).setScale(0.1));
-bm.addBiome(new BiomeDefinition("gaiadimension:mineral_river").setGroundPalette(new PalettedBrush().add("gaiadimension:pebbles")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:gaia_stone")).setVegetationPalette(new PalettedBrush()).setVegetationChance(0).setDepth(-0.2).setScale(0));
+bm.addBiome(new BiomeDefinition("gaiadimension:mineral_river").setGroundPalette(new PalettedBrush().add("gaiadimension:pebbles")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:gaia_stone")).setVegetationPalette(new PalettedBrush()).setVegetationChance(0).setDepth(-0.8).setScale(0));
 
 // src/main/bedrock/ts/API/lib/EnchantmentLib.ts
-import { world as world36, system as system43 } from "@minecraft/server";
+import { world as world36, system as system42 } from "@minecraft/server";
 import { ActionFormData } from "@minecraft/server-ui";
 var EnchantmentManager = class {
   registry;
@@ -14388,12 +14373,12 @@ var EnchantmentManager = class {
     });
   }
   initEvents() {
-    system43.runInterval(() => this.manageVisuals(), 5);
+    system42.runInterval(() => this.manageVisuals(), 5);
     world36.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
       const { block, player } = ev;
       if (block.typeId === "minecraft:enchanting_table" && player.isSneaking) {
         ev.cancel = true;
-        system43.run(() => {
+        system42.run(() => {
           this.openEnchantmentUI(player);
         });
       }
@@ -14641,7 +14626,7 @@ enchantmentManager.register("gaia:thunder_strike", {
 });
 
 // src/main/bedrock/ts/entities/MalachiteGuard.ts
-import { world as world37, system as system44, Player as Player26, EquipmentSlot as EquipmentSlot2, GameMode as GameMode9, EntityComponentTypes } from "@minecraft/server";
+import { world as world37, system as system43, Player as Player25, EquipmentSlot as EquipmentSlot2, GameMode as GameMode9, EntityComponentTypes } from "@minecraft/server";
 var GUARD_ID = "gaiadimension:malachite_guard";
 var DRONE_ID = "gaiadimension:malachite_drone";
 var BATON_ID = "gaiadimension:malachite_guard_baton";
@@ -14705,7 +14690,7 @@ function distSq(a, b) {
   return dx * dx + dy * dy + dz * dz;
 }
 function isValidPlayer(e) {
-  if (!(e instanceof Player26)) return false;
+  if (!(e instanceof Player25)) return false;
   try {
     const gm = e.getGameMode();
     return gm !== GameMode9.creative && gm !== GameMode9.spectator;
@@ -14731,7 +14716,7 @@ var MalachiteGuardSystem = class {
         this.setupGuard(entity);
       }
     });
-    system44.runInterval(() => {
+    system43.runInterval(() => {
       for (const dim of [world37.getDimension("overworld")]) {
         const guards = dim.getEntities({ type: GUARD_ID });
         for (const guard of guards) {
@@ -14763,7 +14748,7 @@ var MalachiteGuardSystem = class {
       if (phase === PHASE_ATTACK) {
         const threshold = maxHp / 2 - 2;
         if (curHp < threshold) {
-          system44.run(() => {
+          system43.run(() => {
             try {
               if (hurtEntity.isValid && health) {
                 health.setCurrentValue(threshold);
@@ -14777,7 +14762,7 @@ var MalachiteGuardSystem = class {
       if (phase === PHASE_RESIST) {
         if (!attacker || !isValidPlayer(attacker)) {
           if (hurtEntity.location.y > -64) {
-            system44.run(() => {
+            system43.run(() => {
               try {
                 if (hurtEntity.isValid && health) {
                   health.setCurrentValue(Math.min(curHp + damage, maxHp));
@@ -14791,7 +14776,7 @@ var MalachiteGuardSystem = class {
         const mult = getDamageMultiplier(damage);
         if (mult < 1) {
           const reduction = damage * (1 - mult);
-          system44.run(() => {
+          system43.run(() => {
             try {
               if (hurtEntity.isValid && health) {
                 health.setCurrentValue(Math.min(curHp + reduction, maxHp));
@@ -14804,7 +14789,7 @@ var MalachiteGuardSystem = class {
     });
     world37.afterEvents.entityHitEntity.subscribe((event) => {
       const { damagingEntity, hitEntity } = event;
-      if (damagingEntity instanceof Player26 && hitEntity.isValid) {
+      if (damagingEntity instanceof Player25 && hitEntity.isValid) {
         try {
           const equip = damagingEntity.getComponent(EntityComponentTypes.Equippable);
           const mainhand = equip?.getEquipment(EquipmentSlot2.Mainhand);
@@ -14818,7 +14803,7 @@ var MalachiteGuardSystem = class {
         } catch {
         }
       }
-      if (damagingEntity.typeId === GUARD_ID && hitEntity instanceof Player26) {
+      if (damagingEntity.typeId === GUARD_ID && hitEntity instanceof Player25) {
         if (!hitEntity.isValid) return;
         if (Math.random() > 1 / 12) return;
         try {
@@ -14830,7 +14815,7 @@ var MalachiteGuardSystem = class {
           if (item) {
             const dim = hitEntity.dimension;
             const loc = hitEntity.location;
-            system44.run(() => {
+            system43.run(() => {
               try {
                 dim.spawnItem(item, { x: loc.x, y: loc.y + 0.5, z: loc.z });
                 equip.setEquipment(slot, void 0);
@@ -14865,7 +14850,7 @@ var MalachiteGuardSystem = class {
     setNum(guard, P.BIDE_DAMAGE, 0);
     setBool(guard, P.HAS_DRONES, true);
     setBool(guard, P.DRONES_SPAWNED, false);
-    system44.run(() => {
+    system43.run(() => {
       if (!guard.isValid) return;
       try {
         guard.triggerEvent("mg_defend");
@@ -15037,7 +15022,7 @@ var MalachiteGuardSystem = class {
         dim.runCommand(`particle minecraft:terrain_explosion ${gl.x} ${gl.y} ${gl.z}`);
       } catch {
       }
-      system44.runTimeout(() => {
+      system43.runTimeout(() => {
         if (!guard.isValid) return;
         setNum(guard, P.STOMP_COOLDOWN, STOMP_COOLDOWN);
         guard.triggerEvent("mg_stomp_end");
@@ -15128,14 +15113,14 @@ var malachiteGuardSystem = new MalachiteGuardSystem();
 // src/main/bedrock/ts/GaiaDimensionAddon.ts
 initializeDestructionHandlers();
 initializeEventManager();
-system45.beforeEvents?.shutdown?.subscribe((event) => event.cancel = true);
+system44.beforeEvents?.shutdown?.subscribe((event) => event.cancel = true);
 initializeScriptEvents();
 initializeGeyser();
 initializeLightMixin();
 initializeGlitterGrassSync();
 initializeMagicStaffBehaviors();
 registerCustomTool();
-system45.beforeEvents.startup.subscribe((event) => {
+system44.beforeEvents.startup.subscribe((event) => {
   const { blockComponentRegistry, customCommandRegistry, itemComponentRegistry, dimensionRegistry } = event;
   dimensionRegistry.registerCustomDimension("gaiadimension:gaia_dimension");
   registerLeavesComponent({ blockComponentRegistry });

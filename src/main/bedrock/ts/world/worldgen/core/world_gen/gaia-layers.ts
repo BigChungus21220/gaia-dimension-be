@@ -309,10 +309,9 @@ export function buildGaiaLayers(worldSeed: number): LayerFn {
     let biomes = gaiaBiomesLayer(islands, worldSeed + 1);
     for (let i = 1000; i <= 1005; i++) biomes = zoomLayer(biomes, worldSeed + i, false);
 
-    // River generation — rivers use pebbles surface (not salt_dunes)
+    // River generation — Java: exactly 1 smooth pass (GaiaLayerUtil.java L52)
     let river = riverLayer(biomes, worldSeed + 1);
     river = smoothLayer(river, worldSeed + 1000);
-    river = smoothLayer(river, worldSeed + 1001); // extra smooth pass = thinner rivers
 
     biomes = smoothLayer(biomes, worldSeed + 1000);
     biomes = riverMixLayer(biomes, river, worldSeed + 100);

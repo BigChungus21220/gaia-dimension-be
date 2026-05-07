@@ -5,7 +5,7 @@ import { BiomeDefinition } from "../definitions/definition-biome";
 
 // Java source: GaiaDimensions.java — sea level 63, minY -64
 const SEA_LEVEL = 63;
-const ENTRY = -64;
+const ENTRY = 0; // Shifted from -64 to 0 so terrain generates around Y=70, allowing rivers (Y=55) to fill with water up to Y=63
 const STONE_DEPTH = 10;  // shallow shell — only fill what's visible
 const SOIL_DEPTH = 4;
 
@@ -26,6 +26,17 @@ export class ChunkGenerator {
     public range: any;
     public seed: ProceduralRandom;
     public isGenerating: Set<string> = new Set();
+
+    // Java Edition 5x5 Parabolic Biome Weight Matrix
+    private static biomeWeights: number[] = [];
+    static {
+        for (let rx = -2; rx <= 2; ++rx) {
+            for (let rz = -2; rz <= 2; ++rz) {
+                const weight = 10.0 / Math.sqrt((rx * rx + rz * rz) + 0.2);
+                ChunkGenerator.biomeWeights[rx + 2 + (rz + 2) * 5] = weight;
+            }
+        }
+    }
 
     // Noise layers for terrain shape
     private base: FastNoiseLite;
@@ -111,11 +122,58 @@ export class ChunkGenerator {
         return height;
     }
 
+    /**
+     * 1:1 Java port of GaiaTerrainWarp.fillNoiseColumn lines 61-86.
+     * Computes terrain height using the 5x5 parabolic biome weight matrix
+     * with the exact depth/scale blending formula.
+     */
     getHeight(x: number, z: number): number {
         const raw = this.getTerrainHeight(x, z);
-        const biome = this.getBiomeAt(x, z);
-        const h = raw * 10 * (1 + biome.scale) + biome.depth * 40 + ENTRY;
-        return Math.max(Math.floor(h), SEA_LEVEL + 1);
+        const centerBiome = this.getBiomeAt(x, z);
+        const centerDepth = centerBiome.depth;
+
+        // Java 5x5 biome interpolation with EXACT weight formula:
+        //   weight = (depthPenalty) * BIOME_WEIGHTS[i] / (neighborDepth + 2.0)
+        let scaleSum = 0;
+        let depthSum = 0;
+        let weightSum = 0;
+
+        for (let rx = -2; rx <= 2; rx++) {
+            for (let rz = -2; rz <= 2; rz++) {
+                const b = this.getBiomeAt(x + rx * 4, z + rz * 4);
+                const offD = b.depth;
+                const offS = b.scale;
+
+                // Java: penalize when neighbor is deeper than center (0.5x)
+                const depthPenalty = offD > centerDepth ? 0.5 : 1.0;
+                // Java: divide by (depth + 2.0) — this is what creates smooth slopes
+                const w = depthPenalty * ChunkGenerator.biomeWeights[rx + 2 + (rz + 2) * 5] / (offD + 2.0);
+
+                scaleSum += offS * w;
+                depthSum += offD * w;
+                weightSum += w;
+            }
+        }
+
+        const avgDepth = depthSum / weightSum;
+        const avgScale = scaleSum / weightSum;
+
+        // Java: GaiaTerrainWarp.java L83-86
+        // d6 = avgDepth * 0.5 - 0.125
+        // d8 = avgScale * 0.9 + 0.1
+        // offset = d6 * 0.265625
+        // factor = 96.0 / d8
+        const depthOffset = (avgDepth * 0.5 - 0.125) * 0.265625;
+        const scaleFactor = 96.0 / (avgScale * 0.9 + 0.1);
+
+        // Apply noise with Java's density equation, then map to world height
+        // computeInitialDensity: base = 1.0 - y*2/32 + density(-0.46875)
+        // We approximate the density→surface intersection at:
+        //   terrain = SEA_LEVEL + depthOffset * scaleFactor + noise * scaleInfluence
+        let terrain = Math.floor(SEA_LEVEL + depthOffset * scaleFactor + raw * 10 * (avgScale * 0.9 + 0.1));
+        if (isNaN(terrain) || !isFinite(terrain)) terrain = SEA_LEVEL;
+        terrain = Math.max(this.range.min, Math.min(this.range.max - 1, terrain));
+        return terrain;
     }
 
     buildChunk(X: number, Z: number, hash: string): Promise<boolean> {
@@ -151,6 +209,22 @@ export class ChunkGenerator {
         const placedTrees: {x: number, z: number}[] = [];
 
         try {
+            // Java cell-based terrain interpolation (GaiaChunkGenerator.doFill + GaiaNoiseInterpolator)
+            // Java computes density at cell corners (every cellWidth=4 blocks) and
+            // bilinearly interpolates between them. This creates smooth slopes instead
+            // of 4x4 tetris stepping at biome boundaries.
+            const CELL = 4;
+            const CELLS_X = 16 / CELL; // 4 cells per chunk axis
+            const CELLS_Z = 16 / CELL;
+            // Pre-compute heights at 5x5 cell corners (0,4,8,12,16 on each axis)
+            const corners: number[][] = [];
+            for (let cx = 0; cx <= CELLS_X; cx++) {
+                corners[cx] = [];
+                for (let cz = 0; cz <= CELLS_Z; cz++) {
+                    corners[cx][cz] = this.getHeight(worldX + cx * CELL, worldZ + cz * CELL);
+                }
+            }
+
             for (let x = 0; x < 16; x++) {
                 for (let z = 0; z < 16; z++) {
                     const xx = worldX + x, zz = worldZ + z;
@@ -160,23 +234,23 @@ export class ChunkGenerator {
                     const jitterZ = Math.round(this.spikes.GetNoise(xx * 2 + 1000, zz * 2 + 1000) * 5);
                     const biome = this.getBiomeAt(xx + jitterX, zz + jitterZ);
 
-                    // Blended height — average depth/scale over 5 sample points
-                    const rawH = this.getTerrainHeight(xx, zz);
-                    const BLEND_R = 4;
-                    const b0 = this.getBiomeAt(xx, zz);
-                    const b1 = this.getBiomeAt(xx + BLEND_R, zz);
-                    const b2 = this.getBiomeAt(xx, zz + BLEND_R);
-                    const b3 = this.getBiomeAt(xx - BLEND_R, zz);
-                    const b4 = this.getBiomeAt(xx, zz - BLEND_R);
-                    const avgDepth = (b0.depth + b1.depth + b2.depth + b3.depth + b4.depth) / 5;
-                    const avgScale = (b0.scale + b1.scale + b2.scale + b3.scale + b4.scale) / 5;
-
-                    let terrain = Math.floor(rawH * 10 * (1 + avgScale) + avgDepth * 40 + ENTRY);
+                    // Bilinear interpolation between cell corners (Java: Mth.lerp3)
+                    const cellX = Math.floor(x / CELL);
+                    const cellZ = Math.floor(z / CELL);
+                    const fracX = (x - cellX * CELL) / CELL;
+                    const fracZ = (z - cellZ * CELL) / CELL;
+                    const h00 = corners[cellX][cellZ];
+                    const h10 = corners[cellX + 1][cellZ];
+                    const h01 = corners[cellX][cellZ + 1];
+                    const h11 = corners[cellX + 1][cellZ + 1];
+                    // bilerp: lerp(lerp(h00,h10,fx), lerp(h01,h11,fx), fz)
+                    let terrain = Math.floor(h00 + (h10 - h00) * fracX + (h01 - h00) * fracZ + (h00 - h10 - h01 + h11) * fracX * fracZ);
                     if (isNaN(terrain) || !isFinite(terrain)) terrain = ENTRY;
                     terrain = Math.max(this.range.min, Math.min(this.range.max - 1, terrain));
 
                     const groundId = biome.groundPaletted?.permutations?.[0] as string ?? "gaiadimension:crystal_plains_glitter_grass";
                     const underId = biome.underGroundPaletted?.permutations?.[0] as string ?? "gaiadimension:heavy_soil";
+                    const isUnderwater = terrain < SEA_LEVEL;
 
                     // 1. Stone shell
                     const stoneStart = Math.max(this.range.min, terrain - (STONE_DEPTH + SOIL_DEPTH));
@@ -189,21 +263,18 @@ export class ChunkGenerator {
                         if (!setBlock(dim.getBlock({ x: xx, y, z: zz }), underId)) failRef.count++;
                     }
 
-                    // 3. Surface block & Water Fill
-                    const isUnderwater = terrain < this.seaLevel;
+                    // 3. Surface block
                     try {
                         const surfaceBlock = dim.getBlock({ x: xx, y: terrain, z: zz });
                         if (surfaceBlock) {
-                            if (isUnderwater && groundId.includes("grass")) {
-                                surfaceBlock.setType(underId); // Use soil/pebbles underwater instead of grass
-                            } else {
-                                surfaceBlock.setType(groundId);
-                            }
+                            if (isUnderwater && groundId.includes("grass")) surfaceBlock.setType(underId);
+                            else surfaceBlock.setType(groundId);
                         }
                     } catch (_) { /* block ID not registered — skip */ }
-
+                    
+                    // Water Fill
                     if (isUnderwater) {
-                        for (let y = terrain + 1; y <= this.seaLevel; y++) {
+                        for (let y = terrain + 1; y <= SEA_LEVEL; y++) {
                             const waterBlock = dim.getBlock({ x: xx, y, z: zz });
                             if (waterBlock) {
                                 try { waterBlock.setType("gaiadimension:mineral_water"); } catch (_) {}

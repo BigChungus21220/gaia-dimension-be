@@ -13,7 +13,18 @@ export interface FluidInteraction {
     sound?: string;
 }
 
+export interface FluidPhysicsState {
+    player: Player;
+    drag: number;
+    acceleration: number;
+    gravityScale: number;
+    canSprint: boolean;
+}
+
 export abstract class FluidTemplate {
+    static blockResolver: ((dim: Dimension, x: number, y: number, z: number) => Block | undefined) | undefined;
+    static physicsStates: Map<string, FluidPhysicsState> = new Map();
+
     /**
      * List of all block type IDs considered part of this fluid (source, flowing, levels).
      */

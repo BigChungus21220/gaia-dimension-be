@@ -211,4 +211,4 @@ bm.addBiome(new BiomeDefinition("gaiadimension:mineral_river")
     .setGroundPalette(new PalettedBrush().add("gaiadimension:pebbles"))
     .setUnderGroundPalette(new PalettedBrush().add("gaiadimension:gaia_stone"))
     .setVegetationPalette(new PalettedBrush()).setVegetationChance(0.0)
-    .setDepth(-0.2).setScale(0.0));
+    .setDepth(-0.8).setScale(0.0));

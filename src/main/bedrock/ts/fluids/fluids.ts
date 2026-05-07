@@ -129,10 +129,10 @@ const PENDING_BLOCKS: Map<string, PendingBlockData> = new Map();
 let taskIndex = 0;
 
 const DIRECTIONS = [
-    { x: 0, y: 0, z: -1, name: "north", straight: 1 },
-    { x: 0, y: 0, z: 1, name: "south", straight: 5 },
-    { x: 1, y: 0, z: 0, name: "east", straight: 3 },
-    { x: -1, y: 0, z: 0, name: "west", straight: 7 }
+    { x: 0, y: 0, z: -1 },
+    { x: 0, y: 0, z: 1 },
+    { x: 1, y: 0, z: 0 },
+    { x: -1, y: 0, z: 0 }
 ];
 
 system.runInterval(() => {
@@ -325,36 +325,39 @@ function isReplaceable(blk: Block | undefined): boolean {
     return false;
 }
 
-function findClosestSlope(dimension: Dimension, startLoc: Vector3, searchDist: number, baseId: string): Vector3[] {
-    const queue: { loc: Vector3, dist: number }[] = [{ loc: startLoc, dist: 0 }];
-    const visited = new Set<string>();
-    const foundSlopes: Vector3[] = [];
-    let minDist = 999;
+// 1:1 Burnt BFS — returns distance to nearest drop-off, or 999 if none found
+function getSlopeDistance(dimension: Dimension, x: number, y: number, z: number, maxDistance: number, baseId: string): number {
+    const visited = new Set<number>();
+    const qX: number[] = [x], qZ: number[] = [z], qD: number[] = [0];
+    let head = 0, tail = 1;
+    const KEY_MUL = 200003;
+    visited.add(x * KEY_MUL + z);
 
-    while (queue.length > 0) {
-        const { loc, dist } = queue.shift()!;
-        if (dist > searchDist) continue;
-        if (dist > minDist) break;
+    while (head < tail) {
+        const cx = qX[head], cz = qZ[head], d = qD[head++];
+        if (d >= maxDistance) continue;
 
         for (const dir of DIRECTIONS) {
-            const next = { x: loc.x + dir.x, y: loc.y, z: loc.z + dir.z };
-            const key = `${next.x},${next.y},${next.z}`;
+            const nx = cx + dir.x, nz = cz + dir.z;
+            const key = nx * KEY_MUL + nz;
             if (visited.has(key)) continue;
             visited.add(key);
 
-            const block = getCachedBlock(dimension, next.x, next.y, next.z);
-            if (!block) continue;
+            const neighbor = getCachedBlock(dimension, nx, y, nz);
+            if (!neighbor) continue;
 
-            const below = getCachedBlock(dimension, next.x, next.y - 1, next.z);
-            if (below && isReplaceable(below)) {
-                if (dist + 1 < minDist) { minDist = dist + 1; foundSlopes.length = 0; }
-                if (dist + 1 === minDist) foundSlopes.push({ x: next.x, y: next.y, z: next.z });
-            } else if (isReplaceable(block)) {
-                queue.push({ loc: next, dist: dist + 1 });
-            }
+            // 1:1 JAVA: search through air OR existing same-type fluid
+            const isSameFluid = neighbor.typeId.startsWith(baseId);
+            if (!isSameFluid && !isReplaceable(neighbor)) continue;
+
+            // Check if there is a hole below
+            const below = getCachedBlock(dimension, nx, y - 1, nz);
+            if (below && isReplaceable(below)) return d;
+
+            qX[tail] = nx; qZ[tail] = nz; qD[tail++] = d + 1;
         }
     }
-    return foundSlopes;
+    return 999;
 }
 
 function processFluidBlock(block: Block, dimension: Dimension): boolean {
@@ -388,19 +391,65 @@ function processFluidBlock(block: Block, dimension: Dimension): boolean {
         }
     }
 
+    // 1:1 BURNT: Tag-based parent validation
+    // Stage 1 needs "template_full" (source/_down), stage 2 needs "template1", stage 3 needs "template2"
+    let requiredParentTag = "";
+    if (currentStage === 1) requiredParentTag = "template_full";
+    else if (currentStage === 2) requiredParentTag = "template1";
+    else if (currentStage === 3) requiredParentTag = "template2";
+
+    // 1:1 BURNT: Merge Logic — flowing block under another flowing/_down block becomes _down
+    if (currentStage > 0) {
+        const above = getCachedBlock(dimension, block.location.x, block.location.y + 1, block.location.z);
+        if (above) {
+            const aboveId = above.typeId;
+            const isAboveDown = (aboveId === baseId + "_down");
+            const isAboveHalf = (aboveId === baseId + "1" || aboveId === baseId + "2" || aboveId === baseId + "3");
+            if (isAboveDown || isAboveHalf) {
+                if (block.isValid) {
+                    dimension.fillBlocks(new BlockVolume(block.location, block.location), BlockPermutation.resolve(baseId + "_down"));
+                    changesHappened = true;
+                }
+                return changesHappened;
+            }
+        }
+    }
+
+    // 1:1 BURNT: Parent validation — NO escape hatches, NO source-as-universal-parent
     if (currentStage > 0) {
         let hasParent = false;
-        const parentTag = currentStage === 1 ? "template" : `template${currentStage-1}`;
         for (const dir of DIRECTIONS) {
-            const neighbor = getCachedBlock(dimension, block.x + dir.x, block.y, block.z + dir.z);
-            if (neighbor && (neighbor.typeId === baseId || neighbor.hasTag(parentTag))) { hasParent = true; break; }
+            const neighbor = getCachedBlock(dimension, block.location.x + dir.x, block.location.y, block.location.z + dir.z);
+            if (neighbor && neighbor.hasTag(requiredParentTag)) {
+                hasParent = true;
+                break;
+            }
         }
         if (!hasParent) {
-            const above = getCachedBlock(dimension, block.x, block.y + 1, block.z);
-            if (!(above && (above.typeId === baseId || above.typeId === baseId + "_down"))) {
+            if (block.isValid) {
                 dimension.fillBlocks(new BlockVolume(block.location, block.location), "minecraft:air");
-                return true;
+                changesHappened = true;
             }
+            return changesHappened;
+        }
+    } else if (currentStage === -1) {
+        // 1:1 BURNT: _down blocks must have valid fluid above them
+        const above = getCachedBlock(dimension, block.location.x, block.location.y + 1, block.location.z);
+        if (!above) {
+            if (block.isValid) {
+                dimension.fillBlocks(new BlockVolume(block.location, block.location), "minecraft:air");
+                changesHappened = true;
+            }
+            return changesHappened;
+        }
+        const aboveId = above.typeId;
+        const validAbove = [baseId, baseId + "_down", baseId + "1", baseId + "2", baseId + "3"];
+        if (!validAbove.includes(aboveId)) {
+            if (block.isValid) {
+                dimension.fillBlocks(new BlockVolume(block.location, block.location), "minecraft:air");
+                changesHappened = true;
+            }
+            return changesHappened;
         }
     }
 
@@ -437,37 +486,86 @@ function processFluidBlock(block: Block, dimension: Dimension): boolean {
     if (below && isReplaceable(below)) { dimension.fillBlocks(new BlockVolume(below.location, below.location), baseId + "_down"); flowedDown = true; changesHappened = true; }
     else if (below && (below.typeId === baseId + "_down" || below.typeId === baseId)) flowedDown = true;
 
-    const maxStages = 7;
-    const canSpread = (currentStage === 0) || (currentStage === -1 && !flowedDown) || (currentStage > 0 && currentStage < maxStages);
+    const maxStages = 3; // 1:1 Burnt: all fluids have exactly 3 flowing stages
+    // Flow Sideways
+    // 1:1 JAVA LOGIC: Flowing blocks skip horizontal spread if they flow down (The Pillar Fix)
+    const canSpread = (currentStage === 0) ||
+        (currentStage === -1 && !flowedDown) ||
+        (currentStage > 0 && !flowedDown && currentStage < maxStages);
 
     if (canSpread) {
-        const nextStageNum = (currentStage <= 0) ? 1 : currentStage + 1;
-        const nextId = baseId + nextStageNum;
-        const searchDist = template?.slopeFindDistance ?? 4;
-        const slopes = findClosestSlope(dimension, block.location, searchDist, baseId);
-        
-        for (const dir of DIRECTIONS) {
-            const neighbor = getCachedBlock(dimension, block.x + dir.x, block.y, block.z + dir.z);
-            if (neighbor) {
-                let shouldFlow = slopes.length === 0;
-                if (slopes.length > 0) {
-                    const distToSlope = (s: Vector3) => Math.abs(s.x - (block.x + dir.x)) + Math.abs(s.z - (block.z + dir.z));
-                    shouldFlow = slopes.some(s => distToSlope(s) < Math.abs(s.x - block.x) + Math.abs(s.z - block.z));
-                }
+        if (!template) return changesHappened;
+        const nextStageNum = currentStage <= 0 ? 1 : currentStage + 1;
+        const nextStageId = (currentStage === 0 || currentStage === -1) ? baseId + "1" : baseId + (currentStage + 1).toString();
 
-                if (shouldFlow) {
+        // PERFORMANCE: Fast stability check — skip expensive BFS if no neighbor can be overwritten.
+        // For worldgen lakes, 95%+ of source blocks are interior (surrounded by other water).
+        // Each BFS call (getSlopeDistance × 4 directions) is extremely expensive; this avoids it entirely.
+        let anyOverwritable = false;
+        for (let i = 0; i < DIRECTIONS.length; i++) {
+            const dir = DIRECTIONS[i];
+            const neighbor = getCachedBlock(dimension, block.location.x + dir.x, block.location.y, block.location.z + dir.z);
+            if (neighbor) {
+                if (isReplaceable(neighbor)) { anyOverwritable = true; break; }
+                if (neighbor.typeId.startsWith(baseId)) {
+                    const nInfo = getTypeInfo(neighbor.typeId);
+                    if (nInfo.stage > 0 && nextStageNum < nInfo.stage) { anyOverwritable = true; break; }
+                }
+            }
+        }
+
+        if (anyOverwritable) {
+            const maxSearch = template.slopeFindDistance;
+
+            // 1:1 BURNT: Find the minimum distance to a drop-off among all directions
+            let minDistance = 999;
+            const distances: number[] = [];
+
+            for (let i = 0; i < DIRECTIONS.length; i++) {
+                const dir = DIRECTIONS[i];
+                const dist = getSlopeDistance(dimension, block.location.x + dir.x, block.location.y, block.location.z + dir.z, maxSearch, baseId);
+                distances[i] = dist;
+                if (dist < minDistance) minDistance = dist;
+            }
+
+            for (let i = 0; i < DIRECTIONS.length; i++) {
+                const dir = DIRECTIONS[i];
+                // Only spread if this direction leads to the shortest path to a hole, 
+                // or if no holes were found at all (in which case spread everywhere).
+                if (minDistance < 999 && distances[i] > minDistance) continue;
+
+                const nx = block.location.x + dir.x, ny = block.location.y, nz = block.location.z + dir.z;
+                const neighbor = getCachedBlock(dimension, nx, ny, nz);
+                if (neighbor) {
                     let canOverwrite = false;
-                    if (isReplaceable(neighbor)) canOverwrite = true;
-                    else if (neighbor.typeId.startsWith(baseId)) {
+
+                    if (isReplaceable(neighbor)) {
+                        canOverwrite = true;
+                    } else if (neighbor.typeId.startsWith(baseId)) {
                         const nInfo = getTypeInfo(neighbor.typeId);
-                        if (nInfo.stage > 0 && nextStageNum < nInfo.stage) canOverwrite = true;
+                        const neighborStage = nInfo.stage;
+
+                        // Rules:
+                        // 1. Cannot overwrite Source (0) or Down (-1) with horizontal flow (1,2,3).
+                        // 2. Can overwrite if nextStageNum < neighborStage.
+                        if (neighborStage > 0 && nextStageNum < neighborStage) {
+                            canOverwrite = true;
+                        }
                     }
 
                     if (canOverwrite) {
-                        const perm = BlockPermutation.resolve(nextId, { "gaiadimension:flow_dir": dir.straight });
-                        dimension.fillBlocks(new BlockVolume(neighbor.location, neighbor.location), perm);
-                        PENDING_BLOCKS.set(`${neighbor.x},${neighbor.y},${neighbor.z},${dimension.id}`, { block: neighbor, dimension, scheduledTick: system.currentTick + (template?.spreadDelay ?? 5) });
-                        changesHappened = true;
+                        if (neighbor.isValid) {
+                            let dirState = 0;
+                            if (dir.z === -1) dirState = 1;
+                            else if (dir.x === 1) dirState = 7;
+                            else if (dir.z === 1) dirState = 5;
+                            else if (dir.x === -1) dirState = 3;
+
+                            const perm = BlockPermutation.resolve(nextStageId, { "gaiadimension:flow_dir": dirState });
+                            dimension.fillBlocks(new BlockVolume(neighbor.location, neighbor.location), perm);
+                            PENDING_BLOCKS.set(`${neighbor.location.x},${neighbor.location.y},${neighbor.location.z},${dimension.id}`, { block: neighbor, dimension, scheduledTick: system.currentTick + (template?.spreadDelay ?? 5) });
+                            changesHappened = true;
+                        }
                     }
                 }
             }
@@ -475,33 +573,55 @@ function processFluidBlock(block: Block, dimension: Dimension): boolean {
     }
     
     if (currentStage > 0) {
-        let flowX = 0, flowZ = 0;
+        let flowX = 0;
+        let flowZ = 0;
+
         for (const dir of DIRECTIONS) {
-            const nb = getCachedBlock(dimension, block.x + dir.x, block.y, block.z + dir.z);
-            let nLevel = 999;
-            if (nb && isReplaceable(nb) && !fluidIDs.has(nb.typeId)) nLevel = 99;
-            else if (nb && nb.typeId.startsWith(baseId)) { 
-                const nInfo = getTypeInfo(nb.typeId); 
-                nLevel = nInfo.stage === -1 ? 0 : nInfo.stage; 
+            const neighbor = getCachedBlock(dimension, block.x + dir.x, block.y, block.z + dir.z);
+            if (!neighbor) continue;
+
+            let nLevel = -999;
+            if (neighbor.typeId.startsWith(baseId)) {
+                const nInfo = getTypeInfo(neighbor.typeId);
+                nLevel = nInfo.stage === -1 ? 0 : nInfo.stage;
+            } else {
+                // If it's not fluid, check if it's a hole. True drops pull flow visually!
+                const below = getCachedBlock(dimension, neighbor.x, neighbor.y - 1, neighbor.z);
+                if (isReplaceable(neighbor) && below && isReplaceable(below)) {
+                    nLevel = 99; // Drop-off strongly pulls flow
+                } else {
+                    continue; // Flat air or solid blocks DO NOT pull flow! (This prevents diagonal twisting and wall-facing flows)
+                }
             }
-            
-            // Flow AWAY from higher blocks (downhill)
-            if (nLevel < currentStage) { flowX += dir.x; flowZ += dir.z; }
-            else if (nLevel > currentStage) { flowX -= dir.x; flowZ -= dir.z; }
+
+            if (nLevel < currentStage) {
+                // Lower stage = source/shallower = flow AWAY from it (outward)
+                flowX -= dir.x;
+                flowZ -= dir.z;
+            } else if (nLevel > currentStage) {
+                // Higher stage = deeper / drop-off = flow TOWARD it (downhill)
+                flowX += dir.x;
+                flowZ += dir.z;
+            }
         }
-        
+
         flowX = flowX > 0 ? 1 : (flowX < 0 ? -1 : 0);
         flowZ = flowZ > 0 ? 1 : (flowZ < 0 ? -1 : 0);
-        
-        let dirState = 5; // Default South
-        if (flowX === 0 && flowZ === -1) dirState = 1;      // North
-        else if (flowX === 1 && flowZ === -1) dirState = 2; // North-East
-        else if (flowX === 1 && flowZ === 0) dirState = 3;  // East
-        else if (flowX === 1 && flowZ === 1) dirState = 4;  // South-East
-        else if (flowX === 0 && flowZ === 1) dirState = 5;  // South
-        else if (flowX === -1 && flowZ === 1) dirState = 6; // South-West
-        else if (flowX === -1 && flowZ === 0) dirState = 7; // West
-        else if (flowX === -1 && flowZ === -1) dirState = 8;// North-West
+
+        let dirState: number;
+        if (flowX === 0 && flowZ === 0) {
+            // Vector cancelled (corner block with equal-level neighbours on both sides).
+            // Preserve whatever dirState was stamped on first spread — do NOT overwrite.
+            dirState = (block.permutation.getAllStates()["gaiadimension:flow_dir"] as number) ?? 0;
+        } else if (flowX === 0 && flowZ === -1) dirState = 1; // N
+        else if (flowX === -1 && flowZ === -1) dirState = 2; // NW
+        else if (flowX === -1 && flowZ === 0) dirState = 3; // W
+        else if (flowX === -1 && flowZ === 1) dirState = 4; // SW
+        else if (flowX === 0 && flowZ === 1) dirState = 5; // S
+        else if (flowX === 1 && flowZ === 1) dirState = 6; // SE
+        else if (flowX === 1 && flowZ === 0) dirState = 7; // E
+        else if (flowX === 1 && flowZ === -1) dirState = 8; // NE
+        else dirState = 0;
 
         const perms = block.permutation.getAllStates();
         if (perms["gaiadimension:flow_dir"] !== dirState) {
