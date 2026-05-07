@@ -126,6 +126,9 @@ interface PendingBlockData {
 }
 
 const PENDING_BLOCKS: Map<string, PendingBlockData> = new Map(); 
+// PERFORMANCE: Stable block tracking — blocks that processed with zero changes
+// are marked stable and skipped on subsequent onTick calls until wakeNeighbors clears them.
+const STABLE_BLOCKS: Set<string> = new Set();
 let taskIndex = 0;
 
 const DIRECTIONS = [
@@ -270,7 +273,16 @@ function runFluidFlowLogic(startTime: number) {
         PENDING_BLOCKS.delete(key);
         try {
             const { block, dimension } = data;
-            if (block.isValid) { if (processFluidBlock(block, dimension)) wakeNeighbors(block.location, dimension); processedCount++; }
+            if (block.isValid) {
+                const changed = processFluidBlock(block, dimension);
+                if (changed) {
+                    wakeNeighbors(block.location, dimension);
+                } else {
+                    // No changes — mark as stable so onTick skips it
+                    STABLE_BLOCKS.add(key);
+                }
+                processedCount++;
+            }
         } catch (e) {}
     }
 }
@@ -696,6 +708,8 @@ export class FluidFlowComponent implements BlockCustomComponent {
         if (PENDING_BLOCKS.size >= MAX_QUEUE_SIZE) return;
         const { block } = event;
         const key = `${block.x},${block.y},${block.z},${block.dimension.id}`;
+        // PERFORMANCE: Skip blocks already marked stable (no changes on last process)
+        if (STABLE_BLOCKS.has(key)) return;
         if (!PENDING_BLOCKS.has(key)) {
             let delay = 5;
             const info = getTypeInfo(block.typeId);
@@ -719,6 +733,8 @@ function wakeNeighbors(location: Vector3, dimension: Dimension) {
     for (const offset of locations) {
         const nx = x + offset.x, ny = y + offset.y, nz = z + offset.z;
         const key = `${nx},${ny},${nz},${dimension.id}`;
+        // Clear stability flag so this block gets re-evaluated
+        STABLE_BLOCKS.delete(key);
         if (!PENDING_BLOCKS.has(key)) {
             const neighbor = getCachedBlock(dimension, nx, ny, nz);
             if (neighbor && neighbor.isValid && fluidIDs.has(neighbor.typeId)) PENDING_BLOCKS.set(key, { block: neighbor, dimension, scheduledTick });

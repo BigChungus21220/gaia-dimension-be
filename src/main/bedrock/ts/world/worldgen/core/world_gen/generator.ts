@@ -124,11 +124,11 @@ export class ChunkGenerator {
 
     /**
      * 1:1 Java port of GaiaTerrainWarp.fillNoiseColumn lines 61-86.
-     * Computes terrain height using the 5x5 parabolic biome weight matrix
-     * with the exact depth/scale blending formula.
+     * Computes the low-frequency biome depth and scale blending.
+     * This is sampled at 4-block cell corners and bilinearly interpolated
+     * across the chunk to create smooth slopes at biome boundaries.
      */
-    getHeight(x: number, z: number): number {
-        const raw = this.getTerrainHeight(x, z);
+    getBiomeBlend(x: number, z: number): { depthOffset: number, scaleFactor: number, avgScale: number } {
         const centerBiome = this.getBiomeAt(x, z);
         const centerDepth = centerBiome.depth;
 
@@ -166,14 +166,7 @@ export class ChunkGenerator {
         const depthOffset = (avgDepth * 0.5 - 0.125) * 0.265625;
         const scaleFactor = 96.0 / (avgScale * 0.9 + 0.1);
 
-        // Apply noise with Java's density equation, then map to world height
-        // computeInitialDensity: base = 1.0 - y*2/32 + density(-0.46875)
-        // We approximate the density→surface intersection at:
-        //   terrain = SEA_LEVEL + depthOffset * scaleFactor + noise * scaleInfluence
-        let terrain = Math.floor(SEA_LEVEL + depthOffset * scaleFactor + raw * 10 * (avgScale * 0.9 + 0.1));
-        if (isNaN(terrain) || !isFinite(terrain)) terrain = SEA_LEVEL;
-        terrain = Math.max(this.range.min, Math.min(this.range.max - 1, terrain));
-        return terrain;
+        return { depthOffset, scaleFactor, avgScale };
     }
 
     buildChunk(X: number, Z: number, hash: string): Promise<boolean> {
@@ -216,12 +209,12 @@ export class ChunkGenerator {
             const CELL = 4;
             const CELLS_X = 16 / CELL; // 4 cells per chunk axis
             const CELLS_Z = 16 / CELL;
-            // Pre-compute heights at 5x5 cell corners (0,4,8,12,16 on each axis)
-            const corners: number[][] = [];
+            // Pre-compute low-frequency biome blending at 5x5 cell corners (0,4,8,12,16 on each axis)
+            const corners: {depthOffset: number, scaleFactor: number, avgScale: number}[][] = [];
             for (let cx = 0; cx <= CELLS_X; cx++) {
                 corners[cx] = [];
                 for (let cz = 0; cz <= CELLS_Z; cz++) {
-                    corners[cx][cz] = this.getHeight(worldX + cx * CELL, worldZ + cz * CELL);
+                    corners[cx][cz] = this.getBiomeBlend(worldX + cx * CELL, worldZ + cz * CELL);
                 }
             }
 
@@ -234,17 +227,30 @@ export class ChunkGenerator {
                     const jitterZ = Math.round(this.spikes.GetNoise(xx * 2 + 1000, zz * 2 + 1000) * 5);
                     const biome = this.getBiomeAt(xx + jitterX, zz + jitterZ);
 
-                    // Bilinear interpolation between cell corners (Java: Mth.lerp3)
+                    // Bilinear interpolation of low-frequency biome blend parameters
                     const cellX = Math.floor(x / CELL);
                     const cellZ = Math.floor(z / CELL);
                     const fracX = (x - cellX * CELL) / CELL;
                     const fracZ = (z - cellZ * CELL) / CELL;
-                    const h00 = corners[cellX][cellZ];
-                    const h10 = corners[cellX + 1][cellZ];
-                    const h01 = corners[cellX][cellZ + 1];
-                    const h11 = corners[cellX + 1][cellZ + 1];
+                    const c00 = corners[cellX][cellZ];
+                    const c10 = corners[cellX + 1][cellZ];
+                    const c01 = corners[cellX][cellZ + 1];
+                    const c11 = corners[cellX + 1][cellZ + 1];
+                    
                     // bilerp: lerp(lerp(h00,h10,fx), lerp(h01,h11,fx), fz)
-                    let terrain = Math.floor(h00 + (h10 - h00) * fracX + (h01 - h00) * fracZ + (h00 - h10 - h01 + h11) * fracX * fracZ);
+                    const depthOffset = c00.depthOffset + (c10.depthOffset - c00.depthOffset) * fracX + (c01.depthOffset - c00.depthOffset) * fracZ + (c00.depthOffset - c10.depthOffset - c01.depthOffset + c11.depthOffset) * fracX * fracZ;
+                    const scaleFactor = c00.scaleFactor + (c10.scaleFactor - c00.scaleFactor) * fracX + (c01.scaleFactor - c00.scaleFactor) * fracZ + (c00.scaleFactor - c10.scaleFactor - c01.scaleFactor + c11.scaleFactor) * fracX * fracZ;
+                    const avgScale = c00.avgScale + (c10.avgScale - c00.avgScale) * fracX + (c01.avgScale - c00.avgScale) * fracZ + (c00.avgScale - c10.avgScale - c01.avgScale + c11.avgScale) * fracX * fracZ;
+
+                    // High-frequency surface noise is evaluated precisely at the 1x1 block coordinate
+                    const raw = this.getTerrainHeight(xx, zz);
+                    
+                    // Exact mathematical collapse of Java's 3D DensityFunction to a 2D surface (where totaldensity = 0)
+                    // Java: y_cell = 16 * (0.53125 + depthOffset + noise / scaleFactor)
+                    // At cellHeight = 8, y_blocks = 128 * (0.53125 + depthOffset + noise / scaleFactor)
+                    // Which simplifies to: 68.0 + 128 * depthOffset + 128 * noise / scaleFactor
+                    // We scale our 'raw' noise (which is generally -1 to 1) to match Java's 128.0D blendedNoise amplitude.
+                    let terrain = Math.floor(68.0 + 128.0 * depthOffset + (128.0 * (raw * 10) / scaleFactor));
                     if (isNaN(terrain) || !isFinite(terrain)) terrain = ENTRY;
                     terrain = Math.max(this.range.min, Math.min(this.range.max - 1, terrain));
 

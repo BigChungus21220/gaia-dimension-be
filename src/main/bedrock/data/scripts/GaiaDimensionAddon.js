@@ -6240,6 +6240,7 @@ var BUDGET = 4;
 var MAX_QUEUE_SIZE = 1e3;
 var playerInteractionDummies = /* @__PURE__ */ new Map();
 var PENDING_BLOCKS = /* @__PURE__ */ new Map();
+var STABLE_BLOCKS = /* @__PURE__ */ new Set();
 var taskIndex = 0;
 var DIRECTIONS = [
   { x: 0, y: 0, z: -1 },
@@ -6381,7 +6382,12 @@ function runFluidFlowLogic(startTime) {
     try {
       const { block, dimension } = data;
       if (block.isValid) {
-        if (processFluidBlock(block, dimension)) wakeNeighbors(block.location, dimension);
+        const changed = processFluidBlock(block, dimension);
+        if (changed) {
+          wakeNeighbors(block.location, dimension);
+        } else {
+          STABLE_BLOCKS.add(key);
+        }
         processedCount++;
       }
     } catch (e) {
@@ -6610,44 +6616,64 @@ function processFluidBlock(block, dimension) {
   const canSpread = currentStage === 0 || currentStage === -1 && !flowedDown || currentStage > 0 && !flowedDown && currentStage < maxStages;
   if (canSpread) {
     if (!template) return changesHappened;
+    const nextStageNum = currentStage <= 0 ? 1 : currentStage + 1;
     const nextStageId = currentStage === 0 || currentStage === -1 ? baseId + "1" : baseId + (currentStage + 1).toString();
-    const maxSearch = template.slopeFindDistance;
-    let minDistance = 999;
-    const distances = [];
+    let anyOverwritable = false;
     for (let i = 0; i < DIRECTIONS.length; i++) {
       const dir = DIRECTIONS[i];
-      const dist = getSlopeDistance(dimension, block.location.x + dir.x, block.location.y, block.location.z + dir.z, maxSearch, baseId);
-      distances[i] = dist;
-      if (dist < minDistance) minDistance = dist;
-    }
-    for (let i = 0; i < DIRECTIONS.length; i++) {
-      const dir = DIRECTIONS[i];
-      if (minDistance < 999 && distances[i] > minDistance) continue;
-      const nx = block.x + dir.x, ny = block.y, nz = block.z + dir.z;
-      const neighbor = getCachedBlock(dimension, nx, ny, nz);
+      const neighbor = getCachedBlock(dimension, block.location.x + dir.x, block.location.y, block.location.z + dir.z);
       if (neighbor) {
-        let canOverwrite = false;
         if (isReplaceable(neighbor)) {
-          canOverwrite = true;
-        } else if (neighbor.typeId.startsWith(baseId)) {
+          anyOverwritable = true;
+          break;
+        }
+        if (neighbor.typeId.startsWith(baseId)) {
           const nInfo = getTypeInfo(neighbor.typeId);
-          const neighborStage = nInfo.stage;
-          const nextStageNum = currentStage <= 0 ? 1 : currentStage + 1;
-          if (neighborStage > 0 && nextStageNum < neighborStage) {
-            canOverwrite = true;
+          if (nInfo.stage > 0 && nextStageNum < nInfo.stage) {
+            anyOverwritable = true;
+            break;
           }
         }
-        if (canOverwrite) {
-          if (neighbor.isValid) {
-            let dirState = 0;
-            if (dir.z === -1) dirState = 1;
-            else if (dir.x === 1) dirState = 7;
-            else if (dir.z === 1) dirState = 5;
-            else if (dir.x === -1) dirState = 3;
-            const perm = BlockPermutation12.resolve(nextStageId, { "gaiadimension:flow_dir": dirState });
-            dimension.fillBlocks(new BlockVolume3(neighbor.location, neighbor.location), perm);
-            PENDING_BLOCKS.set(`${neighbor.x},${neighbor.y},${neighbor.z},${dimension.id}`, { block: neighbor, dimension, scheduledTick: system29.currentTick + (template?.spreadDelay ?? 5) });
-            changesHappened = true;
+      }
+    }
+    if (anyOverwritable) {
+      const maxSearch = template.slopeFindDistance;
+      let minDistance = 999;
+      const distances = [];
+      for (let i = 0; i < DIRECTIONS.length; i++) {
+        const dir = DIRECTIONS[i];
+        const dist = getSlopeDistance(dimension, block.location.x + dir.x, block.location.y, block.location.z + dir.z, maxSearch, baseId);
+        distances[i] = dist;
+        if (dist < minDistance) minDistance = dist;
+      }
+      for (let i = 0; i < DIRECTIONS.length; i++) {
+        const dir = DIRECTIONS[i];
+        if (minDistance < 999 && distances[i] > minDistance) continue;
+        const nx = block.location.x + dir.x, ny = block.location.y, nz = block.location.z + dir.z;
+        const neighbor = getCachedBlock(dimension, nx, ny, nz);
+        if (neighbor) {
+          let canOverwrite = false;
+          if (isReplaceable(neighbor)) {
+            canOverwrite = true;
+          } else if (neighbor.typeId.startsWith(baseId)) {
+            const nInfo = getTypeInfo(neighbor.typeId);
+            const neighborStage = nInfo.stage;
+            if (neighborStage > 0 && nextStageNum < neighborStage) {
+              canOverwrite = true;
+            }
+          }
+          if (canOverwrite) {
+            if (neighbor.isValid) {
+              let dirState = 0;
+              if (dir.z === -1) dirState = 1;
+              else if (dir.x === 1) dirState = 7;
+              else if (dir.z === 1) dirState = 5;
+              else if (dir.x === -1) dirState = 3;
+              const perm = BlockPermutation12.resolve(nextStageId, { "gaiadimension:flow_dir": dirState });
+              dimension.fillBlocks(new BlockVolume3(neighbor.location, neighbor.location), perm);
+              PENDING_BLOCKS.set(`${neighbor.location.x},${neighbor.location.y},${neighbor.location.z},${dimension.id}`, { block: neighbor, dimension, scheduledTick: system29.currentTick + (template?.spreadDelay ?? 5) });
+              changesHappened = true;
+            }
           }
         }
       }
@@ -6714,6 +6740,7 @@ var FluidFlowComponent = class {
     if (PENDING_BLOCKS.size >= MAX_QUEUE_SIZE) return;
     const { block } = event;
     const key = `${block.x},${block.y},${block.z},${block.dimension.id}`;
+    if (STABLE_BLOCKS.has(key)) return;
     if (!PENDING_BLOCKS.has(key)) {
       let delay2 = 5;
       const info = getTypeInfo(block.typeId);
@@ -6736,6 +6763,7 @@ function wakeNeighbors(location, dimension) {
   for (const offset of locations) {
     const nx = x + offset.x, ny = y + offset.y, nz = z + offset.z;
     const key = `${nx},${ny},${nz},${dimension.id}`;
+    STABLE_BLOCKS.delete(key);
     if (!PENDING_BLOCKS.has(key)) {
       const neighbor = getCachedBlock(dimension, nx, ny, nz);
       if (neighbor && neighbor.isValid && fluidIDs.has(neighbor.typeId)) PENDING_BLOCKS.set(key, { block: neighbor, dimension, scheduledTick });
@@ -13857,11 +13885,11 @@ var ChunkGenerator = class _ChunkGenerator {
   }
   /**
    * 1:1 Java port of GaiaTerrainWarp.fillNoiseColumn lines 61-86.
-   * Computes terrain height using the 5x5 parabolic biome weight matrix
-   * with the exact depth/scale blending formula.
+   * Computes the low-frequency biome depth and scale blending.
+   * This is sampled at 4-block cell corners and bilinearly interpolated
+   * across the chunk to create smooth slopes at biome boundaries.
    */
-  getHeight(x, z) {
-    const raw = this.getTerrainHeight(x, z);
+  getBiomeBlend(x, z) {
     const centerBiome = this.getBiomeAt(x, z);
     const centerDepth = centerBiome.depth;
     let scaleSum = 0;
@@ -13883,10 +13911,7 @@ var ChunkGenerator = class _ChunkGenerator {
     const avgScale = scaleSum / weightSum;
     const depthOffset = (avgDepth * 0.5 - 0.125) * 0.265625;
     const scaleFactor = 96 / (avgScale * 0.9 + 0.1);
-    let terrain = Math.floor(SEA_LEVEL + depthOffset * scaleFactor + raw * 10 * (avgScale * 0.9 + 0.1));
-    if (isNaN(terrain) || !isFinite(terrain)) terrain = SEA_LEVEL;
-    terrain = Math.max(this.range.min, Math.min(this.range.max - 1, terrain));
-    return terrain;
+    return { depthOffset, scaleFactor, avgScale };
   }
   buildChunk(X, Z, hash) {
     if (this.isGenerating.has(hash)) return Promise.resolve(true);
@@ -13928,7 +13953,7 @@ var ChunkGenerator = class _ChunkGenerator {
       for (let cx = 0; cx <= CELLS_X; cx++) {
         corners[cx] = [];
         for (let cz = 0; cz <= CELLS_Z; cz++) {
-          corners[cx][cz] = this.getHeight(worldX + cx * CELL, worldZ + cz * CELL);
+          corners[cx][cz] = this.getBiomeBlend(worldX + cx * CELL, worldZ + cz * CELL);
         }
       }
       for (let x = 0; x < 16; x++) {
@@ -13941,11 +13966,15 @@ var ChunkGenerator = class _ChunkGenerator {
           const cellZ = Math.floor(z / CELL);
           const fracX = (x - cellX * CELL) / CELL;
           const fracZ = (z - cellZ * CELL) / CELL;
-          const h00 = corners[cellX][cellZ];
-          const h10 = corners[cellX + 1][cellZ];
-          const h01 = corners[cellX][cellZ + 1];
-          const h11 = corners[cellX + 1][cellZ + 1];
-          let terrain = Math.floor(h00 + (h10 - h00) * fracX + (h01 - h00) * fracZ + (h00 - h10 - h01 + h11) * fracX * fracZ);
+          const c00 = corners[cellX][cellZ];
+          const c10 = corners[cellX + 1][cellZ];
+          const c01 = corners[cellX][cellZ + 1];
+          const c11 = corners[cellX + 1][cellZ + 1];
+          const depthOffset = c00.depthOffset + (c10.depthOffset - c00.depthOffset) * fracX + (c01.depthOffset - c00.depthOffset) * fracZ + (c00.depthOffset - c10.depthOffset - c01.depthOffset + c11.depthOffset) * fracX * fracZ;
+          const scaleFactor = c00.scaleFactor + (c10.scaleFactor - c00.scaleFactor) * fracX + (c01.scaleFactor - c00.scaleFactor) * fracZ + (c00.scaleFactor - c10.scaleFactor - c01.scaleFactor + c11.scaleFactor) * fracX * fracZ;
+          const avgScale = c00.avgScale + (c10.avgScale - c00.avgScale) * fracX + (c01.avgScale - c00.avgScale) * fracZ + (c00.avgScale - c10.avgScale - c01.avgScale + c11.avgScale) * fracX * fracZ;
+          const raw = this.getTerrainHeight(xx, zz);
+          let terrain = Math.floor(68 + 128 * depthOffset + 128 * (raw * 10) / scaleFactor);
           if (isNaN(terrain) || !isFinite(terrain)) terrain = ENTRY;
           terrain = Math.max(this.range.min, Math.min(this.range.max - 1, terrain));
           const groundId = biome.groundPaletted?.permutations?.[0] ?? "gaiadimension:crystal_plains_glitter_grass";
