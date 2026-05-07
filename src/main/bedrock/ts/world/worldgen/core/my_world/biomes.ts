@@ -11,54 +11,55 @@ import { CuttedSpruceTreeDefinition, PillarTreeDefinition, SpruceTreeDefinition,
  */
 
 // ── TREE DEFINITIONS ──
+// Heights match Java StraightTrunkPlacer(base, randA, randB): min=base, max=base+randA+randB
 
 const pinkAgateTree = new SpruceTreeDefinition();
 pinkAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:pink_agate_log"));
 pinkAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:pink_agate_leaves"));
-pinkAgateTree.setHeight(5, 9);
+pinkAgateTree.setHeight(5, 11); // Java: StraightTrunkPlacer(5, 3, 3)
 
 const blueAgateTree = new SpruceTreeDefinition();
 blueAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:blue_agate_log"));
 blueAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:blue_agate_leaves"));
-blueAgateTree.setHeight(6, 10);
+blueAgateTree.setHeight(6, 9); // Java: StraightTrunkPlacer(6, 2, 1)
 
 const greenAgateTree = new SpruceTreeDefinition();
 greenAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:green_agate_log"));
 greenAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:green_agate_leaves"));
-greenAgateTree.setHeight(7, 12);
+greenAgateTree.setHeight(10, 16); // Java: ThickTrunkPlacer(10, 3, 3)
 
 const purpleAgateTree = new SpruceTreeDefinition();
 purpleAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:purple_agate_log"));
 purpleAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:purple_agate_leaves"));
-purpleAgateTree.setHeight(5, 8);
+purpleAgateTree.setHeight(7, 13); // Java: CardinalTrunkPlacer(7, 3, 3)
 
 const fossilizedTree = new CuttedSpruceTreeDefinition();
 fossilizedTree.setLogPaletted(new PalettedBrush().add("gaiadimension:fossilized_log"));
 fossilizedTree.setCarpetPaletted(new PalettedBrush().add("gaiadimension:fossilized_leaves"));
-fossilizedTree.setHeight(3, 6);
+fossilizedTree.setHeight(5, 11); // Java: StraightTrunkPlacer(5, 3, 3)
 
 const corruptedTree = new SpruceTreeDefinition();
 corruptedTree.setLogPaletted(new PalettedBrush().add("gaiadimension:corrupted_log"));
 corruptedTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:corrupted_leaves"));
-corruptedTree.setHeight(4, 7);
+corruptedTree.setHeight(7, 11); // Java: StraightTrunkPlacer(7, 4, 0)
 
 const burntAgateTree = new PillarTreeDefinition("burnt_agate");
 burntAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:burnt_log"));
-burntAgateTree.setHeight(3, 6);
+burntAgateTree.setHeight(5, 11); // Java: StraightTrunkPlacer(5, 3, 3)
 
 const fireAgateTree = new PillarTreeDefinition("fire_agate");
 fireAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:fire_agate_log"));
-fireAgateTree.setHeight(3, 5);
+fireAgateTree.setHeight(5, 11); // Java: StraightTrunkPlacer(5, 3, 3) (BURNING_TREE_CONFIG)
 
 const auraTree = new SpruceTreeDefinition();
 auraTree.setLogPaletted(new PalettedBrush().add("gaiadimension:aura_log"));
 auraTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:aura_leaves"));
-auraTree.setHeight(4, 8);
+auraTree.setHeight(10, 16); // Java: FourBranchTrunkPlacer(10, 3, 3)
 
 const goldenTree = new SpruceTreeDefinition();
 goldenTree.setLogPaletted(new PalettedBrush().add("gaiadimension:golden_log"));
 goldenTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:golden_leaves"));
-goldenTree.setHeight(5, 9);
+goldenTree.setHeight(7, 11); // Java: VaryingFourBranchTrunkPlacer(7, 2, 2)
 
 const mutantAgateTree = new SpruceTreeDefinition();
 mutantAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:pink_agate_log"));

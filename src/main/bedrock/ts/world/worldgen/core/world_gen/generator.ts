@@ -393,35 +393,81 @@ export class ChunkGenerator {
         const leafId = treeDef.leavesPaletted?.permutations?.[0] as string ?? treeDef.carpetPaletted?.permutations?.[0] as string;
         if (!logId) return;
 
-        const minH = treeDef.height?.[0] ?? 4;
-        const maxH = treeDef.height?.[1] ?? 8;
+        const minH = treeDef.height?.[0] ?? 5;
+        const maxH = treeDef.height?.[1] ?? 11;
         const h = minH + Math.floor(random.nextFloat() * (maxH - minH + 1));
 
+        // ── Trunk ────────────────────────────────────────────────────────
         for (let i = 0; i < h; i++) {
             setBlock(dim.getBlock({ x, y: baseY + i, z }), logId);
         }
 
         if (!leafId) return;
-        const topY = baseY + h - 1;
 
-        for (let ox = -2; ox <= 2; ox++) {
-            for (let oz = -2; oz <= 2; oz++) {
-                if (Math.abs(ox) === 2 && Math.abs(oz) === 2) continue;
-                const leaf = dim.getBlock({ x: x + ox, y: topY, z: z + oz });
-                if (leaf && leaf.typeId === "minecraft:air") {
-                    try { leaf.setType(leafId); } catch (_) {}
-                }
-            }
-        }
+        // ── Foliage — Java CappedFoliagePlacer parity ────────────────────
+        // Java places foliage layers from trunk top downward.
+        // The canopy radius and number of layers scales with trunk height.
+        // CappedFoliagePlacer(radius=3, offset=1): Places leaves at trunk top + offset,
+        // then layers downward with decreasing radius, capped at a max height.
+        
+        const topY = baseY + h;
+        
+        // Number of foliage layers scales with trunk height (Java: typically 3-5 layers)
+        const foliageLayers = Math.min(6, Math.max(3, Math.floor(h * 0.4)));
+        // Max radius scales with height (Java CappedFoliagePlacer uses radius 2-3)
+        const maxRadius = h >= 10 ? 3 : 2;
+
+        // Top cap: single block or small cross at the very top
+        setLeaf(dim, x, topY, z, leafId);
+        
+        // Layer 1: Small cross at top
         for (let ox = -1; ox <= 1; ox++) {
             for (let oz = -1; oz <= 1; oz++) {
-                const leaf = dim.getBlock({ x: x + ox, y: topY + 1, z: z + oz });
-                if (leaf && leaf.typeId === "minecraft:air") {
-                    try { leaf.setType(leafId); } catch (_) {}
+                if (ox === 0 && oz === 0) continue;
+                if (Math.abs(ox) + Math.abs(oz) > 1 && random.nextFloat() > 0.6) continue;
+                setLeaf(dim, x + ox, topY, z + oz, leafId);
+            }
+        }
+
+        // Layers 2+: Growing wider, then tapering, placed from top-1 downward
+        for (let layer = 0; layer < foliageLayers; layer++) {
+            const ly = topY - 1 - layer;
+            if (ly <= baseY) break;
+
+            // Radius grows from 1 to maxRadius, then optionally tapers at the bottom
+            let radius: number;
+            if (layer < foliageLayers - 1) {
+                // Grow from 1 to maxRadius over the first few layers
+                radius = Math.min(maxRadius, 1 + Math.floor((layer + 1) * maxRadius / foliageLayers));
+            } else {
+                // Last layer: slightly smaller (taper)
+                radius = Math.max(1, maxRadius - 1);
+            }
+
+            for (let ox = -radius; ox <= radius; ox++) {
+                for (let oz = -radius; oz <= radius; oz++) {
+                    // Diamond/taxicab distance check with some corner randomness
+                    const dist = Math.abs(ox) + Math.abs(oz);
+                    if (dist > radius + 1) continue;
+                    // Skip corners randomly for organic shape (Java does this via foliage shape)
+                    if (Math.abs(ox) === radius && Math.abs(oz) === radius) {
+                        if (random.nextFloat() > 0.4) continue;
+                    }
+                    if (dist === radius + 1) {
+                        if (random.nextFloat() > 0.3) continue;
+                    }
+                    setLeaf(dim, x + ox, ly, z + oz, leafId);
                 }
             }
         }
         yield;
+    }
+}
+
+function setLeaf(dim: Dimension, x: number, y: number, z: number, leafId: string) {
+    const block = dim.getBlock({ x, y, z });
+    if (block && block.typeId === "minecraft:air") {
+        try { block.setType(leafId); } catch (_) {}
     }
 }
 
