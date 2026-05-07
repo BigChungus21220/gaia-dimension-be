@@ -12984,9 +12984,6 @@ String.prototype.toArray = function toArray(num) {
 };
 
 // src/main/bedrock/ts/world/worldgen/core/utils/ease-ing.ts
-function easeOutQuad(x) {
-  return 1 - (1 - x) * (1 - x);
-}
 var c1 = 1.70158;
 var c2 = c1 * 1.525;
 var c3 = c1 + 1;
@@ -13703,8 +13700,16 @@ var TreePalette = class {
 var BiomeDefinition = class {
   id;
   trees;
+  /** @deprecated Use treesPerChunk instead */
   treesChance;
+  /** @deprecated Use treesPerChunk instead */
   treeAreaChance;
+  /** Java countExtra: base tree count per chunk */
+  treesPerChunk;
+  /** Java countExtra: chance of extra trees (0.0 - 1.0) */
+  treesExtraChance;
+  /** Java countExtra: number of extra trees when chance succeeds */
+  treesExtra;
   temperature;
   humidity;
   groundPaletted;
@@ -13721,6 +13726,9 @@ var BiomeDefinition = class {
     this.trees = new TreePalette();
     this.treesChance = 0.02;
     this.treeAreaChance = 0.5;
+    this.treesPerChunk = 0;
+    this.treesExtraChance = 0.1;
+    this.treesExtra = 1;
     this.temperature = [0, 1];
     this.humidity = [0, 1];
     this.groundPaletted = new PalettedBrush();
@@ -13744,14 +13752,24 @@ var BiomeDefinition = class {
     this.trees.onPrecalculate(samples, seed2);
     this.IsPrecalculated = true;
   }
-  /**@default 0.02 */
+  /**@default 0.02 @deprecated Use setTreesPerChunk instead */
   setTreesChance(p) {
     this.treesChance = p;
     return this;
   }
-  /**@default 0.5 */
+  /**@default 0.5 @deprecated Use setTreesPerChunk instead */
   setTreesAreaChance(p) {
     this.treeAreaChance = p;
+    return this;
+  }
+  /**
+   * Java-parity tree placement: countExtra(count, chance, extra)
+   * Places `count` trees per chunk, with `chance` probability of placing `extra` more.
+   */
+  setTreesPerChunk(count, chance = 0.1, extra = 1) {
+    this.treesPerChunk = count;
+    this.treesExtraChance = chance;
+    this.treesExtra = extra;
     return this;
   }
   setTrees(p) {
@@ -14141,6 +14159,9 @@ var ChunkGenerator = class _ChunkGenerator {
     const random2 = this.seed.getSeqence(X, Z);
     const worldX = X * 16, worldZ = Z * 16;
     const placedTrees = [];
+    const terrainMap = new Array(256);
+    const biomeMap = new Array(256);
+    const underwaterMap = new Array(256);
     try {
       const CELL = 4;
       const CELLS_X = 16 / CELL;
@@ -14217,32 +14238,48 @@ var ChunkGenerator = class _ChunkGenerator {
               }
             }
           }
-          if (!isUnderwater && biome.hasTrees) {
-            if (random2.nextFloat() < biome.treesChance && easeOutQuad((this.trees.GetNoise(xx, zz) + 1) / 2) < biome.treeAreaChance) {
-              let tooClose = false;
-              for (const pt of placedTrees) {
-                if (Math.abs(pt.x - xx) < 3 && Math.abs(pt.z - zz) < 3) {
-                  tooClose = true;
-                  break;
-                }
-              }
-              if (!tooClose) {
-                const treeDef = biome.trees.get(random2.nextFloat());
-                if (treeDef) {
-                  const above = dim.getBlock({ x: xx, y: terrain + 1, z: zz });
-                  if (above && above.typeId === "minecraft:air") {
-                    try {
-                      yield* this.placeTree(dim, xx, terrain + 1, zz, treeDef, random2);
-                      placedTrees.push({ x: xx, z: zz });
-                    } catch (_) {
-                    }
-                  }
-                }
+          terrainMap[x * 16 + z] = terrain;
+          biomeMap[x * 16 + z] = biome;
+          underwaterMap[x * 16 + z] = isUnderwater;
+        }
+        yield;
+      }
+      const centerBiome = biomeMap[8 * 16 + 8] || biomeMap[0];
+      if (centerBiome && centerBiome.hasTrees && centerBiome.treesPerChunk >= 0) {
+        let totalTrees = centerBiome.treesPerChunk;
+        if (random2.nextFloat() < centerBiome.treesExtraChance) {
+          totalTrees += centerBiome.treesExtra;
+        }
+        for (let t = 0; t < totalTrees; t++) {
+          const tx = Math.floor(random2.nextFloat() * 16);
+          const tz = Math.floor(random2.nextFloat() * 16);
+          const tIdx = tx * 16 + tz;
+          if (underwaterMap[tIdx]) continue;
+          const terrain = terrainMap[tIdx];
+          if (terrain === void 0) continue;
+          const txx = worldX + tx;
+          const tzz = worldZ + tz;
+          let tooClose = false;
+          for (const pt of placedTrees) {
+            if (Math.abs(pt.x - txx) < 3 && Math.abs(pt.z - tzz) < 3) {
+              tooClose = true;
+              break;
+            }
+          }
+          if (tooClose) continue;
+          const biome = biomeMap[tIdx] || centerBiome;
+          const treeDef = biome.trees.get(random2.nextFloat());
+          if (treeDef) {
+            const above = dim.getBlock({ x: txx, y: terrain + 1, z: tzz });
+            if (above && above.typeId === "minecraft:air") {
+              try {
+                yield* this.placeTree(dim, txx, terrain + 1, tzz, treeDef, random2);
+                placedTrees.push({ x: txx, z: tzz });
+              } catch (_) {
               }
             }
           }
         }
-        yield;
       }
       done();
     } catch (e) {
@@ -14550,20 +14587,20 @@ mutantAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:pink_ag
 mutantAgateTree.setHeight(8, 14);
 var bm = DEFINITION_MANAGER.biomeManager;
 bm.addBiome(new BiomeDefinition("gaiadimension:crystal_plains").setGroundPalette(new PalettedBrush().add("gaiadimension:crystal_plains_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 5).add("gaiadimension:crystal_growth_aura", 3).add("gaiadimension:thiscus", 2).add("gaiadimension:spotted_kersei", 1)).setVegetationChance(0.12).setDepth(0.05).setScale(0.05));
-bm.addBiome(new BiomeDefinition("gaiadimension:pink_agate_forest").setGroundPalette(new PalettedBrush().add("gaiadimension:pink_agate_forest_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 3).add("gaiadimension:spotted_kersei", 2).add("gaiadimension:bulbous_hobina", 1)).setVegetationChance(0.15).setTrees(new TreePalette().add(pinkAgateTree)).setTreesChance(0.06).setTreesAreaChance(0.6).setDepth(0.1).setScale(0.1));
-bm.addBiome(new BiomeDefinition("gaiadimension:blue_agate_taiga").setGroundPalette(new PalettedBrush().add("gaiadimension:blue_agate_taiga_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 3).add("gaiadimension:mystical_murgni", 2).add("gaiadimension:thorny_wiltha", 1)).setVegetationChance(0.1).setTrees(new TreePalette().add(blueAgateTree)).setTreesChance(0.05).setTreesAreaChance(0.55).setDepth(0.1).setScale(0.2));
-bm.addBiome(new BiomeDefinition("gaiadimension:green_agate_jungle").setGroundPalette(new PalettedBrush().add("gaiadimension:green_agate_jungle_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 3).add("gaiadimension:agathum", 2).add("gaiadimension:stickly_cupsir", 2).add("gaiadimension:ouzium", 1)).setVegetationChance(0.2).setTrees(new TreePalette().add(greenAgateTree)).setTreesChance(0.08).setTreesAreaChance(0.7).setDepth(0.1).setScale(0.2));
-bm.addBiome(new BiomeDefinition("gaiadimension:fossil_woodland").setGroundPalette(new PalettedBrush().add("gaiadimension:fossil_woodland_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 2).add("gaiadimension:sombre_shrub", 2)).setVegetationChance(0.08).setTrees(new TreePalette().add(fossilizedTree)).setTreesChance(0.04).setTreesAreaChance(0.5).setDepth(0.1).setScale(0.05));
-bm.addBiome(new BiomeDefinition("gaiadimension:volcanic_lands").setGroundPalette(new PalettedBrush().add("gaiadimension:volcanic_rock")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:volcanic_rock")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_seared", 3).add("gaiadimension:crystal_growth_red", 2)).setVegetationChance(0.04).setTrees(new TreePalette().add(burntAgateTree)).setTreesChance(0.01).setTreesAreaChance(0.2).setDepth(1).setScale(0.7));
+bm.addBiome(new BiomeDefinition("gaiadimension:pink_agate_forest").setGroundPalette(new PalettedBrush().add("gaiadimension:pink_agate_forest_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 3).add("gaiadimension:spotted_kersei", 2).add("gaiadimension:bulbous_hobina", 1)).setVegetationChance(0.15).setTrees(new TreePalette().add(pinkAgateTree)).setTreesPerChunk(4, 0.1, 1).setDepth(0.1).setScale(0.1));
+bm.addBiome(new BiomeDefinition("gaiadimension:blue_agate_taiga").setGroundPalette(new PalettedBrush().add("gaiadimension:blue_agate_taiga_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 3).add("gaiadimension:mystical_murgni", 2).add("gaiadimension:thorny_wiltha", 1)).setVegetationChance(0.1).setTrees(new TreePalette().add(blueAgateTree)).setTreesPerChunk(1, 0.1, 1).setDepth(0.1).setScale(0.2));
+bm.addBiome(new BiomeDefinition("gaiadimension:green_agate_jungle").setGroundPalette(new PalettedBrush().add("gaiadimension:green_agate_jungle_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 3).add("gaiadimension:agathum", 2).add("gaiadimension:stickly_cupsir", 2).add("gaiadimension:ouzium", 1)).setVegetationChance(0.2).setTrees(new TreePalette().add(greenAgateTree)).setTreesPerChunk(5, 0.1, 1).setDepth(0.1).setScale(0.2));
+bm.addBiome(new BiomeDefinition("gaiadimension:fossil_woodland").setGroundPalette(new PalettedBrush().add("gaiadimension:fossil_woodland_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 2).add("gaiadimension:sombre_shrub", 2)).setVegetationChance(0.08).setTrees(new TreePalette().add(fossilizedTree)).setTreesPerChunk(1, 0.1, 1).setDepth(0.1).setScale(0.05));
+bm.addBiome(new BiomeDefinition("gaiadimension:volcanic_lands").setGroundPalette(new PalettedBrush().add("gaiadimension:volcanic_rock")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:volcanic_rock")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_seared", 3).add("gaiadimension:crystal_growth_red", 2)).setVegetationChance(0.04).setTrees(new TreePalette().add(burntAgateTree).add(fireAgateTree)).setTreesPerChunk(0, 0.1, 1).setDepth(1).setScale(0.7));
 bm.addBiome(new BiomeDefinition("gaiadimension:static_wasteland").setGroundPalette(new PalettedBrush().add("gaiadimension:wasteland_stone")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:static_stone")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_black", 3).add("gaiadimension:crystal_growth_mutant", 2)).setVegetationChance(0.03).setDepth(3).setScale(0.05));
 bm.addBiome(new BiomeDefinition("gaiadimension:salt_dunes").setGroundPalette(new PalettedBrush().add("gaiadimension:salt")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:saltstone")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 2)).setVegetationChance(0.02).setDepth(0.2).setScale(0.05));
-bm.addBiome(new BiomeDefinition("gaiadimension:smoldering_bog").setGroundPalette(new PalettedBrush().add("gaiadimension:smoldering_bog_murky_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:boggy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_seared", 3).add("gaiadimension:roofed_agaric", 2).add("gaiadimension:corrupted_varloom", 1)).setVegetationChance(0.12).setTrees(new TreePalette().add(fireAgateTree)).setTreesChance(0.03).setTreesAreaChance(0.35).setDepth(0.2).setScale(0.02));
-bm.addBiome(new BiomeDefinition("gaiadimension:shining_grove").setGroundPalette(new PalettedBrush().add("gaiadimension:shining_grove_soft_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:light_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_aura", 5).add("gaiadimension:thiscus", 3).add("gaiadimension:spotted_kersei", 2)).setVegetationChance(0.15).setTrees(new TreePalette().add(auraTree)).setTreesChance(0.05).setTreesAreaChance(0.5).setDepth(0.4).setScale(0.05));
+bm.addBiome(new BiomeDefinition("gaiadimension:smoldering_bog").setGroundPalette(new PalettedBrush().add("gaiadimension:smoldering_bog_murky_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:boggy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_seared", 3).add("gaiadimension:roofed_agaric", 2).add("gaiadimension:corrupted_varloom", 1)).setVegetationChance(0.12).setTrees(new TreePalette().add(fireAgateTree)).setTreesPerChunk(0, 0.1, 1).setDepth(0.2).setScale(0.02));
+bm.addBiome(new BiomeDefinition("gaiadimension:shining_grove").setGroundPalette(new PalettedBrush().add("gaiadimension:shining_grove_soft_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:light_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_aura", 5).add("gaiadimension:thiscus", 3).add("gaiadimension:spotted_kersei", 2)).setVegetationChance(0.15).setTrees(new TreePalette().add(auraTree)).setTreesPerChunk(2, 0.1, 1).setDepth(0.4).setScale(0.05));
 bm.addBiome(new BiomeDefinition("gaiadimension:mookaite_mesa").setGroundPalette(new PalettedBrush().add("gaiadimension:mookaite_mesa_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:auburn_mookaite")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_red", 2).add("gaiadimension:gold_orb_tucher", 1)).setVegetationChance(0.03).setDepth(2).setScale(0.075));
-bm.addBiome(new BiomeDefinition("gaiadimension:purple_agate_swamp").setGroundPalette(new PalettedBrush().add("gaiadimension:purple_agate_swamp_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 3).add("gaiadimension:corrupted_gaia_eye", 2).add("gaiadimension:corrupted_varloom", 2).add("gaiadimension:roofed_agaric", 1)).setVegetationChance(0.18).setTrees(new TreePalette().add(purpleAgateTree).add(corruptedTree)).setTreesChance(0.04).setTreesAreaChance(0.45).setDepth(0).setScale(0.05));
-bm.addBiome(new BiomeDefinition("gaiadimension:goldstone_lands").setGroundPalette(new PalettedBrush().add("gaiadimension:goldstone_lands_corrupted_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:corrupted_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_black", 3).add("gaiadimension:corrupted_gaia_eye", 2)).setVegetationChance(0.06).setTrees(new TreePalette().add(corruptedTree)).setTreesChance(0.02).setTreesAreaChance(0.3).setDepth(0.125).setScale(0.05));
-bm.addBiome(new BiomeDefinition("gaiadimension:mutant_agate_wildwood").setGroundPalette(new PalettedBrush().add("gaiadimension:mutant_agate_wildwood_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_mutant", 4).add("gaiadimension:crystal_growth", 2).add("gaiadimension:glamelea", 1)).setVegetationChance(0.18).setTrees(new TreePalette().add(mutantAgateTree)).setTreesChance(0.07).setTreesAreaChance(0.65).setDepth(0.1).setScale(0.1));
-bm.addBiome(new BiomeDefinition("gaiadimension:golden_forest").setGroundPalette(new PalettedBrush().add("gaiadimension:golden_forest_gilded_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:aurum_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:golden_grass", 4).add("gaiadimension:twinkling_gilsri", 2).add("gaiadimension:elder_imklia", 1)).setVegetationChance(0.14).setTrees(new TreePalette().add(goldenTree)).setTreesChance(0.06).setTreesAreaChance(0.6).setDepth(0.35).setScale(0.15));
+bm.addBiome(new BiomeDefinition("gaiadimension:purple_agate_swamp").setGroundPalette(new PalettedBrush().add("gaiadimension:purple_agate_swamp_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 3).add("gaiadimension:corrupted_gaia_eye", 2).add("gaiadimension:corrupted_varloom", 2).add("gaiadimension:roofed_agaric", 1)).setVegetationChance(0.18).setTrees(new TreePalette().add(purpleAgateTree).add(corruptedTree)).setTreesPerChunk(1, 0.1, 2).setDepth(0).setScale(0.05));
+bm.addBiome(new BiomeDefinition("gaiadimension:goldstone_lands").setGroundPalette(new PalettedBrush().add("gaiadimension:goldstone_lands_corrupted_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:corrupted_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_black", 3).add("gaiadimension:corrupted_gaia_eye", 2)).setVegetationChance(0.06).setTrees(new TreePalette().add(corruptedTree)).setTreesPerChunk(1, 0.1, 1).setDepth(0.125).setScale(0.05));
+bm.addBiome(new BiomeDefinition("gaiadimension:mutant_agate_wildwood").setGroundPalette(new PalettedBrush().add("gaiadimension:mutant_agate_wildwood_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_mutant", 4).add("gaiadimension:crystal_growth", 2).add("gaiadimension:glamelea", 1)).setVegetationChance(0.18).setTrees(new TreePalette().add(mutantAgateTree)).setTreesPerChunk(2, 0.1, 1).setDepth(0.1).setScale(0.1));
+bm.addBiome(new BiomeDefinition("gaiadimension:golden_forest").setGroundPalette(new PalettedBrush().add("gaiadimension:golden_forest_gilded_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:aurum_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:golden_grass", 4).add("gaiadimension:twinkling_gilsri", 2).add("gaiadimension:elder_imklia", 1)).setVegetationChance(0.14).setTrees(new TreePalette().add(goldenTree)).setTreesPerChunk(2, 0.1, 1).setDepth(0.35).setScale(0.15));
 bm.addBiome(new BiomeDefinition("gaiadimension:golden_plains").setGroundPalette(new PalettedBrush().add("gaiadimension:golden_plains_gilded_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:aurum_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:golden_grass", 5).add("gaiadimension:tall_golden_grass", 2)).setVegetationChance(0.16).setDepth(0.35).setScale(0.1));
 bm.addBiome(new BiomeDefinition("gaiadimension:golden_hills").setGroundPalette(new PalettedBrush().add("gaiadimension:golden_hills_gilded_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:aurum_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:golden_grass", 3)).setVegetationChance(0.06).setDepth(0.8).setScale(0.5));
 bm.addBiome(new BiomeDefinition("gaiadimension:golden_sands").setGroundPalette(new PalettedBrush().add("gaiadimension:golden_sand")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:brilliant_stone")).setVegetationPalette(new PalettedBrush().add("gaiadimension:golden_grass", 2)).setVegetationChance(0.03).setDepth(0.25).setScale(0.05));

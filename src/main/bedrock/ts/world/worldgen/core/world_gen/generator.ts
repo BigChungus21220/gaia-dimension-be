@@ -219,6 +219,10 @@ export class ChunkGenerator {
         const random = this.seed.getSeqence(X, Z);
         const worldX = X * 16, worldZ = Z * 16;
         const placedTrees: {x: number, z: number}[] = [];
+        // Pre-allocate lookup arrays for the tree placement pass (filled during terrain loop)
+        const terrainMap = new Array<number>(256);
+        const biomeMap = new Array<any>(256);
+        const underwaterMap = new Array<boolean>(256);
 
         try {
             // Java cell-based terrain interpolation (GaiaChunkGenerator.doFill + GaiaNoiseInterpolator)
@@ -321,35 +325,61 @@ export class ChunkGenerator {
                         }
                     }
 
-                    // 5. Trees
-                    if (!isUnderwater && biome.hasTrees) {
-                        if (random.nextFloat() < biome.treesChance &&
-                            easeOutQuad((this.trees.GetNoise(xx, zz) + 1) / 2) < biome.treeAreaChance) {
-                            
-                            // Prevent tree fusion: enforce minimum spacing
-                            let tooClose = false;
-                            for (const pt of placedTrees) {
-                                if (Math.abs(pt.x - xx) < 3 && Math.abs(pt.z - zz) < 3) {
-                                    tooClose = true; break;
-                                }
-                            }
+                    // Store terrain heights for tree placement pass
+                    terrainMap[x * 16 + z] = terrain;
+                    biomeMap[x * 16 + z] = biome;
+                    underwaterMap[x * 16 + z] = isUnderwater;
+                }
+                yield; // yield per X-row
+            }
 
-                            if (!tooClose) {
-                                const treeDef = biome.trees.get(random.nextFloat());
-                                if (treeDef) {
-                                    const above = dim.getBlock({ x: xx, y: terrain + 1, z: zz });
-                                    if (above && above.typeId === "minecraft:air") {
-                                        try { 
-                                            yield* this.placeTree(dim, xx, terrain + 1, zz, treeDef, random); 
-                                            placedTrees.push({x: xx, z: zz});
-                                        } catch (_) {}
-                                    }
-                                }
-                            }
+            // 5. Trees — Java countExtra(count, chance, extra) + InSquarePlacement
+            // Java picks N random XZ positions per chunk, NOT per-block chance.
+            // This prevents the noise-gated dead zones that caused treeless biomes.
+
+            // Find dominant biome for tree count (Java uses per-biome feature placement)
+            const centerBiome = biomeMap[8 * 16 + 8] || biomeMap[0];
+            if (centerBiome && centerBiome.hasTrees && centerBiome.treesPerChunk >= 0) {
+                // Java countExtra: count + (random < chance ? extra : 0)
+                let totalTrees = centerBiome.treesPerChunk;
+                if (random.nextFloat() < centerBiome.treesExtraChance) {
+                    totalTrees += centerBiome.treesExtra;
+                }
+
+                for (let t = 0; t < totalTrees; t++) {
+                    // InSquarePlacement.spread() — uniform random XZ within chunk
+                    const tx = Math.floor(random.nextFloat() * 16);
+                    const tz = Math.floor(random.nextFloat() * 16);
+                    const tIdx = tx * 16 + tz;
+                    
+                    if (underwaterMap[tIdx]) continue;
+                    const terrain = terrainMap[tIdx];
+                    if (terrain === undefined) continue;
+
+                    const txx = worldX + tx;
+                    const tzz = worldZ + tz;
+
+                    // Minimum spacing check (prevents tree fusion)
+                    let tooClose = false;
+                    for (const pt of placedTrees) {
+                        if (Math.abs(pt.x - txx) < 3 && Math.abs(pt.z - tzz) < 3) {
+                            tooClose = true; break;
+                        }
+                    }
+                    if (tooClose) continue;
+
+                    const biome = biomeMap[tIdx] || centerBiome;
+                    const treeDef = biome.trees.get(random.nextFloat());
+                    if (treeDef) {
+                        const above = dim.getBlock({ x: txx, y: terrain + 1, z: tzz });
+                        if (above && above.typeId === "minecraft:air") {
+                            try { 
+                                yield* this.placeTree(dim, txx, terrain + 1, tzz, treeDef, random); 
+                                placedTrees.push({x: txx, z: tzz});
+                            } catch (_) {}
                         }
                     }
                 }
-                yield; // yield per X-row
             }
             done();
         } catch (e) {

@@ -4,8 +4,16 @@ import { TreeDefinition, TreePalette } from "./definition-tree";
 export class BiomeDefinition {
     public id: string;
     public trees: TreePalette;
+    /** @deprecated Use treesPerChunk instead */
     public treesChance: number;
+    /** @deprecated Use treesPerChunk instead */
     public treeAreaChance: number;
+    /** Java countExtra: base tree count per chunk */
+    public treesPerChunk: number;
+    /** Java countExtra: chance of extra trees (0.0 - 1.0) */
+    public treesExtraChance: number;
+    /** Java countExtra: number of extra trees when chance succeeds */
+    public treesExtra: number;
     public temperature: [number, number];
     public humidity: [number, number];
     public groundPaletted: PalettedBrush;
@@ -23,6 +31,9 @@ export class BiomeDefinition {
         this.trees = new TreePalette();
         this.treesChance = 0.02;
         this.treeAreaChance = 0.5;
+        this.treesPerChunk = 0;
+        this.treesExtraChance = 0.1;
+        this.treesExtra = 1;
         this.temperature = [0,1];
         this.humidity = [0,1];
         this.groundPaletted = new PalettedBrush();
@@ -43,15 +54,26 @@ export class BiomeDefinition {
         this.IsPrecalculated = true;
     }
 
-    /**@default 0.02 */
+    /**@default 0.02 @deprecated Use setTreesPerChunk instead */
     setTreesChance(p: number){
         this.treesChance = p;
         return this;
     }
 
-    /**@default 0.5 */
+    /**@default 0.5 @deprecated Use setTreesPerChunk instead */
     setTreesAreaChance(p: number){
         this.treeAreaChance = p;
+        return this;
+    }
+
+    /**
+     * Java-parity tree placement: countExtra(count, chance, extra)
+     * Places `count` trees per chunk, with `chance` probability of placing `extra` more.
+     */
+    setTreesPerChunk(count: number, chance: number = 0.1, extra: number = 1){
+        this.treesPerChunk = count;
+        this.treesExtraChance = chance;
+        this.treesExtra = extra;
         return this;
     }
 
