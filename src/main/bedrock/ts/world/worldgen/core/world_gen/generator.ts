@@ -397,77 +397,46 @@ export class ChunkGenerator {
         const maxH = treeDef.height?.[1] ?? 11;
         const h = minH + Math.floor(random.nextFloat() * (maxH - minH + 1));
 
-        // ── Trunk ────────────────────────────────────────────────────────
-        for (let i = 0; i < h; i++) {
-            setBlock(dim.getBlock({ x, y: baseY + i, z }), logId);
-        }
+        // Leaf-start offset: leaves begin from roughly the lower-third of the trunk
+        // This matches the SpruceTreeDefinition.build() "add" parameter
+        const leafStart = Math.max(1, Math.floor(h * 0.3));
+        const totalHeight = h;
 
-        if (!leafId) return;
-
-        // ── Foliage — Java CappedFoliagePlacer parity ────────────────────
-        // Java places foliage layers from trunk top downward.
-        // The canopy radius and number of layers scales with trunk height.
-        // CappedFoliagePlacer(radius=3, offset=1): Places leaves at trunk top + offset,
-        // then layers downward with decreasing radius, capped at a max height.
-        
-        const topY = baseY + h;
-        
-        // Number of foliage layers scales with trunk height (Java: typically 3-5 layers)
-        const foliageLayers = Math.min(6, Math.max(3, Math.floor(h * 0.4)));
-        // Max radius scales with height (Java CappedFoliagePlacer uses radius 2-3)
-        const maxRadius = h >= 10 ? 3 : 2;
-
-        // Top cap: single block or small cross at the very top
-        setLeaf(dim, x, topY, z, leafId);
-        
-        // Layer 1: Small cross at top
-        for (let ox = -1; ox <= 1; ox++) {
-            for (let oz = -1; oz <= 1; oz++) {
-                if (ox === 0 && oz === 0) continue;
-                if (Math.abs(ox) + Math.abs(oz) > 1 && random.nextFloat() > 0.6) continue;
-                setLeaf(dim, x + ox, topY, z + oz, leafId);
-            }
-        }
-
-        // Layers 2+: Growing wider, then tapering, placed from top-1 downward
-        for (let layer = 0; layer < foliageLayers; layer++) {
-            const ly = topY - 1 - layer;
-            if (ly <= baseY) break;
-
-            // Radius grows from 1 to maxRadius, then optionally tapers at the bottom
-            let radius: number;
-            if (layer < foliageLayers - 1) {
-                // Grow from 1 to maxRadius over the first few layers
-                radius = Math.min(maxRadius, 1 + Math.floor((layer + 1) * maxRadius / foliageLayers));
+        for (let Y = 0; Y < totalHeight; Y++) {
+            const yy = baseY + Y;
+            // Trunk (all but the very top block which becomes a leaf tip)
+            if (Y < totalHeight - 1) {
+                setBlock(dim.getBlock({ x, y: yy, z }), logId);
             } else {
-                // Last layer: slightly smaller (taper)
-                radius = Math.max(1, maxRadius - 1);
+                // Top of trunk: leaf block (like SpruceTreeDefinition)
+                if (leafId) {
+                    const b = dim.getBlock({ x, y: yy, z });
+                    if (b && b.typeId === "minecraft:air") {
+                        try { b.setType(leafId); } catch (_) {}
+                    }
+                }
             }
 
-            for (let ox = -radius; ox <= radius; ox++) {
-                for (let oz = -radius; oz <= radius; oz++) {
-                    // Diamond/taxicab distance check with some corner randomness
-                    const dist = Math.abs(ox) + Math.abs(oz);
-                    if (dist > radius + 1) continue;
-                    // Skip corners randomly for organic shape (Java does this via foliage shape)
-                    if (Math.abs(ox) === radius && Math.abs(oz) === radius) {
-                        if (random.nextFloat() > 0.4) continue;
+            // Radial foliage layers (original polar-coordinate algorithm)
+            // Leaves start at 'leafStart' height and get wider toward the bottom
+            if (leafId && Y >= leafStart) {
+                const max = totalHeight - Y + 1; // wider at bottom, narrower at top
+                for (let i = 0.5; i < max; i += 0.8) {
+                    const count = Math.floor(i * Math.PI);
+                    for (let j = 0; j < count; j++) {
+                        const distance = random.nextFloat() * i / 3 + 0.2;
+                        const rot = random.nextFloat() * Math.PI * 2;
+                        const lx = x + Math.floor(Math.sin(rot) * distance + 0.5);
+                        const lz = z + Math.floor(Math.cos(rot) * distance + 0.5);
+                        const leaf = dim.getBlock({ x: lx, y: yy, z: lz });
+                        if (leaf && leaf.typeId === "minecraft:air") {
+                            try { leaf.setType(leafId); } catch (_) {}
+                        }
                     }
-                    if (dist === radius + 1) {
-                        if (random.nextFloat() > 0.3) continue;
-                    }
-                    setLeaf(dim, x + ox, ly, z + oz, leafId);
                 }
             }
         }
         yield;
-    }
-}
-
-function setLeaf(dim: Dimension, x: number, y: number, z: number, leafId: string) {
-    const block = dim.getBlock({ x, y, z });
-    if (block && block.typeId === "minecraft:air") {
-        try { block.setType(leafId); } catch (_) {}
     }
 }
 

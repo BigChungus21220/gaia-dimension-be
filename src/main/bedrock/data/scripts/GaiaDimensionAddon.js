@@ -14291,40 +14291,59 @@ var ChunkGenerator = class _ChunkGenerator {
     const logId = treeDef.logPaletted?.permutations?.[0];
     const leafId = treeDef.leavesPaletted?.permutations?.[0] ?? treeDef.carpetPaletted?.permutations?.[0];
     if (!logId) return;
-    const minH = treeDef.height?.[0] ?? 4;
-    const maxH = treeDef.height?.[1] ?? 8;
+    const minH = treeDef.height?.[0] ?? 5;
+    const maxH = treeDef.height?.[1] ?? 11;
     const h = minH + Math.floor(random2.nextFloat() * (maxH - minH + 1));
     for (let i = 0; i < h; i++) {
       setBlock(dim.getBlock({ x, y: baseY + i, z }), logId);
     }
     if (!leafId) return;
-    const topY = baseY + h - 1;
-    for (let ox = -2; ox <= 2; ox++) {
-      for (let oz = -2; oz <= 2; oz++) {
-        if (Math.abs(ox) === 2 && Math.abs(oz) === 2) continue;
-        const leaf = dim.getBlock({ x: x + ox, y: topY, z: z + oz });
-        if (leaf && leaf.typeId === "minecraft:air") {
-          try {
-            leaf.setType(leafId);
-          } catch (_) {
-          }
-        }
-      }
-    }
+    const topY = baseY + h;
+    const foliageLayers = Math.min(6, Math.max(3, Math.floor(h * 0.4)));
+    const maxRadius = h >= 10 ? 3 : 2;
+    setLeaf(dim, x, topY, z, leafId);
     for (let ox = -1; ox <= 1; ox++) {
       for (let oz = -1; oz <= 1; oz++) {
-        const leaf = dim.getBlock({ x: x + ox, y: topY + 1, z: z + oz });
-        if (leaf && leaf.typeId === "minecraft:air") {
-          try {
-            leaf.setType(leafId);
-          } catch (_) {
+        if (ox === 0 && oz === 0) continue;
+        if (Math.abs(ox) + Math.abs(oz) > 1 && random2.nextFloat() > 0.6) continue;
+        setLeaf(dim, x + ox, topY, z + oz, leafId);
+      }
+    }
+    for (let layer = 0; layer < foliageLayers; layer++) {
+      const ly = topY - 1 - layer;
+      if (ly <= baseY) break;
+      let radius;
+      if (layer < foliageLayers - 1) {
+        radius = Math.min(maxRadius, 1 + Math.floor((layer + 1) * maxRadius / foliageLayers));
+      } else {
+        radius = Math.max(1, maxRadius - 1);
+      }
+      for (let ox = -radius; ox <= radius; ox++) {
+        for (let oz = -radius; oz <= radius; oz++) {
+          const dist = Math.abs(ox) + Math.abs(oz);
+          if (dist > radius + 1) continue;
+          if (Math.abs(ox) === radius && Math.abs(oz) === radius) {
+            if (random2.nextFloat() > 0.4) continue;
           }
+          if (dist === radius + 1) {
+            if (random2.nextFloat() > 0.3) continue;
+          }
+          setLeaf(dim, x + ox, ly, z + oz, leafId);
         }
       }
     }
     yield;
   }
 };
+function setLeaf(dim, x, y, z, leafId) {
+  const block = dim.getBlock({ x, y, z });
+  if (block && block.typeId === "minecraft:air") {
+    try {
+      block.setType(leafId);
+    } catch (_) {
+    }
+  }
+}
 
 // src/main/bedrock/ts/world/worldgen/core/definitions/definition-manager.ts
 import { world as world33, system as system39 } from "@minecraft/server";
@@ -14546,41 +14565,41 @@ async function playerInitialize(player) {
 var pinkAgateTree = new SpruceTreeDefinition();
 pinkAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:pink_agate_log"));
 pinkAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:pink_agate_leaves"));
-pinkAgateTree.setHeight(5, 9);
+pinkAgateTree.setHeight(5, 11);
 var blueAgateTree = new SpruceTreeDefinition();
 blueAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:blue_agate_log"));
 blueAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:blue_agate_leaves"));
-blueAgateTree.setHeight(6, 10);
+blueAgateTree.setHeight(6, 9);
 var greenAgateTree = new SpruceTreeDefinition();
 greenAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:green_agate_log"));
 greenAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:green_agate_leaves"));
-greenAgateTree.setHeight(7, 12);
+greenAgateTree.setHeight(10, 16);
 var purpleAgateTree = new SpruceTreeDefinition();
 purpleAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:purple_agate_log"));
 purpleAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:purple_agate_leaves"));
-purpleAgateTree.setHeight(5, 8);
+purpleAgateTree.setHeight(7, 13);
 var fossilizedTree = new CuttedSpruceTreeDefinition();
 fossilizedTree.setLogPaletted(new PalettedBrush().add("gaiadimension:fossilized_log"));
 fossilizedTree.setCarpetPaletted(new PalettedBrush().add("gaiadimension:fossilized_leaves"));
-fossilizedTree.setHeight(3, 6);
+fossilizedTree.setHeight(5, 11);
 var corruptedTree = new SpruceTreeDefinition();
 corruptedTree.setLogPaletted(new PalettedBrush().add("gaiadimension:corrupted_log"));
 corruptedTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:corrupted_leaves"));
-corruptedTree.setHeight(4, 7);
+corruptedTree.setHeight(7, 11);
 var burntAgateTree = new PillarTreeDefinition("burnt_agate");
 burntAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:burnt_log"));
-burntAgateTree.setHeight(3, 6);
+burntAgateTree.setHeight(5, 11);
 var fireAgateTree = new PillarTreeDefinition("fire_agate");
 fireAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:fire_agate_log"));
-fireAgateTree.setHeight(3, 5);
+fireAgateTree.setHeight(5, 11);
 var auraTree = new SpruceTreeDefinition();
 auraTree.setLogPaletted(new PalettedBrush().add("gaiadimension:aura_log"));
 auraTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:aura_leaves"));
-auraTree.setHeight(4, 8);
+auraTree.setHeight(10, 16);
 var goldenTree = new SpruceTreeDefinition();
 goldenTree.setLogPaletted(new PalettedBrush().add("gaiadimension:golden_log"));
 goldenTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:golden_leaves"));
-goldenTree.setHeight(5, 9);
+goldenTree.setHeight(7, 11);
 var mutantAgateTree = new SpruceTreeDefinition();
 mutantAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:pink_agate_log"));
 mutantAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:pink_agate_leaves"));
