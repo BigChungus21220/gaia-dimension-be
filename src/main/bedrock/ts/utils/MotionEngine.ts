@@ -180,6 +180,13 @@ export class MotionEngine {
                 // rise speed for smooth buoyant lift, not an instant kick
                 const targetRise = SWIM_UP_FORCE + effectiveDrag * 0.1;
                 p._fluidVY += (targetRise - p._fluidVY) * 0.4;
+            } else if (!player.isSneaking && drag >= 0.7) {
+                // ── Passive buoyancy (water-like fluids only) ────────────
+                // Java: submerged entities passively rise if not sneaking.
+                // This is what creates the iconic bobbing — you sit on the
+                // bottom for 1 tick, then buoyancy lifts you, gravity pulls
+                // you back, lift again → oscillation.
+                p._fluidVY += SWIM_UP_FORCE * 0.6;
             }
         } else {
             // Airborne in fluid — full fluid dynamics
@@ -198,9 +205,10 @@ export class MotionEngine {
 
             // ── Surface buoyancy ─────────────────────────────────────────
             // When slowly sinking and not actively pressing anything,
-            // dampen downward velocity to create natural bobbing
-            if (!isJumping && !player.isSneaking && p._fluidVY < 0 && p._fluidVY > -0.1) {
-                const buoyancy = drag >= 0.7 ? 0.6 : 0.3;
+            // dampen downward velocity aggressively to create natural bobbing.
+            // The stronger dampening (0.4 for water) creates the float-at-surface feel.
+            if (!isJumping && !player.isSneaking && p._fluidVY < 0 && p._fluidVY > -0.15) {
+                const buoyancy = drag >= 0.7 ? 0.4 : 0.3;
                 p._fluidVY *= buoyancy;
             }
         }
@@ -208,7 +216,7 @@ export class MotionEngine {
         // ── Step 4: Deadzone ────────────────────────────────────────────
         if (Math.abs(p._fluidVX) < DEADZONE && inputMag < 0.01) p._fluidVX = 0;
         if (Math.abs(p._fluidVZ) < DEADZONE && inputMag < 0.01) p._fluidVZ = 0;
-        if (Math.abs(p._fluidVY) < DEADZONE && !isJumping && (onGround || !player.isSneaking)) p._fluidVY = 0;
+        if (Math.abs(p._fluidVY) < 0.001 && !isJumping && (onGround || !player.isSneaking)) p._fluidVY = 0;
 
         // ── Step 5: Clamp ───────────────────────────────────────────────
         p._fluidVY = Math.max(-MAX_V_SPEED, Math.min(MAX_V_SPEED, p._fluidVY));

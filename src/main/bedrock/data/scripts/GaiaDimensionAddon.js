@@ -5770,17 +5770,17 @@ var WaterTemplate = class extends FluidTemplate {
       amplifier = 2;
     } else {
       if (isHeadInside) {
-        gravityScale = 1;
+        gravityScale = 0.6;
         amplifier = 2;
       } else if (isFeetInside) {
         const loc = player.location;
         const resolver = FluidTemplate.blockResolver;
         const midBlock = resolver ? resolver(player.dimension, loc.x, loc.y + 0.8, loc.z) : player.dimension.getBlock({ x: loc.x, y: loc.y + 0.8, z: loc.z });
         if (midBlock && this._idsSet.has(midBlock.typeId)) {
-          gravityScale = 2;
+          gravityScale = 1;
           amplifier = 1;
         } else {
-          gravityScale = 3;
+          gravityScale = 1.5;
           amplifier = 0;
         }
       }
@@ -6035,6 +6035,8 @@ var MotionEngine = class {
       if (isJumping) {
         const targetRise = SWIM_UP_FORCE + effectiveDrag * 0.1;
         p._fluidVY += (targetRise - p._fluidVY) * 0.4;
+      } else if (!player.isSneaking && drag >= 0.7) {
+        p._fluidVY += SWIM_UP_FORCE * 0.6;
       }
     } else {
       p._fluidVY *= yDrag;
@@ -6045,14 +6047,14 @@ var MotionEngine = class {
       if (player.isSneaking) {
         p._fluidVY -= FLUID_GRAVITY * 0.8;
       }
-      if (!isJumping && !player.isSneaking && p._fluidVY < 0 && p._fluidVY > -0.1) {
-        const buoyancy = drag >= 0.7 ? 0.6 : 0.3;
+      if (!isJumping && !player.isSneaking && p._fluidVY < 0 && p._fluidVY > -0.15) {
+        const buoyancy = drag >= 0.7 ? 0.4 : 0.3;
         p._fluidVY *= buoyancy;
       }
     }
     if (Math.abs(p._fluidVX) < DEADZONE && inputMag < 0.01) p._fluidVX = 0;
     if (Math.abs(p._fluidVZ) < DEADZONE && inputMag < 0.01) p._fluidVZ = 0;
-    if (Math.abs(p._fluidVY) < DEADZONE && !isJumping && (onGround || !player.isSneaking)) p._fluidVY = 0;
+    if (Math.abs(p._fluidVY) < 1e-3 && !isJumping && (onGround || !player.isSneaking)) p._fluidVY = 0;
     p._fluidVY = Math.max(-MAX_V_SPEED, Math.min(MAX_V_SPEED, p._fluidVY));
     const maxH = canSprint && player.isSprinting ? MAX_H_SPEED_SPRINT : MAX_H_SPEED;
     const hSpeed = Math.sqrt(p._fluidVX * p._fluidVX + p._fluidVZ * p._fluidVZ);
@@ -6419,6 +6421,19 @@ function runPlayerEffects(players) {
       } else if (playersInFluids.has(player.id)) {
         player.runCommand("fog @s remove fluid_fog");
         playersInFluids.delete(player.id);
+        FluidTemplate.physicsStates.delete(player.id);
+        _fluidPosTrack.delete(player.id);
+        const p = player;
+        p._fluidVX = void 0;
+        p._fluidVZ = void 0;
+        p._fluidVY = void 0;
+        p._lastSmoothImpX = void 0;
+        p._lastSmoothImpZ = void 0;
+        p._lastSmoothImpY = void 0;
+        p._smoothDirX = void 0;
+        p._smoothDirZ = void 0;
+        p._walkExcessX = 0;
+        p._walkExcessZ = 0;
       }
     } catch {
     }
@@ -13113,7 +13128,7 @@ import { system as system35 } from "@minecraft/server";
 var delay = system35.waitTicks.bind(system35);
 
 // src/main/bedrock/ts/world/worldgen/core/client/index.ts
-import { world as world35 } from "@minecraft/server";
+import { world as world36 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/worldgen/core/client/local-chunks.ts
 import { system as system36 } from "@minecraft/server";
@@ -13213,10 +13228,10 @@ var ClientChunk = class {
 };
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/index.ts
-import { world as world34, system as system40 } from "@minecraft/server";
+import { world as world35, system as system40 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/session-manager.ts
-import { world as world33 } from "@minecraft/server";
+import { world as world34 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/generator.ts
 import { system as system38 } from "@minecraft/server";
@@ -13781,6 +13796,171 @@ var BiomeDefinition = class {
   }
 };
 
+// src/main/bedrock/ts/world/worldgen/core/world_gen/structures.ts
+import { world as world32, StructureRotation, StructureMirrorAxis, StructureAnimationMode } from "@minecraft/server";
+var MINI_TOWER_TYPES = ["amethyst_tower", "copal_tower", "jade_tower", "jet_tower"];
+var MINI_TOWER_BIOMES = /* @__PURE__ */ new Set([
+  "gaiadimension:pink_agate_forest",
+  "gaiadimension:blue_agate_taiga",
+  "gaiadimension:green_agate_jungle",
+  "gaiadimension:purple_agate_swamp",
+  "gaiadimension:mutant_agate_wildwood",
+  "gaiadimension:fossil_woodland",
+  "gaiadimension:crystal_plains"
+]);
+var MALACHITE_BIOMES = /* @__PURE__ */ new Set([
+  "gaiadimension:pink_agate_forest",
+  "gaiadimension:green_agate_jungle",
+  "gaiadimension:crystal_plains"
+]);
+function getStructureChunkInRegion(chunkX, chunkZ, spacing, separation, salt, worldSeed, triangular) {
+  const regionX = Math.floor(chunkX / spacing);
+  const regionZ = Math.floor(chunkZ / spacing);
+  const rngSeed = hashSeed(regionX, regionZ, worldSeed, salt);
+  const rng = new SimpleRNG(rngSeed);
+  const range = spacing - separation;
+  let offsetX, offsetZ;
+  if (triangular) {
+    offsetX = Math.floor((rng.nextInt(range) + rng.nextInt(range)) / 2);
+    offsetZ = Math.floor((rng.nextInt(range) + rng.nextInt(range)) / 2);
+  } else {
+    offsetX = rng.nextInt(range);
+    offsetZ = rng.nextInt(range);
+  }
+  const structChunkX = regionX * spacing + offsetX;
+  const structChunkZ = regionZ * spacing + offsetZ;
+  if (chunkX === structChunkX && chunkZ === structChunkZ) {
+    return { cx: structChunkX, cz: structChunkZ };
+  }
+  return null;
+}
+function hashSeed(regionX, regionZ, worldSeed, salt) {
+  let hash = regionX * 341873 + regionZ * 132897 + worldSeed + salt;
+  hash = (hash >>> 16 ^ hash) * 73244475;
+  hash = (hash >>> 16 ^ hash) * 73244475;
+  hash = hash >>> 16 ^ hash;
+  return Math.abs(hash);
+}
+var SimpleRNG = class {
+  state;
+  constructor(seed2) {
+    this.state = (seed2 ^ 25214903917) & 4294967295;
+  }
+  next() {
+    this.state = this.state * 1103515245 + 12345 & 2147483647;
+    return this.state;
+  }
+  nextInt(bound) {
+    if (bound <= 0) return 0;
+    return this.next() % bound;
+  }
+  nextFloat() {
+    return this.next() / 2147483647;
+  }
+};
+var ROTATIONS = [
+  StructureRotation.None,
+  StructureRotation.Rotate90,
+  StructureRotation.Rotate180,
+  StructureRotation.Rotate270
+];
+var PLACED_STRUCTURES = /* @__PURE__ */ new Set();
+function getPlacementKey(chunkX, chunkZ, type2) {
+  return `struct:${type2}:${chunkX},${chunkZ}`;
+}
+function placeStructuresForChunk(chunkX, chunkZ, dimension, worldSeed, getBiomeAt, getTerrainHeightAt) {
+  const miniKey = getPlacementKey(chunkX, chunkZ, "mini_tower");
+  if (!PLACED_STRUCTURES.has(miniKey)) {
+    const miniResult = getStructureChunkInRegion(chunkX, chunkZ, 30, 10, 420, worldSeed, false);
+    if (miniResult) {
+      const worldX = miniResult.cx * 16 + 8;
+      const worldZ = miniResult.cz * 16 + 8;
+      const biome = getBiomeAt(worldX, worldZ);
+      if (MINI_TOWER_BIOMES.has(biome.id)) {
+        const typeRng = new SimpleRNG(hashSeed(miniResult.cx, miniResult.cz, worldSeed, 999));
+        const towerIdx = typeRng.nextInt(MINI_TOWER_TYPES.length);
+        const towerName = MINI_TOWER_TYPES[towerIdx];
+        const rotation = ROTATIONS[typeRng.nextInt(4)];
+        const surfaceY = getTerrainHeightAt(worldX, worldZ);
+        placeMiniTower(dimension, worldX, surfaceY, worldZ, towerName, rotation);
+        PLACED_STRUCTURES.add(miniKey);
+      }
+    }
+  }
+  const malKey = getPlacementKey(chunkX, chunkZ, "malachite_watchtower");
+  if (!PLACED_STRUCTURES.has(malKey)) {
+    const malResult = getStructureChunkInRegion(chunkX, chunkZ, 35, 15, 621, worldSeed, true);
+    if (malResult) {
+      const worldX = malResult.cx * 16 + 8;
+      const worldZ = malResult.cz * 16 + 8;
+      const biome = getBiomeAt(worldX, worldZ);
+      if (MALACHITE_BIOMES.has(biome.id)) {
+        const typeRng = new SimpleRNG(hashSeed(malResult.cx, malResult.cz, worldSeed, 1337));
+        const rotation = ROTATIONS[typeRng.nextInt(4)];
+        const surfaceY = getTerrainHeightAt(worldX, worldZ);
+        placeMalachiteTower(dimension, worldX, surfaceY, worldZ, rotation);
+        PLACED_STRUCTURES.add(malKey);
+      }
+    }
+  }
+}
+function placeMiniTower(dimension, x, surfaceY, z, towerName, rotation) {
+  try {
+    const structureId = `mystructure:${towerName}`;
+    const placeY = Math.floor(surfaceY);
+    const options = {
+      rotation,
+      mirror: StructureMirrorAxis.None,
+      animationMode: StructureAnimationMode.None,
+      includeEntities: true,
+      includeBlocks: true,
+      waterlogged: false
+    };
+    world32.structureManager.place(structureId, dimension, { x, y: placeY, z }, options);
+    fillSupportColumn(dimension, x, placeY, z, 17);
+  } catch (e) {
+    console.warn(`[GaiaDim] Failed to place ${towerName} at ${x},${surfaceY},${z}:`, e);
+  }
+}
+function placeMalachiteTower(dimension, x, surfaceY, z, rotation) {
+  try {
+    const structureId = "mystructure:malachite_tower";
+    const placeY = Math.floor(surfaceY);
+    const options = {
+      rotation,
+      mirror: StructureMirrorAxis.None,
+      animationMode: StructureAnimationMode.None,
+      includeEntities: true,
+      includeBlocks: true,
+      waterlogged: false
+    };
+    world32.structureManager.place(structureId, dimension, { x, y: placeY, z }, options);
+    fillSupportColumn(dimension, x, placeY, z, 25);
+  } catch (e) {
+    console.warn(`[GaiaDim] Failed to place malachite_tower at ${x},${surfaceY},${z}:`, e);
+  }
+}
+function fillSupportColumn(dimension, centerX, baseY, centerZ, width) {
+  const half = Math.floor(width / 2);
+  const step = 4;
+  for (let dx = -half; dx <= half; dx += step) {
+    for (let dz = -half; dz <= half; dz += step) {
+      const bx = centerX + dx;
+      const bz = centerZ + dz;
+      for (let y = baseY - 1; y > baseY - 15; y--) {
+        try {
+          const block = dimension.getBlock({ x: bx, y, z: bz });
+          if (!block) break;
+          if (block.typeId !== "minecraft:air" && !block.isLiquid) break;
+          block.setType("gaiadimension:heavy_soil");
+        } catch (_) {
+          break;
+        }
+      }
+    }
+  }
+}
+
 // src/main/bedrock/ts/world/worldgen/core/world_gen/generator.ts
 var SEA_LEVEL = 63;
 var ENTRY = 0;
@@ -13923,6 +14103,22 @@ var ChunkGenerator = class _ChunkGenerator {
         this.isGenerating.delete(hash);
         if (failRef.count === 0) {
           this.setGenerated(hash);
+          try {
+            placeStructuresForChunk(
+              X,
+              Z,
+              this.dimension,
+              this.seed.seed,
+              (x, z) => this.getBiomeAt(x, z),
+              (x, z) => {
+                const raw = this.getTerrainHeight(x, z);
+                const blend = this.getBiomeBlend(x, z);
+                return Math.floor(68 + 128 * blend.depthOffset + 128 * (raw * 10) / blend.scaleFactor);
+              }
+            );
+          } catch (e) {
+            console.warn(`[GaiaDim] Structure placement error in chunk ${X},${Z}:`, e);
+          }
           resolve(true);
         } else {
           resolve(false);
@@ -14094,7 +14290,7 @@ var ChunkGenerator = class _ChunkGenerator {
 };
 
 // src/main/bedrock/ts/world/worldgen/core/definitions/definition-manager.ts
-import { world as world32, system as system39 } from "@minecraft/server";
+import { world as world33, system as system39 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/worldgen/core/definitions/biome-manager.ts
 var BiomeManager = class {
@@ -14162,8 +14358,8 @@ var DefinitionManager = class {
     this.__precalculated = true;
     this.__precalculatedSamples = 15;
     system39.run(() => {
-      this.__precalculated = world32.getDynamicProperty("property-precalculated") ?? true;
-      this.__precalculatedSamples = world32.getDynamicProperty("property-precalculated-sampling") ?? 15;
+      this.__precalculated = world33.getDynamicProperty("property-precalculated") ?? true;
+      this.__precalculatedSamples = world33.getDynamicProperty("property-precalculated-sampling") ?? 15;
       if (this.__precalculatedSamples > 50) this.__precalculatedSamples = 50;
     });
   }
@@ -14172,20 +14368,20 @@ var DefinitionManager = class {
   }
   set IsPrecalculated(v) {
     this.__precalculated = v;
-    world32.setDynamicProperty("property-precalculated", v);
+    world33.setDynamicProperty("property-precalculated", v);
   }
   get PrecalculatedSamples() {
     return this.__precalculatedSamples;
   }
   set PrecalculatedSamples(v) {
     this.__precalculatedSamples = v;
-    world32.setDynamicProperty("property-precalculated-sampling", v);
+    world33.setDynamicProperty("property-precalculated-sampling", v);
   }
   get IsPrecalculatedVariable() {
-    return world32.getDynamicProperty("property-precalculated") ?? false;
+    return world33.getDynamicProperty("property-precalculated") ?? false;
   }
   get IsPrecalculatedSamplesVariable() {
-    return world32.getDynamicProperty("property-precalculated-sampling") ?? 10;
+    return world33.getDynamicProperty("property-precalculated-sampling") ?? 10;
   }
   triggerFinialize(seed2) {
     system39.run(() => {
@@ -14220,7 +14416,7 @@ var SessionManager = class {
   getOrCreateGenerator(dimensionId) {
     if (this.generators.has(dimensionId)) return this.generators.get(dimensionId);
     try {
-      const dimension = world33.getDimension(dimensionId);
+      const dimension = world34.getDimension(dimensionId);
       const gen = new ChunkGenerator(this, dimension, this.procedural);
       this.generators.set(dimensionId, gen);
       return gen;
@@ -14232,10 +14428,10 @@ var SessionManager = class {
     return this.getOrCreateGenerator(dimension.id);
   }
   isGenerated(hash) {
-    return world33.getDynamicProperty(hash);
+    return world34.getDynamicProperty(hash);
   }
   setGenerated(hash) {
-    world33.setDynamicProperty(hash, true);
+    world34.setDynamicProperty(hash, true);
   }
   getBiome(temp, humi) {
     return this.definition.biomeManager.getBiome(temp, humi);
@@ -14245,10 +14441,10 @@ var SessionManager = class {
 // src/main/bedrock/ts/world/worldgen/core/world_gen/index.ts
 var seed;
 system40.run(() => {
-  let savedSeed = world34.getDynamicProperty("seed");
+  let savedSeed = world35.getDynamicProperty("seed");
   if (!savedSeed) {
     savedSeed = Math.ceil(Date.now() * Math.random() * 2);
-    world34.setDynamicProperty("seed", savedSeed);
+    world35.setDynamicProperty("seed", savedSeed);
   }
   seed = savedSeed;
   SESSION_MANAGER.init(seed);
@@ -14285,19 +14481,19 @@ var SESSION_MANAGER = new class {
 
 // src/main/bedrock/ts/world/worldgen/core/client/index.ts
 var initializedPlayers = /* @__PURE__ */ new Set();
-world35.afterEvents.worldLoad.subscribe(() => (async () => {
+world36.afterEvents.worldLoad.subscribe(() => (async () => {
   await SESSION_MANAGER.ready;
   DEFINITION_MANAGER.triggerFinialize(SESSION_MANAGER.procedural);
-  for (const p of world35.getAllPlayers()) {
+  for (const p of world36.getAllPlayers()) {
     playerInitialize(p).catch((e) => console.error(e));
   }
 })().catch((e) => console.error(e, e.stack)));
-world35.afterEvents.playerSpawn.subscribe((e) => {
+world36.afterEvents.playerSpawn.subscribe((e) => {
   if (e.initialSpawn) {
     playerInitialize(e.player).catch((err) => console.error(err));
   }
 });
-world35.beforeEvents.playerLeave.subscribe((e) => {
+world36.beforeEvents.playerLeave.subscribe((e) => {
   initializedPlayers.delete(e.player.id);
   ClientChunk.open(SESSION_MANAGER, e.player).stop();
 });
@@ -14376,7 +14572,7 @@ bm.addBiome(new BiomeDefinition("gaiadimension:mineral_reservoir").setGroundPale
 bm.addBiome(new BiomeDefinition("gaiadimension:mineral_river").setGroundPalette(new PalettedBrush().add("gaiadimension:pebbles")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:gaia_stone")).setVegetationPalette(new PalettedBrush()).setVegetationChance(0).setDepth(-0.8).setScale(0));
 
 // src/main/bedrock/ts/API/lib/EnchantmentLib.ts
-import { world as world36, system as system42 } from "@minecraft/server";
+import { world as world37, system as system42 } from "@minecraft/server";
 import { ActionFormData } from "@minecraft/server-ui";
 var EnchantmentManager = class {
   registry;
@@ -14403,7 +14599,7 @@ var EnchantmentManager = class {
   }
   initEvents() {
     system42.runInterval(() => this.manageVisuals(), 5);
-    world36.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
+    world37.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
       const { block, player } = ev;
       if (block.typeId === "minecraft:enchanting_table" && player.isSneaking) {
         ev.cancel = true;
@@ -14412,7 +14608,7 @@ var EnchantmentManager = class {
         });
       }
     });
-    world36.afterEvents.entityHitEntity.subscribe((ev) => {
+    world37.afterEvents.entityHitEntity.subscribe((ev) => {
       const { damagingEntity } = ev;
       if (!damagingEntity || !damagingEntity.getComponent("minecraft:equippable")) return;
       const equippable = damagingEntity.getComponent("minecraft:equippable");
@@ -14421,7 +14617,7 @@ var EnchantmentManager = class {
         this.triggerEnchants(mainHand, "onHit", ev);
       }
     });
-    world36.afterEvents.playerBreakBlock.subscribe((ev) => {
+    world37.afterEvents.playerBreakBlock.subscribe((ev) => {
       const { itemStack } = ev;
       if (itemStack) {
         this.triggerEnchants(itemStack, "onMine", ev);
@@ -14552,7 +14748,7 @@ ${color}Cost: ${e.cost} Lvl`);
    * Scans players to toggle glint state (Clean in cursor, Glint in inventory).
    */
   manageVisuals() {
-    for (const player of world36.getAllPlayers()) {
+    for (const player of world37.getAllPlayers()) {
       const cursorComp = player.getComponent("minecraft:cursor_inventory");
       if (cursorComp && cursorComp.item) {
         const item = cursorComp.item;
@@ -14655,7 +14851,7 @@ enchantmentManager.register("gaia:thunder_strike", {
 });
 
 // src/main/bedrock/ts/entities/MalachiteGuard.ts
-import { world as world37, system as system43, Player as Player25, EquipmentSlot as EquipmentSlot2, GameMode as GameMode9, EntityComponentTypes } from "@minecraft/server";
+import { world as world38, system as system43, Player as Player25, EquipmentSlot as EquipmentSlot2, GameMode as GameMode9, EntityComponentTypes } from "@minecraft/server";
 var GUARD_ID = "gaiadimension:malachite_guard";
 var DRONE_ID = "gaiadimension:malachite_drone";
 var BATON_ID = "gaiadimension:malachite_guard_baton";
@@ -14739,14 +14935,14 @@ var MalachiteGuardSystem = class {
     this.init();
   }
   init() {
-    world37.afterEvents.entitySpawn.subscribe((event) => {
+    world38.afterEvents.entitySpawn.subscribe((event) => {
       const { entity } = event;
       if (entity.typeId === GUARD_ID) {
         this.setupGuard(entity);
       }
     });
     system43.runInterval(() => {
-      for (const dim of [world37.getDimension("overworld")]) {
+      for (const dim of [world38.getDimension("overworld")]) {
         const guards = dim.getEntities({ type: GUARD_ID });
         for (const guard of guards) {
           if (!guard.isValid) continue;
@@ -14757,7 +14953,7 @@ var MalachiteGuardSystem = class {
         }
       }
     }, 1);
-    world37.afterEvents.entityHurt.subscribe((event) => {
+    world38.afterEvents.entityHurt.subscribe((event) => {
       const { hurtEntity, damage, damageSource } = event;
       if (hurtEntity.typeId !== GUARD_ID || !hurtEntity.isValid) return;
       const phase = getNum(hurtEntity, P.PHASE, PHASE_DEFENCE);
@@ -14816,7 +15012,7 @@ var MalachiteGuardSystem = class {
         }
       }
     });
-    world37.afterEvents.entityHitEntity.subscribe((event) => {
+    world38.afterEvents.entityHitEntity.subscribe((event) => {
       const { damagingEntity, hitEntity } = event;
       if (damagingEntity instanceof Player25 && hitEntity.isValid) {
         try {
@@ -14857,7 +15053,7 @@ var MalachiteGuardSystem = class {
         }
       }
     });
-    world37.afterEvents.entityDie.subscribe((event) => {
+    world38.afterEvents.entityDie.subscribe((event) => {
       const { deadEntity } = event;
       if (deadEntity.typeId !== DRONE_ID) return;
       const parentId = getStr(deadEntity, P.PARENT_ID);

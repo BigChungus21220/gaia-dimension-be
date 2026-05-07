@@ -2,6 +2,7 @@ import { Dimension, system } from "@minecraft/server";
 import { easeOutQuad, FastNoiseLite, ProceduralRandom } from "../utils";
 import { buildGaiaLayers, getBiomeNameFromId } from "./gaia-layers";
 import { BiomeDefinition } from "../definitions/definition-biome";
+import { placeStructuresForChunk } from "./structures";
 
 // Java source: GaiaDimensions.java — sea level 63, minY -64
 const SEA_LEVEL = 63;
@@ -180,6 +181,24 @@ export class ChunkGenerator {
                 this.isGenerating.delete(hash);
                 if (failRef.count === 0) {
                     this.setGenerated(hash);
+
+                    // Place structures after terrain is complete
+                    try {
+                        placeStructuresForChunk(
+                            X, Z,
+                            this.dimension,
+                            this.seed.seed,
+                            (x: number, z: number) => this.getBiomeAt(x, z),
+                            (x: number, z: number) => {
+                                const raw = this.getTerrainHeight(x, z);
+                                const blend = this.getBiomeBlend(x, z);
+                                return Math.floor(68.0 + 128.0 * blend.depthOffset + (128.0 * (raw * 10) / blend.scaleFactor));
+                            },
+                        );
+                    } catch (e) {
+                        console.warn(`[GaiaDim] Structure placement error in chunk ${X},${Z}:`, e);
+                    }
+
                     resolve(true);
                 } else {
                     resolve(false);

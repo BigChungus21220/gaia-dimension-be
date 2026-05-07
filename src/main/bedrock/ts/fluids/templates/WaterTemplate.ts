@@ -63,7 +63,7 @@ export class WaterTemplate extends FluidTemplate {
 
         } else {
             if (isHeadInside) {
-                gravityScale = 1.0;  // Submerged: gentle sinking (effective 0.02)
+                gravityScale = 0.6;  // Submerged: gentle sinking — passive buoyancy in MotionEngine pushes up harder → net float
                 amplifier = 2;
 
             } else if (isFeetInside) {
@@ -73,11 +73,11 @@ export class WaterTemplate extends FluidTemplate {
                     ? resolver(player.dimension, loc.x, loc.y + 0.8, loc.z)
                     : player.dimension.getBlock({ x: loc.x, y: loc.y + 0.8, z: loc.z });
                 if (midBlock && this._idsSet.has(midBlock.typeId)) {
-                    gravityScale = 2.0;  // Waist deep (effective 0.04)
+                    gravityScale = 1.0;  // Waist deep
                     amplifier = 1;
 
                 } else {
-                    gravityScale = 3.0;  // Ankle deep (effective 0.06)
+                    gravityScale = 1.5;  // Ankle deep
                     amplifier = 0;
 
                 }

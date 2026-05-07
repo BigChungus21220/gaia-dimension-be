@@ -300,7 +300,25 @@ function runPlayerEffects(players: Player[]) {
             if (blockHead && fluidIDs.has(blockHead.typeId)) { template = idToTemplate.get(blockHead.typeId); isHead = true; }
             if (blockAt && fluidIDs.has(blockAt.typeId)) { const t = idToTemplate.get(blockAt.typeId); if (!template) template = t; isFeet = true; }
             if (template) { playersInFluids.add(player.id); template.onPlayerTick(player, blockAt || blockHead!, isHead, isFeet); }
-            else if (playersInFluids.has(player.id)) { player.runCommand("fog @s remove fluid_fog"); playersInFluids.delete(player.id); }
+            else if (playersInFluids.has(player.id)) {
+                player.runCommand("fog @s remove fluid_fog");
+                playersInFluids.delete(player.id);
+                // CRITICAL: Stop MotionEngine from applying fluid physics after exit
+                FluidTemplate.physicsStates.delete(player.id);
+                _fluidPosTrack.delete(player.id);
+                // Clear MotionEngine's stored velocity so it doesn't leak into the next fluid entry
+                const p = player as any;
+                p._fluidVX = undefined;
+                p._fluidVZ = undefined;
+                p._fluidVY = undefined;
+                p._lastSmoothImpX = undefined;
+                p._lastSmoothImpZ = undefined;
+                p._lastSmoothImpY = undefined;
+                p._smoothDirX = undefined;
+                p._smoothDirZ = undefined;
+                p._walkExcessX = 0;
+                p._walkExcessZ = 0;
+            }
         } catch {}
     }
 }
