@@ -39,43 +39,6 @@
                 }
             },
             "minecraft:geometry": "minecraft:geometry.cross",
-            "minecraft:placement_filter": {
-                "conditions": [
-                    {
-                        "block_filter": [
-                            "gaiadimension:corrupted_grass",
-                            "gaiadimension:blue_glitter_grass",
-                            "gaiadimension:green_glitter_grass",
-                            "gaiadimension:charred_grass",
-                            "gaiadimension:pale_green_glitter_grass",
-                            "gaiadimension:purple_glitter_grass",
-                            "gaiadimension:orange_glitter_grass",
-                            "gaiadimension:soft_grass",
-                            "gaiadimension:murky_grass",
-                            "gaiadimension:corrupted_grass",
-                            "gaiadimension:pink_glitter_grass",
-                            "gaiadimension:peach_glitter_grass",
-                            "gaiadimension:orange_glitter_grass",
-                            "gaiadimension:light_soil",
-                            "gaiadimension:heavy_soil",
-                            "gaiadimension:cinder",
-                            "gaiadimension:corrupted_soil",
-                            "gaiadimension:boggy_soil",
-                            "gaiadimension:light_soil",
-                            "minecraft:grass_block",
-                            "minecraft:dirt",
-                            "minecraft:podzol",
-                            "minecraft:dirt_with_roots",
-                            "minecraft:moss_block",
-                            "minecraft:coarse_dirt",
-                            "minecraft:sand"
-                        ],
-                        "allowed_faces": [
-                            "up"
-                        ]
-                    }
-                ]
-            },
             "minecraft:selection_box": {
                 "origin": [
                     -5,

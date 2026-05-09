@@ -14,57 +14,72 @@ import { CuttedSpruceTreeDefinition, PillarTreeDefinition, SpruceTreeDefinition,
 // Heights match Java StraightTrunkPlacer(base, randA, randB): min=base, max=base+randA+randB
 
 const pinkAgateTree = new SpruceTreeDefinition();
+pinkAgateTree.id = "pink_agate";
 pinkAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:pink_agate_log"));
 pinkAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:pink_agate_leaves"));
 pinkAgateTree.setHeight(5, 11); // Java: StraightTrunkPlacer(5, 3, 3)
 
 const blueAgateTree = new SpruceTreeDefinition();
+blueAgateTree.id = "blue_agate";
 blueAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:blue_agate_log"));
 blueAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:blue_agate_leaves"));
 blueAgateTree.setHeight(6, 9); // Java: StraightTrunkPlacer(6, 2, 1)
 
 const greenAgateTree = new SpruceTreeDefinition();
+greenAgateTree.id = "green_agate";
 greenAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:green_agate_log"));
 greenAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:green_agate_leaves"));
 greenAgateTree.setHeight(10, 16); // Java: ThickTrunkPlacer(10, 3, 3)
 
+const greenAgateBush = new SpruceTreeDefinition();
+greenAgateBush.id = "green_agate_bush";
+greenAgateBush.setLogPaletted(new PalettedBrush().add("gaiadimension:green_agate_log"));
+greenAgateBush.setLeavesPaletted(new PalettedBrush().add("gaiadimension:green_agate_leaves"));
+greenAgateBush.setHeight(1, 1); // Java: StraightTrunkPlacer(1, 0, 0), BushFoliagePlacer(r=2)
+
 const purpleAgateTree = new SpruceTreeDefinition();
+purpleAgateTree.id = "purple_agate";
 purpleAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:purple_agate_log"));
 purpleAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:purple_agate_leaves"));
 purpleAgateTree.setHeight(7, 13); // Java: CardinalTrunkPlacer(7, 3, 3)
 
-const fossilizedTree = new CuttedSpruceTreeDefinition();
+const fossilizedTree = new SpruceTreeDefinition();
+fossilizedTree.id = "fossilized";
 fossilizedTree.setLogPaletted(new PalettedBrush().add("gaiadimension:fossilized_log"));
-fossilizedTree.setCarpetPaletted(new PalettedBrush().add("gaiadimension:fossilized_leaves"));
-fossilizedTree.setHeight(5, 11); // Java: StraightTrunkPlacer(5, 3, 3)
+fossilizedTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:fossilized_leaves"));
+fossilizedTree.setHeight(5, 11); // Java: StraightTrunkPlacer(5, 3, 3), CappedFoliagePlacer(r=3)
 
 const corruptedTree = new SpruceTreeDefinition();
+corruptedTree.id = "corrupted";
 corruptedTree.setLogPaletted(new PalettedBrush().add("gaiadimension:corrupted_log"));
 corruptedTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:corrupted_leaves"));
 corruptedTree.setHeight(7, 11); // Java: StraightTrunkPlacer(7, 4, 0)
 
-const burntAgateTree = new PillarTreeDefinition("burnt_agate");
+const burntAgateTree = new PillarTreeDefinition("burnt");
 burntAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:burnt_log"));
 burntAgateTree.setHeight(5, 11); // Java: StraightTrunkPlacer(5, 3, 3)
 
-const fireAgateTree = new PillarTreeDefinition("fire_agate");
+const fireAgateTree = new PillarTreeDefinition("fire");
 fireAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:fire_agate_log"));
-fireAgateTree.setHeight(5, 11); // Java: StraightTrunkPlacer(5, 3, 3) (BURNING_TREE_CONFIG)
+fireAgateTree.setHeight(5, 11); // Java: StraightTrunkPlacer(5, 3, 3)
 
 const auraTree = new SpruceTreeDefinition();
+auraTree.id = "aura";
 auraTree.setLogPaletted(new PalettedBrush().add("gaiadimension:aura_log"));
 auraTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:aura_leaves"));
 auraTree.setHeight(10, 16); // Java: FourBranchTrunkPlacer(10, 3, 3)
 
 const goldenTree = new SpruceTreeDefinition();
+goldenTree.id = "golden_small";
 goldenTree.setLogPaletted(new PalettedBrush().add("gaiadimension:golden_log"));
 goldenTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:golden_leaves"));
 goldenTree.setHeight(7, 11); // Java: VaryingFourBranchTrunkPlacer(7, 2, 2)
 
-const mutantAgateTree = new SpruceTreeDefinition();
-mutantAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:pink_agate_log"));
-mutantAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:pink_agate_leaves"));
-mutantAgateTree.setHeight(8, 14);
+const bigGoldenTree = new SpruceTreeDefinition();
+bigGoldenTree.id = "golden_big";
+bigGoldenTree.setLogPaletted(new PalettedBrush().add("gaiadimension:golden_log"));
+bigGoldenTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:golden_leaves"));
+bigGoldenTree.setHeight(9, 16); // Java: VaryingFourBranchTrunkPlacer(9, 3, 4)
 
 // ── BIOME REGISTRATION ──
 
@@ -95,7 +110,7 @@ bm.addBiome(new BiomeDefinition("gaiadimension:green_agate_jungle")
     .setGroundPalette(new PalettedBrush().add("gaiadimension:green_agate_jungle_glitter_grass"))
     .setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil"))
     .setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 3).add("gaiadimension:agathum", 2).add("gaiadimension:stickly_cupsir", 2).add("gaiadimension:ouzium", 1))
-    .setVegetationChance(0.20).setTrees(new TreePalette().add(greenAgateTree)).setTreesPerChunk(5, 0.1, 1)
+    .setVegetationChance(0.20).setTrees(new TreePalette().add(greenAgateTree).add(greenAgateBush)).setTreesPerChunk(5, 0.1, 1)
     .setDepth(0.1).setScale(0.2));
 
 bm.addBiome(new BiomeDefinition("gaiadimension:fossil_woodland")
@@ -160,19 +175,21 @@ bm.addBiome(new BiomeDefinition("gaiadimension:goldstone_lands")
     .setVegetationChance(0.06).setTrees(new TreePalette().add(corruptedTree)).setTreesPerChunk(1, 0.1, 1)
     .setDepth(0.125).setScale(0.05));
 
+// Java: VARIOUS_AGATE_TREES — random_selector with 25% each pink/blue/green/purple
 bm.addBiome(new BiomeDefinition("gaiadimension:mutant_agate_wildwood")
     .setGroundPalette(new PalettedBrush().add("gaiadimension:mutant_agate_wildwood_glitter_grass"))
     .setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil"))
     .setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_mutant", 4).add("gaiadimension:crystal_growth", 2).add("gaiadimension:glamelea", 1))
-    .setVegetationChance(0.18).setTrees(new TreePalette().add(mutantAgateTree)).setTreesPerChunk(2, 0.1, 1)
+    .setVegetationChance(0.18).setTrees(new TreePalette().add(pinkAgateTree).add(blueAgateTree).add(greenAgateTree).add(purpleAgateTree)).setTreesPerChunk(2, 0.1, 1)
     .setDepth(0.1).setScale(0.1));
 
 // GOLD
+// Java: GOLDEN_TREES — random_selector 75% small, 25% big
 bm.addBiome(new BiomeDefinition("gaiadimension:golden_forest")
     .setGroundPalette(new PalettedBrush().add("gaiadimension:golden_forest_gilded_grass"))
     .setUnderGroundPalette(new PalettedBrush().add("gaiadimension:aurum_soil"))
     .setVegetationPalette(new PalettedBrush().add("gaiadimension:golden_grass", 4).add("gaiadimension:twinkling_gilsri", 2).add("gaiadimension:elder_imklia", 1))
-    .setVegetationChance(0.14).setTrees(new TreePalette().add(goldenTree)).setTreesPerChunk(2, 0.1, 1)
+    .setVegetationChance(0.14).setTrees(new TreePalette().add(goldenTree, 3).add(bigGoldenTree)).setTreesPerChunk(2, 0.1, 1)
     .setDepth(0.35).setScale(0.15));
 
 bm.addBiome(new BiomeDefinition("gaiadimension:golden_plains")

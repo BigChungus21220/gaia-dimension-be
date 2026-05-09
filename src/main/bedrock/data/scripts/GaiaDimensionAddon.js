@@ -13644,39 +13644,6 @@ var SpruceTreeDefinition = class extends PillarTreeDefinition {
     }
   }
 };
-var CuttedSpruceTreeDefinition = class extends PillarTreeDefinition {
-  carpetPaletted;
-  constructor() {
-    super("cut_spruce");
-    this.carpetPaletted = "minecraft:moss_carpet";
-  }
-  setCarpetPaletted(p) {
-    this.carpetPaletted = p;
-    return this;
-  }
-  *build(location, seed2, placer) {
-    const { x, y, z } = location;
-    const h = seed2.nextFloat() * (this.height[1] - this.height[0]) + this.height[0];
-    let lastHeights = [0, 0, 0, 0];
-    for (let Y = -2; Y < h; Y++) {
-      if (Y < h - 1) {
-        placer.setBlock({ x: x + 1, y: lastHeights[0] = y + Y, z: z + 1 }, this.logPaletted.toPermutation(seed2.nextFloat()));
-        placer.setBlock({ x: x + 1, y: lastHeights[1] = y + Y, z }, this.logPaletted.toPermutation(seed2.nextFloat()));
-        placer.setBlock({ x, y: lastHeights[2] = y + Y, z: z + 1 }, this.logPaletted.toPermutation(seed2.nextFloat()));
-        placer.setBlock({ x, y: lastHeights[3] = y + Y, z }, this.logPaletted.toPermutation(seed2.nextFloat()));
-      } else {
-        if (seed2.nextFloat() < 0.4) placer.setBlock({ x: x + 1, y: lastHeights[0] = y + Y, z: z + 1 }, this.logPaletted.toPermutation(seed2.nextFloat()));
-        if (seed2.nextFloat() < 0.4) placer.setBlock({ x: x + 1, y: lastHeights[1] = y + Y, z }, this.logPaletted.toPermutation(seed2.nextFloat()));
-        if (seed2.nextFloat() < 0.4) placer.setBlock({ x, y: lastHeights[2] = y + Y, z: z + 1 }, this.logPaletted.toPermutation(seed2.nextFloat()));
-        if (seed2.nextFloat() < 0.4) placer.setBlock({ x, y: lastHeights[3] = y + Y, z }, this.logPaletted.toPermutation(seed2.nextFloat()));
-      }
-    }
-    placer.setBlock({ x: x + 1, y: lastHeights[0] + 1, z: z + 1 }, this.carpetPaletted.toPermutation(seed2.nextFloat()));
-    placer.setBlock({ x: x + 1, y: lastHeights[1] + 1, z }, this.carpetPaletted.toPermutation(seed2.nextFloat()));
-    placer.setBlock({ x, y: lastHeights[2] + 1, z: z + 1 }, this.carpetPaletted.toPermutation(seed2.nextFloat()));
-    placer.setBlock({ x, y: lastHeights[3] + 1, z }, this.carpetPaletted.toPermutation(seed2.nextFloat()));
-  }
-};
 var TreePalette = class {
   trees;
   constructor() {
@@ -14023,7 +13990,7 @@ var ChunkGenerator = class _ChunkGenerator {
   trees;
   // Layer-based biome lookup (ported from Java)
   layerFn;
-  // Biome cache: biome name → BiomeDefinition
+  // Biome cache: biome name â†’ BiomeDefinition
   biomeCache = /* @__PURE__ */ new Map();
   constructor(sessionManager, dimension, seed2) {
     this.manager = sessionManager;
@@ -14052,7 +14019,7 @@ var ChunkGenerator = class _ChunkGenerator {
   }
   /**
    * Get the biome at a world (block) coordinate using the Java layer system.
-   * The layers operate on biome-grid coords (÷4), matching Java's getNoiseBiome(x/4, y, z/4).
+   * The layers operate on biome-grid coords (Ã·4), matching Java's getNoiseBiome(x/4, y, z/4).
    */
   getBiomeAt(x, z) {
     const bx = x >> 2, bz = z >> 2;
@@ -14151,7 +14118,7 @@ var ChunkGenerator = class _ChunkGenerator {
     this.manager.setGenerated(hash + this.dimensionId);
   }
   /**
-   * Single-pass chunk generator: stone → soil → surface grass → vegetation → trees.
+   * Single-pass chunk generator: stone â†’ soil â†’ surface grass â†’ vegetation â†’ trees.
    * Yields every X-row to prevent watchdog timeout.
    */
   *generate(X, Z, failRef, done) {
@@ -14294,63 +14261,170 @@ var ChunkGenerator = class _ChunkGenerator {
     const minH = treeDef.height?.[0] ?? 5;
     const maxH = treeDef.height?.[1] ?? 11;
     const h = minH + Math.floor(random2.nextFloat() * (maxH - minH + 1));
-    for (let i = 0; i < h; i++) {
-      setBlock(dim.getBlock({ x, y: baseY + i, z }), logId);
+    const treeId = treeDef.id || "";
+    let attachments;
+    if (treeId === "green_agate") {
+      attachments = placeThickTrunk(dim, x, baseY, z, h, logId);
+    } else if (treeId === "purple_agate") {
+      attachments = placeCardinalTrunk(dim, x, baseY, z, h, logId);
+    } else if (treeId === "aura") {
+      attachments = placeFourBranchTrunk(dim, x, baseY, z, h, logId);
+    } else if (treeId === "golden_small" || treeId === "golden_big") {
+      attachments = placeVaryingFourBranchTrunk(dim, x, baseY, z, h, logId, random2);
+    } else if (treeId === "green_agate_bush") {
+      setBlock(dim.getBlock({ x, y: baseY, z }), logId);
+      attachments = [{ x, y: baseY + 1, z }];
+    } else {
+      for (let i = 0; i < h; i++) {
+        setBlock(dim.getBlock({ x, y: baseY + i, z }), logId);
+      }
+      attachments = [{ x, y: baseY + h, z }];
     }
     if (!leafId) return;
-    const topY = baseY + h - 1;
-    const treeId = treeDef.id || "";
-    if (treeId === "cut_spruce") {
-      return;
-    }
-    const logName = logId.replace("gaiadimension:", "");
-    if (logName === "green_agate_log") {
-      const r = 3;
-      placeLeavesRowThick(dim, x, topY, z, r - 2, -4, leafId, random2);
-      placeLeavesRowThick(dim, x, topY, z, r - 1, -3, leafId, random2);
-      placeLeavesRowThick(dim, x, topY, z, r, -2, leafId, random2);
-      placeLeavesRowThick(dim, x, topY, z, r, -1, leafId, random2);
-      placeLeavesRowThick(dim, x, topY, z, r - 1, 0, leafId, random2);
-    } else if (logName === "purple_agate_log") {
-      const r = 1;
-      for (let y = 1; y >= -1; y--) {
-        placeLeavesRowBulb(dim, x, topY, z, r, -y, leafId, random2);
-      }
-    } else if (logName === "blue_agate_log") {
-      const crownHeight = 1 + Math.floor(random2.nextFloat() * 2);
-      const foliageHeight = h - Math.floor(random2.nextFloat() * 3);
-      let currentRadius = 0;
-      for (let y = foliageHeight; y >= 0; y--) {
-        const yOff = topY - (foliageHeight - y);
-        if (yOff < baseY) break;
-        placeLeavesRowCapped(dim, x, yOff, z, currentRadius, 0, leafId, random2);
-        if (currentRadius >= 1 && y > 0 && y < crownHeight) {
-          currentRadius--;
-        } else if (currentRadius < 2 + Math.floor(random2.nextFloat() * 2)) {
-          currentRadius++;
-        }
-      }
-    } else if (logName === "corrupted_log") {
-      const crownH = 3 + Math.floor(random2.nextFloat() * 2);
-      const r = 1;
-      for (let y = 0; y <= crownH; y++) {
-        const yOff = -y;
-        const layerRadius = y === 0 || y === crownH ? 0 : r;
-        placeLeavesRowDefault(dim, x, topY, z, layerRadius, yOff, leafId, random2);
-      }
-    } else if (logName === "golden_log") {
-      const r = 1;
-      for (let y = r; y >= -r; y--) {
-        placeLeavesRowCube(dim, x, topY, z, r, -y, leafId);
-      }
-    } else {
-      const r = logName === "pink_agate_log" ? 3 : 2;
-      placeLeavesRowCapped(dim, x, topY, z, r, -1, leafId, random2);
-      placeLeavesRowCapped(dim, x, topY, z, r - 1, 0, leafId, random2);
+    for (const att of attachments) {
+      placeFoliageForTree(dim, att.x, att.y, att.z, treeId, leafId, random2);
     }
     yield;
   }
 };
+function placeThickTrunk(dim, x, baseY, z, h, logId) {
+  for (let y = 0; y < h; y++) {
+    const wy = baseY + y;
+    if (y === 0) {
+      setBlock(dim.getBlock({ x, y: wy, z: z - 2 }), logId);
+      setBlock(dim.getBlock({ x, y: wy, z: z + 2 }), logId);
+      setBlock(dim.getBlock({ x: x + 2, y: wy, z }), logId);
+      setBlock(dim.getBlock({ x: x - 2, y: wy, z }), logId);
+    }
+    if (y < Math.floor(h / 4)) {
+      setBlock(dim.getBlock({ x: x + 1, y: wy, z: z + 1 }), logId);
+      setBlock(dim.getBlock({ x: x + 1, y: wy, z: z - 1 }), logId);
+      setBlock(dim.getBlock({ x: x - 1, y: wy, z: z + 1 }), logId);
+      setBlock(dim.getBlock({ x: x - 1, y: wy, z: z - 1 }), logId);
+    }
+    setBlock(dim.getBlock({ x, y: wy, z }), logId);
+    setBlock(dim.getBlock({ x, y: wy, z: z - 1 }), logId);
+    setBlock(dim.getBlock({ x, y: wy, z: z + 1 }), logId);
+    setBlock(dim.getBlock({ x: x + 1, y: wy, z }), logId);
+    setBlock(dim.getBlock({ x: x - 1, y: wy, z }), logId);
+  }
+  return [{ x, y: baseY + h, z }];
+}
+function placeCardinalTrunk(dim, x, baseY, z, h, logId) {
+  const atts = [];
+  for (let y = 0; y <= h - 2; y++) {
+    setBlock(dim.getBlock({ x, y: baseY + y, z }), logId);
+  }
+  const dirs = [[0, -1], [0, 1], [1, 0], [-1, 0]];
+  for (const [sx, sz] of dirs) {
+    let bx = sx, bz = sz;
+    setBlock(dim.getBlock({ x: x + bx, y: baseY + h - 2, z: z + bz }), logId);
+    setBlock(dim.getBlock({ x: x + bx, y: baseY + h - 1, z: z + bz }), logId);
+    bx += sx;
+    bz += sz;
+    setBlock(dim.getBlock({ x: x + bx, y: baseY + h - 1, z: z + bz }), logId);
+    bx += sx;
+    bz += sz;
+    setBlock(dim.getBlock({ x: x + bx, y: baseY + h, z: z + bz }), logId);
+    bx += sx;
+    bz += sz;
+    setBlock(dim.getBlock({ x: x + bx, y: baseY + h, z: z + bz }), logId);
+    bx += sx;
+    bz += sz;
+    atts.push({ x: x + bx, y: baseY + h, z: z + bz });
+  }
+  return atts;
+}
+function placeFourBranchTrunk(dim, x, baseY, z, h, logId) {
+  const atts = [];
+  for (let y = 0; y < h; y++) {
+    setBlock(dim.getBlock({ x, y: baseY + y, z }), logId);
+  }
+  const dirs = [[0, -1], [0, 1], [1, 0], [-1, 0]];
+  for (const [sx, sz] of dirs) {
+    let bx = sx, bz = sz;
+    const startY = Math.floor(h / 2);
+    for (let y = startY; y < h; y++) {
+      setBlock(dim.getBlock({ x: x + bx, y: baseY + y, z: z + bz }), logId);
+      if (y === h - 1) {
+        atts.push({ x: x + bx, y: baseY + y + 1, z: z + bz });
+      }
+      if (y % 2 === 0) {
+        bx += sx;
+        bz += sz;
+      }
+    }
+  }
+  atts.push({ x, y: baseY + h, z });
+  return atts;
+}
+function placeVaryingFourBranchTrunk(dim, x, baseY, z, h, logId, random2) {
+  const atts = [];
+  const halfH = Math.floor(h / 2);
+  for (let y = 0; y <= halfH; y++) {
+    setBlock(dim.getBlock({ x, y: baseY + y, z }), logId);
+  }
+  const dirs = [[0, -1], [0, 1], [1, 0], [-1, 0]];
+  for (const [sx, sz] of dirs) {
+    let bx = 0, bz = 0;
+    const offset = Math.floor(random2.nextFloat() * 3);
+    const startY = halfH - offset;
+    const branchLen = Math.floor(random2.nextFloat() * 3) + 2;
+    for (let i = 0; i < branchLen; i++) {
+      bx += sx;
+      bz += sz;
+      setBlock(dim.getBlock({ x: x + bx, y: baseY + startY, z: z + bz }), logId);
+    }
+    for (let y = startY; y <= h - offset; y++) {
+      setBlock(dim.getBlock({ x: x + bx, y: baseY + y, z: z + bz }), logId);
+    }
+    atts.push({ x: x + bx, y: baseY + h - offset, z: z + bz });
+  }
+  return atts;
+}
+function placeFoliageForTree(dim, cx, cy, cz, treeId, leafId, random2) {
+  if (treeId === "green_agate") {
+    placeLeavesRowThick(dim, cx, cy, cz, 1, -4, leafId, random2);
+    placeLeavesRowThick(dim, cx, cy, cz, 2, -3, leafId, random2);
+    placeLeavesRowThick(dim, cx, cy, cz, 3, -2, leafId, random2);
+    placeLeavesRowThick(dim, cx, cy, cz, 3, -1, leafId, random2);
+    placeLeavesRowThick(dim, cx, cy, cz, 2, 0, leafId, random2);
+  } else if (treeId === "purple_agate") {
+    for (let y = 1; y >= -1; y--) {
+      placeLeavesRowBulb(dim, cx, cy, cz, 1, -y, leafId);
+    }
+  } else if (treeId === "blue_agate") {
+    const crownHeight = 1 + Math.floor(random2.nextFloat() * 2);
+    const foliageH = 4 + Math.floor(random2.nextFloat() * 3);
+    let r = 0;
+    for (let y = foliageH; y >= 0; y--) {
+      placeLeavesRowDefault(dim, cx, cy - (foliageH - y), cz, r, 0, leafId, random2);
+      if (r >= 1 && y > 0 && y < crownHeight) r--;
+      else if (r < 2 + Math.floor(random2.nextFloat() * 2)) r++;
+    }
+  } else if (treeId === "corrupted") {
+    const crownH = 3 + Math.floor(random2.nextFloat() * 2);
+    for (let y = 0; y <= crownH; y++) {
+      const lr = y === 0 || y === crownH ? 0 : 1;
+      placeLeavesRowDefault(dim, cx, cy, cz, lr, -y, leafId, random2);
+    }
+  } else if (treeId === "golden_small") {
+    for (let y = 1; y >= -1; y--) placeLeavesRowCube(dim, cx, cy, cz, 1, -y, leafId);
+  } else if (treeId === "golden_big") {
+    for (let y = 2; y >= -2; y--) placeLeavesRowCube(dim, cx, cy, cz, 2, -y, leafId);
+  } else if (treeId === "green_agate_bush") {
+    for (let y = 2; y >= 0; y--) placeLeavesRowBush(dim, cx, cy, cz, 2, -y, leafId, random2);
+  } else if (treeId === "pink_agate" || treeId === "fossilized") {
+    placeLeavesRowCapped(dim, cx, cy, cz, 3, -1, leafId, random2);
+    placeLeavesRowCapped(dim, cx, cy, cz, 2, 0, leafId, random2);
+  } else if (treeId === "aura") {
+    placeLeavesRowCapped(dim, cx, cy, cz, 2, -1, leafId, random2);
+    placeLeavesRowCapped(dim, cx, cy, cz, 1, 0, leafId, random2);
+  } else {
+    placeLeavesRowCapped(dim, cx, cy, cz, 2, -1, leafId, random2);
+    placeLeavesRowCapped(dim, cx, cy, cz, 1, 0, leafId, random2);
+  }
+}
 function placeLeavesRowCapped(dim, cx, cy, cz, radius, yOff, leafId, random2) {
   const y = cy + yOff;
   for (let dx = -radius; dx <= radius; dx++) {
@@ -14380,7 +14454,7 @@ function placeLeavesRowThick(dim, cx, cy, cz, radius, yOff, leafId, random2) {
     }
   }
 }
-function placeLeavesRowBulb(dim, cx, cy, cz, radius, yOff, leafId, random2) {
+function placeLeavesRowBulb(dim, cx, cy, cz, radius, yOff, leafId) {
   const y = cy + yOff;
   for (let dx = -radius; dx <= radius; dx++) {
     for (let dz = -radius; dz <= radius; dz++) {
@@ -14397,12 +14471,20 @@ function placeLeavesRowCube(dim, cx, cy, cz, radius, yOff, leafId) {
     }
   }
 }
+function placeLeavesRowBush(dim, cx, cy, cz, radius, yOff, leafId, random2) {
+  const y = cy + yOff;
+  for (let dx = -radius; dx <= radius; dx++) {
+    for (let dz = -radius; dz <= radius; dz++) {
+      if (Math.abs(dx) === radius && Math.abs(dz) === radius && random2.nextFloat() < 0.5) continue;
+      setLeaf(dim, cx + dx, y, cz + dz, leafId);
+    }
+  }
+}
 function placeLeavesRowDefault(dim, cx, cy, cz, radius, yOff, leafId, random2) {
   const y = cy + yOff;
   for (let dx = -radius; dx <= radius; dx++) {
     for (let dz = -radius; dz <= radius; dz++) {
-      const ax = Math.abs(dx), az = Math.abs(dz);
-      if (ax === radius && az === radius && radius > 0) continue;
+      if (Math.abs(dx) === radius && Math.abs(dz) === radius && radius > 0) continue;
       setLeaf(dim, cx + dx, y, cz + dz, leafId);
     }
   }
@@ -14635,52 +14717,66 @@ async function playerInitialize(player) {
 
 // src/main/bedrock/ts/world/worldgen/core/my_world/biomes.ts
 var pinkAgateTree = new SpruceTreeDefinition();
+pinkAgateTree.id = "pink_agate";
 pinkAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:pink_agate_log"));
 pinkAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:pink_agate_leaves"));
 pinkAgateTree.setHeight(5, 11);
 var blueAgateTree = new SpruceTreeDefinition();
+blueAgateTree.id = "blue_agate";
 blueAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:blue_agate_log"));
 blueAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:blue_agate_leaves"));
 blueAgateTree.setHeight(6, 9);
 var greenAgateTree = new SpruceTreeDefinition();
+greenAgateTree.id = "green_agate";
 greenAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:green_agate_log"));
 greenAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:green_agate_leaves"));
 greenAgateTree.setHeight(10, 16);
+var greenAgateBush = new SpruceTreeDefinition();
+greenAgateBush.id = "green_agate_bush";
+greenAgateBush.setLogPaletted(new PalettedBrush().add("gaiadimension:green_agate_log"));
+greenAgateBush.setLeavesPaletted(new PalettedBrush().add("gaiadimension:green_agate_leaves"));
+greenAgateBush.setHeight(1, 1);
 var purpleAgateTree = new SpruceTreeDefinition();
+purpleAgateTree.id = "purple_agate";
 purpleAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:purple_agate_log"));
 purpleAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:purple_agate_leaves"));
 purpleAgateTree.setHeight(7, 13);
-var fossilizedTree = new CuttedSpruceTreeDefinition();
+var fossilizedTree = new SpruceTreeDefinition();
+fossilizedTree.id = "fossilized";
 fossilizedTree.setLogPaletted(new PalettedBrush().add("gaiadimension:fossilized_log"));
-fossilizedTree.setCarpetPaletted(new PalettedBrush().add("gaiadimension:fossilized_leaves"));
+fossilizedTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:fossilized_leaves"));
 fossilizedTree.setHeight(5, 11);
 var corruptedTree = new SpruceTreeDefinition();
+corruptedTree.id = "corrupted";
 corruptedTree.setLogPaletted(new PalettedBrush().add("gaiadimension:corrupted_log"));
 corruptedTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:corrupted_leaves"));
 corruptedTree.setHeight(7, 11);
-var burntAgateTree = new PillarTreeDefinition("burnt_agate");
+var burntAgateTree = new PillarTreeDefinition("burnt");
 burntAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:burnt_log"));
 burntAgateTree.setHeight(5, 11);
-var fireAgateTree = new PillarTreeDefinition("fire_agate");
+var fireAgateTree = new PillarTreeDefinition("fire");
 fireAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:fire_agate_log"));
 fireAgateTree.setHeight(5, 11);
 var auraTree = new SpruceTreeDefinition();
+auraTree.id = "aura";
 auraTree.setLogPaletted(new PalettedBrush().add("gaiadimension:aura_log"));
 auraTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:aura_leaves"));
 auraTree.setHeight(10, 16);
 var goldenTree = new SpruceTreeDefinition();
+goldenTree.id = "golden_small";
 goldenTree.setLogPaletted(new PalettedBrush().add("gaiadimension:golden_log"));
 goldenTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:golden_leaves"));
 goldenTree.setHeight(7, 11);
-var mutantAgateTree = new SpruceTreeDefinition();
-mutantAgateTree.setLogPaletted(new PalettedBrush().add("gaiadimension:pink_agate_log"));
-mutantAgateTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:pink_agate_leaves"));
-mutantAgateTree.setHeight(8, 14);
+var bigGoldenTree = new SpruceTreeDefinition();
+bigGoldenTree.id = "golden_big";
+bigGoldenTree.setLogPaletted(new PalettedBrush().add("gaiadimension:golden_log"));
+bigGoldenTree.setLeavesPaletted(new PalettedBrush().add("gaiadimension:golden_leaves"));
+bigGoldenTree.setHeight(9, 16);
 var bm = DEFINITION_MANAGER.biomeManager;
 bm.addBiome(new BiomeDefinition("gaiadimension:crystal_plains").setGroundPalette(new PalettedBrush().add("gaiadimension:crystal_plains_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 5).add("gaiadimension:crystal_growth_aura", 3).add("gaiadimension:thiscus", 2).add("gaiadimension:spotted_kersei", 1)).setVegetationChance(0.12).setDepth(0.05).setScale(0.05));
 bm.addBiome(new BiomeDefinition("gaiadimension:pink_agate_forest").setGroundPalette(new PalettedBrush().add("gaiadimension:pink_agate_forest_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 3).add("gaiadimension:spotted_kersei", 2).add("gaiadimension:bulbous_hobina", 1)).setVegetationChance(0.15).setTrees(new TreePalette().add(pinkAgateTree)).setTreesPerChunk(4, 0.1, 1).setDepth(0.1).setScale(0.1));
 bm.addBiome(new BiomeDefinition("gaiadimension:blue_agate_taiga").setGroundPalette(new PalettedBrush().add("gaiadimension:blue_agate_taiga_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 3).add("gaiadimension:mystical_murgni", 2).add("gaiadimension:thorny_wiltha", 1)).setVegetationChance(0.1).setTrees(new TreePalette().add(blueAgateTree)).setTreesPerChunk(1, 0.1, 1).setDepth(0.1).setScale(0.2));
-bm.addBiome(new BiomeDefinition("gaiadimension:green_agate_jungle").setGroundPalette(new PalettedBrush().add("gaiadimension:green_agate_jungle_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 3).add("gaiadimension:agathum", 2).add("gaiadimension:stickly_cupsir", 2).add("gaiadimension:ouzium", 1)).setVegetationChance(0.2).setTrees(new TreePalette().add(greenAgateTree)).setTreesPerChunk(5, 0.1, 1).setDepth(0.1).setScale(0.2));
+bm.addBiome(new BiomeDefinition("gaiadimension:green_agate_jungle").setGroundPalette(new PalettedBrush().add("gaiadimension:green_agate_jungle_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 3).add("gaiadimension:agathum", 2).add("gaiadimension:stickly_cupsir", 2).add("gaiadimension:ouzium", 1)).setVegetationChance(0.2).setTrees(new TreePalette().add(greenAgateTree).add(greenAgateBush)).setTreesPerChunk(5, 0.1, 1).setDepth(0.1).setScale(0.2));
 bm.addBiome(new BiomeDefinition("gaiadimension:fossil_woodland").setGroundPalette(new PalettedBrush().add("gaiadimension:fossil_woodland_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 2).add("gaiadimension:sombre_shrub", 2)).setVegetationChance(0.08).setTrees(new TreePalette().add(fossilizedTree)).setTreesPerChunk(1, 0.1, 1).setDepth(0.1).setScale(0.05));
 bm.addBiome(new BiomeDefinition("gaiadimension:volcanic_lands").setGroundPalette(new PalettedBrush().add("gaiadimension:volcanic_rock")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:volcanic_rock")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_seared", 3).add("gaiadimension:crystal_growth_red", 2)).setVegetationChance(0.04).setTrees(new TreePalette().add(burntAgateTree).add(fireAgateTree)).setTreesPerChunk(0, 0.1, 1).setDepth(1).setScale(0.7));
 bm.addBiome(new BiomeDefinition("gaiadimension:static_wasteland").setGroundPalette(new PalettedBrush().add("gaiadimension:wasteland_stone")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:static_stone")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_black", 3).add("gaiadimension:crystal_growth_mutant", 2)).setVegetationChance(0.03).setDepth(3).setScale(0.05));
@@ -14690,8 +14786,8 @@ bm.addBiome(new BiomeDefinition("gaiadimension:shining_grove").setGroundPalette(
 bm.addBiome(new BiomeDefinition("gaiadimension:mookaite_mesa").setGroundPalette(new PalettedBrush().add("gaiadimension:mookaite_mesa_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:auburn_mookaite")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_red", 2).add("gaiadimension:gold_orb_tucher", 1)).setVegetationChance(0.03).setDepth(2).setScale(0.075));
 bm.addBiome(new BiomeDefinition("gaiadimension:purple_agate_swamp").setGroundPalette(new PalettedBrush().add("gaiadimension:purple_agate_swamp_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 3).add("gaiadimension:corrupted_gaia_eye", 2).add("gaiadimension:corrupted_varloom", 2).add("gaiadimension:roofed_agaric", 1)).setVegetationChance(0.18).setTrees(new TreePalette().add(purpleAgateTree).add(corruptedTree)).setTreesPerChunk(1, 0.1, 2).setDepth(0).setScale(0.05));
 bm.addBiome(new BiomeDefinition("gaiadimension:goldstone_lands").setGroundPalette(new PalettedBrush().add("gaiadimension:goldstone_lands_corrupted_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:corrupted_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_black", 3).add("gaiadimension:corrupted_gaia_eye", 2)).setVegetationChance(0.06).setTrees(new TreePalette().add(corruptedTree)).setTreesPerChunk(1, 0.1, 1).setDepth(0.125).setScale(0.05));
-bm.addBiome(new BiomeDefinition("gaiadimension:mutant_agate_wildwood").setGroundPalette(new PalettedBrush().add("gaiadimension:mutant_agate_wildwood_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_mutant", 4).add("gaiadimension:crystal_growth", 2).add("gaiadimension:glamelea", 1)).setVegetationChance(0.18).setTrees(new TreePalette().add(mutantAgateTree)).setTreesPerChunk(2, 0.1, 1).setDepth(0.1).setScale(0.1));
-bm.addBiome(new BiomeDefinition("gaiadimension:golden_forest").setGroundPalette(new PalettedBrush().add("gaiadimension:golden_forest_gilded_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:aurum_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:golden_grass", 4).add("gaiadimension:twinkling_gilsri", 2).add("gaiadimension:elder_imklia", 1)).setVegetationChance(0.14).setTrees(new TreePalette().add(goldenTree)).setTreesPerChunk(2, 0.1, 1).setDepth(0.35).setScale(0.15));
+bm.addBiome(new BiomeDefinition("gaiadimension:mutant_agate_wildwood").setGroundPalette(new PalettedBrush().add("gaiadimension:mutant_agate_wildwood_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_mutant", 4).add("gaiadimension:crystal_growth", 2).add("gaiadimension:glamelea", 1)).setVegetationChance(0.18).setTrees(new TreePalette().add(pinkAgateTree).add(blueAgateTree).add(greenAgateTree).add(purpleAgateTree)).setTreesPerChunk(2, 0.1, 1).setDepth(0.1).setScale(0.1));
+bm.addBiome(new BiomeDefinition("gaiadimension:golden_forest").setGroundPalette(new PalettedBrush().add("gaiadimension:golden_forest_gilded_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:aurum_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:golden_grass", 4).add("gaiadimension:twinkling_gilsri", 2).add("gaiadimension:elder_imklia", 1)).setVegetationChance(0.14).setTrees(new TreePalette().add(goldenTree, 3).add(bigGoldenTree)).setTreesPerChunk(2, 0.1, 1).setDepth(0.35).setScale(0.15));
 bm.addBiome(new BiomeDefinition("gaiadimension:golden_plains").setGroundPalette(new PalettedBrush().add("gaiadimension:golden_plains_gilded_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:aurum_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:golden_grass", 5).add("gaiadimension:tall_golden_grass", 2)).setVegetationChance(0.16).setDepth(0.35).setScale(0.1));
 bm.addBiome(new BiomeDefinition("gaiadimension:golden_hills").setGroundPalette(new PalettedBrush().add("gaiadimension:golden_hills_gilded_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:aurum_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:golden_grass", 3)).setVegetationChance(0.06).setDepth(0.8).setScale(0.5));
 bm.addBiome(new BiomeDefinition("gaiadimension:golden_sands").setGroundPalette(new PalettedBrush().add("gaiadimension:golden_sand")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:brilliant_stone")).setVegetationPalette(new PalettedBrush().add("gaiadimension:golden_grass", 2)).setVegetationChance(0.03).setDepth(0.25).setScale(0.05));
