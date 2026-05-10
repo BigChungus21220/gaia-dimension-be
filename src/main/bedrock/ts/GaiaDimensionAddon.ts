@@ -39,6 +39,7 @@ import { registerCustomTool } from "./durability.js";
 import { registerGaiaCommands } from "./systems/Commands.js";
 import { registerSetBiomeCommand } from "./systems/SetBiomeCommand.js";
 import { registerFireStarterComponent } from "./items/FireStarter.js";
+import { registerDestructionCommands, registerRealmDimensions, initDestroyedDimensionGuard } from "./systems/DimensionDestruction.js";
 import { registerMagicStaffComponent } from "./items/MagicStaff.js";
 import { initializeMagicStaffBehaviors } from "./systems/MagicStaffBehaviors.js";
 import { initializeGlitterGrassSync } from "./blocks/GlitterGrassSync.js";
@@ -75,12 +76,16 @@ initializeLightMixin();
 initializeGlitterGrassSync();
 initializeMagicStaffBehaviors();
 registerCustomTool();
+initDestroyedDimensionGuard();
 
 system.beforeEvents.startup.subscribe((event: StartupEvent) => {
     const { blockComponentRegistry, customCommandRegistry, itemComponentRegistry, dimensionRegistry } = event;
     
     // Register Native Gaia Dimension
     dimensionRegistry.registerCustomDimension("gaiadimension:gaia_dimension");
+
+    // Register dynamic realm pool (16 void dimensions)
+    registerRealmDimensions(dimensionRegistry);
 
     registerLeavesComponent({ blockComponentRegistry });
     registerInvisibleComponent({ blockComponentRegistry });
@@ -106,5 +111,6 @@ system.beforeEvents.startup.subscribe((event: StartupEvent) => {
     
     registerGaiaCommands(customCommandRegistry);
     registerSetBiomeCommand(customCommandRegistry);
+    registerDestructionCommands(customCommandRegistry);
 });
 

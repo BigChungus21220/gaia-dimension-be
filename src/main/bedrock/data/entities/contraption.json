@@ -21,19 +21,19 @@
         },
         "gaiadimension:rel_x": {
           "type": "int",
-          "range": [-10, 10],
+          "range": [-1000000, 1000000],
           "default": 0,
           "client_sync": true
         },
         "gaiadimension:rel_y": {
           "type": "int",
-          "range": [-10, 10],
+          "range": [-1000000, 1000000],
           "default": 0,
           "client_sync": true
         },
         "gaiadimension:rel_z": {
           "type": "int",
-          "range": [-10, 10],
+          "range": [-1000000, 1000000],
           "default": 0,
           "client_sync": true
         }
@@ -47,7 +47,9 @@
       "minecraft:type_family": { "family": ["contraption", "inanimate"] },
       "minecraft:physics": { "has_collision": false, "has_gravity": false },
       "minecraft:pushable": { "is_pushable": false, "is_pushable_by_piston": false },
-      "minecraft:damage_sensor": { "triggers": { "deals_damage": false } }
+      "minecraft:damage_sensor": { "triggers": { "deals_damage": false } },
+      "minecraft:conditional_bandwidth_optimization": {},
+      "minecraft:persistent": {}
     },
     "events": {
       "gaiadimension:despawn": { "add": { "component_groups": ["despawn"] } }
