@@ -1,40 +1,56 @@
-import { system, world, Dimension, Vector3, Block, BlockComponentRegistry, ScriptEventCommandMessageAfterEvent, BlockComponentRandomTickEvent, BlockComponentPlayerInteractEvent } from "@minecraft/server";
-import { Vec3 } from '../Vec3.js';
+import {
+    system,
+    Dimension,
+    Vector3,
+    Block,
+    BlockComponentRegistry,
+    ScriptEventCommandMessageAfterEvent,
+    BlockComponentRandomTickEvent,
+    BlockComponentPlayerInteractEvent,
+    Entity
+} from "@minecraft/server";
 import { sleep } from '../utils.js';
+
+// Module augmentation for potential missing properties in the mock environment
+declare module "@minecraft/server" {
+    interface Block {
+        readonly isValid: boolean;
+    }
+}
 
 /**
  * Applies velocity to entities near the geyser.
- * @param {Dimension} dimension 
- * @param {Vector3} spawnPos 
- * @param {number} duration Ticks to continue pushing
+ * @param dimension The dimension where the geyser is located.
+ * @param spawnPos The position of the geyser blast.
+ * @param duration Ticks to continue pushing.
  */
 function pushEntities(dimension: Dimension, spawnPos: Vector3, duration: number): void {
-    let elapsed = 0;
-    const intervalTicks = 4;
+    let elapsed: number = 0;
+    const intervalTicks: number = 4;
 
-    const runId = system.runInterval(() => {
+    const runId: number = system.runInterval((): void => {
         if (elapsed >= duration) {
             system.clearRun(runId);
             return;
         }
 
-        const entities = dimension.getEntities({
+        const entities: Entity[] = dimension.getEntities({
             location: spawnPos,
             maxDistance: 5
         });
 
         for (const entity of entities) {
             const pos: Vector3 = entity.location;
-            const dx = Math.abs(pos.x - spawnPos.x);
-            const dz = Math.abs(pos.z - spawnPos.z);
-            const dy = pos.y - (spawnPos.y - 1.1); // relative to block top
+            const dx: number = Math.abs(pos.x - spawnPos.x);
+            const dz: number = Math.abs(pos.z - spawnPos.z);
+            const dy: number = pos.y - (spawnPos.y - 1.1); // relative to block top
 
             // Check if entity is roughly above the geyser
             if (dx < 0.7 && dz < 0.7 && dy > 0 && dy < 6) {
                 try {
                     // Apply upward impulse
                     entity.applyImpulse({ x: 0, y: 0.5, z: 0 });
-                } catch (e) {
+                } catch (e: unknown) {
                     // Some entities might not support impulse
                 }
             }
@@ -46,7 +62,7 @@ function pushEntities(dimension: Dimension, spawnPos: Vector3, duration: number)
 
 /**
  * Triggers the geyser eruption logic.
- * @param {Block} block 
+ * @param block The geyser block.
  */
 async function eruptGeyser(block: Block): Promise<void> {
     if (!block || !block.isValid) return;
@@ -76,8 +92,11 @@ async function eruptGeyser(block: Block): Promise<void> {
     dimension.spawnParticle("gaiadimension:geyser_blast", blockCenter);
 }
 
+/**
+ * Initializes geyser event listeners.
+ */
 export function initializeGeyser(): void {
-    system.afterEvents.scriptEventReceive.subscribe((event: ScriptEventCommandMessageAfterEvent) => {
+    system.afterEvents.scriptEventReceive.subscribe((event: ScriptEventCommandMessageAfterEvent): void => {
         if (event.id === "gaiadimension:geyser.erupt") {
              if (event.sourceBlock) {
                  eruptGeyser(event.sourceBlock);
@@ -86,13 +105,17 @@ export function initializeGeyser(): void {
     });
 }
 
+/**
+ * Registers the geyser custom block component.
+ * @param registry The block component registry.
+ */
 export function registerGeyserComponent({ blockComponentRegistry }: { blockComponentRegistry: BlockComponentRegistry }): void {
     blockComponentRegistry.registerCustomComponent("gaiadimension:geyser", {
-        onRandomTick: ({ block }: BlockComponentRandomTickEvent) => {
-            eruptGeyser(block);
+        onRandomTick: (event: BlockComponentRandomTickEvent): void => {
+            eruptGeyser(event.block);
         },
-        onPlayerInteract: ({ block }: BlockComponentPlayerInteractEvent) => {
-            eruptGeyser(block);
+        onPlayerInteract: (event: BlockComponentPlayerInteractEvent): void => {
+            eruptGeyser(event.block);
         }
     });
 }

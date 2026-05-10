@@ -189,7 +189,7 @@ export class GaiaGrassGenerator {
                         "minecraft:material_instances": {
                             "*":    { texture: `${texName}_side`, render_method: "opaque" },
                             "up":   { texture: `${texName}_top`,  render_method: "opaque" },
-                            "down": { texture: grass.soil.replace('gaiadimension:', ''), render_method: "opaque" }
+                            "down": { texture: grass.soil, render_method: "opaque" }
                         },
                         "minecraft:light_dampening": 0
                     },

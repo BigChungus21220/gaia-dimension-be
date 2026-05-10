@@ -1,9 +1,9 @@
-import { world, system, BlockPermutation, ItemStack, BlockVolume, Block, Dimension, Player, Entity, Vector3, BlockComponentRegistry, BlockCustomComponent, BlockComponentTickEvent, GameMode, ItemComponentUseOnEvent, ItemCustomComponent, ItemUseAfterEvent, ItemComponentUseEvent } from "@minecraft/server";
+import { world, system, BlockPermutation, ItemStack, BlockVolume, Block, Dimension, Player, Entity, Vector3, BlockComponentRegistry, BlockCustomComponent, BlockComponentTickEvent, GameMode, ItemComponentUseOnEvent, ItemCustomComponent, ItemUseAfterEvent, ItemComponentUseEvent, BlockComponentPlayerDestroyEvent } from "@minecraft/server";
 import { FluidTemplate } from "./lib/FluidTemplate.js";
 import { LavaTemplate } from "./templates/LavaTemplate.js";
 import { WaterTemplate } from "./templates/WaterTemplate.js";
 import { runEntityEffects } from "./EntityEffects.js";
-import { MotionEngine } from "../utils/MotionEngine.js";
+import { MotionEngine, ExtendedPlayer } from "../utils/MotionEngine.js";
 
 // --- Globals ---
 const blockCache = new Map<string, Block | undefined>();
@@ -27,7 +27,7 @@ function getCachedBlock(dimension: Dimension, x: number, y: number, z: number): 
     return blk;
 }
 
-function getTypeInfo(typeId: string) {
+function getTypeInfo(typeId: string): { stage: number, baseId: string } {
     let info = typeInfoCache.get(typeId);
     if (info) return info;
 
@@ -177,7 +177,7 @@ system.runInterval(() => {
             const player = state.player;
             const pos = player.location;
             const pid = player.id;
-            const p = player as any;
+            const p = player as ExtendedPlayer;
 
             const track = _fluidPosTrack.get(pid);
             if (track) {
@@ -218,7 +218,7 @@ system.runInterval(() => {
     }
 });
 
-function runFluidInteractionDummies(players: Player[]) {
+function runFluidInteractionDummies(players: Player[]): void {
     for (const player of players) {
         const inventory = player.getComponent("inventory")?.container;
         if (!inventory) continue;
@@ -257,7 +257,7 @@ function runFluidInteractionDummies(players: Player[]) {
     }
 }
 
-function runFluidFlowLogic(startTime: number) {
+function runFluidFlowLogic(startTime: number): void {
     if (PENDING_BLOCKS.size === 0) return;
     const currentTick = system.currentTick;
     const iterator = PENDING_BLOCKS.entries();
@@ -287,7 +287,7 @@ function runFluidFlowLogic(startTime: number) {
     }
 }
 
-function runPlayerEffects(players: Player[]) {
+function runPlayerEffects(players: Player[]): void {
     for (const player of players) {
         try {
             const dim = player.dimension;
@@ -307,7 +307,7 @@ function runPlayerEffects(players: Player[]) {
                 FluidTemplate.physicsStates.delete(player.id);
                 _fluidPosTrack.delete(player.id);
                 // Clear MotionEngine's stored velocity so it doesn't leak into the next fluid entry
-                const p = player as any;
+                const p = player as ExtendedPlayer;
                 p._fluidVX = undefined;
                 p._fluidVZ = undefined;
                 p._fluidVY = undefined;
@@ -323,7 +323,7 @@ function runPlayerEffects(players: Player[]) {
     }
 }
 
-function runBoatLogic(players: Player[]) {
+function runBoatLogic(players: Player[]): void {
     if (players.length === 0) return;
     const activeDimensions = new Set(players.map(p => p.dimension));
     for (const dimension of activeDimensions) {
@@ -664,7 +664,7 @@ function processFluidBlock(block: Block, dimension: Dimension): boolean {
 }
 
 export class BucketItemComponent implements ItemCustomComponent {
-    onUse(event: ItemComponentUseEvent) {
+    onUse(event: ItemComponentUseEvent): void {
         const { source, itemStack } = event;
         if (!source || !(source instanceof Player) || !itemStack || itemStack.typeId !== "minecraft:bucket") return;
         const player = source as Player;
@@ -694,7 +694,7 @@ export class BucketItemComponent implements ItemCustomComponent {
             if (block && !block.isAir && !isReplaceable(block)) break;
         }
     }
-    onUseOn(event: ItemComponentUseOnEvent) {
+    onUseOn(event: ItemComponentUseOnEvent): void {
         const { source, block, itemStack, blockFace } = event;
         if (!itemStack || !source || !(source instanceof Player)) return;
         const player = source as Player;
@@ -721,8 +721,8 @@ export class BucketItemComponent implements ItemCustomComponent {
 
 export class FluidFlowComponent implements BlockCustomComponent {
     constructor() { this.onTick = this.onTick.bind(this); this.onPlayerDestroy = this.onPlayerDestroy.bind(this); }
-    onPlayerDestroy(event: any) { wakeNeighbors(event.block.location, event.dimension); }
-    onTick(event: BlockComponentTickEvent) {
+    onPlayerDestroy(event: BlockComponentPlayerDestroyEvent): void { wakeNeighbors(event.block.location, event.dimension); }
+    onTick(event: BlockComponentTickEvent): void {
         if (PENDING_BLOCKS.size >= MAX_QUEUE_SIZE) return;
         const { block } = event;
         const key = `${block.x},${block.y},${block.z},${block.dimension.id}`;
@@ -738,7 +738,7 @@ export class FluidFlowComponent implements BlockCustomComponent {
     }
 }
 
-function wakeNeighbors(location: Vector3, dimension: Dimension) {
+function wakeNeighbors(location: Vector3, dimension: Dimension): void {
     const { x, y, z } = location;
     const centerBlock = getCachedBlock(dimension, x, y, z);
     if (!centerBlock) return;
@@ -835,7 +835,7 @@ world.afterEvents.playerInteractWithEntity.subscribe((event) => {
                 player.playSound(isHot ? "bucket.empty_lava" : "bucket.empty_water");
                 if (player.getGameMode() !== GameMode.Creative) {
                     const inventory = player.getComponent("inventory")?.container;
-                    if (inventory) { const slot = player.selectedSlotIndex; if (itemStack.amount > 1) { itemStack.amount--; inventory.setItem(slot, itemStack); const emptyBucket = new ItemStack("minecraft:bucket", 1); const remainder = container.addItem(emptyBucket); if (remainder) dimension.spawnItem(remainder, player.location); } else inventory.setItem(slot, new ItemStack("minecraft:bucket", 1)); }
+                    if (inventory) { const slot = player.selectedSlotIndex; if (itemStack.amount > 1) { itemStack.amount--; inventory.setItem(slot, itemStack); const emptyBucket = new ItemStack("minecraft:bucket", 1); const remainder = inventory.addItem(emptyBucket); if (remainder) dimension.spawnItem(remainder, player.location); } else inventory.setItem(slot, new ItemStack("minecraft:bucket", 1)); }
                 }
             }
         } else {
@@ -860,6 +860,6 @@ system.runInterval(() => {
     }
 }, 80);
 
-export function registerFluidComponent({ blockComponentRegistry }: { blockComponentRegistry: any }): void {
+export function registerFluidComponent({ blockComponentRegistry }: { blockComponentRegistry: BlockComponentRegistry }): void {
     blockComponentRegistry.registerCustomComponent("gaiadimension:fluid_flow", new FluidFlowComponent());
 }

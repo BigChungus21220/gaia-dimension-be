@@ -1,18 +1,29 @@
-import { Player, ItemComponentUseOnEvent, ItemComponentRegistry, Dimension, Vector3 } from "@minecraft/server";
+import { 
+    Player, 
+    ItemComponentUseOnEvent, 
+    ItemComponentRegistry, 
+    Dimension, 
+    Vector3, 
+    ItemDurabilityComponent, 
+    EntityEquippableComponent, 
+    EquipmentSlot,
+    Direction
+} from "@minecraft/server";
 import { PortalManager } from "../API/lib/PortalLib.js";
 import { ModConfig } from "../config/mod_config.js";
 
-export function registerFireStarterComponent({ itemComponentRegistry }: { itemComponentRegistry: any }): void {
+export function registerFireStarterComponent({ itemComponentRegistry }: { itemComponentRegistry: ItemComponentRegistry }): void {
     itemComponentRegistry.registerCustomComponent("gaiadimension:fire_starter", {
         onUseOn: (event: ItemComponentUseOnEvent) => {
             const { source: player, block, blockFace, itemStack } = event;
             if (!(player instanceof Player)) return;
+            if (!itemStack) return;
 
             const targetLocation = block.location;
-            const placeLocation = {
-                x: targetLocation.x + (blockFace === "East" ? 1 : blockFace === "West" ? -1 : 0),
-                y: targetLocation.y + (blockFace === "Up" ? 1 : blockFace === "Down" ? -1 : 0),
-                z: targetLocation.z + (blockFace === "South" ? 1 : blockFace === "North" ? -1 : 0)
+            const placeLocation: Vector3 = {
+                x: targetLocation.x + (blockFace === Direction.East ? 1 : blockFace === Direction.West ? -1 : 0),
+                y: targetLocation.y + (blockFace === Direction.Up ? 1 : blockFace === Direction.Down ? -1 : 0),
+                z: targetLocation.z + (blockFace === Direction.South ? 1 : blockFace === Direction.North ? -1 : 0)
             };
 
             const targetBlock = player.dimension.getBlock(placeLocation);
@@ -20,7 +31,7 @@ export function registerFireStarterComponent({ itemComponentRegistry }: { itemCo
 
             // Prevent placing fire on top of fire
             if (targetBlock.typeId === "gaiadimension:glittering_fire") return;
-            if (block.typeId === "gaiadimension:glittering_fire" && blockFace === "Up") return;
+            if (block.typeId === "gaiadimension:glittering_fire" && blockFace === Direction.Up) return;
 
             // Only place if it's air or replaceable
             if (targetBlock.isAir || targetBlock.typeId.includes("minecraft:light_block") || targetBlock.typeId === "minecraft:tallgrass" || targetBlock.typeId === "minecraft:yellow_flower" || targetBlock.typeId === "minecraft:red_flower") {
@@ -45,16 +56,15 @@ export function registerFireStarterComponent({ itemComponentRegistry }: { itemCo
                 
                 // Damage the item if not in creative
                 if (player.getGameMode() !== "creative") {
-                    const durability = itemStack.getComponent("minecraft:durability") as any;
+                    const durability = itemStack.getComponent("minecraft:durability") as ItemDurabilityComponent;
                     if (durability) {
+                        const equippable = player.getComponent("minecraft:equippable") as EntityEquippableComponent;
                         if (durability.damage + 1 >= durability.maxDurability) {
-                            const equippable = player.getComponent("minecraft:equippable") as any;
-                            equippable?.setEquipment("Mainhand", undefined);
+                            equippable?.setEquipment(EquipmentSlot.Mainhand, undefined);
                             player.playSound("random.break");
                         } else {
                             durability.damage += 1;
-                            const equippable = player.getComponent("minecraft:equippable") as any;
-                            equippable?.setEquipment("Mainhand", itemStack);
+                            equippable?.setEquipment(EquipmentSlot.Mainhand, itemStack);
                         }
                     }
                 }

@@ -1,4 +1,4 @@
-import { world, system, ItemStack, Player, Entity, Dimension, Vector3 } from '@minecraft/server';
+import { world, system, ItemStack, Player, Entity, Dimension, Vector3, EntityInventoryComponent, Container } from '@minecraft/server';
 
 /**
  * QIDB - QUICK ITEM DATABASE
@@ -7,9 +7,9 @@ import { world, system, ItemStack, Player, Entity, Dimension, Vector3 } from '@m
  */
 
 function date(): string {
-    const date = new Date(Date.now());
-    const ms = date.getMilliseconds().toString().padStart(3, "0");
-    return `${date.toLocaleString().replace(' AM', `.${ms} AM`).replace(' PM', `.${ms} PM`)}`;
+    const d = new Date(Date.now());
+    const ms = d.getMilliseconds().toString().padStart(3, "0");
+    return `${d.toLocaleString().replace(' AM', `.${ms} AM`).replace(' PM', `.${ms} PM`)}`;
 }
 
 interface QIDBSettings {
@@ -29,12 +29,14 @@ interface QIDBLogs {
     keys: boolean;
 }
 
+type QIDBValue = ItemStack | ItemStack[];
+
 export class QIDB {
     #validNamespace: boolean;
     #queuedKeys: string[];
     #settings: QIDBSettings;
-    #quickAccess: Map<string, any>;
-    #queuedValues: any[];
+    #quickAccess: Map<string, QIDBValue>;
+    #queuedValues: (QIDBValue | undefined)[];
     #dimension: Dimension;
     #sL: Vector3 | undefined;
 
@@ -77,7 +79,7 @@ export class QIDB {
         const savedLoc = world.getDynamicProperty('qidb:storage_location') as string | undefined;
         
         if (savedLoc) {
-            this.#sL = JSON.parse(savedLoc);
+            this.#sL = JSON.parse(savedLoc) as Vector3;
         } else {
             // First time setup: Pick a far location based on first player or default
             const player = world.getPlayers()[0];
@@ -94,7 +96,7 @@ export class QIDB {
             if (this.#sL) {
                 this.#dimension.runCommand(`tickingarea add ${this.#sL.x} 319 ${this.#sL.z} ${this.#sL.x} 318 ${this.#sL.z} qidb_storage true`);
             }
-        } catch (e) {}
+        } catch {}
 
         this.#log(`Initialized successfully. Namespace: ${this.#settings.namespace}`);
 
@@ -122,9 +124,11 @@ export class QIDB {
 
                 const k = Math.min(saveRate, this.#queuedKeys.length);
                 for (let i = 0; i < k; i++) {
-                    this.#romSave(this.#queuedKeys[0], this.#queuedValues[0]);
-                    this.#queuedKeys.shift();
-                    this.#queuedValues.shift();
+                    const key = this.#queuedKeys.shift();
+                    const value = this.#queuedValues.shift();
+                    if (key !== undefined) {
+                        this.#romSave(key, value);
+                    }
                 }
             } else if (runId) {
                 system.clearRun(runId);
@@ -138,7 +142,7 @@ export class QIDB {
         if (this.logs.startUp) console.log(`§bQIDB > ${msg}`);
     }
 
-    #load(key: string, length: number): { canStr: boolean, invs: any[] } {
+    #load(key: string, length: number): { canStr: boolean, invs: Container[] } {
         let canStr = false;
         try {
             // Try to load existing structure
@@ -172,7 +176,7 @@ export class QIDB {
             }
         }
 
-        const invs = entities.map(e => (e.getComponent("minecraft:inventory") as any).container);
+        const invs = entities.map(e => (e.getComponent("minecraft:inventory") as EntityInventoryComponent).container);
         if (this.logs.load) console.log(`§aQIDB > Loaded ${key} (${entities.length} entities)`);
         
         return { canStr, invs };
@@ -191,12 +195,12 @@ export class QIDB {
         }
     }
 
-    async #queueSaving(key: string, value: any): Promise<void> {
+    async #queueSaving(key: string, value: QIDBValue | undefined): Promise<void> {
         this.#queuedKeys.push(key);
         this.#queuedValues.push(value);
     }
 
-    async #romSave(key: string, value: any): Promise<void> {
+    async #romSave(key: string, value: QIDBValue | undefined): Promise<void> {
         const slotsNeeded = value ? (Array.isArray(value) ? value.length : 1) : 0;
         
         const { canStr, invs } = this.#load(key, Math.ceil(slotsNeeded / 256) || 1);
@@ -212,16 +216,18 @@ export class QIDB {
                     for (let i = 0; i < inv.size; i++) {
                         const valIndex = (256 * index) + i;
                         if (valIndex < value.length) inv.setItem(i, value[valIndex] || undefined);
+                        else inv.setItem(i, undefined);
                     }
                     world.setDynamicProperty(key, Math.ceil(value.length / 256) || 1);
                 } else {
                     // Save Single
                     inv.setItem(0, value);
+                    for (let i = 1; i < inv.size; i++) inv.setItem(i, undefined);
                     world.setDynamicProperty(key, false);
                 }
             });
             await this.#save(key, canStr);
-        } catch (e) {
+        } catch (e: unknown) {
             console.error(`§cQIDB > Save Failed for ${key}: ${e}`);
             // Force cleanup if save fails
             const entities = this.#sL ? this.#dimension.getEntities({ location: this.#sL, type: "qidb:storage", maxDistance: 2 }) : [];
@@ -229,7 +235,7 @@ export class QIDB {
         }
     }
 
-    public set(key: string, value: any): void {
+    public set(key: string, value: QIDBValue): void {
         const validatedKey = this.#validateKey(key);
         const time = Date.now();
 
@@ -253,21 +259,21 @@ export class QIDB {
         if (this.logs.set) console.log(`§aQIDB > Set ${validatedKey} (${Date.now() - time}ms)`);
     }
 
-    public get(key: string): any {
+    public get(key: string): QIDBValue {
         const validatedKey = this.#validateKey(key);
         const time = Date.now();
 
         // 1. Check Cache
         if (this.#quickAccess.has(validatedKey)) {
             if (this.logs.get) console.log(`§aQIDB > Cache Hit ${validatedKey}`);
-            return this.#quickAccess.get(validatedKey);
+            return this.#quickAccess.get(validatedKey) as QIDBValue;
         }
 
         // 2. Check Pending Save Queue (Race Condition Fix)
         const queueIdx = this.#queuedKeys.indexOf(validatedKey);
         if (queueIdx !== -1) {
             if (this.logs.get) console.log(`§aQIDB > Queue Hit ${validatedKey}`);
-            const value = this.#queuedValues[queueIdx];
+            const value = this.#queuedValues[queueIdx] as QIDBValue;
             this.#quickAccess.set(validatedKey, value); // Promote to cache
             return value;
         }
@@ -280,9 +286,9 @@ export class QIDB {
         const length = (typeof storedProp === 'number') ? storedProp : 1;
         
         const { canStr, invs } = this.#load(validatedKey, length);
-        const items: any[] = [];
+        const items: ItemStack[] = [];
 
-        invs.forEach((inv, index) => {
+        invs.forEach((inv) => {
             for (let i = 0; i < inv.size; i++) {
                 const item = inv.getItem(i);
                 if (item) items.push(item);
@@ -292,7 +298,7 @@ export class QIDB {
         // Cleanup
         this.#save(validatedKey, canStr);
 
-        let result: any = items;
+        let result: QIDBValue = items;
         if (storedProp === false) result = items[0]; // Single item mode
 
         this.#quickAccess.set(validatedKey, result);

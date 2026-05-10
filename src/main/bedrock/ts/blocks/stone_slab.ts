@@ -1,4 +1,16 @@
-import { world, system, BlockPermutation, GameMode, Direction, Player, Block, ItemStack, BlockComponentRegistry, EntityEquippableComponent } from "@minecraft/server";
+import { 
+    world, 
+    system, 
+    BlockPermutation, 
+    GameMode, 
+    Direction, 
+    Player, 
+    Block, 
+    ItemStack, 
+    BlockComponentRegistry, 
+    EntityEquippableComponent, 
+    PlayerInteractWithBlockBeforeEvent 
+} from "@minecraft/server";
 
 /**
  * Handles the creation of double slabs for ore/brick variants.
@@ -7,10 +19,10 @@ import { world, system, BlockPermutation, GameMode, Direction, Player, Block, It
  * @param {ItemStack} mainhandItem
  */
 function handleDoubleOreSlab(player: Player, block: Block, mainhandItem: ItemStack): void {
-    const baseId = block.typeId.replace("_slab", "");
-    const possibleIds = [baseId, baseId + "s"];
+    const baseId: string = block.typeId.replace("_slab", "");
+    const possibleIds: string[] = [baseId, baseId + "s"];
     
-    let success = false;
+    let success: boolean = false;
 
     for (const fullBlockId of possibleIds) {
         try {
@@ -19,7 +31,7 @@ function handleDoubleOreSlab(player: Player, block: Block, mainhandItem: ItemSta
             block.setType(fullBlockId);
             success = true;
             break; 
-        } catch (e) {
+        } catch (e: unknown) {
             // Continue to next possible ID
         }
     }
@@ -28,12 +40,14 @@ function handleDoubleOreSlab(player: Player, block: Block, mainhandItem: ItemSta
         player.playSound("dig.stone");
 
         if (player.getGameMode() !== GameMode.Creative) {
-            const equippable = player.getComponent("equippable") as EntityEquippableComponent;
-            if (mainhandItem.amount > 1) {
-                mainhandItem.amount--;
-                equippable.setEquipment("Mainhand", mainhandItem);
-            } else {
-                equippable.setEquipment("Mainhand");
+            const equippable: EntityEquippableComponent | undefined = player.getComponent("equippable") as EntityEquippableComponent | undefined;
+            if (equippable) {
+                if (mainhandItem.amount > 1) {
+                    mainhandItem.amount--;
+                    equippable.setEquipment("Mainhand", mainhandItem);
+                } else {
+                    equippable.setEquipment("Mainhand");
+                }
             }
         }
     } else {
@@ -45,7 +59,7 @@ function handleDoubleOreSlab(player: Player, block: Block, mainhandItem: ItemSta
 export function registerStoneSlabComponent({ blockComponentRegistry }: { blockComponentRegistry: BlockComponentRegistry }): void {
     blockComponentRegistry.registerCustomComponent("gaiadimension:stone_slab", {});
 
-    world.beforeEvents.playerInteractWithBlock.subscribe(event => {
+    world.beforeEvents.playerInteractWithBlock.subscribe((event: PlayerInteractWithBlockBeforeEvent): void => {
         const { player, block, itemStack, blockFace } = event;
 
         // Check if it's a Gaia Dimension slab (excluding sandstone which is handled separately)
@@ -54,14 +68,16 @@ export function registerStoneSlabComponent({ blockComponentRegistry }: { blockCo
             !block.typeId.includes("sandstone") && 
             itemStack?.typeId === block.typeId) {
 
-            const slabState = block.permutation.getState("minecraft:vertical_half" as any);
-            const isPlacingOnTop = blockFace === Direction.Up && slabState === "bottom";
-            const isPlacingOnBottom = blockFace === Direction.Down && slabState === "top";
+            // Using 'as any' for the state key as vertical_half might not be in the local superset mock, 
+            // but ensuring the return value is typed to avoid implicit any issues.
+            const slabState: string | number | boolean | undefined = block.permutation.getState("minecraft:vertical_half" as any);
+            const isPlacingOnTop: boolean = blockFace === Direction.Up && slabState === "bottom";
+            const isPlacingOnBottom: boolean = blockFace === Direction.Down && slabState === "top";
 
             if (isPlacingOnTop || isPlacingOnBottom) {
                 event.cancel = true;
                 system.run(() => {
-                    if (block.isValid) {
+                    if (block.isValid && itemStack) {
                         handleDoubleOreSlab(player, block, itemStack);
                     }
                 });
@@ -69,4 +85,3 @@ export function registerStoneSlabComponent({ blockComponentRegistry }: { blockCo
         }
     });
 }
-

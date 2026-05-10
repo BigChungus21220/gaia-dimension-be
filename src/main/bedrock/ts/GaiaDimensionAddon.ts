@@ -1,4 +1,17 @@
-import { world, system, StartupEvent, CommandPermissionLevel, Player, CustomCommandStatus } from "@minecraft/server";
+import { 
+    world, 
+    system, 
+    StartupEvent, 
+    CommandPermissionLevel, 
+    Player, 
+    CustomCommandStatus, 
+    BlockComponentRegistry, 
+    ItemComponentRegistry,
+    CustomCommandRegistry,
+    DimensionRegistry,
+    SystemBeforeEvents,
+    SystemBeforeEventSignal
+} from "@minecraft/server";
 import { registerLeavesComponent } from "./blocks/leaves.js";
 import { registerInvisibleComponent } from "./blocks/invisible.js";
 import { registerCurtainComponent } from "./blocks/curtain.js";
@@ -33,12 +46,29 @@ import "./world/worldgen/core/index.js";
 import "./systems/enchantments.js";
 import "./entities/MalachiteGuard.js";
 
+interface SystemShutdownBeforeEvent {
+    cancel: boolean;
+}
+
+declare module "@minecraft/server" {
+    interface StartupEvent {
+        readonly blockComponentRegistry: BlockComponentRegistry;
+        readonly customCommandRegistry: CustomCommandRegistry;
+        readonly itemComponentRegistry: ItemComponentRegistry;
+        readonly dimensionRegistry: DimensionRegistry;
+    }
+
+    interface SystemBeforeEvents {
+        readonly shutdown: SystemBeforeEventSignal<SystemShutdownBeforeEvent>;
+    }
+}
+
 // Initialize systems
 initializeDestructionHandlers();
 initializeEventManager();
 
 // @ts-ignore
-system.beforeEvents?.shutdown?.subscribe((event) => event.cancel = true);
+system.beforeEvents?.shutdown?.subscribe((event: SystemShutdownBeforeEvent) => event.cancel = true);
 initializeScriptEvents();
 initializeGeyser();
 initializeLightMixin();
@@ -74,23 +104,7 @@ system.beforeEvents.startup.subscribe((event: StartupEvent) => {
     registerFireStarterComponent({ itemComponentRegistry });
     registerMagicStaffComponent({ itemComponentRegistry });
     
-    // Register travel command
-    /*
-    customCommandRegistry.registerCommand({
-        name: "gaiadimension:travel",
-        description: "Travel to the Gaia Dimension",
-        permissionLevel: CommandPermissionLevel.Any,
-        cheatsRequired: false
-    }, (origin) => {
-        const player = origin.sourceEntity;
-        if (player instanceof Player) {
-            // Dimension Traveler Logic
-            return { status: CustomCommandStatus.Success };
-        }
-        return { status: CustomCommandStatus.Failure, message: "Only players can use this command." };
-    });
-    */
-
     registerGaiaCommands(customCommandRegistry);
     registerSetBiomeCommand(customCommandRegistry);
 });
+

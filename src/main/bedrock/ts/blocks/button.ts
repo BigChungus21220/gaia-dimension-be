@@ -1,10 +1,10 @@
-import { Block, BlockComponentRegistry, Player, PlayerInteractWithBlockBeforeEvent, system, world } from "@minecraft/server";
+import { Block, BlockComponentRegistry, Player, PlayerInteractWithBlockBeforeEvent, system } from "@minecraft/server";
 import { RedstoneControl } from "../systems/Redstone.js";
-import { registerBreakHandler, registerInteractHandler } from "../systems/event_manager.js";
+import { registerInteractHandler } from "../systems/event_manager.js";
 
-const BUTTON_SUFFIX = "_button";
-const PRESS_DURATION = 1.5 * 20; // 2 seconds
-const VANILLA_BUTTON_DURATION = 1.5 * 20; // 2 seconds for vanilla buttons too
+const BUTTON_SUFFIX: string = "_button";
+const PRESS_DURATION: number = 1.5 * 20; // 1.5 seconds in ticks
+const VANILLA_BUTTON_DURATION: number = 1.5 * 20; // 1.5 seconds for vanilla buttons too
 
 class ButtonComponent {
     // Logic moved to handlers
@@ -29,7 +29,7 @@ function getSoundName(blockTypeId: string, isPressing: boolean): string {
 }
 
 function findSolidBlock(buttonBlock: Block): Block | undefined {
-    const blockFace = buttonBlock.permutation.getState("minecraft:block_face" as any);
+    const blockFace = buttonBlock.permutation.getState("minecraft:block_face") as string | undefined;
     switch (blockFace) {
         case "down": return buttonBlock.above();
         case "up": return buttonBlock.below();
@@ -44,14 +44,14 @@ function findSolidBlock(buttonBlock: Block): Block | undefined {
 function updateCustomDoorsOnly(buttonBlock: Block, newState: boolean): void {
     const dimension = buttonBlock.dimension;
     const center = buttonBlock.location;
-    const checkedDoors = new Set<string>(); // To avoid toggling the same door twice
+    const checkedDoors: Set<string> = new Set<string>(); // To avoid toggling the same door twice
 
     // Scan a 3x3x3 cube around the button
-    for (let x = -1; x <= 1; x++) {
-        for (let y = -1; y <= 1; y++) {
-            for (let z = -1; z <= 1; z++) {
+    for (let x: number = -1; x <= 1; x++) {
+        for (let y: number = -1; y <= 1; y++) {
+            for (let z: number = -1; z <= 1; z++) {
                 const checkLocation = { x: center.x + x, y: center.y + y, z: center.z + z };
-                const block = dimension.getBlock(checkLocation);
+                const block: Block | undefined = dimension.getBlock(checkLocation);
 
                 if (block && block.typeId.includes("door") && !block.typeId.includes("trapdoor")) {
                     
@@ -70,17 +70,18 @@ function updateCustomDoorsOnly(buttonBlock: Block, newState: boolean): void {
                         continue;
                     }
                     
-                    const lowerKey = `${lowerHalf.location.x},${lowerHalf.location.y},${lowerHalf.location.z}`;
+                    const lowerKey: string = `${lowerHalf.location.x},${lowerHalf.location.y},${lowerHalf.location.z}`;
                     if (checkedDoors.has(lowerKey)) {
                         continue;
                     }
                     checkedDoors.add(lowerKey);
 
-                    const blocksToToggle = [lowerHalf, upperHalf];
+                    const blocksToToggle: Block[] = [lowerHalf, upperHalf];
                     for (const doorBlock of blocksToToggle) {
-                        let perm = doorBlock.permutation;
-                        if (perm.getState("gaiadimension:open" as any) !== undefined && perm.getState("gaiadimension:open" as any) !== newState) {
-                            doorBlock.setPermutation(perm.withState("gaiadimension:open" as any, newState));
+                        const perm = doorBlock.permutation;
+                        const isOpen = perm.getState("gaiadimension:open") as boolean | undefined;
+                        if (isOpen !== undefined && isOpen !== newState) {
+                            doorBlock.setPermutation(perm.withState("gaiadimension:open", newState));
                             
                             doorBlock.dimension.playSound(newState ? "open.wooden_trapdoor" : "close.wooden_trapdoor", doorBlock.location, { volume: 1, pitch: 1 });
                             
@@ -98,19 +99,19 @@ function updateCustomDoorsOnly(buttonBlock: Block, newState: boolean): void {
 }
 
 function handleCustomButtonPress(player: Player, block: Block): void {
-    const currentState = block.permutation.getState("gaiadimension:pressed" as any);
+    const currentState = block.permutation.getState("gaiadimension:pressed") as boolean | undefined;
     if (currentState === false) {
         // Visual state change
-        block.setPermutation(block.permutation.withState("gaiadimension:pressed" as any, true));
+        block.setPermutation(block.permutation.withState("gaiadimension:pressed", true));
         
         // Sound
-        const pressSound = getSoundName(block.typeId, true);
+        const pressSound: string = getSoundName(block.typeId, true);
         if (pressSound) {
             player.playSound(pressSound, { location: block.location, volume: 1, pitch: 1 });
         }
 
         // Custom button logic: behave like a redstone source
-        const attachedBlock = findSolidBlock(block);
+        const attachedBlock: Block | undefined = findSolidBlock(block);
         if (attachedBlock) {
              RedstoneControl.updateRedstonePower(block);
         }
@@ -121,13 +122,13 @@ function handleCustomButtonPress(player: Player, block: Block): void {
             if (block.isValid) {
                 try {
                     // Visual state change
-                    block.setPermutation(block.permutation.withState("gaiadimension:pressed" as any, false));
-                } catch (e) {
+                    block.setPermutation(block.permutation.withState("gaiadimension:pressed", false));
+                } catch (e: unknown) {
                     // Ignore error if block is no longer valid
                 }
 
                 // Sound
-                const releaseSound = getSoundName(block.typeId, false);
+                const releaseSound: string = getSoundName(block.typeId, false);
                 if (releaseSound) {
                     player.playSound(releaseSound, { location: block.location, volume: 1, pitch: 1 });
                 }
@@ -141,13 +142,13 @@ export function registerButtonComponent({ blockComponentRegistry }: { blockCompo
 
     // Vanilla Button & Lever Interaction
     registerInteractHandler({
-        check: (block: Block) => (block.typeId.startsWith("minecraft:") && (block.typeId.includes("button") || block.typeId.includes("lever"))),
-        execute: (event: PlayerInteractWithBlockBeforeEvent) => {
+        check: (block: Block): boolean => (block.typeId.startsWith("minecraft:") && (block.typeId.includes("button") || block.typeId.includes("lever"))),
+        execute: (event: PlayerInteractWithBlockBeforeEvent): void => {
             system.run(() => {
                 const { player, block } = event;
                 if (block.typeId.includes("button")) {
                     updateCustomDoorsOnly(block, true);
-                    const foundDoors = RedstoneControl.traceNetworkForDoors(block);
+                    const foundDoors: { block: Block }[] = RedstoneControl.traceNetworkForDoors(block);
                     for (const doorInfo of foundDoors) {
                         RedstoneControl.openAndTrackDoor(doorInfo.block, block);
                     }
@@ -157,7 +158,7 @@ export function registerButtonComponent({ blockComponentRegistry }: { blockCompo
                 }
                  else if (block.typeId.includes("lever")) {
                     updateCustomDoorsOnly(block, true);
-                    const foundDoors = RedstoneControl.traceNetworkForDoors(block);
+                    const foundDoors: { block: Block }[] = RedstoneControl.traceNetworkForDoors(block);
                     for (const doorInfo of foundDoors) {
                         RedstoneControl.openAndTrackDoor(doorInfo.block, block);
                     }
@@ -168,10 +169,9 @@ export function registerButtonComponent({ blockComponentRegistry }: { blockCompo
     
     // Custom Button Interaction
     registerInteractHandler({
-        check: (block: Block) => isCustomButton(block.typeId),
-        execute: (event: PlayerInteractWithBlockBeforeEvent) => {
+        check: (block: Block): boolean => isCustomButton(block.typeId),
+        execute: (event: PlayerInteractWithBlockBeforeEvent): void => {
              system.run(() => handleCustomButtonPress(event.player, event.block));
         }
     });
 }
-

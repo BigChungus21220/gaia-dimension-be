@@ -1,0 +1,134 @@
+{
+	"format_version": "1.20.60",
+	"animations": {
+		"animation.kinetic_block_entity.rotation": {
+			"loop": true,
+			"bones": {
+				"rotation_axis": {
+					"rotation": [
+						0,
+						"math.mod((query.frame_alpha + query.time_stamp) * query.property('create:speed') * 0.3 + query.property('create:rotation_offset'), 360)",
+						0
+					]
+				}
+			}
+		},
+		"animation.kinetic_block_entity_split.rotation": {
+			"loop": true,
+			"bones": {
+				"rotation_axis": {
+					"rotation": [
+						0,
+						"math.mod((query.frame_alpha + query.time_stamp) * query.property('create:speed') * 0.3 + query.property('create:rotation_offset'), 360)",
+						0
+					]
+				},
+				"rotation_axis2": {
+					"rotation": [
+						0,
+						"math.mod((query.frame_alpha + query.time_stamp) * query.property('create:speed2') * 0.3 + query.property('create:rotation_offset'), 360)",
+						0
+					]
+				}
+			}
+		},
+		"animation.directional_kinetic_block_entity.rotation": {
+			"loop": true,
+			"bones": {
+				"rotation_axis": {
+					"rotation": [
+						0,
+						"query.property('create:facing_direction') == 0 || query.property('create:facing_direction') == 2 || query.property('create:facing_direction') == 5 ? math.mod((query.frame_alpha + query.time_stamp) * query.property('create:speed') * 0.3 + query.property('create:rotation_offset'), 360) : -math.mod((query.frame_alpha + query.time_stamp) * query.property('create:speed') * 0.3 + query.property('create:rotation_offset'), 360)",
+						0
+					]
+				}
+			}
+		},
+		"animation.mechanical_press.rotation": {
+			"loop": true,
+			"bones": {
+				"rotation_axis": {
+					"rotation": [
+						0,
+						0,
+						"math.mod((query.frame_alpha + query.time_stamp) * query.property('create:speed') * 0.3 + query.property('create:rotation_offset'), 360)"
+					]
+				}
+			}
+		},
+		"animation.gearbox.rotation": {
+			"loop": true,
+			"bones": {
+				"rotation_north": {
+					"rotation": [0, 0, "variable.angle + query.property('create:rotation_offset')"]
+				},
+				"rotation_south": {
+					"rotation": [0, 0, "-variable.angle + query.property('create:rotation_offset')"]
+				},
+				"rotation_west": {
+					"rotation": ["variable.angle + query.property('create:rotation_offset2')", 0, 0]
+				},
+				"rotation_east": {
+					"rotation": ["-variable.angle + query.property('create:rotation_offset2')", 0, 0]
+				}
+			}
+		},
+		"animation.hand_crank.rotation": {
+			"loop": true,
+			"bones": {
+				"rotation_axis": {
+					"rotation": [
+						0,
+						"query.property('create:facing_direction') == 0 || query.property('create:facing_direction') == 2 || query.property('create:facing_direction') == 5 ? math.mod((query.frame_alpha + query.time_stamp) * query.property('create:speed') * 0.3 + query.property('create:rotation_offset'), 360) : -math.mod((query.frame_alpha + query.time_stamp) * query.property('create:speed') * 0.3 + query.property('create:rotation_offset'), 360)",
+						0
+					]
+				},
+				"handle": {
+					"rotation": [
+						0,
+						"query.property('create:facing_direction') == 0 || query.property('create:facing_direction') == 2 || query.property('create:facing_direction') == 5 ? v.partial_ticks : -v.partial_ticks",
+						0
+					]
+				}
+			}
+		},
+		"animation.mechanical_bearing.rotation": {
+            "loop": true,
+            "bones": {
+                "rotation_axis": {
+                    "rotation": [
+                        0,
+                        "math.mod((query.frame_alpha + query.time_stamp) * query.property('create:speed') * 0.3 + query.property('create:rotation_offset'), 360)",
+                        0
+                    ]
+                },
+                "top": {
+                    "rotation": [
+                        0,
+                        "q.property('create:running') ? math.mod((query.frame_alpha + query.time_stamp) * query.property('create:speed') * 0.3 + query.property('create:rotation_offset'), 360) : 0",
+                        0
+                    ]
+                }
+            }
+        },
+		"animation.mechanical_mixer.rotation": {
+            "loop": true,
+            "bones": {
+                "mixerhead": {
+                    "rotation": [
+                        0,
+                        "math.mod((query.frame_alpha + query.time_stamp) * (query.property('create:running') ? v.runningticks < 15 ? query.property('create:speed') : v.runningticks <= 20 ? query.property('create:speed') * 2 : query.property('create:speed') / 2 : query.property('create:speed') / 2) * 0.3,360)",
+                        0
+                    ]
+                },
+                "rotation_axis": {
+                    "rotation": [
+                        0,
+                        "math.mod((query.frame_alpha + query.time_stamp) * query.property('create:speed') * 0.3 + query.property('create:rotation_offset'), 360)",
+                        0
+                    ]
+                }
+            }
+        }
+	}
+}

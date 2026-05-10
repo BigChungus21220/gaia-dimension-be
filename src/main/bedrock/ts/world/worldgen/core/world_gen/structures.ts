@@ -147,6 +147,7 @@ function getPlacementKey(chunkX: number, chunkZ: number, type: string): string {
     return `struct:${type}:${chunkX},${chunkZ}`;
 }
 
+
 // ──────────────────────────────────────────────────────
 // Public API
 // ──────────────────────────────────────────────────────
@@ -252,7 +253,7 @@ function placeMiniTower(
         // Fills downward from the base until hitting solid ground
         fillSupportColumn(dimension, x, placeY, z, 17); // Mini towers are ~17x17 base
 
-    } catch (e) {
+    } catch (e: unknown) {
         console.warn(`[GaiaDim] Failed to place ${towerName} at ${x},${surfaceY},${z}:`, e);
     }
 }
@@ -284,7 +285,7 @@ function placeMalachiteTower(
         // Fill support columns for the larger watchtower footprint (~25x25)
         fillSupportColumn(dimension, x, placeY, z, 25);
 
-    } catch (e) {
+    } catch (e: unknown) {
         console.warn(`[GaiaDim] Failed to place malachite_tower at ${x},${surfaceY},${z}:`, e);
     }
 }

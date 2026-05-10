@@ -1,0 +1,35 @@
+{
+    "format_version": "1.20.80",
+    "minecraft:client_entity": {
+        "description": {
+            "identifier": "create:block_display",
+            "materials": {
+                "default": "kinetic_block_entity_alpha_single_sided"
+            },
+            "geometry": {
+                "default": "geometry.create.block_display"
+            },
+            "textures": {
+                "default": "textures/blocks/invisible"
+            },
+            "render_controllers": [
+                "controller.render.create.block_display"
+            ],
+            "animations": {
+                "position": "animation.tile_entity.position",
+                "rotate_y": "animation.block_display.rotate_y",
+                "rotate_x": "animation.block_display.rotate_x",
+                "rotate_z": "animation.block_display.rotate_z",
+                "axis_controller": "controller.animation.block_display.axis"
+            },
+            "scripts": {
+                "scale": "2.7",
+                "animate": [
+                    "position",
+                    "axis_controller"
+                ]
+            },
+            "enable_attachables": true
+        }
+    }
+}

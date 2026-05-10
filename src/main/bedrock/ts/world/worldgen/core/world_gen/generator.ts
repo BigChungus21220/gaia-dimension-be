@@ -1,16 +1,17 @@
-import { Dimension, system } from "@minecraft/server";
-import { easeOutQuad, FastNoiseLite, ProceduralRandom } from "../utils";
+import { Dimension, system, Block, NumberRange } from "@minecraft/server";
+import { FastNoiseLite, ProceduralRandom } from "../utils";
 import { buildGaiaLayers, getBiomeNameFromId } from "./gaia-layers";
 import { BiomeDefinition } from "../definitions/definition-biome";
 import { placeStructuresForChunk } from "./structures";
+import type { SessionManager } from "./session-manager";
 
-// Java source: GaiaDimensions.java â€” sea level 63, minY -64
+// Java source: GaiaDimensions.java — sea level 63, minY -64
 const SEA_LEVEL = 63;
 const ENTRY = 0; // Shifted from -64 to 0 so terrain generates around Y=70, allowing rivers (Y=55) to fill with water up to Y=63
-const STONE_DEPTH = 10;  // shallow shell â€” only fill what's visible
+const STONE_DEPTH = 10;  // shallow shell — only fill what's visible
 const SOIL_DEPTH = 4;
 
-function setBlock(block: any, type: string): boolean {
+function setBlock(block: Block | undefined | null, type: string): boolean {
     if (!block) return false;
     if (block.typeId !== type) {
         try { block.setType(type); } catch (_) { return false; }
@@ -19,12 +20,12 @@ function setBlock(block: any, type: string): boolean {
 }
 
 export class ChunkGenerator {
-    public seaLevel = SEA_LEVEL;
-    public entry = ENTRY;
-    public manager: any;
+    public seaLevel: number = SEA_LEVEL;
+    public entry: number = ENTRY;
+    public manager: SessionManager;
     public dimension: Dimension;
     public dimensionId: string;
-    public range: any;
+    public range: NumberRange;
     public seed: ProceduralRandom;
     public isGenerating: Set<string> = new Set();
 
@@ -50,10 +51,10 @@ export class ChunkGenerator {
     // Layer-based biome lookup (ported from Java)
     private layerFn: (x: number, z: number) => number;
 
-    // Biome cache: biome name â†’ BiomeDefinition
+    // Biome cache: biome name -> BiomeDefinition
     private biomeCache = new Map<string, BiomeDefinition>();
 
-    constructor(sessionManager: any, dimension: Dimension, seed: ProceduralRandom) {
+    constructor(sessionManager: SessionManager, dimension: Dimension, seed: ProceduralRandom) {
         this.manager = sessionManager;
         this.dimension = dimension;
         this.dimensionId = dimension.id;
@@ -207,21 +208,21 @@ export class ChunkGenerator {
         });
     }
 
-    isGenerated(hash: string) { return this.manager.isGenerated(hash + this.dimensionId); }
-    setGenerated(hash: string) { this.manager.setGenerated(hash + this.dimensionId); }
+    isGenerated(hash: string): boolean { return this.manager.isGenerated(hash + this.dimensionId); }
+    setGenerated(hash: string): void { this.manager.setGenerated(hash + this.dimensionId); }
 
     /**
-     * Single-pass chunk generator: stone â†’ soil â†’ surface grass â†’ vegetation â†’ trees.
+     * Single-pass chunk generator: stone -> soil -> surface grass -> vegetation -> trees.
      * Yields every X-row to prevent watchdog timeout.
      */
-    *generate(X: number, Z: number, failRef: { count: number }, done: () => void) {
+    *generate(X: number, Z: number, failRef: { count: number }, done: () => void): Generator<void, void, unknown> {
         const { dimension: dim } = this;
         const random = this.seed.getSeqence(X, Z);
         const worldX = X * 16, worldZ = Z * 16;
         const placedTrees: {x: number, z: number}[] = [];
         // Pre-allocate lookup arrays for the tree placement pass (filled during terrain loop)
         const terrainMap = new Array<number>(256);
-        const biomeMap = new Array<any>(256);
+        const biomeMap = new Array<BiomeDefinition>(256);
         const underwaterMap = new Array<boolean>(256);
 
         try {
@@ -299,7 +300,7 @@ export class ChunkGenerator {
                             if (isUnderwater && groundId.includes("grass")) surfaceBlock.setType(underId);
                             else surfaceBlock.setType(groundId);
                         }
-                    } catch (_) { /* block ID not registered â€” skip */ }
+                    } catch (_) { /* block ID not registered — skip */ }
                     
                     // Water Fill
                     if (isUnderwater) {
@@ -311,10 +312,10 @@ export class ChunkGenerator {
                         }
                     }
 
-                    // 4. Vegetation â€” non-fatal
-                    if (!isUnderwater && biome.vegetationPalette?.permutations?.length > 0) {
+                    // 4. Vegetation — non-fatal
+                    if (!isUnderwater && (biome.vegetationPalette?.permutations?.length ?? 0) > 0) {
                         if (random.nextFloat() < biome.vegetationChance) {
-                            const idx = Math.floor(random.nextFloat() * biome.vegetationPalette.permutations.length);
+                            const idx = Math.floor(random.nextFloat() * (biome.vegetationPalette.permutations.length));
                             const vegId = biome.vegetationPalette.permutations[idx] as string;
                             if (vegId) {
                                 const vBlock = dim.getBlock({ x: xx, y: terrain + 1, z: zz });
@@ -333,7 +334,7 @@ export class ChunkGenerator {
                 yield; // yield per X-row
             }
 
-            // 5. Trees â€” Java countExtra(count, chance, extra) + InSquarePlacement
+            // 5. Trees — Java countExtra(count, chance, extra) + InSquarePlacement
             // Java picks N random XZ positions per chunk, NOT per-block chance.
             // This prevents the noise-gated dead zones that caused treeless biomes.
 
@@ -347,7 +348,7 @@ export class ChunkGenerator {
                 }
 
                 for (let t = 0; t < totalTrees; t++) {
-                    // InSquarePlacement.spread() â€” uniform random XZ within chunk
+                    // InSquarePlacement.spread() — uniform random XZ within chunk
                     const tx = Math.floor(random.nextFloat() * 16);
                     const tz = Math.floor(random.nextFloat() * 16);
                     const tIdx = tx * 16 + tz;
@@ -374,7 +375,7 @@ export class ChunkGenerator {
                         const above = dim.getBlock({ x: txx, y: terrain + 1, z: tzz });
                         if (above && above.typeId === "minecraft:air") {
                             try { 
-                                yield* this.placeTree(dim, txx, terrain + 1, tzz, treeDef, random); 
+                                yield* this.placeTree(dim, txx, terrain + 1, tzz, treeDef as any, random); 
                                 placedTrees.push({x: txx, z: tzz});
                             } catch (_) {}
                         }
@@ -389,7 +390,7 @@ export class ChunkGenerator {
     }
 
 
-    *placeTree(dim: Dimension, x: number, baseY: number, z: number, treeDef: any, random: ProceduralRandom) {
+    *placeTree(dim: Dimension, x: number, baseY: number, z: number, treeDef: any, random: ProceduralRandom): Generator<void, void, unknown> {
         const logId = treeDef.logPaletted?.permutations?.[0] as string;
         const leafId = treeDef.leavesPaletted?.permutations?.[0] as string ?? treeDef.carpetPaletted?.permutations?.[0] as string;
         if (!logId) return;
@@ -431,10 +432,10 @@ export class ChunkGenerator {
     }
 }
 
-// â”€â”€ TRUNK PLACERS (1:1 Java ports) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── TRUNK PLACERS (1:1 Java ports) ──────────────────────────────────────────
 
-/** Java ThickTrunkPlacer â€” 2Ã—2 cross core + corner buttresses + root extensions */
-function placeThickTrunk(dim: Dimension, x: number, baseY: number, z: number, h: number, logId: string): {x: number, y: number, z: number}[] {
+/** Java ThickTrunkPlacer — 2×2 cross core + corner buttresses + root extensions */
+function placeThickTrunk(dim: Dimension, x: number, baseY: number, z: number, h: number, logId: string): { x: number, y: number, z: number }[] {
     for (let y = 0; y < h; y++) {
         const wy = baseY + y;
         // Y=0: root logs extending 2 blocks in each cardinal
@@ -461,9 +462,9 @@ function placeThickTrunk(dim: Dimension, x: number, baseY: number, z: number, h:
     return [{ x, y: baseY + h, z }];
 }
 
-/** Java CardinalTrunkPlacer â€” straight trunk + 4 L-shaped cardinal branches */
-function placeCardinalTrunk(dim: Dimension, x: number, baseY: number, z: number, h: number, logId: string): {x: number, y: number, z: number}[] {
-    const atts: {x: number, y: number, z: number}[] = [];
+/** Java CardinalTrunkPlacer — straight trunk + 4 L-shaped cardinal branches */
+function placeCardinalTrunk(dim: Dimension, x: number, baseY: number, z: number, h: number, logId: string): { x: number, y: number, z: number }[] {
+    const atts: { x: number, y: number, z: number }[] = [];
     // Main trunk to height-2
     for (let y = 0; y <= h - 2; y++) {
         setBlock(dim.getBlock({ x, y: baseY + y, z }), logId);
@@ -492,9 +493,9 @@ function placeCardinalTrunk(dim: Dimension, x: number, baseY: number, z: number,
     return atts;
 }
 
-/** Java FourBranchTrunkPlacer â€” straight trunk + 4 branches stepping out from mid-height */
-function placeFourBranchTrunk(dim: Dimension, x: number, baseY: number, z: number, h: number, logId: string): {x: number, y: number, z: number}[] {
-    const atts: {x: number, y: number, z: number}[] = [];
+/** Java FourBranchTrunkPlacer — straight trunk + 4 branches stepping out from mid-height */
+function placeFourBranchTrunk(dim: Dimension, x: number, baseY: number, z: number, h: number, logId: string): { x: number, y: number, z: number }[] {
+    const atts: { x: number, y: number, z: number }[] = [];
     // Main trunk
     for (let y = 0; y < h; y++) {
         setBlock(dim.getBlock({ x, y: baseY + y, z }), logId);
@@ -517,9 +518,9 @@ function placeFourBranchTrunk(dim: Dimension, x: number, baseY: number, z: numbe
     return atts;
 }
 
-/** Java VaryingFourBranchTrunkPlacer â€” half trunk + 4 random-offset branches */
-function placeVaryingFourBranchTrunk(dim: Dimension, x: number, baseY: number, z: number, h: number, logId: string, random: ProceduralRandom): {x: number, y: number, z: number}[] {
-    const atts: {x: number, y: number, z: number}[] = [];
+/** Java VaryingFourBranchTrunkPlacer — half trunk + 4 random-offset branches */
+function placeVaryingFourBranchTrunk(dim: Dimension, x: number, baseY: number, z: number, h: number, logId: string, random: ProceduralRandom): { x: number, y: number, z: number }[] {
+    const atts: { x: number, y: number, z: number }[] = [];
     const halfH = Math.floor(h / 2);
     // Half trunk
     for (let y = 0; y <= halfH; y++) {
@@ -546,18 +547,18 @@ function placeVaryingFourBranchTrunk(dim: Dimension, x: number, baseY: number, z
     return atts;
 }
 
-// â”€â”€ FOLIAGE DISPATCH â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── FOLIAGE DISPATCH ──────────────────────────────────────────────────────────
 
-function placeFoliageForTree(dim: Dimension, cx: number, cy: number, cz: number, treeId: string, leafId: string, random: ProceduralRandom) {
+function placeFoliageForTree(dim: Dimension, cx: number, cy: number, cz: number, treeId: string, leafId: string, random: ProceduralRandom): void {
     if (treeId === "green_agate") {
-        // ThickFoliagePlacer(radius=3, offset=1) â€” 5 layers
+        // ThickFoliagePlacer(radius=3, offset=1) — 5 layers
         placeLeavesRowThick(dim, cx, cy, cz, 1, -4, leafId, random);
         placeLeavesRowThick(dim, cx, cy, cz, 2, -3, leafId, random);
         placeLeavesRowThick(dim, cx, cy, cz, 3, -2, leafId, random);
         placeLeavesRowThick(dim, cx, cy, cz, 3, -1, leafId, random);
         placeLeavesRowThick(dim, cx, cy, cz, 2,  0, leafId, random);
     } else if (treeId === "purple_agate") {
-        // BulbFoliagePlacer(radius=1, offset=1) â€” 3 layers
+        // BulbFoliagePlacer(radius=1, offset=1) — 3 layers
         for (let y = 1; y >= -1; y--) {
             placeLeavesRowBulb(dim, cx, cy, cz, 1, -y, leafId);
         }
@@ -579,13 +580,13 @@ function placeFoliageForTree(dim: Dimension, cx: number, cy: number, cz: number,
             placeLeavesRowDefault(dim, cx, cy, cz, lr, -y, leafId, random);
         }
     } else if (treeId === "golden_small") {
-        // CubeFoliagePlacer(radius=1, offset=1) â€” full cube
+        // CubeFoliagePlacer(radius=1, offset=1) — full cube
         for (let y = 1; y >= -1; y--) placeLeavesRowCube(dim, cx, cy, cz, 1, -y, leafId);
     } else if (treeId === "golden_big") {
-        // CubeFoliagePlacer(radius=2, offset=1) â€” larger cube
+        // CubeFoliagePlacer(radius=2, offset=1) — larger cube
         for (let y = 2; y >= -2; y--) placeLeavesRowCube(dim, cx, cy, cz, 2, -y, leafId);
     } else if (treeId === "green_agate_bush") {
-        // BushFoliagePlacer(radius=2, offset=1, height=2) â€” 3 layers, random corner skip
+        // BushFoliagePlacer(radius=2, offset=1, height=2) — 3 layers, random corner skip
         for (let y = 2; y >= 0; y--) placeLeavesRowBush(dim, cx, cy, cz, 2, -y, leafId, random);
     } else if (treeId === "pink_agate" || treeId === "fossilized") {
         // CappedFoliagePlacer(radius=3, offset=1) — pink_agate + fossilized
@@ -596,16 +597,16 @@ function placeFoliageForTree(dim: Dimension, cx: number, cy: number, cz: number,
         placeLeavesRowCapped(dim, cx, cy, cz, 2, -1, leafId, random);
         placeLeavesRowCapped(dim, cx, cy, cz, 1,  0, leafId, random);
     } else {
-        // Default CappedFoliagePlacer(radius=2, offset=1) â€” burnt, fire, fossilized, etc.
+        // Default CappedFoliagePlacer(radius=2, offset=1) — burnt, fire, fossilized, etc.
         placeLeavesRowCapped(dim, cx, cy, cz, 2, -1, leafId, random);
         placeLeavesRowCapped(dim, cx, cy, cz, 1,  0, leafId, random);
     }
 }
 
-// â”€â”€ Java FoliagePlacer.placeLeavesRow ports â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Java FoliagePlacer.placeLeavesRow ports ──────────────────────────────────
 
 /** CappedFoliagePlacer.shouldSkipLocation */
-function placeLeavesRowCapped(dim: Dimension, cx: number, cy: number, cz: number, radius: number, yOff: number, leafId: string, random: ProceduralRandom) {
+function placeLeavesRowCapped(dim: Dimension, cx: number, cy: number, cz: number, radius: number, yOff: number, leafId: string, random: ProceduralRandom): void {
     const y = cy + yOff;
     for (let dx = -radius; dx <= radius; dx++) {
         for (let dz = -radius; dz <= radius; dz++) {
@@ -621,7 +622,7 @@ function placeLeavesRowCapped(dim: Dimension, cx: number, cy: number, cz: number
 }
 
 /** ThickFoliagePlacer.shouldSkipLocation */
-function placeLeavesRowThick(dim: Dimension, cx: number, cy: number, cz: number, radius: number, yOff: number, leafId: string, random: ProceduralRandom) {
+function placeLeavesRowThick(dim: Dimension, cx: number, cy: number, cz: number, radius: number, yOff: number, leafId: string, random: ProceduralRandom): void {
     const y = cy + yOff;
     for (let dx = -radius; dx <= radius; dx++) {
         for (let dz = -radius; dz <= radius; dz++) {
@@ -639,7 +640,7 @@ function placeLeavesRowThick(dim: Dimension, cx: number, cy: number, cz: number,
 }
 
 /** BulbFoliagePlacer.shouldSkipLocation */
-function placeLeavesRowBulb(dim: Dimension, cx: number, cy: number, cz: number, radius: number, yOff: number, leafId: string) {
+function placeLeavesRowBulb(dim: Dimension, cx: number, cy: number, cz: number, radius: number, yOff: number, leafId: string): void {
     const y = cy + yOff;
     for (let dx = -radius; dx <= radius; dx++) {
         for (let dz = -radius; dz <= radius; dz++) {
@@ -649,8 +650,8 @@ function placeLeavesRowBulb(dim: Dimension, cx: number, cy: number, cz: number, 
     }
 }
 
-/** CubeFoliagePlacer.shouldSkipLocation â€” always false */
-function placeLeavesRowCube(dim: Dimension, cx: number, cy: number, cz: number, radius: number, yOff: number, leafId: string) {
+/** CubeFoliagePlacer.shouldSkipLocation — always false */
+function placeLeavesRowCube(dim: Dimension, cx: number, cy: number, cz: number, radius: number, yOff: number, leafId: string): void {
     const y = cy + yOff;
     for (let dx = -radius; dx <= radius; dx++) {
         for (let dz = -radius; dz <= radius; dz++) {
@@ -659,8 +660,8 @@ function placeLeavesRowCube(dim: Dimension, cx: number, cy: number, cz: number, 
     }
 }
 
-/** BushFoliagePlacer.shouldSkipLocation â€” skip corners randomly */
-function placeLeavesRowBush(dim: Dimension, cx: number, cy: number, cz: number, radius: number, yOff: number, leafId: string, random: ProceduralRandom) {
+/** BushFoliagePlacer.shouldSkipLocation — skip corners randomly */
+function placeLeavesRowBush(dim: Dimension, cx: number, cy: number, cz: number, radius: number, yOff: number, leafId: string, random: ProceduralRandom): void {
     const y = cy + yOff;
     for (let dx = -radius; dx <= radius; dx++) {
         for (let dz = -radius; dz <= radius; dz++) {
@@ -671,7 +672,7 @@ function placeLeavesRowBush(dim: Dimension, cx: number, cy: number, cz: number, 
 }
 
 /** Default vanilla shouldSkipLocation (PineFoliagePlacer etc) */
-function placeLeavesRowDefault(dim: Dimension, cx: number, cy: number, cz: number, radius: number, yOff: number, leafId: string, random: ProceduralRandom) {
+function placeLeavesRowDefault(dim: Dimension, cx: number, cy: number, cz: number, radius: number, yOff: number, leafId: string, random: ProceduralRandom): void {
     const y = cy + yOff;
     for (let dx = -radius; dx <= radius; dx++) {
         for (let dz = -radius; dz <= radius; dz++) {
@@ -681,7 +682,7 @@ function placeLeavesRowDefault(dim: Dimension, cx: number, cy: number, cz: numbe
     }
 }
 
-function setLeaf(dim: Dimension, x: number, y: number, z: number, leafId: string) {
+function setLeaf(dim: Dimension, x: number, y: number, z: number, leafId: string): void {
     const block = dim.getBlock({ x, y, z });
     if (block && block.typeId === "minecraft:air") {
         try { block.setType(leafId); } catch (_) {}

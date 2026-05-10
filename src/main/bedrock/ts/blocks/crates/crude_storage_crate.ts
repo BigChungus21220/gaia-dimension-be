@@ -1,32 +1,52 @@
-import { Machine } from "../../API/lib/Machine.js";
+import { Machine, UIConfig } from "../../API/lib/Machine.js";
 import blockEntityManager from "../../API/lib/BlockEntity.js";
+import { 
+    BlockComponentRegistry, 
+    BlockComponentOnPlaceEvent, 
+    Vector3, 
+    Entity, 
+    Block 
+} from "@minecraft/server";
 
 class CrudeStorageCrate extends Machine {
-    static get NAME() { return "crude_storage_crate"; }
+    static override get NAME(): string { return "crude_storage_crate"; }
     
-    static get INVENTORY_SIZE() { return 27; }
+    static override get INVENTORY_SIZE(): number { return 27; }
 
-    static get UI_CONFIG() {
+    static override get UI_CONFIG(): UIConfig {
+        const slots: number[] = Array.from({ length: 27 }, (_, i) => i);
         return {
-            uiPath: "crude_storage_crate_ui", 
-            inventorySize: this.INVENTORY_SIZE,
-            slots: [] 
+            classicProfile: {
+                inputSlots: slots
+            },
+            pocketProfile: {
+                inputSlots: slots
+            }
         };
     }
-    onLoad() {
+
+    constructor(entity: Entity, block: Block) {
+        super(entity, block);
+        if (this.entity && this.entity.isValid) {
+            this.entity.nameTag = "Crude Storage Crate";
+        }
+    }
+
+    onLoad(): void {
         if (this.entity && this.entity.isValid) {
             this.entity.nameTag = "Crude Storage Crate";
         }
     }
 }
 
-blockEntityManager.register(CrudeStorageCrate);
+blockEntityManager.register(CrudeStorageCrate as any);
 
-export function registerCrudeStorageCrateComponent({ blockComponentRegistry }) {
+export function registerCrudeStorageCrateComponent({ blockComponentRegistry }: { blockComponentRegistry: BlockComponentRegistry }): void {
     blockComponentRegistry.registerCustomComponent("gaiadimension:crude_storage_crate", {
-        onPlace: ({ block, dimension }) => {
-            const location = block.location;
-            const center = { x: location.x + 0.5, y: location.y, z: location.z + 0.5 };
+        onPlace: (event: BlockComponentOnPlaceEvent) => {
+            const { block, dimension } = event;
+            const location: Vector3 = block.location;
+            const center: Vector3 = { x: location.x + 0.5, y: location.y, z: location.z + 0.5 };
             
             try {
                 const entity = dimension.spawnEntity("gaiadimension:crude_storage_crate", center);
@@ -34,8 +54,6 @@ export function registerCrudeStorageCrateComponent({ blockComponentRegistry }) {
             } catch (e) {
                 console.warn("Failed to spawn crude storage crate entity", e);
             }
-        },
-        onPlayerDestroy: ({ block, dimension }) => {
         }
     });
 }

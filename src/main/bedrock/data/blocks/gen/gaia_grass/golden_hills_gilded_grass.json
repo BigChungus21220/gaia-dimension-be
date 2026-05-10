@@ -33,7 +33,7 @@
                     "render_method": "opaque"
                 },
                 "down": {
-                    "texture": "aurum_soil",
+                    "texture": "gaiadimension:aurum_soil",
                     "render_method": "opaque"
                 }
             },

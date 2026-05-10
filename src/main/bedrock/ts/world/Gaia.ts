@@ -1,6 +1,16 @@
 import { world, system, Dimension, Vector3, Player, BlockPermutation, BlockVolume } from "@minecraft/server";
 
-export const GAIA_DIMENSION_ID = "gaiadimension:gaia_dimension";
+export const GAIA_DIMENSION_ID: string = "gaiadimension:gaia_dimension";
+
+declare module "@minecraft/server" {
+    interface Dimension {
+        /**
+         * Returns the biome at the specified location.
+         * @beta
+         */
+        getBiome(location: Vector3): { id: string };
+    }
+}
 
 export class DimensionSystem {
     static isInGaia(player: Player): boolean {
@@ -9,26 +19,26 @@ export class DimensionSystem {
 
     static getBiome(player: Player): string {
         try {
-            const biome = (player.dimension as any).getBiome(player.location);
+            const biome = player.dimension.getBiome(player.location);
             return biome ? biome.id.replace("minecraft:", "").replace("gaiadimension:", "") : "crystal_plains";
-        } catch (e) {
+        } catch (e: unknown) {
             return "crystal_plains";
         }
     }
 
-    static async teleport(player: Player, targetDimId: string) {
+    static async teleport(player: Player, targetDimId: string): Promise<void> {
         if (!player.isValid) return;
         
-        const targetDim = world.getDimension(targetDimId);
-        const isToGaia = targetDimId === GAIA_DIMENSION_ID;
+        const targetDim: Dimension = world.getDimension(targetDimId);
+        const isToGaia: boolean = targetDimId === GAIA_DIMENSION_ID;
         
         // Calculate scale (4:1)
-        const targetX = player.location.x / (isToGaia ? 4 : 0.25);
-        const targetZ = player.location.z / (isToGaia ? 4 : 0.25);
-        const targetY = isToGaia ? 100 : 70; // High enough to be safe
+        const targetX: number = player.location.x / (isToGaia ? 4 : 0.25);
+        const targetZ: number = player.location.z / (isToGaia ? 4 : 0.25);
+        const targetY: number = isToGaia ? 100 : 70; // High enough to be safe
         
-        const spawn = { x: targetX, y: targetY, z: targetZ };
-        const tickingAreaId = `teleport_${player.id}`;
+        const spawn: Vector3 = { x: targetX, y: targetY, z: targetZ };
+        const tickingAreaId: string = `teleport_${player.id}`;
         
         player.sendMessage(`§eLoading Gaia Dimension...`);
 
@@ -40,9 +50,9 @@ export class DimensionSystem {
         });
 
         // 2. Build Arrival Portal & Platform
-        const px = Math.floor(spawn.x);
-        const py = Math.floor(spawn.y);
-        const pz = Math.floor(spawn.z);
+        const px: number = Math.floor(spawn.x);
+        const py: number = Math.floor(spawn.y);
+        const pz: number = Math.floor(spawn.z);
 
         // Platform
         targetDim.fillBlocks(
@@ -52,23 +62,23 @@ export class DimensionSystem {
         );
 
         // Frame
-        const keystone = "gaiadimension:keystone_block";
-        const portal = "gaiadimension:gaia_dimension_portal";
+        const keystone: string = "gaiadimension:keystone_block";
+        const portal: string = "gaiadimension:gaia_dimension_portal";
         
         // Bottom/Top
-        for(let i = -1; i <= 2; i++) {
+        for(let i: number = -1; i <= 2; i++) {
             targetDim.getBlock({x: px + i, y: py, z: pz})?.setType(keystone);
             targetDim.getBlock({x: px + i, y: py + 4, z: pz})?.setType(keystone);
         }
         // Sides
-        for(let i = 1; i <= 3; i++) {
+        for(let i: number = 1; i <= 3; i++) {
             targetDim.getBlock({x: px - 1, y: py + i, z: pz})?.setType(keystone);
             targetDim.getBlock({x: px + 2, y: py + i, z: pz})?.setType(keystone);
         }
         // Interior
-        const portalPerm = BlockPermutation.resolve(portal, { "gaiadimension:perm_dim": 0 });
-        for(let ix = 0; ix <= 1; ix++) {
-            for(let iy = 1; iy <= 3; iy++) {
+        const portalPerm: BlockPermutation = BlockPermutation.resolve(portal, { "gaiadimension:perm_dim": 0 });
+        for(let ix: number = 0; ix <= 1; ix++) {
+            for(let iy: number = 1; iy <= 3; iy++) {
                 targetDim.getBlock({x: px + ix, y: py + iy, z: pz})?.setPermutation(portalPerm);
             }
         }
@@ -78,7 +88,7 @@ export class DimensionSystem {
         
         // 4. Cleanup
         system.runTimeout(() => {
-            try { world.tickingAreaManager.removeTickingArea(tickingAreaId); } catch(e) {}
+            try { world.tickingAreaManager.removeTickingArea(tickingAreaId); } catch(e: unknown) {}
         }, 100);
     }
 }
@@ -94,8 +104,9 @@ system.runInterval(() => {
             if (system.currentTick - lastTeleport < 150) continue; // Slightly longer cooldown
 
             player.setDynamicProperty("last_teleport", system.currentTick);
-            const targetDim = DimensionSystem.isInGaia(player) ? "minecraft:overworld" : GAIA_DIMENSION_ID;
+            const targetDim: string = DimensionSystem.isInGaia(player) ? "minecraft:overworld" : GAIA_DIMENSION_ID;
             DimensionSystem.teleport(player, targetDim);
         }
     }
 }, 10);
+

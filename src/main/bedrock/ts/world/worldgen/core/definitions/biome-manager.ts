@@ -1,14 +1,14 @@
 import { BiomeDefinition } from "./definition-biome";
 import { ProceduralRandom } from "../utils";
+import { DefinitionManager } from "./definition-manager";
 
 export class BiomeManager {
-    public definition: any;
+    public definition: DefinitionManager;
     public biomes: BiomeDefinition[];
     public table: BiomeDefinition[][] | null;
     public default: BiomeDefinition;
 
-    /**@param {any} definition @param {BiomeDefinition} defaultBiome */
-    constructor(definition: any, defaultBiome: BiomeDefinition){
+    constructor(definition: DefinitionManager, defaultBiome: BiomeDefinition){
         this.definition = definition;
         this.biomes = [];
         this.table = null;
@@ -16,9 +16,9 @@ export class BiomeManager {
         definition.finialize.subscribe(()=>this.selfFinialize());
     }
 
-    addBiome(biome: BiomeDefinition){ this.biomes.push(biome); }
+    addBiome(biome: BiomeDefinition): void { this.biomes.push(biome); }
 
-    selfFinialize(){
+    selfFinialize(): void {
         // Temperature slices
         const tempSteps = 20;
         const humiSteps = 20;
@@ -41,7 +41,6 @@ export class BiomeManager {
         this.table = array;
     }
 
-    /**@returns {BiomeDefinition} */
     getBiome(temperature: number, humidity: number): BiomeDefinition { 
         if (!this.table) return this.default;
         
@@ -52,12 +51,12 @@ export class BiomeManager {
         return tempSlice[Math.max(0, Math.min(humiIdx, tempSlice.length - 1))] ?? this.default;
     }
 
-    onPrecalculate(samples: number, seed: ProceduralRandom){
+    onPrecalculate(samples: number, seed: ProceduralRandom): void {
         this.biomes.forEach(e=>e.onPrecalculate(samples, seed));
     }
 }
 
-function getSmallestDistance(numbers: number[]): number {
+function _getSmallestDistance(numbers: number[]): number {
     numbers.sort((a,b)=> a - b);
     let smallest = Infinity;
     for(let l = 1; l < numbers.length; l++){

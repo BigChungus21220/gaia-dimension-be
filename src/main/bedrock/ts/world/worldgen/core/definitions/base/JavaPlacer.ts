@@ -12,7 +12,7 @@ export abstract class TrunkPlacer {
 
     abstract place(placer: PalettedPlacer, random: RandomSource, origin: BlockPos, config: TreeFeatureConfig): FoliageAttachment[];
 
-    protected placeLog(placer: PalettedPlacer, pos: BlockPos, config: TreeFeatureConfig) {
+    protected placeLog(placer: PalettedPlacer, pos: BlockPos, config: TreeFeatureConfig): void {
         placer.setBlock(pos, config.trunkProvider);
     }
 }
@@ -22,7 +22,7 @@ export abstract class FoliagePlacer {
 
     abstract place(placer: PalettedPlacer, random: RandomSource, attachment: FoliageAttachment, config: TreeFeatureConfig): void;
 
-    protected placeLeaves(placer: PalettedPlacer, pos: BlockPos, config: TreeFeatureConfig) {
+    protected placeLeaves(placer: PalettedPlacer, pos: BlockPos, config: TreeFeatureConfig): void {
         placer.setBlock(pos, config.foliageProvider);
     }
 }

@@ -1,5 +1,9 @@
 import { world, system, Block, Dimension, Player, Vector3 } from "@minecraft/server";
 
+/**
+ * Gets the basic dimensions of the world.
+ * @returns An array of Dimension objects.
+ */
 export function getDimensions(): Dimension[] {
     return [
         world.getDimension("overworld"),
@@ -15,10 +19,7 @@ interface DoorSoundOptions {
 
 /**
  * Plays a door, trapdoor, or gate sound based on the block type and state.
- * It intelligently selects the correct sound (wood, iron, etc.) and
- * whether to play the open or close sound.
- *
- * @param block The interactive block instance (e.g., a door, gate).
+ * @param block The interactive block instance.
  * @param isOpen True if the block is opening, false if it is closing.
  * @param options Optional sound options.
  */
@@ -31,10 +32,9 @@ export function playDoorSound(block: Block, isOpen: boolean, options: DoorSoundO
     const typeId = block.typeId.toLowerCase();
     let soundId: string;
 
-    // Determine sound type based on block material
     if (typeId.includes("iron_door")) {
         soundId = isOpen ? "open.iron_door" : "close.iron_door";
-    } else if (typeId.includes("wooden_door") || typeId.includes("door")) { // Catches custom doors named "door"
+    } else if (typeId.includes("wooden_door") || typeId.includes("door")) {
         soundId = isOpen ? "open.wooden_door" : "close.wooden_door";
     } else if (typeId.includes("iron_trapdoor")) {
         soundId = isOpen ? "open.iron_trapdoor" : "close.iron_trapdoor";
@@ -43,8 +43,7 @@ export function playDoorSound(block: Block, isOpen: boolean, options: DoorSoundO
     } else if (typeId.includes("fence_gate")) {
         soundId = isOpen ? "open.fence_gate" : "close.fence_gate";
     } else {
-        // As a fallback, use a generic click sound if type is unknown
-        soundId = isOpen ? "random.click" : "random.click";
+        soundId = "random.click";
     }
 
     const soundOptions = {
@@ -55,7 +54,11 @@ export function playDoorSound(block: Block, isOpen: boolean, options: DoorSoundO
     block.dimension.playSound(soundId, block.location, soundOptions);
 }
 
-
+/**
+ * Checks if a player is sheltered by roof and walls.
+ * @param player The player to check.
+ * @returns True if sheltered, false otherwise.
+ */
 export function isSheltered(player: Player): boolean {
     try {
         const loc = player.location;
@@ -63,7 +66,6 @@ export function isSheltered(player: Player): boolean {
         let roofBlockCount = 0;
         let wallBlockCount = 0;
 
-        // Roof check (3x3x3 volume 2 blocks above the player)
         for (let y = 2; y <= 4; y++) {
             for (let x = -1; x <= 1; x++) {
                 for (let z = -1; z <= 1; z++) {
@@ -75,10 +77,9 @@ export function isSheltered(player: Player): boolean {
             }
         }
 
-        // Wall check (a ring of 3x3 at player's head level)
         for (let x = -1; x <= 1; x++) {
             for (let z = -1; z <= 1; z++) {
-                if (x === 0 && z === 0) continue; // Skip the block the player is in
+                if (x === 0 && z === 0) continue;
                 const block = dim.getBlock({ x: loc.x + x, y: loc.y + 1, z: loc.z + z });
                 if (block && !block.isAir) {
                     wallBlockCount++;
@@ -86,42 +87,41 @@ export function isSheltered(player: Player): boolean {
             }
         }
 
-        const hasRoof = roofBlockCount > 10; // More than 10 blocks in a 27 block volume
-        const hasWalls = wallBlockCount > 3; // More than 3 blocks in the ring of 8 blocks
+        const hasRoof = roofBlockCount > 10;
+        const hasWalls = wallBlockCount > 3;
 
         return hasRoof && hasWalls;
     } catch (e) {
-        return false; // To be safe, let's just...assume not sheltered if chunks are unloaded
+        return false;
     }
 }
 
+/**
+ * Checks if a player is underground.
+ * @param player The player to check.
+ * @returns True if underground, false otherwise.
+ */
 export function isUnderground(player: Player): boolean {
     try {
-        // Get the topmost block at the player's location
         let block = player.dimension.getTopmostBlock(player.location);
-        
-        // If the player's Y position is above or at the block's Y position, they're not underground
         if (block && player.location.y >= block.y) return false;
 
-        // Traverse downward until a solid block is found or we reach the height limit
         while (block && block.y > player.dimension.heightRange.min && !block.isSolid) {
-            // If the player is above the current block, they're not underground
             if (player.location.y >= block.y) return false;
-            block = block.below(); // Move to the block directly below
+            block = block.below();
         }
 
-        // If we exit the loop, we found a solid block below the player
         return block?.isSolid ?? false;
     } catch (e) {
-        return false; // Assume not underground if chunks are unloaded
+        return false;
     }
 }
 
 /**
  * Gets the adjacent block in a given direction.
- * @param block 
- * @param direction - Direction to get neighbor: 'north', 'south', 'east', 'west', 'up', 'down'
- * @returns The adjacent block or null if not available
+ * @param block The origin block.
+ * @param direction Direction to get neighbor.
+ * @returns The adjacent block or undefined.
  */
 export function getNeighbor(block: Block, direction: string): Block | undefined {
     if (!block) return undefined;
@@ -137,61 +137,7 @@ export function getNeighbor(block: Block, direction: string): Block | undefined 
     }
 }
 
-
-
-const REDSTONE_COMPONENTS = ['redstone_wire', 'repeater', 'comparator', 'redstone_torch'];
-
-export function getRedstonePower(block: Block): number {
-    // Direct power check
-    let power = block.getRedstonePower() ?? 0;
-    if (power > 0) return power;
-
-    // Check surrounding blocks
-    const faces = ['north', 'south', 'east', 'west', 'below', 'above'] as const;
-    
-    for (const face of faces) {
-        const neighbor = block[face](); // e.g. block.north()
-        if (!neighbor) continue;
-        
-        const neighborPower = neighbor.getRedstonePower() ?? 0;
-        
-        // If neighbor has power, we need to verify if it connects/transmits to us
-        if (neighborPower > 0) {
-            // Some blocks don't transmit power directly in all directions or are specifically ignored
-            const isSpecialComponent = REDSTONE_COMPONENTS.some(c => neighbor.typeId.includes(c));
-            
-            if (!isSpecialComponent) {
-                // Standard block transmitting power
-                return neighborPower;
-            }
-        }
-
-        // Specific check for redstone torches on walls
-        if (neighbor.typeId.includes('redstone_torch')) {
-            const torchFacing = neighbor.permutation.getState('torch_facing_direction' as any) as number;
-            // If torch is NOT facing the opposite of where we are looking (i.e. attached to the block), it might power it
-            if (torchFacing !== (invertFace[face] as any)) { // Simplified check for now
-                return neighborPower;
-            }
-        }
-    }
-
-    // Daylight detector check (specifically from above)
-    const above = block.above();
-    if (above?.typeId === 'minecraft:daylight_detector') {
-        return above.getRedstonePower() ?? 0;
-    }
-
-    return 0;
-}
-
-/**
- * Returns a promise that resolves after a specified number of ticks.
- * @param ticks 
- */
-export function sleep(ticks: number): Promise<void> {
-    return new Promise(resolve => system.runTimeout(resolve, ticks));
-}
+const REDSTONE_COMPONENTS: string[] = ['redstone_wire', 'repeater', 'comparator', 'redstone_torch'];
 
 export const invertFace: Record<string, string> = {
     'north': 'south',
@@ -202,3 +148,57 @@ export const invertFace: Record<string, string> = {
     'below': 'above'
 };
 
+/**
+ * Calculates the redstone power level at a given block.
+ * @param block The block to check.
+ * @returns The redstone power level (0-15).
+ */
+export function getRedstonePower(block: Block): number {
+    let power = block.getRedstonePower() ?? 0;
+    if (power > 0) return power;
+
+    const faces = ['north', 'south', 'east', 'west', 'below', 'above'] as const;
+    
+    for (const face of faces) {
+        let neighbor: Block | undefined;
+        if (face === 'north') neighbor = block.north();
+        else if (face === 'south') neighbor = block.south();
+        else if (face === 'east') neighbor = block.east();
+        else if (face === 'west') neighbor = block.west();
+        else if (face === 'above') neighbor = block.above();
+        else if (face === 'below') neighbor = block.below();
+
+        if (!neighbor) continue;
+        
+        const neighborPower = neighbor.getRedstonePower() ?? 0;
+        
+        if (neighborPower > 0) {
+            const isSpecialComponent = REDSTONE_COMPONENTS.some(c => neighbor!.typeId.includes(c));
+            if (!isSpecialComponent) {
+                return neighborPower;
+            }
+        }
+
+        if (neighbor.typeId.includes('redstone_torch')) {
+            const torchFacing = neighbor.permutation.getState('torch_facing_direction');
+            if (torchFacing !== invertFace[face]) {
+                return neighborPower;
+            }
+        }
+    }
+
+    const above = block.above();
+    if (above?.typeId === 'minecraft:daylight_detector') {
+        return above.getRedstonePower() ?? 0;
+    }
+
+    return 0;
+}
+
+/**
+ * Returns a promise that resolves after a specified number of ticks.
+ * @param ticks Number of ticks to wait.
+ */
+export function sleep(ticks: number): Promise<void> {
+    return new Promise(resolve => system.runTimeout(resolve, ticks));
+}

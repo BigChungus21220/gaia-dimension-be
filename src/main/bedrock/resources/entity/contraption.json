@@ -1,0 +1,20 @@
+{
+  "format_version": "1.21.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "gaiadimension:contraption",
+      "materials": { "default": "entity_alphatest" },
+      "textures": { "default": "textures/entity/blank" },
+      "geometry": { "default": "geometry.gaiadimension.contraption" },
+      "animations": {
+        "tumble": "animation.gaiadimension.contraption.tumble"
+      },
+      "scripts": { 
+        "scale": "2.7",
+        "animate": [ "tumble" ]
+      },
+      "render_controllers": ["controller.render.gaiadimension.contraption"],
+      "enable_attachables": true
+    }
+  }
+}

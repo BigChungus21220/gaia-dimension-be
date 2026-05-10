@@ -31,7 +31,9 @@ class FogSystem {
                 try {
                     player.runCommand(`fog @s push "gaiadimension:fog_gaia" "gaia_base"`);
                     this.baseFogApplied[player.id] = true;
-                } catch(e) {}
+                } catch (error: unknown) {
+                    // Ignore command errors
+                }
             }
 
             // 2. Layer Biome Fog on top (only if biome is provided)
@@ -52,7 +54,9 @@ class FogSystem {
         if (this.baseFogApplied[player.id]) {
             try {
                 player.runCommand(`fog @s remove "gaia_base"`);
-            } catch(e) {}
+            } catch (error: unknown) {
+                // Ignore command errors
+            }
             this.baseFogApplied[player.id] = false;
         }
     }
@@ -66,7 +70,9 @@ class FogSystem {
         for (const biome of this.playerFogs[player.id]) {
             try {
                 player.runCommand(`fog @s remove "${biome}"`);
-            } catch(e) {}
+            } catch (error: unknown) {
+                // Ignore command errors
+            }
         }
         this.playerFogs[player.id] = [];
         this.activeBiomes[player.id] = null;
@@ -83,19 +89,19 @@ class FogSystem {
             if (!this.playerFogs[player.id]) this.playerFogs[player.id] = [];
             this.playerFogs[player.id].push(biome);
             this.activeBiomes[player.id] = biome;
-        } catch(e) {
-            console.warn(`[FogSystem] Failed to push fog for ${biome}: ${e}`);
+        } catch (error: unknown) {
+            console.warn(`[FogSystem] Failed to push fog for ${biome}: ${error}`);
         }
     }
 }
 
 // Subscribe updateFog to playerChangeBiome for initial entry and transitions
-Events.playerChangeBiome.subscribe((eventData) => {
+Events.playerChangeBiome.subscribe((eventData: Events.BiomeEventData): void => {
     FogSystem.updateFog(eventData.player, eventData.biome);
 });
 
 // Also subscribe to playerChangeBlock to ensure base fog stays active on entry
-Events.playerChangeBlock.subscribe((eventData) => {
+Events.playerChangeBlock.subscribe((eventData: Events.BlockEventData): void => {
     // We only need a light check here; setBiomeFog is handled by playerChangeBiome
     if (DimensionSystem.isInGaia(eventData.player) && !FogSystem.baseFogApplied[eventData.player.id]) {
         FogSystem.updateFog(eventData.player, null);

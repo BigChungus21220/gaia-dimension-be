@@ -1,13 +1,12 @@
-import { BlockPermutation, Dimension, ListBlockVolume, Vector3 } from "@minecraft/server";
+import { BlockPermutation, Dimension, ListBlockVolume, Vector3, BlockFillOptions } from "@minecraft/server";
 
 export class PalettedPlacer {
     public palettes: Map<BlockPermutation, Vector3[]>;
 
     constructor(){ 
-        this.palettes = new Map(); 
+        this.palettes = new Map<BlockPermutation, Vector3[]>(); 
     }
 
-    /**@returns {Vector3[]} */
     getPaletteLocations(permutation: BlockPermutation): Vector3[] {
         return this.palettes.get(permutation) ?? [];
     }
@@ -18,11 +17,14 @@ export class PalettedPlacer {
 
     setBlock(location: Vector3, permutation: BlockPermutation): void {
         let list = this.palettes.get(permutation);
-        if (!list) this.palettes.set(permutation, list = []);
+        if (!list) {
+            list = [];
+            this.palettes.set(permutation, list);
+        }
         list.push(location);
     }
 
-    *flush(dimension: Dimension, filterOption?: any): Generator<void, void, unknown> {
+    *flush(dimension: Dimension, filterOption?: BlockFillOptions): Generator<void, void, unknown> {
         for (const [permutation, list] of this.palettes.entries()) {
             if (!list.length) continue;
             
@@ -36,7 +38,10 @@ export class PalettedPlacer {
                 const cz = Math.floor(loc.z / 16);
                 const key = `${cx},${cy},${cz}`;
                 let sliceList = slices.get(key);
-                if (!sliceList) slices.set(key, sliceList = []);
+                if (!sliceList) {
+                    sliceList = [];
+                    slices.set(key, sliceList);
+                }
                 sliceList.push(loc);
             }
 

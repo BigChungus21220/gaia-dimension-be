@@ -1,10 +1,25 @@
-import { system, BlockPermutation, Direction, GameMode, Block, Dimension, Vector3, Player, PlayerPlaceBlockAfterEvent, PlayerBreakBlockAfterEvent, PlayerInteractWithBlockBeforeEvent, BlockComponentRegistry, EntityInventoryComponent } from "@minecraft/server";
+import {
+    system,
+    BlockPermutation,
+    Direction,
+    GameMode,
+    Block,
+    Dimension,
+    Vector3,
+    Player,
+    PlayerPlaceBlockAfterEvent,
+    PlayerBreakBlockAfterEvent,
+    PlayerInteractWithBlockBeforeEvent,
+    BlockComponentRegistry,
+    EntityInventoryComponent,
+    Container,
+    ItemStack
+} from "@minecraft/server";
 import { updateWallNeighborsAt } from './wall.js';
 import { registerForBlockUpdates } from "../systems/BlockUpdate.js";
 import { registerPlaceHandler, registerBreakHandler, registerInteractHandler } from "../systems/event_manager.js";
-import { trackBlock, untrackBlock } from "../systems/destruction_handler.js";
 
-const INVISIBLE_BLOCK_ID = "gaiadimension:invisible";
+const INVISIBLE_BLOCK_ID: string = "gaiadimension:invisible";
 
 /**
  * Checks if a block is a valid, solid block that a fence can connect to.
@@ -35,13 +50,13 @@ function isConnectable(block: Block | undefined): boolean {
 export function updateFenceConnections(block: Block): void {
     if (!block || !block.isValid || !block.typeId.includes("fence") || block.typeId.includes("fence_gate")) return;
     try {
-        let permutation = block.permutation;
-        permutation = permutation.withState("gaiadimension:north" as any, isConnectable(block.north()));
-        permutation = permutation.withState("gaiadimension:south" as any, isConnectable(block.south()));
-        permutation = permutation.withState("gaiadimension:east" as any, isConnectable(block.east()));
-        permutation = permutation.withState("gaiadimension:west" as any, isConnectable(block.west()));
+        let permutation: BlockPermutation = block.permutation;
+        permutation = permutation.withState("gaiadimension:north", isConnectable(block.north()));
+        permutation = permutation.withState("gaiadimension:south", isConnectable(block.south()));
+        permutation = permutation.withState("gaiadimension:east", isConnectable(block.east()));
+        permutation = permutation.withState("gaiadimension:west", isConnectable(block.west()));
         block.setPermutation(permutation);
-    } catch (e) {
+    } catch (e: unknown) {
         // Suppress errors if the state doesn't exist on the block
     }
 }
@@ -52,11 +67,11 @@ export function updateFenceConnections(block: Block): void {
  */
 function updateInvisibleBlock(block: Block): void {
     if (!block || !block.isValid) return;
-    const blockAbove = block.above();
+    const blockAbove: Block | undefined = block.above();
     if (!blockAbove) return;
 
     const typeId: string = block.typeId;
-    const isOpen: boolean = typeId.includes("fence_gate") ? block.permutation.getState("gaiadimension:open" as any) as boolean : false;
+    const isOpen: boolean = typeId.includes("fence_gate") ? block.permutation.getState("gaiadimension:open") as boolean : false;
 
     if (blockAbove.isAir) {
         // Place an invisible block if it's a closed gate or a regular fence.
@@ -78,10 +93,10 @@ function updateInvisibleBlock(block: Block): void {
  */
 function updateNeighborsAt(location: Vector3, dimension: Dimension): void {
     const { x, y, z } = location;
-    const north = dimension.getBlock({ x, y, z: z - 1 });
-    const south = dimension.getBlock({ x, y, z: z + 1 });
-    const east = dimension.getBlock({ x: x + 1, y, z });
-    const west = dimension.getBlock({ x: x - 1, y, z });
+    const north: Block | undefined = dimension.getBlock({ x, y, z: z - 1 });
+    const south: Block | undefined = dimension.getBlock({ x, y, z: z + 1 });
+    const east: Block | undefined = dimension.getBlock({ x: x + 1, y, z });
+    const west: Block | undefined = dimension.getBlock({ x: x - 1, y, z });
 
     if (north) updateFenceConnections(north);
     if (south) updateFenceConnections(south);
@@ -113,11 +128,11 @@ function handleFenceGateInteract(player: Player, block: Block): void {
         return;
     }
 
-    const isOpen = block.permutation.getState("gaiadimension:open" as any) as boolean;
+    const isOpen: boolean = block.permutation.getState("gaiadimension:open") as boolean;
 
     // Only toggle the 'open' state. Do not change the direction.
-    let newPermutation = block.permutation
-        .withState("gaiadimension:open" as any, !isOpen);
+    const newPermutation: BlockPermutation = block.permutation
+        .withState("gaiadimension:open", !isOpen);
 
     block.setPermutation(newPermutation);
     updateInvisibleBlock(block);
@@ -131,19 +146,19 @@ export function registerFenceComponent({ blockComponentRegistry }: { blockCompon
     blockComponentRegistry.registerCustomComponent("gaiadimension:fence", {});
 
     registerForBlockUpdates({
-        check: (block: Block) => block.typeId.includes("fence") && !block.typeId.includes("fence_gate") && !block.typeId.startsWith("minecraft:"),
+        check: (block: Block): boolean => block.typeId.includes("fence") && !block.typeId.includes("fence_gate") && !block.typeId.startsWith("minecraft:"),
         update: updateFenceConnections
     });
 
     registerPlaceHandler({
-        check: (block: Block) => block.typeId.includes("fence"),
-        execute: (event: PlayerPlaceBlockAfterEvent) => {
+        check: (block: Block): boolean => block.typeId.includes("fence"),
+        execute: (event: PlayerPlaceBlockAfterEvent): void => {
             const { block, player } = event;
 
             // If the placed block is a custom fence gate, set its initial direction.
             if (block.typeId.includes("fence_gate") && !block.typeId.startsWith("minecraft:")) {
-                const gateDirection = getGateDirectionFromPlayerFacing(player.getViewDirection());
-                const newPermutation = block.permutation.withState("minecraft:cardinal_direction" as any, gateDirection);
+                const gateDirection: string = getGateDirectionFromPlayerFacing(player.getViewDirection());
+                const newPermutation: BlockPermutation = block.permutation.withState("minecraft:cardinal_direction", gateDirection);
                 block.setPermutation(newPermutation);
             }
 
@@ -156,20 +171,20 @@ export function registerFenceComponent({ blockComponentRegistry }: { blockCompon
 
     registerBreakHandler({
         event: "after",
-        check: () => true, // Handle all block breaks to update neighbors
-        execute: (event: PlayerBreakBlockAfterEvent) => {
+        check: (): boolean => true, // Handle all block breaks to update neighbors
+        execute: (event: PlayerBreakBlockAfterEvent): void => {
             const { dimension } = event;
-            const location = event.block.location;
+            const location: Vector3 = event.block.location;
 
             // Remove invisible block above the broken block (if any)
-            const blockAbove = dimension.getBlock({ x: location.x, y: location.y + 1, z: location.z });
+            const blockAbove: Block | undefined = dimension.getBlock({ x: location.x, y: location.y + 1, z: location.z });
             if (blockAbove && blockAbove.typeId === INVISIBLE_BLOCK_ID) {
                 blockAbove.setType("minecraft:air");
             }
 
-            const blockBelow = dimension.getBlock({ x: location.x, y: location.y - 1, z: location.z });
+            const blockBelow: Block | undefined = dimension.getBlock({ x: location.x, y: location.y - 1, z: location.z });
             if (blockBelow && blockBelow.typeId.includes("fence") && !blockBelow.typeId.startsWith("minecraft:")) {
-                const fenceTop = dimension.getBlock({ x: location.x, y: location.y, z: location.z });
+                const fenceTop: Block | undefined = dimension.getBlock({ x: location.x, y: location.y, z: location.z });
                 if (fenceTop && fenceTop.isAir) {
                     fenceTop.setType(INVISIBLE_BLOCK_ID);
                 }
@@ -182,8 +197,8 @@ export function registerFenceComponent({ blockComponentRegistry }: { blockCompon
     });
 
     registerInteractHandler({
-        check: (block: Block) => block.typeId.includes("fence") || block.typeId === INVISIBLE_BLOCK_ID,
-        execute: (event: PlayerInteractWithBlockBeforeEvent) => {
+        check: (block: Block): boolean => block.typeId.includes("fence") || block.typeId === INVISIBLE_BLOCK_ID,
+        execute: (event: PlayerInteractWithBlockBeforeEvent): void => {
             const { player, block, blockFace, itemStack } = event;
 
             // Handle fence gate opening/closing
@@ -199,7 +214,7 @@ export function registerFenceComponent({ blockComponentRegistry }: { blockCompon
             if (itemStack) {
                 // Case 1: Placing a block into the invisible block space
                 if (block.typeId === INVISIBLE_BLOCK_ID) {
-                    const blockBelow = block.below();
+                    const blockBelow: Block | undefined = block.below();
                     if (blockBelow && blockBelow.typeId.includes("fence")) {
                         event.cancel = true;
                         system.run(() => {
@@ -207,20 +222,22 @@ export function registerFenceComponent({ blockComponentRegistry }: { blockCompon
                             block.setType(itemStack.typeId);
                             player.playSound("dig.wood", { location: block.location });
                             if (player.gameMode !== GameMode.Creative) {
-                                const inventory = player.getComponent("minecraft:inventory") as EntityInventoryComponent;
-                                const container = inventory.container;
-                                const item = container.getItem(player.selectedSlot);
-                                if (item) {
-                                    if (item.amount === 1) {
-                                        container.setItem(player.selectedSlot, undefined);
-                                    } else {
-                                        item.amount--;
-                                        container.setItem(player.selectedSlot, item);
+                                const inventory: EntityInventoryComponent | undefined = player.getComponent("minecraft:inventory") as EntityInventoryComponent | undefined;
+                                const container: Container | undefined = inventory?.container;
+                                if (container) {
+                                    const item: ItemStack | undefined = container.getItem(player.selectedSlotIndex);
+                                    if (item) {
+                                        if (item.amount === 1) {
+                                            container.setItem(player.selectedSlotIndex, undefined);
+                                        } else {
+                                            item.amount--;
+                                            container.setItem(player.selectedSlotIndex, item);
+                                        }
                                     }
                                 }
                             }
                             // Update the newly placed block and its neighbors
-                            const newBlock = block;
+                            const newBlock: Block = block;
                             updateFenceConnections(newBlock);
                             updateInvisibleBlock(newBlock);
                             updateNeighborsAt(newBlock.location, newBlock.dimension);
@@ -231,29 +248,31 @@ export function registerFenceComponent({ blockComponentRegistry }: { blockCompon
                     event.cancel = true;
                     system.run(() => {
                         if (!block.isValid) return;
-                        const blockAbove = block.above();
+                        const blockAbove: Block | undefined = block.above();
                         if (blockAbove && (blockAbove.isAir || blockAbove.typeId === INVISIBLE_BLOCK_ID)) {
                             try {
                                 blockAbove.setType(itemStack.typeId);
-                            } catch (e) {}
+                            } catch (e: unknown) {}
                             player.playSound("dig.wood", { location: blockAbove.location });
 
                             if (player.gameMode !== GameMode.Creative) {
-                                const inventory = player.getComponent("minecraft:inventory") as EntityInventoryComponent;
-                                const container = inventory.container;
-                                const item = container.getItem(player.selectedSlot);
-                                if (item) {
-                                    if (item.amount === 1) {
-                                        container.setItem(player.selectedSlot, undefined);
-                                    } else {
-                                        item.amount--;
-                                        container.setItem(player.selectedSlot, item);
+                                const inventory: EntityInventoryComponent | undefined = player.getComponent("minecraft:inventory") as EntityInventoryComponent | undefined;
+                                const container: Container | undefined = inventory?.container;
+                                if (container) {
+                                    const item: ItemStack | undefined = container.getItem(player.selectedSlotIndex);
+                                    if (item) {
+                                        if (item.amount === 1) {
+                                            container.setItem(player.selectedSlotIndex, undefined);
+                                        } else {
+                                            item.amount--;
+                                            container.setItem(player.selectedSlotIndex, item);
+                                        }
                                     }
                                 }
                             }
 
                             // Update the newly placed block and its neighbors
-                            const newBlock = block.above();
+                            const newBlock: Block | undefined = block.above();
                             if (newBlock) {
                                 updateFenceConnections(newBlock);
                                 updateInvisibleBlock(newBlock);
@@ -266,5 +285,3 @@ export function registerFenceComponent({ blockComponentRegistry }: { blockCompon
         }
     });
 }
-
-

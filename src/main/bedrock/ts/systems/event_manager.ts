@@ -1,15 +1,35 @@
-import { world, system, PlayerPlaceBlockAfterEvent, PlayerBreakBlockBeforeEvent, PlayerBreakBlockAfterEvent, PlayerInteractWithBlockBeforeEvent, PlayerSpawnAfterEvent, PlayerJoinAfterEvent, Block } from "@minecraft/server";
+import { 
+    world, 
+    system, 
+    PlayerPlaceBlockAfterEvent, 
+    PlayerBreakBlockBeforeEvent, 
+    PlayerBreakBlockAfterEvent, 
+    PlayerInteractWithBlockBeforeEvent, 
+    PlayerSpawnAfterEvent, 
+    PlayerJoinAfterEvent, 
+    Block, 
+    EntityEquippableComponent, 
+    EquipmentSlot 
+} from "@minecraft/server";
 
 export interface PlaceHandler {
     check: (block: Block) => boolean;
     execute: (event: PlayerPlaceBlockAfterEvent) => void;
 }
 
-export interface BreakHandler {
-    event: "before" | "after";
-    check: (block: any) => boolean; // any because it can be Block (before) or PlayerBreakBlockAfterEvent (after)
-    execute: (event: any) => void;
-}
+export type BreakBeforeHandler = {
+    event: "before";
+    check: (block: Block) => boolean;
+    execute: (event: PlayerBreakBlockBeforeEvent) => void;
+};
+
+export type BreakAfterHandler = {
+    event: "after";
+    check: (event: PlayerBreakBlockAfterEvent) => boolean;
+    execute: (event: PlayerBreakBlockAfterEvent) => void;
+};
+
+export type BreakHandler = BreakBeforeHandler | BreakAfterHandler;
 
 export interface InteractHandler {
     check: (block: Block) => boolean;
@@ -20,8 +40,8 @@ export type PlayerSpawnHandler = (event: PlayerSpawnAfterEvent) => void;
 export type PlayerJoinHandler = (event: PlayerJoinAfterEvent) => void;
 
 const placeHandlers: PlaceHandler[] = [];
-const breakBeforeHandlers: BreakHandler[] = [];
-const breakAfterHandlers: BreakHandler[] = [];
+const breakBeforeHandlers: BreakBeforeHandler[] = [];
+const breakAfterHandlers: BreakAfterHandler[] = [];
 const interactHandlers: InteractHandler[] = [];
 const spawnHandlers: PlayerSpawnHandler[] = [];
 const joinHandlers: PlayerJoinHandler[] = [];
@@ -81,8 +101,8 @@ export function initializeEventManager(): void {
 
     world.beforeEvents.playerInteractWithBlock.subscribe((event: PlayerInteractWithBlockBeforeEvent) => {
         const { player, block } = event;
-        const equippable = player.getComponent('minecraft:equippable') as any;
-        const mainHandItem = equippable?.getEquipment('Mainhand');
+        const equippable = player.getComponent('minecraft:equippable') as EntityEquippableComponent | undefined;
+        const mainHandItem = equippable?.getEquipment(EquipmentSlot.Mainhand);
         const isHoldingBow = mainHandItem?.typeId === 'minecraft:bow';
 
         for (const handler of interactHandlers) {

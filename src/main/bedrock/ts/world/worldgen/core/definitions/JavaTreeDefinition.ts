@@ -2,7 +2,7 @@ import { BlockPos } from "./base/BlockPos";
 import { RandomSource } from "./base/RandomSource";
 import { TreeFeatureConfig, TrunkPlacer, FoliagePlacer } from "./base/JavaPlacer";
 import { TreeDefinition } from "./definition-tree";
-import { BlockPermutation, Dimension } from "@minecraft/server";
+import { Vector3 } from "@minecraft/server";
 import { PalettedPlacer, ProceduralRandom } from "../utils";
 
 export class JavaTreeDefinition extends TreeDefinition {
@@ -15,7 +15,7 @@ export class JavaTreeDefinition extends TreeDefinition {
         super(id);
     }
 
-    *build(location: import("@minecraft/server").Vector3 & Dimension, seed: ProceduralRandom, placer: PalettedPlacer) {
+    *build(location: Vector3, seed: ProceduralRandom, placer: PalettedPlacer): Generator<void, void, unknown> {
         const random = new RandomSource(seed);
         const origin = new BlockPos(location.x, location.y, location.z);
 

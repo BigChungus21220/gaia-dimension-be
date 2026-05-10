@@ -9,7 +9,7 @@ for (let x = -2; x <= 2; ++x) {
 }
 
 export class GaiaTerrainWarp {
-    private blendedNoise: any;
+    private blendedNoise: FastNoiseLite;
 
     constructor(
         private cellWidth: number,

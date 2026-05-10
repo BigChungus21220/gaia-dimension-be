@@ -2,6 +2,7 @@ import { world, system } from "@minecraft/server";
 import { NativeEvent, ProceduralRandom } from "../utils";
 import { BiomeManager } from "./biome-manager";
 import { BiomeDefinition } from "./definition-biome";
+import { TreeDefinition } from "./definition-tree";
 
 export class DefinitionManager {
     /**@readonly */
@@ -9,7 +10,7 @@ export class DefinitionManager {
     /**@readonly */
     public precalculate: NativeEvent;
     /**@readonly */
-    public treeDefinitions: Map<string, any>;
+    public treeDefinitions: Map<string, TreeDefinition>;
     public biomeManager: BiomeManager;
     private __precalculated: boolean;
     private __precalculatedSamples: number;
@@ -29,16 +30,16 @@ export class DefinitionManager {
         });
     }
 
-    get IsPrecalculated(){return this.__precalculated;}
-    set IsPrecalculated(v){ this.__precalculated = v; world.setDynamicProperty("property-precalculated", v); }
+    get IsPrecalculated(): boolean {return this.__precalculated;}
+    set IsPrecalculated(v: boolean){ this.__precalculated = v; world.setDynamicProperty("property-precalculated", v); }
     
-    get PrecalculatedSamples(){return this.__precalculatedSamples;}
-    set PrecalculatedSamples(v){ this.__precalculatedSamples = v; world.setDynamicProperty("property-precalculated-sampling", v); }
+    get PrecalculatedSamples(): number {return this.__precalculatedSamples;}
+    set PrecalculatedSamples(v: number){ this.__precalculatedSamples = v; world.setDynamicProperty("property-precalculated-sampling", v); }
     
-    get IsPrecalculatedVariable(){return (world.getDynamicProperty("property-precalculated") as boolean) ?? false;}
-    get IsPrecalculatedSamplesVariable(){return (world.getDynamicProperty("property-precalculated-sampling") as number) ?? 10;}
+    get IsPrecalculatedVariable(): boolean {return (world.getDynamicProperty("property-precalculated") as boolean) ?? false;}
+    get IsPrecalculatedSamplesVariable(): number {return (world.getDynamicProperty("property-precalculated-sampling") as number) ?? 10;}
 
-    triggerFinialize(seed: ProceduralRandom){
+    triggerFinialize(seed: ProceduralRandom): void {
         // DEFER TO NEXT TICK TO ENSURE ALL BIOMES ARE REGISTERED AND PROPERTIES LOADED
         system.run(() => {
             this.finialize.subscribe(()=>{

@@ -1,11 +1,31 @@
-import { world, system, ItemStack, Player, EntityHitEntityAfterEvent, PlayerBreakBlockAfterEvent, Entity } from "@minecraft/server";
-import { ActionFormData } from "@minecraft/server-ui";
+import { 
+    world, 
+    system, 
+    ItemStack, 
+    Player, 
+    EntityHitEntityAfterEvent, 
+    PlayerBreakBlockAfterEvent, 
+    Entity, 
+    EntityEquippableComponent, 
+    EquipmentSlot, 
+    EntityInventoryComponent, 
+    Container, 
+    ItemEnchantableComponent,
+    GameMode,
+    EntityCursorInventoryComponent,
+    EnchantmentTypes,
+    EnchantmentType
+} from "@minecraft/server";
+import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
 
 /**
  * --- Custom Enchantment Library ---
  * Provides a framework for creating, applying, and managing custom enchantments.
  * Integrates with the vanilla Enchanting Table via Sneak + Interact.
  */
+
+type EnchantmentTriggerType = 'onHit' | 'onMine' | 'onTick';
+type EnchantmentEventData = EntityHitEntityAfterEvent | PlayerBreakBlockAfterEvent | { player: Player, itemStack: ItemStack };
 
 interface EnchantmentConfig {
     name: string;
@@ -28,7 +48,7 @@ class EnchantmentManager {
     private registry: Map<string, RegisteredEnchantment>;
 
     constructor() {
-        this.registry = new Map();
+        this.registry = new Map<string, RegisteredEnchantment>();
         this.initEvents();
     }
 
@@ -37,7 +57,7 @@ class EnchantmentManager {
      * @param id - Unique identifier (e.g., 'luminiae:lifesteal')
      * @param config - Configuration object
      */
-    register(id: string, config: EnchantmentConfig): void {
+    public register(id: string, config: EnchantmentConfig): void {
         this.registry.set(id, {
             id,
             name: config.name,
@@ -50,7 +70,7 @@ class EnchantmentManager {
         });
     }
 
-    initEvents(): void {
+    private initEvents(): void {
         // Visual Management Loop (Cursor vs Inventory)
         system.runInterval(() => this.manageVisuals(), 5);
 
@@ -69,12 +89,14 @@ class EnchantmentManager {
         });
 
         // 2. Combat Trigger
-        world.afterEvents.entityHitEntity.subscribe((ev) => {
+        world.afterEvents.entityHitEntity.subscribe((ev: EntityHitEntityAfterEvent) => {
             const { damagingEntity } = ev;
-            if (!damagingEntity || !damagingEntity.getComponent("minecraft:equippable")) return;
+            if (!damagingEntity) return;
             
-            const equippable = damagingEntity.getComponent("minecraft:equippable") as any;
-            const mainHand = equippable.getEquipment("Mainhand");
+            const equippable = damagingEntity.getComponent("minecraft:equippable") as EntityEquippableComponent;
+            if (!equippable) return;
+
+            const mainHand = equippable.getEquipment(EquipmentSlot.Mainhand);
             
             if (mainHand) {
                 this.triggerEnchants(mainHand, 'onHit', ev);
@@ -82,7 +104,7 @@ class EnchantmentManager {
         });
 
         // 3. Mining Trigger
-        world.afterEvents.playerBreakBlock.subscribe((ev) => {
+        world.afterEvents.playerBreakBlock.subscribe((ev: PlayerBreakBlockAfterEvent) => {
             const { itemStack } = ev;
             if (itemStack) {
                 this.triggerEnchants(itemStack, 'onMine', ev);
@@ -93,12 +115,19 @@ class EnchantmentManager {
     /**
      * Triggers registered callbacks for an item's enchants.
      */
-    triggerEnchants(itemStack: ItemStack, triggerType: 'onHit' | 'onMine' | 'onTick', eventData: any): void {
+    public triggerEnchants(itemStack: ItemStack, triggerType: EnchantmentTriggerType, eventData: EnchantmentEventData): void {
         const enchants = this.getEnchantments(itemStack);
         for (const [id, level] of Object.entries(enchants)) {
             const config = this.registry.get(id);
-            if (config && config[triggerType]) {
-                (config[triggerType] as Function)(eventData, level);
+            if (!config) continue;
+
+            if (triggerType === 'onHit' && config.onHit) {
+                config.onHit(eventData as EntityHitEntityAfterEvent, level);
+            } else if (triggerType === 'onMine' && config.onMine) {
+                config.onMine(eventData as PlayerBreakBlockAfterEvent, level);
+            } else if (triggerType === 'onTick' && config.onTick) {
+                const tickData = eventData as { player: Player, itemStack: ItemStack };
+                config.onTick(tickData.player, tickData.itemStack, level);
             }
         }
     }
@@ -107,9 +136,9 @@ class EnchantmentManager {
      * Opens the Enchanting UI for the player.
      * @param player 
      */
-    async openEnchantmentUI(player: Player): Promise<void> {
-        const equippable = player.getComponent("minecraft:equippable") as any;
-        const itemStack = equippable?.getEquipment("Mainhand");
+    public async openEnchantmentUI(player: Player): Promise<void> {
+        const equippable = player.getComponent("minecraft:equippable") as EntityEquippableComponent;
+        const itemStack = equippable?.getEquipment(EquipmentSlot.Mainhand);
 
         if (!itemStack) {
             player.sendMessage("§cHold an item to enchant.");
@@ -149,7 +178,7 @@ class EnchantmentManager {
             form.button(`${e.config.name} ${this.toRoman(e.nextLevel)}\n${color}Cost: ${e.cost} Lvl`);
         });
 
-        const response = await form.show(player);
+        const response: ActionFormResponse = await form.show(player);
         if (response.canceled || response.selection === undefined) return;
 
         const selection = validEnchants[response.selection];
@@ -159,10 +188,10 @@ class EnchantmentManager {
     /**
      * Handles the transaction of XP and applying the enchant.
      */
-    applyEnchantmentTransaction(player: Player, itemStack: ItemStack, selection: { config: RegisteredEnchantment, nextLevel: number, cost: number }): void {
+    private applyEnchantmentTransaction(player: Player, itemStack: ItemStack, selection: { config: RegisteredEnchantment, nextLevel: number, cost: number }): void {
         const { config, nextLevel, cost } = selection;
 
-        if (player.level < cost && player.getGameMode() !== 'creative') {
+        if (player.level < cost && player.getGameMode() !== GameMode.creative) {
             player.sendMessage(`§cNot enough XP! Need ${cost} levels.`);
             player.playSound("note.bass");
             return;
@@ -172,11 +201,13 @@ class EnchantmentManager {
         const newItem = this.applyEnchantment(itemStack, config.id, nextLevel);
         
         // Update Inventory
-        const equippable = player.getComponent("minecraft:equippable") as any;
-        equippable.setEquipment("Mainhand", newItem);
+        const equippable = player.getComponent("minecraft:equippable") as EntityEquippableComponent;
+        if (equippable) {
+            equippable.setEquipment(EquipmentSlot.Mainhand, newItem);
+        }
 
         // Deduct XP
-        if (player.getGameMode() !== 'creative') {
+        if (player.getGameMode() !== GameMode.creative) {
             player.addLevels(-cost);
         }
 
@@ -189,7 +220,7 @@ class EnchantmentManager {
      * Applies an enchantment to an item stack (Data + Lore).
      * @returns The modified item stack.
      */
-    applyEnchantment(itemStack: ItemStack, id: string, level: number): ItemStack {
+    public applyEnchantment(itemStack: ItemStack, id: string, level: number): ItemStack {
         const config = this.registry.get(id);
         if (!config) return itemStack;
 
@@ -219,31 +250,32 @@ class EnchantmentManager {
      * @param itemStack 
      * @param shouldHaveGlint 
      */
-    updateGlint(itemStack: ItemStack, shouldHaveGlint = true): void {
-        const enchantable = itemStack.getComponent("minecraft:enchantable") as any;
+    public updateGlint(itemStack: ItemStack, shouldHaveGlint = true): void {
+        const enchantable = itemStack.getComponent("minecraft:enchantable") as ItemEnchantableComponent;
         if (!enchantable) return;
 
         const hasDummy = itemStack.getDynamicProperty("luminiae:dummy_glint") as boolean;
         const currentVanillas = enchantable.getEnchantments();
+        const unbreakingType = EnchantmentTypes.get("unbreaking");
 
         if (shouldHaveGlint) {
             // Restore Glint: Only if no real enchants exist
-            if (currentVanillas.length === 0) {
+            if (currentVanillas.length === 0 && unbreakingType) {
                 try {
-                    enchantable.addEnchantment({ typeId: "unbreaking", level: 0 });
+                    enchantable.addEnchantment({ type: unbreakingType, level: 0 });
                     itemStack.setDynamicProperty("luminiae:dummy_glint", true);
                 } catch (e) {
                     try {
-                        enchantable.addEnchantment({ typeId: "unbreaking", level: 1 });
+                        enchantable.addEnchantment({ type: unbreakingType, level: 1 });
                         itemStack.setDynamicProperty("luminiae:dummy_glint", true);
                     } catch (e2) {}
                 }
             }
         } else {
             // Remove Glint: Only if it was our dummy
-            if (hasDummy) {
+            if (hasDummy && unbreakingType) {
                 // Double check if it's still just Unbreaking (don't wipe real enchants if they got mixed somehow)
-                const unbreaking = enchantable.getEnchantment("unbreaking");
+                const unbreaking = enchantable.getEnchantment(unbreakingType);
                 if (unbreaking && currentVanillas.length === 1) {
                     enchantable.removeAllEnchantments();
                     itemStack.setDynamicProperty("luminiae:dummy_glint", undefined);
@@ -255,10 +287,10 @@ class EnchantmentManager {
     /**
      * Scans players to toggle glint state (Clean in cursor, Glint in inventory).
      */
-    manageVisuals(): void {
+    public manageVisuals(): void {
         for (const player of world.getAllPlayers()) {
             // A. Check Cursor (Remove Glint)
-            const cursorComp = player.getComponent("minecraft:cursor_inventory") as any;
+            const cursorComp = player.getComponent("minecraft:cursor_inventory") as EntityCursorInventoryComponent;
             if (cursorComp && cursorComp.item) {
                 const item = cursorComp.item;
                 if (this.hasCustomEnchants(item) && item.getDynamicProperty("luminiae:dummy_glint")) {
@@ -268,9 +300,9 @@ class EnchantmentManager {
             }
 
             // B. Check Inventory (Restore Glint)
-            const invComp = player.getComponent("minecraft:inventory") as any;
+            const invComp = player.getComponent("minecraft:inventory") as EntityInventoryComponent;
             if (invComp && invComp.container) {
-                const container = invComp.container;
+                const container: Container = invComp.container;
                 for (let i = 0; i < container.size; i++) {
                     const item = container.getItem(i);
                     if (item && this.hasCustomEnchants(item) && !item.getDynamicProperty("luminiae:dummy_glint")) {
@@ -284,9 +316,16 @@ class EnchantmentManager {
             }
             
             // C. Check Equipment (Mainhand/Offhand/Armor)
-            const equipComp = player.getComponent("minecraft:equippable") as any;
+            const equipComp = player.getComponent("minecraft:equippable") as EntityEquippableComponent;
             if (equipComp) {
-                const slots = ["Mainhand", "Offhand", "Head", "Chest", "Legs", "Feet"] as const;
+                const slots = [
+                    EquipmentSlot.Mainhand, 
+                    EquipmentSlot.Offhand, 
+                    EquipmentSlot.Head, 
+                    EquipmentSlot.Chest, 
+                    EquipmentSlot.Legs, 
+                    EquipmentSlot.Feet
+                ] as const;
                 for (const slot of slots) {
                     const item = equipComp.getEquipment(slot);
                     if (item && this.hasCustomEnchants(item) && !item.getDynamicProperty("luminiae:dummy_glint")) {
@@ -300,7 +339,7 @@ class EnchantmentManager {
         }
     }
 
-    hasCustomEnchants(item: ItemStack): boolean {
+    public hasCustomEnchants(item: ItemStack): boolean {
         return !!item.getDynamicProperty("luminiae:enchants");
     }
 
@@ -309,12 +348,12 @@ class EnchantmentManager {
      * @param itemStack 
      * @returns Key-value map of enchants
      */
-    getEnchantments(itemStack: ItemStack): Record<string, number> {
+    public getEnchantments(itemStack: ItemStack): Record<string, number> {
         if (!itemStack) return {};
         const data = itemStack.getDynamicProperty("luminiae:enchants") as string;
         if (!data) return {};
         try {
-            return JSON.parse(data);
+            return JSON.parse(data) as Record<string, number>;
         } catch (e) {
             return {};
         }
@@ -324,13 +363,18 @@ class EnchantmentManager {
      * Converts a number to Roman numeral.
      * @param num 
      */
-    toRoman(num: number): string {
-        const roman: Record<string, number> = {M:1000,CM:900,D:500,CD:400,C:100,XC:90,L:50,XL:40,X:10,IX:9,V:5,IV:4,I:1};
+    private toRoman(num: number): string {
+        const roman: [string, number][] = [
+            ['M', 1000], ['CM', 900], ['D', 500], ['CD', 400],
+            ['C', 100], ['XC', 90], ['L', 50], ['XL', 40],
+            ['X', 10], ['IX', 9], ['V', 5], ['IV', 4], ['I', 1]
+        ];
         let str = '';
-        for (let i of Object.keys(roman)) {
-            let q = Math.floor(num / roman[i]);
-            num -= q * roman[i];
-            str += i.repeat(q);
+        let n = num;
+        for (const [key, value] of roman) {
+            const q = Math.floor(n / value);
+            n -= q * value;
+            str += key.repeat(q);
         }
         return str;
     }

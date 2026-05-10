@@ -1,9 +1,23 @@
-import { system, world, BlockPermutation, Direction, GameMode, Block, Dimension, Vector3, PlayerPlaceBlockAfterEvent, PlayerInteractWithBlockBeforeEvent, BlockComponentRegistry, EntityInventoryComponent, Container, ItemStack } from "@minecraft/server";
+import { 
+    system, 
+    BlockPermutation, 
+    Direction, 
+    GameMode, 
+    Block, 
+    Dimension, 
+    Vector3, 
+    PlayerPlaceBlockAfterEvent, 
+    PlayerInteractWithBlockBeforeEvent, 
+    BlockComponentRegistry, 
+    EntityInventoryComponent, 
+    Container, 
+    ItemStack,
+    Player
+} from "@minecraft/server";
 import { registerForBlockUpdates } from "../systems/BlockUpdate.js";
-import { registerPlaceHandler, registerBreakHandler, registerInteractHandler } from "../systems/event_manager.js";
-import { trackBlock, untrackBlock } from "../systems/destruction_handler.js";
+import { registerPlaceHandler, registerInteractHandler } from "../systems/event_manager.js";
 
-const INVISIBLE_BLOCK_ID = "gaiadimension:invisible";
+const INVISIBLE_BLOCK_ID: string = "gaiadimension:invisible";
 
 /**
  * Checks if a block is a valid, solid block that a wall can connect to.
@@ -37,43 +51,43 @@ function isConnectable(block: Block | undefined): boolean {
 export function updateWallConnections(block: Block): void {
     if (!block || !block.isValid || !block.typeId.includes("wall")) return;
     try {
-        let permutation = block.permutation;
-        const blockAbove = block.above();
-        const isWallAbove = blockAbove?.typeId.includes("wall");
+        let permutation: BlockPermutation = block.permutation;
+        const blockAbove: Block | undefined = block.above();
+        const isWallAbove: boolean = blockAbove?.typeId.includes("wall") ?? false;
 
         // North
-        let northConnect = isConnectable(block.north());
-        if (!northConnect && isWallAbove && isConnectable(blockAbove.north())) {
+        let northConnect: boolean = isConnectable(block.north());
+        if (!northConnect && isWallAbove && blockAbove && isConnectable(blockAbove.north())) {
             northConnect = true;
         }
-        permutation = permutation.withState("gaiadimension:north" as any, northConnect);
+        permutation = permutation.withState("gaiadimension:north", northConnect);
 
         // South
-        let southConnect = isConnectable(block.south());
-        if (!southConnect && isWallAbove && isConnectable(blockAbove.south())) {
+        let southConnect: boolean = isConnectable(block.south());
+        if (!southConnect && isWallAbove && blockAbove && isConnectable(blockAbove.south())) {
             southConnect = true;
         }
-        permutation = permutation.withState("gaiadimension:south" as any, southConnect);
+        permutation = permutation.withState("gaiadimension:south", southConnect);
 
         // East
-        let eastConnect = isConnectable(block.east());
-        if (!eastConnect && isWallAbove && isConnectable(blockAbove.east())) {
+        let eastConnect: boolean = isConnectable(block.east());
+        if (!eastConnect && isWallAbove && blockAbove && isConnectable(blockAbove.east())) {
             eastConnect = true;
         }
-        permutation = permutation.withState("gaiadimension:east" as any, eastConnect);
+        permutation = permutation.withState("gaiadimension:east", eastConnect);
 
         // West
-        let westConnect = isConnectable(block.west());
-        if (!westConnect && isWallAbove && isConnectable(blockAbove.west())) {
+        let westConnect: boolean = isConnectable(block.west());
+        if (!westConnect && isWallAbove && blockAbove && isConnectable(blockAbove.west())) {
             westConnect = true;
         }
-        permutation = permutation.withState("gaiadimension:west" as any, westConnect);
+        permutation = permutation.withState("gaiadimension:west", westConnect);
 
         // Above
-        permutation = permutation.withState("gaiadimension:above" as any, isConnectable(block.above()));
+        permutation = permutation.withState("gaiadimension:above", isConnectable(block.above()));
 
         block.setPermutation(permutation);
-    } catch (e) {
+    } catch (e: unknown) {
         // Suppress errors if the state doesn't exist on the block
     }
 }
@@ -84,7 +98,7 @@ export function updateWallConnections(block: Block): void {
  */
 function updateInvisibleBlock(block: Block): void {
     if (!block || !block.isValid) return;
-    const blockAbove = block.above();
+    const blockAbove: Block | undefined = block.above();
     if (!blockAbove) return;
 
     if (blockAbove.isAir) {
@@ -103,7 +117,7 @@ function updateInvisibleBlock(block: Block): void {
  */
 export function updateWallNeighborsAt(location: Vector3, dimension: Dimension): void {
     const { x, y, z } = location;
-    const neighbors = [
+    const neighbors: (Block | undefined)[] = [
         dimension.getBlock({ x, y, z: z - 1 }), // North
         dimension.getBlock({ x, y, z: z + 1 }), // South
         dimension.getBlock({ x: x + 1, y, z }), // East
@@ -126,13 +140,13 @@ export function registerWallComponent({ blockComponentRegistry }: { blockCompone
     blockComponentRegistry.registerCustomComponent("gaiadimension:wall", {});
 
     registerForBlockUpdates({
-        check: (block: Block) => block.typeId.includes("wall") && !block.typeId.startsWith("minecraft:"),
+        check: (block: Block): boolean => block.typeId.includes("wall") && !block.typeId.startsWith("minecraft:"),
         update: updateWallConnections
     });
 
     registerPlaceHandler({
-        check: (block: Block) => block.typeId.includes("wall") && !block.typeId.startsWith("minecraft:"),
-        execute: (event: PlayerPlaceBlockAfterEvent) => {
+        check: (block: Block): boolean => block.typeId.includes("wall") && !block.typeId.startsWith("minecraft:"),
+        execute: (event: PlayerPlaceBlockAfterEvent): void => {
             const { block } = event;
             updateWallConnections(block);
             updateInvisibleBlock(block);
@@ -141,15 +155,15 @@ export function registerWallComponent({ blockComponentRegistry }: { blockCompone
     });
 
     registerInteractHandler({
-        check: (block: Block) => block.typeId.includes("wall") || block.typeId === INVISIBLE_BLOCK_ID,
-        execute: (event: PlayerInteractWithBlockBeforeEvent) => {
+        check: (block: Block): boolean => block.typeId.includes("wall") || block.typeId === INVISIBLE_BLOCK_ID,
+        execute: (event: PlayerInteractWithBlockBeforeEvent): void => {
             const { player, block, blockFace, itemStack } = event;
 
             // Handle item placement on top of walls
             if (itemStack) {
                 // Case 1: Placing a block into the invisible block space
                 if (block.typeId === INVISIBLE_BLOCK_ID) {
-                    const blockBelow = block.below();
+                    const blockBelow: Block | undefined = block.below();
                     if (blockBelow && blockBelow.typeId.includes("wall")) {
                         event.cancel = true;
                         system.run(() => {
@@ -161,20 +175,22 @@ export function registerWallComponent({ blockComponentRegistry }: { blockCompone
                             updateWallConnections(blockBelow);
 
                             if (player.getGameMode() !== GameMode.Creative) {
-                                const inventory = player.getComponent("minecraft:inventory") as EntityInventoryComponent;
-                                const container = inventory.container;
-                                const item = container.getItem(player.selectedSlot);
-                                if (item) {
-                                    if (item.amount === 1) {
-                                        container.setItem(player.selectedSlot, undefined);
-                                    } else {
-                                        item.amount--;
-                                        container.setItem(player.selectedSlot, item);
+                                const inventory: EntityInventoryComponent | undefined = player.getComponent("minecraft:inventory") as EntityInventoryComponent | undefined;
+                                const container: Container | undefined = inventory?.container;
+                                if (container) {
+                                    const item: ItemStack | undefined = container.getItem(player.selectedSlot);
+                                    if (item) {
+                                        if (item.amount === 1) {
+                                            container.setItem(player.selectedSlot, undefined);
+                                        } else {
+                                            item.amount--;
+                                            container.setItem(player.selectedSlot, item);
+                                        }
                                     }
                                 }
                             }
                             // Update the newly placed block and its neighbors
-                            const newBlock = block;
+                            const newBlock: Block = block;
                             updateWallConnections(newBlock);
                             updateInvisibleBlock(newBlock);
                             updateWallNeighborsAt(newBlock.location, newBlock.dimension);
@@ -185,29 +201,31 @@ export function registerWallComponent({ blockComponentRegistry }: { blockCompone
                     event.cancel = true;
                     system.run(() => {
                         if (!block.isValid) return;
-                        const blockAbove = block.above();
+                        const blockAbove: Block | undefined = block.above();
                         if (blockAbove && (blockAbove.isAir || blockAbove.typeId === INVISIBLE_BLOCK_ID)) {
                             try {
                                 blockAbove.setType(itemStack.typeId);
-                            } catch (e) {}
+                            } catch (e: unknown) {}
                             player.playSound("dig.stone", { location: blockAbove.location });
 
                             if (player.getGameMode() !== GameMode.Creative) {
-                                const inventory = player.getComponent("minecraft:inventory") as EntityInventoryComponent;
-                                const container = inventory.container;
-                                const item = container.getItem(player.selectedSlot);
-                                if (item) {
-                                    if (item.amount === 1) {
-                                        container.setItem(player.selectedSlot, undefined);
-                                    } else {
-                                        item.amount--;
-                                        container.setItem(player.selectedSlot, item);
+                                const inventory: EntityInventoryComponent | undefined = player.getComponent("minecraft:inventory") as EntityInventoryComponent | undefined;
+                                const container: Container | undefined = inventory?.container;
+                                if (container) {
+                                    const item: ItemStack | undefined = container.getItem(player.selectedSlot);
+                                    if (item) {
+                                        if (item.amount === 1) {
+                                            container.setItem(player.selectedSlot, undefined);
+                                        } else {
+                                            item.amount--;
+                                            container.setItem(player.selectedSlot, item);
+                                        }
                                     }
                                 }
                             }
 
                             // Update the newly placed block and its neighbors
-                            const newBlock = block.above();
+                            const newBlock: Block | undefined = block.above();
                             if (newBlock) {
                                 updateWallConnections(newBlock);
                                 updateInvisibleBlock(newBlock);
@@ -220,4 +238,3 @@ export function registerWallComponent({ blockComponentRegistry }: { blockCompone
         }
     });
 }
-

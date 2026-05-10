@@ -1,4 +1,4 @@
-import { world, system, Block, Dimension, Vector3 } from "@minecraft/server";
+import { world, system, Block, Dimension, PistonActivateAfterEvent, ExplosionAfterEvent, Vector3 } from "@minecraft/server";
 
 export interface BlockUpdateRegistration {
     check: (block: Block) => boolean;
@@ -28,7 +28,7 @@ export function registerForBlockUpdates(registration: BlockUpdateRegistration): 
 function updateNeighboringBlocks(block: Block): void {
     if (!block || !block.dimension) return;
 
-    const neighbors = [
+    const neighbors: (Block | undefined)[] = [
         block.north(),
         block.south(),
         block.east(),
@@ -52,11 +52,12 @@ function updateNeighboringBlocks(block: Block): void {
 // --- Event Subscriptions ---
 // Listen to events that cause block changes without direct player interaction.
 
-world.afterEvents.pistonActivate.subscribe(event => {
+world.afterEvents.pistonActivate.subscribe((event: PistonActivateAfterEvent): void => {
     const { piston, dimension } = event;
     system.run(() => {
-        for (const location of piston.getAttachedBlocks()) {
-            const block = dimension.getBlock(location);
+        const locations: Vector3[] = piston.getAttachedBlocks();
+        for (const location of locations) {
+            const block: Block | undefined = dimension.getBlock(location);
             if (block) {
                 updateNeighboringBlocks(block);
             }
@@ -64,10 +65,11 @@ world.afterEvents.pistonActivate.subscribe(event => {
     });
 });
 
-world.afterEvents.explosion.subscribe(event => {
+world.afterEvents.explosion.subscribe((event: ExplosionAfterEvent): void => {
     const { dimension } = event;
-    for (const location of event.getImpactedBlocks()) {
-        const block = dimension.getBlock(location); // This is now an air block
+    const locations: Vector3[] = event.getImpactedBlocks();
+    for (const location of locations) {
+        const block: Block | undefined = dimension.getBlock(location); // This is now an air block
         if (block) {
             updateNeighboringBlocks(block);
         }

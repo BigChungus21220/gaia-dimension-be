@@ -2,12 +2,14 @@ import { Dimension, world } from "@minecraft/server";
 import { ProceduralRandom } from "../utils";
 import { ChunkGenerator } from "./generator";
 import { DEFINITION_MANAGER } from "../definitions/index";
+import { DefinitionManager } from "../definitions/definition-manager";
+import { BiomeDefinition } from "../definitions/definition-biome";
 
 export class SessionManager {
     public generators: Map<string, ChunkGenerator>;
     public seed: number;
     public procedural: ProceduralRandom;
-    public definition: any;
+    public definition: DefinitionManager;
 
     constructor(seed: number) {
         this.generators = new Map();
@@ -24,10 +26,10 @@ export class SessionManager {
         
         try {
             const dimension = world.getDimension(dimensionId);
-            const gen = new ChunkGenerator(this as any, dimension, this.procedural);
+            const gen = new ChunkGenerator(this, dimension, this.procedural);
             this.generators.set(dimensionId, gen);
             return gen;
-        } catch (e) {
+        } catch (e: unknown) {
             return undefined;
         }
     }
@@ -36,7 +38,7 @@ export class SessionManager {
         return this.getOrCreateGenerator(dimension.id);
     }
 
-    isGenerated(hash: string): any { 
+    isGenerated(hash: string): boolean | string | number | undefined { 
         return world.getDynamicProperty(hash); 
     }
 
@@ -44,7 +46,7 @@ export class SessionManager {
         world.setDynamicProperty(hash, true); 
     }
 
-    getBiome(temp: number, humi: number): any {
+    getBiome(temp: number, humi: number): BiomeDefinition {
         return this.definition.biomeManager.getBiome(temp, humi);
     }
 }

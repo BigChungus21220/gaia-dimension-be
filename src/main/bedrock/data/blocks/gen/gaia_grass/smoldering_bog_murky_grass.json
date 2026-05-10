@@ -33,7 +33,7 @@
                     "render_method": "opaque"
                 },
                 "down": {
-                    "texture": "boggy_soil",
+                    "texture": "gaiadimension:boggy_soil",
                     "render_method": "opaque"
                 }
             },

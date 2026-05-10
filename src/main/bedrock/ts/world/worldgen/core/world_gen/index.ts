@@ -1,5 +1,7 @@
-import { world, system } from "@minecraft/server";
+import { world, system, Dimension } from "@minecraft/server";
 import { SessionManager } from "./session-manager";
+import { ProceduralRandom } from "../utils";
+import { ChunkGenerator } from "./generator";
 export * from "./session-manager";
 export * from "./generator";
 
@@ -11,10 +13,10 @@ system.run(() => {
         world.setDynamicProperty("seed", savedSeed);
     }
     seed = savedSeed;
-    (SESSION_MANAGER as any).init(seed);
+    SESSION_MANAGER.init(seed);
 });
 
-export const SESSION_MANAGER = new class {
+class SessionManagerProxy {
     private _instance?: SessionManager;
     private _readyPromise: Promise<void>;
     private _resolveReady!: () => void;
@@ -23,16 +25,18 @@ export const SESSION_MANAGER = new class {
         this._readyPromise = new Promise<void>(r => this._resolveReady = r);
     }
 
-    init(seed: number) {
+    init(seed: number): void {
         this._instance = new SessionManager(seed);
         this._resolveReady();
     }
 
     /** Resolves once init(seed) has been called and the SessionManager is live. */
-    get ready() { return this._readyPromise; }
-    get instance() { return this._instance; }
+    get ready(): Promise<void> { return this._readyPromise; }
+    get instance(): SessionManager | undefined { return this._instance; }
     // Proxy common methods used by the generator
-    get(dim: any) { return this._instance?.get(dim); }
-    get seed() { return this._instance?.seed ?? 0; }
-    get procedural() { return this._instance?.procedural; }
-};
+    get(dim: Dimension): ChunkGenerator | undefined { return this._instance?.get(dim); }
+    get seed(): number { return this._instance?.seed ?? 0; }
+    get procedural(): ProceduralRandom | undefined { return this._instance?.procedural; }
+}
+
+export const SESSION_MANAGER = new SessionManagerProxy();

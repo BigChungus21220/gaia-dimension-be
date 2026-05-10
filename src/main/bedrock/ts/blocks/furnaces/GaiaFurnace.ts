@@ -1,13 +1,23 @@
-import { ItemStack } from "@minecraft/server";
-import { Machine } from "../../API/lib/Machine.js";
+import { ItemStack, BlockComponentRegistry, BlockPermutation, Dimension, Vector3, Block } from "@minecraft/server";
+import { Machine, UIProfile, UIConfig } from "../../API/lib/Machine.js";
 import { nativeFuels, nativeRecipes } from "../../furnace_recipes/furnace/NativeFurnaceData.js";
 import { recipeDiscovery } from "../../furnace_recipes/furnace/RecipeDiscovery.js";
 import blockEntityManager from "../../API/lib/BlockEntity.js";
 
-export class GaiaFurnace extends Machine {
-    static get NAME() { return "gaia_furnace"; }
+// Extend BlockPermutation to include withState if not already present in the base declarations
+declare module "@minecraft/server" {
+    interface BlockPermutation {
+        withState(stateName: string, value: string | number | boolean): BlockPermutation;
+    }
+    interface Block {
+        setPermutation(permutation: BlockPermutation): void;
+    }
+}
 
-    static get TIMERS() {
+export class GaiaFurnace extends Machine {
+    static get NAME(): string { return "gaia_furnace"; }
+
+    static get TIMERS(): { [key: string]: { max: number } } {
         return {
             cook: { max: 200 },
             burn: { max: 0 },
@@ -15,8 +25,8 @@ export class GaiaFurnace extends Machine {
         };
     }
 
-    static get UI_CONFIG() {
-        const staticUI = {
+    static get UI_CONFIG(): UIConfig {
+        const staticUI: { [slot: number]: string } = {
             11: "gaiadimension:furnace_flame_empty",
             13: "gaiadimension:generic_progress_arrow_empty",
             9: "gaiadimension:gaia_stone_furnace_part_1",
@@ -47,7 +57,7 @@ export class GaiaFurnace extends Machine {
         };
     }
 
-    onTick(dt) {
+    onTick(dt: number): void {
         if (this.timers.burn.value > 0) {
             this.timers.burn.value = Math.max(0, this.timers.burn.value - dt);
         }
@@ -59,15 +69,15 @@ export class GaiaFurnace extends Machine {
         // Handle Block State
         try {
             const isBurning = this.timers.burn.value > 0;
-            const currentState = this.block.permutation.getState("gaiadimension:furnace_on" as any);
+            const currentState = this.block.permutation.getState("gaiadimension:furnace_on");
             if (isBurning !== currentState) {
-                this.block.setPermutation(this.block.permutation.withState("gaiadimension:furnace_on" as any, isBurning));
+                this.block.setPermutation(this.block.permutation.withState("gaiadimension:furnace_on", isBurning));
             }
         } catch (e) {}
     }
 
-    updateUI() {
-        const profile = this.cachedUiProfile || this.getCurrentUiProfile();
+    updateUI(): void {
+        const profile: UIProfile = this.cachedUiProfile || this.getCurrentUiProfile();
         
         const burnPercent = this.timers.max_burn.value > 0 
             ? Math.ceil((this.timers.burn.value / this.timers.max_burn.value) * 100) 
@@ -89,7 +99,7 @@ export class GaiaFurnace extends Machine {
         }
     }
 
-    canProcess() {
+    canProcess(): boolean {
         const inputItem = this.inventory.getItem(2);
         
         if (!inputItem) return false;
@@ -110,8 +120,8 @@ export class GaiaFurnace extends Machine {
         return true;
     }
 
-    processTick(dt = 1) {
-        const profile = this.cachedUiProfile || this.getCurrentUiProfile();
+    processTick(dt: number = 1): void {
+        const profile: UIProfile = this.cachedUiProfile || this.getCurrentUiProfile();
 
         if (this.timers.burn.value <= 0) {
             const fuelItem = this.inventory.getItem(20);
@@ -142,7 +152,7 @@ export class GaiaFurnace extends Machine {
         }
     }
 
-    addToSlot(slot, itemStack, profile) {
+    addToSlot(slot: number, itemStack: ItemStack, profile: UIProfile | null): void {
         const current = this.inventory.getItem(slot);
         if (!current) {
             this.setInventoryItem(slot, itemStack, profile);
@@ -159,11 +169,14 @@ export class GaiaFurnace extends Machine {
         }
     }
 
-    getRecipe(input) {
+    getRecipe(input: ItemStack | undefined): { output: string, time: number } | null {
         if (!input) return null;
 
         if (nativeRecipes[input.typeId]) {
-            return { output: nativeRecipes[input.typeId].output, time: 200 };
+            const recipe = nativeRecipes[input.typeId];
+            if (recipe.output) {
+                return { output: recipe.output, time: 200 };
+            }
         }
 
         // Trigger dynamic discovery if unknown
@@ -172,7 +185,7 @@ export class GaiaFurnace extends Machine {
         return null;
     }
 
-    getFuelValue(item) {
+    getFuelValue(item: ItemStack | undefined): number {
         if (!item) return 0;
         
         // 1. Exact Match
@@ -198,13 +211,14 @@ export class GaiaFurnace extends Machine {
     }
 }
 
-blockEntityManager.register(GaiaFurnace);
+blockEntityManager.register(GaiaFurnace as any);
 
-export function registerGaiaFurnaceComponent({ blockComponentRegistry }) {
+export function registerGaiaFurnaceComponent({ blockComponentRegistry }: { blockComponentRegistry: BlockComponentRegistry }): void {
     blockComponentRegistry.registerCustomComponent("gaiadimension:gaia_furnace", {
-        onPlace: ({ block, dimension }) => {
-            const location = block.location;
-            const center = { x: location.x + 0.5, y: location.y, z: location.z + 0.5 };
+        onPlace: (arg: { block: Block, dimension: Dimension }) => {
+            const { block, dimension } = arg;
+            const location: Vector3 = block.location;
+            const center: Vector3 = { x: location.x + 0.5, y: location.y, z: location.z + 0.5 };
             
             try {
                 const entity = dimension.spawnEntity("luminiae_generic:block_entity", center);
@@ -213,9 +227,7 @@ export function registerGaiaFurnaceComponent({ blockComponentRegistry }) {
                 console.warn("Failed to spawn gaia furnace entity", e);
             }
         },
-        onPlayerDestroy: ({ block, dimension }) => {
+        onPlayerDestroy: () => {
         }
     });
 }
-
-

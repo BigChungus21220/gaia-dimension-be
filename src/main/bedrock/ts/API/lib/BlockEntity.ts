@@ -6,10 +6,36 @@
  */
 import { world, system, Entity, Block, Vector3, Dimension, Player } from "@minecraft/server";
 
+declare module "@minecraft/server" {
+    interface Entity {
+        readonly dimension: Dimension;
+        hasTag(tag: string): boolean;
+        addTag(tag: string): void;
+        removeTag(tag: string): void;
+        triggerEvent(eventId: string): void;
+    }
+    interface Block {
+        readonly dimension: Dimension;
+        readonly location: Vector3;
+        readonly typeId: string;
+    }
+    interface Player {
+        readonly isSneaking: boolean;
+        getBlockFromViewDirection(options?: { maxDistance: number }): { block: Block } | undefined;
+        getEntitiesFromViewDirection(options?: { maxDistance: number }): { entity: Entity }[];
+    }
+    interface Dimension {
+        readonly id: string;
+        getBlock(location: Vector3): Block | undefined;
+        getEntities(options?: { families?: string[], location?: Vector3, maxDistance?: number, type?: string }): Entity[];
+        spawnEntity(typeId: string, location: Vector3): Entity;
+    }
+}
+
 interface MachineInstance {
     entity: Entity;
     block: Block;
-    config: any;
+    config: MachineConstructor;
     isViewed: boolean;
     lastTickTime: number;
     locKey: string;
@@ -18,14 +44,43 @@ interface MachineInstance {
     getRequiredXP?(): number;
 }
 
+interface MachineConstructor {
+    new (entity: Entity, block: Block): MachineInstance;
+    NAME: string;
+    INVENTORY_SIZE?: number;
+    UI_CONFIG?: any;
+    processUiConfig?(config: any): void;
+}
+
+interface EntityEquippableComponent {
+    getEquipment(slot: string): { typeId: string } | undefined;
+}
+
+// Event argument types
+interface ExplosionAfterEvent {
+    getImpactedBlocks(): Block[];
+}
+
+interface EntityLoadAfterEvent {
+    readonly entity: Entity;
+}
+
+interface PlayerPlaceBlockAfterEvent {
+    readonly block: Block;
+}
+
+interface PlayerBreakBlockBeforeEvent {
+    readonly block: Block;
+}
+
 class BlockEntityManager {
-    registeredMachineClasses = new Map<string, any>();
-    activeMachineInstances = new Map<string, MachineInstance>(); // Maps entity.id -> Machine instance
+    registeredMachineClasses: Map<string, MachineConstructor> = new Map<string, MachineConstructor>();
+    activeMachineInstances: Map<string, MachineInstance> = new Map<string, MachineInstance>(); // Maps entity.id -> Machine instance
     activeMachineList: MachineInstance[] = []; // Array for efficient batch processing
-    locationToEntityId = new Map<string, string>(); // Optimization: Maps "x,y,z" -> entity.id
-    lastProcessedIndex = 0; // For budget-based ticking
-    pendingSpawns = new Set<string>(); // Track locations currently being spawned to prevent duplicates
-    lastPlacementTick = 0; // Global cooldown to prevent self-healing race conditions
+    locationToEntityId: Map<string, string> = new Map<string, string>(); // Optimization: Maps "x,y,z" -> entity.id
+    lastProcessedIndex: number = 0; // For budget-based ticking
+    pendingSpawns: Set<string> = new Set<string>(); // Track locations currently being spawned to prevent duplicates
+    lastPlacementTick: number = 0; // Global cooldown to prevent self-healing race conditions
 
     constructor() {
         this.registerEventListeners();
@@ -35,7 +90,7 @@ class BlockEntityManager {
      * Registers a new machine class with the system.
      * @param machineClass The class definition of the machine.
      */
-    register(machineClass: any): void {
+    register(machineClass: MachineConstructor): void {
         if (!machineClass || !machineClass.NAME) {
             console.warn("[BlockEntity] Registration failed: machineClass must have a static NAME property.");
             return;
@@ -50,18 +105,18 @@ class BlockEntityManager {
     }
 
     registerEventListeners(): void {
-        world.afterEvents.playerPlaceBlock.subscribe(this.handlePlayerPlaceBlock.bind(this));
-        world.beforeEvents.playerBreakBlock.subscribe(this.handlePlayerBreakBlock.bind(this));
+        (world.afterEvents as any).playerPlaceBlock.subscribe(this.handlePlayerPlaceBlock.bind(this));
+        (world.beforeEvents as any).playerBreakBlock.subscribe(this.handlePlayerBreakBlock.bind(this));
       
-        world.afterEvents.explosion.subscribe(this.handleExplosion.bind(this));
+        (world.afterEvents as any).explosion.subscribe(this.handleExplosion.bind(this));
 
         system.runInterval(this.handlePlayerViewCheck.bind(this), 5);
         system.runInterval(this.handleMachineTick.bind(this), 1);
-        world.afterEvents.worldLoad.subscribe(this.handleWorldLoad.bind(this));
-        world.afterEvents.entityLoad.subscribe(this.handleEntityLoad.bind(this));
+        (world.afterEvents as any).worldLoad.subscribe(this.handleWorldLoad.bind(this));
+        (world.afterEvents as any).entityLoad.subscribe(this.handleEntityLoad.bind(this));
     }
 
-    handleExplosion(event: any): void {
+    handleExplosion(event: ExplosionAfterEvent): void {
         const impactedBlocks = event.getImpactedBlocks();
         for (const block of impactedBlocks) {
              const location = block.location;
@@ -77,7 +132,7 @@ class BlockEntityManager {
         }
     }
 
-    handleEntityLoad(event: any): void {
+    handleEntityLoad(event: EntityLoadAfterEvent): void {
         const entity = event.entity;
         if (entity.typeId.startsWith('luminiae_generic:block_entity')) {
              this.registerEntityAsMachine(entity);
@@ -132,7 +187,7 @@ class BlockEntityManager {
                 const block = entity.dimension.getBlock(blockLocation!);
                 
                 if (block && block.typeId === blockId) {
-                    const MachineClass = this.registeredMachineClasses.get(blockId);
+                    const MachineClass = this.registeredMachineClasses.get(blockId)!;
                     const machineInstance = new MachineClass(entity, block) as MachineInstance;
                     
                     // Optimization: Generate and store locKey on the instance
@@ -148,10 +203,10 @@ class BlockEntityManager {
         }
     }
 
-    handlePlayerPlaceBlock(event: any): void {
+    handlePlayerPlaceBlock(event: PlayerPlaceBlockAfterEvent): void {
         const { block } = event;
         // Global cooldown for self-healing
-        this.lastPlacementTick = system.currentTick;
+        this.lastPlacementTick = (system as any).currentTick;
 
         if (this.registeredMachineClasses.has(block.typeId)) {
             const x = Math.floor(block.location.x);
@@ -172,7 +227,7 @@ class BlockEntityManager {
                     // Double-check inside the run loop in case self-healing happened in between
                     if (this.locationToEntityId.has(locKey)) return;
 
-                    const MachineClass = this.registeredMachineClasses.get(block.typeId);
+                    const MachineClass = this.registeredMachineClasses.get(block.typeId)!;
                     const useLarge = MachineClass.INVENTORY_SIZE === 54;
                     const entityId = useLarge ? 'luminiae_generic:block_entity_large' : 'luminiae_generic:block_entity';
 
@@ -196,7 +251,7 @@ class BlockEntityManager {
         }
     }
 
-    handlePlayerBreakBlock(event: any): void {
+    handlePlayerBreakBlock(event: PlayerBreakBlockBeforeEvent): void {
         const { block } = event;
         if (this.registeredMachineClasses.has(block.typeId)) {
             // Optimization: Use O(1) lookup to find the entity for this block
@@ -275,11 +330,11 @@ class BlockEntityManager {
                     targetMachine = this.activeMachineInstances.get(entityId) || null;
                 } else if (this.registeredMachineClasses.has(blockHit.block.typeId) && !this.pendingSpawns.has(locKey)) {
                     // SELF-HEALING: Block exists but no entity. Spawn one!
-                    if (system.currentTick - this.lastPlacementTick > 20) {
+                    if ((system as any).currentTick - this.lastPlacementTick > 20) {
                         console.warn(`[BlockEntity] Self-healing missing entity at ${locKey}`);
                         
                         try {
-                            const MachineClass = this.registeredMachineClasses.get(blockHit.block.typeId);
+                            const MachineClass = this.registeredMachineClasses.get(blockHit.block.typeId)!;
                             const useLarge = MachineClass.INVENTORY_SIZE === 54;
                             const entityTypeId = useLarge ? 'luminiae_generic:block_entity_large' : 'luminiae_generic:block_entity';
                             const center = { x: blockHit.block.x + 0.5, y: blockHit.block.y + 0.5, z: blockHit.block.z + 0.5 };
@@ -339,7 +394,7 @@ class BlockEntityManager {
 
                 // Handle 'wrench' state (Sneaking/Holding tools)
                 const isSneaking = player.isSneaking;
-                const mainhandItem = (player.getComponent("minecraft:equippable") as any)?.getEquipment("Mainhand")?.typeId || '';
+                const mainhandItem = (player.getComponent("minecraft:equippable") as EntityEquippableComponent | undefined)?.getEquipment("Mainhand")?.typeId || '';
                 const isHoldingTool = mainhandItem.includes('_pickaxe') || mainhandItem.includes('wrench');
 
                 if (isSneaking || isHoldingTool) {
@@ -378,7 +433,7 @@ class BlockEntityManager {
         const PROCESS_LIMIT = 40; 
         const TIME_BUDGET_MS = 5; 
         const startTime = Date.now();
-        const currentTick = system.currentTick;
+        const currentTick = (system as any).currentTick;
 
         // --- Priority Ticking (Active Viewers) ---
         for (const machine of this.activeMachineList) {
@@ -462,12 +517,12 @@ class BlockEntityManager {
         if (entityId) {
             const machine = this.activeMachineInstances.get(entityId);
             if (machine && typeof machine.getRequiredXP === 'function') {
-                xp = machine.getRequiredXP();
+                xp = machine.getRequiredXP()!;
             }
         }
         return xp;
     }
 }
 
-const blockEntityManager = new BlockEntityManager();
+const blockEntityManager: BlockEntityManager = new BlockEntityManager();
 export default blockEntityManager;

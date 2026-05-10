@@ -1,4 +1,4 @@
-import { Player } from "@minecraft/server";
+import { Player, Vector3, InputButton, ButtonState } from "@minecraft/server";
 
 /**
  * MotionEngine — 100% script-based fluid physics for Bedrock
@@ -36,6 +36,20 @@ const MAX_H_SPEED_SPRINT = 0.6;
 /** Max vertical speed (blocks/tick) */
 const MAX_V_SPEED = 2.0;
 
+export interface ExtendedPlayer extends Player {
+    // Custom properties for fluid physics tracking
+    _fluidVX?: number;
+    _fluidVY?: number;
+    _fluidVZ?: number;
+    _lastSmoothImpX?: number;
+    _lastSmoothImpY?: number;
+    _lastSmoothImpZ?: number;
+    _smoothDirX?: number;
+    _smoothDirZ?: number;
+    _walkExcessX?: number;
+    _walkExcessZ?: number;
+}
+
 export class MotionEngine {
     /**
      * Java-parity fluid physics tick.
@@ -52,8 +66,8 @@ export class MotionEngine {
         acceleration: number = 0.02,
         gravityScale: number = 1.0,
         canSprint: boolean = true,
-    ) {
-        const p = player as any;
+    ): void {
+        const p = player as ExtendedPlayer;
 
         // ── Guards ───────────────────────────────────────────────────────
         if (player.isFlying || player.isGliding) {
@@ -82,9 +96,11 @@ export class MotionEngine {
         let forward = 0;
         let right = 0;
         try {
-            const mv = p.inputInfo.getMovementVector();
-            forward = mv.y;
-            right = -mv.x; // Bedrock: positive = rightward (D key), formula expects left-positive (Java)
+            const mv = p.inputInfo?.getMovementVector();
+            if (mv) {
+                forward = mv.y;
+                right = -mv.x; // Bedrock: positive = rightward (D key), formula expects left-positive (Java)
+            }
         } catch { /* no inputInfo — standing still */ }
 
         const yaw = player.getRotation().y * DEG2RAD;
@@ -125,10 +141,10 @@ export class MotionEngine {
             }
         }
 
-        const smoothLen = Math.sqrt(p._smoothDirX * p._smoothDirX + p._smoothDirZ * p._smoothDirZ);
+        const smoothLen = Math.sqrt((p._smoothDirX ?? 0) * (p._smoothDirX ?? 0) + (p._smoothDirZ ?? 0) * (p._smoothDirZ ?? 0));
         inputMag = Math.min(smoothLen, 1.0);
-        normX = smoothLen > 0.0001 ? p._smoothDirX / smoothLen : 0;
-        normZ = smoothLen > 0.0001 ? p._smoothDirZ / smoothLen : 0;
+        normX = smoothLen > 0.0001 ? (p._smoothDirX ?? 0) / smoothLen : 0;
+        normZ = smoothLen > 0.0001 ? (p._smoothDirZ ?? 0) / smoothLen : 0;
 
         // ── Effective drag ───────────────────────────────────────────────
         let effectiveDrag = drag;
@@ -146,11 +162,11 @@ export class MotionEngine {
         // ── Jump detection ───────────────────────────────────────────────
         let isJumping = false;
         try {
-            const jumpState = p.inputInfo?.getButtonState?.('Jump');
-            isJumping = jumpState === 1;
+            const jumpState = p.inputInfo?.getButtonState(InputButton.Jump);
+            isJumping = jumpState === ButtonState.Pressed;
         } catch { }
         if (!isJumping) {
-            try { isJumping = !!p.isJumping; } catch { }
+            try { isJumping = player.isJumping; } catch { }
         }
 
         const onGround = player.isOnGround;
@@ -160,8 +176,8 @@ export class MotionEngine {
         // =================================================================
 
         // ── Step 1: Input acceleration ───────────────────────────────────
-        p._fluidVX += swimSpeed * normX * inputMag;
-        p._fluidVZ += swimSpeed * normZ * inputMag;
+        p._fluidVX = (p._fluidVX ?? 0) + swimSpeed * normX * inputMag;
+        p._fluidVZ = (p._fluidVZ ?? 0) + swimSpeed * normZ * inputMag;
 
         // ── Step 2: XZ Drag ─────────────────────────────────────────────
         p._fluidVX *= effectiveDrag;
@@ -171,26 +187,26 @@ export class MotionEngine {
         const yDrag = drag >= 0.7 ? 0.8 : drag;
 
         if (onGround) {
-            if (p._fluidVY < 0) p._fluidVY = 0;
+            if ((p._fluidVY ?? 0) < 0) p._fluidVY = 0;
             // Drag on upward velocity so jump arcs decay gracefully
-            if (p._fluidVY > 0) p._fluidVY *= yDrag;
+            if ((p._fluidVY ?? 0) > 0) p._fluidVY = (p._fluidVY ?? 0) * yDrag;
 
             if (isJumping) {
                 // Continuous upward force while held — blends toward target
                 // rise speed for smooth buoyant lift, not an instant kick
                 const targetRise = SWIM_UP_FORCE + effectiveDrag * 0.1;
-                p._fluidVY += (targetRise - p._fluidVY) * 0.4;
+                p._fluidVY = (p._fluidVY ?? 0) + (targetRise - (p._fluidVY ?? 0)) * 0.4;
             } else if (!player.isSneaking && drag >= 0.7) {
                 // ── Passive buoyancy (water-like fluids only) ────────────
                 // Java: submerged entities passively rise if not sneaking.
                 // This is what creates the iconic bobbing — you sit on the
                 // bottom for 1 tick, then buoyancy lifts you, gravity pulls
                 // you back, lift again → oscillation.
-                p._fluidVY += SWIM_UP_FORCE * 0.6;
+                p._fluidVY = (p._fluidVY ?? 0) + SWIM_UP_FORCE * 0.6;
             }
         } else {
             // Airborne in fluid — full fluid dynamics
-            p._fluidVY *= yDrag;
+            p._fluidVY = (p._fluidVY ?? 0) * yDrag;
             p._fluidVY -= FLUID_GRAVITY * gravityScale;
 
             // Continuous swim-up while jump held
@@ -207,41 +223,41 @@ export class MotionEngine {
             // When slowly sinking and not actively pressing anything,
             // dampen downward velocity aggressively to create natural bobbing.
             // The stronger dampening (0.4 for water) creates the float-at-surface feel.
-            if (!isJumping && !player.isSneaking && p._fluidVY < 0 && p._fluidVY > -0.15) {
+            if (!isJumping && !player.isSneaking && (p._fluidVY ?? 0) < 0 && (p._fluidVY ?? 0) > -0.15) {
                 const buoyancy = drag >= 0.7 ? 0.4 : 0.3;
                 p._fluidVY *= buoyancy;
             }
         }
 
         // ── Step 4: Deadzone ────────────────────────────────────────────
-        if (Math.abs(p._fluidVX) < DEADZONE && inputMag < 0.01) p._fluidVX = 0;
-        if (Math.abs(p._fluidVZ) < DEADZONE && inputMag < 0.01) p._fluidVZ = 0;
-        if (Math.abs(p._fluidVY) < 0.001 && !isJumping && (onGround || !player.isSneaking)) p._fluidVY = 0;
+        if (Math.abs(p._fluidVX ?? 0) < DEADZONE && inputMag < 0.01) p._fluidVX = 0;
+        if (Math.abs(p._fluidVZ ?? 0) < DEADZONE && inputMag < 0.01) p._fluidVZ = 0;
+        if (Math.abs(p._fluidVY ?? 0) < 0.001 && !isJumping && (onGround || !player.isSneaking)) p._fluidVY = 0;
 
         // ── Step 5: Clamp ───────────────────────────────────────────────
-        p._fluidVY = Math.max(-MAX_V_SPEED, Math.min(MAX_V_SPEED, p._fluidVY));
+        p._fluidVY = Math.max(-MAX_V_SPEED, Math.min(MAX_V_SPEED, p._fluidVY ?? 0));
         const maxH = (canSprint && player.isSprinting) ? MAX_H_SPEED_SPRINT : MAX_H_SPEED;
-        const hSpeed = Math.sqrt(p._fluidVX * p._fluidVX + p._fluidVZ * p._fluidVZ);
+        const hSpeed = Math.sqrt((p._fluidVX ?? 0) * (p._fluidVX ?? 0) + (p._fluidVZ ?? 0) * (p._fluidVZ ?? 0));
         if (hSpeed > maxH) {
             const scale = maxH / hSpeed;
-            p._fluidVX *= scale;
-            p._fluidVZ *= scale;
+            p._fluidVX = (p._fluidVX ?? 0) * scale;
+            p._fluidVZ = (p._fluidVZ ?? 0) * scale;
         }
 
         // ── Step 6: Wall collision ──────────────────────────────────────
         try {
             const headLoc = player.getHeadLocation();
-            const hDir = Math.sqrt(p._fluidVX * p._fluidVX + p._fluidVZ * p._fluidVZ);
+            const hDir = Math.sqrt((p._fluidVX ?? 0) * (p._fluidVX ?? 0) + (p._fluidVZ ?? 0) * (p._fluidVZ ?? 0));
             if (hDir > 0.01) {
                 const ray = player.dimension.getBlockFromRay(
                     headLoc,
-                    { x: p._fluidVX / hDir, y: 0, z: p._fluidVZ / hDir },
+                    { x: (p._fluidVX ?? 0) / hDir, y: 0, z: (p._fluidVZ ?? 0) / hDir },
                     { maxDistance: 0.45 },
                 );
                 if (ray && !ray.block.isAir && !ray.block.isLiquid) {
-                    p._fluidVX *= 0.15;
-                    p._fluidVZ *= 0.15;
-                    if (p._fluidVY < 0.08) p._fluidVY += 0.04;
+                    p._fluidVX = (p._fluidVX ?? 0) * 0.15;
+                    p._fluidVZ = (p._fluidVZ ?? 0) * 0.15;
+                    if ((p._fluidVY ?? 0) < 0.08) p._fluidVY = (p._fluidVY ?? 0) + 0.04;
                 }
             }
         } catch { /* chunk unloaded or invalid location */ }
@@ -250,9 +266,9 @@ export class MotionEngine {
         const walkExX = p._walkExcessX ?? 0;
         const walkExZ = p._walkExcessZ ?? 0;
 
-        let targetImpX = p._fluidVX - walkExX;
-        let targetImpZ = p._fluidVZ - walkExZ;
-        let targetImpY = p._fluidVY;
+        let targetImpX = (p._fluidVX ?? 0) - walkExX;
+        let targetImpZ = (p._fluidVZ ?? 0) - walkExZ;
+        let targetImpY = (p._fluidVY ?? 0);
 
         // Smooth XZ impulse (α=0.6)
         const IMPULSE_LERP = 0.6;
@@ -281,29 +297,35 @@ export class MotionEngine {
 
 // ─── Legacy re-exports (used by burntClimbables.ts / CustomFarmland.ts) ──────
 
-type AxisKey = "x" | "y" | "z";
-type AxisPair = [AxisKey, AxisKey];
+export type AxisKey = "x" | "y" | "z";
+export type AxisPair = [AxisKey, AxisKey];
 
 export const Geo = new class {
-    distance(v1: any, v2: any) {
+    distance(v1: Vector3, v2: Vector3): number {
         return Math.sqrt((v1.x - v2.x) ** 2 + (v1.y - v2.y) ** 2 + (v1.z - v2.z) ** 2);
     }
-    getDirection3D(v1: any, v2: any) {
+    getDirection3D(v1: Vector3, v2: Vector3): Vector3 {
         const d = this.distance(v1, v2) || 1;
         return { x: (v2.x - v1.x) / d, y: (v2.y - v1.y) / d, z: (v2.z - v1.z) / d };
     }
-    rotate(offset: Partial<Record<AxisKey, number>>, angle: number, axis: AxisPair = ["x", "z"]) {
+    rotate(offset: Partial<Record<AxisKey, number>>, angle: number, axis: AxisPair = ["x", "z"]): Vector3 {
         const [pa, sa] = axis;
-        const flat: any = { [pa]: offset[pa] ?? 0, [sa]: offset[sa] ?? 0 };
-        let dir = this.getDirection3D({ x: 0, y: 0, z: 0 }, sumObjects({}, flat));
-        let dist = this.distance({ x: 0, y: 0, z: 0 }, sumObjects({}, flat));
-        angle += Math.acos(dir[pa]) * 57.2958 * ((dir[sa] ?? 0) < 0 ? -1 : 1);
-        let d: any = { [pa]: Math.cos(angle / 57.2958), [sa]: Math.sin(angle / 57.2958) };
-        return sumObjects({}, d, dist);
+        const flat: Partial<Vector3> = { [pa]: offset[pa] ?? 0, [sa]: offset[sa] ?? 0 };
+        const zero: Vector3 = { x: 0, y: 0, z: 0 };
+        const flatVec = sumObjects(zero, flat);
+        const dir = this.getDirection3D(zero, flatVec);
+        const dist = this.distance(zero, flatVec);
+        
+        const paVal = dir[pa] ?? 0;
+        const saVal = dir[sa] ?? 0;
+
+        angle += Math.acos(paVal) * 57.2958 * (saVal < 0 ? -1 : 1);
+        const d: Partial<Vector3> = { [pa]: Math.cos(angle / 57.2958), [sa]: Math.sin(angle / 57.2958) };
+        return sumObjects(zero, d, dist);
     }
 };
 
-export function sumObjects(v1: any, v2: any, multi = 1) {
+export function sumObjects(v1: Partial<Vector3>, v2: Partial<Vector3>, multi: number = 1): Vector3 {
     return {
         x: (v1.x || 0) + (v2.x || 0) * multi,
         y: (v1.y || 0) + (v2.y || 0) * multi,
@@ -311,13 +333,16 @@ export function sumObjects(v1: any, v2: any, multi = 1) {
     };
 }
 
-export function getXZVelocity(player: Player, forceZeroSprint: boolean = false) {
-    let vector: any = { x: 0, z: 0 };
-    const input = (player as any).inputInfo.getMovementVector();
-    vector = sumObjects(vector, Geo.rotate({
-        x: input.y,
-        z: input.x,
-    }, player.getRotation().y + 90));
+export function getXZVelocity(player: Player, forceZeroSprint: boolean = false): Vector3 {
+    let vector: Partial<Vector3> = { x: 0, z: 0 };
+    const p = player as ExtendedPlayer;
+    const mv = p.inputInfo?.getMovementVector();
+    if (mv) {
+        vector = sumObjects(vector, Geo.rotate({
+            x: mv.y,
+            z: mv.x,
+        }, player.getRotation().y + 90));
+    }
     const speedMod = (player.getEffect('speed')?.amplifier ?? -1) + 1 - ((player.getEffect('slowness')?.amplifier ?? -1) + 1);
     const base = forceZeroSprint ? 0.37 : (0.37 + (player.isSprinting ? 0.13 : 0) + speedMod / 10);
     return sumObjects({}, vector, base);

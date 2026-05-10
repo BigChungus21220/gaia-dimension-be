@@ -1,8 +1,20 @@
-import { Player, system, world, CommandPermissionLevel, CustomCommandParamType, CustomCommandRegistry, CommandOrigin, BlockPermutation, Vector3 } from "@minecraft/server";
-import { ModalFormData } from "@minecraft/server-ui";
+import { 
+    Player, 
+    system, 
+    world, 
+    CommandPermissionLevel, 
+    CustomCommandParamType, 
+    CustomCommandRegistry, 
+    CommandOrigin, 
+    BlockPermutation, 
+    Vector3,
+    Entity,
+    Block
+} from "@minecraft/server";
+import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { DimensionSystem } from "../world/Gaia.js";
 import { Vec3 } from "../Vec3.js";
-import { MathParser } from "./MathParser.js";
+import { MathParser, MathContext } from "./MathParser.js";
 import { DataSystem } from "./DataSystem.js";
 import { ModConfig } from "../config/mod_config.js";
 
@@ -10,7 +22,7 @@ import { ModConfig } from "../config/mod_config.js";
  * Registers Gaia Utility Commands
  * @param {CustomCommandRegistry} registry 
  */
-export function registerGaiaCommands(registry: CustomCommandRegistry) {
+export function registerGaiaCommands(registry: CustomCommandRegistry): void {
     // /gaiadimension:math [expression...]
     registry.registerCommand({
         name: "gaiadimension:math",
@@ -28,20 +40,20 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
         ]
     }, (origin: CommandOrigin, p1?: string, p2?: string, p3?: string, p4?: string, p5?: string, p6?: string, p7?: string, p8?: string) => {
         const player = origin.sourceEntity;
-        if (!(player instanceof Player)) return;
+        if (!(player instanceof Player)) return { status: 0 };
 
         system.run(() => {
             try {
-                const expression = [p1, p2, p3, p4, p5, p6, p7, p8].filter(p => p !== undefined).join(" ");
+                const expression = [p1, p2, p3, p4, p5, p6, p7, p8].filter((p): p is string => p !== undefined).join(" ");
                 if (!expression) {
                     player.sendMessage("§cUsage: /gaiadimension:math <expression>");
                     return;
                 }
 
-                const pos = { x: player.location.x, y: player.location.y, z: player.location.z };
+                const pos: Vector3 = { x: player.location.x, y: player.location.y, z: player.location.z };
                 const view = player.getViewDirection();
                 const rot = player.getRotation();
-                const contextExtra = { 
+                const contextExtra: MathContext = { 
                     pos, view, rot, 
                     self: player,
                     lp: pos,
@@ -55,7 +67,7 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
                 let output = "";
                 if (typeof result === 'object' && result !== null) {
                     if ('x' in result && 'y' in result && 'z' in result) {
-                        output = Vec3.toString(result);
+                        output = Vec3.toString(result as Vector3);
                     } else {
                         output = JSON.stringify(result);
                     }
@@ -64,8 +76,9 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
                 }
 
                 player.sendMessage(`§8[§6Math§8] §f${expression} §7= §a${output}`);
-            } catch (e: any) {
-                player.sendMessage(`§8[§6Math§8] §cError: ${e.message}`);
+            } catch (e) {
+                const message = e instanceof Error ? e.message : String(e);
+                player.sendMessage(`§8[§6Math§8] §cError: ${message}`);
             }
         });
 
@@ -89,20 +102,20 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
         ]
     }, (origin: CommandOrigin, p1?: string, p2?: string, p3?: string, p4?: string, p5?: string, p6?: string, p7?: string, p8?: string) => {
         const player = origin.sourceEntity;
-        if (!(player instanceof Player)) return;
+        if (!(player instanceof Player)) return { status: 0 };
 
         system.run(() => {
             try {
-                const expression = [p1, p2, p3, p4, p5, p6, p7, p8].filter(p => p !== undefined).join(" ");
+                const expression = [p1, p2, p3, p4, p5, p6, p7, p8].filter((p): p is string => p !== undefined).join(" ");
                 if (!expression) {
                     player.sendMessage("§cUsage: /gaiadimension:tpmath <expression>");
                     return;
                 }
 
-                const pos = { x: player.location.x, y: player.location.y, z: player.location.z };
+                const pos: Vector3 = { x: player.location.x, y: player.location.y, z: player.location.z };
                 const view = player.getViewDirection();
                 const rot = player.getRotation();
-                const contextExtra = { 
+                const contextExtra: MathContext = { 
                     pos, view, rot, 
                     self: player,
                     lp: pos,
@@ -114,13 +127,14 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
                 const result = MathParser.evaluate(expression, contextExtra);
 
                 if (typeof result === 'object' && result !== null && 'x' in result && 'y' in result && 'z' in result) {
-                    player.teleport(result);
-                    player.sendMessage(`§8[§6TPMath§8] §7Teleported to §a${Vec3.toString(result)}`);
+                    player.teleport(result as Vector3);
+                    player.sendMessage(`§8[§6TPMath§8] §7Teleported to §a${Vec3.toString(result as Vector3)}`);
                 } else {
                     player.sendMessage("§cError: The expression must result in a Vector3.");
                 }
-            } catch (e: any) {
-                player.sendMessage(`§8[§6TPMath§8] §cError: ${e.message}`);
+            } catch (e) {
+                const message = e instanceof Error ? e.message : String(e);
+                player.sendMessage(`§8[§6TPMath§8] §cError: ${message}`);
             }
         });
 
@@ -144,14 +158,14 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
         ]
     }, (origin: CommandOrigin, op?: string, target?: string, path?: string, v1?: string, v2?: string, v3?: string, v4?: string, v5?: string) => {
         const player = origin.sourceEntity;
-        if (!(player instanceof Player)) return;
+        if (!(player instanceof Player)) return { status: 0 };
 
         system.run(() => {
             try {
                 const operation = op ? op.toLowerCase() : "get";
                 const targetType = target ? target.toLowerCase() : "self";
                 
-                const getTarget = (type: string) => {
+                const getTarget = (type: string): Player | Entity | Block | null => {
                     if (type === "block") {
                         const ray = player.getBlockFromViewDirection({ maxDistance: 10 });
                         return ray ? ray.block : null;
@@ -179,7 +193,7 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
                     }
                 } 
                 else if (operation === "merge") {
-                    const jsonStr = [path, v1, v2, v3, v4, v5].filter(p => p !== undefined).join(" ");
+                    const jsonStr = [path, v1, v2, v3, v4, v5].filter((p): p is string => p !== undefined).join(" ");
                     const source = JSON.parse(jsonStr);
                     DataSystem.deepMerge(data, source);
                     DataSystem.saveRoot(targetObj, data);
@@ -188,13 +202,13 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
                 else if (operation === "modify") {
                     const subOp = v1 ? v1.toLowerCase() : "set";
                     const sourceType = v2 ? v2.toLowerCase() : "value";
-                    let finalVal: any = undefined;
+                    let finalVal: string | number | boolean | object | undefined = undefined;
 
                     if (sourceType === "value") {
-                        const rawVal = [v3, v4, v5].filter(p => p !== undefined).join(" ");
+                        const rawVal = [v3, v4, v5].filter((p): p is string => p !== undefined).join(" ");
                         finalVal = rawVal;
                         try { finalVal = JSON.parse(rawVal); } catch(e) {}
-                        if (!isNaN(rawVal as any)) finalVal = Number(rawVal);
+                        if (!isNaN(Number(rawVal)) && rawVal.trim() !== "") finalVal = Number(rawVal);
                         if (rawVal === "true") finalVal = true;
                         if (rawVal === "false") finalVal = false;
                     } 
@@ -221,12 +235,12 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
                     player.sendMessage(`Modified entity data of ${targetName}`);
                 }
                 else if (operation === "math") {
-                    const expression = [v1, v2, v3, v4, v5].filter(p => p !== undefined).join(" ");
+                    const expression = [v1, v2, v3, v4, v5].filter((p): p is string => p !== undefined).join(" ");
                     
-                    const pos = { x: player.location.x, y: player.location.y, z: player.location.z };
+                    const pos: Vector3 = { x: player.location.x, y: player.location.y, z: player.location.z };
                     const view = player.getViewDirection();
                     const rot = player.getRotation();
-                    const contextExtra = { 
+                    const contextExtra: MathContext = { 
                         pos, view, rot, 
                         self: player,
                         lp: pos,
@@ -244,8 +258,9 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
                 else {
                     throw new Error("Unknown operation. Use get, merge, modify, remove, or math.");
                 }
-            } catch (e: any) {
-                player.sendMessage(`§cError: ${e.message}`);
+            } catch (e) {
+                const message = e instanceof Error ? e.message : String(e);
+                player.sendMessage(`§cError: ${message}`);
             }
         });
 
@@ -259,7 +274,7 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
         permissionLevel: CommandPermissionLevel.Any,
     }, (origin: CommandOrigin) => {
         const player = origin.sourceEntity;
-        if (!(player instanceof Player)) return;
+        if (!(player instanceof Player)) return { status: 0 };
 
         system.run(() => {
             player.sendMessage("§8§l========================================");
@@ -281,7 +296,7 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
         permissionLevel: CommandPermissionLevel.Any,
     }, (origin: CommandOrigin) => {
         const player = origin.sourceEntity;
-        if (!(player instanceof Player)) return;
+        if (!(player instanceof Player)) return { status: 0 };
 
         system.run(() => {
             const inGaia = DimensionSystem.isInGaia(player);
@@ -311,7 +326,7 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
         permissionLevel: CommandPermissionLevel.Any,
     }, (origin: CommandOrigin) => {
         const player = origin.sourceEntity;
-        if (!(player instanceof Player)) return;
+        if (!(player instanceof Player)) return { status: 0 };
 
         system.run(() => {
             const inGaia = DimensionSystem.isInGaia(player);
@@ -348,7 +363,7 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
         permissionLevel: CommandPermissionLevel.Any,
     }, (origin: CommandOrigin) => {
         const player = origin.sourceEntity;
-        if (!(player instanceof Player)) return;
+        if (!(player instanceof Player)) return { status: 0 };
         system.run(() => {
             player.sendMessage("§d[Gaia Creator] §7She's the primordial architect who birthed the original Java realm. If you see crystals, thank her. If you see bugs, it's definitely the porter's fault.");
             player.sendMessage("§b🔗 https://www.curseforge.com/minecraft/mc-mods/gaia-dimension");
@@ -363,17 +378,17 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
         permissionLevel: CommandPermissionLevel.GameDirectors,
     }, (origin: CommandOrigin) => {
         const player = origin.sourceEntity;
-        if (!(player instanceof Player)) return;
+        if (!(player instanceof Player)) return { status: 0 };
 
         system.run(() => {
             const currentConfig = ModConfig.getAll();
             const form = new ModalFormData();
             form.title("§6Gaia Settings");
             
-            form.toggle("Portal Biome Restriction\n§7(Only allowed biomes)", { defaultValue: currentConfig.portalBiomeRestriction });
-            form.toggle("Allow All Biomes\n§7(Bypass restriction)", { defaultValue: currentConfig.allowAllBiomes });
+            form.toggle("Portal Biome Restriction\n§7(Only allowed biomes)", currentConfig.portalBiomeRestriction);
+            form.toggle("Allow All Biomes\n§7(Bypass restriction)", currentConfig.allowAllBiomes);
             
-            form.textField("Manually Add Biome ID", "Enter identifier...", { defaultValue: "" });
+            form.textField("Manually Add Biome ID", "Enter identifier...", "");
 
             // Sorted list of all discovered biomes for the toggle list
             const discovered = currentConfig.discoveredBiomes;
@@ -382,11 +397,11 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
             for (const biomeId of discovered) {
                 const isAllowed = hotBiomes.has(biomeId);
                 const label = isAllowed ? `§aAllowed: §f${biomeId}` : `§7Restricted: §f${biomeId}`;
-                form.toggle(label, { defaultValue: isAllowed });
+                form.toggle(label, isAllowed);
             }
 
-            form.show(player).then(response => {
-                if (response.canceled) return;
+            form.show(player).then((response: ModalFormResponse) => {
+                if (response.canceled || !response.formValues) return;
                 
                 const [portalRestriction, allowAll, manualBiome, ...biomeToggles] = response.formValues as [boolean, boolean, string, ...boolean[]];
                 
@@ -407,8 +422,8 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
                 ModConfig.hotBiomes = newHotBiomes;
                 
                 player.sendMessage(`§6[Gaia] §7Settings updated.`);
-            }).catch(e => {
-                console.error("Failed to show settings form: " + e);
+            }).catch((e: unknown) => {
+                console.error("Failed to show settings form: " + (e instanceof Error ? e.message : String(e)));
             });
         });
 
@@ -422,7 +437,7 @@ export function registerGaiaCommands(registry: CustomCommandRegistry) {
         permissionLevel: CommandPermissionLevel.Any,
     }, (origin: CommandOrigin) => {
         const player = origin.sourceEntity;
-        if (!(player instanceof Player)) return;
+        if (!(player instanceof Player)) return { status: 0 };
         system.run(() => {
             player.sendMessage("§6[The Porter] §7Behold the one who dragged this entire dimension into Bedrock by its crystal ears.");
             player.sendMessage("§eIt only took 4 years, three gray hairs, and a questionable amount of sanity. Don't ask why it took so long... those gray hairs are just Albite dust, I promise.");

@@ -25,7 +25,6 @@ export class BiomeDefinition {
     public depth: number;
     public scale: number;
 
-    /**@param {string} id */
     constructor(id: string){
         this.id =  id;
         this.trees = new TreePalette();
@@ -46,22 +45,22 @@ export class BiomeDefinition {
         this.scale = 0.05;
     }
 
-    setDepth(p: number){ this.depth = p; return this; }
-    setScale(p: number){ this.scale = p; return this; }
+    setDepth(p: number): this { this.depth = p; return this; }
+    setScale(p: number): this { this.scale = p; return this; }
 
-    onPrecalculate(samples: number, seed: ProceduralRandom){ 
+    onPrecalculate(samples: number, seed: ProceduralRandom): void { 
         this.trees.onPrecalculate(samples, seed);
         this.IsPrecalculated = true;
     }
 
     /**@default 0.02 @deprecated Use setTreesPerChunk instead */
-    setTreesChance(p: number){
+    setTreesChance(p: number): this {
         this.treesChance = p;
         return this;
     }
 
     /**@default 0.5 @deprecated Use setTreesPerChunk instead */
-    setTreesAreaChance(p: number){
+    setTreesAreaChance(p: number): this {
         this.treeAreaChance = p;
         return this;
     }
@@ -70,43 +69,43 @@ export class BiomeDefinition {
      * Java-parity tree placement: countExtra(count, chance, extra)
      * Places `count` trees per chunk, with `chance` probability of placing `extra` more.
      */
-    setTreesPerChunk(count: number, chance: number = 0.1, extra: number = 1){
+    setTreesPerChunk(count: number, chance: number = 0.1, extra: number = 1): this {
         this.treesPerChunk = count;
         this.treesExtraChance = chance;
         this.treesExtra = extra;
         return this;
     }
 
-    setTrees(p: TreePalette){
+    setTrees(p: TreePalette): this {
         this.trees = p;
         return this;
     }
 
-    setTemperature(min: number, max: number){
+    setTemperature(min: number, max: number): this {
         this.temperature = [min, max];
         return this;
     }
 
-    setHumidity(min: number, max: number){
+    setHumidity(min: number, max: number): this {
         this.humidity = [min, max];
         return this;
     }
 
-    setGroundPalette(p: PalettedBrush){this.groundPaletted = p; return this;}
-    setUnderGroundPalette(p: PalettedBrush){this.underGroundPaletted = p; return this;}
-    setVegetationPalette(p: PalettedBrush){this.vegetationPalette = p; return this;}
+    setGroundPalette(p: PalettedBrush): this {this.groundPaletted = p; return this;}
+    setUnderGroundPalette(p: PalettedBrush): this {this.underGroundPaletted = p; return this;}
+    setVegetationPalette(p: PalettedBrush): this {this.vegetationPalette = p; return this;}
 
     /**@default true @deprecated */
-    setVegetationValidation(p: boolean){
+    setVegetationValidation(p: boolean): this {
         this.vegetationValidation = p;
         return this;
     }
 
     /**@default 0.1 */
-    setVegetationChance(p: number){
+    setVegetationChance(p: number): this {
         this.vegetationChance = p; return this;
     }
 
-    get hasTrees(){return this.trees.trees.length;}
+    get hasTrees(): number {return this.trees.trees.length;}
     getTreeDefinition(random: ProceduralRandom): TreeDefinition {return this.trees.get(random.nextFloat());}
 }

@@ -1,0 +1,38 @@
+{
+  "format_version": "1.16.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "gaiadimension:contraption",
+      "is_spawnable": false,
+      "is_summonable": true,
+      "is_experimental": false,
+      "properties": {
+        "gaiadimension:tumble_a": {
+          "type": "int",
+          "range": [-1800000000, 1800000000],
+          "default": 0,
+          "client_sync": true
+        },
+        "gaiadimension:tumble_b": {
+          "type": "int",
+          "range": [-1800000000, 1800000000],
+          "default": 0,
+          "client_sync": true
+        }
+      }
+    },
+    "component_groups": {
+      "despawn": { "minecraft:instant_despawn": {} }
+    },
+    "components": {
+      "minecraft:collision_box": { "height": 1, "width": 1 },
+      "minecraft:type_family": { "family": ["contraption", "inanimate"] },
+      "minecraft:physics": { "has_collision": false, "has_gravity": false },
+      "minecraft:pushable": { "is_pushable": false, "is_pushable_by_piston": false },
+      "minecraft:damage_sensor": { "triggers": { "deals_damage": false } }
+    },
+    "events": {
+      "gaiadimension:despawn": { "add": { "component_groups": ["despawn"] } }
+    }
+  }
+}

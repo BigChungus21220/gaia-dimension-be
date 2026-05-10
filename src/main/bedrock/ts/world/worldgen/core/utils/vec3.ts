@@ -56,8 +56,8 @@ export class Vec3 implements Vector3 {
         }
     }
 
-    static isVec3(vec: any): boolean {
-        return vec && vec[isVec3Symbol] === true;
+    static isVec3(vec: unknown): vec is Vec3 {
+        return !!(vec && typeof vec === "object" && isVec3Symbol in vec && (vec as any)[isVec3Symbol] === true);
     }
 
     static floor(vec: Vector3): Vec3 {
@@ -88,10 +88,10 @@ export class Vec3 implements Vector3 {
         return Vec3.magnitude(Vec3.subtract(a, b));
     }
 
-    static from(object: any): Vec3 {
+    static from(object: unknown): Vec3 {
         if (Vec3.isVec3(object)) return object;
         if (Array.isArray(object)) return new Vec3(object[0], object[1], object[2]);
-        const { x = 0, y = 0, z = 0 } = object ?? {};
+        const { x = 0, y = 0, z = 0 } = (object as Vector3) ?? {};
         return new Vec3(Number(x), Number(y), Number(z));
     }
 
@@ -106,34 +106,32 @@ export class Vec3 implements Vector3 {
         return new Vec3(-vec.x, -vec.y, -vec.z);
     }
 
-    static get up() { return new Vec3(0, 1, 0); }
-    static get down() { return new Vec3(0, -1, 0); }
-    static get right() { return new Vec3(1, 0, 0); }
-    static get left() { return new Vec3(-1, 0, 0); }
-    static get forward() { return new Vec3(0, 0, 1); }
-    static get backward() { return new Vec3(0, 0, -1); }
-    static get zero() { return new Vec3(0, 0, 0); }
+    static get up(): Vec3 { return new Vec3(0, 1, 0); }
+    static get down(): Vec3 { return new Vec3(0, -1, 0); }
+    static get right(): Vec3 { return new Vec3(1, 0, 0); }
+    static get left(): Vec3 { return new Vec3(-1, 0, 0); }
+    static get forward(): Vec3 { return new Vec3(0, 0, 1); }
+    static get backward(): Vec3 { return new Vec3(0, 0, -1); }
+    static get zero(): Vec3 { return new Vec3(0, 0, 0); }
 
-    distance(vec: Vector3) { return Vec3.distance(this, vec); }
-    lerp(vec: Vector3, t: number) { return Vec3.lerp(this, vec, t); }
-    projection(vec: Vector3) { return Vec3.projection(this, vec); }
-    reflect(vec: Vector3) { return Vec3.reflect(this, vec); }
-    rejection(vec: Vector3) { return Vec3.rejection(this, vec); }
-    cross(vec: Vector3) { return Vec3.cross(this, vec); }
-    dot(vec: Vector3) { return Vec3.dot(this, vec); }
-    floor() { return Vec3.floor(this); }
-    ceil() { return Vec3.ceil(this); }
-    add(vec: Vector3) { return Vec3.add(this, vec); }
-    subtract(vec: Vector3) { return Vec3.subtract(this, vec); }
-    multiply(num: number | Vector3) { return Vec3.multiply(this, num); }
-    get length() { return Vec3.magnitude(this); }
-    get normalized() { return Vec3.normalize(this); }
+    distance(vec: Vector3): number { return Vec3.distance(this, vec); }
+    lerp(vec: Vector3, t: number): Vec3 { return Vec3.lerp(this, vec, t); }
+    projection(vec: Vector3): Vec3 { return Vec3.projection(this, vec); }
+    reflect(vec: Vector3): Vec3 { return Vec3.reflect(this, vec); }
+    rejection(vec: Vector3): Vec3 { return Vec3.rejection(this, vec); }
+    cross(vec: Vector3): Vec3 { return Vec3.cross(this, vec); }
+    dot(vec: Vector3): number { return Vec3.dot(this, vec); }
+    floor(): Vec3 { return Vec3.floor(this); }
+    ceil(): Vec3 { return Vec3.ceil(this); }
+    add(vec: Vector3): Vec3 { return Vec3.add(this, vec); }
+    subtract(vec: Vector3): Vec3 { return Vec3.subtract(this, vec); }
+    multiply(num: number | Vector3): Vec3 { return Vec3.multiply(this, num); }
+    get length(): number { return Vec3.magnitude(this); }
+    get normalized(): Vec3 { return Vec3.normalize(this); }
 
-    toString() { return `<${this.x}, ${this.y}, ${this.z}>`; }
+    toString(): string { return `<${this.x}, ${this.y}, ${this.z}>`; }
 }
 
-// Ensure the legacy export function also exists if needed
-// @ts-ignore
-export function Vec3Factory(x = 0, y = 0, z = 0) {
+export function Vec3Factory(x: number = 0, y: number = 0, z: number = 0): Vec3 {
     return new Vec3(x, y, z);
 }

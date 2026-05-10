@@ -1,9 +1,18 @@
-import { Dimension, BlockPermutation, Block, world, Entity, BlockVolume, Vector3 } from "@minecraft/server";
+import { Dimension, BlockPermutation, Block, world, Entity, BlockVolume, Vector3, system } from "@minecraft/server";
 import { Vec3 } from "../Vec3.js";
 
 export interface Link {
     location: Vector3;
     linkedLocation: Vector3;
+}
+
+declare module "@minecraft/server" {
+    interface Block {
+        setType(typeId: string): void;
+    }
+    interface BlockVolume {
+        isInside(location: Vector3): boolean;
+    }
 }
 
 /**
@@ -17,14 +26,14 @@ class Portal {
     private static linked: Link[] = [];
     static {
         system.run(() => {
-            this.linked = JSON.parse(world.getDynamicProperty('PortalLinked') as string ?? "[]");
+            this.linked = JSON.parse(world.getDynamicProperty('PortalLinked') as string ?? "[]") as Link[];
         });
     }
     static LinkPositions: ('start' | 'end')[] = ['start', 'end'];
     /** @private */
-    private static serialize = JSON.stringify;
-    static PortalSizeY = 3;
-    static PortalSizeZ = 2;
+    private static serialize: (value: any) => string = JSON.stringify;
+    static PortalSizeY: number = 3;
+    static PortalSizeZ: number = 2;
 
     /**
      * Get adjacent blocks of a specific type within a defined range.
@@ -41,8 +50,8 @@ class Portal {
         ];
 
         for (const dir of directions) {
-            const adjacentPos = Vec3.add(block.location, dir);
-            const adjacentBlock = block.dimension.getBlock(adjacentPos);
+            const adjacentPos: Vector3 = Vec3.add(block.location, dir);
+            const adjacentBlock: Block | undefined = block.dimension.getBlock(adjacentPos);
             if (adjacentBlock && adjacentBlock.typeId === typeId) {
                 adjacentBlocks.push(adjacentBlock);
             }
@@ -75,7 +84,7 @@ class Portal {
         if (typeof fromLocation !== 'object' || typeof toLocation !== 'object') {
             throw new Error('Both fromLocation and toLocation must be objects');
         }
-        this.linked = this.linked.filter(l => 
+        this.linked = this.linked.filter((l: Link) => 
             !(l.location.x === fromLocation.x && l.location.y === fromLocation.y && l.location.z === fromLocation.z &&
               l.linkedLocation.x === toLocation.x && l.linkedLocation.y === toLocation.y && l.linkedLocation.z === toLocation.z)
         );
@@ -118,8 +127,8 @@ class Portal {
         let link: Link | undefined;
         switch (from) {
             case 'start':
-                link = this.linked.find(link => {
-                    const volume = new BlockVolume(link.location, {
+                link = this.linked.find((link: Link) => {
+                    const volume: BlockVolume = new BlockVolume(link.location, {
                         x: link.location.x,
                         y: link.location.y + this.PortalSizeY,
                         z: link.location.z + this.PortalSizeZ
@@ -128,8 +137,8 @@ class Portal {
                 });
                 break;
             case 'end':
-                link = this.linked.find(link => {
-                    const volume = new BlockVolume(link.linkedLocation, {
+                link = this.linked.find((link: Link) => {
+                    const volume: BlockVolume = new BlockVolume(link.linkedLocation, {
                         x: link.linkedLocation.x,
                         y: link.linkedLocation.y + this.PortalSizeY,
                         z: link.linkedLocation.z + this.PortalSizeZ
@@ -144,10 +153,10 @@ class Portal {
     }
 
     static lightPortal(corner: Vector3, dimension: Dimension, x_oriented: boolean): void {
-        for (let x = 0; x < 4; x++) {
-            for (let y = 0; y < 5; y++) {
-                const is_edge = x === 0 || y === 0 || x === 3 || y === 4;
-                const block = dimension.getBlock(Vec3.add(corner, { x: x_oriented ? 0 : x, y, z: x_oriented ? x : 0 }))
+        for (let x: number = 0; x < 4; x++) {
+            for (let y: number = 0; y < 5; y++) {
+                const is_edge: boolean = x === 0 || y === 0 || x === 3 || y === 4;
+                const block: Block | undefined = dimension.getBlock(Vec3.add(corner, { x: x_oriented ? 0 : x, y, z: x_oriented ? x : 0 }))
       
                 if (block) {
                     if (is_edge) {
@@ -161,10 +170,10 @@ class Portal {
     }
 
     static breakPortal(block: Block): void {
-        const adjacent = this.getAdjacentBlocks(block, 'gaiadimension:gaia_dimension_portal');
-        adjacent.forEach(b => {
-            this.LinkPositions.forEach(position => {
-                const link = this.getLink(position, block.location);
+        const adjacent: Block[] = this.getAdjacentBlocks(block, 'gaiadimension:gaia_dimension_portal');
+        adjacent.forEach((b: Block) => {
+            this.LinkPositions.forEach((position: 'start' | 'end') => {
+                const link: Link | undefined = this.getLink(position, block.location);
                 if (link) {
                     this.unlink(link.location, link.linkedLocation);
                 }
@@ -174,17 +183,17 @@ class Portal {
     }
 
     static isUnlit(corner: Vector3, dimension: Dimension, x_oriented: boolean): boolean {
-        let isValid = true;
-        for (let x = 0; x < 4; x++) {
-            for (let y = 0; y < 5; y++) {
-                const blockpos = Vec3.add(corner, { x: x_oriented ? 0 : x, y, z: x_oriented ? x : 0 });
-                const block = dimension.getBlock(blockpos);
+        let isValid: boolean = true;
+        for (let x: number = 0; x < 4; x++) {
+            for (let y: number = 0; y < 5; y++) {
+                const blockpos: Vector3 = Vec3.add(corner, { x: x_oriented ? 0 : x, y, z: x_oriented ? x : 0 });
+                const block: Block | undefined = dimension.getBlock(blockpos);
                 if (!block) {
                     isValid = false;
                     break;
                 }
-                const blocktype = block.typeId;
-                const is_edge = x === 0 || y === 0 || x === 3 || y === 4;
+                const blocktype: string = block.typeId;
+                const is_edge: boolean = x === 0 || y === 0 || x === 3 || y === 4;
                 if (is_edge && blocktype !== "gaiadimension:keystone_block") {
                     isValid = false;
                     break;
@@ -205,14 +214,14 @@ class Portal {
      * @returns {boolean} Whether lighting this portal was a success or not.
      */
     static canLight(block: Block): boolean {
-        const position = block.location;
-        const dimension = block.dimension;
+        const position: Vector3 = block.location;
+        const dimension: Dimension = block.dimension;
         let offset: Vector3 = { x: 0, y: 0, z: 0 };
-        let light_success = false;
-        const x_oriented = true;
-        for (let x = -2; x <= -1; x++) {
-            for (let y = -3; y <= -1; y++) {
-                const test_offset = { x: x_oriented ? 0 : x, y, z: x_oriented ? x : 0 };
+        let light_success: boolean = false;
+        const x_oriented: boolean = true;
+        for (let x: number = -2; x <= -1; x++) {
+            for (let y: number = -3; y <= -1; y++) {
+                const test_offset: Vector3 = { x: x_oriented ? 0 : x, y, z: x_oriented ? x : 0 };
                 if (this.isUnlit(Vec3.add(position, test_offset), dimension, true)) {
                     offset = test_offset;
                     light_success = true;

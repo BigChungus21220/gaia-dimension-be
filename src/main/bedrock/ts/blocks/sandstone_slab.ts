@@ -1,4 +1,16 @@
-import { EquipmentSlot, world, system, BlockPermutation, GameMode, Direction, Player, Block, ItemStack, BlockComponentRegistry, EntityEquippableComponent } from "@minecraft/server";
+import { 
+    EquipmentSlot, 
+    world, 
+    system, 
+    GameMode, 
+    Direction, 
+    Player, 
+    Block, 
+    ItemStack, 
+    BlockComponentRegistry, 
+    EntityEquippableComponent,
+    PlayerInteractWithBlockBeforeEvent 
+} from "@minecraft/server";
 
 /**
  * Handles the creation of double sandstone slabs.
@@ -7,7 +19,7 @@ import { EquipmentSlot, world, system, BlockPermutation, GameMode, Direction, Pl
  * @param {ItemStack} mainhandItem
  */
 function handleDoubleSandstoneSlab(player: Player, block: Block, mainhandItem: ItemStack): void {
-    const fullBlockId = block.typeId.replace("_slab", "");
+    const fullBlockId: string = block.typeId.replace("_slab", "");
     try {
         block.setType(fullBlockId);
         player.playSound("dig.stone");
@@ -16,26 +28,26 @@ function handleDoubleSandstoneSlab(player: Player, block: Block, mainhandItem: I
             const equippable = player.getComponent("equippable") as EntityEquippableComponent;
             if (mainhandItem.amount > 1) {
                 mainhandItem.amount--;
-                equippable.setEquipment("Mainhand" as EquipmentSlot , mainhandItem);
+                equippable.setEquipment(EquipmentSlot.Mainhand, mainhandItem);
             } else {
-                equippable.setEquipment("Mainhand" as EquipmentSlot);
+                equippable.setEquipment(EquipmentSlot.Mainhand);
             }
         }
-    } catch (e) {
-        console.warn(`Failed to find full block type for ${block.typeId}`);
+    } catch (e: unknown) {
+        console.warn(`Failed to find full block type for ${block.typeId}. Error: ${e}`);
     }
 }
 
 export function registerSandstoneComponent({ blockComponentRegistry }: { blockComponentRegistry: BlockComponentRegistry }): void {
     blockComponentRegistry.registerCustomComponent("gaiadimension:sandstone_slab", {});
 
-    world.beforeEvents.playerInteractWithBlock.subscribe(event => {
+    world.beforeEvents.playerInteractWithBlock.subscribe((event: PlayerInteractWithBlockBeforeEvent) => {
         const { player, block, itemStack, blockFace } = event;
 
-        if (block.typeId.includes("sandstone_slab") && itemStack?.typeId === block.typeId) {
-            const slabState = block.permutation.getState("minecraft:vertical_half" as any);
-            const isPlacingOnTop = blockFace === Direction.Up && slabState === "bottom";
-            const isPlacingOnBottom = blockFace === Direction.Down && slabState === "top";
+        if (itemStack && block.typeId.includes("sandstone_slab") && itemStack.typeId === block.typeId) {
+            const slabState = block.permutation.getState("minecraft:vertical_half") as string | undefined;
+            const isPlacingOnTop: boolean = blockFace === Direction.Up && slabState === "bottom";
+            const isPlacingOnBottom: boolean = blockFace === Direction.Down && slabState === "top";
 
             if (isPlacingOnTop || isPlacingOnBottom) {
                 event.cancel = true;

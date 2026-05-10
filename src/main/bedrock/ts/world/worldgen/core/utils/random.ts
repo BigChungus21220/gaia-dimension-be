@@ -1,3 +1,12 @@
+declare global {
+    interface Array<T> {
+        random(r?: number): T;
+    }
+    interface String {
+        toArray(num?: number): string[];
+    }
+}
+
 export class ProceduralRandom {
     static getNumber(pos: number, seed: number): number {
         const BIT_NOISE1 = 0x68E31DA4;
@@ -31,12 +40,10 @@ export class ProceduralRandom {
     getSeqence(x: number, z: number): ProceduralRandom { return new ProceduralRandom(this.getInt(x + z * 999999937)); }
 }
 
-// @ts-ignore
-Array.prototype.random = function random(r = Math.random()) {
+Array.prototype.random = function <T>(this: T[], r: number = Math.random()): T {
     return this[Math.floor(r * this.length)];
 };
 
-// @ts-ignore
-String.prototype.toArray = function toArray(num) {
+String.prototype.toArray = function (this: string, num?: number): string[] {
     return new Array(num ?? 1).fill(this);
 };

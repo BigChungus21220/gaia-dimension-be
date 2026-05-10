@@ -1,31 +1,39 @@
-import { world, system, Entity, Player, EquipmentSlot, GameMode, EntityComponentTypes } from "@minecraft/server";
+import { world, system, Entity, Player, EquipmentSlot, GameMode, EntityComponentTypes, EntityDamageCause, EntityHealthComponent, EntityMarkVariantComponent, EntityEquippableComponent, Dimension } from "@minecraft/server";
+
+// ─── Enums & Types ───────────────────────────────────────────────────
+enum GuardPhase {
+    Defence = 0,
+    Attack = 1,
+    Resist = 2
+}
+
+enum GuardAnimState {
+    Default = 0, // idle + walk
+    StompWindup = 1, // raising leg
+    ChargeCrouch = 2, // crouching + shaking (bide)
+    StompExecute = 3, // slam impact
+    BlastExecute = 4 // arms spread, explosion
+}
+
+interface DroneOffset {
+    readonly x: number;
+    readonly z: number;
+}
 
 // ─── Constants ───────────────────────────────────────────────────────
-const GUARD_ID   = "gaiadimension:malachite_guard";
-const DRONE_ID   = "gaiadimension:malachite_drone";
-const BATON_ID   = "gaiadimension:malachite_guard_baton";
-
-// Phase IDs (matches Java GuardPhase enum)
-const PHASE_DEFENCE = 0;
-const PHASE_ATTACK  = 1;
-const PHASE_RESIST  = 2;
-
-// Animation state signals (written to mark_variant for the animation controller)
-const ANIM_DEFAULT        = 0; // idle + walk
-const ANIM_STOMP_WINDUP   = 1; // raising leg
-const ANIM_CHARGE_CROUCH  = 2; // crouching + shaking (bide)
-const ANIM_STOMP_EXECUTE  = 3; // slam impact
-const ANIM_BLAST_EXECUTE  = 4; // arms spread, explosion
+const GUARD_ID: string = "gaiadimension:malachite_guard";
+const DRONE_ID: string = "gaiadimension:malachite_drone";
+const BATON_ID: string = "gaiadimension:malachite_guard_baton";
 
 // Timing (ticks)
-const STOMP_WINDUP_TICKS  = 20;
-const STOMP_COOLDOWN      = 120;
-const CHARGE_DURATION     = 100;
-const CHARGE_COOLDOWN     = 60;
-const BLAST_LINGER        = 20;
+const STOMP_WINDUP_TICKS: number = 20;
+const STOMP_COOLDOWN: number = 120;
+const CHARGE_DURATION: number = 100;
+const CHARGE_COOLDOWN: number = 60;
+const BLAST_LINGER: number = 20;
 
 // Drone spawn offsets (fixed 4 drones — difficulty-agnostic for Bedrock)
-const DRONE_OFFSETS = [
+const DRONE_OFFSETS: DroneOffset[] = [
     { x:  2, z:  1 },
     { x:  2, z: -1 },
     { x: -2, z:  1 },
@@ -45,28 +53,28 @@ const P = {
     HAS_DRONES:      "gd:has_drones",
     DRONES_SPAWNED:  "gd:drones_spawned",
     PARENT_ID:       "gd:parent_id"
-};
+} as const;
 
 // ─── Helpers ─────────────────────────────────────────────────────────
-function getNum(e: Entity, key: string, def = 0): number {
+function getNum(e: Entity, key: string, def: number = 0): number {
     return (e.getDynamicProperty(key) as number) ?? def;
 }
-function setNum(e: Entity, key: string, v: number) {
+function setNum(e: Entity, key: string, v: number): void {
     e.setDynamicProperty(key, v);
 }
-function getBool(e: Entity, key: string, def = false): boolean {
+function getBool(e: Entity, key: string, def: boolean = false): boolean {
     return (e.getDynamicProperty(key) as boolean) ?? def;
 }
-function setBool(e: Entity, key: string, v: boolean) {
+function setBool(e: Entity, key: string, v: boolean): void {
     e.setDynamicProperty(key, v);
 }
-function getStr(e: Entity, key: string, def = ""): string {
+function getStr(e: Entity, key: string, def: string = ""): string {
     return (e.getDynamicProperty(key) as string) ?? def;
 }
 
-function setAnimState(guard: Entity, state: number) {
+function setAnimState(guard: Entity, state: GuardAnimState): void {
     try {
-        const mv = guard.getComponent(EntityComponentTypes.MarkVariant);
+        const mv = guard.getComponent(EntityComponentTypes.MarkVariant) as EntityMarkVariantComponent;
         if (mv) mv.value = state;
     } catch {}
 }
@@ -101,7 +109,7 @@ class MalachiteGuardSystem {
         this.init();
     }
 
-    init() {
+    private init(): void {
         // ── Setup new guards on spawn ──
         world.afterEvents.entitySpawn.subscribe((event) => {
             const { entity } = event;
@@ -112,12 +120,11 @@ class MalachiteGuardSystem {
 
         // ── Core tick loop (every 1 tick for precise timing) ──
         system.runInterval(() => {
-            for (const dim of [world.getDimension("overworld")]) {
-                const guards = dim.getEntities({ type: GUARD_ID });
-                for (const guard of guards) {
-                    if (!guard.isValid) continue;
-                    try { this.tickGuard(guard); } catch {}
-                }
+            const overworld: Dimension = world.getDimension("overworld");
+            const guards: Entity[] = overworld.getEntities({ type: GUARD_ID });
+            for (const guard of guards) {
+                if (!guard.isValid) continue;
+                try { this.tickGuard(guard); } catch {}
             }
         }, 1);
 
@@ -126,30 +133,30 @@ class MalachiteGuardSystem {
             const { hurtEntity, damage, damageSource } = event;
             if (hurtEntity.typeId !== GUARD_ID || !hurtEntity.isValid) return;
 
-            const phase = getNum(hurtEntity, P.PHASE, PHASE_DEFENCE);
-            const health = hurtEntity.getComponent(EntityComponentTypes.Health);
+            const phase: number = getNum(hurtEntity, P.PHASE, GuardPhase.Defence);
+            const health = hurtEntity.getComponent(EntityComponentTypes.Health) as EntityHealthComponent;
             if (!health) return;
 
-            const maxHp = health.effectiveMax;
-            const curHp = health.currentValue;
-            const attacker = damageSource.damagingEntity;
+            const maxHp: number = health.effectiveMax;
+            const curHp: number = health.currentValue;
+            const attacker: Entity | undefined = damageSource.damagingEntity;
 
             // ── Bide accumulation during charge phase ──
-            const chargeTimer = getNum(hurtEntity, P.CHARGE_TIMER, 0);
+            const chargeTimer: number = getNum(hurtEntity, P.CHARGE_TIMER, 0);
             if (chargeTimer > 0 && attacker && isValidPlayer(attacker)) {
-                const bide = getNum(hurtEntity, P.BIDE_DAMAGE, 0);
+                const bide: number = getNum(hurtEntity, P.BIDE_DAMAGE, 0);
                 setNum(hurtEntity, P.BIDE_DAMAGE, bide + damage * 0.5);
             }
 
             // ── DEFENCE phase: damage is blocked natively by damage_sensor in "defend" component group ──
             // If we somehow still get a hurt event in defence, just ignore it
-            if (phase === PHASE_DEFENCE) {
+            if (phase === GuardPhase.Defence) {
                 return;
             }
 
             // ── ATTACK phase: clamp HP to never drop below 50% - 2 ──
-            if (phase === PHASE_ATTACK) {
-                const threshold = (maxHp / 2.0) - 2.0;
+            if (phase === GuardPhase.Attack) {
+                const threshold: number = (maxHp / 2.0) - 2.0;
                 if (curHp < threshold) {
                     system.run(() => {
                         try {
@@ -163,7 +170,7 @@ class MalachiteGuardSystem {
             }
 
             // ── RESIST phase: only player-sourced direct damage, with multiplier curve ──
-            if (phase === PHASE_RESIST) {
+            if (phase === GuardPhase.Resist) {
                 if (!attacker || !isValidPlayer(attacker)) {
                     // Not a valid player hit — heal back
                     if (hurtEntity.location.y > -64) {
@@ -179,9 +186,9 @@ class MalachiteGuardSystem {
                 }
 
                 // Apply damage multiplier curve
-                const mult = getDamageMultiplier(damage);
+                const mult: number = getDamageMultiplier(damage);
                 if (mult < 1.0) {
-                    const reduction = damage * (1.0 - mult);
+                    const reduction: number = damage * (1.0 - mult);
                     system.run(() => {
                         try {
                             if (hurtEntity.isValid && health) {
@@ -200,13 +207,13 @@ class MalachiteGuardSystem {
             // ── Baton knockback ──
             if (damagingEntity instanceof Player && hitEntity.isValid) {
                 try {
-                    const equip = damagingEntity.getComponent(EntityComponentTypes.Equippable);
+                    const equip = damagingEntity.getComponent(EntityComponentTypes.Equippable) as EntityEquippableComponent;
                     const mainhand = equip?.getEquipment(EquipmentSlot.Mainhand);
                     if (mainhand?.typeId === BATON_ID) {
-                        const yaw = damagingEntity.getRotation().y;
-                        const rad = yaw * (Math.PI / 180);
-                        const kbX = -Math.sin(rad) * 1.5;
-                        const kbZ =  Math.cos(rad) * 1.5;
+                        const yaw: number = damagingEntity.getRotation().y;
+                        const rad: number = yaw * (Math.PI / 180);
+                        const kbX: number = -Math.sin(rad) * 1.5;
+                        const kbZ: number =  Math.cos(rad) * 1.5;
                         hitEntity.applyKnockback(kbX, kbZ, 1.5, 0.4);
                     }
                 } catch {}
@@ -220,16 +227,16 @@ class MalachiteGuardSystem {
                 if (Math.random() > (1 / 12)) return;
 
                 try {
-                    const equip = hitEntity.getComponent(EntityComponentTypes.Equippable);
+                    const equip = hitEntity.getComponent(EntityComponentTypes.Equippable) as EntityEquippableComponent;
                     if (!equip) return;
 
                     const slots: EquipmentSlot[] = [EquipmentSlot.Head, EquipmentSlot.Chest, EquipmentSlot.Legs, EquipmentSlot.Feet];
-                    const slot = slots[Math.floor(Math.random() * slots.length)];
+                    const slot: EquipmentSlot = slots[Math.floor(Math.random() * slots.length)];
                     const item = equip.getEquipment(slot);
 
                     if (item) {
                         // Drop the item and clear the slot
-                        const dim = hitEntity.dimension;
+                        const dim: Dimension = hitEntity.dimension;
                         const loc = hitEntity.location;
                         system.run(() => {
                             try {
@@ -248,7 +255,7 @@ class MalachiteGuardSystem {
             const { deadEntity } = event;
             if (deadEntity.typeId !== DRONE_ID) return;
 
-            const parentId = getStr(deadEntity, P.PARENT_ID);
+            const parentId: string = getStr(deadEntity, P.PARENT_ID);
             if (!parentId) return;
 
             // Find the parent guard and re-check drone count
@@ -259,10 +266,10 @@ class MalachiteGuardSystem {
     // ────────────────────────────────────────────────────────────────────
     // Setup
     // ────────────────────────────────────────────────────────────────────
-    setupGuard(guard: Entity): void {
-        const guardId = `mg_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+    private setupGuard(guard: Entity): void {
+        const guardId: string = `mg_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
         guard.setDynamicProperty(P.GUARD_ID, guardId);
-        setNum(guard, P.PHASE, PHASE_DEFENCE);
+        setNum(guard, P.PHASE, GuardPhase.Defence);
         setNum(guard, P.STOMP_COOLDOWN, 0);
         setNum(guard, P.CHARGE_COOLDOWN, 0);
         setNum(guard, P.STOMP_TIMER, 0);
@@ -276,7 +283,7 @@ class MalachiteGuardSystem {
             if (!guard.isValid) return;
             try {
                 guard.triggerEvent("mg_defend");
-                setAnimState(guard, ANIM_DEFAULT);
+                setAnimState(guard, GuardAnimState.Default);
             } catch {}
         });
     }
@@ -284,34 +291,34 @@ class MalachiteGuardSystem {
     // ────────────────────────────────────────────────────────────────────
     // Per-tick guard logic
     // ────────────────────────────────────────────────────────────────────
-    tickGuard(guard: Entity): void {
-        const phase = getNum(guard, P.PHASE, PHASE_DEFENCE);
-        const guardId = getStr(guard, P.GUARD_ID);
+    private tickGuard(guard: Entity): void {
+        const phase: number = getNum(guard, P.PHASE, GuardPhase.Defence);
+        const guardId: string = getStr(guard, P.GUARD_ID);
         if (!guardId) return;
 
-        const health = guard.getComponent(EntityComponentTypes.Health);
+        const health = guard.getComponent(EntityComponentTypes.Health) as EntityHealthComponent;
         if (!health) return;
-        const maxHp = health.effectiveMax;
-        const curHp = health.currentValue;
+        const maxHp: number = health.effectiveMax;
+        const curHp: number = health.currentValue;
 
         // ── PHASE STATE MACHINE ──
         switch (phase) {
-            case PHASE_DEFENCE:
+            case GuardPhase.Defence:
                 this.tickDefencePhase(guard, guardId, curHp, maxHp);
                 break;
-            case PHASE_ATTACK:
+            case GuardPhase.Attack:
                 this.tickAttackPhase(guard, guardId, curHp, maxHp);
                 break;
-            case PHASE_RESIST:
+            case GuardPhase.Resist:
                 this.tickResistPhase(guard, guardId, curHp, maxHp);
                 break;
         }
 
         // ── COOLDOWN TICKING ──
-        const stompCd = getNum(guard, P.STOMP_COOLDOWN, 0);
+        const stompCd: number = getNum(guard, P.STOMP_COOLDOWN, 0);
         if (stompCd > 0) setNum(guard, P.STOMP_COOLDOWN, stompCd - 1);
 
-        const chargeCd = getNum(guard, P.CHARGE_COOLDOWN, 0);
+        const chargeCd: number = getNum(guard, P.CHARGE_COOLDOWN, 0);
         if (chargeCd > 0) setNum(guard, P.CHARGE_COOLDOWN, chargeCd - 1);
 
         // ── STOMP ATTACK TICK ──
@@ -324,7 +331,7 @@ class MalachiteGuardSystem {
     // ────────────────────────────────────────────────────────────────────
     // DEFENCE phase: immobile, spawn drones, wait for drones to die
     // ────────────────────────────────────────────────────────────────────
-    tickDefencePhase(guard: Entity, guardId: string, curHp: number, maxHp: number): void {
+    private tickDefencePhase(guard: Entity, guardId: string, curHp: number, maxHp: number): void {
         // Spawn drones if not yet done
         if (!getBool(guard, P.DRONES_SPAWNED, false)) {
             this.spawnDrones(guard, guardId);
@@ -332,7 +339,7 @@ class MalachiteGuardSystem {
         }
 
         // Check if all drones are dead
-        const drones = guard.dimension.getEntities({
+        const drones: Entity[] = guard.dimension.getEntities({
             type: DRONE_ID,
             tags: [`mg_parent:${guardId}`],
             location: guard.location,
@@ -341,19 +348,19 @@ class MalachiteGuardSystem {
 
         if (drones.length <= 0 && getBool(guard, P.DRONES_SPAWNED, false)) {
             // All drones dead → transition to ATTACK
-            setNum(guard, P.PHASE, PHASE_ATTACK);
+            setNum(guard, P.PHASE, GuardPhase.Attack);
             setBool(guard, P.HAS_DRONES, false);
             guard.triggerEvent("no_mg_defend");
-            setAnimState(guard, ANIM_DEFAULT);
+            setAnimState(guard, GuardAnimState.Default);
         }
     }
 
     // ────────────────────────────────────────────────────────────────────
     // ATTACK phase: normal combat, transition to RESIST at <= 50% HP
     // ────────────────────────────────────────────────────────────────────
-    tickAttackPhase(guard: Entity, guardId: string, curHp: number, maxHp: number): void {
+    private tickAttackPhase(guard: Entity, guardId: string, curHp: number, maxHp: number): void {
         if (curHp <= maxHp / 2) {
-            setNum(guard, P.PHASE, PHASE_RESIST);
+            setNum(guard, P.PHASE, GuardPhase.Resist);
             guard.triggerEvent("mg_resist");
         }
 
@@ -364,9 +371,9 @@ class MalachiteGuardSystem {
     // ────────────────────────────────────────────────────────────────────
     // RESIST phase: enraged, restricted damage, slower. Revert to ATTACK if healed > 50%
     // ────────────────────────────────────────────────────────────────────
-    tickResistPhase(guard: Entity, guardId: string, curHp: number, maxHp: number): void {
+    private tickResistPhase(guard: Entity, guardId: string, curHp: number, maxHp: number): void {
         if (curHp > maxHp / 2) {
-            setNum(guard, P.PHASE, PHASE_ATTACK);
+            setNum(guard, P.PHASE, GuardPhase.Attack);
             guard.triggerEvent("no_mg_resist");
         }
 
@@ -377,13 +384,13 @@ class MalachiteGuardSystem {
     // ────────────────────────────────────────────────────────────────────
     // Drone spawning
     // ────────────────────────────────────────────────────────────────────
-    spawnDrones(guard: Entity, guardId: string): void {
-        const dim = guard.dimension;
+    private spawnDrones(guard: Entity, guardId: string): void {
+        const dim: Dimension = guard.dimension;
         const loc = guard.location;
 
         for (const offset of DRONE_OFFSETS) {
             try {
-                const drone = dim.spawnEntity(DRONE_ID, {
+                const drone: Entity = dim.spawnEntity(DRONE_ID, {
                     x: loc.x + offset.x,
                     y: loc.y + 1,
                     z: loc.z + offset.z
@@ -397,13 +404,13 @@ class MalachiteGuardSystem {
     // ────────────────────────────────────────────────────────────────────
     // Opportunity detection for stomp and blast attacks
     // ────────────────────────────────────────────────────────────────────
-    checkAttackOpportunities(guard: Entity): void {
-        const phase = getNum(guard, P.PHASE);
-        if (phase === PHASE_DEFENCE) return; // Can't attack in defence
+    private checkAttackOpportunities(guard: Entity): void {
+        const phase: number = getNum(guard, P.PHASE);
+        if (phase === GuardPhase.Defence) return; // Can't attack in defence
 
-        const stompTimer = getNum(guard, P.STOMP_TIMER, 0);
-        const chargeTimer = getNum(guard, P.CHARGE_TIMER, 0);
-        const blastTimer = getNum(guard, P.BLAST_TIMER, 0);
+        const stompTimer: number = getNum(guard, P.STOMP_TIMER, 0);
+        const chargeTimer: number = getNum(guard, P.CHARGE_TIMER, 0);
+        const blastTimer: number = getNum(guard, P.BLAST_TIMER, 0);
 
         // Don't start new attacks if one is already active
         if (stompTimer > 0 || chargeTimer > 0 || blastTimer > 0) return;
@@ -411,21 +418,21 @@ class MalachiteGuardSystem {
         const gl = guard.location;
 
         // Get nearby valid players
-        const nearbyPlayers = guard.dimension.getEntities({
+        const nearbyPlayers: Player[] = guard.dimension.getEntities({
             type: "minecraft:player",
             location: gl,
             maxDistance: 6
-        }).filter(e => isValidPlayer(e));
+        }).filter((e: Entity): e is Player => isValidPlayer(e));
 
         if (nearbyPlayers.length === 0) return;
 
         // ── BLAST check: player is above or below the guard (Y diff > 1) ──
-        const chargeCd = getNum(guard, P.CHARGE_COOLDOWN, 0);
-        const stompCd = getNum(guard, P.STOMP_COOLDOWN, 0);
+        const chargeCd: number = getNum(guard, P.CHARGE_COOLDOWN, 0);
+        const stompCd: number = getNum(guard, P.STOMP_COOLDOWN, 0);
 
         if (chargeCd <= 0) {
             for (const player of nearbyPlayers) {
-                const yDiff = player.location.y - gl.y;
+                const yDiff: number = player.location.y - gl.y;
                 if (Math.abs(yDiff) > 1.0) {
                     // Start blast charge
                     this.startBlastAttack(guard);
@@ -437,7 +444,7 @@ class MalachiteGuardSystem {
         // ── STOMP check: player on ground, within 2-4 blocks horizontal ──
         if (stompCd <= 0) {
             for (const player of nearbyPlayers) {
-                const dSq = distSq(guard, player);
+                const dSq: number = distSq(guard, player);
                 if (dSq > 1.0 && dSq < 16.0 && player.isOnGround) {
                     this.startStompAttack(guard);
                     return;
@@ -449,38 +456,38 @@ class MalachiteGuardSystem {
     // ────────────────────────────────────────────────────────────────────
     // STOMP ATTACK — Java StompAttackGoal port
     // ────────────────────────────────────────────────────────────────────
-    startStompAttack(guard: Entity): void {
+    private startStompAttack(guard: Entity): void {
         setNum(guard, P.STOMP_TIMER, STOMP_WINDUP_TICKS);
         guard.triggerEvent("mg_stomp_start");
-        setAnimState(guard, ANIM_STOMP_WINDUP);
+        setAnimState(guard, GuardAnimState.StompWindup);
     }
 
-    tickStomp(guard: Entity): void {
-        const timer = getNum(guard, P.STOMP_TIMER, 0);
+    private tickStomp(guard: Entity): void {
+        const timer: number = getNum(guard, P.STOMP_TIMER, 0);
         if (timer <= 0) return;
 
-        const newTimer = timer - 1;
+        const newTimer: number = timer - 1;
         setNum(guard, P.STOMP_TIMER, newTimer);
 
         // ── Execute stomp at timer == 0 ──
         if (newTimer <= 0) {
-            setAnimState(guard, ANIM_STOMP_EXECUTE);
+            setAnimState(guard, GuardAnimState.StompExecute);
 
             const gl = guard.location;
-            const dim = guard.dimension;
+            const dim: Dimension = guard.dimension;
 
             // Damage + launch all non-malachite entities in 3-block radius
-            const targets = dim.getEntities({
+            const targets: Entity[] = dim.getEntities({
                 location: gl,
                 maxDistance: 3.5
-            }).filter(e => e.id !== guard.id && e.typeId !== DRONE_ID && e.typeId !== GUARD_ID);
+            }).filter((e: Entity) => e.id !== guard.id && e.typeId !== DRONE_ID && e.typeId !== GUARD_ID);
 
             // Play stomp sound
             try { dim.playSound("mob.ravager.stomp", gl); } catch {}
 
             for (const target of targets) {
                 try {
-                    target.applyDamage(5, { cause: "entityAttack" as any, damagingEntity: guard });
+                    target.applyDamage(5, { cause: EntityDamageCause.EntityAttack, damagingEntity: guard });
                     target.applyKnockback(0, 0, 0, 0.6); // Vertical launch
                 } catch {}
             }
@@ -495,7 +502,7 @@ class MalachiteGuardSystem {
                 if (!guard.isValid) return;
                 setNum(guard, P.STOMP_COOLDOWN, STOMP_COOLDOWN);
                 guard.triggerEvent("mg_stomp_end");
-                setAnimState(guard, ANIM_DEFAULT);
+                setAnimState(guard, GuardAnimState.Default);
             }, 10);
         }
     }
@@ -503,20 +510,20 @@ class MalachiteGuardSystem {
     // ────────────────────────────────────────────────────────────────────
     // BLAST ATTACK (BIDE) — Java BlastAttackGoal port
     // ────────────────────────────────────────────────────────────────────
-    startBlastAttack(guard: Entity): void {
+    private startBlastAttack(guard: Entity): void {
         setNum(guard, P.CHARGE_TIMER, CHARGE_DURATION);
         setNum(guard, P.BIDE_DAMAGE, 0);
         guard.triggerEvent("mg_charge_start");
-        setAnimState(guard, ANIM_CHARGE_CROUCH);
+        setAnimState(guard, GuardAnimState.ChargeCrouch);
     }
 
-    tickBlast(guard: Entity): void {
-        const chargeTimer = getNum(guard, P.CHARGE_TIMER, 0);
-        const blastTimer = getNum(guard, P.BLAST_TIMER, 0);
+    private tickBlast(guard: Entity): void {
+        const chargeTimer: number = getNum(guard, P.CHARGE_TIMER, 0);
+        const blastTimer: number = getNum(guard, P.BLAST_TIMER, 0);
 
         // ── Charging phase ──
         if (chargeTimer > 0) {
-            const newCharge = chargeTimer - 1;
+            const newCharge: number = chargeTimer - 1;
             setNum(guard, P.CHARGE_TIMER, newCharge);
 
             // Charge particles (Java: 3 malachite_magic particles per tick during charge)
@@ -533,18 +540,18 @@ class MalachiteGuardSystem {
 
             // ── Charge complete → EXECUTE ──
             if (newCharge <= 0) {
-                setAnimState(guard, ANIM_BLAST_EXECUTE);
+                setAnimState(guard, GuardAnimState.BlastExecute);
                 setNum(guard, P.BLAST_TIMER, BLAST_LINGER);
 
                 const gl = guard.location;
-                const dim = guard.dimension;
-                const bideDmg = getNum(guard, P.BIDE_DAMAGE, 0);
+                const dim: Dimension = guard.dimension;
+                const bideDmg: number = getNum(guard, P.BIDE_DAMAGE, 0);
 
                 // Damage all non-malachite entities in 4-block radius
-                const targets = dim.getEntities({
+                const targets: Entity[] = dim.getEntities({
                     location: gl,
                     maxDistance: 4.5
-                }).filter(e => e.id !== guard.id && e.typeId !== DRONE_ID && e.typeId !== GUARD_ID);
+                }).filter((e: Entity) => e.id !== guard.id && e.typeId !== DRONE_ID && e.typeId !== GUARD_ID);
 
                 // Blast sound
                 try { dim.playSound("random.explode", gl, { volume: 1.5, pitch: 0.7 }); } catch {}
@@ -552,12 +559,12 @@ class MalachiteGuardSystem {
                 for (const target of targets) {
                     try {
                         // Java: 8.0F + bideDamage
-                        target.applyDamage(8 + bideDmg, { cause: "entityAttack" as any, damagingEntity: guard });
+                        target.applyDamage(8 + bideDmg, { cause: EntityDamageCause.EntityAttack, damagingEntity: guard });
 
                         // Directional knockback away from guard
-                        const dx = target.location.x - gl.x;
-                        const dz = target.location.z - gl.z;
-                        const dist = Math.sqrt(dx*dx + dz*dz) || 1;
+                        const dx: number = target.location.x - gl.x;
+                        const dz: number = target.location.z - gl.z;
+                        const dist: number = Math.sqrt(dx*dx + dz*dz) || 1;
                         target.applyKnockback(dx / dist, dz / dist, 2.0, 0.3);
                     } catch {}
                 }
@@ -567,7 +574,7 @@ class MalachiteGuardSystem {
 
         // ── Blast lingering / particle phase ──
         if (blastTimer > 0) {
-            const newBlast = blastTimer - 1;
+            const newBlast: number = blastTimer - 1;
             setNum(guard, P.BLAST_TIMER, newBlast);
 
             // Explosion particles during linger
@@ -589,10 +596,10 @@ class MalachiteGuardSystem {
                 setNum(guard, P.CHARGE_COOLDOWN, CHARGE_COOLDOWN);
                 setNum(guard, P.BIDE_DAMAGE, 0);
                 guard.triggerEvent("mg_charge_end");
-                setAnimState(guard, ANIM_DEFAULT);
+                setAnimState(guard, GuardAnimState.Default);
             }
         }
     }
 }
 
-export const malachiteGuardSystem = new MalachiteGuardSystem();
+export const malachiteGuardSystem: MalachiteGuardSystem = new MalachiteGuardSystem();

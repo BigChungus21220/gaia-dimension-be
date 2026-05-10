@@ -1,7 +1,34 @@
-import { world, system, ItemStack, Block, Vector3, Player, Dimension } from "@minecraft/server";
+import { 
+    world, 
+    system, 
+    ItemStack, 
+    Block, 
+    Vector3, 
+    Player, 
+    Dimension, 
+    BlockInventoryComponent, 
+    BlockRecordPlayerComponent, 
+    EntityInventoryComponent, 
+    Container,
+    PlayerInteractWithBlockBeforeEvent,
+    PlayerBreakBlockBeforeEvent,
+    BlockExplodeAfterEvent,
+    BlockPermutation,
+    GameMode
+} from "@minecraft/server";
+
+declare module "@minecraft/server" {
+    interface Block {
+        below(): Block | undefined;
+        above(): Block | undefined;
+    }
+    interface BlockPermutation {
+        getState(stateName: string): string | number | boolean | undefined;
+    }
+}
 
 // Vanilla records array 
-const VANILLA_RECORDS = [
+const VANILLA_RECORDS: string[] = [
     "13", "cat", "blocks", "chirp", "far", "mall", "mellohi", "stal", "strad", "ward", "11", "wait", "otherside", "pigstep", "5", "relic", "creator", "creator_music_box", "precipice"
 ];
 
@@ -37,15 +64,15 @@ class CustomJukeBox {
 
     init(): void {
         // Global Interaction Listener (Handles Insertion & Ejection)
-        world.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
+        world.beforeEvents.playerInteractWithBlock.subscribe((ev: PlayerInteractWithBlockBeforeEvent) => {
             if (ev.block.typeId !== "minecraft:jukebox") return;
 
             const { block, player, itemStack } = ev;
             const key = this.getLocationKey(block.location);
 
-            const isPlaying = this.activeJukeboxes.has(key);
-            const invComp = block.getComponent("minecraft:inventory") as any;
-            const recordComp = block.getComponent("minecraft:record_player") as any;
+            const isPlaying: boolean = this.activeJukeboxes.has(key);
+            const invComp = block.getComponent("minecraft:inventory") as BlockInventoryComponent;
+            const recordComp = block.getComponent("minecraft:record_player") as BlockRecordPlayerComponent;
             
             let hasRecord = false;
             try {
@@ -61,16 +88,16 @@ class CustomJukeBox {
 
             // Insertion Logic
             if (itemStack && itemStack.hasTag("minecraft:is_music_disc")) {
-                const tags = itemStack.getTags();
-                const sTag = tags.find(t => t.startsWith("sound:"));
+                const tags: string[] = itemStack.getTags();
+                const sTag: string | undefined = tags.find(t => t.startsWith("sound:"));
                 
                 if (sTag) {
-                    const soundId = sTag.substring(6);
-                    const dTag = tags.find(t => t.startsWith("duration:"));
-                    const nTag = tags.find(t => t.startsWith("name:"));
+                    const soundId: string = sTag.substring(6);
+                    const dTag: string | undefined = tags.find(t => t.startsWith("duration:"));
+                    const nTag: string | undefined = tags.find(t => t.startsWith("name:"));
                     
-                    const duration = dTag ? parseFloat(dTag.substring(9)) : 0;
-                    const name = nTag ? nTag.substring(5) : "";
+                    const duration: number = dTag ? parseFloat(dTag.substring(9)) : 0;
+                    const name: string = nTag ? nTag.substring(5) : "";
 
                     system.run(() => {
                         this.insertDisc(block, player, itemStack, soundId, duration, name);
@@ -80,14 +107,14 @@ class CustomJukeBox {
         });
 
         // Cleanup on block break (Synchronous)
-        world.beforeEvents.playerBreakBlock.subscribe((ev) => {
+        world.beforeEvents.playerBreakBlock.subscribe((ev: PlayerBreakBlockBeforeEvent) => {
             if (ev.block.typeId === "minecraft:jukebox") {
                 this.handleBreak(ev.block, ev.player);
             }
         });
         
         // Explosion Cleanup /async 
-        world.afterEvents.blockExplode.subscribe((ev) => {
+        world.afterEvents.blockExplode.subscribe((ev: BlockExplodeAfterEvent) => {
             this.stopDisc(ev.block.location, false); 
         });
 
@@ -111,8 +138,8 @@ class CustomJukeBox {
      * Manually inserts a disc into the Jukebox inventory and starts playback.
      */
     insertDisc(block: Block, player: Player, itemStack: ItemStack, soundId: string, duration: number, name: string): void {
-        const invComp = block.getComponent("minecraft:inventory") as any;
-        const recordComp = block.getComponent("minecraft:record_player") as any;
+        const invComp = block.getComponent("minecraft:inventory") as BlockInventoryComponent;
+        const recordComp = block.getComponent("minecraft:record_player") as BlockRecordPlayerComponent;
         
         try {
             if (invComp && invComp.container) {
@@ -126,10 +153,11 @@ class CustomJukeBox {
 
         this.playDisc(block, itemStack.typeId, soundId, duration, name);
 
-        if (player.getGameMode() !== "creative") {
-            const inv = (player.getComponent("minecraft:inventory") as any)?.container;
+        if (player.getGameMode() !== GameMode.creative) {
+            const playerInvComp = player.getComponent("minecraft:inventory") as EntityInventoryComponent;
+            const inv: Container | undefined = playerInvComp?.container;
             if (inv) {
-                const selected = inv.getItem(player.selectedSlotIndex);
+                const selected: ItemStack | undefined = inv.getItem(player.selectedSlotIndex);
                 if (selected) {
                     if (selected.amount > 1) {
                         selected.amount--;
@@ -147,20 +175,20 @@ class CustomJukeBox {
      */
     tick(): void {
         for (const [key, data] of this.activeJukeboxes) {
-            const loc = this.parseLocationKey(key);
-            const dim = world.getDimension(data.dimensionId || "overworld");
+            const loc: Vector3 = this.parseLocationKey(key);
+            const dim: Dimension = world.getDimension(data.dimensionId || "overworld");
             
             try {
-                const block = dim.getBlock(loc);
+                const block: Block | undefined = dim.getBlock(loc);
                 if (!block || block.typeId !== "minecraft:jukebox") {
                     this.stopDisc(loc, false); 
                     continue;
                 }
 
-                const invComp = block.getComponent("minecraft:inventory") as any;
-                const recordComp = block.getComponent("minecraft:record_player") as any;
+                const invComp = block.getComponent("minecraft:inventory") as BlockInventoryComponent;
+                const recordComp = block.getComponent("minecraft:record_player") as BlockRecordPlayerComponent;
                 
-                let currentRecord;
+                let currentRecord: ItemStack | undefined;
                 if (invComp && invComp.container) {
                     currentRecord = invComp.container.getItem(0);
                 } else if (recordComp && recordComp.getRecord) {
@@ -173,7 +201,7 @@ class CustomJukeBox {
                 }
 
                 if (data.duration > 0) {
-                    const elapsed = (Date.now() - data.startTime) / 1000;
+                    const elapsed: number = (Date.now() - data.startTime) / 1000;
                     if (elapsed >= data.duration) {
                         this.ejectDisc(block, data.discTypeId);
                     }
@@ -189,13 +217,13 @@ class CustomJukeBox {
 
         // Scan near players for Input/Output logic
         for (const player of world.getAllPlayers()) {
-            const pos = player.location;
+            const pos: Vector3 = player.location;
             for (let x = -4; x <= 4; x++) {
                 for (let y = -2; y <= 2; y++) {
                     for (let z = -4; z <= 4; z++) {
-                        const bPos = { x: Math.floor(pos.x + x), y: Math.floor(pos.y + y), z: Math.floor(pos.z + z) };
+                        const bPos: Vector3 = { x: Math.floor(pos.x + x), y: Math.floor(pos.y + y), z: Math.floor(pos.z + z) };
                         try {
-                            const block = player.dimension.getBlock(bPos);
+                            const block: Block | undefined = player.dimension.getBlock(bPos);
                             if (block?.typeId === "minecraft:jukebox") {
                                 this.handleHopperInteractions(block);
                                 this.processHopperCheck(block);
@@ -213,7 +241,7 @@ class CustomJukeBox {
     handleHopperInteractions(block: Block): void {
         // Output to Hopper Below (Push)
         try {
-            const hopperBelow = block.below();
+            const hopperBelow: Block | undefined = block.below();
             if (hopperBelow && hopperBelow.typeId === "minecraft:hopper") {
                 this.pushToHopper(block, hopperBelow);
             }
@@ -221,10 +249,10 @@ class CustomJukeBox {
 
         // Input from Hopper Above (Pull)
         try {
-            const hopperAbove = block.above();
+            const hopperAbove: Block | undefined = block.above();
             if (hopperAbove && hopperAbove.typeId === "minecraft:hopper") {
-                const facing = hopperAbove.permutation.getState("facing_direction" as any);
-                const isLocked = hopperAbove.permutation.getState("toggle_bit" as any);
+                const facing = hopperAbove.permutation.getState("facing_direction");
+                const isLocked = hopperAbove.permutation.getState("toggle_bit");
                 
                 // Facing 0 = Down
                 if (facing === 0 && !isLocked) {
@@ -235,17 +263,20 @@ class CustomJukeBox {
     }
 
     pushToHopper(jukebox: Block, hopperBlock: Block): void {
-        if (hopperBlock.permutation.getState("toggle_bit" as any)) return;
+        if (hopperBlock.permutation.getState("toggle_bit")) return;
 
-        const jukeInv = (jukebox.getComponent("minecraft:inventory") as any)?.container;
-        const hopperInv = (hopperBlock.getComponent("minecraft:inventory") as any)?.container;
+        const jukeInvComp = jukebox.getComponent("minecraft:inventory") as BlockInventoryComponent;
+        const jukeInv: Container | undefined = jukeInvComp?.container;
+        const hopperInvComp = hopperBlock.getComponent("minecraft:inventory") as BlockInventoryComponent;
+        const hopperInv: Container | undefined = hopperInvComp?.container;
+        
         if (!jukeInv || !hopperInv) return;
 
-        const item = jukeInv.getItem(0);
+        const item: ItemStack | undefined = jukeInv.getItem(0);
         if (!item) return;
 
-        const itemToMove = new ItemStack(item.typeId, 1);
-        const remainder = hopperInv.addItem(itemToMove);
+        const itemToMove: ItemStack = new ItemStack(item.typeId, 1);
+        const remainder: ItemStack | undefined = hopperInv.addItem(itemToMove);
 
         if (!remainder || remainder.amount === 0) {
             jukeInv.setItem(0, undefined);
@@ -253,17 +284,20 @@ class CustomJukeBox {
     }
 
     pullFromHopper(jukebox: Block, hopperBlock: Block): void {
-        const jukeInv = (jukebox.getComponent("minecraft:inventory") as any)?.container;
-        const hopperInv = (hopperBlock.getComponent("minecraft:inventory") as any)?.container;
+        const jukeInvComp = jukebox.getComponent("minecraft:inventory") as BlockInventoryComponent;
+        const jukeInv: Container | undefined = jukeInvComp?.container;
+        const hopperInvComp = hopperBlock.getComponent("minecraft:inventory") as BlockInventoryComponent;
+        const hopperInv: Container | undefined = hopperInvComp?.container;
+        
         if (!jukeInv || !hopperInv) return;
 
         if (jukeInv.getItem(0)) return; 
 
         for (let i = 0; i < hopperInv.size; i++) {
-            const item = hopperInv.getItem(i);
+            const item: ItemStack | undefined = hopperInv.getItem(i);
             if (item) {
                 // Clone item
-                const clone = item.clone();
+                const clone: ItemStack = item.clone();
                 clone.amount = 1;
                 jukeInv.setItem(0, clone);
 
@@ -282,10 +316,10 @@ class CustomJukeBox {
      * Checks if a new disc has entered the Jukebox (via Hopper) and starts playback.
      */
     processHopperCheck(block: Block): void {
-        const invComp = block.getComponent("minecraft:inventory") as any;
-        const recordComp = block.getComponent("minecraft:record_player") as any;
+        const invComp = block.getComponent("minecraft:inventory") as BlockInventoryComponent;
+        const recordComp = block.getComponent("minecraft:record_player") as BlockRecordPlayerComponent;
 
-        let currentRecord;
+        let currentRecord: ItemStack | undefined;
         try {
             if (invComp && invComp.container) currentRecord = invComp.container.getItem(0);
             else if (recordComp && recordComp.getRecord) currentRecord = recordComp.getRecord();
@@ -293,21 +327,21 @@ class CustomJukeBox {
 
         if (!currentRecord) return;
 
-        const key = this.getLocationKey(block.location);
+        const key: string = this.getLocationKey(block.location);
 
         // Allow vanilla discs to function normally
         if (currentRecord.typeId.startsWith("minecraft:music_disc_")) return;
 
         if (!this.activeJukeboxes.has(key)) {
-            const tags = currentRecord.getTags();
-            const sTag = tags.find(t => t.startsWith("sound:"));
-            const dTag = tags.find(t => t.startsWith("duration:"));
-            const nTag = tags.find(t => t.startsWith("name:")); 
+            const tags: string[] = currentRecord.getTags();
+            const sTag: string | undefined = tags.find(t => t.startsWith("sound:"));
+            const dTag: string | undefined = tags.find(t => t.startsWith("duration:"));
+            const nTag: string | undefined = tags.find(t => t.startsWith("name:")); 
             
             if (sTag) {
-                const sound = sTag.substring(6);
-                const duration = dTag ? parseFloat(dTag.substring(9)) : 0;
-                const name = nTag ? nTag.substring(5) : "";
+                const sound: string = sTag.substring(6);
+                const duration: number = dTag ? parseFloat(dTag.substring(9)) : 0;
+                const name: string = nTag ? nTag.substring(5) : "";
                 this.playDisc(block, currentRecord.typeId, sound, duration, name);
             }
         }
@@ -317,7 +351,7 @@ class CustomJukeBox {
      * Starts playback, visuals, and state tracking.
      */
     playDisc(block: Block, discTypeId: string, soundId: string, duration = 0, name = ""): void {
-        const key = this.getLocationKey(block.location);
+        const key: string = this.getLocationKey(block.location);
         if (!soundId) soundId = `record.${discTypeId.split(':')[1]}`;
 
         if (this.activeJukeboxes.has(key)) this.stopDisc(block.location, false);
@@ -326,17 +360,18 @@ class CustomJukeBox {
         block.dimension.playSound(soundId, block.location, { volume: 4.0 });
 
         if (name) {
-            block.dimension.runCommand(`title @a[x=${block.location.x},y=${block.location.y},z=${block.location.z},r=10] actionbar §dNow Playing: ${name}`);
+            const { x, y, z } = block.location;
+            block.dimension.runCommand(`title @a[x=${x},y=${y},z=${z},r=10] actionbar §dNow Playing: ${name}`);
         }
         
-        const dimId = block.dimension.id;
-        const px = Math.floor(block.location.x) + 0.5;
-        const py = Math.floor(block.location.y) + 1.2;
-        const pz = Math.floor(block.location.z) + 0.5;
+        const dimId: string = block.dimension.id;
+        const px: number = Math.floor(block.location.x) + 0.5;
+        const py: number = Math.floor(block.location.y) + 1.2;
+        const pz: number = Math.floor(block.location.z) + 0.5;
         
-        const particleRun = system.runInterval(() => {
+        const particleRun: number = system.runInterval(() => {
             try {
-                const d = world.getDimension(dimId);
+                const d: Dimension = world.getDimension(dimId);
                 d.runCommand(`particle minecraft:note_particle ${px} ${py} ${pz}`);
             } catch(e) {}
         }, 20);
@@ -357,15 +392,15 @@ class CustomJukeBox {
     ejectDisc(block: Block, discTypeId: string): void {
         this.stopDisc(block.location, false);
         
-        const invComp = block.getComponent("minecraft:inventory") as any;
-        const recordComp = block.getComponent("minecraft:record_player") as any;
+        const invComp = block.getComponent("minecraft:inventory") as BlockInventoryComponent;
+        const recordComp = block.getComponent("minecraft:record_player") as BlockRecordPlayerComponent;
 
         try {
             if (invComp && invComp.container) invComp.container.setItem(0, undefined);
             else if (recordComp && recordComp.setRecord) recordComp.setRecord(undefined);
         } catch(e) {}
 
-        const center = { x: block.location.x + 0.5, y: block.location.y + 1.1, z: block.location.z + 0.5 };
+        const center: Vector3 = { x: block.location.x + 0.5, y: block.location.y + 1.1, z: block.location.z + 0.5 };
         block.dimension.spawnItem(new ItemStack(discTypeId, 1), center);
     }
 
@@ -374,17 +409,17 @@ class CustomJukeBox {
      * @param defer - If true, command runs next tick.
      */
     stopDisc(location: Vector3, shouldDrop = false, player: Player | null = null, defer = false): void {
-        const key = this.getLocationKey(location);
-        const data = this.activeJukeboxes.get(key);
+        const key: string = this.getLocationKey(location);
+        const data: JukeboxData | undefined = this.activeJukeboxes.get(key);
         
         if (data) {
-            const dim = world.getDimension(data.dimensionId || "overworld");
-            const soundId = data.soundId;
-            const x = Math.floor(location.x);
-            const y = Math.floor(location.y);
-            const z = Math.floor(location.z);
+            const dim: Dimension = world.getDimension(data.dimensionId || "overworld");
+            const soundId: string = data.soundId;
+            const x: number = Math.floor(location.x);
+            const y: number = Math.floor(location.y);
+            const z: number = Math.floor(location.z);
 
-            const stopCmd = () => {
+            const stopCmd: () => void = () => {
                 try {
                     if (player && player.isValid) player.runCommand(`stopsound @s ${soundId}`);
                     dim.runCommand(`stopsound @a[x=${x},y=${y},z=${z},r=64] ${soundId}`);
@@ -397,14 +432,14 @@ class CustomJukeBox {
 
             if (shouldDrop) {
                 try {
-                    const center = { x: x + 0.5, y: y + 0.5, z: z + 0.5 };
+                    const center: Vector3 = { x: x + 0.5, y: y + 0.5, z: z + 0.5 };
                     dim.spawnItem(new ItemStack(data.discTypeId, 1), center);
                 } catch(e) {}
             }
             this.activeJukeboxes.delete(key);
         }
 
-        const particleRunId = this.activeParticles.get(key);
+        const particleRunId: number | undefined = this.activeParticles.get(key);
         if (particleRunId !== undefined) {
             system.clearRun(particleRunId);
             this.activeParticles.delete(key);
@@ -412,9 +447,10 @@ class CustomJukeBox {
     }
 
     stopVanillaMusic(block: Block): void {
+        const { x, y, z } = block.location;
         for (const name of VANILLA_RECORDS) {
             try {
-                block.dimension.runCommand(`stopsound @a[x=${block.location.x},y=${block.location.y},z=${block.location.z},r=64] record.${name}`);
+                block.dimension.runCommand(`stopsound @a[x=${x},y=${y},z=${z},r=64] record.${name}`);
             } catch(e) {}
         }
     }
@@ -424,7 +460,10 @@ class CustomJukeBox {
     }
 
     parseLocationKey(key: string): Vector3 {
-        const [x, y, z] = key.split(',').map(Number);
+        const parts: string[] = key.split(',');
+        const x: number = Number(parts[0]);
+        const y: number = Number(parts[1]);
+        const z: number = Number(parts[2]);
         return { x, y, z };
     }
 }

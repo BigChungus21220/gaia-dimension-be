@@ -1,0 +1,22 @@
+{
+    "format_version": "1.10.0",
+    "minecraft:entity": {
+      "description": {
+        "identifier": "custom:contraption",
+        "is_spawnable": true,
+        "is_summonable": true,
+        "is_experimental": true,
+        "runtime_identifier": "minecraft:armor_stand"
+      },
+      "components": {
+        "minecraft:physics": {
+          "has_gravity": false
+        },
+        "minecraft:collision_box": {
+          "width": 1.0,
+          "height": 1.0
+        }
+      }
+    }
+  }
+  

@@ -1,0 +1,23 @@
+{
+    "format_version": "1.20.80",
+    "minecraft:client_entity": {
+        "description": {
+            "identifier": "create:tile_entity",
+            "geometry": {
+                "default": "geometry.tile_entity"
+            },
+            "animations": {
+                "position": "animation.tile_entity.position"
+            },
+            "textures": {
+                "default": "textures/blocks/invisible.png"
+            },
+            "materials": {
+                "default": "kinetic_block_entity_alpha_single_sided"
+            },
+            "scripts": {
+                "animate": ["position"]
+            }
+        }
+    }
+}

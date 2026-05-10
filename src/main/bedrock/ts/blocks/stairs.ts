@@ -1,4 +1,13 @@
-import { system, BlockPermutation, Block, BlockComponentRegistry, BlockEventAfterEvents, BlockEventBeforeEvents, PlayerPlaceBlockBeforeEvent, BlockBreakAfterEvent, BlockEvent } from "@minecraft/server";
+import {
+    system,
+    BlockPermutation,
+    Block,
+    BlockComponentRegistry,
+    PlayerPlaceBlockAfterEvent,
+    PlayerBreakBlockBeforeEvent,
+    PlayerBreakBlockAfterEvent,
+    Vector3
+} from "@minecraft/server";
 import { registerForBlockUpdates } from "../systems/BlockUpdate.js";
 import { registerPlaceHandler, registerBreakHandler } from "../systems/event_manager.js";
 import { trackBlock, untrackBlock } from "../systems/destruction_handler.js";
@@ -18,7 +27,7 @@ interface StairShape {
  * @param {Block} block The block whose neighbors need updating.
  */
 function updateNeighbors(block: Block): void {
-    const neighbors = [
+    const neighbors: (Block | undefined)[] = [
         block.north(),
         block.south(),
         block.east(),
@@ -29,7 +38,7 @@ function updateNeighbors(block: Block): void {
 
     for (const neighbor of neighbors) {
         // We only ever want to update our custom stairs.
-        if (neighbor?.hasTag(tag)) {
+        if (neighbor && neighbor.isValid && neighbor.hasTag(tag)) {
             system.run(() => updateStair(neighbor));
         }
     }
@@ -38,9 +47,9 @@ function updateNeighbors(block: Block): void {
 function updateBlocker(block: Block): void {
     const above = block.above();
     const below = block.below();
-    if (above?.typeId === blocker && above.permutation.getState("minecraft:vertical_half" as any) === "bottom") {
+    if (above && above.isValid && above.typeId === blocker && above.permutation.getState("minecraft:vertical_half") === "bottom") {
         above.setPermutation(BlockPermutation.resolve("minecraft:air"));
-    } else if (below?.typeId === blocker && below.permutation.getState("minecraft:vertical_half" as any) === "top") {
+    } else if (below && below.isValid && below.typeId === blocker && below.permutation.getState("minecraft:vertical_half") === "top") {
         below.setPermutation(BlockPermutation.resolve("minecraft:air"));
     }
 }
@@ -57,20 +66,20 @@ function updateStair(block: Block): void {
         const west = block.west();
         const above = block.above();
 
-        const direction = block.permutation.getState("minecraft:cardinal_direction" as any) as string;
-        const stairHalf = block.permutation.getState("minecraft:vertical_half" as any) as string;
+        const direction = block.permutation.getState("minecraft:cardinal_direction") as string;
+        const stairHalf = block.permutation.getState("minecraft:vertical_half") as string;
 
         const getStairShape = (neighbor: Block | undefined): StairShape => {
             if (!neighbor || !neighbor.isValid || !neighbor.typeId || !neighbor.permutation) return { half: undefined, direction: undefined };
 
             if (neighbor.hasTag(tag)) { // It's a custom stair
                 return {
-                    half: neighbor.permutation.getState("minecraft:vertical_half" as any),
-                    direction: neighbor.permutation.getState("minecraft:cardinal_direction" as any)
+                    half: neighbor.permutation.getState("minecraft:vertical_half"),
+                    direction: neighbor.permutation.getState("minecraft:cardinal_direction")
                 };
             } else if (neighbor.typeId.includes("minecraft:") && neighbor.typeId.includes("stairs")) { // It's a vanilla stair
-                const upsideDown = neighbor.permutation.getState("upside_down_bit" as any);
-                const directionValue = neighbor.permutation.getState("weirdo_direction" as any);
+                const upsideDown = neighbor.permutation.getState("upside_down_bit");
+                const directionValue = neighbor.permutation.getState("weirdo_direction") as number | undefined;
 
                 const half = upsideDown ? "top" : "bottom";
                 let direction: string | undefined;
@@ -125,10 +134,10 @@ function updateStair(block: Block): void {
             else if (validNeighbor(east, "south")) toPlace = 4;
         }
 
-        block.setPermutation(block.permutation.withState(type as any, toPlace));
+        block.setPermutation(block.permutation.withState(type, toPlace));
 
         const target = stairHalf === "bottom" ? above : block.below();
-        if (target && (target.isAir || target.typeId === "minecraft:water" || target.typeId.includes("piston_arm"))) {
+        if (target && target.isValid && (target.isAir || target.typeId === "minecraft:water" || target.typeId.includes("piston_arm"))) {
             let directionState = direction;
             if (toPlace === 4) {
                 if (direction === "north") directionState = "west";
@@ -143,9 +152,9 @@ function updateStair(block: Block): void {
             }
 
             target.setPermutation(BlockPermutation.resolve(blocker)
-                .withState("minecraft:cardinal_direction" as any, directionState)
-                .withState("minecraft:vertical_half" as any, stairHalf)
-                .withState("gaiadimension:corner" as any, toPlace > 3)
+                .withState("minecraft:cardinal_direction", directionState)
+                .withState("minecraft:vertical_half", stairHalf)
+                .withState("gaiadimension:corner", toPlace > 3)
             );
             trackBlock(target);
         }
@@ -161,13 +170,13 @@ export function registerStairsComponent({ blockComponentRegistry }: { blockCompo
     });
 
     registerForBlockUpdates({
-        check: (block: Block) => block && block.hasTag(tag),
+        check: (block: Block): boolean => block && block.isValid && block.hasTag(tag),
         update: updateStair
     });
 
     registerPlaceHandler({
-        check: (block: Block) => block.hasTag(tag) || block.north()?.hasTag(tag) || block.south()?.hasTag(tag) || block.east()?.hasTag(tag) || block.west()?.hasTag(tag) || block.above()?.hasTag(tag) || block.below()?.hasTag(tag),
-        execute: (event: PlayerPlaceBlockBeforeEvent) => {
+        check: (block: Block): boolean => block && block.isValid && (block.hasTag(tag) || (block.north()?.hasTag(tag) ?? false) || (block.south()?.hasTag(tag) ?? false) || (block.east()?.hasTag(tag) ?? false) || (block.west()?.hasTag(tag) ?? false) || (block.above()?.hasTag(tag) ?? false) || (block.below()?.hasTag(tag) ?? false)),
+        execute: (event: PlayerPlaceBlockAfterEvent): void => {
             const { block } = event;
             const blockBelow = block.below();
 
@@ -176,7 +185,7 @@ export function registerStairsComponent({ blockComponentRegistry }: { blockCompo
                 system.run(() => updateStair(block));
             }
             
-            if (block.hasTag(tag) && blockBelow?.hasTag(tag)) {
+            if (block.hasTag(tag) && blockBelow && blockBelow.isValid && blockBelow.hasTag(tag)) {
                 // Allow placing stairs on top of each other
             } else {
                 updateNeighbors(block);
@@ -186,9 +195,9 @@ export function registerStairsComponent({ blockComponentRegistry }: { blockCompo
 
     registerBreakHandler({
         event: "before",
-        check: (block: Block) => block.hasTag(tag),
-        execute: (event: BlockEventBeforeEvents) => {
-            const { block } = event as any; // Cast as any because beforeEvents might have different structure in event_manager
+        check: (block: Block): boolean => block && block.isValid && block.hasTag(tag),
+        execute: (event: PlayerBreakBlockBeforeEvent): void => {
+            const { block } = event;
             if (!block || !block.isValid) return;
             
             system.run(() => {
@@ -196,12 +205,12 @@ export function registerStairsComponent({ blockComponentRegistry }: { blockCompo
                 const above = block.above();
                 const below = block.below();
                 
-                if (above?.typeId.includes("stairs_collision")) {
+                if (above && above.isValid && above.typeId.includes("stairs_collision")) {
                     untrackBlock(above.location);
                     above.setPermutation(BlockPermutation.resolve("minecraft:air"));
                 }
                 
-                if (below?.typeId === blocker) {
+                if (below && below.isValid && below.typeId === blocker) {
                     untrackBlock(below.location);
                     below.setPermutation(BlockPermutation.resolve("minecraft:air"));
                 }
@@ -211,32 +220,31 @@ export function registerStairsComponent({ blockComponentRegistry }: { blockCompo
 
     registerBreakHandler({
         event: "after",
-        check: (event: BlockBreakAfterEvent) => {
+        check: (event: PlayerBreakBlockAfterEvent): boolean => {
             try {
-                const { brokenBlock, dimension } = event;
-                const { x, y, z } = brokenBlock.location;
+                const { block, dimension } = event;
+                const { x, y, z } = block.location;
                 const north = dimension.getBlock({x: x, y: y, z: z - 1});
                 const south = dimension.getBlock({x: x, y: y, z: z + 1});
                 const east = dimension.getBlock({x: x + 1, y: y, z: z});
                 const west = dimension.getBlock({x: x - 1, y: y, z: z});
                 const above = dimension.getBlock({x: x, y: y + 1, z: z});
                 const below = dimension.getBlock({x: x, y: y - 1, z: z});
-                return [north, south, east, west, above, below].some(b => b && b.hasTag(tag));
+                return [north, south, east, west, above, below].some(b => b && b.isValid && b.hasTag(tag));
             } catch (e) {
                 return false;
             }
         },
-        execute: (event: BlockBreakAfterEvent) => {
-            const { brokenBlock } = event;
-            if (!brokenBlock || !brokenBlock.isValid) return;
+        execute: (event: PlayerBreakBlockAfterEvent): void => {
+            const { block, dimension } = event;
+            if (!block) return;
 
             // When a block is broken, we only need to update its neighbors.
-            const blockAtPos = event.dimension.getBlock(brokenBlock.location);
-            if (blockAtPos) {
+            const blockAtPos = dimension.getBlock(block.location);
+            if (blockAtPos && blockAtPos.isValid) {
                 updateNeighbors(blockAtPos);
                 updateBlocker(blockAtPos);
             }
         }
     });
 }
-

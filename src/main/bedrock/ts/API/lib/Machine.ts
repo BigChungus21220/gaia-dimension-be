@@ -2,33 +2,114 @@
  * --- Base Machine Class Library ---
  * Created by Luminiae Federation
  */
-import { world, system, ItemStack } from "@minecraft/server";
+import { world, system, ItemStack, Entity, Block, Container, Player, Dimension, Vector3 } from "@minecraft/server";
 
+declare module "@minecraft/server" {
+    interface Entity {
+        readonly dimension: Dimension;
+    }
+    interface Block {
+        readonly dimension: Dimension;
+        readonly location: Vector3;
+        readonly typeId: string;
+        readonly permutation: BlockPermutation;
+        below(): Block | undefined;
+        above(): Block | undefined;
+        north(): Block | undefined;
+        east(): Block | undefined;
+        south(): Block | undefined;
+        west(): Block | undefined;
+    }
+    interface BlockPermutation {
+        getState(stateName: string): string | number | boolean | undefined;
+    }
+    interface Container {
+        readonly size: number;
+        getItem(slot: number): ItemStack | undefined;
+        setItem(slot: number, item?: ItemStack): void;
+        addItem(item: ItemStack): ItemStack | undefined;
+    }
+    interface ItemStack {
+        readonly typeId: string;
+        amount: number;
+        readonly maxStackSize: number;
+        nameTag?: string;
+        getLore(): string[];
+        setLore(lore: string[]): void;
+    }
+    interface ScoreboardObjective {
+        getScore(participant: Entity | string): number | undefined;
+        setScore(participant: Entity | string, score: number): void;
+        addScore(participant: Entity | string, score: number): number;
+    }
+    interface Dimension {
+        getPlayers(options?: any): Player[];
+        spawnItem(itemStack: ItemStack, location: Vector3): Entity;
+        playSound(soundId: string, location: Vector3, options?: { pitch?: number, volume?: number }): void;
+    }
+}
+
+interface TimerConfig {
+    [key: string]: { max: number };
+}
+
+interface TimerHelper {
+    value: number;
+    max: number;
+    add(amount: number): void;
+}
+
+interface AnimatedUIPart {
+    slot: number;
+    timer: string;
+    maxTimer?: string;
+    steps: number;
+    baseId: string;
+    segmentOffset?: number;
+}
+
+interface ButtonConfig {
+    icon: string;
+    callback: string;
+}
+
+export interface UIProfile {
+    inputSlots?: number[];
+    resultSlots?: number[];
+    fuelSlot?: number;
+    secondaryResultSlot?: number;
+    staticUI?: { [slot: number]: string };
+    buttons?: { [slot: number]: ButtonConfig };
+    animatedUI?: AnimatedUIPart[];
+}
+
+export interface UIConfig {
+    classicProfile: UIProfile;
+    pocketProfile: UIProfile;
+}
+
+interface Snapshot {
+    typeId: string;
+    amount: number;
+}
 
 // Getting segment from a value (0-based index)
-function getSegment(initialValue, currentValue, parts) {
+function getSegment(initialValue: number, currentValue: number, parts: number): number {
     if (parts === 0 || initialValue === 0) return 0;
     // Map 0..initialValue to 0..(parts-1)
-    // If currentValue is 0, return 0.
-    // If currentValue is initialValue, return parts - 1.
     const ratio = Math.max(0, Math.min(1, currentValue / initialValue));
-    return Math.floor(ratio * (parts - 1)); // -1 to keep it within 0..parts-1 bounds? 
-    // Wait, if parts is 12 (frames 0-11).
-    // ratio 1 * 11 = 11. ratio 0 = 0.
-    // If ratio is 0.99 * 11 = 10.89 -> 10.
-    // This seems correct for 0-based frames where 0 is empty/start and max is full.
-    // However, for flame (burn down), we might want 0 to be empty (or 0 index) and max to be full (11 index).
-    // Yes.
+    return Math.floor(ratio * (parts - 1));
 }
 
 /**
  * Manages scoreboard-based timers for a specific entity.
  */
 class TimerManager {
-    entity;
-    timers = new Map();
+    [key: string]: any; // Allow dynamic timer properties
+    entity: Entity;
+    timers = new Map<string, TimerHelper>();
 
-    constructor(entity, timerConfig) {
+    constructor(entity: Entity, timerConfig: TimerConfig) {
         this.entity = entity;
         if (!timerConfig) return;
         
@@ -36,24 +117,27 @@ class TimerManager {
             const scoreboardId = `gaiadimension:${timerName}`;
             let objective = world.scoreboard.getObjective(scoreboardId);
             if (!objective) {
-                objective = world.scoreboard.addObjective(scoreboardId, timerName);
+                objective = world.scoreboard.addObjective(scoreboardId, timerName) as any;
             }
             
+            if (!objective) continue;
+
             // Allow max to be dynamic (default to config)
             let currentMax = timerConfig[timerName].max;
+            const finalObjective = objective;
 
             // Define the property to return a helper object, not just a number
             Object.defineProperty(this, timerName, {
-                get: () => {
+                get: (): TimerHelper => {
                     return {
                         get value() {
                             try {
-                                return objective.getScore(entity) ?? 0;
+                                return finalObjective.getScore(entity) ?? 0;
                             } catch (e) { return 0; }
                         },
                         set value(val) {
                             try {
-                                objective.setScore(entity, val);
+                                finalObjective.setScore(entity, val);
                             } catch (e) {}
                         },
                         get max() {
@@ -62,9 +146,9 @@ class TimerManager {
                         set max(val) {
                             currentMax = val;
                         },
-                        add: (amount) => {
+                        add: (amount: number) => {
                             try {
-                                objective.addScore(entity, amount);
+                                finalObjective.addScore(entity, amount);
                             } catch (e) {}
                         }
                     };
@@ -80,22 +164,39 @@ class TimerManager {
  * Handles inventory management, UI rendering, timers, and processing logic.
  */
 export class Machine {
-    static get NAME() { throw new Error("Machine class must override static getter 'NAME'."); }
-    static get TIMERS() { return {}; }
-    static get UI_CONFIG() { return { classicProfile: {}, pocketProfile: {} }; }
-    static get RECIPES() { return {}; }
-    static get INVENTORY_SIZE() { return 27; }
+    static get NAME(): string { throw new Error("Machine class must override static getter 'NAME'."); }
+    static get TIMERS(): TimerConfig { return {}; }
+    static get UI_CONFIG(): UIConfig { return { classicProfile: {}, pocketProfile: {} }; }
+    static get RECIPES(): Record<string, any> { return {}; }
+    static get INVENTORY_SIZE(): number { return 27; }
+    static get FUEL_ITEMS(): Record<string, number> | undefined { return undefined; }
+
+    entity: Entity;
+    block: Block;
+    config: typeof Machine;
+    inventory: Container;
+    timers: TimerManager;
+    tickCount: number;
+    uiTickCount: number;
+    cachedPlayers: Player[];
+    locKey: string | null;
+    cachedUiProfile: UIProfile | null;
+    isViewed: boolean;
+    lastTickTime: number;
+    dynamicButtons: Map<number, ButtonConfig>;
+    lastResultSnapshots: Map<number, Snapshot>;
 
     /**
      * Initializes a new machine instance.
      * @param {Entity} entity - The entity representing the machine.
      * @param {Block} block - The block associated with the machine.
      */
-    constructor(entity, block) {
+    constructor(entity: Entity, block: Block) {
         this.entity = entity;
         this.block = block;
-        this.config = this.constructor;
-        this.inventory = this.entity.getComponent('minecraft:inventory').container;
+        this.config = this.constructor as typeof Machine;
+        const inventoryComp = this.entity.getComponent('minecraft:inventory');
+        this.inventory = inventoryComp.container;
         this.timers = new TimerManager(this.entity, this.config.TIMERS);
         
         // Optimization State
@@ -105,7 +206,7 @@ export class Machine {
         this.locKey = null; // Set by BlockEntityManager for O(1) lookups
         this.cachedUiProfile = null;
         this.isViewed = false; // Gated by BlockEntityManager for prioritized 20TPS updates
-        this.lastTickTime = system.currentTick; // Basis for delta-time (dt) logic compensation
+        this.lastTickTime = system.currentTick as any; // Basis for delta-time (dt) logic compensation
         
         this.dynamicButtons = new Map();
 
@@ -124,21 +225,21 @@ export class Machine {
      * @param {string} icon - Item Type ID
      * @param {string} callback - Name of the method to call on interaction
      */
-    setButton(slot, icon, callback) {
+    setButton(slot: number, icon: string, callback: string): void {
         this.dynamicButtons.set(slot, { icon, callback });
     }
 
     /**
      * Initializes snapshot of result slots to prevent ejecting existing items on load.
      */
-    initResultSnapshots() {
+    initResultSnapshots(): void {
         const uiProfile = this.getCurrentUiProfile();
         if (!uiProfile) return;
         
         const resultSlots = [
             ...(uiProfile.resultSlots || []),
             uiProfile.secondaryResultSlot
-        ].filter(s => s !== undefined);
+        ].filter((s): s is number => s !== undefined);
 
         for (const slot of resultSlots) {
             const item = this.inventory.getItem(slot);
@@ -155,7 +256,7 @@ export class Machine {
      * Logic processing is consistent via dt. UI and interaction checks are gated by isViewed.
      * @param {number} dt - Delta time (ticks elapsed since last update).
      */
-    tick(dt = 1) {
+    tick(dt: number = 1): void {
         const prevTick = this.tickCount;
         this.tickCount += dt;
 
@@ -211,10 +312,10 @@ export class Machine {
     /**
      * Handles "fake button" interactions.
      * Detects if a button slot is empty or has a swapped item, triggers the action, and resets the button.
-     * @param {Object} uiProfile - The current UI configuration.
+     * @param {UIProfile | null} uiProfile - The current UI configuration.
      */
-    handleInteractions(uiProfile) {
-        const buttons = uiProfile && uiProfile.buttons ? { ...uiProfile.buttons } : {};
+    handleInteractions(uiProfile: UIProfile | null): void {
+        const buttons: Record<number, ButtonConfig> = uiProfile && uiProfile.buttons ? { ...uiProfile.buttons } : {};
         
         for (const [slot, btn] of this.dynamicButtons) {
             buttons[slot] = btn;
@@ -244,8 +345,9 @@ export class Machine {
                 } catch(e) {}
 
                 // 4. Execute Action
-                if (typeof this[btnConfig.callback] === 'function') {
-                    this[btnConfig.callback](this.cachedPlayers[0]); // Pass a player (approximate)
+                const callback = btnConfig.callback;
+                if (typeof (this as any)[callback] === 'function') {
+                    (this as any)[callback](this.cachedPlayers[0]); // Pass a player (approximate)
                 }
             }
         }
@@ -254,7 +356,7 @@ export class Machine {
     /**
      * Safely sets an item in the machine's inventory, updating security snapshots.
      */
-    setInventoryItem(slot, item, cachedUiProfile = null) {
+    setInventoryItem(slot: number, item: ItemStack | undefined, cachedUiProfile: UIProfile | null = null): void {
         try {
             this.inventory.setItem(slot, item);
             
@@ -278,7 +380,7 @@ export class Machine {
     /**
      * strict checks for Fuel and Result slots.
      */
-    monitorStrictSlots() {
+    monitorStrictSlots(): void {
         const uiProfile = this.cachedUiProfile || this.getCurrentUiProfile();
         if (!uiProfile) return;
 
@@ -295,7 +397,7 @@ export class Machine {
         const resultSlots = [
             ...(uiProfile.resultSlots || []),
             uiProfile.secondaryResultSlot
-        ].filter(s => s !== undefined);
+        ].filter((s): s is number => s !== undefined);
 
         for (const slot of resultSlots) {
             const currentItem = this.inventory.getItem(slot);
@@ -335,14 +437,14 @@ export class Machine {
     /**
      * Updates the snapshot of result slots. 
      */
-    updateResultSnapshots() {
+    updateResultSnapshots(): void {
         const uiProfile = this.cachedUiProfile || this.getCurrentUiProfile();
         if (!uiProfile) return;
         
         const resultSlots = [
             ...(uiProfile.resultSlots || []),
             uiProfile.secondaryResultSlot
-        ].filter(s => s !== undefined);
+        ].filter((s): s is number => s !== undefined);
 
         for (const slot of resultSlots) {
             const item = this.inventory.getItem(slot);
@@ -358,7 +460,7 @@ export class Machine {
      * Checks if an item is valid fuel for this machine.
      * @param {ItemStack} item 
      */
-    isValidFuel(item) {
+    isValidFuel(item: ItemStack): boolean {
         if (!this.config.FUEL_ITEMS) return true; // No restriction defined
         return !!this.config.FUEL_ITEMS[item.typeId];
     }
@@ -368,22 +470,22 @@ export class Machine {
      * Useful for updating visual states (like 'on' status), fuel timers, or other continuous logic.
      * @param {number} dt - Ticks elapsed.
      */
-    onTick(dt) { }
+    onTick(dt: number): void { }
 
     /**
      * Called every tick when players are viewing the machine, after renderUI.
      * Override this to update dynamic UI elements using setItemDisplay.
      */
-    updateUI() { }
+    updateUI(): void { }
 
     /**
      * Updates the display properties (Name, Lore) of an item in a specific slot.
      * @param {number} slot - The inventory slot index.
-     * @param {string} name - The new name for the item.
+     * @param {string | undefined} name - The new name for the item.
      * @param {string[]} lore - The new lore strings for the item.
-     * @param {Object} cachedUiProfile - Optional cached profile.
+     * @param {UIProfile | null} cachedUiProfile - Optional cached profile.
      */
-    setItemDisplay(slot, name, lore = [], cachedUiProfile = null) {
+    setItemDisplay(slot: number, name: string | undefined, lore: string[] = [], cachedUiProfile: UIProfile | null = null): void {
         const item = this.inventory.getItem(slot);
         if (!item) return;
 
@@ -406,7 +508,7 @@ export class Machine {
      * @param {number} amount - Amount to consume (default 1).
      * @returns {boolean} True if items were consumed, false if slot was empty or had insufficient items.
      */
-    consumeItem(slot, amount = 1) {
+    consumeItem(slot: number, amount: number = 1): boolean {
         const item = this.inventory.getItem(slot);
         if (!item || item.amount < amount) return false;
 
@@ -424,19 +526,19 @@ export class Machine {
      * Determines if the machine has valid inputs, fuel, and space for outputs.
      * @returns {boolean} True if processing can proceed.
      */
-    canProcess() { return false; }
+    canProcess(): boolean { return false; }
 
     /**
      * Executed when 'canProcess' returns true.
      * Handles timer increments, item consumption, and product creation.
      */
-    processTick() { }
+    processTick(dt: number): void { }
 
     /**
      * Gets players near the machine for UI interactions.
      * Only called when the machine is marked as 'viewed' by the central manager.
      */
-    getNearbyPlayers() {
+    getNearbyPlayers(): Player[] {
         return this.block.dimension.getPlayers({ 
             maxDistance: 6, 
             location: this.block.location 
@@ -447,7 +549,7 @@ export class Machine {
      * Checks if the machine is currently active (processing items).
      * @returns {boolean} True if the 'cook' timer is greater than 0 or if the machine can start processing.
      */
-    isRunning() {
+    isRunning(): boolean {
         return (this.timers.cook && this.timers.cook.value > 0) || this.canProcess();
     }
 
@@ -456,10 +558,10 @@ export class Machine {
      * Also clears cursor if they picked up a UI item.
      * @param {Player[]} players - List of players to enforce inventory rules on.
      */
-    enforceCursor(players) {
+    enforceCursor(players: Player[]): void {
         for (const player of players) {
             // A. Check Cursor
-            const cursorComp = player.getComponent('minecraft:cursor_inventory');
+            const cursorComp = player.getComponent('minecraft:cursor_inventory') as any;
             if (cursorComp && cursorComp.item) {
                 if (this.isUiItem(cursorComp.item)) {
                     cursorComp.clear();
@@ -471,15 +573,15 @@ export class Machine {
     /**
      * Strict cleanup of player inventory and machine functional slots.
      */
-    enforcePlayerInventory(players) {
+    enforcePlayerInventory(players: Player[]): void {
         const uiProfile = this.cachedUiProfile || this.getCurrentUiProfile();
         if (!uiProfile) return;
 
         for (const player of players) {
             // B. Check Main Inventory
-            const inventory = player.getComponent('minecraft:inventory');
+            const inventory = player.getComponent('minecraft:inventory') as any;
             if (!inventory) continue;
-            const container = inventory.container;
+            const container = inventory.container as Container;
             
             for (let i = 0; i < container.size; i++) {
                 const item = container.getItem(i);
@@ -496,7 +598,7 @@ export class Machine {
             ...(uiProfile.resultSlots || []),
             uiProfile.fuelSlot,
             uiProfile.secondaryResultSlot
-        ].filter(s => s !== undefined));
+        ].filter((s): s is number => s !== undefined));
 
         for (let slot = 0; slot < this.inventory.size; slot++) {
             const item = this.inventory.getItem(slot);
@@ -520,7 +622,7 @@ export class Machine {
     /**
      * Renders static UI elements and placeholders.
      */
-    renderStaticUI(uiProfile) {
+    renderStaticUI(uiProfile: UIProfile | null): void {
         if (!uiProfile) return;
 
         const userSlots = [
@@ -528,7 +630,7 @@ export class Machine {
             ...(uiProfile.resultSlots || []),
             uiProfile.fuelSlot,
             uiProfile.secondaryResultSlot
-        ].filter(s => s !== undefined);
+        ].filter((s): s is number => s !== undefined);
 
         for (let slot = 0; slot < this.inventory.size; slot++) {
             if (userSlots.includes(slot)) continue;
@@ -544,7 +646,7 @@ export class Machine {
             }
 
             if (this.dynamicButtons.has(slot)) {
-                desiredId = this.dynamicButtons.get(slot).icon;
+                desiredId = this.dynamicButtons.get(slot)!.icon;
             }
 
             let isAnimatedAndRunning = false;
@@ -580,11 +682,11 @@ export class Machine {
     /**
      * Renders animated UI elements based on machine state.
      */
-    renderAnimatedUI(uiProfile) {
+    renderAnimatedUI(uiProfile: UIProfile | null): void {
         if (!uiProfile) return;
         if (uiProfile.animatedUI) {
             for (const part of uiProfile.animatedUI) {
-                const timer = this.timers[part.timer];
+                const timer = this.timers[part.timer] as TimerHelper | undefined;
                 if (timer === undefined) continue;
 
                 if (timer.value <= 0) continue; // Skip if timer is inactive
@@ -614,9 +716,9 @@ export class Machine {
 
     /**
      * Checks if an item is a protected UI element (static or animated).
-     * @param {ItemStack} item 
+     * @param {ItemStack | undefined} item 
      */
-    isUiItem(item) {
+    isUiItem(item: ItemStack | undefined): boolean {
         if (!item) return false;
         
         // Global ban list check
@@ -656,7 +758,7 @@ export class Machine {
      * or dropping it in the world if no player can take it.
      * @param {ItemStack} itemStack - The item to eject.
      */
-    ejectItem(itemStack) {
+    ejectItem(itemStack: ItemStack): void {
         if (!itemStack || itemStack.amount === 0) return;
 
         // Security: Never eject UI items to the world or player
@@ -665,9 +767,10 @@ export class Machine {
         // Try to give to nearest player
         const player = this.cachedPlayers[0];
         if (player) {
-            const inventory = player.getComponent("minecraft:inventory");
+            const inventory = player.getComponent("minecraft:inventory") as any;
             if (inventory) {
-                const remainder = inventory.container.addItem(itemStack);
+                const container = inventory.container as Container;
+                const remainder = container.addItem(itemStack);
                 if (!remainder) return; // All items added
                 itemStack = remainder; // Update itemStack to be the remainder
             }
@@ -687,12 +790,12 @@ export class Machine {
     /**
      * Retrieves the current UI configuration based on block state.
      */
-    getCurrentUiProfile() {
-        const pocketUi = this.block.permutation.getState('gaiadimension:pocket_ui' as any);
+    getCurrentUiProfile(): UIProfile {
+        const pocketUi = this.block.permutation.getState('gaiadimension:pocket_ui');
         return this.config.UI_CONFIG[pocketUi ? 'pocketProfile' : 'classicProfile'];
     }
 
-    handleHopperInteractions() {
+    handleHopperInteractions(): void {
         const uiProfile = this.getCurrentUiProfile();
         if (!uiProfile) return;
 
@@ -703,7 +806,7 @@ export class Machine {
                 const outputSlots = [
                     ...(uiProfile.resultSlots || []),
                     uiProfile.secondaryResultSlot
-                ].filter(s => s !== undefined);
+                ].filter((s): s is number => s !== undefined);
                 
                 if (outputSlots.length > 0) {
                     this.pushToHopper(hopperBelow, outputSlots);
@@ -716,8 +819,8 @@ export class Machine {
             const hopperAbove = this.block.above();
             if (hopperAbove && hopperAbove.typeId === "minecraft:hopper") {
                 // Check if hopper is facing DOWN (0) and not locked
-                const facing = hopperAbove.permutation.getState("facing_direction" as any);
-                const isLocked = hopperAbove.permutation.getState("toggle_bit" as any);
+                const facing = hopperAbove.permutation.getState("facing_direction");
+                const isLocked = hopperAbove.permutation.getState("toggle_bit");
                 
                 if (facing === 0 && !isLocked && uiProfile.inputSlots) {
                     this.pullFromHopper(hopperAbove, uiProfile.inputSlots);
@@ -727,7 +830,7 @@ export class Machine {
 
         // Input from Side Hoppers (Fuel/Catalyst) (Pull)
         if (uiProfile.fuelSlot !== undefined) {
-            const directions = {
+            const directions: Record<string, number> = {
                 north: 3, // Hopper at North must face South (3)
                 east: 4,  // Hopper at East must face West (4)
                 south: 2, // Hopper at South must face North (2)
@@ -736,10 +839,10 @@ export class Machine {
 
             for (const [dir, requiredFacing] of Object.entries(directions)) {
                 try {
-                    const hopperSide = this.block[dir](); // e.g., block.north()
+                    const hopperSide = (this.block as any)[dir](); // e.g., block.north()
                     if (hopperSide && hopperSide.typeId === "minecraft:hopper") {
-                        const facing = hopperSide.permutation.getState("facing_direction" as any);
-                        const isLocked = hopperSide.permutation.getState("toggle_bit" as any);
+                        const facing = hopperSide.permutation.getState("facing_direction");
+                        const isLocked = hopperSide.permutation.getState("toggle_bit");
 
                         if (facing === requiredFacing && !isLocked) {
                             this.pullFromHopper(hopperSide, [uiProfile.fuelSlot]);
@@ -753,10 +856,11 @@ export class Machine {
     /**
      * Pushes items from specific machine slots into a target hopper.
      */
-    pushToHopper(hopperBlock, sourceSlots) {
-        if (hopperBlock.permutation.getState("toggle_bit" as any)) return; // Hopper is locked
+    pushToHopper(hopperBlock: Block, sourceSlots: number[]): void {
+        if (hopperBlock.permutation.getState("toggle_bit")) return; // Hopper is locked
 
-        const hopperInventory = hopperBlock.getComponent("minecraft:inventory")?.container;
+        const inventoryComp = hopperBlock.getComponent("minecraft:inventory") as any;
+        const hopperInventory = inventoryComp?.container as Container | undefined;
         if (!hopperInventory) return;
 
         // Find first available output item
@@ -784,14 +888,15 @@ export class Machine {
     /**
      * Pulls items from a source hopper into specific machine slots.
      */
-    pullFromHopper(hopperBlock, targetSlots) {
-        const hopperInventory = hopperBlock.getComponent("minecraft:inventory")?.container;
+    pullFromHopper(hopperBlock: Block, targetSlots: number[]): void {
+        const inventoryComp = hopperBlock.getComponent("minecraft:inventory") as any;
+        const hopperInventory = inventoryComp?.container as Container | undefined;
         if (!hopperInventory) return;
 
                 
         // Find the first item in the hopper
         let hopperSlot = -1;
-        let itemToMove = null;
+        let itemToMove: ItemStack | null = null;
 
         for (let i = 0; i < hopperInventory.size; i++) {
             const item = hopperInventory.getItem(i);
@@ -842,7 +947,7 @@ export class Machine {
      * Called when the machine is destroyed/removed.
      * Ejects all valid player items (inputs, outputs, fuel) to the world.
      */
-    destroy() {
+    destroy(): void {
         if (!this.inventory) return;
 
         const uiProfile = this.getCurrentUiProfile();
@@ -854,9 +959,9 @@ export class Machine {
             ...(uiProfile.resultSlots || []),
             uiProfile.fuelSlot,
             uiProfile.secondaryResultSlot
-        ].filter(s => s !== undefined);
+        ].filter((s): s is number => s !== undefined);
 
-        const itemsToDrop = [];
+        const itemsToDrop: ItemStack[] = [];
         const dim = this.entity.dimension; // Capture dimension reference
         const dropLoc = { 
             x: this.entity.location.x, 
@@ -891,9 +996,9 @@ export class Machine {
 
     /**
      * Registers UI items from a machine config to be strictly managed (banned from drop/player inv).
-     * @param {Object} config - The machine's UI_CONFIG
+     * @param {UIConfig} config - The machine's UI_CONFIG
      */
-    static processUiConfig(config) {
+    static processUiConfig(config: UIConfig): void {
         if (!config) return;
         
         BANNED_ITEMS.add("gaiadimension:placeholder_invisible");
@@ -915,15 +1020,15 @@ export class Machine {
 }
 
 // --- Global UI Item Protection ---
-const BANNED_ITEMS = new Set(["gaiadimension:placeholder_invisible"]);
-const BANNED_PREFIXES = new Set();
+const BANNED_ITEMS: Set<string> = new Set(["gaiadimension:placeholder_invisible"]);
+const BANNED_PREFIXES: Set<string> = new Set();
 
 world.afterEvents.entitySpawn.subscribe((event) => {
     const { entity } = event;
     if (entity.typeId !== "minecraft:item") return;
 
     try {
-        const itemComp = entity.getComponent("minecraft:item");
+        const itemComp = entity.getComponent("minecraft:item") as any;
         if (!itemComp || !itemComp.itemStack) return;
 
         const typeId = itemComp.itemStack.typeId;
@@ -946,4 +1051,3 @@ world.afterEvents.entitySpawn.subscribe((event) => {
     } catch (e) {
     }
 });
-

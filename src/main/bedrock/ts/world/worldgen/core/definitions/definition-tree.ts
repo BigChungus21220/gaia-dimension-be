@@ -1,19 +1,36 @@
-import { BlockPermutation, Dimension, ListBlockVolume, Vector3, system } from "@minecraft/server";
-import { PalettedPlacer, ProceduralRandom } from "../utils";
+import { BlockPermutation, Dimension, ListBlockVolume, Vector3 } from "@minecraft/server";
+import { PalettedBrush, PalettedPlacer, ProceduralRandom } from "../utils";
 
-export class CompiledTreeSmaple {
-    public lists: Map<BlockPermutation, import("@minecraft/server").Vector3[]>;
+declare global {
+    interface Array<T> {
+        random(r?: number): T;
+    }
+    interface String {
+        toPermutation(r?: number): BlockPermutation;
+    }
+}
+
+declare module "@minecraft/server" {
+    interface BlockPermutation {
+        toPermutation(r?: number): BlockPermutation;
+    }
+}
+
+export type PermutationLike = string | BlockPermutation | PalettedBrush;
+
+export class CompiledTreeSample {
+    public lists: Map<BlockPermutation, Vector3[]>;
     constructor(){ 
         this.lists = new Map();
     }
-    placePaleteLike(){return this.lists.entries();}
-    [Symbol.iterator](){return this.lists.entries();}
+    placePaleteLike(): IterableIterator<[BlockPermutation, Vector3[]]> {return this.lists.entries();}
+    [Symbol.iterator](): IterableIterator<[BlockPermutation, Vector3[]]> {return this.lists.entries();}
 }
 
 export abstract class TreeDefinition {
     public id: string;
     public IsPrecalculated: boolean;
-    public samples: CompiledTreeSmaple[];
+    public samples: CompiledTreeSample[];
 
     constructor(id: string){
         this.id = id;
@@ -23,20 +40,20 @@ export abstract class TreeDefinition {
 
     abstract build(location: Vector3, seed: ProceduralRandom, placer: PalettedPlacer): Generator<void, void, unknown>;
     
-    place(location: Vector3 & { dimension: Dimension }, seed: ProceduralRandom, placer: PalettedPlacer){ 
+    place(location: Vector3 & { dimension: Dimension }, seed: ProceduralRandom, placer: PalettedPlacer): Generator<void, void, unknown> { 
         return this.build(location, seed, placer); 
     }
 
-    onPrecalculate(samples: number, seed: ProceduralRandom){
+    onPrecalculate(samples: number, seed: ProceduralRandom): void {
         samples ??= 5;
         this.IsPrecalculated = true;
         while(samples-- > 0){
             const placer = new PalettedPlacer();
-            for(const empty of this.build({x:0,y:0,z:0}, seed, placer));
-            const sample = new CompiledTreeSmaple();
+            for(const _ of this.build({x:0,y:0,z:0}, seed, placer));
+            const sample = new CompiledTreeSample();
             for(const [p, list] of placer.palettes.entries()) {
                 const volume = new ListBlockVolume(list);
-                const newList = [];
+                const newList: Vector3[] = [];
                 for(const a of volume.getBlockLocationIterator()) newList.push(a);
                 sample.lists.set(p, newList);
             }
@@ -44,16 +61,15 @@ export abstract class TreeDefinition {
         }
     }
 
-    /**@returns {CompiledTreeSmaple} */
-    getCompiledSample(r: number){ return (this.samples as any).random(r); }
+    getCompiledSample(r: number): CompiledTreeSample { return this.samples.random(r); }
 
     /** Used by the generator to validate placement */
-    public canPlaceValidator: (loc: any) => boolean = () => true;
+    public canPlaceValidator: (loc: Vector3) => boolean = () => true;
 }
 
 export class PillarTreeDefinition extends TreeDefinition {
     public height: [number, number];
-    public logPaletted: any;
+    public logPaletted: PermutationLike;
 
     constructor(id: string = "pillar"){
         super(id);
@@ -61,14 +77,14 @@ export class PillarTreeDefinition extends TreeDefinition {
         this.logPaletted = "minecraft:spruce_log";
     }
 
-    setCanPlaceValidator(p: (loc: any) => boolean){this.canPlaceValidator = p; return this;}
+    setCanPlaceValidator(p: (loc: Vector3) => boolean): this {this.canPlaceValidator = p; return this;}
 
-    setLogPaletted(p: any){
+    setLogPaletted(p: PermutationLike): this {
         this.logPaletted = p;
         return this;
     }
 
-    setHeight(min: number, max: number){
+    setHeight(min: number, max?: number): this {
         this.height[0] = min;
         this.height[1] = max??min;
         return this;
@@ -85,7 +101,7 @@ export class PillarTreeDefinition extends TreeDefinition {
 
 export class SpruceTreeDefinition extends PillarTreeDefinition {
     public offset: [number, number];
-    public leavesPaletted: any;
+    public leavesPaletted: PermutationLike;
 
     constructor(){
         super("spruce");
@@ -93,12 +109,12 @@ export class SpruceTreeDefinition extends PillarTreeDefinition {
         this.leavesPaletted = "minecraft:spruce_leaves";
     }
 
-    setLeavesPaletted(p: any){
+    setLeavesPaletted(p: PermutationLike): this {
         this.leavesPaletted = p;
         return this;
     }
 
-    setOffSet(min: number, max: number){
+    setOffSet(min: number, max?: number): this {
         this.offset[0] = min;
         this.offset[1] = max??min;
         return this;
@@ -131,14 +147,14 @@ export class SpruceTreeDefinition extends PillarTreeDefinition {
 }
 
 export class CuttedSpruceTreeDefinition extends PillarTreeDefinition {
-    public carpetPaletted: any;
+    public carpetPaletted: PermutationLike;
 
     constructor(){
         super("cut_spruce");
         this.carpetPaletted = "minecraft:moss_carpet";
     }
 
-    setCarpetPaletted(p: any){
+    setCarpetPaletted(p: PermutationLike): this {
         this.carpetPaletted = p;
         return this;
     }
@@ -170,14 +186,13 @@ export class CuttedSpruceTreeDefinition extends PillarTreeDefinition {
 export class TreePalette {
     public trees: TreeDefinition[];
     constructor(){ this.trees = []; }
-    add(treeDefinition: TreeDefinition, num?: number){
+    add(treeDefinition: TreeDefinition, num?: number): this {
         let value = num??1;
         while(value--) this.trees.push(treeDefinition);
         return this;
     }
-    /**@returns {TreeDefinition} */
-    get(random: number): TreeDefinition { return (this.trees as any).random(random); }
-    onPrecalculate(samples: number, seed: ProceduralRandom){
+    get(random: number): TreeDefinition { return this.trees.random(random); }
+    onPrecalculate(samples: number, seed: ProceduralRandom): void {
         for(const tree of this.trees) if(!tree.IsPrecalculated) tree.onPrecalculate(samples, seed);
     }
 }

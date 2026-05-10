@@ -12,8 +12,6 @@
  * Minecraft-style layer system the Java mod uses.
  */
 
-import { BiomeDefinition } from "../definitions/definition-biome";
-
 // ══════════════════════════════════════════════════
 //  BIOME IDS — simple numeric IDs like Java's registry IDs
 // ══════════════════════════════════════════════════
@@ -49,12 +47,14 @@ export const BIOME_IDS = {
     GOLD_ISLAND:        22,
 } as const;
 
+export type BiomeId = typeof BIOME_IDS[keyof typeof BIOME_IDS];
+
 const B = BIOME_IDS;
 
-const COMMON = [B.PINK_AGATE_FOREST, B.BLUE_AGATE_TAIGA, B.GREEN_AGATE_JUNGLE, B.CRYSTAL_PLAINS, B.FOSSIL_WOODLAND];
-const UNCOMMON = [B.VOLCANIC_LANDS, B.STATIC_WASTELAND, B.SALT_DUNES, B.SMOLDERING_BOG, B.SHINING_GROVE, B.MOOKAITE_MESA];
-const RARE = [B.PURPLE_AGATE_SWAMP, B.GOLDSTONE_LANDS, B.MUTANT_WILDWOOD];
-const GOLD = [B.GOLDEN_SANDS, B.GOLDEN_MARSH, B.GOLDEN_HILLS, B.GOLDEN_FOREST, B.GOLDEN_PLAINS];
+const COMMON: readonly BiomeId[] = [B.PINK_AGATE_FOREST, B.BLUE_AGATE_TAIGA, B.GREEN_AGATE_JUNGLE, B.CRYSTAL_PLAINS, B.FOSSIL_WOODLAND];
+const UNCOMMON: readonly BiomeId[] = [B.VOLCANIC_LANDS, B.STATIC_WASTELAND, B.SALT_DUNES, B.SMOLDERING_BOG, B.SHINING_GROVE, B.MOOKAITE_MESA];
+const RARE: readonly BiomeId[] = [B.PURPLE_AGATE_SWAMP, B.GOLDSTONE_LANDS, B.MUTANT_WILDWOOD];
+const GOLD: readonly BiomeId[] = [B.GOLDEN_SANDS, B.GOLDEN_MARSH, B.GOLDEN_HILLS, B.GOLDEN_FOREST, B.GOLDEN_PLAINS];
 
 // ══════════════════════════════════════════════════
 //  SEEDED RNG — matches Java's LinearCongruentialGenerator
@@ -63,7 +63,7 @@ class LayerRNG {
     private state: number;
     constructor(seed: number) { this.state = seed | 0; }
 
-    initRandom(x: number, z: number) {
+    public initRandom(x: number, z: number): void {
         let s = this.state;
         s = Math.imul(s, s * 6364136223846793005 + 1442695040888963407 | 0);
         s = (s + x) | 0;
@@ -76,18 +76,18 @@ class LayerRNG {
         this.state = s;
     }
 
-    nextRandom(bound: number): number {
+    public nextRandom(bound: number): number {
         let r = ((this.state >> 24) % bound) | 0;
         if (r < 0) r += bound;
         this.state = Math.imul(this.state, 6364136223846793005) + 1442695040888963407 | 0;
         return r;
     }
 
-    random2(a: number, b: number): number {
+    public random2<T>(a: T, b: T): T {
         return this.nextRandom(2) === 0 ? a : b;
     }
 
-    random4(a: number, b: number, c: number, d: number): number {
+    public random4<T>(a: T, b: T, c: T, d: T): T {
         const r = this.nextRandom(4);
         return r === 0 ? a : r === 1 ? b : r === 2 ? c : d;
     }
@@ -96,18 +96,18 @@ class LayerRNG {
 // ══════════════════════════════════════════════════
 //  LAYER CACHE — 2D grid that stores biome IDs
 // ══════════════════════════════════════════════════
-type LayerFn = (x: number, z: number) => number;
+type LayerFn = (x: number, z: number) => BiomeId;
 
-function cachedLayer(fn: LayerFn, cacheSize = 1024): LayerFn {
-    const cache = new Map<number, number>();
-    return (x: number, z: number) => {
+function cachedLayer(fn: LayerFn, cacheSize: number = 1024): LayerFn {
+    const cache = new Map<number, BiomeId>();
+    return (x: number, z: number): BiomeId => {
         const key = ((x & 0xFFFF) << 16) | (z & 0xFFFF);
-        let v = cache.get(key);
+        const v = cache.get(key);
         if (v !== undefined) return v;
-        v = fn(x, z);
+        const res = fn(x, z);
         if (cache.size > cacheSize) cache.clear();
-        cache.set(key, v);
-        return v;
+        cache.set(key, res);
+        return res;
     };
 }
 
@@ -117,7 +117,7 @@ function cachedLayer(fn: LayerFn, cacheSize = 1024): LayerFn {
 
 function islandLayer(seed: number): LayerFn {
     const rng = new LayerRNG(seed);
-    return cachedLayer((x, z) => {
+    return cachedLayer((x: number, z: number): BiomeId => {
         rng.initRandom(x, z);
         if (x === 0 && z === 0) return B.LAND;
         return rng.nextRandom(10) === 0 ? B.LAND : B.OCEAN;
@@ -126,7 +126,7 @@ function islandLayer(seed: number): LayerFn {
 
 function zoomLayer(parent: LayerFn, seed: number, fuzzy: boolean): LayerFn {
     const rng = new LayerRNG(seed);
-    return cachedLayer((x, z) => {
+    return cachedLayer((x: number, z: number): BiomeId => {
         const px = x >> 1, pz = z >> 1;
         const first = parent(px, pz);
         rng.initRandom(px << 1, pz << 1);
@@ -148,7 +148,7 @@ function zoomLayer(parent: LayerFn, seed: number, fuzzy: boolean): LayerFn {
     });
 }
 
-function modeOrRandom(rng: LayerRNG, a: number, b: number, c: number, d: number): number {
+function modeOrRandom(rng: LayerRNG, a: BiomeId, b: BiomeId, c: BiomeId, d: BiomeId): BiomeId {
     if (b === c && c === d) return b;
     if (a === b && a === c) return a;
     if (a === b && a === d) return a;
@@ -162,12 +162,12 @@ function modeOrRandom(rng: LayerRNG, a: number, b: number, c: number, d: number)
     return rng.random4(a, b, c, d);
 }
 
-function isOcean(v: number): boolean { return v === B.OCEAN; }
-function isGold(v: number): boolean { return v === B.GOLD_ISLAND || GOLD.includes(v as any); }
+function isOcean(v: BiomeId): boolean { return v === B.OCEAN; }
+function isGold(v: BiomeId): boolean { return v === B.GOLD_ISLAND || GOLD.includes(v); }
 
 function addIslandLayer(parent: LayerFn, seed: number): LayerFn {
     const rng = new LayerRNG(seed);
-    return cachedLayer((x, z) => {
+    return cachedLayer((x: number, z: number): BiomeId => {
         // Bishop neighbors (diagonals)
         const sw = parent(x - 1, z - 1);
         const se = parent(x + 1, z - 1);
@@ -185,19 +185,19 @@ function addIslandLayer(parent: LayerFn, seed: number): LayerFn {
             }
             return center;
         } else {
-            let i = 1, j: number = B.LAND;
+            let i = 1, j: BiomeId = B.LAND;
             if (!isOcean(nw) && rng.nextRandom(i++) === 0) j = nw;
             if (!isOcean(ne) && rng.nextRandom(i++) === 0) j = ne;
             if (!isOcean(sw) && rng.nextRandom(i++) === 0) j = sw;
             if (!isOcean(se) && rng.nextRandom(i++) === 0) j = se;
-            return rng.nextRandom(3) === 0 ? j : (j === B.LAND ? B.LAND : center);
+            return (rng.nextRandom(3) === 0 ? j : (j === B.LAND ? B.LAND : center));
         }
     });
 }
 
 function removeTooMuchOcean(parent: LayerFn, seed: number): LayerFn {
     const rng = new LayerRNG(seed);
-    return cachedLayer((x, z) => {
+    return cachedLayer((x: number, z: number): BiomeId => {
         const n = parent(x, z - 1), e = parent(x + 1, z);
         const s = parent(x, z + 1), w = parent(x - 1, z);
         const c = parent(x, z);
@@ -211,7 +211,7 @@ function removeTooMuchOcean(parent: LayerFn, seed: number): LayerFn {
 
 function goldIslandLayer(parent: LayerFn, seed: number): LayerFn {
     const rng = new LayerRNG(seed);
-    return cachedLayer((x, z) => {
+    return cachedLayer((x: number, z: number): BiomeId => {
         const sw = parent(x - 1, z - 1), se = parent(x + 1, z - 1);
         const ne = parent(x + 1, z + 1), nw = parent(x - 1, z + 1);
         const c = parent(x, z);
@@ -225,7 +225,7 @@ function goldIslandLayer(parent: LayerFn, seed: number): LayerFn {
 
 function gaiaBiomesLayer(parent: LayerFn, seed: number): LayerFn {
     const rng = new LayerRNG(seed);
-    return cachedLayer((x, z) => {
+    return cachedLayer((x: number, z: number): BiomeId => {
         const c = parent(x, z);
         rng.initRandom(x, z);
         if (isOcean(c)) return c;
@@ -238,7 +238,7 @@ function gaiaBiomesLayer(parent: LayerFn, seed: number): LayerFn {
 
 function smoothLayer(parent: LayerFn, seed: number): LayerFn {
     const rng = new LayerRNG(seed);
-    return cachedLayer((x, z) => {
+    return cachedLayer((x: number, z: number): BiomeId => {
         const c = parent(x, z);
         const n = parent(x, z - 1), e = parent(x + 1, z);
         const s = parent(x, z + 1), w = parent(x - 1, z);
@@ -252,7 +252,7 @@ function smoothLayer(parent: LayerFn, seed: number): LayerFn {
 
 function riverLayer(parent: LayerFn, seed: number): LayerFn {
     const rng = new LayerRNG(seed);
-    return cachedLayer((x, z) => {
+    return cachedLayer((x: number, z: number): BiomeId => {
         const c = parent(x, z);
         const n = parent(x, z - 1), e = parent(x + 1, z);
         const s = parent(x, z + 1), w = parent(x - 1, z);
@@ -262,7 +262,7 @@ function riverLayer(parent: LayerFn, seed: number): LayerFn {
 }
 
 function riverMixLayer(biomesParent: LayerFn, riverParent: LayerFn, seed: number): LayerFn {
-    return cachedLayer((x, z) => {
+    return cachedLayer((x: number, z: number): BiomeId => {
         const biome = biomesParent(x, z);
         const river = riverParent(x, z);
         if (isOcean(biome)) return biome;
@@ -272,9 +272,9 @@ function riverMixLayer(biomesParent: LayerFn, riverParent: LayerFn, seed: number
 }
 
 function oceanMixLayer(biomesParent: LayerFn, oceanParent: LayerFn, seed: number): LayerFn {
-    return cachedLayer((x, z) => {
+    return cachedLayer((x: number, z: number): BiomeId => {
         const biome = biomesParent(x, z);
-        const ocean = oceanParent(x, z);
+        // const ocean = oceanParent(x, z); // unused in original
         if (!isOcean(biome)) return biome;
         return B.OCEAN; // mineral_reservoir
     });
@@ -284,7 +284,7 @@ function oceanMixLayer(biomesParent: LayerFn, oceanParent: LayerFn, seed: number
 //  BUILD LAYER STACK — matches GaiaLayerUtil.makeLayers()
 // ══════════════════════════════════════════════════
 export function buildGaiaLayers(worldSeed: number): LayerFn {
-    let islands = islandLayer(worldSeed + 1);
+    let islands: LayerFn = islandLayer(worldSeed + 1);
     islands = zoomLayer(islands, worldSeed + 2000, true);  // FUZZY
     islands = addIslandLayer(islands, worldSeed + 1);
     islands = zoomLayer(islands, worldSeed + 2001, false);  // NORMAL
@@ -293,8 +293,8 @@ export function buildGaiaLayers(worldSeed: number): LayerFn {
     islands = addIslandLayer(islands, worldSeed + 70);
     islands = removeTooMuchOcean(islands, worldSeed + 2);
 
-    let ocean = islandLayer(worldSeed + 2); // All ocean
-    ocean = cachedLayer((x, z) => B.OCEAN); // OceanLayer always returns ocean
+    let ocean: LayerFn = islandLayer(worldSeed + 2); // All ocean
+    ocean = cachedLayer((_x: number, _z: number): BiomeId => B.OCEAN); // OceanLayer always returns ocean
     ocean = zoomLayer(ocean, worldSeed + 2001, true);
     for (let i = 2002; i <= 2005; i++) ocean = zoomLayer(ocean, worldSeed + i, false);
     ocean = smoothLayer(ocean, worldSeed + 1003);
@@ -306,11 +306,11 @@ export function buildGaiaLayers(worldSeed: number): LayerFn {
     islands = goldIslandLayer(islands, worldSeed + 5);
     islands = zoomLayer(islands, worldSeed + 1000, false);
 
-    let biomes = gaiaBiomesLayer(islands, worldSeed + 1);
+    let biomes: LayerFn = gaiaBiomesLayer(islands, worldSeed + 1);
     for (let i = 1000; i <= 1005; i++) biomes = zoomLayer(biomes, worldSeed + i, false);
 
     // River generation — Java: exactly 1 smooth pass (GaiaLayerUtil.java L52)
-    let river = riverLayer(biomes, worldSeed + 1);
+    let river: LayerFn = riverLayer(biomes, worldSeed + 1);
     river = smoothLayer(river, worldSeed + 1000);
 
     biomes = smoothLayer(biomes, worldSeed + 1000);
@@ -323,7 +323,7 @@ export function buildGaiaLayers(worldSeed: number): LayerFn {
 // ══════════════════════════════════════════════════
 //  BIOME ID → BIOME DEFINITION LOOKUP
 // ══════════════════════════════════════════════════
-const ID_TO_NAME: Record<number, string> = {
+const ID_TO_NAME: Partial<Record<BiomeId, string>> = {
     [B.OCEAN]:              "gaiadimension:crystal_plains",
     [B.PINK_AGATE_FOREST]:  "gaiadimension:pink_agate_forest",
     [B.BLUE_AGATE_TAIGA]:   "gaiadimension:blue_agate_taiga",
@@ -349,6 +349,6 @@ const ID_TO_NAME: Record<number, string> = {
     [B.LAND]:               "gaiadimension:crystal_plains",
 };
 
-export function getBiomeNameFromId(id: number): string {
+export function getBiomeNameFromId(id: BiomeId): string {
     return ID_TO_NAME[id] ?? "gaiadimension:crystal_plains";
 }
