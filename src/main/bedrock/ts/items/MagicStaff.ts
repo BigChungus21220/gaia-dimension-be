@@ -119,7 +119,7 @@ function physicsTick(c: ForceContraption): void {
     // Floor clamp
     if (c.center.y < -64) { c.center.y = -64; c.velocity.y = 0; }
 
-    const maxAng = 0.08;
+    const maxAng = 0.5;
 
     c.angularVel.x = Math.max(-maxAng, Math.min(maxAng, c.angularVel.x));
     c.angularVel.y = Math.max(-maxAng, Math.min(maxAng, c.angularVel.y));
@@ -135,17 +135,8 @@ function physicsTick(c: ForceContraption): void {
     c.angularVel.x *= 0.96;
     c.angularVel.y *= 0.96;
 
-    // ── Sync: delay position orbit to match client_sync property latency ──
-    const SYNC_DELAY = 3;
-    if (!c.rotHistory) c.rotHistory = [];
-    c.rotHistory.push({ x: c.rotation.x, y: c.rotation.y });
-    if (c.rotHistory.length > SYNC_DELAY + 1) c.rotHistory.shift();
-
-    // Position uses delayed rotation (what client is currently showing)
-    const delayed = c.rotHistory[0];
-    const delayedRot: Vector3 = { x: delayed.x, y: delayed.y, z: 0 };
-
-    // Properties use current rotation (will arrive at client in ~SYNC_DELAY ticks)
+    // ── Contraption: ALL movement via properties (100% sync) ──
+    // Animation computes both rotation AND orbital position from properties
     const SCALE = 10000000;
     const toScaled = (rad: number) => {
         let d = (rad * 180 / Math.PI) % 360;
@@ -158,11 +149,11 @@ function physicsTick(c: ForceContraption): void {
 
     for (const child of c.children) {
         if (!child.entity.isValid) continue;
-        const rotated = applyRotation(child.relPos, delayedRot);
+        // ALL blocks go to center — animation handles the orbital offset
         child.entity.teleport({
-            x: c.center.x + rotated.x,
-            y: c.center.y + rotated.y,
-            z: c.center.z + rotated.z
+            x: c.center.x,
+            y: c.center.y,
+            z: c.center.z
         });
         child.entity.setProperty("gaiadimension:tumble_a", pitchS);
         child.entity.setProperty("gaiadimension:tumble_b", yawS);
@@ -309,6 +300,10 @@ function handleForceGrab(player: Player): void {
                             entity.runCommand(`replaceitem entity @s slot.weapon.mainhand 0 ${blockTypeId}`);
                         }
                     });
+                    // Set grid position properties (used by animation for orbital offset)
+                    entity.setProperty("gaiadimension:rel_x", x);
+                    entity.setProperty("gaiadimension:rel_y", y);
+                    entity.setProperty("gaiadimension:rel_z", z);
                     children.push({ entity, relPos: { x, y, z }, blockTypeId });
                     block.setType("minecraft:air");
                 }

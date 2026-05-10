@@ -8262,17 +8262,6 @@ function registerFireStarterComponent({ itemComponentRegistry }) {
 // src/main/bedrock/ts/items/MagicStaff.ts
 import { world as world24, system as system32, Player as Player26 } from "@minecraft/server";
 var activeContraptions = /* @__PURE__ */ new Map();
-function applyRotation(p, r) {
-  const cx = Math.cos(r.x), sx = Math.sin(r.x);
-  const x1 = p.x;
-  const y1 = p.y * cx - p.z * sx;
-  const z1 = p.y * sx + p.z * cx;
-  const cy = Math.cos(r.y), sy = Math.sin(r.y);
-  const x2 = x1 * cy - z1 * sy;
-  const y2 = y1;
-  const z2 = x1 * sy + z1 * cy;
-  return { x: x2, y: y2, z: z2 };
-}
 function isSolid(dim, x, y, z) {
   const b = dim.getBlock({ x: Math.floor(x), y: Math.floor(y), z: Math.floor(z) });
   return !!b && !b.isAir && !b.isLiquid;
@@ -8311,7 +8300,7 @@ function physicsTick(c) {
     c.center.y = -64;
     c.velocity.y = 0;
   }
-  const maxAng = 0.08;
+  const maxAng = 0.5;
   c.angularVel.x = Math.max(-maxAng, Math.min(maxAng, c.angularVel.x));
   c.angularVel.y = Math.max(-maxAng, Math.min(maxAng, c.angularVel.y));
   c.rotation.x += c.angularVel.x;
@@ -8321,12 +8310,6 @@ function physicsTick(c) {
   c.rotation.y = (c.rotation.y % PI2 + PI2 + Math.PI) % PI2 - Math.PI;
   c.angularVel.x *= 0.96;
   c.angularVel.y *= 0.96;
-  const SYNC_DELAY = 3;
-  if (!c.rotHistory) c.rotHistory = [];
-  c.rotHistory.push({ x: c.rotation.x, y: c.rotation.y });
-  if (c.rotHistory.length > SYNC_DELAY + 1) c.rotHistory.shift();
-  const delayed = c.rotHistory[0];
-  const delayedRot = { x: delayed.x, y: delayed.y, z: 0 };
   const SCALE = 1e7;
   const toScaled = (rad) => {
     let d = rad * 180 / Math.PI % 360;
@@ -8338,11 +8321,10 @@ function physicsTick(c) {
   const yawS = Math.max(-18e8, Math.min(18e8, toScaled(c.rotation.y)));
   for (const child of c.children) {
     if (!child.entity.isValid) continue;
-    const rotated = applyRotation(child.relPos, delayedRot);
     child.entity.teleport({
-      x: c.center.x + rotated.x,
-      y: c.center.y + rotated.y,
-      z: c.center.z + rotated.z
+      x: c.center.x,
+      y: c.center.y,
+      z: c.center.z
     });
     child.entity.setProperty("gaiadimension:tumble_a", pitchS);
     child.entity.setProperty("gaiadimension:tumble_b", yawS);
@@ -8467,6 +8449,9 @@ function handleForceGrab(player) {
               entity.runCommand(`replaceitem entity @s slot.weapon.mainhand 0 ${blockTypeId}`);
             }
           });
+          entity.setProperty("gaiadimension:rel_x", x);
+          entity.setProperty("gaiadimension:rel_y", y);
+          entity.setProperty("gaiadimension:rel_z", z);
           children.push({ entity, relPos: { x, y, z }, blockTypeId });
           block.setType("minecraft:air");
         }

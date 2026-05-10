@@ -3,12 +3,18 @@
   "animations": {
     "animation.gaiadimension.contraption.tumble": {
       "loop": true,
+      "override_previous_animation": true,
       "bones": {
         "root": {
           "rotation": [
             "q.property('gaiadimension:tumble_a') / 10000000",
-            "q.property('gaiadimension:tumble_b') / 10000000",
+            "-(q.property('gaiadimension:tumble_b') / 10000000)",
             0
+          ],
+          "position": [
+            "v.p = q.property('gaiadimension:tumble_a') / 10000000; v.w = q.property('gaiadimension:tumble_b') / 10000000; v.rx = q.property('gaiadimension:rel_x'); v.ry = q.property('gaiadimension:rel_y'); v.rz = q.property('gaiadimension:rel_z'); v.y1 = v.ry * math.cos(v.p) - v.rz * math.sin(v.p); v.z1 = v.ry * math.sin(v.p) + v.rz * math.cos(v.p); v.s = 16.0 / 2.7; return -(v.rx * math.cos(v.w) - v.z1 * math.sin(v.w)) * v.s;",
+            "v.p = q.property('gaiadimension:tumble_a') / 10000000; v.ry = q.property('gaiadimension:rel_y'); v.rz = q.property('gaiadimension:rel_z'); v.s = 16.0 / 2.7; return (v.ry * math.cos(v.p) - v.rz * math.sin(v.p)) * v.s;",
+            "v.p = q.property('gaiadimension:tumble_a') / 10000000; v.w = q.property('gaiadimension:tumble_b') / 10000000; v.rx = q.property('gaiadimension:rel_x'); v.ry = q.property('gaiadimension:rel_y'); v.rz = q.property('gaiadimension:rel_z'); v.z1 = v.ry * math.sin(v.p) + v.rz * math.cos(v.p); v.s = 16.0 / 2.7; return -(v.rx * math.sin(v.w) + v.z1 * math.cos(v.w)) * v.s;"
           ]
         }
       }
