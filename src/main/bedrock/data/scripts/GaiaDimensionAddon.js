@@ -8499,10 +8499,11 @@ function handleForceGrab(player) {
         z: headLoc.z + viewDir.z * 4
       };
       for (const child of contraption.children) {
+        if (!child.entity.isValid) continue;
         child.entity.teleport({
-          x: contraption.center.x + child.relPos.x,
-          y: contraption.center.y + child.relPos.y,
-          z: contraption.center.z + child.relPos.z
+          x: contraption.center.x,
+          y: contraption.center.y,
+          z: contraption.center.z
         });
       }
     } else {
