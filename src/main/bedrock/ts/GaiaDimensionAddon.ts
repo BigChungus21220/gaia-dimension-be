@@ -39,7 +39,8 @@ import { registerCustomTool } from "./durability.js";
 import { registerGaiaCommands } from "./systems/Commands.js";
 import { registerSetBiomeCommand } from "./systems/SetBiomeCommand.js";
 import { registerFireStarterComponent } from "./items/FireStarter.js";
-import { registerDestructionCommands, registerRealmDimensions, initDestroyedDimensionGuard } from "./systems/DimensionDestruction.js";
+import { registerDestructionCommands, registerRealmDimensions, initDestroyedDimensionGuard, REALM_COUNT, REALM_PREFIX } from "./systems/DimensionDestruction.js";
+import { registerDimension } from "./utils.js";
 import { registerMagicStaffComponent } from "./items/MagicStaff.js";
 import { initializeMagicStaffBehaviors } from "./systems/MagicStaffBehaviors.js";
 import { initializeGlitterGrassSync } from "./blocks/GlitterGrassSync.js";
@@ -82,10 +83,16 @@ system.beforeEvents.startup.subscribe((event: StartupEvent) => {
     const { blockComponentRegistry, customCommandRegistry, itemComponentRegistry, dimensionRegistry } = event;
     
     // Register Native Gaia Dimension
-    dimensionRegistry.registerCustomDimension("gaiadimension:gaia_dimension");
+    const gaiaDimId = "gaiadimension:gaia_dimension";
+    dimensionRegistry.registerCustomDimension(gaiaDimId);
+    registerDimension(gaiaDimId);
 
     // Register dynamic realm pool (16 void dimensions)
     registerRealmDimensions(dimensionRegistry);
+    // Mirror realm registrations into the shared dimension registry
+    for (let i = 0; i < REALM_COUNT; i++) {
+        registerDimension(`${REALM_PREFIX}${i}`);
+    }
 
     registerLeavesComponent({ blockComponentRegistry });
     registerInvisibleComponent({ blockComponentRegistry });

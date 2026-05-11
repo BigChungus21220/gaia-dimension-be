@@ -1,4 +1,5 @@
 import { world, system, Entity, Player, EquipmentSlot, GameMode, EntityComponentTypes, EntityDamageCause, EntityHealthComponent, EntityMarkVariantComponent, EntityEquippableComponent, Dimension } from "@minecraft/server";
+import { getDimensions } from "../utils.js";
 
 // ─── Enums & Types ───────────────────────────────────────────────────
 enum GuardPhase {
@@ -120,11 +121,12 @@ class MalachiteGuardSystem {
 
         // ── Core tick loop (every 1 tick for precise timing) ──
         system.runInterval(() => {
-            const overworld: Dimension = world.getDimension("overworld");
-            const guards: Entity[] = overworld.getEntities({ type: GUARD_ID });
-            for (const guard of guards) {
-                if (!guard.isValid) continue;
-                try { this.tickGuard(guard); } catch {}
+            for (const dimension of getDimensions()) {
+                const guards: Entity[] = dimension.getEntities({ type: GUARD_ID });
+                for (const guard of guards) {
+                    if (!guard.isValid) continue;
+                    try { this.tickGuard(guard); } catch {}
+                }
             }
         }, 1);
 

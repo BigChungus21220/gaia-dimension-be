@@ -1,4 +1,5 @@
 import { world, Entity as VanillaEntity } from "@minecraft/server";
+import { getDimensions } from "../ts/utils.js";
 import { Entity } from "./net/minecraft/world/entity/Entity.js";
 import { PartEntity } from "./net/neoforged/neoforge/entity/PartEntity.js";
 import { Level } from "./net/minecraft/world/level/Level.js";
@@ -54,12 +55,14 @@ export class MultipartEntityUtil {
 
     private static getAllLinkedParts(parentId: string): VanillaEntity[] {
         const parts: VanillaEntity[] = [];
-        for (const dimension of ["overworld", "nether", "the_end"]) {
-            const d = world.getDimension(dimension);
-            if (!d) continue;
-            // Manual filter as propertyFilters is not standard in stable yet
-            const found = d.getEntities().filter(e => e.getDynamicProperty(this.PARENT_ID_PROP) === parentId);
-            parts.push(...found);
+        for (const d of getDimensions()) {
+            try {
+                // Manual filter as propertyFilters is not standard in stable yet
+                const found = d.getEntities().filter(e => e.getDynamicProperty(this.PARENT_ID_PROP) === parentId);
+                parts.push(...found);
+            } catch {
+                // Dimension not available
+            }
         }
         return parts;
     }

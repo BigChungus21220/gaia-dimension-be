@@ -5,6 +5,7 @@
  * It automatically handles spawning, despawning, interaction, and ticking.
  */
 import { world, system, Entity, Block, Vector3, Dimension, Player } from "@minecraft/server";
+import { getDimensions } from "../../utils.js";
 
 declare module "@minecraft/server" {
     interface Entity {
@@ -499,7 +500,7 @@ class BlockEntityManager {
 
     handleWorldLoad(): void {
         console.warn("[BlockEntity] World load handling started...");
-        const dimensions = ["overworld", "nether", "the_end"].map(id => world.getDimension(id));
+        const dimensions = getDimensions();
         dimensions.forEach(dimension => {
             const entities = dimension.getEntities({ families: ['luminiae_generic'] });
             console.warn(`[BlockEntity] Found ${entities.length} generic block entities in ${dimension.id}`);

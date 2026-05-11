@@ -1,0 +1,49 @@
+{
+  "format_version": "1.16.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "gaiadimension:contraption_seat",
+      "is_spawnable": false,
+      "is_summonable": true,
+      "is_experimental": false
+    },
+    "component_groups": {
+      "despawn": { "minecraft:instant_despawn": {} }
+    },
+    "components": {
+      "minecraft:movement.basic": {},
+      "minecraft:movement": { "value": 1.0 },
+      "minecraft:input_ground_controlled": {},
+      "minecraft:behavior.controlled_by_player": {
+        "fractional_rotation": 1.0,
+        "fractional_rotation_limit": 360.0,
+        "priority": 9999
+      },
+      "minecraft:type_family": { "family": ["contraption_seat", "inanimate"] },
+      "minecraft:is_stackable": {},
+      "minecraft:can_climb": {},
+      "minecraft:rideable": {
+        "seat_count": 1,
+        "interact_text": "action.hint.exit",
+        "seats": [
+          { "position": [0.0, 0.6, 0.0] }
+        ]
+      },
+      "minecraft:collision_box": { "width": 0.9, "height": 1.0 },
+      "minecraft:physics": { "has_collision": true, "has_gravity": true },
+      "minecraft:damage_sensor": {
+        "triggers": { "deals_damage": false }
+      },
+      "minecraft:fire_immune": true,
+      "minecraft:health": { "value": 1, "max": 1 },
+      "minecraft:knockback_resistance": { "value": 1.0 },
+      "minecraft:pushable": { "is_pushable": false, "is_pushable_by_piston": false },
+      "minecraft:nameable": { "allow_name_tag_renaming": false, "always_show": false },
+      "minecraft:conditional_bandwidth_optimization": {},
+      "minecraft:persistent": {}
+    },
+    "events": {
+      "gaiadimension:despawn": { "add": { "component_groups": ["despawn"] } }
+    }
+  }
+}

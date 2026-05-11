@@ -28,8 +28,8 @@ const CORE_DIMENSIONS: DimEntry[] = [
 ];
 
 /** Dynamic realm pool — registered at startup, void worlds */
-const REALM_COUNT = 16;
-const REALM_PREFIX = "gaiadimension:realm_";
+export const REALM_COUNT = 16;
+export const REALM_PREFIX = "gaiadimension:realm_";
 
 function getRealmDims(): DimEntry[] {
     const realms: DimEntry[] = [];

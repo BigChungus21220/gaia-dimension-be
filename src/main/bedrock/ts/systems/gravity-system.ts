@@ -1,4 +1,4 @@
-import { world, BlockPermutation, Block, Vector3, PlayerPlaceBlockAfterEvent, PlayerBreakBlockAfterEvent, Dimension } from "@minecraft/server";
+import { BlockPermutation, Block, Vector3, PlayerPlaceBlockAfterEvent, PlayerBreakBlockAfterEvent, Dimension } from "@minecraft/server";
 
 declare module "../config/gravity-config.js" {
     export const gravityBlocks: Set<string>;
@@ -9,9 +9,9 @@ import { gravityBlocks } from "../config/gravity-config.js";
 /**
  * Checks the block above a given location to see if it should start falling.
  * @param {Vector3} location The location of the block that was just updated.
+ * @param {Dimension} dimension The dimension to check in.
  */
-function checkAndTriggerFall(location: Vector3): void {
-    const dimension: Dimension = world.getDimension("overworld");
+function checkAndTriggerFall(location: Vector3, dimension: Dimension): void {
     const blockAboveLocation: Vector3 = { x: location.x, y: location.y + 1, z: location.z };
     const blockAbove: Block | undefined = dimension.getBlock(blockAboveLocation);
 
@@ -26,9 +26,9 @@ function checkAndTriggerFall(location: Vector3): void {
 /**
  * Checks all blocks in a column above a location and triggers a chain reaction if they are unsupported.
  * @param {Vector3} location The starting location to check from.
+ * @param {Dimension} dimension The dimension to check in.
  */
-function checkAllAbove(location: Vector3): void {
-    const dimension: Dimension = world.getDimension("overworld");
+function checkAllAbove(location: Vector3, dimension: Dimension): void {
     let y: number = location.y;
 
     while (y < dimension.heightRange.max) {
@@ -88,7 +88,7 @@ function triggerFall(block: Block): void {
             landingBlock.setPermutation(BlockPermutation.resolve(typeId));
         }
         // After placing the block, check if the block that was originally above it needs to fall.
-        checkAllAbove({ x: originalLocation.x, y: originalLocation.y + 1, z: originalLocation.z });
+        checkAllAbove({ x: originalLocation.x, y: originalLocation.y + 1, z: originalLocation.z }, dimension);
     } catch (e: unknown) {
         console.warn(`[Gravity] Failed to place block ${typeId} at destination. ${e}`);
     }
@@ -115,12 +115,12 @@ export function initializeGravitySystem(): void {
         }
 
         // Case 2: A normal block was placed, check if the block ABOVE it should fall.
-        checkAndTriggerFall(block.location);
+        checkAndTriggerFall(block.location, block.dimension);
     });
 
     world.afterEvents.playerBreakBlock.subscribe((event: PlayerBreakBlockAfterEvent) => {
         // When a block is broken, check the block that was above it to start a potential chain reaction.
-        checkAllAbove({ x: event.block.location.x, y: event.block.location.y + 1, z: event.block.location.z });
+        checkAllAbove({ x: event.block.location.x, y: event.block.location.y + 1, z: event.block.location.z }, event.block.dimension);
     });
 }
 

@@ -1,9 +1,12 @@
 import { world, system, Block, Dimension, Entity, Player, Vector3 } from "@minecraft/server";
-import * as CANNON from "cannon-es";
+import { resolveContraptionCollision } from "./ContraptionHitbox.js";
 
 // ══════════════════════════════════════════════════════════════════════
-//  ContraptionPhysics — Rigid-body physics powered by cannon-es
-//  Converts any connected block structure into a physics-simulated body.
+//  ContraptionPhysics — GMod-style script-side physics.
+//  Visual entities have NO engine physics (gravity/collision disabled).
+//  Script drives: velocity, gravity, ground collision, angular velocity.
+//  Animation system is UNTOUCHED — calibrated Molang handles visuals.
+//  Hitbox is handled by separate ContraptionHitbox module.
 // ══════════════════════════════════════════════════════════════════════
 
 // ── Types ───────────────────────────────────────────────────────────
@@ -84,103 +87,43 @@ export class ContraptionScanner {
     }
 }
 
-// ── Collision helper ────────────────────────────────────────────────
+// ── World collision ─────────────────────────────────────────────────
 
 function isSolid(dim: Dimension, x: number, y: number, z: number): boolean {
-    const b = dim.getBlock({ x: Math.floor(x), y: Math.floor(y), z: Math.floor(z) });
-    return !!b && !b.isAir && !b.isLiquid;
+    try {
+        const b = dim.getBlock({ x: Math.floor(x), y: Math.floor(y), z: Math.floor(z) });
+        return !!b && !b.isAir && !b.isLiquid;
+    } catch { return false; }
 }
 
-// ── Cannon-ES World Singleton ───────────────────────────────────────
-
-const physicsWorld = new CANNON.World({
-    gravity: new CANNON.Vec3(0, -9.8, 0),
-});
-physicsWorld.solver.iterations = 5;
-physicsWorld.defaultContactMaterial.friction = 0.5;
-physicsWorld.defaultContactMaterial.restitution = 0.1;
-physicsWorld.allowSleep = true;
-
-const FIXED_DT = 1 / 20;
-const _eulerCache = new CANNON.Vec3();
-const _sharedHalfBlock = new CANNON.Vec3(0.5, 0.5, 0.5);
-
-/** Scan downward to find the top of the first solid block. */
-function findSurfaceY(dim: Dimension, x: number, startY: number, z: number): number {
-    for (let y = Math.floor(startY); y >= -64; y--) {
-        if (isSolid(dim, x, y, z)) return y;
-    }
-    return -999;
+/** Rotate a relative position by pitch (X) then yaw (Y) */
+function rotateRel(rel: Vector3, pitch: number, yaw: number): Vector3 {
+    const cp = Math.cos(pitch), sp = Math.sin(pitch);
+    const cy = Math.cos(yaw), sy = Math.sin(yaw);
+    const y1 = rel.y * cp - rel.z * sp;
+    const z1 = rel.y * sp + rel.z * cp;
+    return {
+        x: rel.x * cy - z1 * sy,
+        y: y1,
+        z: rel.x * sy + z1 * cy,
+    };
 }
 
-// ── Terrain Collider ────────────────────────────────────────────────
-// Per-body set of static boxes representing the terrain surface.
+// ── Physics constants ───────────────────────────────────────────────
 
-class TerrainCollider {
-    private bodies = new Map<string, CANNON.Body>();
-    private scanRadius: number;
+const GRAVITY = 0.04;           // blocks/tick²
+const LINEAR_DAMPING = 0.98;    // air friction
+const ANGULAR_DAMPING = 0.96;   // spin friction
+const BOUNCE = 0.3;             // ground bounce coefficient
+const REST_THRESHOLD = 0.01;    // speed below this = resting
 
-    constructor(scanRadius: number) {
-        this.scanRadius = scanRadius;
-    }
-
-    /** Rebuild terrain around (cx, cy, cz). Adds/removes only what changed. */
-    rebuild(dim: Dimension, cx: number, cy: number, cz: number): void {
-        const bx = Math.floor(cx);
-        const bz = Math.floor(cz);
-        const r = this.scanRadius;
-        const needed = new Set<string>();
-
-        for (let dx = -r; dx <= r; dx++) {
-            for (let dz = -r; dz <= r; dz++) {
-                const wx = bx + dx;
-                const wz = bz + dz;
-                const sy = findSurfaceY(dim, wx, Math.floor(cy) + 4, wz);
-                if (sy < -64) continue;
-
-                // Also add 1-2 blocks below surface for wall collision
-                for (let depth = 0; depth < 3; depth++) {
-                    const wy = sy - depth;
-                    if (!isSolid(dim, wx, wy, wz)) continue;
-                    const key = `${wx},${wy},${wz}`;
-                    needed.add(key);
-
-                    if (!this.bodies.has(key)) {
-                        const body = new CANNON.Body({
-                            mass: 0,
-                            type: CANNON.Body.STATIC,
-                            position: new CANNON.Vec3(wx + 0.5, wy + 0.5, wz + 0.5),
-                        });
-                        body.addShape(new CANNON.Box(_sharedHalfBlock));
-                        physicsWorld.addBody(body);
-                        this.bodies.set(key, body);
-                    }
-                }
-            }
-        }
-
-        // Remove bodies that are no longer needed
-        for (const [key, body] of this.bodies) {
-            if (!needed.has(key)) {
-                physicsWorld.removeBody(body);
-                this.bodies.delete(key);
-            }
-        }
-    }
-
-    destroy(): void {
-        for (const body of this.bodies.values()) {
-            physicsWorld.removeBody(body);
-        }
-        this.bodies.clear();
-    }
-}
-
-// ── Contraption Body ────────────────────────────────────────────────
+// ── GMod-style Contraption Body ─────────────────────────────────────
 
 export class ContraptionBody {
     center: Vector3;
     rotation: Vector3;
+    velocity: Vector3;
+    angularVelocity: Vector3;
     children: ContraptionChild[];
     dimension: Dimension;
     state: "held" | "thrown" | "resting";
@@ -188,43 +131,32 @@ export class ContraptionBody {
     tickCallback: number;
     config: Required<ContraptionConfig>;
 
-    cannonBody: CANNON.Body;
-    terrain: TerrainCollider;
-
     // Perf: dirty tracking
     private _lastPitchS: number = 0;
     private _lastYawS: number = 0;
     private _lastCenterX: number = 0;
     private _lastCenterY: number = 0;
     private _lastCenterZ: number = 0;
-    private _terrainTick: number = 0;
-    // Track last terrain rebuild position to avoid redundant scans
-    private _lastTerrainBX: number = -99999;
-    private _lastTerrainBZ: number = -99999;
+    private _restTicks: number = 0;
 
     private constructor(
         center: Vector3,
         children: ContraptionChild[],
         dimension: Dimension,
-        config: Required<ContraptionConfig>,
-        cannonBody: CANNON.Body,
-        terrain: TerrainCollider
+        config: Required<ContraptionConfig>
     ) {
         this.center = center;
         this.rotation = { x: 0, y: 0, z: 0 };
+        this.velocity = { x: 0, y: 0, z: 0 };
+        this.angularVelocity = { x: 0, y: 0, z: 0 };
         this.children = children;
         this.dimension = dimension;
         this.state = "held";
         this.holderId = "";
         this.tickCallback = 0;
         this.config = config;
-        this.cannonBody = cannonBody;
-        this.terrain = terrain;
     }
 
-    /**
-     * Assembles a contraption from world blocks using cannon-es compound body.
-     */
     static assemble(
         blocks: Block[],
         pivot: Vector3,
@@ -236,16 +168,6 @@ export class ContraptionBody {
         const children: ContraptionChild[] = [];
         const REL_SCALE = 1000;
 
-        // Create cannon-es compound rigid body
-        const body = new CANNON.Body({
-            mass: blocks.length,  // 1 kg per block
-            position: new CANNON.Vec3(center.x, center.y, center.z),
-            linearDamping: 0.1,
-            angularDamping: 0.3,
-        });
-
-        const halfBlock = new CANNON.Vec3(0.5, 0.5, 0.5);
-
         for (const block of blocks) {
             const relPos: Vector3 = {
                 x: block.location.x - pivot.x,
@@ -254,13 +176,6 @@ export class ContraptionBody {
             };
             const blockTypeId = block.typeId;
 
-            // Add per-block box shape to compound body (accurate hitbox)
-            body.addShape(
-                new CANNON.Box(halfBlock),
-                new CANNON.Vec3(relPos.x + 0.5, relPos.y + 0.5, relPos.z + 0.5)
-            );
-
-            // Spawn entity
             const entity = dimension.spawnEntity(cfg.entityType, {
                 x: center.x, y: center.y, z: center.z,
             });
@@ -277,90 +192,124 @@ export class ContraptionBody {
             block.setType("minecraft:air");
         }
 
-        // Body starts kinematic (held)
-        body.type = CANNON.Body.KINEMATIC;
-        body.sleepSpeedLimit = 0.2;
-        body.sleepTimeLimit = 1.5;
-        physicsWorld.addBody(body);
-
-        // Terrain collider — radius based on contraption footprint
-        const scanRadius = Math.max(4, Math.ceil(Math.sqrt(blocks.length)) + 2);
-        const terrain = new TerrainCollider(scanRadius);
-
-        return new ContraptionBody(center, children, dimension, cfg, body, terrain);
+        return new ContraptionBody(center, children, dimension, cfg);
     }
 
     hold(player: Player): void {
         this.state = "held";
         this.holderId = player.id;
-        this.cannonBody.type = CANNON.Body.KINEMATIC;
-        this.cannonBody.velocity.set(0, 0, 0);
-        this.cannonBody.angularVelocity.set(0, 0, 0);
-        this.cannonBody.quaternion.set(0, 0, 0, 1);
+        this.velocity = { x: 0, y: 0, z: 0 };
+        this.angularVelocity = { x: 0, y: 0, z: 0 };
+        this.rotation = { x: 0, y: 0, z: 0 };
     }
 
     throw(direction: Vector3, force?: number): void {
         const f = force ?? this.config.throwForce;
         this.state = "thrown";
         this.holderId = "";
-
-        // Build terrain collider immediately so body doesn't fall through
-        this.terrain.rebuild(this.dimension, this.center.x, this.center.y, this.center.z);
-        this._lastTerrainBX = Math.floor(this.center.x);
-        this._lastTerrainBZ = Math.floor(this.center.z);
-
-        // Switch to dynamic
-        this.cannonBody.type = CANNON.Body.DYNAMIC;
-        this.cannonBody.wakeUp();
-        this.cannonBody.velocity.set(direction.x * f, direction.y * f, direction.z * f);
-        this.cannonBody.angularVelocity.set(direction.z * 2, 0, -direction.x * 2);
+        this._restTicks = 0;
+        this.velocity = {
+            x: direction.x * f,
+            y: direction.y * f + 0.3,
+            z: direction.z * f,
+        };
+        this.angularVelocity = {
+            x: direction.z * 0.15,
+            y: 0,
+            z: -direction.x * 0.15,
+        };
     }
 
     /**
-     * Physics tick:
-     * 1. Refresh terrain collider when body moves to a new block column
-     * 2. Step cannon-es
-     * 3. Read back state and sync entities
+     * Script-side physics tick:
+     * - Gravity applied to velocity
+     * - Position updated by velocity
+     * - Ground collision checked per-block at rotated positions
+     * - Angular velocity updates rotation
+     * - Damping applied
+     * - Player collision resolved via hitbox module
      */
     physicsTick(): void {
-        // Rebuild terrain when body moves to a new block position (every 5 ticks min)
-        this._terrainTick++;
-        if (this._terrainTick >= 5) {
-            this._terrainTick = 0;
-            const bx = Math.floor(this.center.x);
-            const bz = Math.floor(this.center.z);
-            if (bx !== this._lastTerrainBX || bz !== this._lastTerrainBZ) {
-                this._lastTerrainBX = bx;
-                this._lastTerrainBZ = bz;
-                this.terrain.rebuild(this.dimension, this.center.x, this.center.y, this.center.z);
+        // Gravity
+        this.velocity.y -= GRAVITY;
+
+        // Move
+        this.center.x += this.velocity.x;
+        this.center.y += this.velocity.y;
+        this.center.z += this.velocity.z;
+
+        // Rotation
+        this.rotation.x += this.angularVelocity.x;
+        this.rotation.y += this.angularVelocity.y;
+
+        // Ground collision — check lowest blocks at rotated positions
+        let grounded = false;
+        for (const child of this.children) {
+            if (!child.entity.isValid) continue;
+            const rot = rotateRel(child.relPos, this.rotation.x, this.rotation.y);
+            const wx = this.center.x + rot.x;
+            const wy = this.center.y + rot.y;
+            const wz = this.center.z + rot.z;
+
+            if (isSolid(this.dimension, wx, wy, wz)) {
+                grounded = true;
+                // Push center up so this block is above ground
+                const groundTop = Math.floor(wy) + 1;
+                this.center.y += groundTop - wy;
+                break;
             }
         }
 
-        // Step physics
-        physicsWorld.step(FIXED_DT);
+        if (grounded) {
+            if (Math.abs(this.velocity.y) > 0.05) {
+                this.velocity.y = -this.velocity.y * BOUNCE;
+            } else {
+                this.velocity.y = 0;
+            }
+            this.velocity.x *= 0.8;
+            this.velocity.z *= 0.8;
+            this.angularVelocity.x *= 0.85;
+            this.angularVelocity.z *= 0.85;
+        }
 
-        // Read back position
-        const pos = this.cannonBody.position;
-        this.center.x = pos.x;
-        this.center.y = pos.y;
-        this.center.z = pos.z;
+        // Air damping
+        this.velocity.x *= LINEAR_DAMPING;
+        this.velocity.z *= LINEAR_DAMPING;
+        this.angularVelocity.x *= ANGULAR_DAMPING;
+        this.angularVelocity.y *= ANGULAR_DAMPING;
 
-        // Read back rotation
-        this.cannonBody.quaternion.toEuler(_eulerCache);
-        this.rotation.x = _eulerCache.x;
-        this.rotation.y = _eulerCache.y;
-
-        // Sync entities
+        // Sync visual entities
         this._syncProperties();
 
-        // Sleep detection
-        if (this.cannonBody.sleepState === CANNON.Body.SLEEPING) {
-            this.state = "resting";
+        // Player collision via hitbox module
+        for (const player of world.getAllPlayers()) {
+            if (!player.isValid) continue;
+            if (player.dimension.id !== this.dimension.id) continue;
+            const dx = player.location.x - this.center.x;
+            const dy = player.location.y - this.center.y;
+            const dz = player.location.z - this.center.z;
+            if (Math.sqrt(dx * dx + dy * dy + dz * dz) > this.children.length + 3) continue;
+            resolveContraptionCollision(player, this);
+        }
+
+        // Rest detection
+        const speed = Math.abs(this.velocity.x) + Math.abs(this.velocity.y) + Math.abs(this.velocity.z)
+            + Math.abs(this.angularVelocity.x) + Math.abs(this.angularVelocity.y);
+        if (speed < REST_THRESHOLD && grounded) {
+            this._restTicks++;
+            if (this._restTicks > 20) {
+                this.state = "resting";
+                this.velocity = { x: 0, y: 0, z: 0 };
+                this.angularVelocity = { x: 0, y: 0, z: 0 };
+            }
+        } else {
+            this._restTicks = 0;
         }
     }
 
     /**
-     * Syncs rotation/position properties and teleports entities.
+     * Syncs rotation/position properties and teleports entities to CENTER.
+     * Animation handles all visual offset via calibrated Molang.
      */
     _syncProperties(): void {
         const SCALE = 10000000;
@@ -404,8 +353,6 @@ export class ContraptionBody {
     }
 
     destroy(): void {
-        physicsWorld.removeBody(this.cannonBody);
-        this.terrain.destroy();
         for (const child of this.children) {
             if (child.entity.isValid) child.entity.triggerEvent("gaiadimension:despawn");
         }
@@ -452,8 +399,6 @@ export class ContraptionManager {
                 const holder = world.getEntity(body.holderId);
                 if (!holder || !holder.isValid) {
                     body.state = "thrown";
-                    body.cannonBody.type = CANNON.Body.DYNAMIC;
-                    body.cannonBody.wakeUp();
                     this.active.delete(body.holderId);
                     this.active.set("thrown_" + Date.now(), body);
                     return;
@@ -464,16 +409,12 @@ export class ContraptionManager {
                 const targetX = headLoc.x + viewDir.x * body.config.holdDistance;
                 const targetY = headLoc.y + viewDir.y * body.config.holdDistance;
                 const targetZ = headLoc.z + viewDir.z * body.config.holdDistance;
-                // Move kinematic body to target
-                body.cannonBody.position.set(targetX, targetY, targetZ);
-                body.cannonBody.quaternion.set(0, 0, 0, 1);
                 body.center = { x: targetX, y: targetY, z: targetZ };
                 body.rotation = { x: 0, y: 0, z: 0 };
                 body._syncProperties();
-            } else if (body.state === "thrown") {
+            } else if (body.state === "thrown" || body.state === "resting") {
                 body.physicsTick();
             }
-            // Resting — cannon-es sleeping handles this
         }, 1);
 
         body.tickCallback = tickCallback;

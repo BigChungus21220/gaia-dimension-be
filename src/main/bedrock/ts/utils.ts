@@ -1,15 +1,37 @@
 import { world, system, Block, Dimension, Player, Vector3 } from "@minecraft/server";
 
+// ── Dimension Registry ──────────────────────────────────────────────
+// Vanilla dimensions are always present. Custom dimensions register
+// themselves at startup via registerDimension().
+const VANILLA_DIMENSION_IDS: string[] = ["overworld", "the_end", "nether"];
+const registeredDimensionIds: string[] = [];
+
 /**
- * Gets the basic dimensions of the world.
+ * Registers a custom dimension ID so it is included in getDimensions().
+ * Call this during startup for every custom dimension you register.
+ * @param id The dimension identifier (e.g. "myaddon:my_dimension").
+ */
+export function registerDimension(id: string): void {
+    if (!registeredDimensionIds.includes(id)) {
+        registeredDimensionIds.push(id);
+    }
+}
+
+/**
+ * Gets all dimensions of the world (vanilla + any registered custom).
+ * Silently skips any dimension that fails to resolve.
  * @returns An array of Dimension objects.
  */
 export function getDimensions(): Dimension[] {
-    return [
-        world.getDimension("overworld"),
-        world.getDimension("the_end"),
-        world.getDimension("nether")
-    ];
+    const dims: Dimension[] = [];
+    for (const id of [...VANILLA_DIMENSION_IDS, ...registeredDimensionIds]) {
+        try {
+            dims.push(world.getDimension(id));
+        } catch {
+            // Dimension not available (not registered, or world not ready)
+        }
+    }
+    return dims;
 }
 
 interface DoorSoundOptions {
