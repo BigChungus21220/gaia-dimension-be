@@ -27,19 +27,37 @@ const CORE_DIMENSIONS: DimEntry[] = [
     { id: "gaiadimension:gaia_dimension",     name: "Gaia Dimension", lore: "Crystalline paradise preserved in eternal sun.",  color: "§6" },
 ];
 
-/** Dynamic realm pool — registered at startup, void worlds */
+/** Dynamic realm pool — registered at startup, unique Gaia-variant worlds */
 export const REALM_COUNT = 16;
 export const REALM_PREFIX = "gaiadimension:realm_";
 
 function getRealmDims(): DimEntry[] {
     const realms: DimEntry[] = [];
-    const adjectives = ["Shattered", "Hollow", "Prismatic", "Forgotten", "Fractured", "Drifting", "Aberrant", "Silent", "Twisted", "Crimson", "Ethereal", "Obsidian", "Lunar", "Solar", "Spectral", "Abyssal"];
+    const themes: { adj: string; lore: string; color: string }[] = [
+        { adj: "Rainia",      lore: "OH MY GOD IT'S RAINING CRYSTALS",                              color: "§b" },
+        { adj: "Hollow",      lore: "Echo... echo... is anyone even here?",                          color: "§7" },
+        { adj: "Prismatic",   lore: "Warning: may cause permanent eye damage from sheer beauty.",     color: "§d" },
+        { adj: "Forgotten",   lore: "Even the GPS gave up on this place.",                            color: "§2" },
+        { adj: "Upside-Down", lore: "The trees grow INTO the sky. The sky IS the ground.",            color: "§c" },
+        { adj: "Floaty",      lore: "Everything floats here. EVERYTHING.",                            color: "§f" },
+        { adj: "Cursed",      lore: "The flowers have teeth. THE FLOWERS HAVE TEETH.",                color: "§5" },
+        { adj: "Silent",      lore: "Shhh. Even your footsteps are afraid to make noise.",            color: "§8" },
+        { adj: "Wiggly",      lore: "The ground won't stop moving. Please make it stop.",             color: "§4" },
+        { adj: "Burning",     lore: "Floor is lava but unironically.",                                color: "§c" },
+        { adj: "Misty",       lore: "Can't see five blocks ahead. Vibes are immaculate though.",      color: "§9" },
+        { adj: "Void",        lore: "Stare into the abyss. The abyss offers you a crystal.",          color: "§8" },
+        { adj: "Moonlit",     lore: "Eternal night. Eternal chill. Eternal drip.",                    color: "§f" },
+        { adj: "Golden",      lore: "Everything the light touches is gold. And edible.",              color: "§6" },
+        { adj: "Spectral",    lore: "The ghosts here are more alive than you.",                       color: "§3" },
+        { adj: "Abyssal",     lore: "Rock bottom. Literally. You can't go deeper than this.",         color: "§1" },
+    ];
     for (let i = 0; i < REALM_COUNT; i++) {
+        const t = themes[i];
         realms.push({
             id: `${REALM_PREFIX}${i}`,
-            name: `${adjectives[i]} Realm`,
-            lore: `Dimension fragment #${i + 1} — an empty void awaiting purpose.`,
-            color: "§7",
+            name: `${t.adj} Realm`,
+            lore: t.lore,
+            color: t.color,
         });
     }
     return realms;

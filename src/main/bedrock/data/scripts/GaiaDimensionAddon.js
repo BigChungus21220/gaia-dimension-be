@@ -8296,13 +8296,31 @@ var REALM_COUNT = 16;
 var REALM_PREFIX = "gaiadimension:realm_";
 function getRealmDims() {
   const realms = [];
-  const adjectives = ["Shattered", "Hollow", "Prismatic", "Forgotten", "Fractured", "Drifting", "Aberrant", "Silent", "Twisted", "Crimson", "Ethereal", "Obsidian", "Lunar", "Solar", "Spectral", "Abyssal"];
+  const themes = [
+    { adj: "Rainia", lore: "OH MY GOD IT'S RAINING CRYSTALS", color: "\xA7b" },
+    { adj: "Hollow", lore: "Echo... echo... is anyone even here?", color: "\xA77" },
+    { adj: "Prismatic", lore: "Warning: may cause permanent eye damage from sheer beauty.", color: "\xA7d" },
+    { adj: "Forgotten", lore: "Even the GPS gave up on this place.", color: "\xA72" },
+    { adj: "Upside-Down", lore: "The trees grow INTO the sky. The sky IS the ground.", color: "\xA7c" },
+    { adj: "Floaty", lore: "Everything floats here. EVERYTHING.", color: "\xA7f" },
+    { adj: "Cursed", lore: "The flowers have teeth. THE FLOWERS HAVE TEETH.", color: "\xA75" },
+    { adj: "Silent", lore: "Shhh. Even your footsteps are afraid to make noise.", color: "\xA78" },
+    { adj: "Wiggly", lore: "The ground won't stop moving. Please make it stop.", color: "\xA74" },
+    { adj: "Burning", lore: "Floor is lava but unironically.", color: "\xA7c" },
+    { adj: "Misty", lore: "Can't see five blocks ahead. Vibes are immaculate though.", color: "\xA79" },
+    { adj: "Void", lore: "Stare into the abyss. The abyss offers you a crystal.", color: "\xA78" },
+    { adj: "Moonlit", lore: "Eternal night. Eternal chill. Eternal drip.", color: "\xA7f" },
+    { adj: "Golden", lore: "Everything the light touches is gold. And edible.", color: "\xA76" },
+    { adj: "Spectral", lore: "The ghosts here are more alive than you.", color: "\xA73" },
+    { adj: "Abyssal", lore: "Rock bottom. Literally. You can't go deeper than this.", color: "\xA71" }
+  ];
   for (let i = 0; i < REALM_COUNT; i++) {
+    const t = themes[i];
     realms.push({
       id: `${REALM_PREFIX}${i}`,
-      name: `${adjectives[i]} Realm`,
-      lore: `Dimension fragment #${i + 1} \u2014 an empty void awaiting purpose.`,
-      color: "\xA77"
+      name: `${t.adj} Realm`,
+      lore: t.lore,
+      color: t.color
     });
   }
   return realms;
@@ -14449,7 +14467,7 @@ var ClientChunk = class {
     if (this.isRunning && this.id !== void 0) system38.clearRun(this.id);
   }
   _tick() {
-    if (this.player.dimension.id !== "gaiadimension:gaia_dimension") return;
+    if (!this.player.dimension.id.startsWith("gaiadimension:")) return;
     const gen = this.currentGenerator;
     if (!gen) return;
     const { x: X, z: Z } = this.chunkXZ;
@@ -15890,12 +15908,17 @@ var SessionManager = class {
     this.procedural = new ProceduralRandom(this.seed);
     this.definition = DEFINITION_MANAGER;
     this.getOrCreateGenerator("gaiadimension:gaia_dimension");
+    for (let i = 0; i < REALM_COUNT; i++) {
+      const realmId = `${REALM_PREFIX}${i}`;
+      this.getOrCreateGenerator(realmId, i);
+    }
   }
-  getOrCreateGenerator(dimensionId) {
+  getOrCreateGenerator(dimensionId, realmIndex) {
     if (this.generators.has(dimensionId)) return this.generators.get(dimensionId);
     try {
       const dimension = world31.getDimension(dimensionId);
-      const gen = new ChunkGenerator(this, dimension, this.procedural);
+      const genSeed = realmIndex !== void 0 ? new ProceduralRandom(this.seed + (realmIndex + 1) * 7919) : this.procedural;
+      const gen = new ChunkGenerator(this, dimension, genSeed);
       this.generators.set(dimensionId, gen);
       return gen;
     } catch (e) {

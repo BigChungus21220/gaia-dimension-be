@@ -50,7 +50,7 @@ export class ClientChunk {
     }
 
     _tick(){
-        if (this.player.dimension.id !== "gaiadimension:gaia_dimension") return;
+        if (!this.player.dimension.id.startsWith("gaiadimension:")) return;
 
         const gen = this.currentGenerator;
         if (!gen) return;

@@ -4,6 +4,7 @@ import { ChunkGenerator } from "./generator";
 import { DEFINITION_MANAGER } from "../definitions/index";
 import { DefinitionManager } from "../definitions/definition-manager";
 import { BiomeDefinition } from "../definitions/definition-biome";
+import { REALM_COUNT, REALM_PREFIX } from "../../../../systems/DimensionDestruction.js";
 
 export class SessionManager {
     public generators: Map<string, ChunkGenerator>;
@@ -17,16 +18,26 @@ export class SessionManager {
         this.procedural = new ProceduralRandom(this.seed);
         this.definition = DEFINITION_MANAGER;
 
-        // Initialize Gaia dimension generator only
+        // Initialize Gaia dimension generator
         this.getOrCreateGenerator("gaiadimension:gaia_dimension");
+
+        // Initialize realm dimension generators with unique seeds
+        for (let i = 0; i < REALM_COUNT; i++) {
+            const realmId = `${REALM_PREFIX}${i}`;
+            this.getOrCreateGenerator(realmId, i);
+        }
     }
 
-    public getOrCreateGenerator(dimensionId: string): ChunkGenerator | undefined {
+    public getOrCreateGenerator(dimensionId: string, realmIndex?: number): ChunkGenerator | undefined {
         if (this.generators.has(dimensionId)) return this.generators.get(dimensionId);
         
         try {
             const dimension = world.getDimension(dimensionId);
-            const gen = new ChunkGenerator(this, dimension, this.procedural);
+            // Realm dims get unique seeds: base seed offset by large prime * index
+            const genSeed = realmIndex !== undefined
+                ? new ProceduralRandom(this.seed + (realmIndex + 1) * 7919)
+                : this.procedural;
+            const gen = new ChunkGenerator(this, dimension, genSeed);
             this.generators.set(dimensionId, gen);
             return gen;
         } catch (e: unknown) {
