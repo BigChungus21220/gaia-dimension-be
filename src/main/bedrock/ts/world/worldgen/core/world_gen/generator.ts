@@ -219,7 +219,7 @@ export class ChunkGenerator {
         const { dimension: dim } = this;
         const random = this.seed.getSeqence(X, Z);
         const worldX = X * 16, worldZ = Z * 16;
-        const placedTrees: {x: number, z: number}[] = [];
+        const placedTrees: { x: number, z: number }[] = [];
         // Pre-allocate lookup arrays for the tree placement pass (filled during terrain loop)
         const terrainMap = new Array<number>(256);
         const biomeMap = new Array<BiomeDefinition>(256);
@@ -234,7 +234,7 @@ export class ChunkGenerator {
             const CELLS_X = 16 / CELL; // 4 cells per chunk axis
             const CELLS_Z = 16 / CELL;
             // Pre-compute low-frequency biome blending at 5x5 cell corners (0,4,8,12,16 on each axis)
-            const corners: {depthOffset: number, scaleFactor: number, avgScale: number}[][] = [];
+            const corners: { depthOffset: number, scaleFactor: number, avgScale: number }[][] = [];
             for (let cx = 0; cx <= CELLS_X; cx++) {
                 corners[cx] = [];
                 for (let cz = 0; cz <= CELLS_Z; cz++) {
@@ -245,7 +245,7 @@ export class ChunkGenerator {
             for (let x = 0; x < 16; x++) {
                 for (let z = 0; z < 16; z++) {
                     const xx = worldX + x, zz = worldZ + z;
-                    
+
                     // Domain warp (jitter) for biome boundaries to prevent cubical blending
                     const jitterX = Math.round(this.spikes.GetNoise(xx * 2, zz * 2) * 5);
                     const jitterZ = Math.round(this.spikes.GetNoise(xx * 2 + 1000, zz * 2 + 1000) * 5);
@@ -260,7 +260,7 @@ export class ChunkGenerator {
                     const c10 = corners[cellX + 1][cellZ];
                     const c01 = corners[cellX][cellZ + 1];
                     const c11 = corners[cellX + 1][cellZ + 1];
-                    
+
                     // bilerp: lerp(lerp(h00,h10,fx), lerp(h01,h11,fx), fz)
                     const depthOffset = c00.depthOffset + (c10.depthOffset - c00.depthOffset) * fracX + (c01.depthOffset - c00.depthOffset) * fracZ + (c00.depthOffset - c10.depthOffset - c01.depthOffset + c11.depthOffset) * fracX * fracZ;
                     const scaleFactor = c00.scaleFactor + (c10.scaleFactor - c00.scaleFactor) * fracX + (c01.scaleFactor - c00.scaleFactor) * fracZ + (c00.scaleFactor - c10.scaleFactor - c01.scaleFactor + c11.scaleFactor) * fracX * fracZ;
@@ -268,8 +268,8 @@ export class ChunkGenerator {
 
                     // High-frequency surface noise is evaluated precisely at the 1x1 block coordinate
                     const raw = this.getTerrainHeight(xx, zz);
-                    
-                    // Exact mathematical collapse of Java's 3D DensityFunction to a 2D surface (where totaldensity = 0)
+
+                    // Exact mathematical collapse of Java's 3D DensityFunction to a 2D surface 
                     // Java: y_cell = 16 * (0.53125 + depthOffset + noise / scaleFactor)
                     // At cellHeight = 8, y_blocks = 128 * (0.53125 + depthOffset + noise / scaleFactor)
                     // Which simplifies to: 68.0 + 128 * depthOffset + 128 * noise / scaleFactor
@@ -301,13 +301,13 @@ export class ChunkGenerator {
                             else surfaceBlock.setType(groundId);
                         }
                     } catch (_) { /* block ID not registered — skip */ }
-                    
+
                     // Water Fill
                     if (isUnderwater) {
                         for (let y = terrain + 1; y <= SEA_LEVEL; y++) {
                             const waterBlock = dim.getBlock({ x: xx, y, z: zz });
                             if (waterBlock) {
-                                try { waterBlock.setType("gaiadimension:mineral_water"); } catch (_) {}
+                                try { waterBlock.setType("gaiadimension:mineral_water"); } catch (_) { }
                             }
                         }
                     }
@@ -320,7 +320,7 @@ export class ChunkGenerator {
                             if (vegId) {
                                 const vBlock = dim.getBlock({ x: xx, y: terrain + 1, z: zz });
                                 if (vBlock && vBlock.typeId === "minecraft:air") {
-                                    try { vBlock.setType(vegId); } catch (_) {}
+                                    try { vBlock.setType(vegId); } catch (_) { }
                                 }
                             }
                         }
@@ -352,7 +352,7 @@ export class ChunkGenerator {
                     const tx = Math.floor(random.nextFloat() * 16);
                     const tz = Math.floor(random.nextFloat() * 16);
                     const tIdx = tx * 16 + tz;
-                    
+
                     if (underwaterMap[tIdx]) continue;
                     const terrain = terrainMap[tIdx];
                     if (terrain === undefined) continue;
@@ -374,10 +374,10 @@ export class ChunkGenerator {
                     if (treeDef) {
                         const above = dim.getBlock({ x: txx, y: terrain + 1, z: tzz });
                         if (above && above.typeId === "minecraft:air") {
-                            try { 
-                                yield* this.placeTree(dim, txx, terrain + 1, tzz, treeDef as any, random); 
-                                placedTrees.push({x: txx, z: tzz});
-                            } catch (_) {}
+                            try {
+                                yield* this.placeTree(dim, txx, terrain + 1, tzz, treeDef as any, random);
+                                placedTrees.push({ x: txx, z: tzz });
+                            } catch (_) { }
                         }
                     }
                 }
@@ -556,7 +556,7 @@ function placeFoliageForTree(dim: Dimension, cx: number, cy: number, cz: number,
         placeLeavesRowThick(dim, cx, cy, cz, 2, -3, leafId, random);
         placeLeavesRowThick(dim, cx, cy, cz, 3, -2, leafId, random);
         placeLeavesRowThick(dim, cx, cy, cz, 3, -1, leafId, random);
-        placeLeavesRowThick(dim, cx, cy, cz, 2,  0, leafId, random);
+        placeLeavesRowThick(dim, cx, cy, cz, 2, 0, leafId, random);
     } else if (treeId === "purple_agate") {
         // BulbFoliagePlacer(radius=1, offset=1) — 3 layers
         for (let y = 1; y >= -1; y--) {
@@ -591,15 +591,15 @@ function placeFoliageForTree(dim: Dimension, cx: number, cy: number, cz: number,
     } else if (treeId === "pink_agate" || treeId === "fossilized") {
         // CappedFoliagePlacer(radius=3, offset=1) — pink_agate + fossilized
         placeLeavesRowCapped(dim, cx, cy, cz, 3, -1, leafId, random);
-        placeLeavesRowCapped(dim, cx, cy, cz, 2,  0, leafId, random);
+        placeLeavesRowCapped(dim, cx, cy, cz, 2, 0, leafId, random);
     } else if (treeId === "aura") {
         // CappedFoliagePlacer(radius=2, offset=1)
         placeLeavesRowCapped(dim, cx, cy, cz, 2, -1, leafId, random);
-        placeLeavesRowCapped(dim, cx, cy, cz, 1,  0, leafId, random);
+        placeLeavesRowCapped(dim, cx, cy, cz, 1, 0, leafId, random);
     } else {
         // Default CappedFoliagePlacer(radius=2, offset=1) — burnt, fire, fossilized, etc.
         placeLeavesRowCapped(dim, cx, cy, cz, 2, -1, leafId, random);
-        placeLeavesRowCapped(dim, cx, cy, cz, 1,  0, leafId, random);
+        placeLeavesRowCapped(dim, cx, cy, cz, 1, 0, leafId, random);
     }
 }
 
@@ -685,6 +685,6 @@ function placeLeavesRowDefault(dim: Dimension, cx: number, cy: number, cz: numbe
 function setLeaf(dim: Dimension, x: number, y: number, z: number, leafId: string): void {
     const block = dim.getBlock({ x, y, z });
     if (block && block.typeId === "minecraft:air") {
-        try { block.setType(leafId); } catch (_) {}
+        try { block.setType(leafId); } catch (_) { }
     }
 }

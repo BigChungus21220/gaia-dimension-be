@@ -349,6 +349,6 @@ const ID_TO_NAME: Partial<Record<BiomeId, string>> = {
     [B.LAND]:               "gaiadimension:crystal_plains",
 };
 
-export function getBiomeNameFromId(id: BiomeId): string {
-    return ID_TO_NAME[id] ?? "gaiadimension:crystal_plains";
+export function getBiomeNameFromId(id: number): string {
+    return ID_TO_NAME[id as BiomeId] ?? "gaiadimension:crystal_plains";
 }

@@ -1,4 +1,4 @@
-import { world, system, Entity, Player, EquipmentSlot, GameMode, EntityComponentTypes, EntityDamageCause, EntityHealthComponent, EntityMarkVariantComponent, EntityEquippableComponent, Dimension } from "@minecraft/server";
+import { world, system, Entity, Player, EquipmentSlot, GameMode, EntityComponentTypes, EntityDamageCause, EntityHealthComponent, EntityEquippableComponent, Dimension } from "@minecraft/server";
 import { getDimensions } from "../utils.js";
 
 // ─── Enums & Types ───────────────────────────────────────────────────
@@ -75,8 +75,7 @@ function getStr(e: Entity, key: string, def: string = ""): string {
 
 function setAnimState(guard: Entity, state: GuardAnimState): void {
     try {
-        const mv = guard.getComponent(EntityComponentTypes.MarkVariant) as EntityMarkVariantComponent;
-        if (mv) mv.value = state;
+        guard.setProperty("minecraft:mark_variant", state);
     } catch {}
 }
 
@@ -90,7 +89,7 @@ function isValidPlayer(e: Entity): e is Player {
     if (!(e instanceof Player)) return false;
     try {
         const gm = (e as Player).getGameMode();
-        return gm !== GameMode.creative && gm !== GameMode.spectator;
+        return gm !== GameMode.Creative && gm !== GameMode.Spectator;
     } catch { return false; }
 }
 
