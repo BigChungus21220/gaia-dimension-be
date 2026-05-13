@@ -49,8 +49,8 @@ export class SessionManager {
         return this.getOrCreateGenerator(dimension.id);
     }
 
-    isGenerated(hash: string): boolean | string | number | undefined { 
-        return world.getDynamicProperty(hash); 
+    isGenerated(hash: string): boolean { 
+        return !!world.getDynamicProperty(hash); 
     }
 
     setGenerated(hash: string): void { 

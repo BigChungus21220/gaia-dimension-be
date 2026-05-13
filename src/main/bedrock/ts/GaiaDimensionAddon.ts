@@ -59,10 +59,6 @@ declare module "@minecraft/server" {
         readonly itemComponentRegistry: ItemComponentRegistry;
         readonly dimensionRegistry: DimensionRegistry;
     }
-
-    interface SystemBeforeEvents {
-        readonly shutdown: SystemBeforeEventSignal<SystemShutdownBeforeEvent>;
-    }
 }
 
 // Initialize systems

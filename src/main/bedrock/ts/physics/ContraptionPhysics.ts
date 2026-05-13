@@ -241,7 +241,6 @@ export class ContraptionBody {
         // Rotation
         this.rotation.x += this.angularVelocity.x;
         this.rotation.y += this.angularVelocity.y;
-
         // Ground collision — check lowest blocks at rotated positions
         let grounded = false;
         for (const child of this.children) {
@@ -396,14 +395,13 @@ export class ContraptionManager {
             }
 
             if (body.state === "held") {
-                const holder = world.getEntity(body.holderId);
-                if (!holder || !holder.isValid) {
+                const p = world.getAllPlayers().find(pl => pl.id === body.holderId);
+                if (!p) {
                     body.state = "thrown";
                     this.active.delete(body.holderId);
                     this.active.set("thrown_" + Date.now(), body);
                     return;
                 }
-                const p = holder as Player;
                 const headLoc = p.getHeadLocation();
                 const viewDir = p.getViewDirection();
                 const targetX = headLoc.x + viewDir.x * body.config.holdDistance;

@@ -15929,7 +15929,7 @@ var SessionManager = class {
     return this.getOrCreateGenerator(dimension.id);
   }
   isGenerated(hash) {
-    return world31.getDynamicProperty(hash);
+    return !!world31.getDynamicProperty(hash);
   }
   setGenerated(hash) {
     world31.setDynamicProperty(hash, true);

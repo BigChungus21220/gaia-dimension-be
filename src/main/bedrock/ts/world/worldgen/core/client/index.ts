@@ -9,7 +9,7 @@ const initializedPlayers = new Set<string>();
 // Initialize session manager finalization once ready
 world.afterEvents.worldLoad.subscribe(() => (async () => {
     await SESSION_MANAGER.ready;
-    DEFINITION_MANAGER.triggerFinialize(SESSION_MANAGER.procedural);
+    DEFINITION_MANAGER.triggerFinialize(SESSION_MANAGER.procedural!);
     // Init any players already in world (handles /reload case)
     for (const p of world.getAllPlayers()) {
         playerInitialize(p).catch(e => console.error(e));
@@ -33,7 +33,7 @@ async function playerInitialize(player: Player) {
     if (initializedPlayers.has(player.id)) return;
     initializedPlayers.add(player.id);
     await SESSION_MANAGER.ready;
-    const local = ClientChunk.open(SESSION_MANAGER as any, player);
+    const local = ClientChunk.open(SESSION_MANAGER, player);
     local.start();
 }
 

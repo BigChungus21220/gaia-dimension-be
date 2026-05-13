@@ -1,18 +1,23 @@
-import { system, Player } from "@minecraft/server";
-import { SessionManager } from "../world_gen/index";
+import { system, Player, Dimension } from "@minecraft/server";
+import { ChunkGenerator } from "../world_gen/generator";
+
+/** Structural type — accepts both SessionManager and SessionManagerProxy */
+interface SessionLike {
+    get(dim: Dimension): ChunkGenerator | undefined;
+}
 
 const CLIENT_CHUNKS = new WeakMap<Player, ClientChunk>();
 const MAX_RETRIES = 3;
 
 export class ClientChunk {
-    static open(sessionManager: SessionManager, player: Player){
+    static open(sessionManager: SessionLike, player: Player){
         let m = CLIENT_CHUNKS.get(player);
         if(!m) CLIENT_CHUNKS.set(player, m = new this(player, sessionManager));
         return m;
     }
 
     public player: Player;
-    public manager: SessionManager;
+    public manager: SessionLike;
     public lastVisitedChunk = "";
     public id: number | undefined = undefined;
 
@@ -21,7 +26,7 @@ export class ClientChunk {
     private activeJobs = 0;
     private maxJobs = 3;
 
-    constructor(player: Player, sessionManager: SessionManager){ 
+    constructor(player: Player, sessionManager: SessionLike){ 
         this.player = player; 
         this.manager = sessionManager;
     }
