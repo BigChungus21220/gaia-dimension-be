@@ -46,9 +46,11 @@ export function resolveContraptionCollision(
         if (!child.entity.isValid) continue;
 
         // Block world position (rotated)
+        // Visual Y offset: root bone pivot [0,7,0] at scale 2.7
+        const VISUAL_Y = 7 * 2.7 / 16;
         const rot = rotateRel(child.relPos, body.rotation.x, body.rotation.y);
         const bx = body.center.x + rot.x;
-        const by = body.center.y + rot.y;
+        const by = body.center.y + VISUAL_Y + rot.y;
         const bz = body.center.z + rot.z;
 
         // AABB overlap (player vs 1×1×1 block)

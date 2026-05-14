@@ -347,6 +347,7 @@ export class ChunkGenerator {
                     totalTrees += centerBiome.treesExtra;
                 }
 
+                let placed = 0;
                 for (let t = 0; t < totalTrees; t++) {
                     // InSquarePlacement.spread() — uniform random XZ within chunk
                     const tx = Math.floor(random.nextFloat() * 16);
@@ -377,7 +378,10 @@ export class ChunkGenerator {
                             try {
                                 yield* this.placeTree(dim, txx, terrain + 1, tzz, treeDef as any, random);
                                 placedTrees.push({ x: txx, z: tzz });
-                            } catch (_) { }
+                                placed++;
+                            } catch (treeErr) {
+                                console.warn(`[GaiaDim] Tree place failed at ${txx},${terrain+1},${tzz}: ${treeErr}`);
+                            }
                         }
                     }
                 }
@@ -589,9 +593,14 @@ function placeFoliageForTree(dim: Dimension, cx: number, cy: number, cz: number,
         // BushFoliagePlacer(radius=2, offset=1, height=2) — 3 layers, random corner skip
         for (let y = 2; y >= 0; y--) placeLeavesRowBush(dim, cx, cy, cz, 2, -y, leafId, random);
     } else if (treeId === "pink_agate" || treeId === "fossilized") {
-        // CappedFoliagePlacer(radius=3, offset=1) — pink_agate + fossilized
-        placeLeavesRowCapped(dim, cx, cy, cz, 3, -1, leafId, random);
-        placeLeavesRowCapped(dim, cx, cy, cz, 2, 0, leafId, random);
+        // CappedFoliagePlacer(radius=3, offset=1) — proper multi-layer canopy
+        // Java generates layers scaling outward then inward, like a rounded cap
+        placeLeavesRowCapped(dim, cx, cy, cz, 1, -5, leafId, random);
+        placeLeavesRowCapped(dim, cx, cy, cz, 2, -4, leafId, random);
+        placeLeavesRowCapped(dim, cx, cy, cz, 3, -3, leafId, random);
+        placeLeavesRowCapped(dim, cx, cy, cz, 3, -2, leafId, random);
+        placeLeavesRowCapped(dim, cx, cy, cz, 2, -1, leafId, random);
+        placeLeavesRowCapped(dim, cx, cy, cz, 1, 0, leafId, random);
     } else if (treeId === "aura") {
         // CappedFoliagePlacer(radius=2, offset=1)
         placeLeavesRowCapped(dim, cx, cy, cz, 2, -1, leafId, random);

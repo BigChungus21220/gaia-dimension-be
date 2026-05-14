@@ -8792,7 +8792,7 @@ function registerDestructionCommands(registry) {
 import { Player as Player28 } from "@minecraft/server";
 
 // src/main/bedrock/ts/physics/ContraptionPhysics.ts
-import { world as world25, system as system33 } from "@minecraft/server";
+import { world as world25, system as system33, BlockPermutation as BlockPermutation15 } from "@minecraft/server";
 
 // src/main/bedrock/ts/physics/ContraptionHitbox.ts
 var PLAYER_HALF_W = 0.3;
@@ -8819,9 +8819,10 @@ function resolveContraptionCollision(player, body) {
   let totalPushZ = 0;
   for (const child of body.children) {
     if (!child.entity.isValid) continue;
+    const VISUAL_Y = 7 * 2.7 / 16;
     const rot = rotateRel(child.relPos, body.rotation.x, body.rotation.y);
     const bx = body.center.x + rot.x;
-    const by = body.center.y + rot.y;
+    const by = body.center.y + VISUAL_Y + rot.y;
     const bz = body.center.z + rot.z;
     const ox = PLAYER_HALF_W + BLOCK_HALF - Math.abs(px - bx);
     const oz = PLAYER_HALF_W + BLOCK_HALF - Math.abs(pz - bz);
@@ -8862,6 +8863,18 @@ function resolveContraptionCollision(player, body) {
 }
 
 // src/main/bedrock/ts/physics/ContraptionPhysics.ts
+var PHANTOM_SLOPE_IDS = [
+  "gaiadimension:phantom_slope_n",
+  // dir 0: slope ascends toward +Z
+  "gaiadimension:phantom_slope_e",
+  // dir 1: slope ascends toward +X
+  "gaiadimension:phantom_slope_s",
+  // dir 2: slope ascends toward -Z
+  "gaiadimension:phantom_slope_w"
+  // dir 3: slope ascends toward -X
+];
+var PHANTOM_FULL = "gaiadimension:phantom_full";
+var SLOPE_ANGLE_STEPS = 128;
 var DEFAULT_CONFIG = {
   entityType: "gaiadimension:contraption",
   holdDistance: 4,
@@ -8915,10 +8928,16 @@ var ContraptionScanner = class {
     return true;
   }
 };
+var PHANTOM_TYPES = /* @__PURE__ */ new Set([
+  PHANTOM_FULL,
+  ...PHANTOM_SLOPE_IDS
+]);
 function isSolid(dim, x, y, z) {
   try {
     const b = dim.getBlock({ x: Math.floor(x), y: Math.floor(y), z: Math.floor(z) });
-    return !!b && !b.isAir && !b.isLiquid;
+    if (!b || b.isAir || b.isLiquid) return false;
+    if (PHANTOM_TYPES.has(b.typeId)) return false;
+    return true;
   } catch {
     return false;
   }
@@ -8939,6 +8958,7 @@ var LINEAR_DAMPING = 0.98;
 var ANGULAR_DAMPING = 0.96;
 var BOUNCE = 0.3;
 var REST_THRESHOLD = 0.01;
+var VISUAL_Y_OFFSET = 7 * 2.7 / 16;
 var ContraptionBody = class _ContraptionBody {
   center;
   rotation;
@@ -8957,6 +8977,9 @@ var ContraptionBody = class _ContraptionBody {
   _lastCenterY = 0;
   _lastCenterZ = 0;
   _restTicks = 0;
+  // Phantom slope collision tracking
+  _barrierPositions = [];
+  _barriersPlaced = false;
   constructor(center, children, dimension, config) {
     this.center = center;
     this.rotation = { x: 0, y: 0, z: 0 };
@@ -9001,6 +9024,7 @@ var ContraptionBody = class _ContraptionBody {
     return new _ContraptionBody(center, children, dimension, cfg);
   }
   hold(player) {
+    this.removeBarriers();
     this.state = "held";
     this.holderId = player.id;
     this.velocity = { x: 0, y: 0, z: 0 };
@@ -9008,6 +9032,7 @@ var ContraptionBody = class _ContraptionBody {
     this.rotation = { x: 0, y: 0, z: 0 };
   }
   throw(direction, force) {
+    this.removeBarriers();
     const f = force ?? this.config.throwForce;
     this.state = "thrown";
     this.holderId = "";
@@ -9033,6 +9058,7 @@ var ContraptionBody = class _ContraptionBody {
    * - Player collision resolved via hitbox module
    */
   physicsTick() {
+    if (this.state === "resting" && this._barriersPlaced) return;
     this.velocity.y -= GRAVITY;
     this.center.x += this.velocity.x;
     this.center.y += this.velocity.y;
@@ -9044,13 +9070,21 @@ var ContraptionBody = class _ContraptionBody {
       if (!child.entity.isValid) continue;
       const rot = rotateRel2(child.relPos, this.rotation.x, this.rotation.y);
       const wx = this.center.x + rot.x;
-      const wy = this.center.y + rot.y;
+      const wy = this.center.y + VISUAL_Y_OFFSET + rot.y;
       const wz = this.center.z + rot.z;
       if (isSolid(this.dimension, wx, wy, wz)) {
         grounded = true;
         const groundTop = Math.floor(wy) + 1;
         this.center.y += groundTop - wy;
         break;
+      }
+      if (isSolid(this.dimension, wx, wy - 1, wz)) {
+        const surfaceTop = Math.floor(wy - 1) + 1;
+        if (wy - surfaceTop < 0.05) {
+          grounded = true;
+          this.center.y += surfaceTop - wy;
+          break;
+        }
       }
     }
     if (grounded) {
@@ -9069,14 +9103,16 @@ var ContraptionBody = class _ContraptionBody {
     this.angularVelocity.x *= ANGULAR_DAMPING;
     this.angularVelocity.y *= ANGULAR_DAMPING;
     this._syncProperties();
-    for (const player of world25.getAllPlayers()) {
-      if (!player.isValid) continue;
-      if (player.dimension.id !== this.dimension.id) continue;
-      const dx = player.location.x - this.center.x;
-      const dy = player.location.y - this.center.y;
-      const dz = player.location.z - this.center.z;
-      if (Math.sqrt(dx * dx + dy * dy + dz * dz) > this.children.length + 3) continue;
-      resolveContraptionCollision(player, this);
+    if (!this._barriersPlaced) {
+      for (const player of world25.getAllPlayers()) {
+        if (!player.isValid) continue;
+        if (player.dimension.id !== this.dimension.id) continue;
+        const dx = player.location.x - this.center.x;
+        const dy = player.location.y - this.center.y;
+        const dz = player.location.z - this.center.z;
+        if (Math.sqrt(dx * dx + dy * dy + dz * dz) > this.children.length + 3) continue;
+        resolveContraptionCollision(player, this);
+      }
     }
     const speed = Math.abs(this.velocity.x) + Math.abs(this.velocity.y) + Math.abs(this.velocity.z) + Math.abs(this.angularVelocity.x) + Math.abs(this.angularVelocity.y);
     if (speed < REST_THRESHOLD && grounded) {
@@ -9085,9 +9121,26 @@ var ContraptionBody = class _ContraptionBody {
         this.state = "resting";
         this.velocity = { x: 0, y: 0, z: 0 };
         this.angularVelocity = { x: 0, y: 0, z: 0 };
+        let lowestWy = Infinity;
+        for (const child of this.children) {
+          if (!child.entity.isValid) continue;
+          const rot = rotateRel2(child.relPos, this.rotation.x, this.rotation.y);
+          const wy = this.center.y + VISUAL_Y_OFFSET + rot.y;
+          if (wy < lowestWy) lowestWy = wy;
+        }
+        if (isFinite(lowestWy)) {
+          const snappedLowest = Math.round(lowestWy);
+          this.center.y += snappedLowest - lowestWy;
+        }
+        if (!this._barriersPlaced) {
+          this.placeBarriers();
+        }
       }
     } else {
       this._restTicks = 0;
+      if (this._barriersPlaced) {
+        this.removeBarriers();
+      }
     }
   }
   /**
@@ -9134,10 +9187,119 @@ var ContraptionBody = class _ContraptionBody {
     }
   }
   destroy() {
+    this.removeBarriers();
     for (const child of this.children) {
       if (child.entity.isValid) child.entity.triggerEvent("gaiadimension:despawn");
     }
     this.children = [];
+  }
+  // ══════════════════════════════════════════════════════════════════
+  //  Phantom Slope Collision — Engine-native collision for resting
+  //  contraptions using invisible blocks with multi-box collision.
+  //
+  //  COORDINATE SYSTEM: Bedrock uses LEFT-HANDED rotation.
+  //  Ry (yaw): x2 = rx*cos(w) - z1*sin(w)   (MINUS sin)
+  //            z2 = rx*sin(w) + z1*cos(w)   (PLUS sin)
+  //  This matches rotateRel() above.
+  // ══════════════════════════════════════════════════════════════════
+  /**
+   * Place invisible phantom slope blocks at each child's resting grid position.
+   * The slope angle and direction are derived from the contraption's rotation.
+   */
+  placeBarriers() {
+    if (this._barriersPlaced) return;
+    const pitch = this.rotation.x;
+    const yaw = this.rotation.y;
+    const absPitchDeg = Math.abs(pitch * 180 / Math.PI) % 180;
+    const clampedDeg = Math.min(absPitchDeg, 89.3);
+    const slopeIdx = Math.round(clampedDeg / 89.3 * (SLOPE_ANGLE_STEPS - 1));
+    let yawNorm = (yaw % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+    const pitchSign = pitch >= 0 ? 0 : 2;
+    const octant = Math.round(yawNorm / (Math.PI / 2)) % 4;
+    const dirIdx = (octant + pitchSign) % 4;
+    const useFullBlock = slopeIdx <= 1;
+    const targets = [];
+    for (const child of this.children) {
+      if (!child.entity.isValid) continue;
+      const rot = rotateRel2(child.relPos, pitch, yaw);
+      const vx = this.center.x + rot.x;
+      const vy = this.center.y + VISUAL_Y_OFFSET + rot.y;
+      const vz = this.center.z + rot.z;
+      const wx = Math.floor(vx);
+      const wy = Math.floor(vy);
+      const wz = Math.floor(vz);
+      targets.push({ wx, wy, wz });
+    }
+    let maxPhantomY = -Infinity;
+    for (const t of targets) {
+      if (t.wy > maxPhantomY) maxPhantomY = t.wy;
+    }
+    const safeY = maxPhantomY + 1;
+    for (const player of world25.getAllPlayers()) {
+      if (!player.isValid) continue;
+      if (player.dimension.id !== this.dimension.id) continue;
+      const px = player.location.x;
+      const py = player.location.y;
+      const pz = player.location.z;
+      for (const t of targets) {
+        const overlapX = px + 0.3 > t.wx && px - 0.3 < t.wx + 1;
+        const overlapZ = pz + 0.3 > t.wz && pz - 0.3 < t.wz + 1;
+        const overlapY = py + 1.8 > t.wy && py < t.wy + 1;
+        if (overlapX && overlapY && overlapZ) {
+          try {
+            player.teleport({ x: px, y: safeY, z: pz });
+          } catch {
+          }
+          break;
+        }
+      }
+    }
+    for (const t of targets) {
+      try {
+        const block = this.dimension.getBlock({ x: t.wx, y: t.wy, z: t.wz });
+        if (!block) continue;
+        if (!block.isAir && !block.isLiquid) continue;
+        if (useFullBlock) {
+          block.setType(PHANTOM_FULL);
+        } else {
+          const slopeBlockId = PHANTOM_SLOPE_IDS[dirIdx];
+          const slopeHi = Math.floor(slopeIdx / 16);
+          const slopeLo = slopeIdx % 16;
+          const perm = BlockPermutation15.resolve(slopeBlockId, {
+            "gaiadimension:slope_hi": slopeHi,
+            "gaiadimension:slope_lo": slopeLo
+          });
+          block.setPermutation(perm);
+        }
+        this._barrierPositions.push({ x: t.wx, y: t.wy, z: t.wz });
+      } catch (e) {
+        console.error(`[Contraption] placeBarriers ERROR at ${t.wx},${t.wy},${t.wz}: ${e}`);
+      }
+    }
+    this._barriersPlaced = true;
+  }
+  /**
+   * Remove all placed phantom collision blocks (set back to air).
+   */
+  removeBarriers() {
+    if (!this._barriersPlaced || this._barrierPositions.length === 0) {
+      this._barriersPlaced = false;
+      return;
+    }
+    for (const pos of this._barrierPositions) {
+      try {
+        const block = this.dimension.getBlock(pos);
+        if (!block) continue;
+        const id = block.typeId;
+        if (id === PHANTOM_FULL || id === PHANTOM_SLOPE_IDS[0] || id === PHANTOM_SLOPE_IDS[1] || id === PHANTOM_SLOPE_IDS[2] || id === PHANTOM_SLOPE_IDS[3]) {
+          block.setType("minecraft:air");
+        }
+      } catch {
+      }
+    }
+    console.log(`[Contraption] Removed ${this._barrierPositions.length} phantom collision blocks`);
+    this._barrierPositions = [];
+    this._barriersPlaced = false;
   }
   prune() {
     this.children = this.children.filter((ch) => ch.entity.isValid);
@@ -9167,14 +9329,13 @@ var ContraptionManager = class {
         return;
       }
       if (body.state === "held") {
-        const holder = world25.getEntity(body.holderId);
-        if (!holder || !holder.isValid) {
+        const p = world25.getAllPlayers().find((pl) => pl.id === body.holderId);
+        if (!p) {
           body.state = "thrown";
           this.active.delete(body.holderId);
           this.active.set("thrown_" + Date.now(), body);
           return;
         }
-        const p = holder;
         const headLoc = p.getHeadLocation();
         const viewDir = p.getViewDirection();
         const targetX = headLoc.x + viewDir.x * body.config.holdDistance;
@@ -14320,7 +14481,7 @@ var PalettedPlacer = class {
 };
 
 // src/main/bedrock/ts/world/worldgen/core/utils/paletted-brush.ts
-import { BlockPermutation as BlockPermutation17 } from "@minecraft/server";
+import { BlockPermutation as BlockPermutation18 } from "@minecraft/server";
 var PalettedBrush = class {
   permutations;
   resolved;
@@ -14344,9 +14505,9 @@ var PalettedBrush = class {
     this.resolved = this.permutations.map((p) => {
       if (typeof p === "string") {
         try {
-          return BlockPermutation17.resolve(p);
+          return BlockPermutation18.resolve(p);
         } catch (e) {
-          return BlockPermutation17.resolve("minecraft:air");
+          return BlockPermutation18.resolve("minecraft:air");
         }
       }
       return p;
@@ -14354,7 +14515,7 @@ var PalettedBrush = class {
   }
   next(r = Math.random()) {
     this.resolveAll();
-    return this.resolved[Math.floor(r * this.resolved.length)] ?? BlockPermutation17.resolve("minecraft:air");
+    return this.resolved[Math.floor(r * this.resolved.length)] ?? BlockPermutation18.resolve("minecraft:air");
   }
   toPermutation(r) {
     return this.next(r);
@@ -14367,11 +14528,11 @@ var PalettedBrush = class {
   }
 };
 PalettedBrush.prototype.toPermutation = PalettedBrush.prototype.next;
-BlockPermutation17.prototype.toPermutation = function(r) {
+BlockPermutation18.prototype.toPermutation = function(r) {
   return this;
 };
 String.prototype.toPermutation = function(r) {
-  return BlockPermutation17.resolve(this);
+  return BlockPermutation18.resolve(this);
 };
 
 // src/main/bedrock/ts/world/worldgen/core/utils/event.ts
@@ -15505,6 +15666,7 @@ var ChunkGenerator = class _ChunkGenerator {
         if (random.nextFloat() < centerBiome.treesExtraChance) {
           totalTrees += centerBiome.treesExtra;
         }
+        let placed = 0;
         for (let t = 0; t < totalTrees; t++) {
           const tx = Math.floor(random.nextFloat() * 16);
           const tz = Math.floor(random.nextFloat() * 16);
@@ -15530,7 +15692,9 @@ var ChunkGenerator = class _ChunkGenerator {
               try {
                 yield* this.placeTree(dim, txx, terrain + 1, tzz, treeDef, random);
                 placedTrees.push({ x: txx, z: tzz });
-              } catch (_) {
+                placed++;
+              } catch (treeErr) {
+                console.warn(`[GaiaDim] Tree place failed at ${txx},${terrain + 1},${tzz}: ${treeErr}`);
               }
             }
           }
@@ -15703,8 +15867,12 @@ function placeFoliageForTree(dim, cx, cy, cz, treeId, leafId, random) {
   } else if (treeId === "green_agate_bush") {
     for (let y = 2; y >= 0; y--) placeLeavesRowBush(dim, cx, cy, cz, 2, -y, leafId, random);
   } else if (treeId === "pink_agate" || treeId === "fossilized") {
-    placeLeavesRowCapped(dim, cx, cy, cz, 3, -1, leafId, random);
-    placeLeavesRowCapped(dim, cx, cy, cz, 2, 0, leafId, random);
+    placeLeavesRowCapped(dim, cx, cy, cz, 1, -5, leafId, random);
+    placeLeavesRowCapped(dim, cx, cy, cz, 2, -4, leafId, random);
+    placeLeavesRowCapped(dim, cx, cy, cz, 3, -3, leafId, random);
+    placeLeavesRowCapped(dim, cx, cy, cz, 3, -2, leafId, random);
+    placeLeavesRowCapped(dim, cx, cy, cz, 2, -1, leafId, random);
+    placeLeavesRowCapped(dim, cx, cy, cz, 1, 0, leafId, random);
   } else if (treeId === "aura") {
     placeLeavesRowCapped(dim, cx, cy, cz, 2, -1, leafId, random);
     placeLeavesRowCapped(dim, cx, cy, cz, 1, 0, leafId, random);
@@ -16450,8 +16618,7 @@ function getStr(e, key, def = "") {
 }
 function setAnimState(guard, state) {
   try {
-    const mv = guard.getComponent(EntityComponentTypes.MarkVariant);
-    if (mv) mv.value = state;
+    guard.setProperty("minecraft:mark_variant", state);
   } catch {
   }
 }
@@ -16464,7 +16631,7 @@ function isValidPlayer(e) {
   if (!(e instanceof Player33)) return false;
   try {
     const gm = e.getGameMode();
-    return gm !== GameMode10.creative && gm !== GameMode10.spectator;
+    return gm !== GameMode10.Creative && gm !== GameMode10.Spectator;
   } catch {
     return false;
   }

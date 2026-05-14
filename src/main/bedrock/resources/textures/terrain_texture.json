@@ -2208,6 +2208,9 @@
         },
         "gaia_golden_marsh_gilded_grass_side": {
             "textures": "textures/gaiadimension/gen/gaia_grass/gaia_golden_marsh_gilded_grass_side"
+        },
+        "gaiadimension:phantom_void": {
+            "textures": "textures/gaiadimension/androsa/absolute_void"
         }
     }
 }

@@ -1,5 +1,16 @@
-import { world, system, Block, Dimension, Entity, Player, Vector3 } from "@minecraft/server";
+import { world, system, Block, BlockPermutation, Dimension, Entity, Player, Vector3 } from "@minecraft/server";
 import { resolveContraptionCollision } from "./ContraptionHitbox.js";
+
+// ── Phantom slope constants ─────────────────────────────────────────
+// 4 cardinal direction block IDs × 128 angle permutations = 512 slope variants
+const PHANTOM_SLOPE_IDS = [
+    "gaiadimension:phantom_slope_n",   // dir 0: slope ascends toward +Z
+    "gaiadimension:phantom_slope_e",   // dir 1: slope ascends toward +X
+    "gaiadimension:phantom_slope_s",   // dir 2: slope ascends toward -Z
+    "gaiadimension:phantom_slope_w",   // dir 3: slope ascends toward -X
+] as const;
+const PHANTOM_FULL = "gaiadimension:phantom_full";
+const SLOPE_ANGLE_STEPS = 128;   // must match PhantomSlopeGenerator.ts
 
 // ══════════════════════════════════════════════════════════════════════
 //  ContraptionPhysics — GMod-style script-side physics.
@@ -89,10 +100,19 @@ export class ContraptionScanner {
 
 // ── World collision ─────────────────────────────────────────────────
 
+// Set of phantom block IDs that should NOT count as solid ground
+const PHANTOM_TYPES = new Set([
+    PHANTOM_FULL,
+    ...PHANTOM_SLOPE_IDS,
+]);
+
 function isSolid(dim: Dimension, x: number, y: number, z: number): boolean {
     try {
         const b = dim.getBlock({ x: Math.floor(x), y: Math.floor(y), z: Math.floor(z) });
-        return !!b && !b.isAir && !b.isLiquid;
+        if (!b || b.isAir || b.isLiquid) return false;
+        // Don't treat our own phantom collision blocks as ground
+        if (PHANTOM_TYPES.has(b.typeId)) return false;
+        return true;
     } catch { return false; }
 }
 
@@ -117,6 +137,13 @@ const ANGULAR_DAMPING = 0.96;   // spin friction
 const BOUNCE = 0.3;             // ground bounce coefficient
 const REST_THRESHOLD = 0.01;    // speed below this = resting
 
+// Visual offset: the bone chain (root pivot [0,7,0] → rightitem) shifts
+// the rendered block upward from the entity's feet position.
+// This offset must be applied to BOTH ground collision and phantom placement
+// so they use the same Y reference frame.
+const VISUAL_Y_OFFSET = 7 * 2.7 / 16;  // root pivot contribution = 1.18125
+
+
 // ── GMod-style Contraption Body ─────────────────────────────────────
 
 export class ContraptionBody {
@@ -138,6 +165,10 @@ export class ContraptionBody {
     private _lastCenterY: number = 0;
     private _lastCenterZ: number = 0;
     private _restTicks: number = 0;
+
+    // Phantom slope collision tracking
+    private _barrierPositions: Vector3[] = [];
+    private _barriersPlaced: boolean = false;
 
     private constructor(
         center: Vector3,
@@ -196,6 +227,7 @@ export class ContraptionBody {
     }
 
     hold(player: Player): void {
+        this.removeBarriers();   // ← clean up phantom blocks on pickup
         this.state = "held";
         this.holderId = player.id;
         this.velocity = { x: 0, y: 0, z: 0 };
@@ -204,6 +236,7 @@ export class ContraptionBody {
     }
 
     throw(direction: Vector3, force?: number): void {
+        this.removeBarriers();   // ← clean up phantom blocks on throw
         const f = force ?? this.config.throwForce;
         this.state = "thrown";
         this.holderId = "";
@@ -230,6 +263,11 @@ export class ContraptionBody {
      * - Player collision resolved via hitbox module
      */
     physicsTick(): void {
+        // Once resting with barriers placed, freeze — no more physics.
+        // Without this, gravity applies every tick, pulls center.y down,
+        // breaks barrier alignment, and triggers barrier removal cycle.
+        if (this.state === "resting" && this._barriersPlaced) return;
+
         // Gravity
         this.velocity.y -= GRAVITY;
 
@@ -241,20 +279,25 @@ export class ContraptionBody {
         // Rotation
         this.rotation.x += this.angularVelocity.x;
         this.rotation.y += this.angularVelocity.y;
-        // Ground collision — check lowest blocks at rotated positions
+        // Ground collision — check blocks at rotated visual positions
         let grounded = false;
         for (const child of this.children) {
             if (!child.entity.isValid) continue;
             const rot = rotateRel(child.relPos, this.rotation.x, this.rotation.y);
             const wx = this.center.x + rot.x;
-            const wy = this.center.y + rot.y;
+            const wy = this.center.y + VISUAL_Y_OFFSET + rot.y;
             const wz = this.center.z + rot.z;
 
+            // Check if visual block is INSIDE a solid block → push UP
             if (isSolid(this.dimension, wx, wy, wz)) {
                 grounded = true;
-                // Push center up so this block is above ground
                 const groundTop = Math.floor(wy) + 1;
                 this.center.y += groundTop - wy;
+                break;
+            }
+            // Check if visual block is sitting ON a solid surface → just grounded, don't push down
+            if (isSolid(this.dimension, wx, wy - 1, wz)) {
+                grounded = true;
                 break;
             }
         }
@@ -281,14 +324,17 @@ export class ContraptionBody {
         this._syncProperties();
 
         // Player collision via hitbox module
-        for (const player of world.getAllPlayers()) {
-            if (!player.isValid) continue;
-            if (player.dimension.id !== this.dimension.id) continue;
-            const dx = player.location.x - this.center.x;
-            const dy = player.location.y - this.center.y;
-            const dz = player.location.z - this.center.z;
-            if (Math.sqrt(dx * dx + dy * dy + dz * dz) > this.children.length + 3) continue;
-            resolveContraptionCollision(player, this);
+        // SKIP when phantom barriers are placed — engine-native collision handles it
+        if (!this._barriersPlaced) {
+            for (const player of world.getAllPlayers()) {
+                if (!player.isValid) continue;
+                if (player.dimension.id !== this.dimension.id) continue;
+                const dx = player.location.x - this.center.x;
+                const dy = player.location.y - this.center.y;
+                const dz = player.location.z - this.center.z;
+                if (Math.sqrt(dx * dx + dy * dy + dz * dz) > this.children.length + 3) continue;
+                resolveContraptionCollision(player, this);
+            }
         }
 
         // Rest detection
@@ -300,9 +346,33 @@ export class ContraptionBody {
                 this.state = "resting";
                 this.velocity = { x: 0, y: 0, z: 0 };
                 this.angularVelocity = { x: 0, y: 0, z: 0 };
+
+                // Snap center.y to integer grid alignment before placing barriers.
+                // This eliminates floating-point drift (e.g. 63.9997 vs 64.0)
+                // that causes phantom blocks to snap to wrong grid cells.
+                let lowestWy = Infinity;
+                for (const child of this.children) {
+                    if (!child.entity.isValid) continue;
+                    const rot = rotateRel(child.relPos, this.rotation.x, this.rotation.y);
+                    const wy = this.center.y + VISUAL_Y_OFFSET + rot.y;
+                    if (wy < lowestWy) lowestWy = wy;
+                }
+                if (isFinite(lowestWy)) {
+                    const snappedLowest = Math.round(lowestWy);
+                    this.center.y += snappedLowest - lowestWy;
+                }
+
+                // Place phantom slope collision blocks
+                if (!this._barriersPlaced) {
+                    this.placeBarriers();
+                }
             }
         } else {
             this._restTicks = 0;
+            // If we were resting and started moving again, clear barriers
+            if (this._barriersPlaced) {
+                this.removeBarriers();
+            }
         }
     }
 
@@ -352,10 +422,156 @@ export class ContraptionBody {
     }
 
     destroy(): void {
+        this.removeBarriers();   // ← clean up phantom blocks on destroy
         for (const child of this.children) {
             if (child.entity.isValid) child.entity.triggerEvent("gaiadimension:despawn");
         }
         this.children = [];
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    //  Phantom Slope Collision — Engine-native collision for resting
+    //  contraptions using invisible blocks with multi-box collision.
+    //
+    //  COORDINATE SYSTEM: Bedrock uses LEFT-HANDED rotation.
+    //  Ry (yaw): x2 = rx*cos(w) - z1*sin(w)   (MINUS sin)
+    //            z2 = rx*sin(w) + z1*cos(w)   (PLUS sin)
+    //  This matches rotateRel() above.
+    // ══════════════════════════════════════════════════════════════════
+
+    /**
+     * Place invisible phantom slope blocks at each child's resting grid position.
+     * The slope angle and direction are derived from the contraption's rotation.
+     */
+    placeBarriers(): void {
+        if (this._barriersPlaced) return;
+
+        const pitch = this.rotation.x;
+        const yaw = this.rotation.y;
+
+        // Compute slope_idx from pitch angle (0-127)
+        const absPitchDeg = Math.abs(pitch * 180 / Math.PI) % 180;
+        const clampedDeg = Math.min(absPitchDeg, 89.3);
+        const slopeIdx = Math.round((clampedDeg / 89.3) * (SLOPE_ANGLE_STEPS - 1));
+
+        // Determine cardinal direction from yaw (left-handed convention)
+        let yawNorm = ((yaw % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+        const pitchSign = pitch >= 0 ? 0 : 2;
+        const octant = Math.round(yawNorm / (Math.PI / 2)) % 4;
+        const dirIdx = (octant + pitchSign) % 4;
+
+        const useFullBlock = slopeIdx <= 1;
+
+        // ── Phase 1: Compute all target positions first ──
+        // center has +0.5 on X/Z (block center). Rotated positions need to snap
+        // to the correct block grid. The visual center of each child at rest is
+        // at (center + rotated_relPos). We want the block grid position that
+        // contains that visual center.
+        const targets: { wx: number; wy: number; wz: number }[] = [];
+        for (const child of this.children) {
+            if (!child.entity.isValid) continue;
+            const rot = rotateRel(child.relPos, pitch, yaw);
+            const vx = this.center.x + rot.x;
+            const vy = this.center.y + VISUAL_Y_OFFSET + rot.y;
+            const vz = this.center.z + rot.z;
+            const wx = Math.floor(vx);
+            const wy = Math.floor(vy);
+            const wz = Math.floor(vz);
+            targets.push({ wx, wy, wz });
+        }
+
+        // ── Phase 2: Push overlapping players ON TOP of the contraption ──
+        // Find the highest Y among all phantom block targets
+        let maxPhantomY = -Infinity;
+        for (const t of targets) {
+            if (t.wy > maxPhantomY) maxPhantomY = t.wy;
+        }
+        const safeY = maxPhantomY + 1; // top of the highest phantom block
+
+        for (const player of world.getAllPlayers()) {
+            if (!player.isValid) continue;
+            if (player.dimension.id !== this.dimension.id) continue;
+            const px = player.location.x;
+            const py = player.location.y;
+            const pz = player.location.z;
+
+            // Check if player overlaps with ANY phantom block position
+            for (const t of targets) {
+                // Player AABB: [px-0.3, px+0.3] × [py, py+1.8] × [pz-0.3, pz+0.3]
+                // Block AABB:  [wx, wx+1] × [wy, wy+1] × [wz, wz+1]
+                const overlapX = px + 0.3 > t.wx && px - 0.3 < t.wx + 1;
+                const overlapZ = pz + 0.3 > t.wz && pz - 0.3 < t.wz + 1;
+                const overlapY = py + 1.8 > t.wy && py < t.wy + 1;
+
+                if (overlapX && overlapY && overlapZ) {
+                    // Push player to the top of the contraption
+                    try {
+                        player.teleport({ x: px, y: safeY, z: pz });
+                    } catch {}
+                    break; // only push once per player
+                }
+            }
+        }
+
+        // ── Phase 3: Place the phantom blocks ──
+        for (const t of targets) {
+            try {
+                const block = this.dimension.getBlock({ x: t.wx, y: t.wy, z: t.wz });
+                if (!block) continue;
+                if (!block.isAir && !block.isLiquid) continue;
+
+                if (useFullBlock) {
+                    block.setType(PHANTOM_FULL);
+                } else {
+                    const slopeBlockId = PHANTOM_SLOPE_IDS[dirIdx];
+                    const slopeHi = Math.floor(slopeIdx / 16);
+                    const slopeLo = slopeIdx % 16;
+                    const perm = BlockPermutation.resolve(slopeBlockId, {
+                        "gaiadimension:slope_hi": slopeHi,
+                        "gaiadimension:slope_lo": slopeLo,
+                    });
+                    block.setPermutation(perm);
+                }
+
+                this._barrierPositions.push({ x: t.wx, y: t.wy, z: t.wz });
+            } catch (e) {
+                console.error(`[Contraption] placeBarriers ERROR at ${t.wx},${t.wy},${t.wz}: ${e}`);
+            }
+        }
+
+        this._barriersPlaced = true;
+    }
+
+    /**
+     * Remove all placed phantom collision blocks (set back to air).
+     */
+    removeBarriers(): void {
+        if (!this._barriersPlaced || this._barrierPositions.length === 0) {
+            this._barriersPlaced = false;
+            return;
+        }
+
+        for (const pos of this._barrierPositions) {
+            try {
+                const block = this.dimension.getBlock(pos);
+                if (!block) continue;
+                // Only clear our own phantom blocks
+                const id = block.typeId;
+                if (id === PHANTOM_FULL ||
+                    id === PHANTOM_SLOPE_IDS[0] ||
+                    id === PHANTOM_SLOPE_IDS[1] ||
+                    id === PHANTOM_SLOPE_IDS[2] ||
+                    id === PHANTOM_SLOPE_IDS[3]) {
+                    block.setType("minecraft:air");
+                }
+            } catch {
+                // Block unloaded — skip
+            }
+        }
+
+        console.log(`[Contraption] Removed ${this._barrierPositions.length} phantom collision blocks`);
+        this._barrierPositions = [];
+        this._barriersPlaced = false;
     }
 
     prune(): boolean {

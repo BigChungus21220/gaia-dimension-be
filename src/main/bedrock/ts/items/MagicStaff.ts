@@ -120,7 +120,7 @@ function handleForceGrab(player: Player): void {
         return;
     }
 
-    // 2) Grab a small cube of blocks around the target
+    // Grab a handful of blocks
     const blockHit = player.getBlockFromViewDirection({ maxDistance: 10 });
     if (!blockHit) return;
 
