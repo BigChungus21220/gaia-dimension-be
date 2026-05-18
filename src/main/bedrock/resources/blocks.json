@@ -8,39 +8,6 @@
         "textures": "gaiadimension:canopy_sign",
         "sound": "wood"
     },
-    "gaiadimension:charred_grass": {
-        "sound": "grass"
-    },
-    "gaiadimension:corrupted_grass": {
-        "sound": "grass"
-    },
-    "gaiadimension:murky_grass": {
-        "sound": "grass"
-    },
-    "gaiadimension:soft_grass": {
-        "sound": "grass"
-    },
-    "gaiadimension:blue_glitter_grass": {
-        "sound": "grass"
-    },
-    "gaiadimension:green_glitter_grass": {
-        "sound": "grass"
-    },
-    "gaiadimension:orange_glitter_grass": {
-        "sound": "grass"
-    },
-    "gaiadimension:pale_green_glitter_grass": {
-        "sound": "grass"
-    },
-    "gaiadimension:peach_glitter_grass": {
-        "sound": "grass"
-    },
-    "gaiadimension:pink_glitter_grass": {
-        "sound": "grass"
-    },
-    "gaiadimension:purple_glitter_grass": {
-        "sound": "grass"
-    },
     "gaiadimension:aura_leaves": {
         "sound": "glass"
     },
@@ -221,24 +188,6 @@
     "gaiadimension:canopy_hanging_sign": {
         "textures": "gaiadimension:canopy_hanging_sign",
         "sound": "wood"
-    },
-    "gaiadimension:gilded_grass": {
-        "sound": "grass"
-    },
-    "gaiadimension:glitter_grass": {
-        "sound": "grass"
-    },
-    "gaiadimension:fossil_glitter_grass": {
-        "sound": "grass"
-    },
-    "gaiadimension:mutant_glitter_grass": {
-        "sound": "grass"
-    },
-    "gaiadimension:volcanic_glitter_grass": {
-        "sound": "grass"
-    },
-    "gaiadimension:static_glitter_grass": {
-        "sound": "grass"
     },
     "gaiadimension:pink_agate_forest_glitter_grass": {
         "sound": "grass"

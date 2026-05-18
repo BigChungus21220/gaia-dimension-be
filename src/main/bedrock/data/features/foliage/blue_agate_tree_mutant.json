@@ -34,7 +34,7 @@
       "gaiadimension:heavy_soil"
     ],
     "may_grow_on": [
-      "gaiadimension:pale_green_glitter_grass"
+      "gaiadimension:fossil_woodland_glitter_grass"
     ],
     "may_replace": [
       "minecraft:air",
@@ -49,19 +49,19 @@
       "gaiadimension:purple_agate_leaves"
     ],
     "may_grow_through": [
-      "gaiadimension:orange_glitter_grass",
-      "gaiadimension:blue_glitter_grass",
-      "gaiadimension:green_glitter_grass",
-      "gaiadimension:charred_grass",
-      "gaiadimension:pale_green_glitter_grass",
-      "gaiadimension:purple_glitter_grass",
-      "gaiadimension:orange_glitter_grass",
-      "gaiadimension:soft_grass",
-      "gaiadimension:murky_grass",
-      "gaiadimension:corrupted_grass",
-      "gaiadimension:pink_glitter_grass",
-      "gaiadimension:peach_glitter_grass",
-      "gaiadimension:orange_glitter_grass",
+      "gaiadimension:mookaite_mesa_glitter_grass",
+      "gaiadimension:blue_agate_taiga_glitter_grass",
+      "gaiadimension:green_agate_jungle_glitter_grass",
+      "gaiadimension:vanilla_grass_plains",
+      "gaiadimension:fossil_woodland_glitter_grass",
+      "gaiadimension:purple_agate_swamp_glitter_grass",
+      "gaiadimension:mookaite_mesa_glitter_grass",
+      "gaiadimension:shining_grove_soft_grass",
+      "gaiadimension:smoldering_bog_murky_grass",
+      "gaiadimension:goldstone_lands_corrupted_grass",
+      "gaiadimension:pink_agate_forest_glitter_grass",
+      "gaiadimension:crystal_plains_glitter_grass",
+      "gaiadimension:mookaite_mesa_glitter_grass",
       "gaiadimension:light_soil",
       "gaiadimension:heavy_soil",
       "gaiadimension:cinder",

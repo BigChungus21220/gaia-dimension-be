@@ -153,7 +153,7 @@
                 "geometry": "geometry.rosa_gd.slab_icon",
                 "material_instances": {
                     "*": {
-                        "texture": "gaiadimension:malachite__tiles",
+                        "texture": "gaiadimension:malachite_tiles",
                         "render_method": "opaque"
                     }
                 }

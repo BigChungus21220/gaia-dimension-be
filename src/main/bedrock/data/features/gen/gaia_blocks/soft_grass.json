@@ -4,7 +4,7 @@
 		"description": {
 			"identifier": "gaiadimension:gen/gaia_blocks/soft_grass"
 		},
-		"places_block": "gaiadimension:soft_grass",
+		"places_block": "gaiadimension:shining_grove_soft_grass",
 		"enforce_placement_rules": false,
 		"enforce_survivability_rules": false
 	}

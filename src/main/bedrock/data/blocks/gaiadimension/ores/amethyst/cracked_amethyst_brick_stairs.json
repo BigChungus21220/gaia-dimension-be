@@ -69,7 +69,20 @@
             "minecraft:loot": "loot_tables/blocks/gaiadimension/ores/cracked_amethyst_brick_stairs.json",
             "minecraft:map_color": "#915f6d",
             "minecraft:light_emission": 15,
-            "minecraft:light_dampening": 0
+            "minecraft:light_dampening": 0,
+            "minecraft:geometry": {
+                "identifier": "geometry.rosa_gd.stairs",
+                "bone_visibility": {
+                    "bot_ne": true,
+                    "bot_nw": true,
+                    "bot_se": true,
+                    "bot_sw": true,
+                    "top_ne": true,
+                    "top_nw": true,
+                    "top_se": false,
+                    "top_sw": false
+                }
+            }
         },
         "permutations": [
             {

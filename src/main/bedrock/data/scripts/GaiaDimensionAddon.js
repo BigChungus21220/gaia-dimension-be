@@ -9079,12 +9079,8 @@ var ContraptionBody = class _ContraptionBody {
         break;
       }
       if (isSolid(this.dimension, wx, wy - 1, wz)) {
-        const surfaceTop = Math.floor(wy - 1) + 1;
-        if (wy - surfaceTop < 0.05) {
-          grounded = true;
-          this.center.y += surfaceTop - wy;
-          break;
-        }
+        grounded = true;
+        break;
       }
     }
     if (grounded) {

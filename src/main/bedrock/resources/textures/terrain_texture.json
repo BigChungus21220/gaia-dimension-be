@@ -2209,6 +2209,33 @@
         "gaia_golden_marsh_gilded_grass_side": {
             "textures": "textures/gaiadimension/gen/gaia_grass/gaia_golden_marsh_gilded_grass_side"
         },
+        "gaiadimension:tektite_ore": {
+            "textures": "textures/gaiadimension/androsa/blocks/tektite_ore"
+        },
+        "gaiadimension:pulsing_chiselled_malachite_brick": {
+            "textures": "textures/gaiadimension/androsa/blocks/pulsing_chiselled_malachite_bricks"
+        },
+        "gaiadimension:crusted_jet_brick": {
+            "textures": "textures/gaiadimension/androsa/blocks/crusted_jet_bricks"
+        },
+        "gaiadimension:steel_furnace_name": {
+            "textures": "textures/gaiadimension/androsa/blocks/steel_furnace_name"
+        },
+        "gaiadimension:steel_furnace_off": {
+            "textures": "textures/gaiadimension/androsa/blocks/steel_furnace_off"
+        },
+        "gaiadimension:steel_furnace_on": {
+            "textures": "textures/gaiadimension/androsa/blocks/steel_furnace_on"
+        },
+        "gaiadimension:slot_background": {
+            "textures": "textures/gaiadimension/androsa/blocks/slot_background"
+        },
+        "empty": {
+            "textures": "textures/gaiadimension/androsa/blocks/empty"
+        },
+        "gaia_bedrock": {
+            "textures": "textures/gaiadimension/androsa/blocks/gaia_bedrock"
+        },
         "gaiadimension:phantom_void": {
             "textures": "textures/gaiadimension/androsa/absolute_void"
         }

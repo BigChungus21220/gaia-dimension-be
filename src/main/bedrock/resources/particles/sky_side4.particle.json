@@ -22,6 +22,7 @@
 			},
 			"minecraft:emitter_shape_box": {
 				"offset": [-200, 50, 0],
+				"half_dimensions": [1, 1, 1],
 				"direction": "outwards"
 			},
 			"minecraft:particle_lifetime_expression": {

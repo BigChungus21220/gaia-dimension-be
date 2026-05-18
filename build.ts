@@ -4,10 +4,23 @@ import * as path from 'path';
 import * as esbuild from 'esbuild';
 import AdmZip from 'adm-zip';
 
+const bedrockBase = "C:/Users/OS/AppData/Roaming/Minecraft Bedrock/Users";
+const extraPaths: string[] = [];
+if (fs.existsSync(bedrockBase)) {
+    for (const d of fs.readdirSync(bedrockBase)) {
+        extraPaths.push(`${bedrockBase}/${d}/games/com.mojang`);
+    }
+}
+const bedrockPreviewBase = "C:/Users/OS/AppData/Roaming/Minecraft Bedrock Preview/Users";
+if (fs.existsSync(bedrockPreviewBase)) {
+    for (const d of fs.readdirSync(bedrockPreviewBase)) {
+        extraPaths.push(`${bedrockPreviewBase}/${d}/games/com.mojang`);
+    }
+}
+
 const MOJANG_PATHS = [
     path.join(process.env.APPDATA || '', '..', 'Local/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/LocalState/games/com.mojang'),
-    "C:/Users/ADMIN/AppData/Roaming/Minecraft Bedrock/Users/Shared/games/com.mojang",
-    "C:/Users/ADMIN/AppData/Roaming/Minecraft Bedrock Preview/Users/Shared/games/com.mojang"
+    ...extraPaths
 ].filter(p => fs.existsSync(p));
 
 const ROOT = process.cwd();

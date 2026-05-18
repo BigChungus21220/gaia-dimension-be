@@ -11,10 +11,7 @@
       },
       "geometry": {
         "default": "geometry.gaiadimension.sign_text"
-      },
-      "render_controllers": [
-        "controller.render.shulker"
-      ]
+      }
     }
   }
 }

@@ -1,0 +1,28 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.bftr.steel_furnace",
+				"texture_width": 16,
+				"texture_height": 16,
+				"visible_bounds_width": 1,
+				"visible_bounds_height": 1,
+				"visible_bounds_offset": [0, 0, 0]
+			},
+			"bones": [
+				{
+					"name": "body",
+					"pivot": [8, 8, 8],
+					"cubes": [
+						{
+							"origin": [0, 0, 0],
+							"size": [16, 16, 16],
+							"uv": [0, 0]
+						}
+					]
+				}
+			]
+		}
+	]
+}

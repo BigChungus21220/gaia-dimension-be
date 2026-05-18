@@ -43,22 +43,6 @@
                 "use_efficiency": true,
                 "destroy_speeds": [
                     {
-                        "block": "gaiadimension:pillar1",
-                        "speed": 6
-                    },
-                    {
-                        "block": "gaiadimension:brick3",
-                        "speed": 6
-                    },
-                    {
-                        "block": "gaiadimension:green_brick3",
-                        "speed": 6
-                    },
-                    {
-                        "block": "gaiadimension:brick1",
-                        "speed": 6
-                    },
-                    {
                         "block": "gaiadimension:cracked_malachite_brick_slab",
                         "speed": 6
                     },
@@ -220,10 +204,6 @@
                     },
                     {
                         "block": "gaiadimension:diopside_block",
-                        "speed": 6
-                    },
-                    {
-                        "block": "gaiadimension:brick2",
                         "speed": 6
                     },
                     {

@@ -9,11 +9,11 @@
 		"enforce_survivability_rules": true,
 		"may_attach_to": {
 			"bottom": [
-				"gaiadimension:soft_grass"
+				"gaiadimension:shining_grove_soft_grass"
 			]
 		},
 		"may_replace": [
-			"gaiadimension:soft_grass",
+			"gaiadimension:shining_grove_soft_grass",
 			"minecraft:air"
 		]
 	}

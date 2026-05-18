@@ -9,11 +9,11 @@
 		"enforce_survivability_rules": true,
 		"may_attach_to": {
 			"bottom": [
-				"gaiadimension:purple_glitter_grass"
+				"gaiadimension:purple_agate_swamp_glitter_grass"
 			]
 		},
 		"may_replace": [
-			"gaiadimension:purple_glitter_grass",
+			"gaiadimension:purple_agate_swamp_glitter_grass",
 			"minecraft:air"
 		]
 	}

@@ -5,7 +5,7 @@
             "loop": true,
             "animation_length": 0.1,
             "timeline": {
-                "0.0": "particle gaiadimension:magic_staff_trail"
+                "0.0": "1;"
             }
         }
     }

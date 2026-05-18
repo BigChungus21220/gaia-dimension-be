@@ -75,7 +75,7 @@
       "gaiadimension:on_death": {
         "sequence": [
           {
-            "set_actor_property": {
+            "set_property": {
               "gaiadimension:is_dead": true
             }
           },

@@ -32,7 +32,6 @@
                 "repair_items": [
                     {
                         "items": [
-                            "gaiadimension:malachite_guard",
                             "gaiadimension:malachite_guard_helmet"
                         ],
                         "repair_amount": 1083
@@ -40,7 +39,7 @@
                 ]
             },
             "minecraft:display_name": {
-                "value": "Malachite Headgear\n\u00a77Sturdy, heavy, and eerily polished"
+                "value": "Malachite Headgear\n§7Sturdy, heavy, and eerily polished"
             },
             "minecraft:tags": {
                 "tags": [

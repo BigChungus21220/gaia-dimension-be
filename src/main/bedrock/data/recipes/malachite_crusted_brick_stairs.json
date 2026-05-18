@@ -2,7 +2,7 @@
     "format_version": "1.12",
     "minecraft:recipe_shaped": {
         "description": {
-            "identifier": "gaiadimension:malachite_crusted_brick_stairs"
+            "identifier": "gaiadimension:crusted_malachite_brick_stairs"
         },
         "tags": [
             "crafting_table"
@@ -14,11 +14,11 @@
         ],
         "key": {
             "#": {
-                "item": "gaiadimension:malachite_crusted_bricks"
+                "item": "gaiadimension:crusted_malachite_bricks"
             }
         },
         "result": {
-            "item": "gaiadimension:malachite_crusted_brick_stairs",
+            "item": "gaiadimension:crusted_malachite_brick_stairs",
             "count": 8
         }
     }

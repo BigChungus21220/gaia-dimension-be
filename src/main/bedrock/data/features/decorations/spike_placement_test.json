@@ -9,11 +9,11 @@
 		"enforce_survivability_rules": true,
 		"may_attach_to": {
 			"bottom": [
-				"gaiadimension:murky_grass"
+				"gaiadimension:smoldering_bog_murky_grass"
 			]
 		},
 		"may_replace": [
-			"gaiadimension:murky_grass",
+			"gaiadimension:smoldering_bog_murky_grass",
 			"minecraft:air"
 		]
 	}
