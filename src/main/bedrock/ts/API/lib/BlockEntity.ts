@@ -499,11 +499,11 @@ class BlockEntityManager {
     }
 
     handleWorldLoad(): void {
-        console.warn("[BlockEntity] World load handling started...");
+        // console.warn("[BlockEntity] World load handling started...");
         const dimensions = getDimensions();
         dimensions.forEach(dimension => {
             const entities = dimension.getEntities({ families: ['luminiae_generic'] });
-            console.warn(`[BlockEntity] Found ${entities.length} generic block entities in ${dimension.id}`);
+            // console.warn(`[BlockEntity] Found ${entities.length} generic block entities in ${dimension.id}`);
             for (const entity of entities) {
                this.registerEntityAsMachine(entity);
             }

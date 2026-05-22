@@ -94,16 +94,16 @@ system.beforeEvents.startup.subscribe((event: StartupEvent) => {
     registerInvisibleComponent({ blockComponentRegistry });
     registerCurtainComponent({ blockComponentRegistry });
     registerWoodComponent({ blockComponentRegistry });
-    registerFenceComponent({ blockComponentRegistry });
+    // registerFenceComponent({ blockComponentRegistry }); // TODO: No blocks use this component yet
     registerSaplingComponent({ blockComponentRegistry });
-    registerWallComponent({ blockComponentRegistry });
+    // registerWallComponent({ blockComponentRegistry }); // TODO: No blocks use this component yet
     registerButtonComponent({ blockComponentRegistry });
     registerPressurePlateComponent({ blockComponentRegistry });
     registerStairsComponent({ blockComponentRegistry });
     registerSignComponent({ blockComponentRegistry });
     registerGeyserComponent({ blockComponentRegistry });
-    registerSandstoneComponent({ blockComponentRegistry });
-    registerStoneSlabComponent({ blockComponentRegistry });
+    // registerSandstoneComponent({ blockComponentRegistry }); // TODO: No blocks use this component yet
+    // registerStoneSlabComponent({ blockComponentRegistry }); // TODO: No blocks use this component yet
     registerGaiaFurnaceComponent({ blockComponentRegistry });
     registerGlitteringFireComponent();
     registerCrudeStorageCrateComponent({ blockComponentRegistry });

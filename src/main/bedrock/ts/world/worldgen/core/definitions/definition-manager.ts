@@ -45,9 +45,9 @@ export class DefinitionManager {
             this.finialize.subscribe(()=>{
                 let time = Date.now();
                 this.biomeManager.selfFinialize();
-                console.warn("PRECALUCLATION WITH SAMPLES: " + this.__precalculatedSamples);
+                // console.warn("PRECALUCLATION WITH SAMPLES: " + this.__precalculatedSamples);
                 if(this.__precalculated) this.biomeManager.onPrecalculate(this.__precalculatedSamples, seed);
-                console.warn("PRECALCULATED IN " + (Date.now() - time) + " ms");
+                // console.warn("PRECALCULATED IN " + (Date.now() - time) + " ms");
             });
             this.finialize.trigger(seed);
         });
