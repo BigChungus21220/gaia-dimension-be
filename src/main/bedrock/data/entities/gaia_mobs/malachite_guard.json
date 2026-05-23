@@ -15,32 +15,44 @@
       },
       "animations": {
         "main_controller": "controller.animation.malachite_guard",
-        "shake_controller": "controller.animation.malachite_guard.shake"
+        "shake_controller": "controller.animation.malachite_guard.shake",
+        "idle_arms": "animation.dummy",
+        "walk": "animation.dummy",
+        "defence_pose": "animation.dummy",
+        "stomp_windup": "animation.dummy",
+        "charge_crouch": "animation.dummy",
+        "blast_execute": "animation.dummy",
+        "shake": "animation.dummy"
       },
       "properties": {
         "gaiadimension:phase": {
           "type": "int",
           "default": 0,
-          "range": [0, 2],
+          "range": [
+            0,
+            2
+          ],
           "client_sync": true
         },
         "gaiadimension:anim_state": {
           "type": "int",
           "default": 0,
-          "range": [0, 5],
+          "range": [
+            0,
+            5
+          ],
           "client_sync": true
         }
       }
     },
-
     "component_groups": {
       "defend": {
         "minecraft:is_charged": {},
         "minecraft:movement": {
-          "value": 0.0
+          "value": 0
         },
         "minecraft:knockback_resistance": {
-          "value": 1.0
+          "value": 1
         },
         "minecraft:damage_sensor": {
           "triggers": [
@@ -64,35 +76,58 @@
           "value": 0.09
         },
         "minecraft:knockback_resistance": {
-          "value": 1.0
+          "value": 1
         }
       },
       "stomp_active": {
         "minecraft:knockback_resistance": {
-          "value": 1.0
+          "value": 1
         }
       },
       "charge_active": {
         "minecraft:knockback_resistance": {
-          "value": 1.0
+          "value": 1
         }
       }
     },
-
     "components": {
       "minecraft:underwater_movement": {
-        "value": 5.0
+        "value": 5
       },
       "minecraft:break_blocks": {
         "breakable_blocks": [
-          "bamboo", "bamboo_sapling", "beetroot", "brown_mushroom",
-          "carrots", "carved_pumpkin", "chorus_flower", "chorus_plant",
-          "deadbush", "double_plant", "leaves", "leaves2",
-          "lit_pumpkin", "melon_block", "melon_stem", "potatoes",
-          "pumpkin", "pumpkin_stem", "red_flower", "red_mushroom",
-          "crimson_fungus", "warped_fungus", "reeds", "sapling",
-          "snow_layer", "sweet_berry_bush", "tallgrass", "turtle_egg",
-          "vine", "waterlily", "wheat", "yellow_flower"
+          "bamboo",
+          "bamboo_sapling",
+          "beetroot",
+          "brown_mushroom",
+          "carrots",
+          "carved_pumpkin",
+          "chorus_flower",
+          "chorus_plant",
+          "deadbush",
+          "double_plant",
+          "leaves",
+          "leaves2",
+          "lit_pumpkin",
+          "melon_block",
+          "melon_stem",
+          "potatoes",
+          "pumpkin",
+          "pumpkin_stem",
+          "red_flower",
+          "red_mushroom",
+          "crimson_fungus",
+          "warped_fungus",
+          "reeds",
+          "sapling",
+          "snow_layer",
+          "sweet_berry_bush",
+          "tallgrass",
+          "turtle_egg",
+          "vine",
+          "waterlily",
+          "wheat",
+          "yellow_flower"
         ]
       },
       "minecraft:experience_reward": {
@@ -105,7 +140,11 @@
       },
       "minecraft:is_hidden_when_invisible": {},
       "minecraft:type_family": {
-        "family": ["mob", "malachite_guard", "boss"]
+        "family": [
+          "mob",
+          "malachite_guard",
+          "boss"
+        ]
       },
       "minecraft:nameable": {},
       "minecraft:collision_box": {
@@ -187,13 +226,13 @@
         "priority": 1,
         "track_target": true,
         "melee_fov": 360,
-        "speed_multiplier": 1.0,
+        "speed_multiplier": 1,
         "reach_multiplier": 1.5
       },
       "minecraft:behavior.move_towards_target": {
         "priority": 2,
-        "speed_multiplier": 1.0,
-        "within_radius": 32.0
+        "speed_multiplier": 1,
+        "within_radius": 32
       },
       "minecraft:behavior.random_stroll": {
         "priority": 6,
@@ -202,7 +241,7 @@
       },
       "minecraft:behavior.look_at_player": {
         "priority": 7,
-        "look_distance": 8.0,
+        "look_distance": 8,
         "probability": 0.02
       },
       "minecraft:behavior.random_look_around": {
@@ -252,63 +291,96 @@
         "value": 0
       }
     },
-
     "events": {
       "minecraft:entity_spawned": {
         "add": {
-          "component_groups": ["defend"]
+          "component_groups": [
+            "defend"
+          ]
         }
       },
       "mg_defend": {
         "remove": {
-          "component_groups": ["normal", "resist", "stomp_active", "charge_active"]
+          "component_groups": [
+            "normal",
+            "resist",
+            "stomp_active",
+            "charge_active"
+          ]
         },
         "add": {
-          "component_groups": ["defend"]
+          "component_groups": [
+            "defend"
+          ]
         }
       },
       "no_mg_defend": {
         "remove": {
-          "component_groups": ["defend", "stomp_active", "charge_active"]
+          "component_groups": [
+            "defend",
+            "stomp_active",
+            "charge_active"
+          ]
         },
         "add": {
-          "component_groups": ["normal"]
+          "component_groups": [
+            "normal"
+          ]
         }
       },
       "mg_resist": {
         "remove": {
-          "component_groups": ["normal", "defend", "stomp_active", "charge_active"]
+          "component_groups": [
+            "normal",
+            "defend",
+            "stomp_active",
+            "charge_active"
+          ]
         },
         "add": {
-          "component_groups": ["resist"]
+          "component_groups": [
+            "resist"
+          ]
         }
       },
       "no_mg_resist": {
         "remove": {
-          "component_groups": ["resist"]
+          "component_groups": [
+            "resist"
+          ]
         },
         "add": {
-          "component_groups": ["normal"]
+          "component_groups": [
+            "normal"
+          ]
         }
       },
       "mg_stomp_start": {
         "add": {
-          "component_groups": ["stomp_active"]
+          "component_groups": [
+            "stomp_active"
+          ]
         }
       },
       "mg_stomp_end": {
         "remove": {
-          "component_groups": ["stomp_active"]
+          "component_groups": [
+            "stomp_active"
+          ]
         }
       },
       "mg_charge_start": {
         "add": {
-          "component_groups": ["charge_active"]
+          "component_groups": [
+            "charge_active"
+          ]
         }
       },
       "mg_charge_end": {
         "remove": {
-          "component_groups": ["charge_active"]
+          "component_groups": [
+            "charge_active"
+          ]
         }
       }
     }

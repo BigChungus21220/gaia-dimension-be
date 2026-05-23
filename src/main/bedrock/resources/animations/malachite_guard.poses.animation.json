@@ -3,37 +3,69 @@
 	"animations": {
 		"animation.malachite_guard.defence_pose": {
 			"loop": true,
-			"override_previous_animation": true,
 			"bones": {
 				"body": {
-					"position": [0, 1.6, 0]
+					"position": [
+						0,
+						-1.6,
+						0
+					]
 				},
 				"upperArmL": {
-					"rotation": [-74.48, -5.73, 0]
+					"rotation": [
+						74.4845,
+						5.7296,
+						0
+					]
 				},
 				"upperArmR": {
-					"rotation": [-74.48, 5.73, 0]
-				},
-				"lowerArmL": {
-					"rotation": [-97.40, 34.38, 0]
-				},
-				"lowerArmR": {
-					"rotation": [-97.40, -34.38, 0]
+					"rotation": [
+						74.4845,
+						-5.7296,
+						0
+					]
 				},
 				"leg0": {
-					"rotation": [-28.65, -40.11, 0]
+					"rotation": [
+						28.6479,
+						40.1071,
+						0
+					]
 				},
 				"leg1": {
-					"rotation": [-28.65, 40.11, 0]
+					"rotation": [
+						28.6479,
+						-40.1071,
+						0
+					]
 				},
 				"footL": {
-					"rotation": [28.65, 0, 0]
+					"rotation": [
+						-28.6479,
+						0,
+						0
+					]
 				},
 				"footR": {
-					"rotation": [28.65, 0, 0]
+					"rotation": [
+						-28.6479,
+						0,
+						0
+					]
 				},
-				"head": {
-					"rotation": [0, 0, 0]
+				"lowerArmL": {
+					"rotation": [
+						97.4029,
+						-34.3775,
+						0
+					]
+				},
+				"lowerArmR": {
+					"rotation": [
+						97.4029,
+						34.3775,
+						0
+					]
 				}
 			}
 		},
@@ -42,109 +74,203 @@
 			"override_previous_animation": true,
 			"bones": {
 				"body": {
-					"position": [0, 8.0, 0]
+					"position": [
+						0,
+						-8,
+						0
+					]
 				},
 				"head": {
-					"rotation": [45.84, 0, 0]
+					"rotation": [
+						45.84,
+						0,
+						0
+					]
 				},
 				"torso": {
-					"rotation": [11.46, 0, 0]
+					"rotation": [
+						11.46,
+						0,
+						0
+					]
 				},
 				"upperArmL": {
-					"rotation": [-45.84, -22.92, 0]
+					"rotation": [
+						-45.84,
+						-22.92,
+						0
+					]
 				},
 				"upperArmR": {
-					"rotation": [-45.84, 22.92, 0]
+					"rotation": [
+						-45.84,
+						22.92,
+						0
+					]
 				},
 				"lowerArmL": {
-					"rotation": [-103.13, 0, 0]
+					"rotation": [
+						-103.13,
+						0,
+						0
+					]
 				},
 				"lowerArmR": {
-					"rotation": [-103.13, 0, 0]
+					"rotation": [
+						-103.13,
+						0,
+						0
+					]
 				},
 				"leg0": {
-					"rotation": [-63.03, -17.19, 0]
+					"rotation": [
+						-63.03,
+						-17.19,
+						0
+					]
 				},
 				"leg1": {
-					"rotation": [-63.03, 17.19, 0]
+					"rotation": [
+						-63.03,
+						17.19,
+						0
+					]
 				},
 				"footL": {
-					"rotation": [91.67, 0, 0]
+					"rotation": [
+						91.67,
+						0,
+						0
+					]
 				},
 				"footR": {
-					"rotation": [91.67, 0, 0]
+					"rotation": [
+						91.67,
+						0,
+						0
+					]
 				}
 			}
 		},
 		"animation.malachite_guard.blast_execute": {
 			"loop": true,
-			"override_previous_animation": true,
 			"bones": {
-				"body": {
-					"position": [0, 1.6, 0]
-				},
 				"head": {
-					"rotation": [-45.84, 0, 0]
+					"rotation": [
+						45.84,
+						0,
+						0
+					]
 				},
 				"torso": {
-					"rotation": [-5.73, 0, 0]
+					"rotation": [
+						5.73,
+						0,
+						0
+					]
 				},
 				"upperArmL": {
-					"rotation": [-171.89, 0, 40.11]
+					"rotation": [
+						171.89,
+						0,
+						40.11
+					]
 				},
 				"upperArmR": {
-					"rotation": [-171.89, 0, -40.11]
-				},
-				"lowerArmL": {
-					"rotation": [0, 0, 0]
-				},
-				"lowerArmR": {
-					"rotation": [0, 0, 0]
+					"rotation": [
+						171.89,
+						0,
+						-40.11
+					]
 				},
 				"leg0": {
-					"rotation": [0, 0, -17.19]
+					"rotation": [
+						0,
+						0,
+						-17.19
+					]
 				},
 				"leg1": {
-					"rotation": [0, 0, 17.19]
+					"rotation": [
+						0,
+						0,
+						17.19
+					]
 				},
-				"footL": {
-					"rotation": [0, 0, 0]
-				},
-				"footR": {
-					"rotation": [0, 0, 0]
+				"body": {
+					"position": [
+						0,
+						-1.6,
+						0
+					]
 				}
 			}
 		},
 		"animation.malachite_guard.stomp_windup": {
 			"loop": true,
-			"override_previous_animation": true,
 			"bones": {
 				"head": {
-					"rotation": [-17.19, 0, 0]
+					"rotation": [
+						-17.19,
+						0,
+						0
+					]
 				},
 				"upperArmL": {
-					"rotation": [-114.59, -40.11, 0]
+					"rotation": [
+						-114.59,
+						40.11,
+						0
+					]
 				},
 				"upperArmR": {
-					"rotation": [-114.59, 40.11, 0]
+					"rotation": [
+						-114.59,
+						-40.11,
+						0
+					]
 				},
 				"lowerArmL": {
-					"rotation": [-45.84, 17.19, 0]
+					"rotation": [
+						-45.84,
+						-17.19,
+						0
+					]
 				},
 				"lowerArmR": {
-					"rotation": [-45.84, -17.19, 0]
+					"rotation": [
+						-45.84,
+						17.19,
+						0
+					]
 				},
 				"leg0": {
-					"rotation": [-114.59, -28.65, 0]
+					"rotation": [
+						-114.59,
+						28.65,
+						0
+					]
 				},
 				"footL": {
-					"rotation": [114.59, 0, 0]
+					"rotation": [
+						114.59,
+						0,
+						0
+					]
 				},
 				"leg1": {
-					"rotation": [-11.46, 28.65, 0]
+					"rotation": [
+						-11.46,
+						-28.65,
+						0
+					]
 				},
 				"footR": {
-					"rotation": [11.46, 0, 0]
+					"rotation": [
+						11.46,
+						0,
+						0
+					]
 				}
 			}
 		},
@@ -153,35 +279,50 @@
 			"bones": {
 				"upperArmR": {
 					"rotation": [
-						"Math.sin(query.life_time * 20.0 * 0.067) * 2.865",
+						"math.sin(query.life_time * 76.7763) * 2.8648",
 						0,
-						"Math.cos(query.life_time * 20.0 * 0.09) * 2.865 + 2.865"
+						"-(math.cos(query.life_time * 103.1324) * 2.8648 + 2.8648)"
 					]
 				},
 				"upperArmL": {
 					"rotation": [
-						"-Math.sin(query.life_time * 20.0 * 0.067) * 2.865",
+						"-math.sin(query.life_time * 76.7763) * 2.8648",
 						0,
-						"-(Math.cos(query.life_time * 20.0 * 0.09) * 2.865 + 2.865)"
+						"math.cos(query.life_time * 103.1324) * 2.8648 + 2.8648"
 					]
 				}
 			}
 		},
 		"animation.malachite_guard.walk": {
 			"loop": true,
-			"anim_time_update": "query.modified_distance_moved",
 			"bones": {
 				"upperArmL": {
-					"rotation": ["Math.cos(query.anim_time * 0.6662 * 57.2958) * 28.65 * query.modified_move_speed * 10.0", 0, 0]
+					"rotation": [
+						"math.cos(query.modified_distance_moved * 38.1706) * 28.6479 * query.modified_move_speed",
+						0,
+						"math.cos(query.life_time * 20.0 * 5.1566) * 2.8648 + 2.8648"
+					]
 				},
 				"upperArmR": {
-					"rotation": ["Math.cos((query.anim_time * 0.6662 + 3.14159) * 57.2958) * 28.65 * query.modified_move_speed * 10.0", 0, 0]
-				},
-				"leg1": {
-					"rotation": ["Math.cos(query.anim_time * 0.6662 * 57.2958) * 28.65 * query.modified_move_speed * 10.0", 0, 0]
+					"rotation": [
+						"-math.cos(query.modified_distance_moved * 38.1706) * 28.6479 * query.modified_move_speed",
+						0,
+						"-(math.cos(query.life_time * 20.0 * 5.1566) * 2.8648 + 2.8648)"
+					]
 				},
 				"leg0": {
-					"rotation": ["Math.cos((query.anim_time * 0.6662 + 3.14159) * 57.2958) * 28.65 * query.modified_move_speed * 10.0", 0, 0]
+					"rotation": [
+						"-math.cos(query.modified_distance_moved * 38.1706) * 28.6479 * query.modified_move_speed",
+						0,
+						0
+					]
+				},
+				"leg1": {
+					"rotation": [
+						"math.cos(query.modified_distance_moved * 38.1706) * 28.6479 * query.modified_move_speed",
+						0,
+						0
+					]
 				}
 			}
 		}

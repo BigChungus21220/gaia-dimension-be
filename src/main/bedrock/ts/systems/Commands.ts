@@ -385,10 +385,10 @@ export function registerGaiaCommands(registry: CustomCommandRegistry): void {
             const form = new ModalFormData();
             form.title("§6Gaia Settings");
             
-            form.toggle("Portal Biome Restriction\n§7(Only allowed biomes)", currentConfig.portalBiomeRestriction);
-            form.toggle("Allow All Biomes\n§7(Bypass restriction)", currentConfig.allowAllBiomes);
+            form.toggle("Portal Biome Restriction\n§7(Only allowed biomes)", { defaultValue: currentConfig.portalBiomeRestriction });
+            form.toggle("Allow All Biomes\n§7(Bypass restriction)", { defaultValue: currentConfig.allowAllBiomes });
             
-            form.textField("Manually Add Biome ID", "Enter identifier...", "");
+            form.textField("Manually Add Biome ID", "Enter identifier...", { defaultValue: "" });
 
             // Sorted list of all discovered biomes for the toggle list
             const discovered = currentConfig.discoveredBiomes;
@@ -397,7 +397,7 @@ export function registerGaiaCommands(registry: CustomCommandRegistry): void {
             for (const biomeId of discovered) {
                 const isAllowed = hotBiomes.has(biomeId);
                 const label = isAllowed ? `§aAllowed: §f${biomeId}` : `§7Restricted: §f${biomeId}`;
-                form.toggle(label, isAllowed);
+                form.toggle(label, { defaultValue: isAllowed });
             }
 
             form.show(player).then((response: ModalFormResponse) => {

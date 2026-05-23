@@ -1,0 +1,59 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.malachite_guard.blast_execute": {
+      "loop": true,
+      "bones": {
+        "head": {
+          "rotation": [
+            45.84,
+            0,
+            0
+          ]
+        },
+        "torso": {
+          "rotation": [
+            5.73,
+            0,
+            0
+          ]
+        },
+        "upperArmL": {
+          "rotation": [
+            171.89,
+            0,
+            40.11
+          ]
+        },
+        "upperArmR": {
+          "rotation": [
+            171.89,
+            0,
+            -40.11
+          ]
+        },
+        "leg0": {
+          "rotation": [
+            0,
+            0,
+            -17.19
+          ]
+        },
+        "leg1": {
+          "rotation": [
+            0,
+            0,
+            17.19
+          ]
+        },
+        "body": {
+          "position": [
+            0,
+            -1.6,
+            0
+          ]
+        }
+      }
+    }
+  }
+}

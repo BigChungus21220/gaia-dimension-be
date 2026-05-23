@@ -1,0 +1,88 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.malachite_guard.charge_crouch": {
+			"loop": true,
+			"override_previous_animation": true,
+			"bones": {
+				"body": {
+					"position": [
+						0,
+						-8,
+						0
+					]
+				},
+				"head": {
+					"rotation": [
+						45.84,
+						0,
+						0
+					]
+				},
+				"torso": {
+					"rotation": [
+						11.46,
+						0,
+						0
+					]
+				},
+				"upperArmL": {
+					"rotation": [
+						-45.84,
+						-22.92,
+						0
+					]
+				},
+				"upperArmR": {
+					"rotation": [
+						-45.84,
+						22.92,
+						0
+					]
+				},
+				"lowerArmL": {
+					"rotation": [
+						-103.13,
+						0,
+						0
+					]
+				},
+				"lowerArmR": {
+					"rotation": [
+						-103.13,
+						0,
+						0
+					]
+				},
+				"leg0": {
+					"rotation": [
+						-63.03,
+						-17.19,
+						0
+					]
+				},
+				"leg1": {
+					"rotation": [
+						-63.03,
+						17.19,
+						0
+					]
+				},
+				"footL": {
+					"rotation": [
+						91.67,
+						0,
+						0
+					]
+				},
+				"footR": {
+					"rotation": [
+						91.67,
+						0,
+						0
+					]
+				}
+			}
+		}
+	}
+}

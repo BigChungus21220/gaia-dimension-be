@@ -1,0 +1,24 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.malachite_guard.idle_arms": {
+      "loop": true,
+      "bones": {
+        "upperArmR": {
+          "rotation": [
+            "math.sin(query.life_time * 76.7763) * 2.8648",
+            0.0,
+            "-(math.cos(query.life_time * 103.1324) * 2.8648 + 2.8648)"
+          ]
+        },
+        "upperArmL": {
+          "rotation": [
+            "-math.sin(query.life_time * 76.7763) * 2.8648",
+            0.0,
+            "math.cos(query.life_time * 103.1324) * 2.8648 + 2.8648"
+          ]
+        }
+      }
+    }
+  }
+}

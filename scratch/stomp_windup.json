@@ -1,0 +1,37 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.malachite_guard.stomp_windup": {
+      "loop": true,
+      "bones": {
+        "head": {
+          "rotation": [-17.19, 0, 0]
+        },
+        "upperArmL": {
+          "rotation": [-114.59, 40.11, 0]
+        },
+        "upperArmR": {
+          "rotation": [-114.59, -40.11, 0]
+        },
+        "lowerArmL": {
+          "rotation": [-45.84, -17.19, 0]
+        },
+        "lowerArmR": {
+          "rotation": [-45.84, 17.19, 0]
+        },
+        "leg0": {
+          "rotation": [-114.59, 28.65, 0]
+        },
+        "footL": {
+          "rotation": [114.59, 0, 0]
+        },
+        "leg1": {
+          "rotation": [-11.46, -28.65, 0]
+        },
+        "footR": {
+          "rotation": [11.46, 0, 0]
+        }
+      }
+    }
+  }
+}
