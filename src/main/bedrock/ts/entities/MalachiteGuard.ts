@@ -86,11 +86,21 @@ function distSq(a: Entity, b: Entity): number {
 }
 
 function isValidPlayer(e: Entity): e is Player {
-    if (!(e instanceof Player)) return false;
+    if (e.typeId !== "minecraft:player") return false;
     try {
         const gm = (e as Player).getGameMode();
         return gm !== GameMode.Creative && gm !== GameMode.Spectator;
     } catch { return false; }
+}
+
+// Walk the damage source chain: direct entity may be a projectile — find the player shooter
+function getPlayerSource(damageSource: import("@minecraft/server").EntityDamageSource): Player | undefined {
+    const direct = damageSource.damagingEntity;
+    if (direct && isValidPlayer(direct)) return direct as Player;
+    // projectileOwner covers arrows, tridents etc.
+    const owner = (damageSource as any).projectileOwner ?? (damageSource as any).cause === "projectile" ? undefined : undefined;
+    if (owner && isValidPlayer(owner)) return owner as Player;
+    return undefined;
 }
 
 // ─── Damage multiplier curve (Java getMultiplier) ────────────────────
@@ -140,22 +150,34 @@ class MalachiteGuardSystem {
 
             const maxHp: number = health.effectiveMax;
             const curHp: number = health.currentValue;
-            const attacker: Entity | undefined = damageSource.damagingEntity;
+
+            // Resolve the true player attacker — handles both direct melee and projectiles
+            const playerAttacker: Player | undefined = getPlayerSource(damageSource);
 
             // ── Bide accumulation during charge phase ──
             const chargeTimer: number = getNum(hurtEntity, P.CHARGE_TIMER, 0);
-            if (chargeTimer > 0 && attacker && isValidPlayer(attacker)) {
+            if (chargeTimer > 0 && playerAttacker) {
                 const bide: number = getNum(hurtEntity, P.BIDE_DAMAGE, 0);
                 setNum(hurtEntity, P.BIDE_DAMAGE, bide + damage * 0.5);
             }
 
-            // ── DEFENCE phase: damage is blocked natively by damage_sensor in "defend" component group ──
-            // If we somehow still get a hurt event in defence, just ignore it
+            // ── DEFENCE phase: all damage blocked ──
             if (phase === GuardPhase.Defence) {
+                // Heal back whatever got through (damage_sensor may not fully block it)
+                if (damage > 0) {
+                    system.run(() => {
+                        try {
+                            if (hurtEntity.isValid && health) {
+                                health.setCurrentValue(Math.min(curHp + damage, maxHp));
+                            }
+                        } catch {}
+                    });
+                }
                 return;
             }
 
-            // ── ATTACK phase: clamp HP to never drop below 50% - 2 ──
+            // ── ATTACK phase: clamp so HP cannot drop below (maxHp/2 - 2) ──
+            // The event fires after damage is applied, so curHp is already reduced.
             if (phase === GuardPhase.Attack) {
                 const threshold: number = (maxHp / 2.0) - 2.0;
                 if (curHp < threshold) {
@@ -170,10 +192,10 @@ class MalachiteGuardSystem {
                 return;
             }
 
-            // ── RESIST phase: only player-sourced direct damage, with multiplier curve ──
+            // ── RESIST phase: only player-sourced damage (melee OR projectile) is accepted ──
             if (phase === GuardPhase.Resist) {
-                if (!attacker || !isValidPlayer(attacker)) {
-                    // Not a valid player hit — heal back
+                if (!playerAttacker) {
+                    // Non-player source — heal back (unless falling out of world)
                     if (hurtEntity.location.y > -64) {
                         system.run(() => {
                             try {
@@ -206,12 +228,12 @@ class MalachiteGuardSystem {
             const { damagingEntity, hitEntity } = event;
 
             // ── Baton knockback ──
-            if (damagingEntity instanceof Player && hitEntity.isValid) {
+            if (isValidPlayer(damagingEntity) && hitEntity.isValid) {
                 try {
-                    const equip = damagingEntity.getComponent(EntityComponentTypes.Equippable) as EntityEquippableComponent;
+                    const equip = (damagingEntity as Player).getComponent(EntityComponentTypes.Equippable) as EntityEquippableComponent;
                     const mainhand = equip?.getEquipment(EquipmentSlot.Mainhand);
                     if (mainhand?.typeId === BATON_ID) {
-                        const yaw: number = damagingEntity.getRotation().y;
+                        const yaw: number = (damagingEntity as Player).getRotation().y;
                         const rad: number = yaw * (Math.PI / 180);
                         const kbX: number = -Math.sin(rad) * 1.5;
                         const kbZ: number =  Math.cos(rad) * 1.5;
@@ -221,7 +243,7 @@ class MalachiteGuardSystem {
             }
 
             // ── Guard strips player armor ──
-            if (damagingEntity.typeId === GUARD_ID && hitEntity instanceof Player) {
+            if (damagingEntity.typeId === GUARD_ID && isValidPlayer(hitEntity)) {
                 if (!hitEntity.isValid) return;
 
                 // 1 in 12 chance (between Java's Normal 1/16 and Hard 1/8)

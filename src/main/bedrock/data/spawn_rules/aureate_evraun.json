@@ -1,0 +1,27 @@
+{
+    "format_version": "1.8.0",
+    "minecraft:spawn_rules": {
+        "description": {
+            "identifier": "gaiadimension:aureate_evraun",
+            "population_control": "animal"
+        },
+        "conditions": [
+            {
+                "minecraft:spawns_on_block_filter": {
+                    "blocks": [
+                        "gaiadimension:gilded_grass",
+                        "gaiadimension:aurum_soil"
+                    ]
+                },
+                "minecraft:weight": {
+                    "default": 20
+                },
+                "minecraft:herd": {
+                    "min_size": 1,
+                    "max_size": 2
+                },
+                "minecraft:spawns_on_surface": {}
+            }
+        ]
+    }
+}

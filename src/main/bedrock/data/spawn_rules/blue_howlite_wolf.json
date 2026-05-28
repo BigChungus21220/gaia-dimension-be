@@ -1,0 +1,27 @@
+{
+    "format_version": "1.8.0",
+    "minecraft:spawn_rules": {
+        "description": {
+            "identifier": "gaiadimension:blue_howlite_wolf",
+            "population_control": "animal"
+        },
+        "conditions": [
+            {
+                "minecraft:spawns_on_block_filter": {
+                    "blocks": [
+                        "gaiadimension:glitter_grass",
+                        "gaiadimension:heavy_soil"
+                    ]
+                },
+                "minecraft:weight": {
+                    "default": 1
+                },
+                "minecraft:herd": {
+                    "min_size": 1,
+                    "max_size": 1
+                },
+                "minecraft:spawns_on_surface": {}
+            }
+        ]
+    }
+}

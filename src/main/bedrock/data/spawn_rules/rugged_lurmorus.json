@@ -1,0 +1,27 @@
+{
+    "format_version": "1.8.0",
+    "minecraft:spawn_rules": {
+        "description": {
+            "identifier": "gaiadimension:rugged_lurmorus",
+            "population_control": "animal"
+        },
+        "conditions": [
+            {
+                "minecraft:spawns_on_block_filter": {
+                    "blocks": [
+                        "gaiadimension:glitter_grass",
+                        "gaiadimension:heavy_soil"
+                    ]
+                },
+                "minecraft:weight": {
+                    "default": 10
+                },
+                "minecraft:herd": {
+                    "min_size": 1,
+                    "max_size": 3
+                },
+                "minecraft:spawns_on_surface": {}
+            }
+        ]
+    }
+}

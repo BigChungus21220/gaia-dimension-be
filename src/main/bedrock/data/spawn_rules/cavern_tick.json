@@ -1,0 +1,31 @@
+{
+    "format_version": "1.8.0",
+    "minecraft:spawn_rules": {
+        "description": {
+            "identifier": "gaiadimension:cavern_tick",
+            "population_control": "monster"
+        },
+        "conditions": [
+            {
+                "minecraft:spawns_on_block_filter": {
+                    "blocks": [
+                        "gaiadimension:gaia_stone"
+                    ]
+                },
+                "minecraft:weight": {
+                    "default": 65
+                },
+                "minecraft:herd": {
+                    "min_size": 2,
+                    "max_size": 4
+                },
+                "minecraft:spawns_underground": {},
+                "minecraft:brightness_filter": {
+                    "min": 0,
+                    "max": 7,
+                    "adjust_for_weather": false
+                }
+            }
+        ]
+    }
+}

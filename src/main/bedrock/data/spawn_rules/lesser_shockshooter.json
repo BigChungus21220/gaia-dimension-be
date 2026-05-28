@@ -1,0 +1,27 @@
+{
+    "format_version": "1.8.0",
+    "minecraft:spawn_rules": {
+        "description": {
+            "identifier": "gaiadimension:lesser_shockshooter",
+            "population_control": "animal"
+        },
+        "conditions": [
+            {
+                "minecraft:spawns_on_block_filter": {
+                    "blocks": [
+                        "gaiadimension:soft_grass",
+                        "gaiadimension:light_soil"
+                    ]
+                },
+                "minecraft:weight": {
+                    "default": 10
+                },
+                "minecraft:herd": {
+                    "min_size": 2,
+                    "max_size": 4
+                },
+                "minecraft:spawns_on_surface": {}
+            }
+        ]
+    }
+}

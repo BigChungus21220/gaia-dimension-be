@@ -17,20 +17,16 @@
         "armor": "geometry.rosa_gd.malachite_guard.armor"
       },
       "animations": {
-        "walk": "animation.malachite_guard.walk",
-        "idle_arms": "animation.malachite_guard.idle_arms",
-        "defence_pose": "animation.malachite_guard.defence_pose",
-        "charge_crouch": "animation.malachite_guard.charge_crouch",
-        "blast_execute": "animation.malachite_guard.blast_execute",
-        "stomp_windup": "animation.malachite_guard.stomp_windup",
-        "shake": "animation.malachite_guard.shake",
+        "walk": "animation.iron_golem.walk",
         "normal": "animation.malachite_guard.normal",
-        "activate": "animation.malachite_guard.activate",
-        "slam": "animation.malachite_guard.slam",
+        "move": "animation.iron_golem.move",
+        "walk_to_target": "animation.iron_golem.walk_to_target",
+        "move_to_target": "animation.iron_golem.move_to_target",
         "attack": "animation.iron_golem.attack",
+        "flower": "animation.iron_golem.nah",
         "look_at_target": "animation.common.look_at_target",
-        "main_controller": "controller.animation.malachite_guard",
-        "shake_controller": "controller.animation.malachite_guard.shake"
+        "move_controller": "controller.animation.iron_golem.move",
+        "arm_controller": "controller.animation.iron_golem.arm_movement"
       },
       "spawn_egg": {
         "texture": "spawn_egg_malachite_guard"
@@ -41,8 +37,11 @@
         ],
         "animate": [
           "look_at_target",
-          "main_controller",
-          "shake_controller"
+          "move_controller",
+          "arm_controller",
+          {
+            "normal": "!query.is_powered"
+          }
         ]
       },
       "render_controllers": [

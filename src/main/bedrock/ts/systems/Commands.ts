@@ -303,7 +303,12 @@ export function registerGaiaCommands(registry: CustomCommandRegistry): void {
             const dimId = player.dimension.id;
             
             let dimensionName = "§7" + dimId;
-            if (inGaia) {
+            if (dimId === "gaiadimension:gaia_dimension") {
+                dimensionName = "§6Gaia Dimension 1";
+            } else if (dimId.startsWith("gaiadimension:realm_")) {
+                const index = parseInt(dimId.replace("gaiadimension:realm_", ""));
+                dimensionName = `§6Gaia Dimension ${index + 2}`;
+            } else if (inGaia) {
                 dimensionName = "§6Gaia Dimension";
             } else if (dimId === "minecraft:overworld") {
                 dimensionName = "§aOverworld";
@@ -333,10 +338,20 @@ export function registerGaiaCommands(registry: CustomCommandRegistry): void {
             const dimId = player.dimension.id;
             
             let dimensionName = "§7" + dimId;
-            if (inGaia) dimensionName = "§6Gaia Dimension";
-            else if (dimId === "minecraft:overworld") dimensionName = "§aOverworld";
-            else if (dimId === "minecraft:nether") dimensionName = "§cNether";
-            else if (dimId === "minecraft:the_end") dimensionName = "§dThe End";
+            if (dimId === "gaiadimension:gaia_dimension") {
+                dimensionName = "§6Gaia Dimension 1";
+            } else if (dimId.startsWith("gaiadimension:realm_")) {
+                const index = parseInt(dimId.replace("gaiadimension:realm_", ""));
+                dimensionName = `§6Gaia Dimension ${index + 2}`;
+            } else if (inGaia) {
+                dimensionName = "§6Gaia Dimension";
+            } else if (dimId === "minecraft:overworld") {
+                dimensionName = "§aOverworld";
+            } else if (dimId === "minecraft:nether") {
+                dimensionName = "§cNether";
+            } else if (dimId === "minecraft:the_end") {
+                dimensionName = "§dThe End";
+            }
 
             player.sendMessage("§8§l========================================");
             player.sendMessage("§6§lGAIA STATUS REPORT");

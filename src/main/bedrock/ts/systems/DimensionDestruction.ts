@@ -21,10 +21,10 @@ interface DimEntry {
 
 /** Hardcoded dimension definitions (always available) */
 const CORE_DIMENSIONS: DimEntry[] = [
-    { id: "minecraft:overworld",              name: "Overworld",      lore: "The familiar realm of sun and earth.",           color: "§a" },
-    { id: "minecraft:nether",                 name: "Nether",         lore: "A hellscape of fire and brimstone.",              color: "§c" },
-    { id: "minecraft:the_end",                name: "The End",        lore: "The void beyond the stars.",                      color: "§5" },
-    { id: "gaiadimension:gaia_dimension",     name: "Gaia Dimension", lore: "Crystalline paradise preserved in eternal sun.",  color: "§6" },
+    { id: "minecraft:overworld",              name: "Overworld",        lore: "The familiar realm of sun and earth.",                                                              color: "§a" },
+    { id: "minecraft:nether",                 name: "Nether",           lore: "A hellscape of fire and brimstone.",                                                                color: "§c" },
+    { id: "minecraft:the_end",                name: "The End",          lore: "The void beyond the stars.",                                                                        color: "§5" },
+    { id: "gaiadimension:gaia_dimension",     name: "Gaia Dimension 1", lore: "Crystalline paradise preserved in eternal sun.",                                                    color: "§6" },
 ];
 
 /** Dynamic realm pool — registered at startup, unique Gaia-variant worlds */
@@ -33,29 +33,29 @@ export const REALM_PREFIX = "gaiadimension:realm_";
 
 function getRealmDims(): DimEntry[] {
     const realms: DimEntry[] = [];
-    const themes: { adj: string; lore: string; color: string }[] = [
-        { adj: "Rainia",      lore: "OH MY GOD IT'S RAINING CRYSTALS",                              color: "§b" },
-        { adj: "Hollow",      lore: "Echo... echo... is anyone even here?",                          color: "§7" },
-        { adj: "Prismatic",   lore: "Warning: may cause permanent eye damage from sheer beauty.",     color: "§d" },
-        { adj: "Forgotten",   lore: "Even the GPS gave up on this place.",                            color: "§2" },
-        { adj: "Upside-Down", lore: "The trees grow INTO the sky. The sky IS the ground.",            color: "§c" },
-        { adj: "Floaty",      lore: "Everything floats here. EVERYTHING.",                            color: "§f" },
-        { adj: "Cursed",      lore: "The flowers have teeth. THE FLOWERS HAVE TEETH.",                color: "§5" },
-        { adj: "Silent",      lore: "Shhh. Even your footsteps are afraid to make noise.",            color: "§8" },
-        { adj: "Wiggly",      lore: "The ground won't stop moving. Please make it stop.",             color: "§4" },
-        { adj: "Burning",     lore: "Floor is lava but unironically.",                                color: "§c" },
-        { adj: "Misty",       lore: "Can't see five blocks ahead. Vibes are immaculate though.",      color: "§9" },
-        { adj: "Void",        lore: "Stare into the abyss. The abyss offers you a crystal.",          color: "§8" },
-        { adj: "Moonlit",     lore: "Eternal night. Eternal chill. Eternal drip.",                    color: "§f" },
-        { adj: "Golden",      lore: "Everything the light touches is gold. And edible.",              color: "§6" },
-        { adj: "Spectral",    lore: "The ghosts here are more alive than you.",                       color: "§3" },
-        { adj: "Abyssal",     lore: "Rock bottom. Literally. You can't go deeper than this.",         color: "§1" },
+    const themes: { lore: string; color: string }[] = [
+        { lore: "Another... crystal world. Sure. Why not.",                                            color: "§b" },
+        { lore: "It's a crystal world... again. Yep. Another one.",                                    color: "§e" },
+        { lore: "Yet ANOTHER Gaia dimension. Are you serious right now.",                              color: "§d" },
+        { lore: "Four. FOUR Gaia dimensions. Who approved this.",                                      color: "§9" },
+        { lore: "HOW MANY GAIA DIMENSIONS ARE THERE.",                                                 color: "§c" },
+        { lore: "I am begging you. Please. No more crystals. I have a family.",                        color: "§5" },
+        { lore: "JESUS MARY THEY ARE ALL MINERALS.",                                                   color: "§4" },
+        { lore: "By Androsa, that's A LOT of Gaia dimensions!",                                        color: "§6" },
+        { lore: "okay at this point i'm convinced the universe is just vibes and malachite.",          color: "§3" },
+        { lore: "The crystals... they're MULTIPLYING.",                                                 color: "§c" },
+        { lore: "Whoever designed this place needs to be evaluated by a professional.",                color: "§2" },
+        { lore: "I have counted twelve Gaia dimensions. I need to lie down.",                          color: "§9" },
+        { lore: "Androsa WHY. ANDROSA. W H Y.",                                                        color: "§d" },
+        { lore: "At this point I think Gaia IS the universe and everything else is the anomaly.",      color: "§5" },
+        { lore: "SIXTEEN. There are SIXTEEN of these. I quit.",                                        color: "§c" },
+        { lore: "This is the last one. It has to be. Please let it be the last one.",                  color: "§8" },
     ];
     for (let i = 0; i < REALM_COUNT; i++) {
         const t = themes[i];
         realms.push({
             id: `${REALM_PREFIX}${i}`,
-            name: `${t.adj} Realm`,
+            name: `Gaia Dimension ${i + 2}`,
             lore: t.lore,
             color: t.color,
         });

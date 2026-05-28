@@ -7293,7 +7293,12 @@ function registerGaiaCommands(registry) {
       const inGaia = DimensionSystem.isInGaia(player);
       const dimId = player.dimension.id;
       let dimensionName = "\xA77" + dimId;
-      if (inGaia) {
+      if (dimId === "gaiadimension:gaia_dimension") {
+        dimensionName = "\xA76Gaia Dimension 1";
+      } else if (dimId.startsWith("gaiadimension:realm_")) {
+        const index = parseInt(dimId.replace("gaiadimension:realm_", ""));
+        dimensionName = `\xA76Gaia Dimension ${index + 2}`;
+      } else if (inGaia) {
         dimensionName = "\xA76Gaia Dimension";
       } else if (dimId === "minecraft:overworld") {
         dimensionName = "\xA7aOverworld";
@@ -7317,10 +7322,20 @@ function registerGaiaCommands(registry) {
       const inGaia = DimensionSystem.isInGaia(player);
       const dimId = player.dimension.id;
       let dimensionName = "\xA77" + dimId;
-      if (inGaia) dimensionName = "\xA76Gaia Dimension";
-      else if (dimId === "minecraft:overworld") dimensionName = "\xA7aOverworld";
-      else if (dimId === "minecraft:nether") dimensionName = "\xA7cNether";
-      else if (dimId === "minecraft:the_end") dimensionName = "\xA7dThe End";
+      if (dimId === "gaiadimension:gaia_dimension") {
+        dimensionName = "\xA76Gaia Dimension 1";
+      } else if (dimId.startsWith("gaiadimension:realm_")) {
+        const index = parseInt(dimId.replace("gaiadimension:realm_", ""));
+        dimensionName = `\xA76Gaia Dimension ${index + 2}`;
+      } else if (inGaia) {
+        dimensionName = "\xA76Gaia Dimension";
+      } else if (dimId === "minecraft:overworld") {
+        dimensionName = "\xA7aOverworld";
+      } else if (dimId === "minecraft:nether") {
+        dimensionName = "\xA7cNether";
+      } else if (dimId === "minecraft:the_end") {
+        dimensionName = "\xA7dThe End";
+      }
       player.sendMessage("\xA78\xA7l========================================");
       player.sendMessage("\xA76\xA7lGAIA STATUS REPORT");
       player.sendMessage("\xA77Location: " + dimensionName);
@@ -7769,35 +7784,35 @@ var CORE_DIMENSIONS = [
   { id: "minecraft:overworld", name: "Overworld", lore: "The familiar realm of sun and earth.", color: "\xA7a" },
   { id: "minecraft:nether", name: "Nether", lore: "A hellscape of fire and brimstone.", color: "\xA7c" },
   { id: "minecraft:the_end", name: "The End", lore: "The void beyond the stars.", color: "\xA75" },
-  { id: "gaiadimension:gaia_dimension", name: "Gaia Dimension", lore: "Crystalline paradise preserved in eternal sun.", color: "\xA76" }
+  { id: "gaiadimension:gaia_dimension", name: "Gaia Dimension 1", lore: "Crystalline paradise preserved in eternal sun.", color: "\xA76" }
 ];
 var REALM_COUNT = 16;
 var REALM_PREFIX = "gaiadimension:realm_";
 function getRealmDims() {
   const realms = [];
   const themes = [
-    { adj: "Rainia", lore: "OH MY GOD IT'S RAINING CRYSTALS", color: "\xA7b" },
-    { adj: "Hollow", lore: "Echo... echo... is anyone even here?", color: "\xA77" },
-    { adj: "Prismatic", lore: "Warning: may cause permanent eye damage from sheer beauty.", color: "\xA7d" },
-    { adj: "Forgotten", lore: "Even the GPS gave up on this place.", color: "\xA72" },
-    { adj: "Upside-Down", lore: "The trees grow INTO the sky. The sky IS the ground.", color: "\xA7c" },
-    { adj: "Floaty", lore: "Everything floats here. EVERYTHING.", color: "\xA7f" },
-    { adj: "Cursed", lore: "The flowers have teeth. THE FLOWERS HAVE TEETH.", color: "\xA75" },
-    { adj: "Silent", lore: "Shhh. Even your footsteps are afraid to make noise.", color: "\xA78" },
-    { adj: "Wiggly", lore: "The ground won't stop moving. Please make it stop.", color: "\xA74" },
-    { adj: "Burning", lore: "Floor is lava but unironically.", color: "\xA7c" },
-    { adj: "Misty", lore: "Can't see five blocks ahead. Vibes are immaculate though.", color: "\xA79" },
-    { adj: "Void", lore: "Stare into the abyss. The abyss offers you a crystal.", color: "\xA78" },
-    { adj: "Moonlit", lore: "Eternal night. Eternal chill. Eternal drip.", color: "\xA7f" },
-    { adj: "Golden", lore: "Everything the light touches is gold. And edible.", color: "\xA76" },
-    { adj: "Spectral", lore: "The ghosts here are more alive than you.", color: "\xA73" },
-    { adj: "Abyssal", lore: "Rock bottom. Literally. You can't go deeper than this.", color: "\xA71" }
+    { lore: "Another... crystal world. Sure. Why not.", color: "\xA7b" },
+    { lore: "It's a crystal world... again. Yep. Another one.", color: "\xA7e" },
+    { lore: "Yet ANOTHER Gaia dimension. Are you serious right now.", color: "\xA7d" },
+    { lore: "Four. FOUR Gaia dimensions. Who approved this.", color: "\xA79" },
+    { lore: "HOW MANY GAIA DIMENSIONS ARE THERE.", color: "\xA7c" },
+    { lore: "I am begging you. Please. No more crystals. I have a family.", color: "\xA75" },
+    { lore: "JESUS MARY THEY ARE ALL MINERALS.", color: "\xA74" },
+    { lore: "By Androsa, that's A LOT of Gaia dimensions!", color: "\xA76" },
+    { lore: "okay at this point i'm convinced the universe is just vibes and malachite.", color: "\xA73" },
+    { lore: "The crystals... they're MULTIPLYING.", color: "\xA7c" },
+    { lore: "Whoever designed this place needs to be evaluated by a professional.", color: "\xA72" },
+    { lore: "I have counted twelve Gaia dimensions. I need to lie down.", color: "\xA79" },
+    { lore: "Androsa WHY. ANDROSA. W H Y.", color: "\xA7d" },
+    { lore: "At this point I think Gaia IS the universe and everything else is the anomaly.", color: "\xA75" },
+    { lore: "SIXTEEN. There are SIXTEEN of these. I quit.", color: "\xA7c" },
+    { lore: "This is the last one. It has to be. Please let it be the last one.", color: "\xA78" }
   ];
   for (let i = 0; i < REALM_COUNT; i++) {
     const t = themes[i];
     realms.push({
       id: `${REALM_PREFIX}${i}`,
-      name: `${t.adj} Realm`,
+      name: `Gaia Dimension ${i + 2}`,
       lore: t.lore,
       color: t.color
     });
@@ -14875,39 +14890,16 @@ var SEA_LEVEL = 63;
 var ENTRY = 0;
 var STONE_DEPTH = 10;
 var SOIL_DEPTH = 4;
-function runCmd(dim, cmd, failRef) {
-  for (let attempt = 0; attempt < 3; attempt++) {
+function setBlock(block, type2) {
+  if (!block) return false;
+  if (block.typeId !== type2) {
     try {
-      dim.runCommand(cmd);
-      return;
+      block.setType(type2);
     } catch (_) {
+      return false;
     }
   }
-  failRef.count++;
-}
-function runCmdSoft(dim, cmd) {
-  try {
-    dim.runCommand(cmd);
-  } catch (_) {
-  }
-}
-function emitRowFills(dim, row, worldX, worldZ, failRef) {
-  let z = 0;
-  while (z < row.length) {
-    const e = row[z];
-    if (!e.blockType || e.yMin > e.yMax) {
-      z++;
-      continue;
-    }
-    let z2 = z;
-    while (z2 + 1 < row.length) {
-      const n = row[z2 + 1];
-      if (n.blockType !== e.blockType || n.yMin !== e.yMin || n.yMax !== e.yMax) break;
-      z2++;
-    }
-    runCmd(dim, `fill ${worldX} ${e.yMin} ${worldZ + z} ${worldX} ${e.yMax} ${worldZ + z2} ${e.blockType}`, failRef);
-    z = z2 + 1;
-  }
+  return true;
 }
 var ChunkGenerator = class _ChunkGenerator {
   seaLevel = SEA_LEVEL;
@@ -14966,7 +14958,7 @@ var ChunkGenerator = class _ChunkGenerator {
   }
   /**
    * Get the biome at a world (block) coordinate using the Java layer system.
-   * The layers operate on biome-grid coords (÷4), matching Java's getNoiseBiome(x/4, y, z/4).
+   * The layers operate on biome-grid coords (Ã·4), matching Java's getNoiseBiome(x/4, y, z/4).
    */
   getBiomeAt(x, z) {
     const bx = x >> 2, bz = z >> 2;
@@ -15065,10 +15057,8 @@ var ChunkGenerator = class _ChunkGenerator {
     this.manager.setGenerated(hash + this.dimensionId);
   }
   /**
-   * Single-pass chunk generator: compute terrain + emit fill commands per X-row.
-   * Yields once per row (same cadence as original code = 16 yields for terrain).
-   * Uses 1D run-length merging along Z to batch same-type/same-Y columns.
-   * Each tick runs ~4-12 fill commands — safe for Bedrock's command budget.
+   * Single-pass chunk generator: stone -> soil -> surface grass -> vegetation -> trees.
+   * Yields every X-row to prevent watchdog timeout.
    */
   *generate(X, Z, failRef, done) {
     const { dimension: dim } = this;
@@ -15090,13 +15080,8 @@ var ChunkGenerator = class _ChunkGenerator {
         }
       }
       for (let x = 0; x < 16; x++) {
-        const rowStone = [];
-        const rowSoil = [];
-        const rowSurface = [];
-        const rowWater = [];
         for (let z = 0; z < 16; z++) {
           const xx = worldX + x, zz = worldZ + z;
-          const idx = x * 16 + z;
           const jitterX = Math.round(this.spikes.GetNoise(xx * 2, zz * 2) * 5);
           const jitterZ = Math.round(this.spikes.GetNoise(xx * 2 + 1e3, zz * 2 + 1e3) * 5);
           const biome = this.getBiomeAt(xx + jitterX, zz + jitterZ);
@@ -15110,45 +15095,58 @@ var ChunkGenerator = class _ChunkGenerator {
           const c11 = corners[cellX + 1][cellZ + 1];
           const depthOffset = c00.depthOffset + (c10.depthOffset - c00.depthOffset) * fracX + (c01.depthOffset - c00.depthOffset) * fracZ + (c00.depthOffset - c10.depthOffset - c01.depthOffset + c11.depthOffset) * fracX * fracZ;
           const scaleFactor = c00.scaleFactor + (c10.scaleFactor - c00.scaleFactor) * fracX + (c01.scaleFactor - c00.scaleFactor) * fracZ + (c00.scaleFactor - c10.scaleFactor - c01.scaleFactor + c11.scaleFactor) * fracX * fracZ;
+          const avgScale = c00.avgScale + (c10.avgScale - c00.avgScale) * fracX + (c01.avgScale - c00.avgScale) * fracZ + (c00.avgScale - c10.avgScale - c01.avgScale + c11.avgScale) * fracX * fracZ;
           const raw = this.getTerrainHeight(xx, zz);
           let terrain = Math.floor(68 + 128 * depthOffset + 128 * (raw * 10) / scaleFactor);
           if (isNaN(terrain) || !isFinite(terrain)) terrain = ENTRY;
           terrain = Math.max(this.range.min, Math.min(this.range.max - 1, terrain));
-          const gnd = biome.groundPaletted?.permutations?.[0] ?? "gaiadimension:crystal_plains_glitter_grass";
-          const und = biome.underGroundPaletted?.permutations?.[0] ?? "gaiadimension:heavy_soil";
+          const groundId = biome.groundPaletted?.permutations?.[0] ?? "gaiadimension:crystal_plains_glitter_grass";
+          const underId = biome.underGroundPaletted?.permutations?.[0] ?? "gaiadimension:heavy_soil";
           const isUnderwater = terrain < SEA_LEVEL;
-          terrainMap[idx] = terrain;
-          biomeMap[idx] = biome;
-          underwaterMap[idx] = isUnderwater;
           const stoneStart = Math.max(this.range.min, terrain - (STONE_DEPTH + SOIL_DEPTH));
-          const stoneEnd = terrain - SOIL_DEPTH - 1;
-          rowStone.push(stoneStart <= stoneEnd ? { blockType: "gaiadimension:gaia_stone", yMin: stoneStart, yMax: stoneEnd } : { blockType: "", yMin: 0, yMax: -1 });
-          rowSoil.push({ blockType: und, yMin: terrain - SOIL_DEPTH, yMax: terrain - 1 });
-          let surfaceType = gnd;
-          if (isUnderwater && surfaceType.includes("grass")) surfaceType = und;
-          rowSurface.push({ blockType: surfaceType, yMin: terrain, yMax: terrain });
-          rowWater.push(isUnderwater && terrain + 1 <= SEA_LEVEL ? { blockType: "gaiadimension:mineral_water", yMin: terrain + 1, yMax: SEA_LEVEL } : { blockType: "", yMin: 0, yMax: -1 });
-        }
-        emitRowFills(dim, rowStone, worldX + x, worldZ, failRef);
-        emitRowFills(dim, rowSoil, worldX + x, worldZ, failRef);
-        emitRowFills(dim, rowSurface, worldX + x, worldZ, failRef);
-        emitRowFills(dim, rowWater, worldX + x, worldZ, failRef);
-        for (let z = 0; z < 16; z++) {
-          const idx = x * 16 + z;
-          if (underwaterMap[idx]) continue;
-          const biome = biomeMap[idx];
-          if ((biome.vegetationPalette?.permutations?.length ?? 0) > 0) {
-            if (random.nextFloat() < biome.vegetationChance) {
-              const vegIdx = Math.floor(random.nextFloat() * biome.vegetationPalette.permutations.length);
-              const vegId = biome.vegetationPalette.permutations[vegIdx];
-              if (vegId) {
+          for (let y = stoneStart; y < terrain - SOIL_DEPTH; y++) {
+            if (!setBlock(dim.getBlock({ x: xx, y, z: zz }), "gaiadimension:gaia_stone")) failRef.count++;
+          }
+          for (let y = terrain - SOIL_DEPTH; y < terrain; y++) {
+            if (!setBlock(dim.getBlock({ x: xx, y, z: zz }), underId)) failRef.count++;
+          }
+          try {
+            const surfaceBlock = dim.getBlock({ x: xx, y: terrain, z: zz });
+            if (surfaceBlock) {
+              if (isUnderwater && groundId.includes("grass")) surfaceBlock.setType(underId);
+              else surfaceBlock.setType(groundId);
+            }
+          } catch (_) {
+          }
+          if (isUnderwater) {
+            for (let y = terrain + 1; y <= SEA_LEVEL; y++) {
+              const waterBlock = dim.getBlock({ x: xx, y, z: zz });
+              if (waterBlock) {
                 try {
-                  dim.runCommand(`setblock ${worldX + x} ${terrainMap[idx] + 1} ${worldZ + z} ${vegId}`);
+                  waterBlock.setType("gaiadimension:mineral_water");
                 } catch (_) {
                 }
               }
             }
           }
+          if (!isUnderwater && (biome.vegetationPalette?.permutations?.length ?? 0) > 0) {
+            if (random.nextFloat() < biome.vegetationChance) {
+              const idx = Math.floor(random.nextFloat() * biome.vegetationPalette.permutations.length);
+              const vegId = biome.vegetationPalette.permutations[idx];
+              if (vegId) {
+                const vBlock = dim.getBlock({ x: xx, y: terrain + 1, z: zz });
+                if (vBlock && vBlock.typeId === "minecraft:air") {
+                  try {
+                    vBlock.setType(vegId);
+                  } catch (_) {
+                  }
+                }
+              }
+            }
+          }
+          terrainMap[x * 16 + z] = terrain;
+          biomeMap[x * 16 + z] = biome;
+          underwaterMap[x * 16 + z] = isUnderwater;
         }
         yield;
       }
@@ -15179,12 +15177,15 @@ var ChunkGenerator = class _ChunkGenerator {
           const biome = biomeMap[tIdx] || centerBiome;
           const treeDef = biome.trees.get(random.nextFloat());
           if (treeDef) {
-            try {
-              const testResult = dim.runCommand(`testforblock ${txx} ${terrain + 1} ${tzz} minecraft:air`);
-              yield* this.placeTree(dim, txx, terrain + 1, tzz, treeDef, random);
-              placedTrees.push({ x: txx, z: tzz });
-              placed++;
-            } catch (treeErr) {
+            const above = dim.getBlock({ x: txx, y: terrain + 1, z: tzz });
+            if (above && above.typeId === "minecraft:air") {
+              try {
+                yield* this.placeTree(dim, txx, terrain + 1, tzz, treeDef, random);
+                placedTrees.push({ x: txx, z: tzz });
+                placed++;
+              } catch (treeErr) {
+                console.warn(`[GaiaDim] Tree place failed at ${txx},${terrain + 1},${tzz}: ${treeErr}`);
+              }
             }
           }
         }
@@ -15213,11 +15214,11 @@ var ChunkGenerator = class _ChunkGenerator {
     } else if (treeId === "golden_small" || treeId === "golden_big") {
       attachments = placeVaryingFourBranchTrunk(dim, x, baseY, z, h, logId, random);
     } else if (treeId === "green_agate_bush") {
-      runCmdSoft(dim, `setblock ${x} ${baseY} ${z} ${logId}`);
+      setBlock(dim.getBlock({ x, y: baseY, z }), logId);
       attachments = [{ x, y: baseY + 1, z }];
     } else {
       for (let i = 0; i < h; i++) {
-        runCmdSoft(dim, `setblock ${x} ${baseY + i} ${z} ${logId}`);
+        setBlock(dim.getBlock({ x, y: baseY + i, z }), logId);
       }
       attachments = [{ x, y: baseY + h, z }];
     }
@@ -15232,44 +15233,44 @@ function placeThickTrunk(dim, x, baseY, z, h, logId) {
   for (let y = 0; y < h; y++) {
     const wy = baseY + y;
     if (y === 0) {
-      runCmdSoft(dim, `setblock ${x} ${wy} ${z - 2} ${logId}`);
-      runCmdSoft(dim, `setblock ${x} ${wy} ${z + 2} ${logId}`);
-      runCmdSoft(dim, `setblock ${x + 2} ${wy} ${z} ${logId}`);
-      runCmdSoft(dim, `setblock ${x - 2} ${wy} ${z} ${logId}`);
+      setBlock(dim.getBlock({ x, y: wy, z: z - 2 }), logId);
+      setBlock(dim.getBlock({ x, y: wy, z: z + 2 }), logId);
+      setBlock(dim.getBlock({ x: x + 2, y: wy, z }), logId);
+      setBlock(dim.getBlock({ x: x - 2, y: wy, z }), logId);
     }
     if (y < Math.floor(h / 4)) {
-      runCmdSoft(dim, `setblock ${x + 1} ${wy} ${z + 1} ${logId}`);
-      runCmdSoft(dim, `setblock ${x + 1} ${wy} ${z - 1} ${logId}`);
-      runCmdSoft(dim, `setblock ${x - 1} ${wy} ${z + 1} ${logId}`);
-      runCmdSoft(dim, `setblock ${x - 1} ${wy} ${z - 1} ${logId}`);
+      setBlock(dim.getBlock({ x: x + 1, y: wy, z: z + 1 }), logId);
+      setBlock(dim.getBlock({ x: x + 1, y: wy, z: z - 1 }), logId);
+      setBlock(dim.getBlock({ x: x - 1, y: wy, z: z + 1 }), logId);
+      setBlock(dim.getBlock({ x: x - 1, y: wy, z: z - 1 }), logId);
     }
-    runCmdSoft(dim, `setblock ${x} ${wy} ${z} ${logId}`);
-    runCmdSoft(dim, `setblock ${x} ${wy} ${z - 1} ${logId}`);
-    runCmdSoft(dim, `setblock ${x} ${wy} ${z + 1} ${logId}`);
-    runCmdSoft(dim, `setblock ${x + 1} ${wy} ${z} ${logId}`);
-    runCmdSoft(dim, `setblock ${x - 1} ${wy} ${z} ${logId}`);
+    setBlock(dim.getBlock({ x, y: wy, z }), logId);
+    setBlock(dim.getBlock({ x, y: wy, z: z - 1 }), logId);
+    setBlock(dim.getBlock({ x, y: wy, z: z + 1 }), logId);
+    setBlock(dim.getBlock({ x: x + 1, y: wy, z }), logId);
+    setBlock(dim.getBlock({ x: x - 1, y: wy, z }), logId);
   }
   return [{ x, y: baseY + h, z }];
 }
 function placeCardinalTrunk(dim, x, baseY, z, h, logId) {
   const atts = [];
   for (let y = 0; y <= h - 2; y++) {
-    runCmdSoft(dim, `setblock ${x} ${baseY + y} ${z} ${logId}`);
+    setBlock(dim.getBlock({ x, y: baseY + y, z }), logId);
   }
   const dirs = [[0, -1], [0, 1], [1, 0], [-1, 0]];
   for (const [sx, sz] of dirs) {
     let bx = sx, bz = sz;
-    runCmdSoft(dim, `setblock ${x + bx} ${baseY + h - 2} ${z + bz} ${logId}`);
-    runCmdSoft(dim, `setblock ${x + bx} ${baseY + h - 1} ${z + bz} ${logId}`);
+    setBlock(dim.getBlock({ x: x + bx, y: baseY + h - 2, z: z + bz }), logId);
+    setBlock(dim.getBlock({ x: x + bx, y: baseY + h - 1, z: z + bz }), logId);
     bx += sx;
     bz += sz;
-    runCmdSoft(dim, `setblock ${x + bx} ${baseY + h - 1} ${z + bz} ${logId}`);
+    setBlock(dim.getBlock({ x: x + bx, y: baseY + h - 1, z: z + bz }), logId);
     bx += sx;
     bz += sz;
-    runCmdSoft(dim, `setblock ${x + bx} ${baseY + h} ${z + bz} ${logId}`);
+    setBlock(dim.getBlock({ x: x + bx, y: baseY + h, z: z + bz }), logId);
     bx += sx;
     bz += sz;
-    runCmdSoft(dim, `setblock ${x + bx} ${baseY + h} ${z + bz} ${logId}`);
+    setBlock(dim.getBlock({ x: x + bx, y: baseY + h, z: z + bz }), logId);
     bx += sx;
     bz += sz;
     atts.push({ x: x + bx, y: baseY + h, z: z + bz });
@@ -15279,14 +15280,14 @@ function placeCardinalTrunk(dim, x, baseY, z, h, logId) {
 function placeFourBranchTrunk(dim, x, baseY, z, h, logId) {
   const atts = [];
   for (let y = 0; y < h; y++) {
-    runCmdSoft(dim, `setblock ${x} ${baseY + y} ${z} ${logId}`);
+    setBlock(dim.getBlock({ x, y: baseY + y, z }), logId);
   }
   const dirs = [[0, -1], [0, 1], [1, 0], [-1, 0]];
   for (const [sx, sz] of dirs) {
     let bx = sx, bz = sz;
     const startY = Math.floor(h / 2);
     for (let y = startY; y < h; y++) {
-      runCmdSoft(dim, `setblock ${x + bx} ${baseY + y} ${z + bz} ${logId}`);
+      setBlock(dim.getBlock({ x: x + bx, y: baseY + y, z: z + bz }), logId);
       if (y === h - 1) {
         atts.push({ x: x + bx, y: baseY + y + 1, z: z + bz });
       }
@@ -15303,7 +15304,7 @@ function placeVaryingFourBranchTrunk(dim, x, baseY, z, h, logId, random) {
   const atts = [];
   const halfH = Math.floor(h / 2);
   for (let y = 0; y <= halfH; y++) {
-    runCmdSoft(dim, `setblock ${x} ${baseY + y} ${z} ${logId}`);
+    setBlock(dim.getBlock({ x, y: baseY + y, z }), logId);
   }
   const dirs = [[0, -1], [0, 1], [1, 0], [-1, 0]];
   for (const [sx, sz] of dirs) {
@@ -15314,10 +15315,10 @@ function placeVaryingFourBranchTrunk(dim, x, baseY, z, h, logId, random) {
     for (let i = 0; i < branchLen; i++) {
       bx += sx;
       bz += sz;
-      runCmdSoft(dim, `setblock ${x + bx} ${baseY + startY} ${z + bz} ${logId}`);
+      setBlock(dim.getBlock({ x: x + bx, y: baseY + startY, z: z + bz }), logId);
     }
     for (let y = startY; y <= h - offset; y++) {
-      runCmdSoft(dim, `setblock ${x + bx} ${baseY + y} ${z + bz} ${logId}`);
+      setBlock(dim.getBlock({ x: x + bx, y: baseY + y, z: z + bz }), logId);
     }
     atts.push({ x: x + bx, y: baseY + h - offset, z: z + bz });
   }
@@ -15435,9 +15436,12 @@ function placeLeavesRowDefault(dim, cx, cy, cz, radius, yOff, leafId, random) {
   }
 }
 function setLeaf(dim, x, y, z, leafId) {
-  try {
-    dim.runCommand(`setblock ${x} ${y} ${z} ${leafId} keep`);
-  } catch (_) {
+  const block = dim.getBlock({ x, y, z });
+  if (block && block.typeId === "minecraft:air") {
+    try {
+      block.setType(leafId);
+    } catch (_) {
+    }
   }
 }
 
@@ -16397,7 +16401,7 @@ enchantmentManager.register("gaia:thunder_strike", {
 });
 
 // src/main/bedrock/ts/entities/MalachiteGuard.ts
-import { world as world33, system as system40, Player as Player29, EquipmentSlot as EquipmentSlot7, GameMode as GameMode6, EntityComponentTypes, EntityDamageCause } from "@minecraft/server";
+import { world as world33, system as system40, EquipmentSlot as EquipmentSlot7, GameMode as GameMode6, EntityComponentTypes, EntityDamageCause } from "@minecraft/server";
 var GUARD_ID = "gaiadimension:malachite_guard";
 var DRONE_ID = "gaiadimension:malachite_drone";
 var BATON_ID = "gaiadimension:malachite_guard_baton";
@@ -16452,13 +16456,20 @@ function distSq(a, b) {
   return dx * dx + dy * dy + dz * dz;
 }
 function isValidPlayer(e) {
-  if (!(e instanceof Player29)) return false;
+  if (e.typeId !== "minecraft:player") return false;
   try {
     const gm = e.getGameMode();
     return gm !== GameMode6.Creative && gm !== GameMode6.Spectator;
   } catch {
     return false;
   }
+}
+function getPlayerSource(damageSource) {
+  const direct = damageSource.damagingEntity;
+  if (direct && isValidPlayer(direct)) return direct;
+  const owner = damageSource.projectileOwner ?? damageSource.cause === "projectile" ? void 0 : void 0;
+  if (owner && isValidPlayer(owner)) return owner;
+  return void 0;
 }
 function getDamageMultiplier(baseDmg) {
   if (baseDmg > 100) return 0;
@@ -16498,13 +16509,23 @@ var MalachiteGuardSystem = class {
       if (!health) return;
       const maxHp = health.effectiveMax;
       const curHp = health.currentValue;
-      const attacker = damageSource.damagingEntity;
+      const playerAttacker = getPlayerSource(damageSource);
       const chargeTimer = getNum(hurtEntity, P.CHARGE_TIMER, 0);
-      if (chargeTimer > 0 && attacker && isValidPlayer(attacker)) {
+      if (chargeTimer > 0 && playerAttacker) {
         const bide = getNum(hurtEntity, P.BIDE_DAMAGE, 0);
         setNum(hurtEntity, P.BIDE_DAMAGE, bide + damage * 0.5);
       }
       if (phase === 0 /* Defence */) {
+        if (damage > 0) {
+          system40.run(() => {
+            try {
+              if (hurtEntity.isValid && health) {
+                health.setCurrentValue(Math.min(curHp + damage, maxHp));
+              }
+            } catch {
+            }
+          });
+        }
         return;
       }
       if (phase === 1 /* Attack */) {
@@ -16522,7 +16543,7 @@ var MalachiteGuardSystem = class {
         return;
       }
       if (phase === 2 /* Resist */) {
-        if (!attacker || !isValidPlayer(attacker)) {
+        if (!playerAttacker) {
           if (hurtEntity.location.y > -64) {
             system40.run(() => {
               try {
@@ -16551,7 +16572,7 @@ var MalachiteGuardSystem = class {
     });
     world33.afterEvents.entityHitEntity.subscribe((event) => {
       const { damagingEntity, hitEntity } = event;
-      if (damagingEntity instanceof Player29 && hitEntity.isValid) {
+      if (isValidPlayer(damagingEntity) && hitEntity.isValid) {
         try {
           const equip = damagingEntity.getComponent(EntityComponentTypes.Equippable);
           const mainhand = equip?.getEquipment(EquipmentSlot7.Mainhand);
@@ -16565,7 +16586,7 @@ var MalachiteGuardSystem = class {
         } catch {
         }
       }
-      if (damagingEntity.typeId === GUARD_ID && hitEntity instanceof Player29) {
+      if (damagingEntity.typeId === GUARD_ID && isValidPlayer(hitEntity)) {
         if (!hitEntity.isValid) return;
         if (Math.random() > 1 / 12) return;
         try {
