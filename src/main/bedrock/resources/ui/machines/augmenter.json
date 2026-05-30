@@ -1,0 +1,59 @@
+{
+	"namespace": "augmenter_ui",
+	"interface@gaia_machines.dynamic_interface_custom": {
+		"$bg_texture": "textures/gaiadimension/androsa/gui/crafting_table",
+		"$size": ["100%", 166],
+		"$content": [
+			{
+				"title": {
+					"type": "label",
+					"text": "Augmenter",
+					"color": [0.94, 0.94, 0.94],
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [28, 6]
+				}
+			},
+			{
+				"staff_input@gaia_machines.item_slot": {
+					"$index": 0,
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [28, 35]
+				}
+			},
+			{
+				"core_ingredient@gaia_machines.item_slot": {
+					"$index": 1,
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [79, 17]
+				}
+			},
+			{
+				"head_ingredient@gaia_machines.item_slot": {
+					"$index": 2,
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [79, 35]
+				}
+			},
+			{
+				"rod_ingredient@gaia_machines.item_slot": {
+					"$index": 3,
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [79, 53]
+				}
+			},
+			{
+				"output@gaia_machines.item_slot": {
+					"$index": 4,
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [130, 35]
+				}
+			}
+		]
+	}
+}

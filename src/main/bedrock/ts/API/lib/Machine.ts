@@ -171,6 +171,14 @@ export class Machine {
     static get INVENTORY_SIZE(): number { return 27; }
     static get FUEL_ITEMS(): Record<string, number> | undefined { return undefined; }
 
+    /**
+     * Returns the §-encoded routing name for JSON UI chest_screen matching.
+     * e.g. "gaia_furnace" → "§g§a§i§a§_§f§u§r§n§a§c§e"
+     */
+    static get UI_ROUTING_NAME(): string {
+        return `§${this.NAME.split('').join('§')}`;
+    }
+
     entity: Entity;
     block: Block;
     config: typeof Machine;
@@ -499,6 +507,41 @@ export class Machine {
         if (lore !== undefined) item.setLore(lore);
         
         this.setInventoryItem(slot, item, cachedUiProfile);
+    }
+
+    /**
+     * Creates or updates a gaiadimension:ui item in a UI slot for JSON UI progress bars.
+     * The item's durability drives #size_binding_x/y in the JSON UI, and nameTag drives #hover_text.
+     * @param {number} slot - The UI slot index.
+     * @param {string} hoverText - Text shown on hover (via #hover_text binding).
+     * @param {number} fillPixels - Fill amount in pixels (0 = empty, max depends on bar size).
+     */
+    setUiDisplay(slot: number, hoverText: string = '', fillPixels: number = 0): void {
+        try {
+            let item = this.inventory.getItem(slot);
+            const isUiItem = item && item.typeId === 'gaiadimension:ui';
+
+            if (!isUiItem) {
+                item = new ItemStack('gaiadimension:ui', 1);
+            }
+
+            // Set hover text
+            if (hoverText) {
+                item!.nameTag = hoverText;
+            }
+
+            // Set durability to drive fill (damage = maxDurability - fillPixels)
+            const durabilityComp = item!.getComponent('minecraft:durability') as any;
+            if (durabilityComp) {
+                const targetDamage = Math.max(0, durabilityComp.maxDurability - fillPixels);
+                if (durabilityComp.damage !== targetDamage || !isUiItem) {
+                    durabilityComp.damage = targetDamage;
+                    this.inventory.setItem(slot, item);
+                }
+            } else if (!isUiItem) {
+                this.inventory.setItem(slot, item);
+            }
+        } catch (e) {}
     }
 
     /**
@@ -1020,7 +1063,7 @@ export class Machine {
 }
 
 // --- Global UI Item Protection ---
-const BANNED_ITEMS: Set<string> = new Set(["gaiadimension:placeholder_invisible"]);
+const BANNED_ITEMS: Set<string> = new Set(["gaiadimension:placeholder_invisible", "gaiadimension:ui"]);
 const BANNED_PREFIXES: Set<string> = new Set();
 
 world.afterEvents.entitySpawn.subscribe((event) => {

@@ -28,13 +28,13 @@ class CrudeStorageCrate extends Machine {
     constructor(entity: Entity, block: Block) {
         super(entity, block);
         if (this.entity && this.entity.isValid) {
-            this.entity.nameTag = "Crude Storage Crate";
+            this.entity.nameTag = CrudeStorageCrate.UI_ROUTING_NAME;
         }
     }
 
     onLoad(): void {
         if (this.entity && this.entity.isValid) {
-            this.entity.nameTag = "Crude Storage Crate";
+            this.entity.nameTag = CrudeStorageCrate.UI_ROUTING_NAME;
         }
     }
 }

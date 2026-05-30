@@ -27,6 +27,9 @@ import { registerGeyserComponent, initializeGeyser } from "./blocks/geyser.js";
 import { registerSandstoneComponent } from "./blocks/sandstone_slab.js";
 import { registerStoneSlabComponent } from "./blocks/stone_slab.js";
 import { registerGaiaFurnaceComponent } from "./blocks/furnaces/GaiaFurnace.js";
+import { registerRestructurerComponent } from "./blocks/furnaces/Restructurer.js";
+import { registerPurifierComponent } from "./blocks/furnaces/Purifier.js";
+import { registerAugmenterComponent } from "./blocks/augmenter/Augmenter.js";
 import { registerGlitteringFireComponent } from "./blocks/glittering_fire.js";
 import { registerCrudeStorageCrateComponent } from "./blocks/crates/crude_storage_crate.js";
 import { registerMegaStorageCrateComponent } from "./blocks/crates/mega_storage_crate.js";
@@ -105,6 +108,9 @@ system.beforeEvents.startup.subscribe((event: StartupEvent) => {
     // registerSandstoneComponent({ blockComponentRegistry }); // TODO: No blocks use this component yet
     // registerStoneSlabComponent({ blockComponentRegistry }); // TODO: No blocks use this component yet
     registerGaiaFurnaceComponent({ blockComponentRegistry });
+    registerRestructurerComponent({ blockComponentRegistry });
+    registerPurifierComponent({ blockComponentRegistry });
+    registerAugmenterComponent({ blockComponentRegistry });
     registerGlitteringFireComponent();
     registerCrudeStorageCrateComponent({ blockComponentRegistry });
     registerMegaStorageCrateComponent({ blockComponentRegistry });

@@ -2345,6 +2345,13 @@ var Machine = class {
   static get FUEL_ITEMS() {
     return void 0;
   }
+  /**
+   * Returns the §-encoded routing name for JSON UI chest_screen matching.
+   * e.g. "gaia_furnace" → "§g§a§i§a§_§f§u§r§n§a§c§e"
+   */
+  static get UI_ROUTING_NAME() {
+    return `\xA7${this.NAME.split("").join("\xA7")}`;
+  }
   entity;
   block;
   config;
@@ -2608,6 +2615,36 @@ var Machine = class {
     if (name !== void 0) item.nameTag = name;
     if (lore !== void 0) item.setLore(lore);
     this.setInventoryItem(slot, item, cachedUiProfile);
+  }
+  /**
+   * Creates or updates a gaiadimension:ui item in a UI slot for JSON UI progress bars.
+   * The item's durability drives #size_binding_x/y in the JSON UI, and nameTag drives #hover_text.
+   * @param {number} slot - The UI slot index.
+   * @param {string} hoverText - Text shown on hover (via #hover_text binding).
+   * @param {number} fillPixels - Fill amount in pixels (0 = empty, max depends on bar size).
+   */
+  setUiDisplay(slot, hoverText = "", fillPixels = 0) {
+    try {
+      let item = this.inventory.getItem(slot);
+      const isUiItem = item && item.typeId === "gaiadimension:ui";
+      if (!isUiItem) {
+        item = new ItemStack5("gaiadimension:ui", 1);
+      }
+      if (hoverText) {
+        item.nameTag = hoverText;
+      }
+      const durabilityComp = item.getComponent("minecraft:durability");
+      if (durabilityComp) {
+        const targetDamage = Math.max(0, durabilityComp.maxDurability - fillPixels);
+        if (durabilityComp.damage !== targetDamage || !isUiItem) {
+          durabilityComp.damage = targetDamage;
+          this.inventory.setItem(slot, item);
+        }
+      } else if (!isUiItem) {
+        this.inventory.setItem(slot, item);
+      }
+    } catch (e) {
+    }
   }
   /**
    * Safely consumes a specified amount of items from a slot.
@@ -3038,7 +3075,7 @@ var Machine = class {
     }
   }
 };
-var BANNED_ITEMS = /* @__PURE__ */ new Set(["gaiadimension:placeholder_invisible"]);
+var BANNED_ITEMS = /* @__PURE__ */ new Set(["gaiadimension:placeholder_invisible", "gaiadimension:ui"]);
 var BANNED_PREFIXES = /* @__PURE__ */ new Set();
 world10.afterEvents.entitySpawn.subscribe((event) => {
   const { entity } = event;
@@ -4214,12 +4251,570 @@ function registerGaiaFurnaceComponent({ blockComponentRegistry }) {
   });
 }
 
+// src/main/bedrock/ts/blocks/furnaces/Restructurer.ts
+import { ItemStack as ItemStack9 } from "@minecraft/server";
+var GLITTERING_FUELS = {
+  "minecraft:gold_nugget": 20,
+  "minecraft:gold_ingot": 200,
+  "minecraft:golden_axe": 150,
+  "minecraft:golden_hoe": 150,
+  "minecraft:golden_pickaxe": 150,
+  "minecraft:golden_shovel": 150,
+  "minecraft:golden_sword": 150,
+  "minecraft:golden_helmet": 500,
+  "minecraft:golden_chestplate": 500,
+  "minecraft:golden_leggings": 500,
+  "minecraft:golden_boots": 500,
+  "minecraft:golden_horse_armor": 1e3,
+  "minecraft:gold_block": 2e3,
+  "minecraft:gold_ore": 150,
+  "gaiadimension:pyrite": 500,
+  "gaiadimension:pyrite_block": 5e3,
+  "gaiadimension:sweet_muckball": 250,
+  "gaiadimension:frail_glitter_block": 1e3,
+  "gaiadimension:thick_glitter_block": 2e3,
+  "gaiadimension:gummy_glitter_block": 4e3,
+  "minecraft:blaze_powder": 1200,
+  "minecraft:blaze_rod": 2400
+};
+var SHINING_FUELS = {
+  "gaiadimension:pink_essence": 100,
+  "gaiadimension:pink_goo": 900,
+  "gaiadimension:pink_sludge_block": 8100,
+  "gaiadimension:aura_residue": 200,
+  "gaiadimension:aura_cluster": 1800,
+  "gaiadimension:aura_block": 16200
+};
+var RESTRUCTURER_RECIPES = {
+  "gaiadimension:blue_opal": { output: "gaiadimension:benitoite", byproduct: "gaiadimension:black_residue", time: 200 },
+  "gaiadimension:red_opal": { output: "gaiadimension:carnelian", byproduct: "gaiadimension:black_residue", time: 200 },
+  "gaiadimension:white_opal": { output: "gaiadimension:goshenite", byproduct: "gaiadimension:black_residue", time: 200 },
+  "gaiadimension:green_opal": { output: "gaiadimension:diopside", byproduct: "gaiadimension:black_residue", time: 200 },
+  "gaiadimension:labradorite": { output: "gaiadimension:euclase", byproduct: "gaiadimension:black_residue", time: 200 },
+  "gaiadimension:hematite": { output: "gaiadimension:stibnite", byproduct: "gaiadimension:black_residue", time: 200 },
+  "gaiadimension:moonstone": { output: "gaiadimension:albite", byproduct: "gaiadimension:black_residue", time: 200 },
+  "gaiadimension:cinnabar": { output: "gaiadimension:proustite", byproduct: "gaiadimension:black_residue", time: 200 },
+  "gaiadimension:blue_opal_block": { output: "gaiadimension:benitoite_block", byproduct: "gaiadimension:tektite", time: 200 },
+  "gaiadimension:red_opal_block": { output: "gaiadimension:carnelian_block", byproduct: "gaiadimension:tektite", time: 200 },
+  "gaiadimension:white_opal_block": { output: "gaiadimension:goshenite_block", byproduct: "gaiadimension:tektite", time: 200 },
+  "gaiadimension:green_opal_block": { output: "gaiadimension:diopside_block", byproduct: "gaiadimension:tektite", time: 200 },
+  "gaiadimension:labradorite_block": { output: "gaiadimension:euclase_block", byproduct: "gaiadimension:tektite", time: 200 },
+  "gaiadimension:hematite_block": { output: "gaiadimension:stibnite_block", byproduct: "gaiadimension:tektite", time: 200 },
+  "gaiadimension:moonstone_block": { output: "gaiadimension:albite_block", byproduct: "gaiadimension:tektite", time: 200 },
+  "gaiadimension:cinnabar_block": { output: "gaiadimension:proustite_block", byproduct: "gaiadimension:tektite", time: 200 },
+  "gaiadimension:pyrite_block": { output: "gaiadimension:aura_cluster", byproduct: "gaiadimension:bismuth_crystal", time: 200 },
+  "gaiadimension:pyrite": { output: "gaiadimension:aura_residue", byproduct: "gaiadimension:bismuth_residue", time: 200 },
+  "gaiadimension:bismuth_crystal": { output: "minecraft:diamond", byproduct: "gaiadimension:pink_essence", time: 200 },
+  "gaiadimension:scaynyx_ingot": { output: "minecraft:gold_ingot", byproduct: "gaiadimension:pink_essence", time: 200 },
+  "gaiadimension:benitoite": { output: "gaiadimension:crystallized_lapis_lazuli", byproduct: "gaiadimension:pink_essence", time: 200 },
+  "gaiadimension:carnelian": { output: "gaiadimension:crystallized_redstone", byproduct: "gaiadimension:pink_essence", time: 200 }
+};
+var Restructurer = class _Restructurer extends Machine {
+  static get NAME() {
+    return "restructurer";
+  }
+  static get INVENTORY_SIZE() {
+    return 7;
+  }
+  // 5 real + 2 UI
+  static get TIMERS() {
+    return {
+      cook: { max: 200 },
+      burn: { max: 0 },
+      max_burn: { max: 0 }
+    };
+  }
+  static get UI_CONFIG() {
+    return {
+      classicProfile: {
+        inputSlots: [0],
+        fuelSlot: 1,
+        // glittering fuel slot (also need slot 2 for shining)
+        resultSlots: [3],
+        secondaryResultSlot: 4
+      },
+      pocketProfile: {
+        inputSlots: [0],
+        fuelSlot: 1,
+        resultSlots: [3],
+        secondaryResultSlot: 4
+      }
+    };
+  }
+  constructor(entity, block) {
+    super(entity, block);
+    if (this.entity && this.entity.isValid) {
+      this.entity.nameTag = _Restructurer.UI_ROUTING_NAME;
+    }
+  }
+  onLoad() {
+    if (this.entity && this.entity.isValid) {
+      this.entity.nameTag = _Restructurer.UI_ROUTING_NAME;
+    }
+  }
+  onTick(dt) {
+    if (this.timers.burn.value > 0) {
+      this.timers.burn.value = Math.max(0, this.timers.burn.value - dt);
+    }
+    if (!this.canProcess() && this.timers.cook.value > 0) {
+      this.timers.cook.value = Math.max(0, this.timers.cook.value - 2 * dt);
+    }
+    try {
+      const isBurning = this.timers.burn.value > 0;
+      const currentState = this.block.permutation.getState("gaiadimension:lit");
+      if (isBurning !== currentState) {
+        this.block.setPermutation(this.block.permutation.withState("gaiadimension:lit", isBurning));
+      }
+    } catch (e) {
+    }
+  }
+  updateUI() {
+    const burnPercent = this.timers.max_burn.value > 0 ? this.timers.burn.value / this.timers.max_burn.value : 0;
+    const burnFill = Math.ceil(burnPercent * 14);
+    this.setUiDisplay(5, `\xA76Fuel: ${Math.ceil(burnPercent * 100)}%`, burnFill);
+    const cookPercent = this.timers.cook.max > 0 ? this.timers.cook.value / this.timers.cook.max : 0;
+    const cookFill = Math.floor(cookPercent * 24);
+    this.setUiDisplay(6, `\xA7eProgress: ${Math.floor(cookPercent * 100)}%`, cookFill);
+  }
+  canProcess() {
+    const inputItem = this.inventory.getItem(0);
+    if (!inputItem) return false;
+    const recipe = RESTRUCTURER_RECIPES[inputItem.typeId];
+    if (!recipe) return false;
+    if (this.timers.burn.value <= 0) {
+      const glitterFuel = this.inventory.getItem(1);
+      const shineFuel = this.inventory.getItem(2);
+      if (!glitterFuel || !shineFuel) return false;
+      if (!GLITTERING_FUELS[glitterFuel.typeId] || !SHINING_FUELS[shineFuel.typeId]) return false;
+    }
+    const outputItem = this.inventory.getItem(3);
+    if (outputItem) {
+      if (outputItem.typeId !== recipe.output || outputItem.amount + 1 > outputItem.maxStackSize) return false;
+    }
+    const byproductItem = this.inventory.getItem(4);
+    if (byproductItem) {
+      if (byproductItem.typeId !== recipe.byproduct || byproductItem.amount + 1 > byproductItem.maxStackSize) return false;
+    }
+    return true;
+  }
+  processTick(dt = 1) {
+    const profile = this.cachedUiProfile || this.getCurrentUiProfile();
+    if (this.timers.burn.value <= 0) {
+      const glitterFuel = this.inventory.getItem(1);
+      const shineFuel = this.inventory.getItem(2);
+      if (!glitterFuel || !shineFuel) return;
+      const glitterBurn = GLITTERING_FUELS[glitterFuel.typeId] || 0;
+      const shineBurn = SHINING_FUELS[shineFuel.typeId] || 0;
+      if (glitterBurn <= 0 || shineBurn <= 0) return;
+      const averageBurn = Math.floor((glitterBurn + shineBurn) / 2);
+      this.consumeItem(1, 1);
+      this.consumeItem(2, 1);
+      this.timers.burn.value = averageBurn;
+      this.timers.max_burn.value = averageBurn;
+    }
+    const inputItem = this.inventory.getItem(0);
+    if (!inputItem) {
+      this.timers.cook.value = 0;
+      return;
+    }
+    const recipe = RESTRUCTURER_RECIPES[inputItem.typeId];
+    if (!recipe) {
+      this.timers.cook.value = 0;
+      return;
+    }
+    this.timers.cook.max = recipe.time;
+    this.timers.cook.add(dt);
+    if (this.timers.cook.value >= this.timers.cook.max) {
+      this.timers.cook.value = 0;
+      this.consumeItem(0, 1);
+      this.addToSlot(3, new ItemStack9(recipe.output, 1), profile);
+      this.addToSlot(4, new ItemStack9(recipe.byproduct, 1), profile);
+    }
+  }
+  addToSlot(slot, itemStack, profile) {
+    const current = this.inventory.getItem(slot);
+    if (!current) {
+      this.setInventoryItem(slot, itemStack, profile);
+    } else if (current.typeId === itemStack.typeId) {
+      const maxStack = current.maxStackSize ?? 64;
+      if (current.amount < maxStack) {
+        const space = maxStack - current.amount;
+        const add = Math.min(space, itemStack.amount);
+        if (add > 0) {
+          current.amount += add;
+          this.setInventoryItem(slot, current, profile);
+        }
+      }
+    }
+  }
+};
+BlockEntity_default.register(Restructurer);
+function registerRestructurerComponent({ blockComponentRegistry }) {
+  blockComponentRegistry.registerCustomComponent("gaiadimension:restructurer", {
+    onPlace: (arg) => {
+      const { block, dimension } = arg;
+      const location = block.location;
+      const center = { x: location.x + 0.5, y: location.y, z: location.z + 0.5 };
+      try {
+        const entity = dimension.spawnEntity("luminiae_generic:block_entity", center);
+        BlockEntity_default.registerEntityAsMachine(entity);
+      } catch (e) {
+        console.warn("Failed to spawn restructurer entity", e);
+      }
+    },
+    onPlayerDestroy: () => {
+    }
+  });
+}
+
+// src/main/bedrock/ts/blocks/furnaces/Purifier.ts
+import { ItemStack as ItemStack10 } from "@minecraft/server";
+var GLITTERING_FUELS2 = {
+  "minecraft:gold_nugget": 20,
+  "minecraft:gold_ingot": 200,
+  "minecraft:golden_axe": 150,
+  "minecraft:golden_hoe": 150,
+  "minecraft:golden_pickaxe": 150,
+  "minecraft:golden_shovel": 150,
+  "minecraft:golden_sword": 150,
+  "minecraft:golden_helmet": 500,
+  "minecraft:golden_chestplate": 500,
+  "minecraft:golden_leggings": 500,
+  "minecraft:golden_boots": 500,
+  "minecraft:golden_horse_armor": 1e3,
+  "minecraft:gold_block": 2e3,
+  "minecraft:gold_ore": 150,
+  "gaiadimension:pyrite": 500,
+  "gaiadimension:pyrite_block": 5e3,
+  "gaiadimension:sweet_muckball": 250,
+  "gaiadimension:frail_glitter_block": 1e3,
+  "gaiadimension:thick_glitter_block": 2e3,
+  "gaiadimension:gummy_glitter_block": 4e3,
+  "minecraft:blaze_powder": 1200,
+  "minecraft:blaze_rod": 2400
+};
+var SHINING_FUELS2 = {
+  "gaiadimension:pink_essence": 100,
+  "gaiadimension:pink_goo": 900,
+  "gaiadimension:pink_sludge_block": 8100,
+  "gaiadimension:aura_residue": 200,
+  "gaiadimension:aura_cluster": 1800,
+  "gaiadimension:aura_block": 16200
+};
+var NULLING_FUELS = {
+  "gaiadimension:bismuth_residue": 200,
+  "gaiadimension:bismuth_crystal": 1800,
+  "gaiadimension:bismuth_block": 16200,
+  "gaiadimension:black_residue": 100,
+  "gaiadimension:tektite": 900,
+  "gaiadimension:tektite_block": 8100
+};
+var PURIFIER_RECIPES = {
+  "gaiadimension:corrupted_grass": { output: "gaiadimension:glitter_grass", outputCount: 1, byproduct: "gaiadimension:goldstone_residue", byproductCount: 1, time: 200 },
+  "gaiadimension:corrupted_soil": { output: "gaiadimension:heavy_soil", outputCount: 1, byproduct: "gaiadimension:goldstone_residue", byproductCount: 1, time: 200 },
+  "gaiadimension:corrupted_leaves": { output: "gaiadimension:pink_agate_leaves", outputCount: 1, byproduct: "gaiadimension:goldstone_residue", byproductCount: 1, time: 200 },
+  "gaiadimension:corrupted_log": { output: "gaiadimension:pink_agate_log", outputCount: 1, byproduct: "gaiadimension:goldstone_residue", byproductCount: 2, time: 200 },
+  "gaiadimension:stripped_corrupted_log": { output: "gaiadimension:stripped_pink_agate_log", outputCount: 1, byproduct: "gaiadimension:goldstone_residue", byproductCount: 2, time: 200 },
+  "gaiadimension:corrupted_wood": { output: "gaiadimension:pink_agate_wood", outputCount: 1, byproduct: "gaiadimension:goldstone_residue", byproductCount: 2, time: 200 },
+  "gaiadimension:stripped_corrupted_wood": { output: "gaiadimension:stripped_pink_agate_wood", outputCount: 1, byproduct: "gaiadimension:goldstone_residue", byproductCount: 2, time: 200 },
+  "gaiadimension:corrupted_tiles": { output: "gaiadimension:pink_agate_tiles", outputCount: 1, byproduct: "gaiadimension:goldstone_residue", byproductCount: 1, time: 200 },
+  "gaiadimension:corrupted_tile_stairs": { output: "gaiadimension:pink_agate_tile_stairs", outputCount: 1, byproduct: "gaiadimension:goldstone_residue", byproductCount: 1, time: 200 },
+  "gaiadimension:corrupted_tile_slab": { output: "gaiadimension:pink_agate_tile_slab", outputCount: 1, byproduct: "gaiadimension:goldstone_residue", byproductCount: 1, time: 200 },
+  "gaiadimension:corrupted_sapling": { output: "gaiadimension:pink_agate_sapling", outputCount: 1, byproduct: "gaiadimension:goldstone_residue", byproductCount: 1, time: 200 },
+  "gaiadimension:corrupted_varloom": { output: "gaiadimension:varloom", outputCount: 1, byproduct: "gaiadimension:goldstone_residue", byproductCount: 1, time: 200 }
+};
+var Purifier = class _Purifier extends Machine {
+  static get NAME() {
+    return "purifier";
+  }
+  static get INVENTORY_SIZE() {
+    return 8;
+  }
+  // 6 real + 2 UI
+  static get TIMERS() {
+    return {
+      cook: { max: 200 },
+      burn: { max: 0 },
+      max_burn: { max: 0 }
+    };
+  }
+  static get UI_CONFIG() {
+    return {
+      classicProfile: {
+        inputSlots: [0],
+        fuelSlot: 1,
+        // glittering (also 2=shining, 3=nulling)
+        resultSlots: [4],
+        secondaryResultSlot: 5
+      },
+      pocketProfile: {
+        inputSlots: [0],
+        fuelSlot: 1,
+        resultSlots: [4],
+        secondaryResultSlot: 5
+      }
+    };
+  }
+  constructor(entity, block) {
+    super(entity, block);
+    if (this.entity && this.entity.isValid) {
+      this.entity.nameTag = _Purifier.UI_ROUTING_NAME;
+    }
+  }
+  onLoad() {
+    if (this.entity && this.entity.isValid) {
+      this.entity.nameTag = _Purifier.UI_ROUTING_NAME;
+    }
+  }
+  onTick(dt) {
+    if (this.timers.burn.value > 0) {
+      this.timers.burn.value = Math.max(0, this.timers.burn.value - dt);
+    }
+    if (!this.canProcess() && this.timers.cook.value > 0) {
+      this.timers.cook.value = Math.max(0, this.timers.cook.value - 2 * dt);
+    }
+    try {
+      const isBurning = this.timers.burn.value > 0;
+      const currentState = this.block.permutation.getState("gaiadimension:lit");
+      if (isBurning !== currentState) {
+        this.block.setPermutation(this.block.permutation.withState("gaiadimension:lit", isBurning));
+      }
+    } catch (e) {
+    }
+  }
+  updateUI() {
+    const burnPercent = this.timers.max_burn.value > 0 ? this.timers.burn.value / this.timers.max_burn.value : 0;
+    this.setUiDisplay(6, `\xA76Fuel: ${Math.ceil(burnPercent * 100)}%`, Math.ceil(burnPercent * 20));
+    const cookPercent = this.timers.cook.max > 0 ? this.timers.cook.value / this.timers.cook.max : 0;
+    this.setUiDisplay(7, `\xA7eProgress: ${Math.floor(cookPercent * 100)}%`, Math.floor(cookPercent * 24));
+  }
+  canProcess() {
+    const inputItem = this.inventory.getItem(0);
+    if (!inputItem) return false;
+    const recipe = PURIFIER_RECIPES[inputItem.typeId];
+    if (!recipe) return false;
+    if (this.timers.burn.value <= 0) {
+      const glitterFuel = this.inventory.getItem(1);
+      const shineFuel = this.inventory.getItem(2);
+      const nullFuel = this.inventory.getItem(3);
+      if (!glitterFuel || !shineFuel || !nullFuel) return false;
+      if (!GLITTERING_FUELS2[glitterFuel.typeId] || !SHINING_FUELS2[shineFuel.typeId] || !NULLING_FUELS[nullFuel.typeId]) return false;
+    }
+    const outputItem = this.inventory.getItem(4);
+    if (outputItem) {
+      if (outputItem.typeId !== recipe.output || outputItem.amount + recipe.outputCount > outputItem.maxStackSize) return false;
+    }
+    const byproductItem = this.inventory.getItem(5);
+    if (byproductItem) {
+      if (byproductItem.typeId !== recipe.byproduct || byproductItem.amount + recipe.byproductCount > byproductItem.maxStackSize) return false;
+    }
+    return true;
+  }
+  processTick(dt = 1) {
+    const profile = this.cachedUiProfile || this.getCurrentUiProfile();
+    if (this.timers.burn.value <= 0) {
+      const glitterFuel = this.inventory.getItem(1);
+      const shineFuel = this.inventory.getItem(2);
+      const nullFuel = this.inventory.getItem(3);
+      if (!glitterFuel || !shineFuel || !nullFuel) return;
+      const glitterBurn = GLITTERING_FUELS2[glitterFuel.typeId] || 0;
+      const shineBurn = SHINING_FUELS2[shineFuel.typeId] || 0;
+      const nullBurn = NULLING_FUELS[nullFuel.typeId] || 0;
+      if (glitterBurn <= 0 || shineBurn <= 0 || nullBurn <= 0) return;
+      const averageBurn = Math.floor((glitterBurn + shineBurn + nullBurn) / 3);
+      this.consumeItem(1, 1);
+      this.consumeItem(2, 1);
+      this.consumeItem(3, 1);
+      this.timers.burn.value = averageBurn;
+      this.timers.max_burn.value = averageBurn;
+    }
+    const inputItem = this.inventory.getItem(0);
+    if (!inputItem) {
+      this.timers.cook.value = 0;
+      return;
+    }
+    const recipe = PURIFIER_RECIPES[inputItem.typeId];
+    if (!recipe) {
+      this.timers.cook.value = 0;
+      return;
+    }
+    this.timers.cook.max = recipe.time;
+    this.timers.cook.add(dt);
+    if (this.timers.cook.value >= this.timers.cook.max) {
+      this.timers.cook.value = 0;
+      this.consumeItem(0, 1);
+      this.addToSlot(4, new ItemStack10(recipe.output, recipe.outputCount), profile);
+      this.addToSlot(5, new ItemStack10(recipe.byproduct, recipe.byproductCount), profile);
+    }
+  }
+  addToSlot(slot, itemStack, profile) {
+    const current = this.inventory.getItem(slot);
+    if (!current) {
+      this.setInventoryItem(slot, itemStack, profile);
+    } else if (current.typeId === itemStack.typeId) {
+      const maxStack = current.maxStackSize ?? 64;
+      if (current.amount < maxStack) {
+        const space = maxStack - current.amount;
+        const add = Math.min(space, itemStack.amount);
+        if (add > 0) {
+          current.amount += add;
+          this.setInventoryItem(slot, current, profile);
+        }
+      }
+    }
+  }
+};
+BlockEntity_default.register(Purifier);
+function registerPurifierComponent({ blockComponentRegistry }) {
+  blockComponentRegistry.registerCustomComponent("gaiadimension:purifier", {
+    onPlace: (arg) => {
+      const { block, dimension } = arg;
+      const location = block.location;
+      const center = { x: location.x + 0.5, y: location.y, z: location.z + 0.5 };
+      try {
+        const entity = dimension.spawnEntity("luminiae_generic:block_entity", center);
+        BlockEntity_default.registerEntityAsMachine(entity);
+      } catch (e) {
+        console.warn("Failed to spawn purifier entity", e);
+      }
+    },
+    onPlayerDestroy: () => {
+    }
+  });
+}
+
+// src/main/bedrock/ts/blocks/augmenter/Augmenter.ts
+import { ItemStack as ItemStack11 } from "@minecraft/server";
+var ELEMENT_MAP = {
+  "gaiadimension:tektite": "physical",
+  "gaiadimension:crystal_core": "physical",
+  "gaiadimension:spitfire_heart": "fire",
+  "gaiadimension:shockshooter_soul": "electric",
+  "gaiadimension:moss_agate_claw": "poison",
+  "gaiadimension:howlite_fang": "frost",
+  "gaiadimension:spellbound_core": "magic",
+  "gaiadimension:bismuth_horn": "energy"
+};
+var BEHAVIOR_MAP = {
+  "gaiadimension:tektite": "basic",
+  "gaiadimension:stibnite": "scatter",
+  "gaiadimension:euclase": "ricochet",
+  "gaiadimension:carnelian": "blast",
+  "gaiadimension:benitoite": "linger",
+  "gaiadimension:goshenite": "burst"
+};
+var STAT_MAP = {
+  "gaiadimension:tektite": "standard",
+  "gaiadimension:scaynyx_ingot": "power",
+  "gaiadimension:glitter_rod": "speed",
+  "gaiadimension:shiny_bone": "recharge",
+  "gaiadimension:magnetite_rod": "force",
+  "gaiadimension:aura_rod": "sustain"
+};
+var Augmenter = class _Augmenter extends Machine {
+  static get NAME() {
+    return "augmenter";
+  }
+  static get INVENTORY_SIZE() {
+    return 5;
+  }
+  static get UI_CONFIG() {
+    return {
+      classicProfile: {
+        inputSlots: [0, 1, 2, 3],
+        resultSlots: [4]
+      },
+      pocketProfile: {
+        inputSlots: [0, 1, 2, 3],
+        resultSlots: [4]
+      }
+    };
+  }
+  constructor(entity, block) {
+    super(entity, block);
+    if (this.entity && this.entity.isValid) {
+      this.entity.nameTag = _Augmenter.UI_ROUTING_NAME;
+    }
+  }
+  onLoad() {
+    if (this.entity && this.entity.isValid) {
+      this.entity.nameTag = _Augmenter.UI_ROUTING_NAME;
+    }
+  }
+  onTick(dt) {
+    this.updateOutputPreview();
+  }
+  updateUI() {
+  }
+  updateOutputPreview() {
+    try {
+      const staffItem = this.inventory.getItem(0);
+      const coreItem = this.inventory.getItem(1);
+      const headItem = this.inventory.getItem(2);
+      const rodItem = this.inventory.getItem(3);
+      if (!staffItem || !staffItem.typeId.includes("magic_staff")) {
+        const currentOutput = this.inventory.getItem(4);
+        if (currentOutput) {
+          this.inventory.setItem(4, void 0);
+        }
+        return;
+      }
+      const hasCore = coreItem && ELEMENT_MAP[coreItem.typeId] !== void 0;
+      const hasHead = headItem && BEHAVIOR_MAP[headItem.typeId] !== void 0;
+      const hasRod = rodItem && STAT_MAP[rodItem.typeId] !== void 0;
+      if (!hasCore && !hasHead && !hasRod) {
+        const currentOutput = this.inventory.getItem(4);
+        if (currentOutput) {
+          this.inventory.setItem(4, void 0);
+        }
+        return;
+      }
+      const outputPreview = new ItemStack11(staffItem.typeId, 1);
+      const loreLines = [];
+      if (hasCore) loreLines.push(`\xA79Element: ${ELEMENT_MAP[coreItem.typeId]}`);
+      if (hasHead) loreLines.push(`\xA75Behavior: ${BEHAVIOR_MAP[headItem.typeId]}`);
+      if (hasRod) loreLines.push(`\xA76Stat: ${STAT_MAP[rodItem.typeId]}`);
+      outputPreview.setLore(loreLines);
+      outputPreview.nameTag = staffItem.nameTag || "\xA7dModified Magic Staff";
+      this.inventory.setItem(4, outputPreview);
+    } catch (e) {
+    }
+  }
+  /**
+   * Called when a player takes the output item.
+   * Consume the ingredients.
+   */
+  canProcess() {
+    return false;
+  }
+  processTick(dt = 1) {
+  }
+};
+BlockEntity_default.register(Augmenter);
+function registerAugmenterComponent({ blockComponentRegistry }) {
+  blockComponentRegistry.registerCustomComponent("gaiadimension:augmenter", {
+    onPlace: (arg) => {
+      const { block, dimension } = arg;
+      const location = block.location;
+      const center = { x: location.x + 0.5, y: location.y, z: location.z + 0.5 };
+      try {
+        const entity = dimension.spawnEntity("luminiae_generic:block_entity", center);
+        BlockEntity_default.registerEntityAsMachine(entity);
+      } catch (e) {
+        console.warn("Failed to spawn augmenter entity", e);
+      }
+    },
+    onPlayerDestroy: () => {
+    }
+  });
+}
+
 // src/main/bedrock/ts/blocks/glittering_fire.ts
 import { world as world15, system as system19 } from "@minecraft/server";
 
 // src/main/bedrock/ts/API/lib/PortalLib.ts
 import {
-  BlockPermutation as BlockPermutation7,
+  BlockPermutation as BlockPermutation9,
   BlockVolume
 } from "@minecraft/server";
 var PortalManager = class {
@@ -4386,7 +4981,7 @@ var PortalManager = class {
     const { minX, maxX, minZ, maxZ, minY, maxY } = bounds;
     let blockPerm = null;
     try {
-      const perm = BlockPermutation7.resolve(portalId);
+      const perm = BlockPermutation9.resolve(portalId);
       try {
         const dir = axis === "x" ? "north" : "east";
         blockPerm = perm.withState("minecraft:cardinal_direction", dir);
@@ -4518,7 +5113,7 @@ var PortalManager = class {
               z: blockpos.z + fWidth * direction.z + fOffset * crossDir.z
             };
             const blk = dimension.getBlock(p);
-            if (blk) blk.setPermutation(BlockPermutation7.resolve(isFloor ? frameBlockId : "minecraft:air"));
+            if (blk) blk.setPermutation(BlockPermutation9.resolve(isFloor ? frameBlockId : "minecraft:air"));
           }
         }
       }
@@ -4532,11 +5127,11 @@ var PortalManager = class {
             z: blockpos.z + fWidth * direction.z
           };
           const blk = dimension.getBlock(p);
-          if (blk) blk.setPermutation(BlockPermutation7.resolve(frameBlockId));
+          if (blk) blk.setPermutation(BlockPermutation9.resolve(frameBlockId));
         }
       }
     }
-    const portalPerm = BlockPermutation7.resolve(portalBlockId);
+    const portalPerm = BlockPermutation9.resolve(portalBlockId);
     let orientedPerm;
     try {
       orientedPerm = portalPerm.withState("axis", axis);
@@ -5005,7 +5600,7 @@ function registerGlitteringFireComponent() {
 }
 
 // src/main/bedrock/ts/blocks/crates/crude_storage_crate.ts
-var CrudeStorageCrate = class extends Machine {
+var CrudeStorageCrate = class _CrudeStorageCrate extends Machine {
   static get NAME() {
     return "crude_storage_crate";
   }
@@ -5026,12 +5621,12 @@ var CrudeStorageCrate = class extends Machine {
   constructor(entity, block) {
     super(entity, block);
     if (this.entity && this.entity.isValid) {
-      this.entity.nameTag = "Crude Storage Crate";
+      this.entity.nameTag = _CrudeStorageCrate.UI_ROUTING_NAME;
     }
   }
   onLoad() {
     if (this.entity && this.entity.isValid) {
-      this.entity.nameTag = "Crude Storage Crate";
+      this.entity.nameTag = _CrudeStorageCrate.UI_ROUTING_NAME;
     }
   }
 };
@@ -5053,7 +5648,7 @@ function registerCrudeStorageCrateComponent({ blockComponentRegistry }) {
 }
 
 // src/main/bedrock/ts/blocks/crates/mega_storage_crate.ts
-var MegaStorageCrate = class extends Machine {
+var MegaStorageCrate = class _MegaStorageCrate extends Machine {
   static get NAME() {
     return "mega_storage_crate";
   }
@@ -5074,12 +5669,12 @@ var MegaStorageCrate = class extends Machine {
   constructor(entity, block) {
     super(entity, block);
     if (this.entity && this.entity.isValid) {
-      this.entity.nameTag = "Mega Storage Crate";
+      this.entity.nameTag = _MegaStorageCrate.UI_ROUTING_NAME;
     }
   }
   onLoad() {
     if (this.entity && this.entity.isValid) {
-      this.entity.nameTag = "Mega Storage Crate";
+      this.entity.nameTag = _MegaStorageCrate.UI_ROUTING_NAME;
     }
   }
 };
@@ -5101,10 +5696,10 @@ function registerMegaStorageCrateComponent({ blockComponentRegistry }) {
 }
 
 // src/main/bedrock/ts/mixins/LightMixin.ts
-import { world as world17, system as system21, BlockPermutation as BlockPermutation9 } from "@minecraft/server";
+import { world as world17, system as system21, BlockPermutation as BlockPermutation11 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/Gaia.ts
-import { world as world16, system as system20, BlockPermutation as BlockPermutation8, BlockVolume as BlockVolume2 } from "@minecraft/server";
+import { world as world16, system as system20, BlockPermutation as BlockPermutation10, BlockVolume as BlockVolume2 } from "@minecraft/server";
 var GAIA_DIMENSION_ID = "gaiadimension:gaia_dimension";
 var DimensionSystem = class {
   static isInGaia(player) {
@@ -5151,7 +5746,7 @@ var DimensionSystem = class {
       targetDim.getBlock({ x: px - 1, y: py + i, z: pz })?.setType(keystone);
       targetDim.getBlock({ x: px + 2, y: py + i, z: pz })?.setType(keystone);
     }
-    const portalPerm = BlockPermutation8.resolve(portal, { "gaiadimension:perm_dim": 0 });
+    const portalPerm = BlockPermutation10.resolve(portal, { "gaiadimension:perm_dim": 0 });
     for (let ix = 0; ix <= 1; ix++) {
       for (let iy = 1; iy <= 3; iy++) {
         targetDim.getBlock({ x: px + ix, y: py + iy, z: pz })?.setPermutation(portalPerm);
@@ -5184,7 +5779,7 @@ system20.runInterval(() => {
 var lightBlockPermutation;
 system21.run(() => {
   try {
-    lightBlockPermutation = BlockPermutation9.resolve("minecraft:light_block", { "minecraft:block_light_level": 15 });
+    lightBlockPermutation = BlockPermutation11.resolve("minecraft:light_block", { "minecraft:block_light_level": 15 });
   } catch (e) {
   }
 });
@@ -5222,7 +5817,7 @@ function initializeLightMixin() {
 }
 
 // src/main/bedrock/ts/systems/scriptevents.ts
-import { system as system22, ItemStack as ItemStack9 } from "@minecraft/server";
+import { system as system22, ItemStack as ItemStack12 } from "@minecraft/server";
 function initializeScriptEvents() {
   system22.afterEvents.scriptEventReceive.subscribe((event) => {
     if (event.id === "gaiadimension:give_agate_arrow") {
@@ -5238,7 +5833,7 @@ function initializeScriptEvents() {
         const player = players[0];
         const inventory = player.getComponent("minecraft:inventory");
         if (inventory && inventory.container) {
-          inventory.container.addItem(new ItemStack9("gaiadimension:agate_arrow", 1));
+          inventory.container.addItem(new ItemStack12("gaiadimension:agate_arrow", 1));
         }
       }
     }
@@ -5246,7 +5841,7 @@ function initializeScriptEvents() {
 }
 
 // src/main/bedrock/ts/fluids/fluids.ts
-import { world as world19, system as system24, BlockPermutation as BlockPermutation10, ItemStack as ItemStack10, BlockVolume as BlockVolume3, Player as Player17, GameMode as GameMode4 } from "@minecraft/server";
+import { world as world19, system as system24, BlockPermutation as BlockPermutation12, ItemStack as ItemStack13, BlockVolume as BlockVolume3, Player as Player17, GameMode as GameMode4 } from "@minecraft/server";
 
 // src/main/bedrock/ts/fluids/lib/FluidTemplate.ts
 var FluidTemplate = class {
@@ -6234,7 +6829,7 @@ function processFluidBlock(block, dimension) {
       const isAboveHalf = aboveId === baseId + "1" || aboveId === baseId + "2" || aboveId === baseId + "3";
       if (isAboveDown || isAboveHalf) {
         if (block.isValid) {
-          dimension.fillBlocks(new BlockVolume3(block.location, block.location), BlockPermutation10.resolve(baseId + "_down"));
+          dimension.fillBlocks(new BlockVolume3(block.location, block.location), BlockPermutation12.resolve(baseId + "_down"));
           changesHappened = true;
         }
         return changesHappened;
@@ -6297,7 +6892,7 @@ function processFluidBlock(block, dimension) {
       }
     }
     if (changedStates) {
-      dimension.fillBlocks(new BlockVolume3(block.location, block.location), BlockPermutation10.resolve(block.typeId, states));
+      dimension.fillBlocks(new BlockVolume3(block.location, block.location), BlockPermutation12.resolve(block.typeId, states));
     }
   }
   const below = getCachedBlock(dimension, block.location.x, block.location.y - 1, block.location.z);
@@ -6364,7 +6959,7 @@ function processFluidBlock(block, dimension) {
               else if (dir.x === 1) dirState = 7;
               else if (dir.z === 1) dirState = 5;
               else if (dir.x === -1) dirState = 3;
-              const perm = BlockPermutation10.resolve(nextStageId, { "gaiadimension:flow_dir": dirState });
+              const perm = BlockPermutation12.resolve(nextStageId, { "gaiadimension:flow_dir": dirState });
               dimension.fillBlocks(new BlockVolume3(neighbor.location, neighbor.location), perm);
               PENDING_BLOCKS.set(`${neighbor.location.x},${neighbor.location.y},${neighbor.location.z},${dimension.id}`, { block: neighbor, dimension, scheduledTick: system24.currentTick + (template?.spreadDelay ?? 5) });
               changesHappened = true;
@@ -6417,7 +7012,7 @@ function processFluidBlock(block, dimension) {
     const perms = block.permutation.getAllStates();
     if (perms["gaiadimension:flow_dir"] !== dirState) {
       perms["gaiadimension:flow_dir"] = dirState;
-      dimension.fillBlocks(new BlockVolume3(block.location, block.location), BlockPermutation10.resolve(typeId, perms));
+      dimension.fillBlocks(new BlockVolume3(block.location, block.location), BlockPermutation12.resolve(typeId, perms));
       changesHappened = true;
     }
   }
@@ -6476,7 +7071,7 @@ world19.beforeEvents.playerInteractWithBlock.subscribe((event) => {
     event.cancel = true;
     system24.run(() => {
       if (block.isValid) {
-        block.setPermutation(BlockPermutation10.resolve(fluidId));
+        block.setPermutation(BlockPermutation12.resolve(fluidId));
         wakeNeighbors(block.location, block.dimension);
         const isHot = fluidId.includes("magma") || fluidId.includes("bismuth");
         player.playSound(isHot ? "bucket.empty_lava" : "bucket.empty_water", { pitch: 1, volume: 1 });
@@ -6489,10 +7084,10 @@ world19.beforeEvents.playerInteractWithBlock.subscribe((event) => {
               if (currentItem.amount > 1) {
                 currentItem.amount--;
                 container.setItem(slot, currentItem);
-                const emptyBucket = new ItemStack10("minecraft:bucket", 1);
+                const emptyBucket = new ItemStack13("minecraft:bucket", 1);
                 const remainder = container.addItem(emptyBucket);
                 if (remainder) player.dimension.spawnItem(remainder, player.location);
-              } else container.setItem(slot, new ItemStack10("minecraft:bucket", 1));
+              } else container.setItem(slot, new ItemStack13("minecraft:bucket", 1));
             }
           }
         }
@@ -6511,7 +7106,7 @@ world19.afterEvents.playerInteractWithEntity.subscribe((event) => {
   if (itemStack?.typeId === "minecraft:bucket") {
     const info = getTypeInfo(fluidBlock.typeId);
     if (info.stage === 0) {
-      const bucketId = info.baseId + "_bucket", filledBucket = new ItemStack10(bucketId, 1);
+      const bucketId = info.baseId + "_bucket", filledBucket = new ItemStack13(bucketId, 1);
       const inventory = player.getComponent("inventory")?.container;
       if (inventory) {
         const slot = player.selectedSlotIndex;
@@ -6552,16 +7147,16 @@ world19.afterEvents.playerInteractWithEntity.subscribe((event) => {
             if (itemStack.amount > 1) {
               itemStack.amount--;
               inventory.setItem(slot, itemStack);
-              const emptyBucket = new ItemStack10("minecraft:bucket", 1);
+              const emptyBucket = new ItemStack13("minecraft:bucket", 1);
               const remainder = inventory.addItem(emptyBucket);
               if (remainder) dimension.spawnItem(remainder, player.location);
-            } else inventory.setItem(slot, new ItemStack10("minecraft:bucket", 1));
+            } else inventory.setItem(slot, new ItemStack13("minecraft:bucket", 1));
           }
         }
       }
     } else {
       try {
-        const perm = BlockPermutation10.resolve(itemStack.typeId);
+        const perm = BlockPermutation12.resolve(itemStack.typeId);
         if (perm) {
           dimension.fillBlocks(new BlockVolume3(location, location), perm);
           player.playSound("stone.dig", { location });
@@ -6591,7 +7186,7 @@ system24.runInterval(() => {
       if (!item) continue;
       if (item.typeId === "gaiadimension:tar_cauldron") {
         try {
-          container.setItem(i, new ItemStack10("minecraft:cauldron", item.amount));
+          container.setItem(i, new ItemStack13("minecraft:cauldron", item.amount));
         } catch (e) {
         }
         continue;
@@ -6604,7 +7199,7 @@ system24.runInterval(() => {
           if (m) baseId = baseId.slice(0, -m[1].length);
         }
         try {
-          container.setItem(i, new ItemStack10(baseId + "_bucket", item.amount));
+          container.setItem(i, new ItemStack13(baseId + "_bucket", item.amount));
         } catch (e) {
         }
       }
@@ -8286,7 +8881,7 @@ function registerDestructionCommands(registry) {
 import { Player as Player24 } from "@minecraft/server";
 
 // src/main/bedrock/ts/physics/ContraptionPhysics.ts
-import { world as world23, system as system29, BlockPermutation as BlockPermutation12 } from "@minecraft/server";
+import { world as world23, system as system29, BlockPermutation as BlockPermutation14 } from "@minecraft/server";
 
 // src/main/bedrock/ts/physics/ContraptionHitbox.ts
 var PLAYER_HALF_W = 0.3;
@@ -8755,7 +9350,7 @@ var ContraptionBody = class _ContraptionBody {
           const slopeBlockId = PHANTOM_SLOPE_IDS[dirIdx];
           const slopeHi = Math.floor(slopeIdx / 16);
           const slopeLo = slopeIdx % 16;
-          const perm = BlockPermutation12.resolve(slopeBlockId, {
+          const perm = BlockPermutation14.resolve(slopeBlockId, {
             "gaiadimension:slope_hi": slopeHi,
             "gaiadimension:slope_lo": slopeLo
           });
@@ -9113,7 +9708,7 @@ function handleHit(projectile, data, location, face) {
 }
 
 // src/main/bedrock/ts/blocks/GlitterGrassSync.ts
-import { world as world26, system as system32, ItemStack as ItemStack12 } from "@minecraft/server";
+import { world as world26, system as system32, ItemStack as ItemStack15 } from "@minecraft/server";
 var GLITTER_GRASS_TYPES = [
   "gaiadimension:green_glitter_grass",
   "gaiadimension:pink_glitter_grass",
@@ -9141,7 +9736,7 @@ function syncInventory(player) {
   for (let i = 0; i < inventory.size; i++) {
     const item = inventory.getItem(i);
     if (item && GLITTER_GRASS_TYPES.includes(item.typeId) && item.typeId !== targetGrassId) {
-      const newItem = new ItemStack12(targetGrassId, item.amount);
+      const newItem = new ItemStack15(targetGrassId, item.amount);
       inventory.setItem(i, newItem);
     }
   }
@@ -13249,7 +13844,7 @@ var FastNoiseLite = class _FastNoiseLite {
     if (arguments.length === 6 && arguments[3] instanceof Vector2) {
       return R2(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]);
     }
-    if (arguments.length === 7 && arguments[3] instanceof Vector328) {
+    if (arguments.length === 7 && arguments[3] instanceof Vector331) {
       return R3(
         arguments[0],
         arguments[1],
@@ -13328,7 +13923,7 @@ var FastNoiseLite = class _FastNoiseLite {
     if (arguments.length === 1 && arguments[0] instanceof Vector2) {
       return R2(arguments[0]);
     }
-    if (arguments.length === 1 && arguments[0] instanceof Vector328) {
+    if (arguments.length === 1 && arguments[0] instanceof Vector331) {
       return R3(arguments[0]);
     }
   }
@@ -13408,7 +14003,7 @@ var FastNoiseLite = class _FastNoiseLite {
     if (arguments.length === 1 && arguments[0] instanceof Vector2) {
       return R2(arguments[0]);
     }
-    if (arguments.length === 1 && arguments[0] instanceof Vector328) {
+    if (arguments.length === 1 && arguments[0] instanceof Vector331) {
       return R3(arguments[0]);
     }
   }
@@ -13491,7 +14086,7 @@ var FastNoiseLite = class _FastNoiseLite {
     if (arguments.length === 1 && arguments[0] instanceof Vector2) {
       return R2(arguments[0]);
     }
-    if (arguments.length === 1 && arguments[0] instanceof Vector328) {
+    if (arguments.length === 1 && arguments[0] instanceof Vector331) {
       return R3(arguments[0]);
     }
   }
@@ -13567,7 +14162,7 @@ var FastNoiseLite = class _FastNoiseLite {
     if (arguments.length === 6 && arguments[3] instanceof Vector2) {
       R2(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]);
     }
-    if (arguments.length === 7 && arguments[3] instanceof Vector328) {
+    if (arguments.length === 7 && arguments[3] instanceof Vector331) {
       R3(
         arguments[0],
         arguments[1],
@@ -13857,7 +14452,7 @@ var Vector2 = class {
     this.y = y;
   }
 };
-var Vector328 = class {
+var Vector331 = class {
   /**
    * 3d Vector
    * @param {number} x
@@ -13971,7 +14566,7 @@ var PalettedPlacer = class {
 };
 
 // src/main/bedrock/ts/world/worldgen/core/utils/paletted-brush.ts
-import { BlockPermutation as BlockPermutation15 } from "@minecraft/server";
+import { BlockPermutation as BlockPermutation17 } from "@minecraft/server";
 var PalettedBrush = class {
   permutations;
   resolved;
@@ -13995,9 +14590,9 @@ var PalettedBrush = class {
     this.resolved = this.permutations.map((p) => {
       if (typeof p === "string") {
         try {
-          return BlockPermutation15.resolve(p);
+          return BlockPermutation17.resolve(p);
         } catch (e) {
-          return BlockPermutation15.resolve("minecraft:air");
+          return BlockPermutation17.resolve("minecraft:air");
         }
       }
       return p;
@@ -14005,7 +14600,7 @@ var PalettedBrush = class {
   }
   next(r = Math.random()) {
     this.resolveAll();
-    return this.resolved[Math.floor(r * this.resolved.length)] ?? BlockPermutation15.resolve("minecraft:air");
+    return this.resolved[Math.floor(r * this.resolved.length)] ?? BlockPermutation17.resolve("minecraft:air");
   }
   toPermutation(r) {
     return this.next(r);
@@ -14018,11 +14613,11 @@ var PalettedBrush = class {
   }
 };
 PalettedBrush.prototype.toPermutation = PalettedBrush.prototype.next;
-BlockPermutation15.prototype.toPermutation = function(r) {
+BlockPermutation17.prototype.toPermutation = function(r) {
   return this;
 };
 String.prototype.toPermutation = function(r) {
-  return BlockPermutation15.resolve(this);
+  return BlockPermutation17.resolve(this);
 };
 
 // src/main/bedrock/ts/world/worldgen/core/utils/event.ts
@@ -16924,6 +17519,9 @@ system41.beforeEvents.startup.subscribe((event) => {
   registerSignComponent({ blockComponentRegistry });
   registerGeyserComponent({ blockComponentRegistry });
   registerGaiaFurnaceComponent({ blockComponentRegistry });
+  registerRestructurerComponent({ blockComponentRegistry });
+  registerPurifierComponent({ blockComponentRegistry });
+  registerAugmenterComponent({ blockComponentRegistry });
   registerGlitteringFireComponent();
   registerCrudeStorageCrateComponent({ blockComponentRegistry });
   registerMegaStorageCrateComponent({ blockComponentRegistry });

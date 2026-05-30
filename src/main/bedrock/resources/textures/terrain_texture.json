@@ -928,6 +928,12 @@
         "gaiadimension:restructurer_side": {
             "textures": "textures/gaiadimension/androsa/blocks/restructurer_side"
         },
+        "gaiadimension:augmenter_side": {
+            "textures": "textures/gaiadimension/androsa/blocks/augmenter_side"
+        },
+        "gaiadimension:augmenter_top": {
+            "textures": "textures/gaiadimension/androsa/blocks/augmenter_top"
+        },
         "gaiadimension:roofed_agaric": {
             "textures": "textures/gaiadimension/androsa/blocks/roofed_agaric"
         },

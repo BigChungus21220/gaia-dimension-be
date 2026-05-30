@@ -1,0 +1,181 @@
+{
+	"namespace": "purifier_ui",
+	"interface@gaia_machines.dynamic_interface_custom": {
+		"$bg_texture": "textures/gaiadimension/androsa/gui/purifier",
+		"$size": ["100%", 207],
+		"$content": [
+			{
+				"title": {
+					"type": "label",
+					"text": "Purifier",
+					"color": [0.94, 0.94, 0.94],
+					"anchor_from": "top_middle",
+					"anchor_to": "top_middle",
+					"offset": [0, 6]
+				}
+			},
+			{
+				"input@gaia_machines.item_slot": {
+					"$index": 0,
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [79, 16]
+				}
+			},
+			{
+				"fuel_glittering@gaia_machines.item_slot": {
+					"$index": 1,
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [58, 62]
+				}
+			},
+			{
+				"fuel_shining@gaia_machines.item_slot": {
+					"$index": 2,
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [100, 62]
+				}
+			},
+			{
+				"fuel_nulling@gaia_machines.item_slot": {
+					"$index": 3,
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [79, 34]
+				}
+			},
+			{
+				"output@gaia_machines.item_slot": {
+					"$index": 4,
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [45, 90]
+				}
+			},
+			{
+				"byproduct@gaia_machines.item_slot": {
+					"$index": 5,
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [113, 90]
+				}
+			},
+			{
+				"cook@purifier_ui.cook_bar": {
+					"$index": 6,
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [64, 81]
+				}
+			},
+			{
+				"burn@purifier_ui.burn_bar": {
+					"$index": 7,
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [77, 61]
+				}
+			}
+		]
+	},
+	"burn_bar": {
+		"type": "panel",
+		"size": [22, 22],
+		"controls": [
+			{
+				"fill@gaia_machines.specific_slot": {
+					"anchor_from": "bottom_left",
+					"anchor_to": "bottom_left",
+					"controls": [
+						{
+							"bar": {
+								"type": "panel",
+								"collection_index": "$index",
+								"anchor_from": "bottom_left",
+								"anchor_to": "bottom_left",
+								"size": ["100%", 1],
+								"controls": [
+									{
+										"clip": {
+											"type": "panel",
+											"clips_children": true,
+											"size": [22, 22],
+											"anchor_from": "bottom_left",
+											"anchor_to": "bottom_left",
+											"bindings": "$use_durability",
+											"$source": "#data",
+											"$target": "#size_binding_y",
+											"$visible_if": "(not (#data = 1000))",
+											"controls": [
+												{
+													"image": {
+														"type": "image",
+														"texture": "textures/gaiadimension/androsa/gui/machines/purifier_burn_fill",
+														"size": [22, 22],
+														"anchor_from": "bottom_left",
+														"anchor_to": "bottom_left"
+													}
+												}
+											]
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	"cook_bar": {
+		"type": "panel",
+		"size": [47, 24],
+		"controls": [
+			{
+				"fill@gaia_machines.specific_slot": {
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"controls": [
+						{
+							"bar": {
+								"type": "panel",
+								"collection_index": "$index",
+								"anchor_from": "top_left",
+								"anchor_to": "top_left",
+								"size": [0, 1],
+								"controls": [
+									{
+										"clip": {
+											"type": "panel",
+											"clips_children": true,
+											"size": [47, 24],
+											"anchor_from": "top_left",
+											"anchor_to": "top_left",
+											"bindings": "$use_durability",
+											"$source": "#data",
+											"$target": "#size_binding_y",
+											"$visible_if": "(not (#data = 1000))",
+											"controls": [
+												{
+													"image": {
+														"type": "image",
+														"texture": "textures/gaiadimension/androsa/gui/machines/purifier_cook_fill",
+														"size": [47, 24],
+														"anchor_from": "top_left",
+														"anchor_to": "top_left"
+													}
+												}
+											]
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	}
+}

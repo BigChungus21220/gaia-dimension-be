@@ -1,0 +1,32 @@
+{
+	"namespace": "small_crate_ui",
+	"interface@gaia_machines.dynamic_interface_custom": {
+		"$bg_texture": "textures/gaiadimension/androsa/gui/small_crate",
+		"$size": ["100%", 166],
+		"$content": [
+			{
+				"title": {
+					"type": "label",
+					"text": "Crude Storage Crate",
+					"color": [0.94, 0.94, 0.94],
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [8, 6]
+				}
+			},
+			{
+				"container_grid": {
+					"type": "grid",
+					"grid_dimensions": [9, 3],
+					"grid_item_template": "chest.chest_grid_item",
+					"collection_name": "container_items",
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [7, 17],
+					"size": [162, 54],
+					"layer": 5
+				}
+			}
+		]
+	}
+}

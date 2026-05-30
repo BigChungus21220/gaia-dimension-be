@@ -1,0 +1,55 @@
+{
+    "namespace": "chest",
+    "small_chest_screen@common.inventory_screen_common": {
+        "$ct": "$container_title",
+        "variables": [
+            {
+                "requires": "$desktop_screen",
+                "$screen_content": "chest.small_chest_panel",
+                "$screen_bg_content": "common.screen_background",
+                "$screen_background_alpha": 0.4
+            },
+            {
+                "requires": "$pocket_screen",
+                "$use_custom_pocket_toast": true,
+                "$screen_content": "pocket_containers.small_chest_panel"
+            },
+            {
+                "requires": "(not (($ct - '§g§a§i§a§_§f§u§r§n§a§c§e') = $ct))",
+                "$screen_content": "gaia_furnace_ui.interface",
+                "$screen_bg_content": "common.screen_background",
+                "$screen_background_alpha": 0.4
+            },
+            {
+                "requires": "(not (($ct - '§r§e§s§t§r§u§c§t§u§r§e§r') = $ct))",
+                "$screen_content": "restructurer_ui.interface",
+                "$screen_bg_content": "common.screen_background",
+                "$screen_background_alpha": 0.4
+            },
+            {
+                "requires": "(not (($ct - '§p§u§r§i§f§i§e§r') = $ct))",
+                "$screen_content": "purifier_ui.interface",
+                "$screen_bg_content": "common.screen_background",
+                "$screen_background_alpha": 0.4
+            },
+            {
+                "requires": "(not (($ct - '§a§u§g§m§e§n§t§e§r') = $ct))",
+                "$screen_content": "augmenter_ui.interface",
+                "$screen_bg_content": "common.screen_background",
+                "$screen_background_alpha": 0.4
+            },
+            {
+                "requires": "(not (($ct - '§c§r§u§d§e§_§s§t§o§r§a§g§e§_§c§r§a§t§e') = $ct))",
+                "$screen_content": "small_crate_ui.interface",
+                "$screen_bg_content": "common.screen_background",
+                "$screen_background_alpha": 0.4
+            },
+            {
+                "requires": "(not (($ct - '§m§e§g§a§_§s§t§o§r§a§g§e§_§c§r§a§t§e') = $ct))",
+                "$screen_content": "large_crate_ui.interface",
+                "$screen_bg_content": "common.screen_background",
+                "$screen_background_alpha": 0.4
+            }
+        ]
+    }
+}

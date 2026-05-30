@@ -1,5 +1,5 @@
 {
-    "format_version": "1.8.0",
+    "format_version": "1.21.0",
     "minecraft:spawn_rules": {
         "description": {
             "identifier": "gaiadimension:markuzar_plant",
@@ -7,12 +7,10 @@
         },
         "conditions": [
             {
-                "minecraft:spawns_on_block_filter": {
-                    "blocks": [
+                "minecraft:spawns_on_block_filter": [
                         "gaiadimension:glitter_grass",
                         "gaiadimension:heavy_soil"
-                    ]
-                },
+                    ],
                 "minecraft:weight": {
                     "default": 15
                 },

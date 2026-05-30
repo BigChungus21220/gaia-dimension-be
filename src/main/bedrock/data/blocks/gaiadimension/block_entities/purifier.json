@@ -1,0 +1,97 @@
+{
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:purifier",
+            "menu_category": {
+                "category": "items"
+            },
+            "traits": {
+                "minecraft:placement_position": {
+                    "enabled_states": [
+                        "minecraft:block_face"
+                    ]
+                }
+            },
+            "states": {
+                "gaiadimension:lit": [false, true]
+            }
+        },
+        "components": {
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 3.5
+            },
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 6
+            },
+            "minecraft:geometry": "minecraft:geometry.full_block",
+            "minecraft:collision_box": {
+                "origin": [-8, 0, -8],
+                "size": [16, 16, 16]
+            },
+            "minecraft:selection_box": {
+                "origin": [-8, 0, -8],
+                "size": [16, 16, 16]
+            },
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "gaiadimension:purifier_side",
+                    "render_method": "opaque"
+                },
+                "up": {
+                    "texture": "gaiadimension:gaia_stone_bricks",
+                    "render_method": "opaque"
+                },
+                "down": {
+                    "texture": "gaiadimension:gaia_stone_bricks",
+                    "render_method": "opaque"
+                },
+                "north": {
+                    "texture": "gaiadimension:purifier_front",
+                    "render_method": "opaque"
+                }
+            },
+            "minecraft:custom_components": ["gaiadimension:purifier"],
+            "minecraft:map_color": "#707070",
+            "minecraft:light_dampening": 0
+        },
+        "permutations": [
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'north'",
+                "components": {
+                    "minecraft:transformation": { "rotation": [0, 180, 0] }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'south'",
+                "components": {
+                    "minecraft:transformation": { "rotation": [0, 0, 0] }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'west'",
+                "components": {
+                    "minecraft:transformation": { "rotation": [0, 90, 0] }
+                }
+            },
+            {
+                "condition": "q.block_state('minecraft:block_face') == 'east'",
+                "components": {
+                    "minecraft:transformation": { "rotation": [0, -90, 0] }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:lit') == true",
+                "components": {
+                    "minecraft:material_instances": {
+                        "north": {
+                            "texture": "gaiadimension:purifier_front_lit",
+                            "render_method": "opaque"
+                        }
+                    },
+                    "minecraft:light_emission": 13
+                }
+            }
+        ]
+    }
+}

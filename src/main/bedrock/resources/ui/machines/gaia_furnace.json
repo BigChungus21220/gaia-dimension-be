@@ -1,0 +1,157 @@
+{
+	"namespace": "gaia_furnace_ui",
+	"interface@gaia_machines.dynamic_interface_custom": {
+		"$bg_texture": "textures/gaiadimension/androsa/gui/gaia_stone_furnace",
+		"$size": ["100%", 166],
+		"$content": [
+			{
+				"title": {
+					"type": "label",
+					"text": "Gaia Furnace",
+					"color": [0.82, 0.82, 0.82],
+					"anchor_from": "top_middle",
+					"anchor_to": "top_middle",
+					"offset": [0, 6]
+				}
+			},
+			{
+				"input@gaia_machines.item_slot": {
+					"$index": 0,
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [55, 16]
+				}
+			},
+			{
+				"fuel@gaia_machines.item_slot": {
+					"$index": 1,
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [55, 52]
+				}
+			},
+			{
+				"output@gaia_machines.item_slot": {
+					"$index": 2,
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [115, 34]
+				}
+			},
+			{
+				"burn@gaia_furnace_ui.burn_bar": {
+					"$index": 3,
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [56, 36]
+				}
+			},
+			{
+				"cook@gaia_furnace_ui.cook_bar": {
+					"$index": 4,
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [79, 34]
+				}
+			}
+		]
+	},
+	"burn_bar": {
+		"type": "panel",
+		"size": [14, 14],
+		"controls": [
+			{
+				"fill@gaia_machines.specific_slot": {
+					"anchor_from": "bottom_left",
+					"anchor_to": "bottom_left",
+					"controls": [
+						{
+							"bar": {
+								"type": "panel",
+								"collection_index": "$index",
+								"anchor_from": "bottom_left",
+								"anchor_to": "bottom_left",
+								"size": ["100%", 1],
+								"controls": [
+									{
+										"clip": {
+											"type": "panel",
+											"clips_children": true,
+											"size": [14, 14],
+											"anchor_from": "bottom_left",
+											"anchor_to": "bottom_left",
+											"bindings": "$use_durability",
+											"$source": "#data",
+											"$target": "#size_binding_y",
+											"$visible_if": "(not (#data = 1000))",
+											"controls": [
+												{
+													"image": {
+														"type": "image",
+														"texture": "textures/gaiadimension/androsa/gui/machines/furnace_burn_fill",
+														"size": [14, 14],
+														"anchor_from": "bottom_left",
+														"anchor_to": "bottom_left"
+													}
+												}
+											]
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	"cook_bar": {
+		"type": "panel",
+		"size": [24, 16],
+		"controls": [
+			{
+				"fill@gaia_machines.specific_slot": {
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"controls": [
+						{
+							"bar": {
+								"type": "panel",
+								"collection_index": "$index",
+								"anchor_from": "top_left",
+								"anchor_to": "top_left",
+								"size": [1, 0],
+								"controls": [
+									{
+										"clip": {
+											"type": "panel",
+											"clips_children": true,
+											"size": [24, 16],
+											"anchor_from": "top_left",
+											"anchor_to": "top_left",
+											"bindings": "$use_durability",
+											"$source": "#data",
+											"$target": "#size_binding_x",
+											"$visible_if": "(not (#data = 1000))",
+											"controls": [
+												{
+													"image": {
+														"type": "image",
+														"texture": "textures/gaiadimension/androsa/gui/machines/furnace_cook_fill",
+														"size": [24, 16],
+														"anchor_from": "top_left",
+														"anchor_to": "top_left"
+													}
+												}
+											]
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	}
+}

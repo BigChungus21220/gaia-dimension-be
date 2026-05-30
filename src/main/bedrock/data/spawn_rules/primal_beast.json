@@ -1,5 +1,5 @@
 {
-    "format_version": "1.8.0",
+    "format_version": "1.21.0",
     "minecraft:spawn_rules": {
         "description": {
             "identifier": "gaiadimension:primal_beast",
@@ -7,11 +7,9 @@
         },
         "conditions": [
             {
-                "minecraft:spawns_on_block_filter": {
-                    "blocks": [
+                "minecraft:spawns_on_block_filter": [
                         "gaiadimension:gaia_stone"
-                    ]
-                },
+                    ],
                 "minecraft:weight": {
                     "default": 15
                 },

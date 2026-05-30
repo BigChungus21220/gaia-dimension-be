@@ -1,0 +1,12 @@
+{
+    "ui_defs": [
+        "ui/gaia_machines.json",
+        "ui/chest_screen.json",
+        "ui/machines/gaia_furnace.json",
+        "ui/machines/restructurer.json",
+        "ui/machines/purifier.json",
+        "ui/machines/augmenter.json",
+        "ui/machines/small_crate.json",
+        "ui/machines/large_crate.json"
+    ]
+}
