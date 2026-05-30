@@ -1,0 +1,34 @@
+{
+    "namespace": "global_variables",
+
+    "$use_durability": [
+        {
+            "binding_type": "collection",
+            "binding_collection_name": "container_items",
+            "binding_name": "#item_durability_current_amount"
+        },
+        {
+            "binding_type": "view",
+            "source_property_name": "(#data + (#data < #item_durability_current_amount) - (#data > #item_durability_current_amount))",
+            "target_property_name": "#data"
+        },
+        {
+            "binding_type": "view",
+            "source_property_name": "$source",
+            "target_property_name": "$target"
+        },
+        {
+            "binding_type": "view",
+            "source_property_name": "$visible_if",
+            "target_property_name": "#visible"
+        }
+    ],
+
+    "$fetch_item_hover": [
+        {
+            "binding_type": "collection",
+            "binding_collection_name": "container_items",
+            "binding_name": "#hover_text"
+        }
+    ]
+}

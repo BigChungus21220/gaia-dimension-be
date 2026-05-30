@@ -120,8 +120,8 @@
                             "bg_panel": {
                                 "type": "panel",
                                 "size": "$size",
-                                "anchor_from": "top_middle",
-                                "anchor_to": "top_middle",
+                                "anchor_from": "center",
+                                "anchor_to": "center",
                                 "controls": [
                                     { "bg": {
                                         "type": "image",
@@ -138,6 +138,12 @@
                                         "layer": 5,
                                         "size": ["100%", "100%"],
                                         "controls": "$content"
+                                    }},
+                                    { "bottom_half@common.inventory_panel_bottom_half_with_label": {
+                                        "layer": 5
+                                    }},
+                                    { "hotbar_grid@common.hotbar_grid_template": {
+                                        "layer": 5
                                     }},
                                     { "inventory_take_progress_icon_button@common.inventory_take_progress_icon_button": {
                                         "layer": 10

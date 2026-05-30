@@ -1,5 +1,6 @@
 {
     "ui_defs": [
+        "ui/_global_variables.json",
         "ui/gaia_machines.json",
         "ui/chest_screen.json",
         "ui/machines/gaia_furnace.json",
