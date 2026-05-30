@@ -3,6 +3,8 @@
 	"interface@gaia_machines.dynamic_interface_custom": {
 		"$bg_texture": "textures/gaiadimension/androsa/gui/augmenter",
 		"$size": ["100%", 166],
+		"$inv_offset": [0, -3],
+		"$hotbar_offset": [0, -2],
 		"$content": [
 			{
 				"title": {

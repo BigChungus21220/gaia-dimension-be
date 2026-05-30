@@ -3,6 +3,8 @@
 	"interface@gaia_machines.dynamic_interface_custom": {
 		"$bg_texture": "textures/gaiadimension/androsa/gui/restructurer",
 		"$size": ["100%", 196],
+		"$inv_offset": [1, -2],
+		"$hotbar_offset": [1, -2],
 		"$content": [
 			{
 				"title": {

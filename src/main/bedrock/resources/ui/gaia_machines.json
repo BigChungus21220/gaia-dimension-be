@@ -14,10 +14,12 @@
     },
 
     "item_slot@gaia_machines.specific_slot": {
-        "$overlay_texture|default": "textures/empty",
+        "$overlay_texture|default": "",
         "$overlay_alpha|default": 1,
         "controls": [
             { "slot@chest.chest_grid_item": {
+                "$cell_image_size": [ 0, 0 ],
+                "$item_background_texture": "",
                 "$cell_overlay_ref": "gaia_machines.overlay_image",
                 "collection_index": "$index"
             }}
@@ -107,6 +109,14 @@
         "$bg_texture": "",
         "$size": ["100%", 166],
         "$show_close_button": true,
+        "$cell_image_normal_texture": "",
+        "$cell_image_hover_texture": "",
+        "$cell_image_pressed_texture": "",
+        "$cell_image_locked_texture": "",
+        "$item_background_texture": "",
+        "$cell_image_size": [ 0, 0 ],
+        "$inv_offset|default": [0, -4],
+        "$hotbar_offset|default": [0, -3],
         "controls": [
             { "container_gamepad_helpers@common.container_gamepad_helpers": {} },
             { "selected_item_details_factory@common.selected_item_details_factory": {} },
@@ -142,11 +152,25 @@
                                         "size": ["100%", "100%"],
                                         "controls": "$content"
                                     }},
-                                    { "bottom_half@common.inventory_panel_bottom_half_with_label": {
-                                        "layer": 5
+                                    { "inventory_offset_wrapper": {
+                                        "type": "panel",
+                                        "size": ["100%", "100%"],
+                                        "offset": "$inv_offset",
+                                        "controls": [
+                                            { "bottom_half@common.inventory_panel_bottom_half_with_label": {
+                                                "layer": 5
+                                            }}
+                                        ]
                                     }},
-                                    { "hotbar_grid@common.hotbar_grid_template": {
-                                        "layer": 5
+                                    { "hotbar_offset_wrapper": {
+                                        "type": "panel",
+                                        "size": ["100%", "100%"],
+                                        "offset": "$hotbar_offset",
+                                        "controls": [
+                                            { "hotbar_grid@common.hotbar_grid_template": {
+                                                "layer": 5
+                                            }}
+                                        ]
                                     }},
                                     { "inventory_take_progress_icon_button@common.inventory_take_progress_icon_button": {
                                         "layer": 10
