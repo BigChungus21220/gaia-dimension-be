@@ -4081,43 +4081,39 @@ var blockEntityManager = new BlockEntityManager();
 var BlockEntity_default = blockEntityManager;
 
 // src/main/bedrock/ts/blocks/furnaces/GaiaFurnace.ts
-var GaiaFurnace = class extends Machine {
+var GaiaFurnace = class _GaiaFurnace extends Machine {
   static get NAME() {
     return "gaia_furnace";
   }
   static get TIMERS() {
     return {
-      cook: { max: 200 },
-      burn: { max: 0 },
-      max_burn: { max: 0 }
+      burn: { value: 0, max: 0, save: true },
+      max_burn: { value: 0, max: 0, save: true },
+      cook: { value: 0, max: 200, save: true }
     };
   }
+  constructor(entity, block) {
+    super(entity, block);
+    if (this.entity && this.entity.isValid) {
+      this.entity.nameTag = _GaiaFurnace.UI_ROUTING_NAME;
+    }
+  }
+  onLoad() {
+    if (this.entity && this.entity.isValid) {
+      this.entity.nameTag = _GaiaFurnace.UI_ROUTING_NAME;
+    }
+  }
   static get UI_CONFIG() {
-    const staticUI = {
-      11: "gaiadimension:furnace_flame_empty",
-      13: "gaiadimension:generic_progress_arrow_empty",
-      9: "gaiadimension:gaia_stone_furnace_part_1",
-      17: "gaiadimension:gaia_stone_furnace_part_2",
-      4: "gaiadimension:gaia_stone_furnace_name"
-    };
-    const animatedUI = [
-      { slot: 11, timer: "burn", maxTimer: "max_burn", baseId: "gaiadimension:furnace_flame", steps: 12 },
-      { slot: 13, timer: "cook", baseId: "gaiadimension:generic_progress_arrow", steps: 22 }
-    ];
     return {
       classicProfile: {
-        inputSlots: [2],
-        fuelSlot: 20,
-        resultSlots: [15],
-        staticUI: { ...staticUI },
-        animatedUI
+        inputSlots: [0],
+        fuelSlot: 1,
+        resultSlots: [2]
       },
       pocketProfile: {
-        inputSlots: [2],
-        fuelSlot: 20,
-        resultSlots: [15],
-        staticUI: { ...staticUI },
-        animatedUI
+        inputSlots: [0],
+        fuelSlot: 1,
+        resultSlots: [2]
       }
     };
   }
@@ -4138,23 +4134,25 @@ var GaiaFurnace = class extends Machine {
     }
   }
   updateUI() {
-    const profile = this.cachedUiProfile || this.getCurrentUiProfile();
     const burnPercent = this.timers.max_burn.value > 0 ? Math.ceil(this.timers.burn.value / this.timers.max_burn.value * 100) : 0;
-    this.setItemDisplay(11, "\xA76Furnace Heat", [`\xA77Intensity: ${burnPercent}%`], profile);
+    const fillBurn = this.timers.max_burn.value > 0 ? Math.ceil(this.timers.burn.value / this.timers.max_burn.value * 14) : 0;
+    this.setUiDisplay(3, `\xA76Furnace Heat
+\xA77Intensity: ${burnPercent}%`, fillBurn);
     const cookPercent = Math.floor(this.timers.cook.value / this.timers.cook.max * 100);
-    this.setItemDisplay(13, "\xA7eRefining Progress", [`\xA77Status: ${cookPercent}%`], profile);
-    this.setItemDisplay(4, "\xA7l\xA7bGaia Furnace", ["\xA77Smelting"], profile);
+    const fillCook = Math.ceil(this.timers.cook.value / this.timers.cook.max * 24);
+    this.setUiDisplay(4, `\xA7eRefining Progress
+\xA77Status: ${cookPercent}%`, fillCook);
   }
   canProcess() {
-    const inputItem = this.inventory.getItem(2);
+    const inputItem = this.inventory.getItem(0);
     if (!inputItem) return false;
     const recipe = this.getRecipe(inputItem);
     if (!recipe) return false;
     if (this.timers.burn.value <= 0) {
-      const fuelItem = this.inventory.getItem(20);
+      const fuelItem = this.inventory.getItem(1);
       if (!fuelItem || !this.getFuelValue(fuelItem)) return false;
     }
-    const outputItem = this.inventory.getItem(15);
+    const outputItem = this.inventory.getItem(2);
     if (outputItem) {
       if (outputItem.typeId !== recipe.output || outputItem.amount + 1 > outputItem.maxStackSize) return false;
     }
@@ -4163,15 +4161,15 @@ var GaiaFurnace = class extends Machine {
   processTick(dt = 1) {
     const profile = this.cachedUiProfile || this.getCurrentUiProfile();
     if (this.timers.burn.value <= 0) {
-      const fuelItem = this.inventory.getItem(20);
+      const fuelItem = this.inventory.getItem(1);
       const burnTime = this.getFuelValue(fuelItem);
       if (burnTime > 0) {
-        this.consumeItem(20, 1);
+        this.consumeItem(1, 1);
         this.timers.burn.value = burnTime;
         this.timers.max_burn.value = burnTime;
       } else return;
     }
-    const inputItem = this.inventory.getItem(2);
+    const inputItem = this.inventory.getItem(0);
     const recipe = this.getRecipe(inputItem);
     if (!recipe) {
       this.timers.cook.value = 0;
@@ -4181,8 +4179,8 @@ var GaiaFurnace = class extends Machine {
     this.timers.cook.add(dt);
     if (this.timers.cook.value >= this.timers.cook.max) {
       this.timers.cook.value = 0;
-      this.consumeItem(2, 1);
-      this.addToSlot(15, new ItemStack8(recipe.output, 1), profile);
+      this.consumeItem(0, 1);
+      this.addToSlot(2, new ItemStack8(recipe.output, 1), profile);
     }
   }
   addToSlot(slot, itemStack, profile) {
