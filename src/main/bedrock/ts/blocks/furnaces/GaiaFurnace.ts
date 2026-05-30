@@ -89,14 +89,6 @@ export class GaiaFurnace extends Machine {
 
         // Nameplate
         this.setItemDisplay(4, "§l§bGaia Furnace", ["§7Smelting"], profile);
-
-        // Label all fillers
-        for (let i = 0; i < this.inventory.size; i++) {
-            const item = this.inventory.getItem(i);
-            if (item && item.typeId === "gaiadimension:placeholder_invisible") {
-                this.setItemDisplay(i, "§8Gaia Furnace", [], profile);
-            }
-        }
     }
 
     canProcess(): boolean {

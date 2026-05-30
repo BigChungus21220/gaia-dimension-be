@@ -167,7 +167,7 @@ class BlockEntityManager {
             try {
                 const candidateBlock = entity.dimension.getBlock(candidateLoc);
                 if (candidateBlock && this.registeredMachineClasses.has(candidateBlock.typeId)) {
-                    console.warn(`[BlockEntity] Auto-healing lost link for ${entity.id} at ${candidateLoc.x}, ${candidateLoc.y}, ${candidateLoc.z}`);
+                    // console.warn(`[BlockEntity] Auto-healing lost link for ${entity.id} at ${candidateLoc.x}, ${candidateLoc.y}, ${candidateLoc.z}`);
                     blockLocation = candidateLoc;
                     blockId = candidateBlock.typeId;
                     
@@ -215,9 +215,8 @@ class BlockEntityManager {
             const z = Math.floor(block.location.z);
             const locKey = `${x},${y},${z}`;
             
-            // DUPLICATE PREVENTION: If the map already has an entity here (e.g. from self-healing), stop.
             if (this.locationToEntityId.has(locKey)) {
-                console.warn(`[BlockEntity] Skipping spawn at ${locKey}: Entity already registered.`);
+                // console.warn(`[BlockEntity] Skipping spawn at ${locKey}: Entity already registered.`);
                 return;
             }
 
@@ -332,7 +331,7 @@ class BlockEntityManager {
                 } else if (this.registeredMachineClasses.has(blockHit.block.typeId) && !this.pendingSpawns.has(locKey)) {
                     // SELF-HEALING: Block exists but no entity. Spawn one!
                     if ((system as any).currentTick - this.lastPlacementTick > 20) {
-                        console.warn(`[BlockEntity] Self-healing missing entity at ${locKey}`);
+                        // console.warn(`[BlockEntity] Self-healing missing entity at ${locKey}`);
                         
                         try {
                             const MachineClass = this.registeredMachineClasses.get(blockHit.block.typeId)!;
@@ -351,7 +350,7 @@ class BlockEntityManager {
                             if (existingEntities.length > 0) {
                                 // Bind to existing
                                 entity = existingEntities[0];
-                                console.warn(`[BlockEntity] Found physical entity ${entity.id}, rebinding...`);
+                                // console.warn(`[BlockEntity] Found physical entity ${entity.id}, rebinding...`);
                             } else {
                                 // Spawn new
                                 entity = blockHit.block.dimension.spawnEntity(entityTypeId, center);
@@ -373,7 +372,7 @@ class BlockEntityManager {
                                 targetMachine = this.activeMachineInstances.get(entity.id) || null;
                             }
                         } catch (e) {
-                            console.warn(`[BlockEntity] Failed to self-heal: ${e}`);
+                            // console.warn(`[BlockEntity] Failed to self-heal: ${e}`);
                         }
                     }
                 }

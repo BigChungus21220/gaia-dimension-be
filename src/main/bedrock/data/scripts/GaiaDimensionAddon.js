@@ -2762,7 +2762,7 @@ var Machine = class {
     ].filter((s) => s !== void 0);
     for (let slot = 0; slot < this.inventory.size; slot++) {
       if (userSlots.includes(slot)) continue;
-      let desiredId = "gaiadimension:placeholder_invisible";
+      let desiredId = void 0;
       if (uiProfile.staticUI && uiProfile.staticUI[slot]) {
         desiredId = uiProfile.staticUI[slot];
       }
@@ -2784,6 +2784,16 @@ var Machine = class {
       }
       if (isAnimatedAndRunning) continue;
       const currentItem = this.inventory.getItem(slot);
+      if (desiredId === void 0) {
+        if (currentItem && currentItem.typeId !== "minecraft:air") {
+          this.ejectItem(currentItem);
+          try {
+            this.inventory.setItem(slot, void 0);
+          } catch (e) {
+          }
+        }
+        continue;
+      }
       if (!currentItem || currentItem.typeId !== desiredId) {
         if (currentItem && currentItem.typeId !== "minecraft:air") {
           this.ejectItem(currentItem);
@@ -3790,7 +3800,6 @@ var BlockEntityManager = class {
       try {
         const candidateBlock = entity.dimension.getBlock(candidateLoc);
         if (candidateBlock && this.registeredMachineClasses.has(candidateBlock.typeId)) {
-          console.warn(`[BlockEntity] Auto-healing lost link for ${entity.id} at ${candidateLoc.x}, ${candidateLoc.y}, ${candidateLoc.z}`);
           blockLocation = candidateLoc;
           blockId = candidateBlock.typeId;
           entity.setDynamicProperty("blockLocation", JSON.stringify(blockLocation));
@@ -3918,7 +3927,6 @@ var BlockEntityManager = class {
           targetMachine = this.activeMachineInstances.get(entityId) || null;
         } else if (this.registeredMachineClasses.has(blockHit.block.typeId) && !this.pendingSpawns.has(locKey)) {
           if (system18.currentTick - this.lastPlacementTick > 20) {
-            console.warn(`[BlockEntity] Self-healing missing entity at ${locKey}`);
             try {
               const MachineClass = this.registeredMachineClasses.get(blockHit.block.typeId);
               const useLarge = MachineClass.INVENTORY_SIZE === 54;
@@ -3932,7 +3940,6 @@ var BlockEntityManager = class {
               let entity;
               if (existingEntities.length > 0) {
                 entity = existingEntities[0];
-                console.warn(`[BlockEntity] Found physical entity ${entity.id}, rebinding...`);
               } else {
                 entity = blockHit.block.dimension.spawnEntity(entityTypeId, center);
                 entity.setDynamicProperty("blockLocation", JSON.stringify(blockHit.block.location));
@@ -3949,7 +3956,6 @@ var BlockEntityManager = class {
                 targetMachine = this.activeMachineInstances.get(entity.id) || null;
               }
             } catch (e) {
-              console.warn(`[BlockEntity] Failed to self-heal: ${e}`);
             }
           }
         }
@@ -4139,12 +4145,6 @@ var GaiaFurnace = class extends Machine {
     const cookPercent = Math.floor(this.timers.cook.value / this.timers.cook.max * 100);
     this.setItemDisplay(13, "\xA7eRefining Progress", [`\xA77Status: ${cookPercent}%`], profile);
     this.setItemDisplay(4, "\xA7l\xA7bGaia Furnace", ["\xA77Smelting"], profile);
-    for (let i = 0; i < this.inventory.size; i++) {
-      const item = this.inventory.getItem(i);
-      if (item && item.typeId === "gaiadimension:placeholder_invisible") {
-        this.setItemDisplay(i, "\xA78Gaia Furnace", [], profile);
-      }
-    }
   }
   canProcess() {
     const inputItem = this.inventory.getItem(2);

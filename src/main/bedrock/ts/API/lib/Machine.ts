@@ -678,7 +678,7 @@ export class Machine {
         for (let slot = 0; slot < this.inventory.size; slot++) {
             if (userSlots.includes(slot)) continue;
 
-            let desiredId = 'gaiadimension:placeholder_invisible';
+            let desiredId: string | undefined = undefined;
             
             if (uiProfile.staticUI && uiProfile.staticUI[slot]) {
                 desiredId = uiProfile.staticUI[slot];
@@ -706,6 +706,16 @@ export class Machine {
             if (isAnimatedAndRunning) continue;
 
             const currentItem = this.inventory.getItem(slot);
+
+            if (desiredId === undefined) {
+                if (currentItem && currentItem.typeId !== "minecraft:air") {
+                    this.ejectItem(currentItem);
+                    try {
+                        this.inventory.setItem(slot, undefined);
+                    } catch (e) {}
+                }
+                continue;
+            }
 
             if (!currentItem || currentItem.typeId !== desiredId) {
                 if (currentItem && currentItem.typeId !== "minecraft:air") {
