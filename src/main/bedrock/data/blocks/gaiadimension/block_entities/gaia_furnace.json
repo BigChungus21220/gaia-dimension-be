@@ -87,6 +87,18 @@
                 "condition": "q.block_state('gaiadimension:furnace_on') == true",
                 "components": {
                     "minecraft:material_instances": {
+                        "*": {
+                            "texture": "gaiadimension:gaia_stone_furnace_side",
+                            "render_method": "opaque"
+                        },
+                        "up": {
+                            "texture": "gaiadimension:gaia_stone_furnace_top",
+                            "render_method": "opaque"
+                        },
+                        "down": {
+                            "texture": "gaiadimension:gaia_stone_furnace_top",
+                            "render_method": "opaque"
+                        },
                         "north": {
                             "texture": "gaiadimension:gaia_stone_furnace_front_lit",
                             "render_method": "opaque"

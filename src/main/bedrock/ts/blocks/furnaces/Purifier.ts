@@ -130,11 +130,11 @@ export class Purifier extends Machine {
             : 0;
         this.setUiDisplay(6, `§6Fuel: ${Math.ceil(burnPercent * 100)}%`, Math.ceil(burnPercent * 20));
 
-        // Cook progress (slot 7) - vertical, max 24px
+        // Cook progress (slot 7) - horizontal, max 47px
         const cookPercent = this.timers.cook.max > 0
             ? this.timers.cook.value / this.timers.cook.max
             : 0;
-        this.setUiDisplay(7, `§eProgress: ${Math.floor(cookPercent * 100)}%`, Math.floor(cookPercent * 24));
+        this.setUiDisplay(7, `§eProgress: ${Math.floor(cookPercent * 100)}%`, Math.floor(cookPercent * 47));
     }
 
     canProcess(): boolean {

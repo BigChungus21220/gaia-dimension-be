@@ -4583,7 +4583,7 @@ var Purifier = class _Purifier extends Machine {
     const burnPercent = this.timers.max_burn.value > 0 ? this.timers.burn.value / this.timers.max_burn.value : 0;
     this.setUiDisplay(6, `\xA76Fuel: ${Math.ceil(burnPercent * 100)}%`, Math.ceil(burnPercent * 20));
     const cookPercent = this.timers.cook.max > 0 ? this.timers.cook.value / this.timers.cook.max : 0;
-    this.setUiDisplay(7, `\xA7eProgress: ${Math.floor(cookPercent * 100)}%`, Math.floor(cookPercent * 24));
+    this.setUiDisplay(7, `\xA7eProgress: ${Math.floor(cookPercent * 100)}%`, Math.floor(cookPercent * 47));
   }
   canProcess() {
     const inputItem = this.inventory.getItem(0);

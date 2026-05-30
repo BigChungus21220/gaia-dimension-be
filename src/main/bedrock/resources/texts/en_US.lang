@@ -725,6 +725,10 @@ tile.gaiadimension:golden_forest_gilded_grass.name=Golden Forest Gilded Grass
 tile.gaiadimension:golden_hills_gilded_grass.name=Golden Hills Gilded Grass
 tile.gaiadimension:golden_plains_gilded_grass.name=Golden Plains Gilded Grass
 tile.gaiadimension:golden_marsh_gilded_grass.name=Golden Marsh Gilded Grass
+
+tile.gaiadimension:augmenter.name=Augmenter
+tile.gaiadimension:steel_furnace.name=Steel Furnace
+
 item.gaiadimension:magic_staff_electric_basic_force.name=Magic Staff
 item.gaiadimension:magic_staff_electric_blast_force.name=Magic Staff
 item.gaiadimension:magic_staff_electric_burst_force.name=Magic Staff

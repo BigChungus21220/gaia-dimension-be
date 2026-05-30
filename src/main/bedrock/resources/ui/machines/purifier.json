@@ -64,7 +64,7 @@
 			},
 			{
 				"cook@purifier_ui.cook_bar": {
-					"$index": 6,
+					"$index": 7,
 					"anchor_from": "top_left",
 					"anchor_to": "top_left",
 					"offset": [64, 81]
@@ -72,7 +72,7 @@
 			},
 			{
 				"burn@purifier_ui.burn_bar": {
-					"$index": 7,
+					"$index": 6,
 					"anchor_from": "top_left",
 					"anchor_to": "top_left",
 					"offset": [77, 61]
@@ -144,7 +144,7 @@
 								"collection_index": "$index",
 								"anchor_from": "top_left",
 								"anchor_to": "top_left",
-								"size": [0, 1],
+								"size": [1, 0],
 								"controls": [
 									{
 										"clip": {
@@ -155,7 +155,7 @@
 											"anchor_to": "top_left",
 											"bindings": "$use_durability",
 											"$source": "#data",
-											"$target": "#size_binding_y",
+											"$target": "#size_binding_x",
 											"$visible_if": "(not (#data = 1000))",
 											"controls": [
 												{

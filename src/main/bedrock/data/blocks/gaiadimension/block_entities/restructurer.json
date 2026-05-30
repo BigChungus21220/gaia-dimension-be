@@ -39,11 +39,11 @@
                     "render_method": "opaque"
                 },
                 "up": {
-                    "texture": "gaiadimension:gaia_stone_bricks",
+                    "texture": "gaiadimension:restructurer_side",
                     "render_method": "opaque"
                 },
                 "down": {
-                    "texture": "gaiadimension:gaia_stone_bricks",
+                    "texture": "gaiadimension:restructurer_side",
                     "render_method": "opaque"
                 },
                 "north": {
@@ -84,6 +84,18 @@
                 "condition": "q.block_state('gaiadimension:lit') == true",
                 "components": {
                     "minecraft:material_instances": {
+                        "*": {
+                            "texture": "gaiadimension:restructurer_side",
+                            "render_method": "opaque"
+                        },
+                        "up": {
+                            "texture": "gaiadimension:restructurer_side",
+                            "render_method": "opaque"
+                        },
+                        "down": {
+                            "texture": "gaiadimension:restructurer_side",
+                            "render_method": "opaque"
+                        },
                         "north": {
                             "texture": "gaiadimension:restructurer_front_lit",
                             "render_method": "opaque"
