@@ -3838,7 +3838,6 @@ var BlockEntityManager = class {
       const z = Math.floor(block.location.z);
       const locKey = `${x},${y},${z}`;
       if (this.locationToEntityId.has(locKey)) {
-        console.warn(`[BlockEntity] Skipping spawn at ${locKey}: Entity already registered.`);
         return;
       }
       this.pendingSpawns.add(locKey);
