@@ -1,0 +1,447 @@
+{
+    "format_version": "1.21.70",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gaiadimension:aura_shoot",
+            "menu_category": {
+                "category": "nature"
+            },
+            "states": {
+                "gaiadimension:is_top": [
+                    true,
+                    false
+                ],
+                "gaiadimension:age": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
+                "gaiadimension:color": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
+                ]
+            },
+            "traits": {
+                "minecraft:placement_position": {
+                    "enabled_states": [
+                        "minecraft:block_face"
+                    ]
+                }
+            }
+        },
+        "components": {
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 0
+            },
+            "minecraft:geometry": "geometry.rosa_gd.aura_shoot_top",
+            "minecraft:collision_box": {
+                "origin": [
+                    -2,
+                    0,
+                    -2
+                ],
+                "size": [
+                    4,
+                    16,
+                    4
+                ]
+            },
+            "minecraft:selection_box": {
+                "origin": [
+                    -2,
+                    0,
+                    -2
+                ],
+                "size": [
+                    4,
+                    16,
+                    4
+                ]
+            },
+            "minecraft:tick": {
+                "interval_range": [
+                    1200,
+                    2400
+                ],
+                "looping": true
+            },
+            "minecraft:custom_components": [
+                "gaiadimension:aura_shoot"
+            ],
+            "minecraft:map_color": "#00FF00",
+            "minecraft:light_dampening": 0
+        },
+        "permutations": [
+            {
+                "condition": "q.block_state('gaiadimension:color') == 0 && q.block_state('gaiadimension:is_top')",
+                "components": {
+                    "minecraft:geometry": "geometry.rosa_gd.aura_shoot_top",
+                    "minecraft:material_instances": {
+                        "aura_shoot": {
+                            "texture": "gaiadimension:aura_shoot_0",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        },
+                        "aura_shoot_tip": {
+                            "texture": "gaiadimension:aura_shoot_tip_0",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:color') == 0 && !q.block_state('gaiadimension:is_top')",
+                "components": {
+                    "minecraft:geometry": "geometry.rosa_gd.aura_shoot",
+                    "minecraft:material_instances": {
+                        "aura_shoot": {
+                            "texture": "gaiadimension:aura_shoot_0",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        },
+                        "aura_shoot_tip": {
+                            "texture": "gaiadimension:aura_shoot_tip_0",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:color') == 1 && q.block_state('gaiadimension:is_top')",
+                "components": {
+                    "minecraft:geometry": "geometry.rosa_gd.aura_shoot_top",
+                    "minecraft:material_instances": {
+                        "aura_shoot": {
+                            "texture": "gaiadimension:aura_shoot_1",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        },
+                        "aura_shoot_tip": {
+                            "texture": "gaiadimension:aura_shoot_tip_1",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:color') == 1 && !q.block_state('gaiadimension:is_top')",
+                "components": {
+                    "minecraft:geometry": "geometry.rosa_gd.aura_shoot",
+                    "minecraft:material_instances": {
+                        "aura_shoot": {
+                            "texture": "gaiadimension:aura_shoot_1",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        },
+                        "aura_shoot_tip": {
+                            "texture": "gaiadimension:aura_shoot_tip_1",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:color') == 2 && q.block_state('gaiadimension:is_top')",
+                "components": {
+                    "minecraft:geometry": "geometry.rosa_gd.aura_shoot_top",
+                    "minecraft:material_instances": {
+                        "aura_shoot": {
+                            "texture": "gaiadimension:aura_shoot_2",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        },
+                        "aura_shoot_tip": {
+                            "texture": "gaiadimension:aura_shoot_tip_2",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:color') == 2 && !q.block_state('gaiadimension:is_top')",
+                "components": {
+                    "minecraft:geometry": "geometry.rosa_gd.aura_shoot",
+                    "minecraft:material_instances": {
+                        "aura_shoot": {
+                            "texture": "gaiadimension:aura_shoot_2",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        },
+                        "aura_shoot_tip": {
+                            "texture": "gaiadimension:aura_shoot_tip_2",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:color') == 3 && q.block_state('gaiadimension:is_top')",
+                "components": {
+                    "minecraft:geometry": "geometry.rosa_gd.aura_shoot_top",
+                    "minecraft:material_instances": {
+                        "aura_shoot": {
+                            "texture": "gaiadimension:aura_shoot_3",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        },
+                        "aura_shoot_tip": {
+                            "texture": "gaiadimension:aura_shoot_tip_3",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:color') == 3 && !q.block_state('gaiadimension:is_top')",
+                "components": {
+                    "minecraft:geometry": "geometry.rosa_gd.aura_shoot",
+                    "minecraft:material_instances": {
+                        "aura_shoot": {
+                            "texture": "gaiadimension:aura_shoot_3",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        },
+                        "aura_shoot_tip": {
+                            "texture": "gaiadimension:aura_shoot_tip_3",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:color') == 4 && q.block_state('gaiadimension:is_top')",
+                "components": {
+                    "minecraft:geometry": "geometry.rosa_gd.aura_shoot_top",
+                    "minecraft:material_instances": {
+                        "aura_shoot": {
+                            "texture": "gaiadimension:aura_shoot_4",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        },
+                        "aura_shoot_tip": {
+                            "texture": "gaiadimension:aura_shoot_tip_4",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:color') == 4 && !q.block_state('gaiadimension:is_top')",
+                "components": {
+                    "minecraft:geometry": "geometry.rosa_gd.aura_shoot",
+                    "minecraft:material_instances": {
+                        "aura_shoot": {
+                            "texture": "gaiadimension:aura_shoot_4",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        },
+                        "aura_shoot_tip": {
+                            "texture": "gaiadimension:aura_shoot_tip_4",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:color') == 5 && q.block_state('gaiadimension:is_top')",
+                "components": {
+                    "minecraft:geometry": "geometry.rosa_gd.aura_shoot_top",
+                    "minecraft:material_instances": {
+                        "aura_shoot": {
+                            "texture": "gaiadimension:aura_shoot_5",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        },
+                        "aura_shoot_tip": {
+                            "texture": "gaiadimension:aura_shoot_tip_5",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:color') == 5 && !q.block_state('gaiadimension:is_top')",
+                "components": {
+                    "minecraft:geometry": "geometry.rosa_gd.aura_shoot",
+                    "minecraft:material_instances": {
+                        "aura_shoot": {
+                            "texture": "gaiadimension:aura_shoot_5",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        },
+                        "aura_shoot_tip": {
+                            "texture": "gaiadimension:aura_shoot_tip_5",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:color') == 6 && q.block_state('gaiadimension:is_top')",
+                "components": {
+                    "minecraft:geometry": "geometry.rosa_gd.aura_shoot_top",
+                    "minecraft:material_instances": {
+                        "aura_shoot": {
+                            "texture": "gaiadimension:aura_shoot_6",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        },
+                        "aura_shoot_tip": {
+                            "texture": "gaiadimension:aura_shoot_tip_6",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:color') == 6 && !q.block_state('gaiadimension:is_top')",
+                "components": {
+                    "minecraft:geometry": "geometry.rosa_gd.aura_shoot",
+                    "minecraft:material_instances": {
+                        "aura_shoot": {
+                            "texture": "gaiadimension:aura_shoot_6",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        },
+                        "aura_shoot_tip": {
+                            "texture": "gaiadimension:aura_shoot_tip_6",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:color') == 7 && q.block_state('gaiadimension:is_top')",
+                "components": {
+                    "minecraft:geometry": "geometry.rosa_gd.aura_shoot_top",
+                    "minecraft:material_instances": {
+                        "aura_shoot": {
+                            "texture": "gaiadimension:aura_shoot_7",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        },
+                        "aura_shoot_tip": {
+                            "texture": "gaiadimension:aura_shoot_tip_7",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:color') == 7 && !q.block_state('gaiadimension:is_top')",
+                "components": {
+                    "minecraft:geometry": "geometry.rosa_gd.aura_shoot",
+                    "minecraft:material_instances": {
+                        "aura_shoot": {
+                            "texture": "gaiadimension:aura_shoot_7",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        },
+                        "aura_shoot_tip": {
+                            "texture": "gaiadimension:aura_shoot_tip_7",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:color') == 8 && q.block_state('gaiadimension:is_top')",
+                "components": {
+                    "minecraft:geometry": "geometry.rosa_gd.aura_shoot_top",
+                    "minecraft:material_instances": {
+                        "aura_shoot": {
+                            "texture": "gaiadimension:aura_shoot_8",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        },
+                        "aura_shoot_tip": {
+                            "texture": "gaiadimension:aura_shoot_tip_8",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        }
+                    }
+                }
+            },
+            {
+                "condition": "q.block_state('gaiadimension:color') == 8 && !q.block_state('gaiadimension:is_top')",
+                "components": {
+                    "minecraft:geometry": "geometry.rosa_gd.aura_shoot",
+                    "minecraft:material_instances": {
+                        "aura_shoot": {
+                            "texture": "gaiadimension:aura_shoot_8",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        },
+                        "aura_shoot_tip": {
+                            "texture": "gaiadimension:aura_shoot_tip_8",
+                            "render_method": "alpha_test",
+                            "face_dimming": false,
+                            "ambient_occlusion": false
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

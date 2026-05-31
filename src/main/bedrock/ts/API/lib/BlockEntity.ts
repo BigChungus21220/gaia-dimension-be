@@ -300,7 +300,20 @@ class BlockEntityManager {
 
         if (machineInstance.entity && machineInstance.entity.isValid) {
             try {
-                machineInstance.entity.remove();
+                // Physical sweep for ANY leftover entities at this block location
+                const center = { x: machineInstance.block.x + 0.5, y: machineInstance.block.y + 0.5, z: machineInstance.block.z + 0.5 };
+                const orphans = machineInstance.block.dimension.getEntities({
+                    location: center,
+                    maxDistance: 0.8
+                });
+                
+                for (const orphan of orphans) {
+                    if (orphan.typeId.includes("block_entity") || orphan.typeId.includes("storage_crate")) {
+                        try {
+                            if (orphan.isValid) orphan.remove();
+                        } catch(e) {}
+                    }
+                }
             } catch (e) {
                 system.run(() => {
                     try {
@@ -359,6 +372,15 @@ class BlockEntityManager {
                                 // Bind to existing
                                 entity = existingEntities[0];
                                 // console.warn(`[BlockEntity] Found physical entity ${entity.id}, rebinding...`);
+
+                                // Clean up any duplicate orphan entities using remove()
+                                for (let i = 1; i < existingEntities.length; i++) {
+                                    try {
+                                        if (existingEntities[i].isValid) {
+                                            existingEntities[i].remove();
+                                        }
+                                    } catch (e) {}
+                                }
                             } else {
                                 // Spawn new
                                 entity = blockHit.block.dimension.spawnEntity(entityTypeId, center);

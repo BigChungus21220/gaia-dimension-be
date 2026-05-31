@@ -33,6 +33,7 @@ import { registerAugmenterComponent } from "./blocks/augmenter/Augmenter.js";
 import { registerGlitteringFireComponent } from "./blocks/glittering_fire.js";
 import { registerCrudeStorageCrateComponent } from "./blocks/crates/crude_storage_crate.js";
 import { registerMegaStorageCrateComponent } from "./blocks/crates/mega_storage_crate.js";
+import { registerAuraShootComponent } from "./blocks/flora/AuraShoot.js";
 import { initializeLightMixin } from "./mixins/LightMixin.js";
 import { initializeDestructionHandlers } from "./systems/destruction_handler.js";
 import { initializeEventManager } from "./systems/event_manager.js";
@@ -115,6 +116,7 @@ system.beforeEvents.startup.subscribe((event: StartupEvent) => {
     registerGlitteringFireComponent();
     registerCrudeStorageCrateComponent({ blockComponentRegistry });
     registerMegaStorageCrateComponent({ blockComponentRegistry });
+    registerAuraShootComponent({ blockComponentRegistry });
     registerFluidComponent({ blockComponentRegistry });
     registerFireStarterComponent({ itemComponentRegistry });
     registerMagicStaffComponent({ itemComponentRegistry });

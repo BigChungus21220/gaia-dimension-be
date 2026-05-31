@@ -2274,6 +2274,60 @@
         },
         "gaia_gilded_grass_side": {
             "textures": "textures/gaiadimension/gen/gaia_grass/gaia_gilded_grass_side"
+        },
+        "gaiadimension:aura_shoot_0": {
+            "textures": "textures/gaiadimension/androsa/blocks/aura_shoot_0"
+        },
+        "gaiadimension:aura_shoot_tip_0": {
+            "textures": "textures/gaiadimension/androsa/blocks/aura_shoot_tip_0"
+        },
+        "gaiadimension:aura_shoot_1": {
+            "textures": "textures/gaiadimension/androsa/blocks/aura_shoot_1"
+        },
+        "gaiadimension:aura_shoot_tip_1": {
+            "textures": "textures/gaiadimension/androsa/blocks/aura_shoot_tip_1"
+        },
+        "gaiadimension:aura_shoot_2": {
+            "textures": "textures/gaiadimension/androsa/blocks/aura_shoot_2"
+        },
+        "gaiadimension:aura_shoot_tip_2": {
+            "textures": "textures/gaiadimension/androsa/blocks/aura_shoot_tip_2"
+        },
+        "gaiadimension:aura_shoot_3": {
+            "textures": "textures/gaiadimension/androsa/blocks/aura_shoot_3"
+        },
+        "gaiadimension:aura_shoot_tip_3": {
+            "textures": "textures/gaiadimension/androsa/blocks/aura_shoot_tip_3"
+        },
+        "gaiadimension:aura_shoot_4": {
+            "textures": "textures/gaiadimension/androsa/blocks/aura_shoot_4"
+        },
+        "gaiadimension:aura_shoot_tip_4": {
+            "textures": "textures/gaiadimension/androsa/blocks/aura_shoot_tip_4"
+        },
+        "gaiadimension:aura_shoot_5": {
+            "textures": "textures/gaiadimension/androsa/blocks/aura_shoot_5"
+        },
+        "gaiadimension:aura_shoot_tip_5": {
+            "textures": "textures/gaiadimension/androsa/blocks/aura_shoot_tip_5"
+        },
+        "gaiadimension:aura_shoot_6": {
+            "textures": "textures/gaiadimension/androsa/blocks/aura_shoot_6"
+        },
+        "gaiadimension:aura_shoot_tip_6": {
+            "textures": "textures/gaiadimension/androsa/blocks/aura_shoot_tip_6"
+        },
+        "gaiadimension:aura_shoot_7": {
+            "textures": "textures/gaiadimension/androsa/blocks/aura_shoot_7"
+        },
+        "gaiadimension:aura_shoot_tip_7": {
+            "textures": "textures/gaiadimension/androsa/blocks/aura_shoot_tip_7"
+        },
+        "gaiadimension:aura_shoot_8": {
+            "textures": "textures/gaiadimension/androsa/blocks/aura_shoot_8"
+        },
+        "gaiadimension:aura_shoot_tip_8": {
+            "textures": "textures/gaiadimension/androsa/blocks/aura_shoot_tip_8"
         }
     }
 }

@@ -3904,7 +3904,19 @@ var BlockEntityManager = class {
     }
     if (machineInstance.entity && machineInstance.entity.isValid) {
       try {
-        machineInstance.entity.remove();
+        const center = { x: machineInstance.block.x + 0.5, y: machineInstance.block.y + 0.5, z: machineInstance.block.z + 0.5 };
+        const orphans = machineInstance.block.dimension.getEntities({
+          location: center,
+          maxDistance: 0.8
+        });
+        for (const orphan of orphans) {
+          if (orphan.typeId.includes("block_entity") || orphan.typeId.includes("storage_crate")) {
+            try {
+              if (orphan.isValid) orphan.remove();
+            } catch (e) {
+            }
+          }
+        }
       } catch (e) {
         system18.run(() => {
           try {
@@ -3948,6 +3960,14 @@ var BlockEntityManager = class {
               let entity;
               if (existingEntities.length > 0) {
                 entity = existingEntities[0];
+                for (let i = 1; i < existingEntities.length; i++) {
+                  try {
+                    if (existingEntities[i].isValid) {
+                      existingEntities[i].remove();
+                    }
+                  } catch (e) {
+                  }
+                }
               } else {
                 entity = blockHit.block.dimension.spawnEntity(entityTypeId, center);
                 entity.setDynamicProperty("blockLocation", JSON.stringify(blockHit.block.location));
@@ -5680,6 +5700,66 @@ function registerMegaStorageCrateComponent({ blockComponentRegistry }) {
       }
     }
   });
+}
+
+// src/main/bedrock/ts/blocks/flora/AuraShoot.ts
+var AuraShootComponent = {
+  onRandomTick(event) {
+    const { block } = event;
+    const blockAbove = block.above();
+    if (!blockAbove || !blockAbove.isAir) {
+      return;
+    }
+    let currentBlock = block;
+    let count = 1;
+    while (true) {
+      const blockBelow = currentBlock.below();
+      if (blockBelow && blockBelow.typeId === "gaiadimension:aura_shoot") {
+        count++;
+        currentBlock = blockBelow;
+      } else {
+        break;
+      }
+    }
+    if (count < 15) {
+      const permutation = block.permutation;
+      let age = permutation.getState("gaiadimension:age");
+      if (age === 5) {
+        blockAbove.setType("gaiadimension:aura_shoot");
+        const loc = blockAbove.location;
+        const locationColor = Math.abs(loc.x % 5) + Math.abs(loc.z % 5);
+        const newPerm = blockAbove.permutation.withState("gaiadimension:is_top", true).withState("gaiadimension:age", 0).withState("gaiadimension:color", locationColor);
+        blockAbove.setPermutation(newPerm);
+        const currentPerm = permutation.withState("gaiadimension:age", 0).withState("gaiadimension:is_top", false);
+        block.setPermutation(currentPerm);
+      } else {
+        const currentPerm = permutation.withState("gaiadimension:age", age + 1);
+        block.setPermutation(currentPerm);
+      }
+    }
+  },
+  onPlace(event) {
+    const { block } = event;
+    const loc = block.location;
+    const locationColor = Math.abs(loc.x % 5) + Math.abs(loc.z % 5);
+    block.setPermutation(block.permutation.withState("gaiadimension:color", locationColor));
+    const blockBelow = block.below();
+    if (blockBelow && blockBelow.typeId === "gaiadimension:aura_shoot") {
+      const currentPerm = blockBelow.permutation.withState("gaiadimension:is_top", false);
+      blockBelow.setPermutation(currentPerm);
+    }
+  },
+  onPlayerDestroy(event) {
+    const { block } = event;
+    const blockBelow = block.below();
+    if (blockBelow && blockBelow.typeId === "gaiadimension:aura_shoot") {
+      const currentPerm = blockBelow.permutation.withState("gaiadimension:is_top", true);
+      blockBelow.setPermutation(currentPerm);
+    }
+  }
+};
+function registerAuraShootComponent({ blockComponentRegistry }) {
+  blockComponentRegistry.registerCustomComponent("gaiadimension:aura_shoot", AuraShootComponent);
 }
 
 // src/main/bedrock/ts/mixins/LightMixin.ts
@@ -18094,6 +18174,7 @@ system43.beforeEvents.startup.subscribe((event) => {
   registerGlitteringFireComponent();
   registerCrudeStorageCrateComponent({ blockComponentRegistry });
   registerMegaStorageCrateComponent({ blockComponentRegistry });
+  registerAuraShootComponent({ blockComponentRegistry });
   registerFluidComponent({ blockComponentRegistry });
   registerFireStarterComponent({ itemComponentRegistry });
   registerMagicStaffComponent({ itemComponentRegistry });
