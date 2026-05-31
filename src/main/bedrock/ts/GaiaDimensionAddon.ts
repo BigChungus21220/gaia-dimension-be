@@ -45,6 +45,7 @@ import { registerFireStarterComponent } from "./items/FireStarter.js";
 import { registerDestructionCommands, registerRealmDimensions, initDestroyedDimensionGuard, REALM_COUNT, REALM_PREFIX } from "./systems/DimensionDestruction.js";
 import { registerDimension } from "./utils.js";
 import { registerMagicStaffComponent } from "./items/MagicStaff.js";
+import "./items/GemstonePouch.js";
 import { initializeMagicStaffBehaviors } from "./systems/MagicStaffBehaviors.js";
 import { initializeGlitterGrassSync } from "./blocks/GlitterGrassSync.js";
 import "./world/worldgen/core/index.js";

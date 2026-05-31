@@ -1,6 +1,6 @@
 // src/main/bedrock/ts/GaiaDimensionAddon.ts
 import {
-  system as system41
+  system as system42
 } from "@minecraft/server";
 
 // src/main/bedrock/ts/blocks/leaves.ts
@@ -9554,8 +9554,231 @@ function handleForceThrow(player) {
   player.dimension.playSound("random.explode", player.location, { volume: 0.3 });
 }
 
+// src/main/bedrock/ts/items/GemstonePouch.ts
+import { world as world25, system as system31, ItemStack as ItemStack15, EquipmentSlot as EquipmentSlot6 } from "@minecraft/server";
+var UI_ROUTING_NAME = `\xA7${"gem_pouch".split("").join("\xA7")}`;
+var ALLOWED_GEMS = /* @__PURE__ */ new Set([
+  "gaiadimension:sugilite",
+  "gaiadimension:hematite",
+  "gaiadimension:cinnabar",
+  "gaiadimension:labradorite",
+  "gaiadimension:moonstone",
+  "gaiadimension:red_opal",
+  "gaiadimension:blue_opal",
+  "gaiadimension:green_opal",
+  "gaiadimension:white_opal",
+  "gaiadimension:stibnite",
+  "gaiadimension:proustite",
+  "gaiadimension:euclase",
+  "gaiadimension:albite",
+  "gaiadimension:carnelian",
+  "gaiadimension:benitoite",
+  "gaiadimension:diopside",
+  "gaiadimension:goshenite",
+  "gaiadimension:pyrite",
+  "gaiadimension:tektite",
+  "gaiadimension:goldstone",
+  "gaiadimension:aura_cluster",
+  "gaiadimension:bismuth_crystal",
+  "gaiadimension:opalite",
+  "gaiadimension:celestine"
+]);
+var MAX_STACK_PER_SLOT = 16;
+var POUCH_ENTITY_ID = "gaiadimension:gem_pouch_container";
+var activePouches = /* @__PURE__ */ new Map();
+var wasCrouching = /* @__PURE__ */ new Set();
+var spawnCooldown = /* @__PURE__ */ new Map();
+function getPouchId(itemStack) {
+  const lore = itemStack.getLore();
+  for (const line of lore) {
+    if (line.startsWith("\xA7r\xA70pouch:")) {
+      return line.substring("\xA7r\xA70pouch:".length);
+    }
+  }
+  const id = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+  const newLore = [...lore, `\xA7r\xA70pouch:${id}`];
+  itemStack.setLore(newLore);
+  return id;
+}
+function savePouchContents(pouchId, container) {
+  const slots = [];
+  for (let i = 0; i < container.size; i++) {
+    const item = container.getItem(i);
+    if (item) {
+      slots.push({ slot: i, typeId: item.typeId, amount: item.amount });
+    }
+  }
+  world25.setDynamicProperty(`pouch:${pouchId}`, JSON.stringify(slots));
+}
+function loadPouchContents(pouchId, container) {
+  const data = world25.getDynamicProperty(`pouch:${pouchId}`);
+  if (!data) return;
+  try {
+    const slots = JSON.parse(data);
+    for (const slot of slots) {
+      try {
+        container.setItem(slot.slot, new ItemStack15(slot.typeId, slot.amount));
+      } catch (e) {
+      }
+    }
+  } catch (e) {
+    console.warn(`[GemPouch] Failed to load pouch ${pouchId}: ${e}`);
+  }
+}
+function cleanupPouch(playerId) {
+  const pouch = activePouches.get(playerId);
+  if (!pouch) return;
+  try {
+    const invComp = pouch.entity.getComponent("minecraft:inventory");
+    if (invComp && invComp.container) {
+      savePouchContents(pouch.pouchId, invComp.container);
+    }
+    if (pouch.entity.isValid) pouch.entity.remove();
+  } catch (e) {
+    console.warn(`[GemPouch] Error cleaning up pouch entity: ${e}`);
+  }
+  activePouches.delete(playerId);
+}
+system31.runInterval(() => {
+  const currentTick = system31.currentTick || 0;
+  for (const player of world25.getAllPlayers()) {
+    try {
+      const isCrouching = player.isSneaking;
+      const pid = player.id;
+      const wasAlready = wasCrouching.has(pid);
+      if (isCrouching && !wasAlready) {
+        wasCrouching.add(pid);
+        const lastSpawn = spawnCooldown.get(pid) || 0;
+        if (currentTick - lastSpawn < 40) continue;
+        if (activePouches.has(pid)) continue;
+        const equippable = player.getComponent("minecraft:equippable");
+        if (!equippable) continue;
+        const mainhand = equippable.getEquipment(EquipmentSlot6.Mainhand);
+        if (!mainhand || mainhand.typeId !== "gaiadimension:gem_pouch") continue;
+        const pouchId = getPouchId(mainhand);
+        equippable.setEquipment(EquipmentSlot6.Mainhand, mainhand);
+        spawnCooldown.set(pid, currentTick);
+        const playerRef = player;
+        system31.run(() => {
+          try {
+            if (!playerRef.isValid) return;
+            const loc = playerRef.location;
+            const entity = playerRef.dimension.spawnEntity(POUCH_ENTITY_ID, {
+              x: loc.x,
+              y: loc.y,
+              z: loc.z
+            });
+            entity.nameTag = UI_ROUTING_NAME;
+            entity.setDynamicProperty("pouchId", pouchId);
+            entity.setDynamicProperty("ownerId", pid);
+            const invComp = entity.getComponent("minecraft:inventory");
+            if (invComp && invComp.container) {
+              loadPouchContents(pouchId, invComp.container);
+            }
+            activePouches.set(pid, { entity, pouchId });
+            console.warn(`[GemPouch] Spawned pouch entity for ${pid}, nameTag=${entity.nameTag}`);
+          } catch (e) {
+            console.warn(`[GemPouch] Failed to spawn: ${e}`);
+          }
+        });
+      } else if (!isCrouching && wasAlready) {
+        wasCrouching.delete(pid);
+      }
+    } catch (e) {
+    }
+  }
+}, 2);
+system31.runInterval(() => {
+  for (const [playerId, pouch] of activePouches) {
+    const { entity, pouchId } = pouch;
+    if (!entity || !entity.isValid) {
+      activePouches.delete(playerId);
+      continue;
+    }
+    let playerNearby = false;
+    try {
+      for (const player of world25.getAllPlayers()) {
+        if (player.id === playerId) {
+          const dx = player.location.x - entity.location.x;
+          const dy = player.location.y - entity.location.y;
+          const dz = player.location.z - entity.location.z;
+          if (dx * dx + dy * dy + dz * dz < 64) {
+            playerNearby = true;
+          }
+          break;
+        }
+      }
+    } catch (e) {
+    }
+    if (!playerNearby) {
+      cleanupPouch(playerId);
+    }
+  }
+}, 20);
+system31.runInterval(() => {
+  for (const [playerId, pouch] of activePouches) {
+    const { entity } = pouch;
+    if (!entity || !entity.isValid) continue;
+    try {
+      const invComp = entity.getComponent("minecraft:inventory");
+      if (!invComp || !invComp.container) continue;
+      const container = invComp.container;
+      for (let i = 0; i < container.size; i++) {
+        const item = container.getItem(i);
+        if (!item) continue;
+        if (!ALLOWED_GEMS.has(item.typeId)) {
+          container.setItem(i, void 0);
+          try {
+            for (const player of world25.getAllPlayers()) {
+              if (player.id === playerId) {
+                const pInv = player.getComponent("minecraft:inventory")?.container;
+                if (pInv) {
+                  for (let j = 0; j < pInv.size; j++) {
+                    if (!pInv.getItem(j)) {
+                      pInv.setItem(j, item);
+                      break;
+                    }
+                  }
+                }
+                break;
+              }
+            }
+          } catch (e) {
+          }
+        }
+        if (item.amount > MAX_STACK_PER_SLOT) {
+          const overflow = item.amount - MAX_STACK_PER_SLOT;
+          container.setItem(i, new ItemStack15(item.typeId, MAX_STACK_PER_SLOT));
+          try {
+            const overflowItem = new ItemStack15(item.typeId, overflow);
+            for (const player of world25.getAllPlayers()) {
+              if (player.id === playerId) {
+                const pInv = player.getComponent("minecraft:inventory")?.container;
+                if (pInv) {
+                  for (let j = 0; j < pInv.size; j++) {
+                    if (!pInv.getItem(j)) {
+                      pInv.setItem(j, overflowItem);
+                      break;
+                    }
+                  }
+                }
+                break;
+              }
+            }
+          } catch (e) {
+          }
+        }
+      }
+    } catch (e) {
+    }
+  }
+}, 5);
+world25.afterEvents.playerLeave?.subscribe((event) => {
+  cleanupPouch(event.playerId);
+});
+
 // src/main/bedrock/ts/systems/MagicStaffBehaviors.ts
-import { world as world25, system as system31, MolangVariableMap, Direction as Direction3 } from "@minecraft/server";
+import { world as world26, system as system32, MolangVariableMap, Direction as Direction3 } from "@minecraft/server";
 var projectileCache = /* @__PURE__ */ new Map();
 var activeProjectiles = /* @__PURE__ */ new Set();
 var ELEMENT_COLORS = {
@@ -9568,15 +9791,15 @@ var ELEMENT_COLORS = {
   [6 /* ENERGY */]: { r: 0.6, g: 0.4, b: 0.8 }
 };
 function initializeMagicStaffBehaviors() {
-  world25.afterEvents.entitySpawn.subscribe((event) => {
+  world26.afterEvents.entitySpawn.subscribe((event) => {
     if (event.entity.typeId === "gaiadimension:staff_projectile") {
       activeProjectiles.add(event.entity.id);
     }
   });
-  system31.runInterval(() => {
+  system32.runInterval(() => {
     if (activeProjectiles.size === 0) return;
     for (const id of activeProjectiles) {
-      const entity = world25.getEntity(id);
+      const entity = world26.getEntity(id);
       if (!entity || !entity.isValid) {
         activeProjectiles.delete(id);
         continue;
@@ -9596,15 +9819,15 @@ function initializeMagicStaffBehaviors() {
         activeProjectiles.delete(id);
       }
     }
-    if (system31.currentTick % 200 === 0) {
+    if (system32.currentTick % 200 === 0) {
       for (const id of projectileCache.keys()) {
-        if (!activeProjectiles.has(id) && !world25.getEntity(id)) {
+        if (!activeProjectiles.has(id) && !world26.getEntity(id)) {
           projectileCache.delete(id);
         }
       }
     }
   }, 1);
-  world25.afterEvents.projectileHitBlock.subscribe((event) => {
+  world26.afterEvents.projectileHitBlock.subscribe((event) => {
     if (event.projectile.typeId !== "gaiadimension:staff_projectile") return;
     const data = projectileCache.get(event.projectile.id);
     if (data) {
@@ -9613,7 +9836,7 @@ function initializeMagicStaffBehaviors() {
       projectileCache.delete(event.projectile.id);
     }
   });
-  world25.afterEvents.projectileHitEntity.subscribe((event) => {
+  world26.afterEvents.projectileHitEntity.subscribe((event) => {
     if (event.projectile.typeId !== "gaiadimension:staff_projectile") return;
     const data = projectileCache.get(event.projectile.id);
     if (data) {
@@ -9695,7 +9918,7 @@ function handleHit(projectile, data, location, face) {
 }
 
 // src/main/bedrock/ts/blocks/GlitterGrassSync.ts
-import { world as world26, system as system32, ItemStack as ItemStack15 } from "@minecraft/server";
+import { world as world27, system as system33, ItemStack as ItemStack16 } from "@minecraft/server";
 var GLITTER_GRASS_TYPES = [
   "gaiadimension:green_glitter_grass",
   "gaiadimension:pink_glitter_grass",
@@ -9723,19 +9946,19 @@ function syncInventory(player) {
   for (let i = 0; i < inventory.size; i++) {
     const item = inventory.getItem(i);
     if (item && GLITTER_GRASS_TYPES.includes(item.typeId) && item.typeId !== targetGrassId) {
-      const newItem = new ItemStack15(targetGrassId, item.amount);
+      const newItem = new ItemStack16(targetGrassId, item.amount);
       inventory.setItem(i, newItem);
     }
   }
 }
 function initializeGlitterGrassSync() {
-  world26.afterEvents.playerPlaceBlock.subscribe((event) => {
+  world27.afterEvents.playerPlaceBlock.subscribe((event) => {
     const { block } = event;
     if (GLITTER_GRASS_TYPES.includes(block.typeId)) {
       const biome = DimensionSystem.getBiomeAt(block.dimension, block.location);
       const targetGrassId = BIOME_TO_GRASS[biome];
       if (targetGrassId && block.typeId !== targetGrassId) {
-        system32.run(() => {
+        system33.run(() => {
           if (block.isValid) {
             block.setType(targetGrassId);
           }
@@ -9743,14 +9966,14 @@ function initializeGlitterGrassSync() {
       }
     }
   });
-  system32.runInterval(() => {
-    for (const player of world26.getAllPlayers()) {
+  system33.runInterval(() => {
+    for (const player of world27.getAllPlayers()) {
       if (DimensionSystem.isInGaia(player)) {
         syncInventory(player);
       }
     }
   }, 40);
-  world26.afterEvents.playerInventoryItemChange.subscribe((event) => {
+  world27.afterEvents.playerInventoryItemChange.subscribe((event) => {
     const { player } = event;
     if (DimensionSystem.isInGaia(player)) {
       syncInventory(player);
@@ -14646,14 +14869,14 @@ var NativeEvent = class extends PublicEvent {
 };
 
 // src/main/bedrock/ts/world/worldgen/core/utils/functions.ts
-import { system as system33 } from "@minecraft/server";
-var delay = system33.waitTicks.bind(system33);
+import { system as system34 } from "@minecraft/server";
+var delay = system34.waitTicks.bind(system34);
 
 // src/main/bedrock/ts/world/worldgen/core/client/index.ts
-import { world as world31 } from "@minecraft/server";
+import { world as world32 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/worldgen/core/client/local-chunks.ts
-import { system as system34 } from "@minecraft/server";
+import { system as system35 } from "@minecraft/server";
 var CLIENT_CHUNKS = /* @__PURE__ */ new WeakMap();
 var MAX_RETRIES = 3;
 var ClientChunk = class {
@@ -14688,7 +14911,7 @@ var ClientChunk = class {
     return `${loc.x};${loc.z}`;
   }
   start() {
-    this.id = system34.runInterval(() => {
+    this.id = system35.runInterval(() => {
       try {
         this._tick();
       } catch (e) {
@@ -14697,7 +14920,7 @@ var ClientChunk = class {
     });
   }
   stop() {
-    if (this.isRunning && this.id !== void 0) system34.clearRun(this.id);
+    if (this.isRunning && this.id !== void 0) system35.clearRun(this.id);
   }
   _tick() {
     if (!this.player.dimension.id.startsWith("gaiadimension:")) return;
@@ -14735,7 +14958,7 @@ var ClientChunk = class {
       this.activeJobs++;
       gen.buildChunk(entry.x, entry.z, entry.key).then((success) => {
         if (!success && entry.retries < MAX_RETRIES) {
-          system34.runTimeout(() => {
+          system35.runTimeout(() => {
             if (!gen.isGenerated(entry.key) && !this.queuedChunks.has(entry.key)) {
               this.queuedChunks.add(entry.key);
               this.chunkQueue.push({ ...entry, retries: entry.retries + 1 });
@@ -14750,13 +14973,13 @@ var ClientChunk = class {
 };
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/index.ts
-import { world as world30, system as system37 } from "@minecraft/server";
+import { world as world31, system as system38 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/session-manager.ts
-import { world as world29 } from "@minecraft/server";
+import { world as world30 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/generator.ts
-import { system as system35 } from "@minecraft/server";
+import { system as system36 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/gaia-layers.ts
 var BIOME_IDS = {
@@ -15303,7 +15526,7 @@ var BiomeDefinition = class {
 };
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/structures.ts
-import { world as world27, StructureRotation, StructureMirrorAxis, StructureAnimationMode } from "@minecraft/server";
+import { world as world28, StructureRotation, StructureMirrorAxis, StructureAnimationMode } from "@minecraft/server";
 var MINI_TOWER_TYPES = ["amethyst_tower", "copal_tower", "jade_tower", "jet_tower"];
 var MINI_TOWER_BIOMES = /* @__PURE__ */ new Set([
   "gaiadimension:pink_agate_forest",
@@ -15422,7 +15645,7 @@ function placeMiniTower(dimension, x, surfaceY, z, towerName, rotation) {
       includeBlocks: true,
       waterlogged: false
     };
-    world27.structureManager.place(structureId, dimension, { x, y: placeY, z }, options);
+    world28.structureManager.place(structureId, dimension, { x, y: placeY, z }, options);
     fillSupportColumn(dimension, x, placeY, z, 17);
   } catch (e) {
     console.warn(`[GaiaDim] Failed to place ${towerName} at ${x},${surfaceY},${z}:`, e);
@@ -15440,7 +15663,7 @@ function placeMalachiteTower(dimension, x, surfaceY, z, rotation) {
       includeBlocks: true,
       waterlogged: false
     };
-    world27.structureManager.place(structureId, dimension, { x, y: placeY, z }, options);
+    world28.structureManager.place(structureId, dimension, { x, y: placeY, z }, options);
     fillSupportColumn(dimension, x, placeY, z, 25);
   } catch (e) {
     console.warn(`[GaiaDim] Failed to place malachite_tower at ${x},${surfaceY},${z}:`, e);
@@ -15605,7 +15828,7 @@ var ChunkGenerator = class _ChunkGenerator {
     this.isGenerating.add(hash);
     return new Promise((resolve) => {
       const failRef = { count: 0 };
-      system35.runJob(this.generate(X, Z, failRef, () => {
+      system36.runJob(this.generate(X, Z, failRef, () => {
         this.isGenerating.delete(hash);
         if (failRef.count === 0) {
           this.setGenerated(hash);
@@ -16028,7 +16251,7 @@ function setLeaf(dim, x, y, z, leafId) {
 }
 
 // src/main/bedrock/ts/world/worldgen/core/definitions/definition-manager.ts
-import { world as world28, system as system36 } from "@minecraft/server";
+import { world as world29, system as system37 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/worldgen/core/definitions/biome-manager.ts
 var BiomeManager = class {
@@ -16093,9 +16316,9 @@ var DefinitionManager = class {
     this.biomeManager = new BiomeManager(this, new BiomeDefinition("gaiadimension:crystal_plains"));
     this.__precalculated = true;
     this.__precalculatedSamples = 15;
-    system36.run(() => {
-      this.__precalculated = world28.getDynamicProperty("property-precalculated") ?? true;
-      this.__precalculatedSamples = world28.getDynamicProperty("property-precalculated-sampling") ?? 15;
+    system37.run(() => {
+      this.__precalculated = world29.getDynamicProperty("property-precalculated") ?? true;
+      this.__precalculatedSamples = world29.getDynamicProperty("property-precalculated-sampling") ?? 15;
       if (this.__precalculatedSamples > 50) this.__precalculatedSamples = 50;
     });
   }
@@ -16104,23 +16327,23 @@ var DefinitionManager = class {
   }
   set IsPrecalculated(v) {
     this.__precalculated = v;
-    world28.setDynamicProperty("property-precalculated", v);
+    world29.setDynamicProperty("property-precalculated", v);
   }
   get PrecalculatedSamples() {
     return this.__precalculatedSamples;
   }
   set PrecalculatedSamples(v) {
     this.__precalculatedSamples = v;
-    world28.setDynamicProperty("property-precalculated-sampling", v);
+    world29.setDynamicProperty("property-precalculated-sampling", v);
   }
   get IsPrecalculatedVariable() {
-    return world28.getDynamicProperty("property-precalculated") ?? false;
+    return world29.getDynamicProperty("property-precalculated") ?? false;
   }
   get IsPrecalculatedSamplesVariable() {
-    return world28.getDynamicProperty("property-precalculated-sampling") ?? 10;
+    return world29.getDynamicProperty("property-precalculated-sampling") ?? 10;
   }
   triggerFinialize(seed2) {
-    system36.run(() => {
+    system37.run(() => {
       this.finialize.subscribe(() => {
         let time = Date.now();
         this.biomeManager.selfFinialize();
@@ -16154,7 +16377,7 @@ var SessionManager = class {
   getOrCreateGenerator(dimensionId, realmIndex) {
     if (this.generators.has(dimensionId)) return this.generators.get(dimensionId);
     try {
-      const dimension = world29.getDimension(dimensionId);
+      const dimension = world30.getDimension(dimensionId);
       const genSeed = realmIndex !== void 0 ? new ProceduralRandom(this.seed + (realmIndex + 1) * 7919) : this.procedural;
       const gen = new ChunkGenerator(this, dimension, genSeed);
       this.generators.set(dimensionId, gen);
@@ -16167,10 +16390,10 @@ var SessionManager = class {
     return this.getOrCreateGenerator(dimension.id);
   }
   isGenerated(hash) {
-    return !!world29.getDynamicProperty(hash);
+    return !!world30.getDynamicProperty(hash);
   }
   setGenerated(hash) {
-    world29.setDynamicProperty(hash, true);
+    world30.setDynamicProperty(hash, true);
   }
   getBiome(temp, humi) {
     return this.definition.biomeManager.getBiome(temp, humi);
@@ -16179,11 +16402,11 @@ var SessionManager = class {
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/index.ts
 var seed;
-system37.run(() => {
-  let savedSeed = world30.getDynamicProperty("seed");
+system38.run(() => {
+  let savedSeed = world31.getDynamicProperty("seed");
   if (!savedSeed) {
     savedSeed = Math.ceil(Date.now() * Math.random() * 2);
-    world30.setDynamicProperty("seed", savedSeed);
+    world31.setDynamicProperty("seed", savedSeed);
   }
   seed = savedSeed;
   SESSION_MANAGER.init(seed);
@@ -16221,19 +16444,19 @@ var SESSION_MANAGER = new SessionManagerProxy();
 
 // src/main/bedrock/ts/world/worldgen/core/client/index.ts
 var initializedPlayers = /* @__PURE__ */ new Set();
-world31.afterEvents.worldLoad.subscribe(() => (async () => {
+world32.afterEvents.worldLoad.subscribe(() => (async () => {
   await SESSION_MANAGER.ready;
   DEFINITION_MANAGER.triggerFinialize(SESSION_MANAGER.procedural);
-  for (const p of world31.getAllPlayers()) {
+  for (const p of world32.getAllPlayers()) {
     playerInitialize(p).catch((e) => console.error(e));
   }
 })().catch((e) => console.error(e, e.stack)));
-world31.afterEvents.playerSpawn.subscribe((e) => {
+world32.afterEvents.playerSpawn.subscribe((e) => {
   if (e.initialSpawn) {
     playerInitialize(e.player).catch((err) => console.error(err));
   }
 });
-world31.beforeEvents.playerLeave.subscribe((e) => {
+world32.beforeEvents.playerLeave.subscribe((e) => {
   initializedPlayers.delete(e.player.id);
   ClientChunk.open(SESSION_MANAGER, e.player).stop();
 });
@@ -16326,7 +16549,7 @@ bm.addBiome(new BiomeDefinition("gaiadimension:mineral_reservoir").setGroundPale
 bm.addBiome(new BiomeDefinition("gaiadimension:mineral_river").setGroundPalette(new PalettedBrush().add("gaiadimension:pebbles")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:gaia_stone")).setVegetationPalette(new PalettedBrush()).setVegetationChance(0).setDepth(-0.8).setScale(0));
 
 // src/main/bedrock/ts/API/lib/EnchantmentLib.ts
-import { world as world32, system as system39, EquipmentSlot as EquipmentSlot6, GameMode as GameMode5 } from "@minecraft/server";
+import { world as world33, system as system40, EquipmentSlot as EquipmentSlot7, GameMode as GameMode5 } from "@minecraft/server";
 import { ActionFormData as ActionFormData2 } from "@minecraft/server-ui";
 var EnchantmentManager = class {
   constructor() {
@@ -16376,10 +16599,10 @@ var EnchantmentManager = class {
     return null;
   }
   initEvents() {
-    system39.runInterval(() => this.manageVisuals(), 5);
-    system39.runInterval(() => this.manageDummies(), 10);
-    system39.runInterval(() => this.electLeader(), 20);
-    world32.afterEvents.playerInteractWithEntity.subscribe((ev) => {
+    system40.runInterval(() => this.manageVisuals(), 5);
+    system40.runInterval(() => this.manageDummies(), 10);
+    system40.runInterval(() => this.electLeader(), 20);
+    world33.afterEvents.playerInteractWithEntity.subscribe((ev) => {
       if (!this.isLeader) return;
       const { player, target } = ev;
       if (!target.hasTag("mirage_enchant_dummy")) return;
@@ -16388,17 +16611,17 @@ var EnchantmentManager = class {
         return;
       }
       this.uiCooldowns.set(player.id, now);
-      world32.setDynamicProperty("mirage:shared_registry", JSON.stringify({}));
+      world33.setDynamicProperty("mirage:shared_registry", JSON.stringify({}));
       player.runCommand(`scriptevent mirage:broadcast_enchants`);
-      system39.runTimeout(() => {
+      system40.runTimeout(() => {
         this.openEnchantmentUI(player);
       }, 3);
     });
-    system39.afterEvents.scriptEventReceive.subscribe((ev) => {
+    system40.afterEvents.scriptEventReceive.subscribe((ev) => {
       if (ev.id === "mirage:broadcast_enchants") {
         let shared = {};
         try {
-          const data = world32.getDynamicProperty("mirage:shared_registry");
+          const data = world33.getDynamicProperty("mirage:shared_registry");
           if (data) shared = JSON.parse(data);
         } catch (e) {
         }
@@ -16411,7 +16634,7 @@ var EnchantmentManager = class {
             _costMultiplier: config._costMultiplier
           };
         }
-        world32.setDynamicProperty("mirage:shared_registry", JSON.stringify(shared));
+        world33.setDynamicProperty("mirage:shared_registry", JSON.stringify(shared));
       }
       if (ev.id === "mirage:apply_enchant") {
         try {
@@ -16436,7 +16659,7 @@ var EnchantmentManager = class {
         }
       }
     });
-    world32.afterEvents.playerInteractWithBlock.subscribe((ev) => {
+    world33.afterEvents.playerInteractWithBlock.subscribe((ev) => {
       if (!this.isLeader) return;
       const { player, block } = ev;
       if (!player.isSneaking) return;
@@ -16445,7 +16668,7 @@ var EnchantmentManager = class {
       const now = Date.now();
       if (this.uiCooldowns.has(player.id) && now - this.uiCooldowns.get(player.id) < 1e3) return;
       const equippable = player.getComponent("minecraft:equippable");
-      const itemStack = equippable?.getEquipment(EquipmentSlot6.Mainhand);
+      const itemStack = equippable?.getEquipment(EquipmentSlot7.Mainhand);
       const enchantId = this.getEnchantFromBook(itemStack);
       if (enchantId) {
         this.uiCooldowns.set(player.id, now);
@@ -16458,7 +16681,7 @@ var EnchantmentManager = class {
         this.openAnvilBookApplyUI(player, itemStack, enchantId);
       }
     });
-    world32.afterEvents.playerPlaceBlock.subscribe((ev) => {
+    world33.afterEvents.playerPlaceBlock.subscribe((ev) => {
       const { block, player } = ev;
       if (block.typeId === "minecraft:enchanting_table") {
         player.sendMessage("\xA7d[Enchantment] \xA7eInteract with the table to access Custom Enchantments!");
@@ -16466,7 +16689,7 @@ var EnchantmentManager = class {
         player.sendMessage("\xA7d[Anvil] \xA7eSneak + Interact with a Custom Book to combine!");
       }
     });
-    world32.afterEvents.entityHitEntity.subscribe((ev) => {
+    world33.afterEvents.entityHitEntity.subscribe((ev) => {
       const { damagingEntity, hitEntity } = ev;
       if (!damagingEntity || !damagingEntity.isValid || !damagingEntity.getComponent("minecraft:equippable")) return;
       const equippable = damagingEntity.getComponent("minecraft:equippable");
@@ -16475,13 +16698,13 @@ var EnchantmentManager = class {
         this.triggerEnchants(mainHand, "entityHitEntity", ev);
       }
     });
-    world32.afterEvents.playerBreakBlock.subscribe((ev) => {
+    world33.afterEvents.playerBreakBlock.subscribe((ev) => {
       const { player, itemStack } = ev;
       if (itemStack) {
         this.triggerEnchants(itemStack, "playerBreakBlock", ev);
       }
     });
-    world32.afterEvents.entityHurt.subscribe((ev) => {
+    world33.afterEvents.entityHurt.subscribe((ev) => {
       const { hurtEntity } = ev;
       if (!hurtEntity || !hurtEntity.isValid || !hurtEntity.getComponent("minecraft:equippable")) return;
       const equippable = hurtEntity.getComponent("minecraft:equippable");
@@ -16491,7 +16714,7 @@ var EnchantmentManager = class {
         if (item) this.triggerEnchants(item, "onHurt", ev);
       }
     });
-    world32.afterEvents.projectileHitBlock.subscribe((ev) => {
+    world33.afterEvents.projectileHitBlock.subscribe((ev) => {
       const { source } = ev;
       if (!source || !source.isValid || !source.getComponent("minecraft:equippable")) return;
       const equippable = source.getComponent("minecraft:equippable");
@@ -16520,25 +16743,25 @@ var EnchantmentManager = class {
     if (!this.namespace) return;
     const now = Date.now();
     try {
-      world32.setDynamicProperty(`mirage:enchant_hb_${this.namespace}`, now);
+      world33.setDynamicProperty(`mirage:enchant_hb_${this.namespace}`, now);
     } catch (e) {
     }
     let instances = [];
     try {
-      const data = world32.getDynamicProperty("mirage:enchant_instances");
+      const data = world33.getDynamicProperty("mirage:enchant_instances");
       if (data) instances = JSON.parse(data);
     } catch (e) {
     }
     if (!instances.includes(this.namespace)) {
       instances.push(this.namespace);
       try {
-        world32.setDynamicProperty("mirage:enchant_instances", JSON.stringify(instances));
+        world33.setDynamicProperty("mirage:enchant_instances", JSON.stringify(instances));
       } catch (e) {
       }
     }
     const alive = instances.filter((ns) => {
       try {
-        const hb = world32.getDynamicProperty(`mirage:enchant_hb_${ns}`);
+        const hb = world33.getDynamicProperty(`mirage:enchant_hb_${ns}`);
         return hb && now - hb < 5e3;
       } catch (e) {
         return false;
@@ -16546,7 +16769,7 @@ var EnchantmentManager = class {
     });
     if (alive.length !== instances.length) {
       try {
-        world32.setDynamicProperty("mirage:enchant_instances", JSON.stringify(alive));
+        world33.setDynamicProperty("mirage:enchant_instances", JSON.stringify(alive));
       } catch (e) {
       }
     }
@@ -16566,7 +16789,7 @@ var EnchantmentManager = class {
     if (!this.namespace || this.registry.size === 0) return;
     if (!this.isLeader) return;
     const activePlayers = /* @__PURE__ */ new Set();
-    for (const player of world32.getAllPlayers()) {
+    for (const player of world33.getAllPlayers()) {
       if (!player.isValid) continue;
       activePlayers.add(player.id);
       this.updateHitboxDummy(player);
@@ -16672,7 +16895,7 @@ var EnchantmentManager = class {
     const inventory = player.getComponent("minecraft:inventory").container;
     let sharedRegistry = /* @__PURE__ */ new Map();
     try {
-      const data = world32.getDynamicProperty("mirage:shared_registry");
+      const data = world33.getDynamicProperty("mirage:shared_registry");
       if (data) {
         const parsed = JSON.parse(data);
         for (const key in parsed) {
@@ -16703,7 +16926,7 @@ var EnchantmentManager = class {
       itemForm.button(`${label}
 \xA78Slot ${c.slot}`);
     });
-    system39.runTimeout(async () => {
+    system40.runTimeout(async () => {
       try {
         const itemResp = await itemForm.show(player);
         if (itemResp.canceled) return;
@@ -16889,7 +17112,7 @@ ${color}Cost: ${t.cost} Lvl`);
    * Scans players to toggle glint state.
    */
   manageVisuals() {
-    for (const player of world32.getAllPlayers()) {
+    for (const player of world33.getAllPlayers()) {
       const cursorComp = player.getComponent("minecraft:cursor_inventory");
       if (cursorComp && cursorComp.item) {
         const item = cursorComp.item;
@@ -16983,7 +17206,7 @@ enchantmentManager.register("gaia:thunder_strike", {
 });
 
 // src/main/bedrock/ts/entities/MalachiteGuard.ts
-import { world as world33, system as system40, EquipmentSlot as EquipmentSlot7, GameMode as GameMode6, EntityComponentTypes, EntityDamageCause } from "@minecraft/server";
+import { world as world34, system as system41, EquipmentSlot as EquipmentSlot8, GameMode as GameMode6, EntityComponentTypes, EntityDamageCause } from "@minecraft/server";
 var GUARD_ID = "gaiadimension:malachite_guard";
 var DRONE_ID = "gaiadimension:malachite_drone";
 var BATON_ID = "gaiadimension:malachite_guard_baton";
@@ -17065,13 +17288,13 @@ var MalachiteGuardSystem = class {
     this.init();
   }
   init() {
-    world33.afterEvents.entitySpawn.subscribe((event) => {
+    world34.afterEvents.entitySpawn.subscribe((event) => {
       const { entity } = event;
       if (entity.typeId === GUARD_ID) {
         this.setupGuard(entity);
       }
     });
-    system40.runInterval(() => {
+    system41.runInterval(() => {
       for (const dimension of getDimensions()) {
         const guards = dimension.getEntities({ type: GUARD_ID });
         for (const guard of guards) {
@@ -17083,7 +17306,7 @@ var MalachiteGuardSystem = class {
         }
       }
     }, 1);
-    world33.afterEvents.entityHurt.subscribe((event) => {
+    world34.afterEvents.entityHurt.subscribe((event) => {
       const { hurtEntity, damage, damageSource } = event;
       if (hurtEntity.typeId !== GUARD_ID || !hurtEntity.isValid) return;
       const phase = getNum(hurtEntity, P.PHASE, 0 /* Defence */);
@@ -17099,7 +17322,7 @@ var MalachiteGuardSystem = class {
       }
       if (phase === 0 /* Defence */) {
         if (damage > 0) {
-          system40.run(() => {
+          system41.run(() => {
             try {
               if (hurtEntity.isValid && health) {
                 health.setCurrentValue(Math.min(curHp + damage, maxHp));
@@ -17113,7 +17336,7 @@ var MalachiteGuardSystem = class {
       if (phase === 1 /* Attack */) {
         const threshold = maxHp / 2 - 2;
         if (curHp < threshold) {
-          system40.run(() => {
+          system41.run(() => {
             try {
               if (hurtEntity.isValid && health) {
                 health.setCurrentValue(threshold);
@@ -17127,7 +17350,7 @@ var MalachiteGuardSystem = class {
       if (phase === 2 /* Resist */) {
         if (!playerAttacker) {
           if (hurtEntity.location.y > -64) {
-            system40.run(() => {
+            system41.run(() => {
               try {
                 if (hurtEntity.isValid && health) {
                   health.setCurrentValue(Math.min(curHp + damage, maxHp));
@@ -17141,7 +17364,7 @@ var MalachiteGuardSystem = class {
         const mult = getDamageMultiplier(damage);
         if (mult < 1) {
           const reduction = damage * (1 - mult);
-          system40.run(() => {
+          system41.run(() => {
             try {
               if (hurtEntity.isValid && health) {
                 health.setCurrentValue(Math.min(curHp + reduction, maxHp));
@@ -17152,12 +17375,12 @@ var MalachiteGuardSystem = class {
         }
       }
     });
-    world33.afterEvents.entityHitEntity.subscribe((event) => {
+    world34.afterEvents.entityHitEntity.subscribe((event) => {
       const { damagingEntity, hitEntity } = event;
       if (isValidPlayer(damagingEntity) && hitEntity.isValid) {
         try {
           const equip = damagingEntity.getComponent(EntityComponentTypes.Equippable);
-          const mainhand = equip?.getEquipment(EquipmentSlot7.Mainhand);
+          const mainhand = equip?.getEquipment(EquipmentSlot8.Mainhand);
           if (mainhand?.typeId === BATON_ID) {
             const yaw = damagingEntity.getRotation().y;
             const rad = yaw * (Math.PI / 180);
@@ -17174,13 +17397,13 @@ var MalachiteGuardSystem = class {
         try {
           const equip = hitEntity.getComponent(EntityComponentTypes.Equippable);
           if (!equip) return;
-          const slots = [EquipmentSlot7.Head, EquipmentSlot7.Chest, EquipmentSlot7.Legs, EquipmentSlot7.Feet];
+          const slots = [EquipmentSlot8.Head, EquipmentSlot8.Chest, EquipmentSlot8.Legs, EquipmentSlot8.Feet];
           const slot = slots[Math.floor(Math.random() * slots.length)];
           const item = equip.getEquipment(slot);
           if (item) {
             const dim = hitEntity.dimension;
             const loc = hitEntity.location;
-            system40.run(() => {
+            system41.run(() => {
               try {
                 dim.spawnItem(item, { x: loc.x, y: loc.y + 0.5, z: loc.z });
                 equip.setEquipment(slot, void 0);
@@ -17193,7 +17416,7 @@ var MalachiteGuardSystem = class {
         }
       }
     });
-    world33.afterEvents.entityDie.subscribe((event) => {
+    world34.afterEvents.entityDie.subscribe((event) => {
       const { deadEntity } = event;
       if (deadEntity.typeId !== DRONE_ID) return;
       const parentId = getStr(deadEntity, P.PARENT_ID);
@@ -17215,7 +17438,7 @@ var MalachiteGuardSystem = class {
     setNum(guard, P.BIDE_DAMAGE, 0);
     setBool(guard, P.HAS_DRONES, true);
     setBool(guard, P.DRONES_SPAWNED, false);
-    system40.run(() => {
+    system41.run(() => {
       if (!guard.isValid) return;
       try {
         guard.triggerEvent("mg_defend");
@@ -17387,7 +17610,7 @@ var MalachiteGuardSystem = class {
         dim.runCommand(`particle minecraft:terrain_explosion ${gl.x} ${gl.y} ${gl.z}`);
       } catch {
       }
-      system40.runTimeout(() => {
+      system41.runTimeout(() => {
         if (!guard.isValid) return;
         setNum(guard, P.STOMP_COOLDOWN, STOMP_COOLDOWN);
         guard.triggerEvent("mg_stomp_end");
@@ -17478,7 +17701,7 @@ var malachiteGuardSystem = new MalachiteGuardSystem();
 // src/main/bedrock/ts/GaiaDimensionAddon.ts
 initializeDestructionHandlers();
 initializeEventManager();
-system41.beforeEvents?.shutdown?.subscribe((event) => event.cancel = true);
+system42.beforeEvents?.shutdown?.subscribe((event) => event.cancel = true);
 initializeScriptEvents();
 initializeGeyser();
 initializeLightMixin();
@@ -17486,7 +17709,7 @@ initializeGlitterGrassSync();
 initializeMagicStaffBehaviors();
 registerCustomTool();
 initDestroyedDimensionGuard();
-system41.beforeEvents.startup.subscribe((event) => {
+system42.beforeEvents.startup.subscribe((event) => {
   const { blockComponentRegistry, customCommandRegistry, itemComponentRegistry, dimensionRegistry } = event;
   const gaiaDimId = "gaiadimension:gaia_dimension";
   dimensionRegistry.registerCustomDimension(gaiaDimId);

@@ -1,0 +1,32 @@
+{
+	"namespace": "gem_pouch_ui",
+	"interface@gaia_machines.dynamic_interface_custom": {
+		"$bg_texture": "textures/gaiadimension/androsa/gui/gem_pouch",
+		"$size": ["100%", 182],
+		"$content": [
+			{
+				"title": {
+					"type": "label",
+					"text": "Gemstone Pouch",
+					"color": [0.94, 0.94, 0.94],
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [48, 6]
+				}
+			},
+			{
+				"container_grid": {
+					"type": "grid",
+					"grid_dimensions": [5, 4],
+					"grid_item_template": "chest.chest_grid_item",
+					"collection_name": "container_items",
+					"anchor_from": "top_left",
+					"anchor_to": "top_left",
+					"offset": [42, 17],
+					"size": [90, 72],
+					"layer": 5
+				}
+			}
+		]
+	}
+}

@@ -8,6 +8,7 @@
         "ui/machines/purifier.json",
         "ui/machines/augmenter.json",
         "ui/machines/small_crate.json",
-        "ui/machines/large_crate.json"
+        "ui/machines/large_crate.json",
+        "ui/machines/gemstone_pouch.json"
     ]
 }
