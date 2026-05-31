@@ -132,7 +132,7 @@ export class Restructurer extends Machine {
         const burnPercent = this.timers.max_burn.value > 0
             ? this.timers.burn.value / this.timers.max_burn.value
             : 0;
-        const burnFill = Math.ceil(burnPercent * 56);
+        const burnFill = Math.ceil(burnPercent * 16);
         this.setUiDisplay(5, `§6Fuel: ${Math.ceil(burnPercent * 100)}%`, burnFill);
 
         // Cook progress (slot 6) - vertical, max 24px

@@ -67,7 +67,7 @@
 					"$index": 7,
 					"anchor_from": "top_left",
 					"anchor_to": "top_left",
-					"offset": [64, 81]
+					"offset": [65, 82]
 				}
 			},
 			{
@@ -75,7 +75,7 @@
 					"$index": 6,
 					"anchor_from": "top_left",
 					"anchor_to": "top_left",
-					"offset": [77, 61]
+					"offset": [78, 62]
 				}
 			}
 		]
@@ -95,7 +95,7 @@
 								"collection_index": "$index",
 								"anchor_from": "bottom_left",
 								"anchor_to": "bottom_left",
-								"size": ["100%", 1],
+								"size": [0, 1],
 								"controls": [
 									{
 										"clip": {

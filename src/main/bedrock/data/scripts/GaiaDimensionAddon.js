@@ -4356,7 +4356,7 @@ var Restructurer = class _Restructurer extends Machine {
   }
   updateUI() {
     const burnPercent = this.timers.max_burn.value > 0 ? this.timers.burn.value / this.timers.max_burn.value : 0;
-    const burnFill = Math.ceil(burnPercent * 56);
+    const burnFill = Math.ceil(burnPercent * 16);
     this.setUiDisplay(5, `\xA76Fuel: ${Math.ceil(burnPercent * 100)}%`, burnFill);
     const cookPercent = this.timers.cook.max > 0 ? this.timers.cook.value / this.timers.cook.max : 0;
     const cookFill = Math.floor(cookPercent * 24);
@@ -4571,9 +4571,11 @@ var Purifier = class _Purifier extends Machine {
   }
   updateUI() {
     const burnPercent = this.timers.max_burn.value > 0 ? this.timers.burn.value / this.timers.max_burn.value : 0;
-    this.setUiDisplay(6, `\xA76Fuel: ${Math.ceil(burnPercent * 100)}%`, Math.ceil(burnPercent * 20));
+    const burnFill = Math.ceil(burnPercent * 22);
+    this.setUiDisplay(6, `\xA76Fuel: ${Math.ceil(burnPercent * 100)}%`, burnFill);
     const cookPercent = this.timers.cook.max > 0 ? this.timers.cook.value / this.timers.cook.max : 0;
-    this.setUiDisplay(7, `\xA7eProgress: ${Math.floor(cookPercent * 100)}%`, Math.floor(cookPercent * 47));
+    const cookFill = Math.floor(cookPercent * 47);
+    this.setUiDisplay(7, `\xA7eProgress: ${Math.floor(cookPercent * 100)}%`, cookFill);
   }
   canProcess() {
     const inputItem = this.inventory.getItem(0);
