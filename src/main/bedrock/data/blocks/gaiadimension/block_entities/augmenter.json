@@ -14,7 +14,7 @@
             "minecraft:destructible_by_explosion": {
                 "explosion_resistance": 6
             },
-            "minecraft:geometry": "minecraft:geometry.full_block",
+            "minecraft:geometry": "geometry.rosa_gd.augmenter",
             "minecraft:collision_box": {
                 "origin": [-8, 0, -8],
                 "size": [16, 16, 16]
@@ -28,11 +28,15 @@
                     "texture": "gaiadimension:augmenter_side",
                     "render_method": "opaque"
                 },
-                "up": {
+                "augmenter_top": {
                     "texture": "gaiadimension:augmenter_top",
                     "render_method": "opaque"
                 },
-                "down": {
+                "augmenter_side": {
+                    "texture": "gaiadimension:augmenter_side",
+                    "render_method": "opaque"
+                },
+                "gaia_stone_bricks": {
                     "texture": "gaiadimension:gaia_stone_bricks",
                     "render_method": "opaque"
                 }
