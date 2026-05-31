@@ -4574,7 +4574,7 @@ var Purifier = class _Purifier extends Machine {
     const burnFill = Math.ceil(burnPercent * 22);
     this.setUiDisplay(6, `\xA76Fuel: ${Math.ceil(burnPercent * 100)}%`, burnFill);
     const cookPercent = this.timers.cook.max > 0 ? this.timers.cook.value / this.timers.cook.max : 0;
-    const cookFill = Math.floor(cookPercent * 47);
+    const cookFill = Math.floor(cookPercent * 24);
     this.setUiDisplay(7, `\xA7eProgress: ${Math.floor(cookPercent * 100)}%`, cookFill);
   }
   canProcess() {

@@ -75,7 +75,7 @@
 					"$index": 6,
 					"anchor_from": "top_left",
 					"anchor_to": "top_left",
-					"offset": [78, 62]
+					"offset": [78, 57]
 				}
 			}
 		]
@@ -144,7 +144,7 @@
 								"collection_index": "$index",
 								"anchor_from": "top_left",
 								"anchor_to": "top_left",
-								"size": [1, 0],
+								"size": [0, 1],
 								"controls": [
 									{
 										"clip": {
@@ -155,7 +155,7 @@
 											"anchor_to": "top_left",
 											"bindings": "$use_durability",
 											"$source": "#data",
-											"$target": "#size_binding_x",
+											"$target": "#size_binding_y",
 											"$visible_if": "(not (#data = 1000))",
 											"controls": [
 												{

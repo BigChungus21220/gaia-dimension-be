@@ -135,7 +135,7 @@ export class Purifier extends Machine {
         const cookPercent = this.timers.cook.max > 0
             ? this.timers.cook.value / this.timers.cook.max
             : 0;
-        const cookFill = Math.floor(cookPercent * 47);
+        const cookFill = Math.floor(cookPercent * 24);
         this.setUiDisplay(7, `§eProgress: ${Math.floor(cookPercent * 100)}%`, cookFill);
     }
 
