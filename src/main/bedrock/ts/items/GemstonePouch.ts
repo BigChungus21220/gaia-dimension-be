@@ -112,14 +112,47 @@ function cleanupPouch(playerId: string): void {
 
 // ── Pouch Entity Tracker ────────────────────────────────────────────
 
-// Track which players were crouching last check (to detect crouch START)
-const wasCrouching: Set<string> = new Set();
 const spawnCooldown: Map<string, number> = new Map();
-const shrunkMachines: Map<string, Set<Entity>> = new Map();
+
+world.beforeEvents.itemUse.subscribe((event) => {
+    const { source: player, itemStack } = event;
+    if (itemStack.typeId !== "gaiadimension:gem_pouch") return;
+
+    const pid = player.id;
+    const currentTick = (system as any).currentTick || 0;
+    const lastSpawn = spawnCooldown.get(pid) || 0;
+
+    if (currentTick - lastSpawn < 10) return;
+    spawnCooldown.set(pid, currentTick);
+
+    system.run(() => {
+        const pouch = activePouches.get(pid);
+        if (pouch) cleanupPouch(pid);
+
+        const pouchId = getPouchId(itemStack);
+        const headLoc = player.getHeadLocation();
+        const view = player.getViewDirection();
+        const entity = player.dimension.spawnEntity(POUCH_ENTITY_ID, {
+            x: headLoc.x + view.x * 1.5,
+            y: headLoc.y + view.y * 1.5 - 1.25,
+            z: headLoc.z + view.z * 1.5
+        });
+
+        entity.nameTag = UI_ROUTING_NAME;
+        entity.setDynamicProperty("pouchId", pouchId);
+        entity.setDynamicProperty("ownerId", pid);
+        entity.addEffect("invisibility", 999999, { showParticles: false });
+
+        const invComp = entity.getComponent("minecraft:inventory") as EntityInventoryComponent;
+        if (invComp && invComp.container) {
+            loadPouchContents(pouchId, invComp.container);
+        }
+
+        activePouches.set(pid, { entity, pouchId });
+    });
+});
 
 system.runInterval(() => {
-    const currentTick = (system as any).currentTick || 0;
-    
     for (const player of world.getAllPlayers()) {
         try {
             const pid = player.id;
@@ -128,8 +161,6 @@ system.runInterval(() => {
             
             const mainhand = equippable.getEquipment(EquipmentSlot.Mainhand) as ItemStack | undefined;
             const isHoldingPouch = mainhand && mainhand.typeId === "gaiadimension:gem_pouch";
-            const isCrouching = player.isSneaking;
-            const wasAlready = wasCrouching.has(pid);
             
             const pouch = activePouches.get(pid);
             
@@ -137,64 +168,8 @@ system.runInterval(() => {
                 // Keep lore up to date
                 const pouchId = getPouchId(mainhand);
                 const currentLore = mainhand.getLore();
-                if (!currentLore.some(l => l.startsWith("§r§0pouch:"))) {
+                if (!currentLore.some(l => l.startsWith("A rA 0pouch:"))) {
                     equippable.setEquipment(EquipmentSlot.Mainhand, mainhand);
-                }
-
-                // Crouch to spawn/move entity
-                if (isCrouching && !wasAlready) {
-                    wasCrouching.add(pid);
-                    const lastSpawn = spawnCooldown.get(pid) || 0;
-                    
-                    // Shrink nearby machines
-                    const myShrunk = new Set<Entity>();
-                    shrunkMachines.set(pid, myShrunk);
-                    const nearby = player.dimension.getEntities({ location: player.location, maxDistance: 6 });
-                    for (const m of nearby) {
-                        if (MACHINE_ENTITY_TYPES.has(m.typeId)) {
-                            try { m.triggerEvent("general_block_entity:shrink"); myShrunk.add(m); } catch (e) {}
-                        }
-                    }
-                    
-                    if (currentTick - lastSpawn >= 20) {
-                        spawnCooldown.set(pid, currentTick);
-                        
-                        // If one already exists, clean it up before spawning a new one at current feet
-                        if (pouch) {
-                            cleanupPouch(pid);
-                        }
-                        
-                        const headLoc = player.getHeadLocation();
-                        const view = player.getViewDirection();
-                        const entity = player.dimension.spawnEntity(POUCH_ENTITY_ID, {
-                            x: headLoc.x + view.x * 1.5,
-                            y: headLoc.y + view.y * 1.5 - 1.25,
-                            z: headLoc.z + view.z * 1.5
-                        });
-                        
-                        entity.nameTag = UI_ROUTING_NAME;
-                        entity.setDynamicProperty("pouchId", pouchId);
-                        entity.setDynamicProperty("ownerId", pid);
-                        entity.addEffect("invisibility", 999999, { showParticles: false });
-                        
-                        const invComp = entity.getComponent("minecraft:inventory") as EntityInventoryComponent;
-                        if (invComp && invComp.container) {
-                            loadPouchContents(pouchId, invComp.container);
-                        }
-                        
-                        activePouches.set(pid, { entity, pouchId });
-                    }
-                } else if (!isCrouching && wasAlready) {
-                    wasCrouching.delete(pid);
-                    
-                    // Expand machines
-                    const myShrunk = shrunkMachines.get(pid);
-                    if (myShrunk) {
-                        for (const m of myShrunk) {
-                            try { if (m.isValid) m.triggerEvent("general_block_entity:expand"); } catch (e) {}
-                        }
-                        shrunkMachines.delete(pid);
-                    }
                 }
                 
                 // If they switched pouches while one was open, cleanup
@@ -216,18 +191,6 @@ system.runInterval(() => {
                 // Despawn & save instantly when unequipped
                 if (pouch) {
                     cleanupPouch(pid);
-                }
-                if (wasAlready) {
-                    wasCrouching.delete(pid);
-                    
-                    // Expand machines
-                    const myShrunk = shrunkMachines.get(pid);
-                    if (myShrunk) {
-                        for (const m of myShrunk) {
-                            try { if (m.isValid) m.triggerEvent("general_block_entity:expand"); } catch (e) {}
-                        }
-                        shrunkMachines.delete(pid);
-                    }
                 }
             }
         } catch (e) {

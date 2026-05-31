@@ -9936,12 +9936,6 @@ var ALLOWED_GEMS = /* @__PURE__ */ new Set([
 ]);
 var MAX_STACK_PER_SLOT = 16;
 var POUCH_ENTITY_ID = "gaiadimension:gem_pouch_container";
-var MACHINE_ENTITY_TYPES = /* @__PURE__ */ new Set([
-  "gaiadimension:crude_storage_crate",
-  "gaiadimension:mega_storage_crate",
-  "luminiae_generic:block_entity",
-  "luminiae_generic:block_entity_large"
-]);
 var pouchDB = new QIDB("g_pouch", 50, 1);
 var activePouches = /* @__PURE__ */ new Map();
 function getPouchId(itemStack) {
@@ -10013,11 +10007,38 @@ function cleanupPouch(playerId) {
   }
   activePouches.delete(playerId);
 }
-var wasCrouching = /* @__PURE__ */ new Set();
 var spawnCooldown = /* @__PURE__ */ new Map();
-var shrunkMachines = /* @__PURE__ */ new Map();
-system32.runInterval(() => {
+world26.beforeEvents.itemUse.subscribe((event) => {
+  const { source: player, itemStack } = event;
+  if (itemStack.typeId !== "gaiadimension:gem_pouch") return;
+  const pid = player.id;
   const currentTick = system32.currentTick || 0;
+  const lastSpawn = spawnCooldown.get(pid) || 0;
+  if (currentTick - lastSpawn < 10) return;
+  spawnCooldown.set(pid, currentTick);
+  system32.run(() => {
+    const pouch = activePouches.get(pid);
+    if (pouch) cleanupPouch(pid);
+    const pouchId = getPouchId(itemStack);
+    const headLoc = player.getHeadLocation();
+    const view = player.getViewDirection();
+    const entity = player.dimension.spawnEntity(POUCH_ENTITY_ID, {
+      x: headLoc.x + view.x * 1.5,
+      y: headLoc.y + view.y * 1.5 - 1.25,
+      z: headLoc.z + view.z * 1.5
+    });
+    entity.nameTag = UI_ROUTING_NAME;
+    entity.setDynamicProperty("pouchId", pouchId);
+    entity.setDynamicProperty("ownerId", pid);
+    entity.addEffect("invisibility", 999999, { showParticles: false });
+    const invComp = entity.getComponent("minecraft:inventory");
+    if (invComp && invComp.container) {
+      loadPouchContents(pouchId, invComp.container);
+    }
+    activePouches.set(pid, { entity, pouchId });
+  });
+});
+system32.runInterval(() => {
   for (const player of world26.getAllPlayers()) {
     try {
       const pid = player.id;
@@ -10025,64 +10046,12 @@ system32.runInterval(() => {
       if (!equippable) continue;
       const mainhand = equippable.getEquipment(EquipmentSlot6.Mainhand);
       const isHoldingPouch = mainhand && mainhand.typeId === "gaiadimension:gem_pouch";
-      const isCrouching = player.isSneaking;
-      const wasAlready = wasCrouching.has(pid);
       const pouch = activePouches.get(pid);
       if (isHoldingPouch) {
         const pouchId = getPouchId(mainhand);
         const currentLore = mainhand.getLore();
-        if (!currentLore.some((l) => l.startsWith("\xA7r\xA70pouch:"))) {
+        if (!currentLore.some((l) => l.startsWith("A rA 0pouch:"))) {
           equippable.setEquipment(EquipmentSlot6.Mainhand, mainhand);
-        }
-        if (isCrouching && !wasAlready) {
-          wasCrouching.add(pid);
-          const lastSpawn = spawnCooldown.get(pid) || 0;
-          const myShrunk = /* @__PURE__ */ new Set();
-          shrunkMachines.set(pid, myShrunk);
-          const nearby = player.dimension.getEntities({ location: player.location, maxDistance: 6 });
-          for (const m of nearby) {
-            if (MACHINE_ENTITY_TYPES.has(m.typeId)) {
-              try {
-                m.triggerEvent("general_block_entity:shrink");
-                myShrunk.add(m);
-              } catch (e) {
-              }
-            }
-          }
-          if (currentTick - lastSpawn >= 20) {
-            spawnCooldown.set(pid, currentTick);
-            if (pouch) {
-              cleanupPouch(pid);
-            }
-            const headLoc = player.getHeadLocation();
-            const view = player.getViewDirection();
-            const entity = player.dimension.spawnEntity(POUCH_ENTITY_ID, {
-              x: headLoc.x + view.x * 1.5,
-              y: headLoc.y + view.y * 1.5,
-              z: headLoc.z + view.z * 1.5
-            });
-            entity.nameTag = UI_ROUTING_NAME;
-            entity.setDynamicProperty("pouchId", pouchId);
-            entity.setDynamicProperty("ownerId", pid);
-            entity.addEffect("invisibility", 999999, { showParticles: false });
-            const invComp = entity.getComponent("minecraft:inventory");
-            if (invComp && invComp.container) {
-              loadPouchContents(pouchId, invComp.container);
-            }
-            activePouches.set(pid, { entity, pouchId });
-          }
-        } else if (!isCrouching && wasAlready) {
-          wasCrouching.delete(pid);
-          const myShrunk = shrunkMachines.get(pid);
-          if (myShrunk) {
-            for (const m of myShrunk) {
-              try {
-                if (m.isValid) m.triggerEvent("general_block_entity:expand");
-              } catch (e) {
-              }
-            }
-            shrunkMachines.delete(pid);
-          }
         }
         if (pouch && pouch.pouchId !== pouchId) {
           cleanupPouch(pid);
@@ -10098,19 +10067,6 @@ system32.runInterval(() => {
       } else {
         if (pouch) {
           cleanupPouch(pid);
-        }
-        if (wasAlready) {
-          wasCrouching.delete(pid);
-          const myShrunk = shrunkMachines.get(pid);
-          if (myShrunk) {
-            for (const m of myShrunk) {
-              try {
-                if (m.isValid) m.triggerEvent("general_block_entity:expand");
-              } catch (e) {
-              }
-            }
-            shrunkMachines.delete(pid);
-          }
         }
       }
     } catch (e) {
