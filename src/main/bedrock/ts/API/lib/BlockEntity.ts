@@ -163,11 +163,9 @@ class BlockEntityManager {
             const candidateLoc = { x: Math.floor(loc.x), y: Math.floor(loc.y), z: Math.floor(loc.z) };
             
             // Try to find a registered machine block at this location
-            // We can't know the exact block ID if it's generic and missing property, so we check the block at world
             try {
                 const candidateBlock = entity.dimension.getBlock(candidateLoc);
                 if (candidateBlock && this.registeredMachineClasses.has(candidateBlock.typeId)) {
-                    // console.warn(`[BlockEntity] Auto-healing lost link for ${entity.id} at ${candidateLoc.x}, ${candidateLoc.y}, ${candidateLoc.z}`);
                     blockLocation = candidateLoc;
                     blockId = candidateBlock.typeId;
                     
@@ -184,19 +182,29 @@ class BlockEntityManager {
 
         if (blockId && this.registeredMachineClasses.has(blockId)) {
             try {
-                // Note: We access dimension directly from entity, assuming it's valid if entity is loaded
                 const block = entity.dimension.getBlock(blockLocation!);
                 
                 if (block && block.typeId === blockId) {
+                    const locKey = `${blockLocation!.x},${blockLocation!.y},${blockLocation!.z}`;
+
+                    // DUPLICATE CHECK: If another entity is already registered at this location, kill this one
+                    const existingEntityId = this.locationToEntityId.get(locKey);
+                    if (existingEntityId && existingEntityId !== entity.id) {
+                        // Another entity already owns this block — this one is a duplicate
+                        try {
+                            if (entity.isValid) entity.remove();
+                        } catch (e) {}
+                        return;
+                    }
+
                     const MachineClass = this.registeredMachineClasses.get(blockId)!;
                     const machineInstance = new MachineClass(entity, block) as MachineInstance;
                     
-                    // Optimization: Generate and store locKey on the instance
-                    machineInstance.locKey = `${blockLocation!.x},${blockLocation!.y},${blockLocation!.z}`;
+                    machineInstance.locKey = locKey;
                     
                     this.activeMachineInstances.set(entity.id, machineInstance);
                     this.activeMachineList.push(machineInstance);
-                    this.locationToEntityId.set(machineInstance.locKey, entity.id);
+                    this.locationToEntityId.set(locKey, entity.id);
                 }
             } catch(e) {
                 console.warn(`[BlockEntity] Error registering entity ${entity.id}: ${e}`);

@@ -3817,12 +3817,21 @@ var BlockEntityManager = class {
       try {
         const block = entity.dimension.getBlock(blockLocation);
         if (block && block.typeId === blockId) {
+          const locKey = `${blockLocation.x},${blockLocation.y},${blockLocation.z}`;
+          const existingEntityId = this.locationToEntityId.get(locKey);
+          if (existingEntityId && existingEntityId !== entity.id) {
+            try {
+              if (entity.isValid) entity.remove();
+            } catch (e) {
+            }
+            return;
+          }
           const MachineClass = this.registeredMachineClasses.get(blockId);
           const machineInstance = new MachineClass(entity, block);
-          machineInstance.locKey = `${blockLocation.x},${blockLocation.y},${blockLocation.z}`;
+          machineInstance.locKey = locKey;
           this.activeMachineInstances.set(entity.id, machineInstance);
           this.activeMachineList.push(machineInstance);
-          this.locationToEntityId.set(machineInstance.locKey, entity.id);
+          this.locationToEntityId.set(locKey, entity.id);
         }
       } catch (e) {
         console.warn(`[BlockEntity] Error registering entity ${entity.id}: ${e}`);
