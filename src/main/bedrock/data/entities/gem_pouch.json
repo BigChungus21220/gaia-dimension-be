@@ -17,8 +17,8 @@
         "family": ["pouch", "inanimate"]
       },
       "minecraft:collision_box": {
-        "height": 1,
-        "width": 1
+        "height": 2.5,
+        "width": 2.5
       },
       "minecraft:health": {
         "value": 1,

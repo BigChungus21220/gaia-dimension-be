@@ -1,6 +1,6 @@
 // src/main/bedrock/ts/GaiaDimensionAddon.ts
 import {
-  system as system42
+  system as system43
 } from "@minecraft/server";
 
 // src/main/bedrock/ts/blocks/leaves.ts
@@ -9555,7 +9555,358 @@ function handleForceThrow(player) {
 }
 
 // src/main/bedrock/ts/items/GemstonePouch.ts
-import { world as world25, system as system31, ItemStack as ItemStack15, EquipmentSlot as EquipmentSlot6 } from "@minecraft/server";
+import { world as world26, system as system32, ItemStack as ItemStack16, EquipmentSlot as EquipmentSlot6 } from "@minecraft/server";
+
+// src/main/bedrock/ts/API/lib/QIDB.ts
+import { world as world25, system as system31 } from "@minecraft/server";
+function date() {
+  const date2 = new Date(Date.now());
+  const ms = date2.getMilliseconds().toString().padStart(3, "0");
+  return `${date2.toLocaleString().replace(" AM", `.${ms} AM`).replace(" PM", `.${ms} PM`)}`;
+}
+var QIDB = class {
+  /**
+   * @param {string} namespace The unique namespace for the database keys.
+   * @param {number} cacheSize Quick the max amount of keys to keep quickly accessible. A small size can couse lag on frequent iterated usage, a large number can cause high hardware RAM usage.
+   * @param {number} saveRate the background saves per tick, (high performance impact) saveRate1 is 20 keys per second
+   */
+  constructor(namespace = "", cacheSize = 50, saveRate = 1) {
+    system31.run(() => {
+      const self = this;
+      this.#settings = {
+        namespace
+      };
+      this.#queuedKeys = [];
+      this.#queuedValues = [];
+      this.#quickAccess = /* @__PURE__ */ new Map();
+      this.#validNamespace = /^[A-Za-z0-9_]*$/.test(this.#settings.namespace);
+      this.#dimension = world25.getDimension("overworld");
+      this.logs;
+      function startLog() {
+        console.log(
+          `\xA7qQIDB > is initialized successfully.\xA7r namespace: ${self.#settings.namespace} \xA7r${date()} `
+        );
+        if (saveRate > 1) {
+          console.warn(
+            `\xA7c\xA7lWARNING! 
+\xA7r\xA7cQIDB > using a saveRate bigger than 1 can cause slower game ticks and extreme lag while saving 1024 size keys. at <${self.#settings.namespace}> \xA7r${date()} `
+          );
+          world25.getPlayers().forEach((player2) => {
+            if (player2.isOp) {
+              player2.sendMessage(
+                `\xA7c\xA7lWARNING! 
+\xA7r\xA7cQIDB > using a saveRate bigger than 1 can cause slower game ticks and extreme lag while saving 1024 size keys. at <${self.#settings.namespace}> \xA7r${date()} `
+              );
+            }
+          });
+        }
+      }
+      const VALID_NAMESPACE_ERROR = new Error(`\xA7cQIDB > ${namespace} isn't a valid namespace. accepted char: A-Z a-z 0-9 _ \xA7r${date()}`);
+      let sl = world25.scoreboard.getObjective("qidb");
+      this.#sL;
+      const player = world25.getPlayers()[0];
+      if (!this.#validNamespace) throw VALID_NAMESPACE_ERROR;
+      if (player)
+        if (!sl || sl?.hasParticipant("x") === false) {
+          if (!sl) sl = world25.scoreboard.addObjective("qidb");
+          sl.setScore("x", player.location.x);
+          sl.setScore("z", player.location.z);
+          this.#sL = { x: sl.getScore("x"), y: 318, z: sl.getScore("z") };
+          this.#dimension.runCommand(`/tickingarea add ${this.#sL.x} 319 ${this.#sL.z} ${this.#sL.x} 318 ${this.#sL.z} storagearea`);
+          startLog();
+        } else {
+          this.#sL = { x: sl.getScore("x"), y: 318, z: sl.getScore("z") };
+          startLog();
+        }
+      world25.afterEvents.playerSpawn.subscribe(({ player: player2, initialSpawn }) => {
+        if (!this.#validNamespace) throw VALID_NAMESPACE_ERROR;
+        if (!initialSpawn) return;
+        if (!sl || sl?.hasParticipant("x") === false) {
+          if (!sl) sl = world25.scoreboard.addObjective("qidb");
+          sl.setScore("x", player2.location.x);
+          sl.setScore("z", player2.location.z);
+          this.#sL = { x: sl.getScore("x"), y: 318, z: sl.getScore("z") };
+          this.#dimension.runCommand(`/tickingarea add ${this.#sL.x} 319 ${this.#sL.z} ${this.#sL.x} 318 ${this.#sL.z} storagearea`);
+          startLog();
+        } else {
+          this.#sL = { x: sl.getScore("x"), y: 318, z: sl.getScore("z") };
+          startLog();
+        }
+      });
+      let show = true;
+      let runId;
+      let lastam;
+      system31.runInterval(() => {
+        const diff = self.#quickAccess.size - cacheSize;
+        if (diff > 0) {
+          for (let i = 0; i < diff; i++) {
+            self.#quickAccess.delete(self.#quickAccess.keys().next()?.value);
+          }
+        }
+        if (self.#queuedKeys.length) {
+          if (!runId) {
+            log();
+            runId = system31.runInterval(() => {
+              log();
+            }, 120);
+          }
+          show = false;
+          const k = Math.min(saveRate, this.#queuedKeys.length);
+          for (let i = 0; i < k; i++) {
+            this.#romSave(this.#queuedKeys[0], this.#queuedValues[0]);
+            this.#queuedKeys.shift();
+            this.#queuedValues.shift();
+          }
+        } else if (runId) {
+          system31.clearRun(runId);
+          runId = void 0;
+          show == false && this.logs.save == true && console.log(`\xA7aQIDB >Saved, You can now close the world safely. \xA7r${date()}`);
+          show = true;
+          return;
+        } else return;
+      }, 1);
+      function log() {
+        const abc = (-(self.#queuedKeys.length - lastam) / 6).toFixed(0) || "//";
+        self.logs.save == true && console.log(`\xA7eQIDB > Saving, Dont close the world.
+\xA7r[Stats]-\xA7eRemaining: ${self.#queuedKeys.length} keys | speed: ${abc} keys/s \xA7r${date()}`);
+        lastam = self.#queuedKeys.length;
+      }
+      system31.beforeEvents.shutdown.subscribe(() => {
+        if (this.#queuedKeys.length) {
+          console.error(
+            `
+
+
+
+\xA7c\xA7lQIDB > Fatal Error >\xA7r\xA7c World closed too early, items not saved correctly.  
+
+Namespace: ${this.#settings.namespace}
+Lost Keys amount: ${this.#queuedKeys.length} \xA7r${date()}
+
+
+
+`
+          );
+        }
+      });
+    });
+  }
+  logs = {
+    startUp: true,
+    save: true,
+    load: true,
+    set: true,
+    get: true,
+    has: true,
+    delete: true,
+    clear: true,
+    values: true,
+    keys: true
+  };
+  #validNamespace;
+  #queuedKeys;
+  #settings;
+  #quickAccess;
+  #queuedValues;
+  #dimension;
+  #sL;
+  #load(key, length) {
+    if (key.length > 30) throw new Error(`\xA7cQIDB > Out of range: <${key}> has more than 30 characters \xA7r${date()}`);
+    let canStr = false;
+    try {
+      world25.structureManager.place(key, this.#dimension, this.#sL, { includeEntities: true });
+      canStr = true;
+    } catch {
+      console.log(length);
+      for (let i = 0; i < length; i++)
+        this.#dimension.spawnEntity("qidb:storage", this.#sL);
+    }
+    const entities = this.#dimension.getEntities({ location: this.#sL, type: "qidb:storage" });
+    if (entities.length < length) {
+      for (let i = entities.length; i < length; i++)
+        entities.push(this.#dimension.spawnEntity("qidb:storage", this.#sL));
+    }
+    if (entities.length > length) {
+      console.log("entities.length > length: ", entities.length, ">", length, entities.length > length);
+      for (let i = entities.length; i > length; i--) {
+        console.log("removed", i);
+        entities[i - 1].remove();
+        entities.pop();
+      }
+    }
+    const invs = [];
+    entities.forEach((entity) => {
+      invs.push(entity.getComponent("inventory").container);
+    });
+    this.logs.load == true && console.log(`\xA7aQIDB > Loaded ${entities.length} entities <${key}> \xA7r${date()}`);
+    return { canStr, invs };
+  }
+  async #save(key, canStr) {
+    if (canStr) world25.structureManager.delete(key);
+    world25.structureManager.createFromWorld(key, this.#dimension, this.#sL, this.#sL, { saveMode: "World", includeEntities: true });
+    const entities = this.#dimension.getEntities({ location: this.#sL, type: "qidb:storage" });
+    entities.forEach((e) => e.remove());
+  }
+  async #queueSaving(key, value) {
+    this.#queuedKeys.push(key);
+    this.#queuedValues.push(value);
+  }
+  async #romSave(key, value) {
+    const { canStr, invs } = this.#load(key, Math.floor((value?.length - 1) / 256) + 1 || 1);
+    invs.forEach((inv, index) => {
+      if (!value) for (let i = 256 * index; i < 256 * index + 256; i++) inv.setItem(i - 256 * index, void 0), world25.setDynamicProperty(key, null);
+      if (Array.isArray(value)) {
+        try {
+          for (let i = 256 * index; i < 256 * index + 256; i++) inv.setItem(i - 256 * index, value[i] || void 0);
+        } catch {
+          throw new Error(`\xA7cQIDB > Invalid value type. supported: ItemStack | ItemStack[] | undefined \xA7r${date()}`);
+        }
+        world25.setDynamicProperty(key, Math.floor((value?.length - 1) / 256) + 1 || 1);
+      } else {
+        try {
+          inv.setItem(0, value), world25.setDynamicProperty(key, false);
+        } catch {
+          throw new Error(`\xA7cQIDB > Invalid value type. supported: ItemStack | ItemStack[] | undefined \xA7r${date()}`);
+        }
+      }
+    });
+    this.#save(key, canStr);
+  }
+  /**
+   * Sets a value as a key in the item database.
+   * @param {string} key The unique identifier of the value.
+   * @param {ItemStack[] | ItemStack} value The `ItemStack[]` or `itemStack` value to set.
+   * @throws Throws if `value` is an array that has more than 512 items.
+   */
+  set(key, value) {
+    if (!this.#validNamespace) throw new Error(`\xA7cQIDB > Invalid name: <${this.#settings.namespace}>. accepted char: A-Z a-z 0-9 _ \xA7r${date()}`);
+    if (!/^[A-Za-z0-9_]*$/.test(key)) throw new Error(`\xA7cQIDB > Invalid name: <${key}>. accepted char: A-Z a-z 0-9 _ \xA7r${date()}`);
+    const time = Date.now();
+    key = this.#settings.namespace + ":" + key;
+    if (Array.isArray(value)) {
+      if (value.length > 1024) throw new Error(`\xA7cQIDB > Out of range: <${key}> has more than 1024 ItemStacks \xA7r${date()}`);
+      world25.setDynamicProperty(key, Math.floor((value?.length - 1) / 256) + 1 || 1);
+    } else {
+      world25.setDynamicProperty(key, false);
+    }
+    this.#quickAccess.set(key, value);
+    if (this.#queuedKeys.includes(key)) {
+      const i = this.#queuedKeys.indexOf(key);
+      this.#queuedValues.splice(i, 1);
+      this.#queuedKeys.splice(i, 1);
+    }
+    this.#queueSaving(key, value);
+    this.logs.set == true && console.log(`\xA7aQIDB > Set key <${key}> succesfully. ${Date.now() - time}ms \xA7r${date()}`);
+  }
+  /**
+   * Gets the value of a key from the item database.
+   * @param {string} key The identifier of the value.
+   * @returns {ItemStack | ItemStack[]} The `ItemStack` | `ItemStack[]` saved as `key`
+   * @throws Throws if the key doesn't exist.
+   */
+  get(key) {
+    if (!this.#validNamespace) throw new Error(`\xA7cQIDB > Invalid name: <${this.#settings.namespace}>. accepted char: A-Z a-z 0-9 _ \xA7r${date()}`);
+    if (!/^[A-Za-z0-9_]*$/.test(key)) throw new Error(`\xA7cQIDB > Invalid name: <${key}>. accepted char: A-Z a-z 0-9 _ \xA7r${date()}`);
+    const time = Date.now();
+    key = this.#settings.namespace + ":" + key;
+    if (this.#quickAccess.has(key)) {
+      this.logs.get == true && console.log(`\xA7aQIDB > Got key <${key}> succesfully. ${Date.now() - time}ms \xA7r${date()}`);
+      return this.#quickAccess.get(key);
+    }
+    const structure = world25.structureManager.get(key);
+    if (!structure) throw new Error(`\xA7cQIDB > The key < ${key} > doesn't exist.`);
+    const { canStr, invs } = this.#load(key);
+    const items = [];
+    invs.forEach((inv, index) => {
+      for (let i = 256 * index; i < 256 * index + 256; i++) items.push(inv.getItem(i - 256 * index));
+      for (let i = 256 * index + 255; i >= 0; i--) if (!items[i]) items.pop();
+      else break;
+    });
+    this.#save(key, canStr);
+    this.logs.get == true && console.log(`\xA7aQIDB > Got items from <${key}> succesfully. ${Date.now() - time}ms \xA7r${date()}`);
+    if (world25.getDynamicProperty(key)) {
+      this.#quickAccess.set(key, items);
+      return items;
+    } else {
+      this.#quickAccess.set(key, items[0]);
+      return items[0];
+    }
+  }
+  /**
+   * Checks if a key exists in the item database.
+   * @param {string} key The identifier of the value.
+   * @returns {boolean}`true` if the key exists, `false` if the key doesn't exist.
+   */
+  has(key) {
+    if (!this.#validNamespace) throw new Error(`\xA7cQIDB > Invalid name: <${this.#settings.namespace}>. accepted char: A-Z a-z 0-9 _ \xA7r${date()}`);
+    if (!/^[A-Za-z0-9_]*$/.test(key)) throw new Error(`\xA7cQIDB > Invalid name: <${key}>. accepted char: A-Z a-z 0-9 _ \xA7r${date()}`);
+    const time = Date.now();
+    key = this.#settings.namespace + ":" + key;
+    const exist = this.#quickAccess.has(key) || world25.structureManager.get(key);
+    this.logs.has == true && console.log(`\xA7aQIDB > Found key <${key}> succesfully. ${Date.now() - time}ms \xA7r${date()}`);
+    if (exist) return true;
+    else return false;
+  }
+  /**
+   * Deletes a key from the item database.
+   * @param {string} key The identifier of the value.
+                  * @throws Throws if the key doesn't exist.
+                  */
+  delete(key) {
+    if (!this.#validNamespace) throw new Error(`\xA7cQIDB > Invalid name: <${this.#settings.namespace}>. accepted char: A-Z a-z 0-9 _ \xA7r${date()}`);
+    if (!/^[A-Za-z0-9_]*$/.test(key)) throw new Error(`\xA7cQIDB > Invalid name: <${key}>. accepted char: A-Z a-z 0-9 _ \xA7r${date()}`);
+    const time = Date.now();
+    key = this.#settings.namespace + ":" + key;
+    if (this.#quickAccess.has(key)) this.#quickAccess.delete(key);
+    const structure = world25.structureManager.get(key);
+    if (structure) world25.structureManager.delete(key), world25.setDynamicProperty(key, null);
+    else throw new Error(`\xA7cQIDB > The key <${key}> doesn't exist. \xA7r${date()}`);
+    this.logs.delete == true && console.log(`\xA7aQIDB > Deleted key <${key}> succesfully. ${Date.now() - time}ms \xA7r${date()}`);
+  }
+  /**
+   * Gets all the keys of your namespace from item database.
+   * @return {string[]} All the keys as an array of strings.
+                      */
+  keys() {
+    if (!this.#validNamespace) throw new Error(`\xA7cQIDB > Invalid name: <${this.#settings.namespace}>. accepted char: A-Z a-z 0-9 _ \xA7r${date()}`);
+    const allIds = world25.getDynamicPropertyIds();
+    const ids = [];
+    allIds.filter((id) => id.startsWith(this.#settings.namespace + ":")).forEach((id) => ids.push(id.replace(this.#settings.namespace + ":", "")));
+    this.logs.keys == true && console.log(`\xA7aQIDB > Got the list of all the ${ids.length} keys. \xA7r${date()}`);
+    return ids;
+  }
+  /**
+   * Gets all the keys of your namespace from item database (takes some time if values aren't alredy loaded in quickAccess).
+   * @return {ItemStack[][]} All the values as an array of ItemStack or ItemStack[].
+                          */
+  values() {
+    if (!this.#validNamespace) throw new Error(`\xA7cQIDB > Invalid name: <${this.#settings.namespace}>. accepted char: A-Z a-z 0-9 _ \xA7r${date()}`);
+    const time = Date.now();
+    const allIds = world25.getDynamicPropertyIds();
+    const values = [];
+    const filtered = allIds.filter((id) => id.startsWith(this.#settings.namespace + ":")).map((id) => id.replace(this.#settings.namespace + ":", ""));
+    for (const key of filtered) {
+      values.push(this.get(key));
+    }
+    this.logs.values == true && console.log(`\xA7aQIDB > Got the list of all the ${values.length} values. ${Date.now() - time}ms \xA7r${date()}`);
+    return values;
+  }
+  /**
+   * Clears all, CAN NOT REWIND.
+   */
+  clear() {
+    if (!this.#validNamespace) throw new Error(`\xA7cQIDB > Invalid name: <${this.#settings.namespace}>. accepted char: A-Z a-z 0-9 _ \xA7r${date()}`);
+    const time = Date.now();
+    const allIds = world25.getDynamicPropertyIds();
+    const filtered = allIds.filter((id) => id.startsWith(this.#settings.namespace + ":")).map((id) => id.replace(this.#settings.namespace + ":", ""));
+    for (const key of filtered) {
+      this.delete(key);
+    }
+    this.logs.clear == true && console.log(`\xA7aQIDB > Cleared, deleted ${filtered.length} values. ${Date.now() - time}ms \xA7r${date()}`);
+  }
+};
+
+// src/main/bedrock/ts/items/GemstonePouch.ts
 var UI_ROUTING_NAME = `\xA7${"gem_pouch".split("").join("\xA7")}`;
 var ALLOWED_GEMS = /* @__PURE__ */ new Set([
   "gaiadimension:sugilite",
@@ -9585,137 +9936,189 @@ var ALLOWED_GEMS = /* @__PURE__ */ new Set([
 ]);
 var MAX_STACK_PER_SLOT = 16;
 var POUCH_ENTITY_ID = "gaiadimension:gem_pouch_container";
+var MACHINE_ENTITY_TYPES = /* @__PURE__ */ new Set([
+  "gaiadimension:crude_storage_crate",
+  "gaiadimension:mega_storage_crate",
+  "luminiae_generic:block_entity",
+  "luminiae_generic:block_entity_large"
+]);
+var pouchDB = new QIDB("g_pouch", 50, 1);
 var activePouches = /* @__PURE__ */ new Map();
-var wasCrouching = /* @__PURE__ */ new Set();
-var spawnCooldown = /* @__PURE__ */ new Map();
 function getPouchId(itemStack) {
   const lore = itemStack.getLore();
-  for (const line of lore) {
-    if (line.startsWith("\xA7r\xA70pouch:")) {
-      return line.substring("\xA7r\xA70pouch:".length);
+  let existingId = null;
+  let loreIndex = -1;
+  for (let i = 0; i < lore.length; i++) {
+    if (lore[i].startsWith("\xA7r\xA70pouch:")) {
+      existingId = lore[i].substring("\xA7r\xA70pouch:".length);
+      loreIndex = i;
+      break;
     }
   }
-  const id = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
-  const newLore = [...lore, `\xA7r\xA70pouch:${id}`];
+  if (existingId && existingId.length <= 12) {
+    return existingId;
+  }
+  const id = Math.random().toString(36).substring(2, 10);
+  const newLore = [...lore];
+  if (loreIndex >= 0) {
+    newLore[loreIndex] = `\xA7r\xA70pouch:${id}`;
+  } else {
+    newLore.push(`\xA7r\xA70pouch:${id}`);
+  }
   itemStack.setLore(newLore);
   return id;
 }
 function savePouchContents(pouchId, container) {
-  const slots = [];
+  const items = [];
   for (let i = 0; i < container.size; i++) {
     const item = container.getItem(i);
     if (item) {
-      slots.push({ slot: i, typeId: item.typeId, amount: item.amount });
+      items[i] = item;
     }
   }
-  world25.setDynamicProperty(`pouch:${pouchId}`, JSON.stringify(slots));
+  try {
+    pouchDB.set(pouchId, items);
+  } catch (e) {
+    console.warn(`[GemPouch] Failed to save QIDB for ${pouchId}: ${e}`);
+  }
 }
 function loadPouchContents(pouchId, container) {
-  const data = world25.getDynamicProperty(`pouch:${pouchId}`);
-  if (!data) return;
+  if (!pouchDB.has(pouchId)) return;
   try {
-    const slots = JSON.parse(data);
-    for (const slot of slots) {
-      try {
-        container.setItem(slot.slot, new ItemStack15(slot.typeId, slot.amount));
-      } catch (e) {
+    const items = pouchDB.get(pouchId);
+    if (Array.isArray(items)) {
+      for (let i = 0; i < container.size; i++) {
+        if (items[i]) {
+          container.setItem(i, items[i]);
+        }
       }
     }
   } catch (e) {
-    console.warn(`[GemPouch] Failed to load pouch ${pouchId}: ${e}`);
+    console.warn(`[GemPouch] Failed to load QIDB for ${pouchId}: ${e}`);
   }
 }
 function cleanupPouch(playerId) {
   const pouch = activePouches.get(playerId);
   if (!pouch) return;
   try {
-    const invComp = pouch.entity.getComponent("minecraft:inventory");
-    if (invComp && invComp.container) {
-      savePouchContents(pouch.pouchId, invComp.container);
+    if (pouch.entity.isValid) {
+      const invComp = pouch.entity.getComponent("minecraft:inventory");
+      if (invComp && invComp.container) {
+        savePouchContents(pouch.pouchId, invComp.container);
+      }
+      pouch.entity.remove();
     }
-    if (pouch.entity.isValid) pouch.entity.remove();
   } catch (e) {
     console.warn(`[GemPouch] Error cleaning up pouch entity: ${e}`);
   }
   activePouches.delete(playerId);
 }
-system31.runInterval(() => {
-  const currentTick = system31.currentTick || 0;
-  for (const player of world25.getAllPlayers()) {
+var wasCrouching = /* @__PURE__ */ new Set();
+var spawnCooldown = /* @__PURE__ */ new Map();
+var shrunkMachines = /* @__PURE__ */ new Map();
+system32.runInterval(() => {
+  const currentTick = system32.currentTick || 0;
+  for (const player of world26.getAllPlayers()) {
     try {
-      const isCrouching = player.isSneaking;
       const pid = player.id;
+      const equippable = player.getComponent("minecraft:equippable");
+      if (!equippable) continue;
+      const mainhand = equippable.getEquipment(EquipmentSlot6.Mainhand);
+      const isHoldingPouch = mainhand && mainhand.typeId === "gaiadimension:gem_pouch";
+      const isCrouching = player.isSneaking;
       const wasAlready = wasCrouching.has(pid);
-      if (isCrouching && !wasAlready) {
-        wasCrouching.add(pid);
-        const lastSpawn = spawnCooldown.get(pid) || 0;
-        if (currentTick - lastSpawn < 40) continue;
-        if (activePouches.has(pid)) continue;
-        const equippable = player.getComponent("minecraft:equippable");
-        if (!equippable) continue;
-        const mainhand = equippable.getEquipment(EquipmentSlot6.Mainhand);
-        if (!mainhand || mainhand.typeId !== "gaiadimension:gem_pouch") continue;
+      const pouch = activePouches.get(pid);
+      if (isHoldingPouch) {
         const pouchId = getPouchId(mainhand);
-        equippable.setEquipment(EquipmentSlot6.Mainhand, mainhand);
-        spawnCooldown.set(pid, currentTick);
-        const playerRef = player;
-        system31.run(() => {
-          try {
-            if (!playerRef.isValid) return;
-            const loc = playerRef.location;
-            const entity = playerRef.dimension.spawnEntity(POUCH_ENTITY_ID, {
-              x: loc.x,
-              y: loc.y,
-              z: loc.z
+        const currentLore = mainhand.getLore();
+        if (!currentLore.some((l) => l.startsWith("\xA7r\xA70pouch:"))) {
+          equippable.setEquipment(EquipmentSlot6.Mainhand, mainhand);
+        }
+        if (isCrouching && !wasAlready) {
+          wasCrouching.add(pid);
+          const lastSpawn = spawnCooldown.get(pid) || 0;
+          const myShrunk = /* @__PURE__ */ new Set();
+          shrunkMachines.set(pid, myShrunk);
+          const nearby = player.dimension.getEntities({ location: player.location, maxDistance: 6 });
+          for (const m of nearby) {
+            if (MACHINE_ENTITY_TYPES.has(m.typeId)) {
+              try {
+                m.triggerEvent("general_block_entity:shrink");
+                myShrunk.add(m);
+              } catch (e) {
+              }
+            }
+          }
+          if (currentTick - lastSpawn >= 20) {
+            spawnCooldown.set(pid, currentTick);
+            if (pouch) {
+              cleanupPouch(pid);
+            }
+            const headLoc = player.getHeadLocation();
+            const view = player.getViewDirection();
+            const entity = player.dimension.spawnEntity(POUCH_ENTITY_ID, {
+              x: headLoc.x + view.x * 1.5,
+              y: headLoc.y + view.y * 1.5,
+              z: headLoc.z + view.z * 1.5
             });
             entity.nameTag = UI_ROUTING_NAME;
             entity.setDynamicProperty("pouchId", pouchId);
             entity.setDynamicProperty("ownerId", pid);
+            entity.addEffect("invisibility", 999999, { showParticles: false });
             const invComp = entity.getComponent("minecraft:inventory");
             if (invComp && invComp.container) {
               loadPouchContents(pouchId, invComp.container);
             }
             activePouches.set(pid, { entity, pouchId });
-            console.warn(`[GemPouch] Spawned pouch entity for ${pid}, nameTag=${entity.nameTag}`);
-          } catch (e) {
-            console.warn(`[GemPouch] Failed to spawn: ${e}`);
           }
-        });
-      } else if (!isCrouching && wasAlready) {
-        wasCrouching.delete(pid);
-      }
-    } catch (e) {
-    }
-  }
-}, 2);
-system31.runInterval(() => {
-  for (const [playerId, pouch] of activePouches) {
-    const { entity, pouchId } = pouch;
-    if (!entity || !entity.isValid) {
-      activePouches.delete(playerId);
-      continue;
-    }
-    let playerNearby = false;
-    try {
-      for (const player of world25.getAllPlayers()) {
-        if (player.id === playerId) {
-          const dx = player.location.x - entity.location.x;
-          const dy = player.location.y - entity.location.y;
-          const dz = player.location.z - entity.location.z;
-          if (dx * dx + dy * dy + dz * dz < 64) {
-            playerNearby = true;
+        } else if (!isCrouching && wasAlready) {
+          wasCrouching.delete(pid);
+          const myShrunk = shrunkMachines.get(pid);
+          if (myShrunk) {
+            for (const m of myShrunk) {
+              try {
+                if (m.isValid) m.triggerEvent("general_block_entity:expand");
+              } catch (e) {
+              }
+            }
+            shrunkMachines.delete(pid);
           }
-          break;
+        }
+        if (pouch && pouch.pouchId !== pouchId) {
+          cleanupPouch(pid);
+        }
+        if (pouch && pouch.entity.isValid) {
+          const dx = player.location.x - pouch.entity.location.x;
+          const dy = player.location.y - pouch.entity.location.y;
+          const dz = player.location.z - pouch.entity.location.z;
+          if (dx * dx + dy * dy + dz * dz > 64) {
+            cleanupPouch(pid);
+          }
+        }
+      } else {
+        if (pouch) {
+          cleanupPouch(pid);
+        }
+        if (wasAlready) {
+          wasCrouching.delete(pid);
+          const myShrunk = shrunkMachines.get(pid);
+          if (myShrunk) {
+            for (const m of myShrunk) {
+              try {
+                if (m.isValid) m.triggerEvent("general_block_entity:expand");
+              } catch (e) {
+              }
+            }
+            shrunkMachines.delete(pid);
+          }
         }
       }
     } catch (e) {
-    }
-    if (!playerNearby) {
-      cleanupPouch(playerId);
+      console.warn(`[GemPouch] Error in tracker for ${player.name}: ${e}`);
     }
   }
-}, 20);
-system31.runInterval(() => {
+}, 2);
+system32.runInterval(() => {
   for (const [playerId, pouch] of activePouches) {
     const { entity } = pouch;
     if (!entity || !entity.isValid) continue;
@@ -9729,7 +10132,7 @@ system31.runInterval(() => {
         if (!ALLOWED_GEMS.has(item.typeId)) {
           container.setItem(i, void 0);
           try {
-            for (const player of world25.getAllPlayers()) {
+            for (const player of world26.getAllPlayers()) {
               if (player.id === playerId) {
                 const pInv = player.getComponent("minecraft:inventory")?.container;
                 if (pInv) {
@@ -9748,10 +10151,10 @@ system31.runInterval(() => {
         }
         if (item.amount > MAX_STACK_PER_SLOT) {
           const overflow = item.amount - MAX_STACK_PER_SLOT;
-          container.setItem(i, new ItemStack15(item.typeId, MAX_STACK_PER_SLOT));
+          container.setItem(i, new ItemStack16(item.typeId, MAX_STACK_PER_SLOT));
           try {
-            const overflowItem = new ItemStack15(item.typeId, overflow);
-            for (const player of world25.getAllPlayers()) {
+            const overflowItem = new ItemStack16(item.typeId, overflow);
+            for (const player of world26.getAllPlayers()) {
               if (player.id === playerId) {
                 const pInv = player.getComponent("minecraft:inventory")?.container;
                 if (pInv) {
@@ -9773,12 +10176,12 @@ system31.runInterval(() => {
     }
   }
 }, 5);
-world25.afterEvents.playerLeave?.subscribe((event) => {
+world26.afterEvents.playerLeave?.subscribe((event) => {
   cleanupPouch(event.playerId);
 });
 
 // src/main/bedrock/ts/systems/MagicStaffBehaviors.ts
-import { world as world26, system as system32, MolangVariableMap, Direction as Direction3 } from "@minecraft/server";
+import { world as world27, system as system33, MolangVariableMap, Direction as Direction3 } from "@minecraft/server";
 var projectileCache = /* @__PURE__ */ new Map();
 var activeProjectiles = /* @__PURE__ */ new Set();
 var ELEMENT_COLORS = {
@@ -9791,15 +10194,15 @@ var ELEMENT_COLORS = {
   [6 /* ENERGY */]: { r: 0.6, g: 0.4, b: 0.8 }
 };
 function initializeMagicStaffBehaviors() {
-  world26.afterEvents.entitySpawn.subscribe((event) => {
+  world27.afterEvents.entitySpawn.subscribe((event) => {
     if (event.entity.typeId === "gaiadimension:staff_projectile") {
       activeProjectiles.add(event.entity.id);
     }
   });
-  system32.runInterval(() => {
+  system33.runInterval(() => {
     if (activeProjectiles.size === 0) return;
     for (const id of activeProjectiles) {
-      const entity = world26.getEntity(id);
+      const entity = world27.getEntity(id);
       if (!entity || !entity.isValid) {
         activeProjectiles.delete(id);
         continue;
@@ -9819,15 +10222,15 @@ function initializeMagicStaffBehaviors() {
         activeProjectiles.delete(id);
       }
     }
-    if (system32.currentTick % 200 === 0) {
+    if (system33.currentTick % 200 === 0) {
       for (const id of projectileCache.keys()) {
-        if (!activeProjectiles.has(id) && !world26.getEntity(id)) {
+        if (!activeProjectiles.has(id) && !world27.getEntity(id)) {
           projectileCache.delete(id);
         }
       }
     }
   }, 1);
-  world26.afterEvents.projectileHitBlock.subscribe((event) => {
+  world27.afterEvents.projectileHitBlock.subscribe((event) => {
     if (event.projectile.typeId !== "gaiadimension:staff_projectile") return;
     const data = projectileCache.get(event.projectile.id);
     if (data) {
@@ -9836,7 +10239,7 @@ function initializeMagicStaffBehaviors() {
       projectileCache.delete(event.projectile.id);
     }
   });
-  world26.afterEvents.projectileHitEntity.subscribe((event) => {
+  world27.afterEvents.projectileHitEntity.subscribe((event) => {
     if (event.projectile.typeId !== "gaiadimension:staff_projectile") return;
     const data = projectileCache.get(event.projectile.id);
     if (data) {
@@ -9918,7 +10321,7 @@ function handleHit(projectile, data, location, face) {
 }
 
 // src/main/bedrock/ts/blocks/GlitterGrassSync.ts
-import { world as world27, system as system33, ItemStack as ItemStack16 } from "@minecraft/server";
+import { world as world28, system as system34, ItemStack as ItemStack17 } from "@minecraft/server";
 var GLITTER_GRASS_TYPES = [
   "gaiadimension:green_glitter_grass",
   "gaiadimension:pink_glitter_grass",
@@ -9946,19 +10349,19 @@ function syncInventory(player) {
   for (let i = 0; i < inventory.size; i++) {
     const item = inventory.getItem(i);
     if (item && GLITTER_GRASS_TYPES.includes(item.typeId) && item.typeId !== targetGrassId) {
-      const newItem = new ItemStack16(targetGrassId, item.amount);
+      const newItem = new ItemStack17(targetGrassId, item.amount);
       inventory.setItem(i, newItem);
     }
   }
 }
 function initializeGlitterGrassSync() {
-  world27.afterEvents.playerPlaceBlock.subscribe((event) => {
+  world28.afterEvents.playerPlaceBlock.subscribe((event) => {
     const { block } = event;
     if (GLITTER_GRASS_TYPES.includes(block.typeId)) {
       const biome = DimensionSystem.getBiomeAt(block.dimension, block.location);
       const targetGrassId = BIOME_TO_GRASS[biome];
       if (targetGrassId && block.typeId !== targetGrassId) {
-        system33.run(() => {
+        system34.run(() => {
           if (block.isValid) {
             block.setType(targetGrassId);
           }
@@ -9966,14 +10369,14 @@ function initializeGlitterGrassSync() {
       }
     }
   });
-  system33.runInterval(() => {
-    for (const player of world27.getAllPlayers()) {
+  system34.runInterval(() => {
+    for (const player of world28.getAllPlayers()) {
       if (DimensionSystem.isInGaia(player)) {
         syncInventory(player);
       }
     }
   }, 40);
-  world27.afterEvents.playerInventoryItemChange.subscribe((event) => {
+  world28.afterEvents.playerInventoryItemChange.subscribe((event) => {
     const { player } = event;
     if (DimensionSystem.isInGaia(player)) {
       syncInventory(player);
@@ -14869,14 +15272,14 @@ var NativeEvent = class extends PublicEvent {
 };
 
 // src/main/bedrock/ts/world/worldgen/core/utils/functions.ts
-import { system as system34 } from "@minecraft/server";
-var delay = system34.waitTicks.bind(system34);
+import { system as system35 } from "@minecraft/server";
+var delay = system35.waitTicks.bind(system35);
 
 // src/main/bedrock/ts/world/worldgen/core/client/index.ts
-import { world as world32 } from "@minecraft/server";
+import { world as world33 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/worldgen/core/client/local-chunks.ts
-import { system as system35 } from "@minecraft/server";
+import { system as system36 } from "@minecraft/server";
 var CLIENT_CHUNKS = /* @__PURE__ */ new WeakMap();
 var MAX_RETRIES = 3;
 var ClientChunk = class {
@@ -14911,7 +15314,7 @@ var ClientChunk = class {
     return `${loc.x};${loc.z}`;
   }
   start() {
-    this.id = system35.runInterval(() => {
+    this.id = system36.runInterval(() => {
       try {
         this._tick();
       } catch (e) {
@@ -14920,7 +15323,7 @@ var ClientChunk = class {
     });
   }
   stop() {
-    if (this.isRunning && this.id !== void 0) system35.clearRun(this.id);
+    if (this.isRunning && this.id !== void 0) system36.clearRun(this.id);
   }
   _tick() {
     if (!this.player.dimension.id.startsWith("gaiadimension:")) return;
@@ -14958,7 +15361,7 @@ var ClientChunk = class {
       this.activeJobs++;
       gen.buildChunk(entry.x, entry.z, entry.key).then((success) => {
         if (!success && entry.retries < MAX_RETRIES) {
-          system35.runTimeout(() => {
+          system36.runTimeout(() => {
             if (!gen.isGenerated(entry.key) && !this.queuedChunks.has(entry.key)) {
               this.queuedChunks.add(entry.key);
               this.chunkQueue.push({ ...entry, retries: entry.retries + 1 });
@@ -14973,13 +15376,13 @@ var ClientChunk = class {
 };
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/index.ts
-import { world as world31, system as system38 } from "@minecraft/server";
+import { world as world32, system as system39 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/session-manager.ts
-import { world as world30 } from "@minecraft/server";
+import { world as world31 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/generator.ts
-import { system as system36 } from "@minecraft/server";
+import { system as system37 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/gaia-layers.ts
 var BIOME_IDS = {
@@ -15526,7 +15929,7 @@ var BiomeDefinition = class {
 };
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/structures.ts
-import { world as world28, StructureRotation, StructureMirrorAxis, StructureAnimationMode } from "@minecraft/server";
+import { world as world29, StructureRotation, StructureMirrorAxis, StructureAnimationMode } from "@minecraft/server";
 var MINI_TOWER_TYPES = ["amethyst_tower", "copal_tower", "jade_tower", "jet_tower"];
 var MINI_TOWER_BIOMES = /* @__PURE__ */ new Set([
   "gaiadimension:pink_agate_forest",
@@ -15645,7 +16048,7 @@ function placeMiniTower(dimension, x, surfaceY, z, towerName, rotation) {
       includeBlocks: true,
       waterlogged: false
     };
-    world28.structureManager.place(structureId, dimension, { x, y: placeY, z }, options);
+    world29.structureManager.place(structureId, dimension, { x, y: placeY, z }, options);
     fillSupportColumn(dimension, x, placeY, z, 17);
   } catch (e) {
     console.warn(`[GaiaDim] Failed to place ${towerName} at ${x},${surfaceY},${z}:`, e);
@@ -15663,7 +16066,7 @@ function placeMalachiteTower(dimension, x, surfaceY, z, rotation) {
       includeBlocks: true,
       waterlogged: false
     };
-    world28.structureManager.place(structureId, dimension, { x, y: placeY, z }, options);
+    world29.structureManager.place(structureId, dimension, { x, y: placeY, z }, options);
     fillSupportColumn(dimension, x, placeY, z, 25);
   } catch (e) {
     console.warn(`[GaiaDim] Failed to place malachite_tower at ${x},${surfaceY},${z}:`, e);
@@ -15828,7 +16231,7 @@ var ChunkGenerator = class _ChunkGenerator {
     this.isGenerating.add(hash);
     return new Promise((resolve) => {
       const failRef = { count: 0 };
-      system36.runJob(this.generate(X, Z, failRef, () => {
+      system37.runJob(this.generate(X, Z, failRef, () => {
         this.isGenerating.delete(hash);
         if (failRef.count === 0) {
           this.setGenerated(hash);
@@ -16251,7 +16654,7 @@ function setLeaf(dim, x, y, z, leafId) {
 }
 
 // src/main/bedrock/ts/world/worldgen/core/definitions/definition-manager.ts
-import { world as world29, system as system37 } from "@minecraft/server";
+import { world as world30, system as system38 } from "@minecraft/server";
 
 // src/main/bedrock/ts/world/worldgen/core/definitions/biome-manager.ts
 var BiomeManager = class {
@@ -16316,9 +16719,9 @@ var DefinitionManager = class {
     this.biomeManager = new BiomeManager(this, new BiomeDefinition("gaiadimension:crystal_plains"));
     this.__precalculated = true;
     this.__precalculatedSamples = 15;
-    system37.run(() => {
-      this.__precalculated = world29.getDynamicProperty("property-precalculated") ?? true;
-      this.__precalculatedSamples = world29.getDynamicProperty("property-precalculated-sampling") ?? 15;
+    system38.run(() => {
+      this.__precalculated = world30.getDynamicProperty("property-precalculated") ?? true;
+      this.__precalculatedSamples = world30.getDynamicProperty("property-precalculated-sampling") ?? 15;
       if (this.__precalculatedSamples > 50) this.__precalculatedSamples = 50;
     });
   }
@@ -16327,23 +16730,23 @@ var DefinitionManager = class {
   }
   set IsPrecalculated(v) {
     this.__precalculated = v;
-    world29.setDynamicProperty("property-precalculated", v);
+    world30.setDynamicProperty("property-precalculated", v);
   }
   get PrecalculatedSamples() {
     return this.__precalculatedSamples;
   }
   set PrecalculatedSamples(v) {
     this.__precalculatedSamples = v;
-    world29.setDynamicProperty("property-precalculated-sampling", v);
+    world30.setDynamicProperty("property-precalculated-sampling", v);
   }
   get IsPrecalculatedVariable() {
-    return world29.getDynamicProperty("property-precalculated") ?? false;
+    return world30.getDynamicProperty("property-precalculated") ?? false;
   }
   get IsPrecalculatedSamplesVariable() {
-    return world29.getDynamicProperty("property-precalculated-sampling") ?? 10;
+    return world30.getDynamicProperty("property-precalculated-sampling") ?? 10;
   }
   triggerFinialize(seed2) {
-    system37.run(() => {
+    system38.run(() => {
       this.finialize.subscribe(() => {
         let time = Date.now();
         this.biomeManager.selfFinialize();
@@ -16377,7 +16780,7 @@ var SessionManager = class {
   getOrCreateGenerator(dimensionId, realmIndex) {
     if (this.generators.has(dimensionId)) return this.generators.get(dimensionId);
     try {
-      const dimension = world30.getDimension(dimensionId);
+      const dimension = world31.getDimension(dimensionId);
       const genSeed = realmIndex !== void 0 ? new ProceduralRandom(this.seed + (realmIndex + 1) * 7919) : this.procedural;
       const gen = new ChunkGenerator(this, dimension, genSeed);
       this.generators.set(dimensionId, gen);
@@ -16390,10 +16793,10 @@ var SessionManager = class {
     return this.getOrCreateGenerator(dimension.id);
   }
   isGenerated(hash) {
-    return !!world30.getDynamicProperty(hash);
+    return !!world31.getDynamicProperty(hash);
   }
   setGenerated(hash) {
-    world30.setDynamicProperty(hash, true);
+    world31.setDynamicProperty(hash, true);
   }
   getBiome(temp, humi) {
     return this.definition.biomeManager.getBiome(temp, humi);
@@ -16402,11 +16805,11 @@ var SessionManager = class {
 
 // src/main/bedrock/ts/world/worldgen/core/world_gen/index.ts
 var seed;
-system38.run(() => {
-  let savedSeed = world31.getDynamicProperty("seed");
+system39.run(() => {
+  let savedSeed = world32.getDynamicProperty("seed");
   if (!savedSeed) {
     savedSeed = Math.ceil(Date.now() * Math.random() * 2);
-    world31.setDynamicProperty("seed", savedSeed);
+    world32.setDynamicProperty("seed", savedSeed);
   }
   seed = savedSeed;
   SESSION_MANAGER.init(seed);
@@ -16444,19 +16847,19 @@ var SESSION_MANAGER = new SessionManagerProxy();
 
 // src/main/bedrock/ts/world/worldgen/core/client/index.ts
 var initializedPlayers = /* @__PURE__ */ new Set();
-world32.afterEvents.worldLoad.subscribe(() => (async () => {
+world33.afterEvents.worldLoad.subscribe(() => (async () => {
   await SESSION_MANAGER.ready;
   DEFINITION_MANAGER.triggerFinialize(SESSION_MANAGER.procedural);
-  for (const p of world32.getAllPlayers()) {
+  for (const p of world33.getAllPlayers()) {
     playerInitialize(p).catch((e) => console.error(e));
   }
 })().catch((e) => console.error(e, e.stack)));
-world32.afterEvents.playerSpawn.subscribe((e) => {
+world33.afterEvents.playerSpawn.subscribe((e) => {
   if (e.initialSpawn) {
     playerInitialize(e.player).catch((err) => console.error(err));
   }
 });
-world32.beforeEvents.playerLeave.subscribe((e) => {
+world33.beforeEvents.playerLeave.subscribe((e) => {
   initializedPlayers.delete(e.player.id);
   ClientChunk.open(SESSION_MANAGER, e.player).stop();
 });
@@ -16549,7 +16952,7 @@ bm.addBiome(new BiomeDefinition("gaiadimension:mineral_reservoir").setGroundPale
 bm.addBiome(new BiomeDefinition("gaiadimension:mineral_river").setGroundPalette(new PalettedBrush().add("gaiadimension:pebbles")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:gaia_stone")).setVegetationPalette(new PalettedBrush()).setVegetationChance(0).setDepth(-0.8).setScale(0));
 
 // src/main/bedrock/ts/API/lib/EnchantmentLib.ts
-import { world as world33, system as system40, EquipmentSlot as EquipmentSlot7, GameMode as GameMode5 } from "@minecraft/server";
+import { world as world34, system as system41, EquipmentSlot as EquipmentSlot7, GameMode as GameMode5 } from "@minecraft/server";
 import { ActionFormData as ActionFormData2 } from "@minecraft/server-ui";
 var EnchantmentManager = class {
   constructor() {
@@ -16599,10 +17002,10 @@ var EnchantmentManager = class {
     return null;
   }
   initEvents() {
-    system40.runInterval(() => this.manageVisuals(), 5);
-    system40.runInterval(() => this.manageDummies(), 10);
-    system40.runInterval(() => this.electLeader(), 20);
-    world33.afterEvents.playerInteractWithEntity.subscribe((ev) => {
+    system41.runInterval(() => this.manageVisuals(), 5);
+    system41.runInterval(() => this.manageDummies(), 10);
+    system41.runInterval(() => this.electLeader(), 20);
+    world34.afterEvents.playerInteractWithEntity.subscribe((ev) => {
       if (!this.isLeader) return;
       const { player, target } = ev;
       if (!target.hasTag("mirage_enchant_dummy")) return;
@@ -16611,17 +17014,17 @@ var EnchantmentManager = class {
         return;
       }
       this.uiCooldowns.set(player.id, now);
-      world33.setDynamicProperty("mirage:shared_registry", JSON.stringify({}));
+      world34.setDynamicProperty("mirage:shared_registry", JSON.stringify({}));
       player.runCommand(`scriptevent mirage:broadcast_enchants`);
-      system40.runTimeout(() => {
+      system41.runTimeout(() => {
         this.openEnchantmentUI(player);
       }, 3);
     });
-    system40.afterEvents.scriptEventReceive.subscribe((ev) => {
+    system41.afterEvents.scriptEventReceive.subscribe((ev) => {
       if (ev.id === "mirage:broadcast_enchants") {
         let shared = {};
         try {
-          const data = world33.getDynamicProperty("mirage:shared_registry");
+          const data = world34.getDynamicProperty("mirage:shared_registry");
           if (data) shared = JSON.parse(data);
         } catch (e) {
         }
@@ -16634,7 +17037,7 @@ var EnchantmentManager = class {
             _costMultiplier: config._costMultiplier
           };
         }
-        world33.setDynamicProperty("mirage:shared_registry", JSON.stringify(shared));
+        world34.setDynamicProperty("mirage:shared_registry", JSON.stringify(shared));
       }
       if (ev.id === "mirage:apply_enchant") {
         try {
@@ -16659,7 +17062,7 @@ var EnchantmentManager = class {
         }
       }
     });
-    world33.afterEvents.playerInteractWithBlock.subscribe((ev) => {
+    world34.afterEvents.playerInteractWithBlock.subscribe((ev) => {
       if (!this.isLeader) return;
       const { player, block } = ev;
       if (!player.isSneaking) return;
@@ -16681,7 +17084,7 @@ var EnchantmentManager = class {
         this.openAnvilBookApplyUI(player, itemStack, enchantId);
       }
     });
-    world33.afterEvents.playerPlaceBlock.subscribe((ev) => {
+    world34.afterEvents.playerPlaceBlock.subscribe((ev) => {
       const { block, player } = ev;
       if (block.typeId === "minecraft:enchanting_table") {
         player.sendMessage("\xA7d[Enchantment] \xA7eInteract with the table to access Custom Enchantments!");
@@ -16689,7 +17092,7 @@ var EnchantmentManager = class {
         player.sendMessage("\xA7d[Anvil] \xA7eSneak + Interact with a Custom Book to combine!");
       }
     });
-    world33.afterEvents.entityHitEntity.subscribe((ev) => {
+    world34.afterEvents.entityHitEntity.subscribe((ev) => {
       const { damagingEntity, hitEntity } = ev;
       if (!damagingEntity || !damagingEntity.isValid || !damagingEntity.getComponent("minecraft:equippable")) return;
       const equippable = damagingEntity.getComponent("minecraft:equippable");
@@ -16698,13 +17101,13 @@ var EnchantmentManager = class {
         this.triggerEnchants(mainHand, "entityHitEntity", ev);
       }
     });
-    world33.afterEvents.playerBreakBlock.subscribe((ev) => {
+    world34.afterEvents.playerBreakBlock.subscribe((ev) => {
       const { player, itemStack } = ev;
       if (itemStack) {
         this.triggerEnchants(itemStack, "playerBreakBlock", ev);
       }
     });
-    world33.afterEvents.entityHurt.subscribe((ev) => {
+    world34.afterEvents.entityHurt.subscribe((ev) => {
       const { hurtEntity } = ev;
       if (!hurtEntity || !hurtEntity.isValid || !hurtEntity.getComponent("minecraft:equippable")) return;
       const equippable = hurtEntity.getComponent("minecraft:equippable");
@@ -16714,7 +17117,7 @@ var EnchantmentManager = class {
         if (item) this.triggerEnchants(item, "onHurt", ev);
       }
     });
-    world33.afterEvents.projectileHitBlock.subscribe((ev) => {
+    world34.afterEvents.projectileHitBlock.subscribe((ev) => {
       const { source } = ev;
       if (!source || !source.isValid || !source.getComponent("minecraft:equippable")) return;
       const equippable = source.getComponent("minecraft:equippable");
@@ -16743,25 +17146,25 @@ var EnchantmentManager = class {
     if (!this.namespace) return;
     const now = Date.now();
     try {
-      world33.setDynamicProperty(`mirage:enchant_hb_${this.namespace}`, now);
+      world34.setDynamicProperty(`mirage:enchant_hb_${this.namespace}`, now);
     } catch (e) {
     }
     let instances = [];
     try {
-      const data = world33.getDynamicProperty("mirage:enchant_instances");
+      const data = world34.getDynamicProperty("mirage:enchant_instances");
       if (data) instances = JSON.parse(data);
     } catch (e) {
     }
     if (!instances.includes(this.namespace)) {
       instances.push(this.namespace);
       try {
-        world33.setDynamicProperty("mirage:enchant_instances", JSON.stringify(instances));
+        world34.setDynamicProperty("mirage:enchant_instances", JSON.stringify(instances));
       } catch (e) {
       }
     }
     const alive = instances.filter((ns) => {
       try {
-        const hb = world33.getDynamicProperty(`mirage:enchant_hb_${ns}`);
+        const hb = world34.getDynamicProperty(`mirage:enchant_hb_${ns}`);
         return hb && now - hb < 5e3;
       } catch (e) {
         return false;
@@ -16769,7 +17172,7 @@ var EnchantmentManager = class {
     });
     if (alive.length !== instances.length) {
       try {
-        world33.setDynamicProperty("mirage:enchant_instances", JSON.stringify(alive));
+        world34.setDynamicProperty("mirage:enchant_instances", JSON.stringify(alive));
       } catch (e) {
       }
     }
@@ -16789,7 +17192,7 @@ var EnchantmentManager = class {
     if (!this.namespace || this.registry.size === 0) return;
     if (!this.isLeader) return;
     const activePlayers = /* @__PURE__ */ new Set();
-    for (const player of world33.getAllPlayers()) {
+    for (const player of world34.getAllPlayers()) {
       if (!player.isValid) continue;
       activePlayers.add(player.id);
       this.updateHitboxDummy(player);
@@ -16895,7 +17298,7 @@ var EnchantmentManager = class {
     const inventory = player.getComponent("minecraft:inventory").container;
     let sharedRegistry = /* @__PURE__ */ new Map();
     try {
-      const data = world33.getDynamicProperty("mirage:shared_registry");
+      const data = world34.getDynamicProperty("mirage:shared_registry");
       if (data) {
         const parsed = JSON.parse(data);
         for (const key in parsed) {
@@ -16926,7 +17329,7 @@ var EnchantmentManager = class {
       itemForm.button(`${label}
 \xA78Slot ${c.slot}`);
     });
-    system40.runTimeout(async () => {
+    system41.runTimeout(async () => {
       try {
         const itemResp = await itemForm.show(player);
         if (itemResp.canceled) return;
@@ -17112,7 +17515,7 @@ ${color}Cost: ${t.cost} Lvl`);
    * Scans players to toggle glint state.
    */
   manageVisuals() {
-    for (const player of world33.getAllPlayers()) {
+    for (const player of world34.getAllPlayers()) {
       const cursorComp = player.getComponent("minecraft:cursor_inventory");
       if (cursorComp && cursorComp.item) {
         const item = cursorComp.item;
@@ -17206,7 +17609,7 @@ enchantmentManager.register("gaia:thunder_strike", {
 });
 
 // src/main/bedrock/ts/entities/MalachiteGuard.ts
-import { world as world34, system as system41, EquipmentSlot as EquipmentSlot8, GameMode as GameMode6, EntityComponentTypes, EntityDamageCause } from "@minecraft/server";
+import { world as world35, system as system42, EquipmentSlot as EquipmentSlot8, GameMode as GameMode6, EntityComponentTypes, EntityDamageCause } from "@minecraft/server";
 var GUARD_ID = "gaiadimension:malachite_guard";
 var DRONE_ID = "gaiadimension:malachite_drone";
 var BATON_ID = "gaiadimension:malachite_guard_baton";
@@ -17288,13 +17691,13 @@ var MalachiteGuardSystem = class {
     this.init();
   }
   init() {
-    world34.afterEvents.entitySpawn.subscribe((event) => {
+    world35.afterEvents.entitySpawn.subscribe((event) => {
       const { entity } = event;
       if (entity.typeId === GUARD_ID) {
         this.setupGuard(entity);
       }
     });
-    system41.runInterval(() => {
+    system42.runInterval(() => {
       for (const dimension of getDimensions()) {
         const guards = dimension.getEntities({ type: GUARD_ID });
         for (const guard of guards) {
@@ -17306,7 +17709,7 @@ var MalachiteGuardSystem = class {
         }
       }
     }, 1);
-    world34.afterEvents.entityHurt.subscribe((event) => {
+    world35.afterEvents.entityHurt.subscribe((event) => {
       const { hurtEntity, damage, damageSource } = event;
       if (hurtEntity.typeId !== GUARD_ID || !hurtEntity.isValid) return;
       const phase = getNum(hurtEntity, P.PHASE, 0 /* Defence */);
@@ -17322,7 +17725,7 @@ var MalachiteGuardSystem = class {
       }
       if (phase === 0 /* Defence */) {
         if (damage > 0) {
-          system41.run(() => {
+          system42.run(() => {
             try {
               if (hurtEntity.isValid && health) {
                 health.setCurrentValue(Math.min(curHp + damage, maxHp));
@@ -17336,7 +17739,7 @@ var MalachiteGuardSystem = class {
       if (phase === 1 /* Attack */) {
         const threshold = maxHp / 2 - 2;
         if (curHp < threshold) {
-          system41.run(() => {
+          system42.run(() => {
             try {
               if (hurtEntity.isValid && health) {
                 health.setCurrentValue(threshold);
@@ -17350,7 +17753,7 @@ var MalachiteGuardSystem = class {
       if (phase === 2 /* Resist */) {
         if (!playerAttacker) {
           if (hurtEntity.location.y > -64) {
-            system41.run(() => {
+            system42.run(() => {
               try {
                 if (hurtEntity.isValid && health) {
                   health.setCurrentValue(Math.min(curHp + damage, maxHp));
@@ -17364,7 +17767,7 @@ var MalachiteGuardSystem = class {
         const mult = getDamageMultiplier(damage);
         if (mult < 1) {
           const reduction = damage * (1 - mult);
-          system41.run(() => {
+          system42.run(() => {
             try {
               if (hurtEntity.isValid && health) {
                 health.setCurrentValue(Math.min(curHp + reduction, maxHp));
@@ -17375,7 +17778,7 @@ var MalachiteGuardSystem = class {
         }
       }
     });
-    world34.afterEvents.entityHitEntity.subscribe((event) => {
+    world35.afterEvents.entityHitEntity.subscribe((event) => {
       const { damagingEntity, hitEntity } = event;
       if (isValidPlayer(damagingEntity) && hitEntity.isValid) {
         try {
@@ -17403,7 +17806,7 @@ var MalachiteGuardSystem = class {
           if (item) {
             const dim = hitEntity.dimension;
             const loc = hitEntity.location;
-            system41.run(() => {
+            system42.run(() => {
               try {
                 dim.spawnItem(item, { x: loc.x, y: loc.y + 0.5, z: loc.z });
                 equip.setEquipment(slot, void 0);
@@ -17416,7 +17819,7 @@ var MalachiteGuardSystem = class {
         }
       }
     });
-    world34.afterEvents.entityDie.subscribe((event) => {
+    world35.afterEvents.entityDie.subscribe((event) => {
       const { deadEntity } = event;
       if (deadEntity.typeId !== DRONE_ID) return;
       const parentId = getStr(deadEntity, P.PARENT_ID);
@@ -17438,7 +17841,7 @@ var MalachiteGuardSystem = class {
     setNum(guard, P.BIDE_DAMAGE, 0);
     setBool(guard, P.HAS_DRONES, true);
     setBool(guard, P.DRONES_SPAWNED, false);
-    system41.run(() => {
+    system42.run(() => {
       if (!guard.isValid) return;
       try {
         guard.triggerEvent("mg_defend");
@@ -17610,7 +18013,7 @@ var MalachiteGuardSystem = class {
         dim.runCommand(`particle minecraft:terrain_explosion ${gl.x} ${gl.y} ${gl.z}`);
       } catch {
       }
-      system41.runTimeout(() => {
+      system42.runTimeout(() => {
         if (!guard.isValid) return;
         setNum(guard, P.STOMP_COOLDOWN, STOMP_COOLDOWN);
         guard.triggerEvent("mg_stomp_end");
@@ -17701,7 +18104,7 @@ var malachiteGuardSystem = new MalachiteGuardSystem();
 // src/main/bedrock/ts/GaiaDimensionAddon.ts
 initializeDestructionHandlers();
 initializeEventManager();
-system42.beforeEvents?.shutdown?.subscribe((event) => event.cancel = true);
+system43.beforeEvents?.shutdown?.subscribe((event) => event.cancel = true);
 initializeScriptEvents();
 initializeGeyser();
 initializeLightMixin();
@@ -17709,7 +18112,7 @@ initializeGlitterGrassSync();
 initializeMagicStaffBehaviors();
 registerCustomTool();
 initDestroyedDimensionGuard();
-system42.beforeEvents.startup.subscribe((event) => {
+system43.beforeEvents.startup.subscribe((event) => {
   const { blockComponentRegistry, customCommandRegistry, itemComponentRegistry, dimensionRegistry } = event;
   const gaiaDimId = "gaiadimension:gaia_dimension";
   dimensionRegistry.registerCustomDimension(gaiaDimId);

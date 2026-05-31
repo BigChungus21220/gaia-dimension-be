@@ -1,6 +1,7 @@
 import { world, system, Player, Entity, ItemStack, EntityInventoryComponent, Container, EquipmentSlot } from "@minecraft/server";
+import { QIDB } from "../API/lib/QIDB.js";
 
-// §-encoded routing name for chest_screen matching: "gem_pouch" → "§g§e§m§_§p§o§u§c§h"
+// §-encoded routing name for chest_screen matching: "gem_pouch" -> "§g§e§m§_§p§o§u§c§h"
 const UI_ROUTING_NAME = `§${"gem_pouch".split('').join('§')}`;
 
 // Allowed gems (tag: gem_pouch_items in Java)
@@ -18,60 +19,76 @@ const ALLOWED_GEMS = new Set([
 const MAX_STACK_PER_SLOT = 16;
 const POUCH_ENTITY_ID = "gaiadimension:gem_pouch_container";
 
-// Track active pouch entities per player
+const MACHINE_ENTITY_TYPES = new Set([
+    "gaiadimension:crude_storage_crate",
+    "gaiadimension:mega_storage_crate",
+    "luminiae_generic:block_entity",
+    "luminiae_generic:block_entity_large"
+]);
+
+// Initialize QIDB database
+const pouchDB = new QIDB("g_pouch", 50, 1);
+
+// Track active pouches: playerId -> { entity, pouchId }
 const activePouches: Map<string, { entity: Entity, pouchId: string }> = new Map();
-
-// Track which players were crouching last check (to detect crouch START)
-const wasCrouching: Set<string> = new Set();
-
-// Cooldown to prevent rapid spawning
-const spawnCooldown: Map<string, number> = new Map();
-
-// ── Persistence ─────────────────────────────────────────────────────
-
-interface SerializedSlot {
-    slot: number;
-    typeId: string;
-    amount: number;
-}
 
 function getPouchId(itemStack: ItemStack): string {
     const lore = itemStack.getLore();
-    for (const line of lore) {
-        if (line.startsWith("§r§0pouch:")) {
-            return line.substring("§r§0pouch:".length);
+    let existingId: string | null = null;
+    let loreIndex = -1;
+    for (let i = 0; i < lore.length; i++) {
+        if (lore[i].startsWith("§r§0pouch:")) {
+            existingId = lore[i].substring("§r§0pouch:".length);
+            loreIndex = i;
+            break;
         }
     }
-    const id = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
-    const newLore = [...lore, `§r§0pouch:${id}`];
+    
+    // If ID exists and is reasonably short (valid), return it
+    if (existingId && existingId.length <= 12) {
+        return existingId;
+    }
+
+    // Generate new short ID
+    const id = Math.random().toString(36).substring(2, 10);
+    const newLore = [...lore];
+    if (loreIndex >= 0) {
+        newLore[loreIndex] = `§r§0pouch:${id}`; // Replace long/invalid ID
+    } else {
+        newLore.push(`§r§0pouch:${id}`);
+    }
     itemStack.setLore(newLore);
     return id;
 }
 
 function savePouchContents(pouchId: string, container: Container): void {
-    const slots: SerializedSlot[] = [];
+    const items: ItemStack[] = [];
     for (let i = 0; i < container.size; i++) {
         const item = container.getItem(i);
         if (item) {
-            slots.push({ slot: i, typeId: item.typeId, amount: item.amount });
+            items[i] = item;
         }
     }
-    world.setDynamicProperty(`pouch:${pouchId}`, JSON.stringify(slots));
+    try {
+        pouchDB.set(pouchId, items);
+    } catch (e) {
+        console.warn(`[GemPouch] Failed to save QIDB for ${pouchId}: ${e}`);
+    }
 }
 
 function loadPouchContents(pouchId: string, container: Container): void {
-    const data = world.getDynamicProperty(`pouch:${pouchId}`) as string | undefined;
-    if (!data) return;
-    
+    if (!pouchDB.has(pouchId)) return;
     try {
-        const slots: SerializedSlot[] = JSON.parse(data);
-        for (const slot of slots) {
-            try {
-                container.setItem(slot.slot, new ItemStack(slot.typeId, slot.amount));
-            } catch (e) {}
+        const items = pouchDB.get(pouchId);
+        if (Array.isArray(items)) {
+            for (let i = 0; i < container.size; i++) {
+                if (items[i]) {
+                    container.setItem(i, items[i] as ItemStack);
+                }
+            }
         }
     } catch (e) {
-        console.warn(`[GemPouch] Failed to load pouch ${pouchId}: ${e}`);
+        console.warn(`[GemPouch] Failed to load QIDB for ${pouchId}: ${e}`);
     }
 }
 
@@ -80,122 +97,144 @@ function cleanupPouch(playerId: string): void {
     if (!pouch) return;
     
     try {
-        const invComp = pouch.entity.getComponent("minecraft:inventory") as EntityInventoryComponent;
-        if (invComp && invComp.container) {
-            savePouchContents(pouch.pouchId, invComp.container);
+        if (pouch.entity.isValid) {
+            const invComp = pouch.entity.getComponent("minecraft:inventory") as EntityInventoryComponent;
+            if (invComp && invComp.container) {
+                savePouchContents(pouch.pouchId, invComp.container);
+            }
+            pouch.entity.remove();
         }
-        if (pouch.entity.isValid) pouch.entity.remove();
     } catch (e) {
         console.warn(`[GemPouch] Error cleaning up pouch entity: ${e}`);
     }
     activePouches.delete(playerId);
 }
 
-// ── Crouch Detection ────────────────────────────────────────────────
+// ── Pouch Entity Tracker ────────────────────────────────────────────
+
+// Track which players were crouching last check (to detect crouch START)
+const wasCrouching: Set<string> = new Set();
+const spawnCooldown: Map<string, number> = new Map();
+const shrunkMachines: Map<string, Set<Entity>> = new Map();
 
 system.runInterval(() => {
     const currentTick = (system as any).currentTick || 0;
     
     for (const player of world.getAllPlayers()) {
         try {
-            const isCrouching = player.isSneaking;
             const pid = player.id;
+            const equippable = player.getComponent("minecraft:equippable") as any;
+            if (!equippable) continue;
+            
+            const mainhand = equippable.getEquipment(EquipmentSlot.Mainhand) as ItemStack | undefined;
+            const isHoldingPouch = mainhand && mainhand.typeId === "gaiadimension:gem_pouch";
+            const isCrouching = player.isSneaking;
             const wasAlready = wasCrouching.has(pid);
             
-            if (isCrouching && !wasAlready) {
-                // Player just started crouching
-                wasCrouching.add(pid);
-                
-                // Check cooldown
-                const lastSpawn = spawnCooldown.get(pid) || 0;
-                if (currentTick - lastSpawn < 40) continue; // 2 second cooldown
-                
-                // Already has an active pouch?
-                if (activePouches.has(pid)) continue;
-                
-                // Check if holding gem pouch
-                const equippable = player.getComponent("minecraft:equippable") as any;
-                if (!equippable) continue;
-                
-                const mainhand = equippable.getEquipment(EquipmentSlot.Mainhand) as ItemStack | undefined;
-                if (!mainhand || mainhand.typeId !== "gaiadimension:gem_pouch") continue;
-                
-                // Get or create pouch ID
+            const pouch = activePouches.get(pid);
+            
+            if (isHoldingPouch) {
+                // Keep lore up to date
                 const pouchId = getPouchId(mainhand);
-                // Write updated item back (with pouch ID in lore)
-                equippable.setEquipment(EquipmentSlot.Mainhand, mainhand);
-                
-                spawnCooldown.set(pid, currentTick);
-                
-                // Spawn entity next tick
-                const playerRef = player;
-                system.run(() => {
-                    try {
-                        if (!playerRef.isValid) return;
+                const currentLore = mainhand.getLore();
+                if (!currentLore.some(l => l.startsWith("§r§0pouch:"))) {
+                    equippable.setEquipment(EquipmentSlot.Mainhand, mainhand);
+                }
+
+                // Crouch to spawn/move entity
+                if (isCrouching && !wasAlready) {
+                    wasCrouching.add(pid);
+                    const lastSpawn = spawnCooldown.get(pid) || 0;
+                    
+                    // Shrink nearby machines
+                    const myShrunk = new Set<Entity>();
+                    shrunkMachines.set(pid, myShrunk);
+                    const nearby = player.dimension.getEntities({ location: player.location, maxDistance: 6 });
+                    for (const m of nearby) {
+                        if (MACHINE_ENTITY_TYPES.has(m.typeId)) {
+                            try { m.triggerEvent("general_block_entity:shrink"); myShrunk.add(m); } catch (e) {}
+                        }
+                    }
+                    
+                    if (currentTick - lastSpawn >= 20) {
+                        spawnCooldown.set(pid, currentTick);
                         
-                        const loc = playerRef.location;
-                        const entity = playerRef.dimension.spawnEntity(POUCH_ENTITY_ID, {
-                            x: loc.x,
-                            y: loc.y,
-                            z: loc.z
+                        // If one already exists, clean it up before spawning a new one at current feet
+                        if (pouch) {
+                            cleanupPouch(pid);
+                        }
+                        
+                        const headLoc = player.getHeadLocation();
+                        const view = player.getViewDirection();
+                        const entity = player.dimension.spawnEntity(POUCH_ENTITY_ID, {
+                            x: headLoc.x + view.x * 1.5,
+                            y: headLoc.y + view.y * 1.5 - 1.25,
+                            z: headLoc.z + view.z * 1.5
                         });
                         
-                        // Set nameTag for UI routing IMMEDIATELY
                         entity.nameTag = UI_ROUTING_NAME;
                         entity.setDynamicProperty("pouchId", pouchId);
                         entity.setDynamicProperty("ownerId", pid);
+                        entity.addEffect("invisibility", 999999, { showParticles: false });
                         
-                        // Load saved contents
                         const invComp = entity.getComponent("minecraft:inventory") as EntityInventoryComponent;
                         if (invComp && invComp.container) {
                             loadPouchContents(pouchId, invComp.container);
                         }
                         
                         activePouches.set(pid, { entity, pouchId });
-                        console.warn(`[GemPouch] Spawned pouch entity for ${pid}, nameTag=${entity.nameTag}`);
-                    } catch (e) {
-                        console.warn(`[GemPouch] Failed to spawn: ${e}`);
                     }
-                });
+                } else if (!isCrouching && wasAlready) {
+                    wasCrouching.delete(pid);
+                    
+                    // Expand machines
+                    const myShrunk = shrunkMachines.get(pid);
+                    if (myShrunk) {
+                        for (const m of myShrunk) {
+                            try { if (m.isValid) m.triggerEvent("general_block_entity:expand"); } catch (e) {}
+                        }
+                        shrunkMachines.delete(pid);
+                    }
+                }
                 
-            } else if (!isCrouching && wasAlready) {
-                wasCrouching.delete(pid);
-            }
-        } catch (e) {}
-    }
-}, 2);
-
-// ── Pouch Entity Monitor (save & despawn when player walks away) ────
-
-system.runInterval(() => {
-    for (const [playerId, pouch] of activePouches) {
-        const { entity, pouchId } = pouch;
-        
-        if (!entity || !entity.isValid) {
-            activePouches.delete(playerId);
-            continue;
-        }
-
-        let playerNearby = false;
-        try {
-            for (const player of world.getAllPlayers()) {
-                if (player.id === playerId) {
-                    const dx = player.location.x - entity.location.x;
-                    const dy = player.location.y - entity.location.y;
-                    const dz = player.location.z - entity.location.z;
-                    if (dx * dx + dy * dy + dz * dz < 64) { // 8 blocks
-                        playerNearby = true;
+                // If they switched pouches while one was open, cleanup
+                if (pouch && pouch.pouchId !== pouchId) {
+                    cleanupPouch(pid);
+                }
+                
+                // Cleanup if they walk too far from the stationary pouch
+                if (pouch && pouch.entity.isValid) {
+                    const dx = player.location.x - pouch.entity.location.x;
+                    const dy = player.location.y - pouch.entity.location.y;
+                    const dz = player.location.z - pouch.entity.location.z;
+                    if (dx * dx + dy * dy + dz * dz > 64) {
+                        cleanupPouch(pid);
                     }
-                    break;
+                }
+                
+            } else {
+                // Despawn & save instantly when unequipped
+                if (pouch) {
+                    cleanupPouch(pid);
+                }
+                if (wasAlready) {
+                    wasCrouching.delete(pid);
+                    
+                    // Expand machines
+                    const myShrunk = shrunkMachines.get(pid);
+                    if (myShrunk) {
+                        for (const m of myShrunk) {
+                            try { if (m.isValid) m.triggerEvent("general_block_entity:expand"); } catch (e) {}
+                        }
+                        shrunkMachines.delete(pid);
+                    }
                 }
             }
-        } catch (e) {}
-
-        if (!playerNearby) {
-            cleanupPouch(playerId);
+        } catch (e) {
+            console.warn(`[GemPouch] Error in tracker for ${player.name}: ${e}`);
         }
     }
-}, 20);
+}, 2);
 
 // ── Item Filter ─────────────────────────────────────────────────────
 

@@ -2244,6 +2244,36 @@
         },
         "gaiadimension:phantom_void": {
             "textures": "textures/gaiadimension/androsa/absolute_void"
+        },
+        "gaia_glitter_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_glitter_grass_top"
+        },
+        "gaia_glitter_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_glitter_grass_side"
+        },
+        "gaia_corrupted_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_corrupted_grass_top"
+        },
+        "gaia_corrupted_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_corrupted_grass_side"
+        },
+        "gaia_murky_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_murky_grass_top"
+        },
+        "gaia_murky_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_murky_grass_side"
+        },
+        "gaia_soft_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_soft_grass_top"
+        },
+        "gaia_soft_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_soft_grass_side"
+        },
+        "gaia_gilded_grass_top": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_gilded_grass_top"
+        },
+        "gaia_gilded_grass_side": {
+            "textures": "textures/gaiadimension/gen/gaia_grass/gaia_gilded_grass_side"
         }
     }
 }

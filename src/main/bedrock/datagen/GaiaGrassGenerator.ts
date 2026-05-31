@@ -71,6 +71,12 @@ const OTHER_GRASSES: GaiaGrass[] = [
     { id: "golden_hills_gilded_grass",     name: "Golden Hills Gilded Grass",     soil: "gaiadimension:aurum_soil",     overlay: null,           tint: null,      mapColor: "#4C401E", srcBase: "gilded_grass" },
     { id: "golden_plains_gilded_grass",    name: "Golden Plains Gilded Grass",    soil: "gaiadimension:aurum_soil",     overlay: null,           tint: null,      mapColor: "#4C401E", srcBase: "gilded_grass" },
     { id: "golden_marsh_gilded_grass",     name: "Golden Marsh Gilded Grass",     soil: "gaiadimension:aurum_soil",     overlay: null,           tint: null,      mapColor: "#4C401E", srcBase: "gilded_grass" },
+    // BASE GRASSES FOR RECIPES / FEATURES
+    { id: "glitter_grass",                 name: "Glitter Grass",                 soil: "gaiadimension:heavy_soil",     overlay: "glitter_grass", tint: "#F2A3B4", mapColor: "#F2A3B4" },
+    { id: "corrupted_grass",               name: "Corrupted Grass",               soil: "gaiadimension:corrupted_soil", overlay: null,           tint: null,      mapColor: "#232323", srcBase: "corrupted_grass" },
+    { id: "murky_grass",                   name: "Murky Grass",                   soil: "gaiadimension:boggy_soil",     overlay: "murky_grass",  tint: "#262627", mapColor: "#262627" },
+    { id: "soft_grass",                    name: "Soft Grass",                    soil: "gaiadimension:light_soil",     overlay: "soft_grass",   tint: "#79CEAD", mapColor: "#79CEAD" },
+    { id: "gilded_grass",                  name: "Gilded Grass",                  soil: "gaiadimension:aurum_soil",     overlay: null,           tint: null,      mapColor: "#4C401E", srcBase: "gilded_grass" },
 ];
 
 const ALL_GRASSES: GaiaGrass[] = [...GLITTER_VARIANTS, ...OTHER_GRASSES];
