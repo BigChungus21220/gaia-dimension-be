@@ -80,13 +80,13 @@ export class Restructurer extends Machine {
     static get UI_CONFIG(): UIConfig {
         return {
             classicProfile: {
-                inputSlots: [0],
+                inputSlots: [0, 2],
                 fuelSlot: 1, // glittering fuel slot (also need slot 2 for shining)
                 resultSlots: [3],
                 secondaryResultSlot: 4
             },
             pocketProfile: {
-                inputSlots: [0],
+                inputSlots: [0, 2],
                 fuelSlot: 1,
                 resultSlots: [3],
                 secondaryResultSlot: 4
@@ -132,7 +132,7 @@ export class Restructurer extends Machine {
         const burnPercent = this.timers.max_burn.value > 0
             ? this.timers.burn.value / this.timers.max_burn.value
             : 0;
-        const burnFill = Math.ceil(burnPercent * 14);
+        const burnFill = Math.ceil(burnPercent * 56);
         this.setUiDisplay(5, `§6Fuel: ${Math.ceil(burnPercent * 100)}%`, burnFill);
 
         // Cook progress (slot 6) - vertical, max 24px
@@ -141,6 +141,7 @@ export class Restructurer extends Machine {
             : 0;
         const cookFill = Math.floor(cookPercent * 24);
         this.setUiDisplay(6, `§eProgress: ${Math.floor(cookPercent * 100)}%`, cookFill);
+
     }
 
     canProcess(): boolean {
@@ -148,27 +149,38 @@ export class Restructurer extends Machine {
         if (!inputItem) return false;
 
         const recipe = RESTRUCTURER_RECIPES[inputItem.typeId];
-        if (!recipe) return false;
+        if (!recipe) {
+            return false;
+        }
 
         // Check fuel state: if not burning, need BOTH fuels
         if (this.timers.burn.value <= 0) {
             const glitterFuel = this.inventory.getItem(1);
             const shineFuel = this.inventory.getItem(2);
-            if (!glitterFuel || !shineFuel) return false;
-            if (!GLITTERING_FUELS[glitterFuel.typeId] || !SHINING_FUELS[shineFuel.typeId]) return false;
+            if (!glitterFuel || !shineFuel) {
+                return false;
+            }
+            if (!GLITTERING_FUELS[glitterFuel.typeId] || !SHINING_FUELS[shineFuel.typeId]) {
+                return false;
+            }
         }
 
         // Check output slots
         const outputItem = this.inventory.getItem(3);
         if (outputItem) {
-            if (outputItem.typeId !== recipe.output || outputItem.amount + 1 > outputItem.maxStackSize) return false;
+            if (outputItem.typeId !== recipe.output || outputItem.amount + 1 > outputItem.maxStackSize) {
+                if (this.tickCount % 40 === 0) console.warn(`[RESTRUCT] canProcess FAIL: output slot 3 full or wrong type`);
+                return false;
+            }
         }
 
         const byproductItem = this.inventory.getItem(4);
         if (byproductItem) {
-            if (byproductItem.typeId !== recipe.byproduct || byproductItem.amount + 1 > byproductItem.maxStackSize) return false;
+            if (byproductItem.typeId !== recipe.byproduct || byproductItem.amount + 1 > byproductItem.maxStackSize) {
+                if (this.tickCount % 40 === 0) console.warn(`[RESTRUCT] canProcess FAIL: byproduct slot 4 full or wrong type`);
+                return false;
+            }
         }
-
         return true;
     }
 
@@ -242,18 +254,6 @@ blockEntityManager.register(Restructurer as any);
 
 export function registerRestructurerComponent({ blockComponentRegistry }: { blockComponentRegistry: BlockComponentRegistry }): void {
     blockComponentRegistry.registerCustomComponent("gaiadimension:restructurer", {
-        onPlace: (arg: { block: Block, dimension: Dimension }) => {
-            const { block, dimension } = arg;
-            const location: Vector3 = block.location;
-            const center: Vector3 = { x: location.x + 0.5, y: location.y, z: location.z + 0.5 };
-
-            try {
-                const entity = dimension.spawnEntity("luminiae_generic:block_entity", center);
-                blockEntityManager.registerEntityAsMachine(entity);
-            } catch (e) {
-                console.warn("Failed to spawn restructurer entity", e);
-            }
-        },
         onPlayerDestroy: () => {}
     });
 }

@@ -78,13 +78,13 @@ export class Purifier extends Machine {
     static get UI_CONFIG(): UIConfig {
         return {
             classicProfile: {
-                inputSlots: [0],
+                inputSlots: [0, 2, 3],
                 fuelSlot: 1, // glittering (also 2=shining, 3=nulling)
                 resultSlots: [4],
                 secondaryResultSlot: 5
             },
             pocketProfile: {
-                inputSlots: [0],
+                inputSlots: [0, 2, 3],
                 fuelSlot: 1,
                 resultSlots: [4],
                 secondaryResultSlot: 5
@@ -236,18 +236,6 @@ blockEntityManager.register(Purifier as any);
 
 export function registerPurifierComponent({ blockComponentRegistry }: { blockComponentRegistry: BlockComponentRegistry }): void {
     blockComponentRegistry.registerCustomComponent("gaiadimension:purifier", {
-        onPlace: (arg: { block: Block, dimension: Dimension }) => {
-            const { block, dimension } = arg;
-            const location: Vector3 = block.location;
-            const center: Vector3 = { x: location.x + 0.5, y: location.y, z: location.z + 0.5 };
-
-            try {
-                const entity = dimension.spawnEntity("luminiae_generic:block_entity", center);
-                blockEntityManager.registerEntityAsMachine(entity);
-            } catch (e) {
-                console.warn("Failed to spawn purifier entity", e);
-            }
-        },
         onPlayerDestroy: () => {}
     });
 }

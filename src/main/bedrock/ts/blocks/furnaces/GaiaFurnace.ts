@@ -202,18 +202,6 @@ blockEntityManager.register(GaiaFurnace as any);
 
 export function registerGaiaFurnaceComponent({ blockComponentRegistry }: { blockComponentRegistry: BlockComponentRegistry }): void {
     blockComponentRegistry.registerCustomComponent("gaiadimension:gaia_furnace", {
-        onPlace: (arg: { block: Block, dimension: Dimension }) => {
-            const { block, dimension } = arg;
-            const location: Vector3 = block.location;
-            const center: Vector3 = { x: location.x + 0.5, y: location.y, z: location.z + 0.5 };
-            
-            try {
-                const entity = dimension.spawnEntity("luminiae_generic:block_entity", center);
-                blockEntityManager.registerEntityAsMachine(entity);
-            } catch (e) {
-                console.warn("Failed to spawn gaia furnace entity", e);
-            }
-        },
         onPlayerDestroy: () => {
         }
     });

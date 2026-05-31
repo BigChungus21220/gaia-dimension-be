@@ -4232,17 +4232,6 @@ var GaiaFurnace = class _GaiaFurnace extends Machine {
 BlockEntity_default.register(GaiaFurnace);
 function registerGaiaFurnaceComponent({ blockComponentRegistry }) {
   blockComponentRegistry.registerCustomComponent("gaiadimension:gaia_furnace", {
-    onPlace: (arg) => {
-      const { block, dimension } = arg;
-      const location = block.location;
-      const center = { x: location.x + 0.5, y: location.y, z: location.z + 0.5 };
-      try {
-        const entity = dimension.spawnEntity("luminiae_generic:block_entity", center);
-        BlockEntity_default.registerEntityAsMachine(entity);
-      } catch (e) {
-        console.warn("Failed to spawn gaia furnace entity", e);
-      }
-    },
     onPlayerDestroy: () => {
     }
   });
@@ -4324,14 +4313,14 @@ var Restructurer = class _Restructurer extends Machine {
   static get UI_CONFIG() {
     return {
       classicProfile: {
-        inputSlots: [0],
+        inputSlots: [0, 2],
         fuelSlot: 1,
         // glittering fuel slot (also need slot 2 for shining)
         resultSlots: [3],
         secondaryResultSlot: 4
       },
       pocketProfile: {
-        inputSlots: [0],
+        inputSlots: [0, 2],
         fuelSlot: 1,
         resultSlots: [3],
         secondaryResultSlot: 4
@@ -4367,7 +4356,7 @@ var Restructurer = class _Restructurer extends Machine {
   }
   updateUI() {
     const burnPercent = this.timers.max_burn.value > 0 ? this.timers.burn.value / this.timers.max_burn.value : 0;
-    const burnFill = Math.ceil(burnPercent * 14);
+    const burnFill = Math.ceil(burnPercent * 56);
     this.setUiDisplay(5, `\xA76Fuel: ${Math.ceil(burnPercent * 100)}%`, burnFill);
     const cookPercent = this.timers.cook.max > 0 ? this.timers.cook.value / this.timers.cook.max : 0;
     const cookFill = Math.floor(cookPercent * 24);
@@ -4377,20 +4366,32 @@ var Restructurer = class _Restructurer extends Machine {
     const inputItem = this.inventory.getItem(0);
     if (!inputItem) return false;
     const recipe = RESTRUCTURER_RECIPES[inputItem.typeId];
-    if (!recipe) return false;
+    if (!recipe) {
+      return false;
+    }
     if (this.timers.burn.value <= 0) {
       const glitterFuel = this.inventory.getItem(1);
       const shineFuel = this.inventory.getItem(2);
-      if (!glitterFuel || !shineFuel) return false;
-      if (!GLITTERING_FUELS[glitterFuel.typeId] || !SHINING_FUELS[shineFuel.typeId]) return false;
+      if (!glitterFuel || !shineFuel) {
+        return false;
+      }
+      if (!GLITTERING_FUELS[glitterFuel.typeId] || !SHINING_FUELS[shineFuel.typeId]) {
+        return false;
+      }
     }
     const outputItem = this.inventory.getItem(3);
     if (outputItem) {
-      if (outputItem.typeId !== recipe.output || outputItem.amount + 1 > outputItem.maxStackSize) return false;
+      if (outputItem.typeId !== recipe.output || outputItem.amount + 1 > outputItem.maxStackSize) {
+        if (this.tickCount % 40 === 0) console.warn(`[RESTRUCT] canProcess FAIL: output slot 3 full or wrong type`);
+        return false;
+      }
     }
     const byproductItem = this.inventory.getItem(4);
     if (byproductItem) {
-      if (byproductItem.typeId !== recipe.byproduct || byproductItem.amount + 1 > byproductItem.maxStackSize) return false;
+      if (byproductItem.typeId !== recipe.byproduct || byproductItem.amount + 1 > byproductItem.maxStackSize) {
+        if (this.tickCount % 40 === 0) console.warn(`[RESTRUCT] canProcess FAIL: byproduct slot 4 full or wrong type`);
+        return false;
+      }
     }
     return true;
   }
@@ -4448,17 +4449,6 @@ var Restructurer = class _Restructurer extends Machine {
 BlockEntity_default.register(Restructurer);
 function registerRestructurerComponent({ blockComponentRegistry }) {
   blockComponentRegistry.registerCustomComponent("gaiadimension:restructurer", {
-    onPlace: (arg) => {
-      const { block, dimension } = arg;
-      const location = block.location;
-      const center = { x: location.x + 0.5, y: location.y, z: location.z + 0.5 };
-      try {
-        const entity = dimension.spawnEntity("luminiae_generic:block_entity", center);
-        BlockEntity_default.registerEntityAsMachine(entity);
-      } catch (e) {
-        console.warn("Failed to spawn restructurer entity", e);
-      }
-    },
     onPlayerDestroy: () => {
     }
   });
@@ -4538,14 +4528,14 @@ var Purifier = class _Purifier extends Machine {
   static get UI_CONFIG() {
     return {
       classicProfile: {
-        inputSlots: [0],
+        inputSlots: [0, 2, 3],
         fuelSlot: 1,
         // glittering (also 2=shining, 3=nulling)
         resultSlots: [4],
         secondaryResultSlot: 5
       },
       pocketProfile: {
-        inputSlots: [0],
+        inputSlots: [0, 2, 3],
         fuelSlot: 1,
         resultSlots: [4],
         secondaryResultSlot: 5
@@ -4664,17 +4654,6 @@ var Purifier = class _Purifier extends Machine {
 BlockEntity_default.register(Purifier);
 function registerPurifierComponent({ blockComponentRegistry }) {
   blockComponentRegistry.registerCustomComponent("gaiadimension:purifier", {
-    onPlace: (arg) => {
-      const { block, dimension } = arg;
-      const location = block.location;
-      const center = { x: location.x + 0.5, y: location.y, z: location.z + 0.5 };
-      try {
-        const entity = dimension.spawnEntity("luminiae_generic:block_entity", center);
-        BlockEntity_default.registerEntityAsMachine(entity);
-      } catch (e) {
-        console.warn("Failed to spawn purifier entity", e);
-      }
-    },
     onPlayerDestroy: () => {
     }
   });

@@ -61,7 +61,7 @@
 					"$index": 5,
 					"anchor_from": "top_left",
 					"anchor_to": "top_left",
-					"offset": [68, 19]
+					"offset": [78, 19]
 				}
 			},
 			{
@@ -69,14 +69,14 @@
 					"$index": 6,
 					"anchor_from": "top_left",
 					"anchor_to": "top_left",
-					"offset": [80, 51]
+					"offset": [82, 53]
 				}
 			}
 		]
 	},
 	"burn_bar": {
 		"type": "panel",
-		"size": [38, 16],
+		"size": [56, 56],
 		"controls": [
 			{
 				"fill@gaia_machines.specific_slot": {
@@ -95,7 +95,7 @@
 										"clip": {
 											"type": "panel",
 											"clips_children": true,
-											"size": [38, 16],
+											"size": [56, 56],
 											"anchor_from": "bottom_left",
 											"anchor_to": "bottom_left",
 											"bindings": "$use_durability",
@@ -107,7 +107,7 @@
 													"image": {
 														"type": "image",
 														"texture": "textures/gaiadimension/androsa/gui/machines/restructurer_burn_fill",
-														"size": [38, 16],
+														"size": [56, 56],
 														"anchor_from": "bottom_left",
 														"anchor_to": "bottom_left"
 													}
