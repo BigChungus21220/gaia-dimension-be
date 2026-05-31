@@ -124,18 +124,18 @@ export class Purifier extends Machine {
     }
 
     updateUI(): void {
-        // Burn bar (slot 6) - vertical, max 20px
+        // Burn bar (slot 6) - vertical, max 22px
         const burnPercent = this.timers.max_burn.value > 0
             ? this.timers.burn.value / this.timers.max_burn.value
             : 0;
         const burnFill = Math.ceil(burnPercent * 22);
         this.setUiDisplay(6, `§6Fuel: ${Math.ceil(burnPercent * 100)}%`, burnFill);
 
-        // Cook progress (slot 7) - horizontal, max 47px
+        // Cook progress (slot 7) - vertical, max 24px
         const cookPercent = this.timers.cook.max > 0
             ? this.timers.cook.value / this.timers.cook.max
             : 0;
-        const cookFill = Math.floor(cookPercent * 24);
+        const cookFill = Math.ceil(cookPercent * 24);
         this.setUiDisplay(7, `§eProgress: ${Math.floor(cookPercent * 100)}%`, cookFill);
     }
 

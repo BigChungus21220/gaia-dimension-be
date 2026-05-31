@@ -67,7 +67,7 @@
 					"$index": 7,
 					"anchor_from": "top_left",
 					"anchor_to": "top_left",
-					"offset": [65, 82]
+					"offset": [64, 82]
 				}
 			},
 			{
@@ -75,7 +75,7 @@
 					"$index": 6,
 					"anchor_from": "top_left",
 					"anchor_to": "top_left",
-					"offset": [78, 57]
+					"offset": [78, 54]
 				}
 			}
 		]
