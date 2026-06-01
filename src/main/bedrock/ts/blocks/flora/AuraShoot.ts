@@ -57,7 +57,17 @@ export const AuraShootComponent: BlockCustomComponent = {
         const { block } = event;
         const loc = block.location;
         const locationColor = (Math.abs(loc.x % 5)) + (Math.abs(loc.z % 5));
-        block.setPermutation(block.permutation.withState("gaiadimension:color", locationColor));
+        
+        let isTop = true;
+        const blockAbove = block.above();
+        if (blockAbove) {
+            const isTrunk = blockAbove.typeId.includes("log") || blockAbove.typeId.includes("wood");
+            if (blockAbove.typeId === "gaiadimension:aura_shoot" || isTrunk) {
+                isTop = false;
+            }
+        }
+        
+        block.setPermutation(block.permutation.withState("gaiadimension:color", locationColor).withState("gaiadimension:is_top", isTop));
 
         const blockBelow = block.below();
         if (blockBelow && blockBelow.typeId === "gaiadimension:aura_shoot") {
@@ -78,4 +88,38 @@ export const AuraShootComponent: BlockCustomComponent = {
 
 export function registerAuraShootComponent({ blockComponentRegistry }: { blockComponentRegistry: any }) {
     blockComponentRegistry.registerCustomComponent("gaiadimension:aura_shoot", AuraShootComponent);
+
+    // Global listener for when ANY block is placed (like a trunk) on top of an aura shoot
+    world.afterEvents.playerPlaceBlock.subscribe((event) => {
+        const { block } = event;
+        const blockBelow = block.below();
+        if (blockBelow && blockBelow.typeId === "gaiadimension:aura_shoot") {
+            const isTrunk = block.typeId.includes("log") || block.typeId.includes("wood");
+            if (block.typeId === "gaiadimension:aura_shoot" || isTrunk) {
+                const currentPerm = blockBelow.permutation.withState("gaiadimension:is_top", false);
+                blockBelow.setPermutation(currentPerm);
+            }
+        }
+    });
+
+    // Global listener for when ANY block is broken (like a trunk) above an aura shoot
+    world.afterEvents.playerBreakBlock.subscribe((event) => {
+        const { block } = event; // This is now AIR
+        const blockBelow = block.below();
+        if (blockBelow && blockBelow.typeId === "gaiadimension:aura_shoot") {
+            // Re-evaluate if there's anything else above it somehow, but usually it's just air now
+            const blockAbove = blockBelow.above();
+            let isTop = true;
+            if (blockAbove) {
+                const isTrunk = blockAbove.typeId.includes("log") || blockAbove.typeId.includes("wood");
+                if (blockAbove.typeId === "gaiadimension:aura_shoot" || isTrunk) {
+                    isTop = false;
+                }
+            }
+            if (isTop) {
+                const currentPerm = blockBelow.permutation.withState("gaiadimension:is_top", true);
+                blockBelow.setPermutation(currentPerm);
+            }
+        }
+    });
 }
