@@ -334,12 +334,23 @@ export class ChunkGenerator {
                 yield; // yield per X-row
             }
 
+            // 4.5 Custom Features
+            const centerBiome = biomeMap[8 * 16 + 8] || biomeMap[0];
+            if (centerBiome && centerBiome.features && centerBiome.features.length > 0) {
+                for (const feature of centerBiome.features) {
+                    try {
+                        feature.place(dim, random, worldX, worldZ, terrainMap, underwaterMap);
+                    } catch (fErr) {
+                        console.warn(`[GaiaDim] Feature place failed at chunk ${X},${Z}: ${fErr}`);
+                    }
+                }
+            }
+
             // 5. Trees — Java countExtra(count, chance, extra) + InSquarePlacement
             // Java picks N random XZ positions per chunk, NOT per-block chance.
             // This prevents the noise-gated dead zones that caused treeless biomes.
 
             // Find dominant biome for tree count (Java uses per-biome feature placement)
-            const centerBiome = biomeMap[8 * 16 + 8] || biomeMap[0];
             if (centerBiome && centerBiome.hasTrees && centerBiome.treesPerChunk >= 0) {
                 // Java countExtra: count + (random < chance ? extra : 0)
                 let totalTrees = centerBiome.treesPerChunk;

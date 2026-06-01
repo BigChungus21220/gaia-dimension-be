@@ -2,6 +2,7 @@ import { BiomeDefinition } from "../definitions/definition-biome";
 import { DEFINITION_MANAGER } from "../definitions/index";
 import { PalettedBrush } from "../utils";
 import { CuttedSpruceTreeDefinition, PillarTreeDefinition, SpruceTreeDefinition, TreePalette } from "../definitions/definition-tree";
+import { AuraShootsFeature } from "../definitions/features/AuraShootsFeature";
 
 /**
  * GAIA DIMENSION BIOMES — Block data ported 1:1 from Java source
@@ -152,6 +153,7 @@ bm.addBiome(new BiomeDefinition("gaiadimension:shining_grove")
     .setUnderGroundPalette(new PalettedBrush().add("gaiadimension:light_soil"))
     .setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_aura", 5).add("gaiadimension:thiscus", 3).add("gaiadimension:spotted_kersei", 2))
     .setVegetationChance(0.15).setTrees(new TreePalette().add(auraTree)).setTreesPerChunk(2, 0.1, 1)
+    .addFeature(new AuraShootsFeature())
     .setDepth(0.4).setScale(0.05));
 
 bm.addBiome(new BiomeDefinition("gaiadimension:mookaite_mesa")

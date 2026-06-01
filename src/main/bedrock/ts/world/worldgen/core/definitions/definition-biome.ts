@@ -1,5 +1,6 @@
 import { PalettedBrush, ProceduralRandom } from "../utils";
 import { TreeDefinition, TreePalette } from "./definition-tree";
+import { Feature } from "./features/Feature";
 
 export class BiomeDefinition {
     public id: string;
@@ -24,6 +25,7 @@ export class BiomeDefinition {
     public IsPrecalculated: boolean;
     public depth: number;
     public scale: number;
+    public features: Feature[];
 
     constructor(id: string){
         this.id =  id;
@@ -43,6 +45,7 @@ export class BiomeDefinition {
         this.IsPrecalculated = false;
         this.depth = 0.125;
         this.scale = 0.05;
+        this.features = [];
     }
 
     setDepth(p: number): this { this.depth = p; return this; }
@@ -73,6 +76,11 @@ export class BiomeDefinition {
         this.treesPerChunk = count;
         this.treesExtraChance = chance;
         this.treesExtra = extra;
+        return this;
+    }
+
+    addFeature(feature: Feature): this {
+        this.features.push(feature);
         return this;
     }
 

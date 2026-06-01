@@ -15911,6 +15911,7 @@ var BiomeDefinition = class {
   IsPrecalculated;
   depth;
   scale;
+  features;
   constructor(id) {
     this.id = id;
     this.trees = new TreePalette();
@@ -15929,6 +15930,7 @@ var BiomeDefinition = class {
     this.IsPrecalculated = false;
     this.depth = 0.125;
     this.scale = 0.05;
+    this.features = [];
   }
   setDepth(p) {
     this.depth = p;
@@ -15960,6 +15962,10 @@ var BiomeDefinition = class {
     this.treesPerChunk = count;
     this.treesExtraChance = chance;
     this.treesExtra = extra;
+    return this;
+  }
+  addFeature(feature) {
+    this.features.push(feature);
     return this;
   }
   setTrees(p) {
@@ -16435,6 +16441,15 @@ var ChunkGenerator = class _ChunkGenerator {
         yield;
       }
       const centerBiome = biomeMap[8 * 16 + 8] || biomeMap[0];
+      if (centerBiome && centerBiome.features && centerBiome.features.length > 0) {
+        for (const feature of centerBiome.features) {
+          try {
+            feature.place(dim, random, worldX, worldZ, terrainMap, underwaterMap);
+          } catch (fErr) {
+            console.warn(`[GaiaDim] Feature place failed at chunk ${X},${Z}: ${fErr}`);
+          }
+        }
+      }
       if (centerBiome && centerBiome.hasTrees && centerBiome.treesPerChunk >= 0) {
         let totalTrees = centerBiome.treesPerChunk;
         if (random.nextFloat() < centerBiome.treesExtraChance) {
@@ -16947,6 +16962,65 @@ async function playerInitialize(player) {
   local.start();
 }
 
+// src/main/bedrock/ts/world/worldgen/core/definitions/features/AuraShootsFeature.ts
+import { BlockPermutation as BlockPermutation19 } from "@minecraft/server";
+
+// src/main/bedrock/ts/world/worldgen/core/definitions/features/Feature.ts
+var Feature = class {
+};
+
+// src/main/bedrock/ts/world/worldgen/core/definitions/features/AuraShootsFeature.ts
+var AuraShootsFeature = class extends Feature {
+  place(dim, random, worldX, worldZ, terrainMap, underwaterMap) {
+    for (let i = 0; i < 20; ++i) {
+      const centerX = Math.floor(random.nextFloat() * 16);
+      const centerZ = Math.floor(random.nextFloat() * 16);
+      const dx = Math.floor(random.nextFloat() * 4) - Math.floor(random.nextFloat() * 4);
+      const dz = Math.floor(random.nextFloat() * 4) - Math.floor(random.nextFloat() * 4);
+      let localX = centerX + dx;
+      let localZ = centerZ + dz;
+      if (localX < 0 || localX > 15 || localZ < 0 || localZ > 15) {
+        continue;
+      }
+      const tIdx = localX * 16 + localZ;
+      if (underwaterMap[tIdx]) continue;
+      const terrain = terrainMap[tIdx];
+      if (terrain === void 0) continue;
+      const txx = worldX + localX;
+      const tzz = worldZ + localZ;
+      const ty = terrain + 1;
+      const block = dim.getBlock({ x: txx, y: ty, z: tzz });
+      if (block && block.typeId === "minecraft:air") {
+        const ground = dim.getBlock({ x: txx, y: terrain, z: tzz });
+        if (!ground || !ground.typeId.includes("soil") && !ground.typeId.includes("grass") && !ground.typeId.includes("mookaite") && !ground.typeId.includes("dirt")) {
+          continue;
+        }
+        const height = 7 + Math.floor(random.nextFloat() * 5);
+        const color = Math.abs(txx % 5) + Math.abs(tzz % 5);
+        for (let k = 0; k < height; ++k) {
+          const currentY = ty + k;
+          const b = dim.getBlock({ x: txx, y: currentY, z: tzz });
+          if (b && (b.typeId === "minecraft:air" || b.typeId.includes("leaves") || b.typeId.includes("grass"))) {
+            const isTop = k + 1 === height;
+            const perm = BlockPermutation19.resolve("gaiadimension:aura_shoot", {
+              "gaiadimension:is_top": isTop,
+              "gaiadimension:color": color,
+              "gaiadimension:age": 0
+            });
+            try {
+              b.setPermutation(perm);
+            } catch (e) {
+              console.warn(`[GaiaDim] Failed to place Aura Shoot at ${txx},${currentY},${tzz}`);
+            }
+          } else {
+            break;
+          }
+        }
+      }
+    }
+  }
+};
+
 // src/main/bedrock/ts/world/worldgen/core/my_world/biomes.ts
 var pinkAgateTree = new SpruceTreeDefinition();
 pinkAgateTree.id = "pink_agate";
@@ -17014,7 +17088,7 @@ bm.addBiome(new BiomeDefinition("gaiadimension:volcanic_lands").setGroundPalette
 bm.addBiome(new BiomeDefinition("gaiadimension:static_wasteland").setGroundPalette(new PalettedBrush().add("gaiadimension:wasteland_stone")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:static_stone")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_black", 3).add("gaiadimension:crystal_growth_mutant", 2)).setVegetationChance(0.03).setDepth(3).setScale(0.05));
 bm.addBiome(new BiomeDefinition("gaiadimension:salt_dunes").setGroundPalette(new PalettedBrush().add("gaiadimension:salt")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:saltstone")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 2)).setVegetationChance(0.02).setDepth(0.2).setScale(0.05));
 bm.addBiome(new BiomeDefinition("gaiadimension:smoldering_bog").setGroundPalette(new PalettedBrush().add("gaiadimension:smoldering_bog_murky_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:boggy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_seared", 3).add("gaiadimension:roofed_agaric", 2).add("gaiadimension:corrupted_varloom", 1)).setVegetationChance(0.12).setTrees(new TreePalette().add(fireAgateTree)).setTreesPerChunk(0, 0.1, 1).setDepth(0.2).setScale(0.02));
-bm.addBiome(new BiomeDefinition("gaiadimension:shining_grove").setGroundPalette(new PalettedBrush().add("gaiadimension:shining_grove_soft_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:light_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_aura", 5).add("gaiadimension:thiscus", 3).add("gaiadimension:spotted_kersei", 2)).setVegetationChance(0.15).setTrees(new TreePalette().add(auraTree)).setTreesPerChunk(2, 0.1, 1).setDepth(0.4).setScale(0.05));
+bm.addBiome(new BiomeDefinition("gaiadimension:shining_grove").setGroundPalette(new PalettedBrush().add("gaiadimension:shining_grove_soft_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:light_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_aura", 5).add("gaiadimension:thiscus", 3).add("gaiadimension:spotted_kersei", 2)).setVegetationChance(0.15).setTrees(new TreePalette().add(auraTree)).setTreesPerChunk(2, 0.1, 1).addFeature(new AuraShootsFeature()).setDepth(0.4).setScale(0.05));
 bm.addBiome(new BiomeDefinition("gaiadimension:mookaite_mesa").setGroundPalette(new PalettedBrush().add("gaiadimension:mookaite_mesa_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:auburn_mookaite")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_red", 2).add("gaiadimension:gold_orb_tucher", 1)).setVegetationChance(0.03).setDepth(2).setScale(0.075));
 bm.addBiome(new BiomeDefinition("gaiadimension:purple_agate_swamp").setGroundPalette(new PalettedBrush().add("gaiadimension:purple_agate_swamp_glitter_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:heavy_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth", 3).add("gaiadimension:corrupted_gaia_eye", 2).add("gaiadimension:corrupted_varloom", 2).add("gaiadimension:roofed_agaric", 1)).setVegetationChance(0.18).setTrees(new TreePalette().add(purpleAgateTree).add(corruptedTree)).setTreesPerChunk(1, 0.1, 2).setDepth(0).setScale(0.05));
 bm.addBiome(new BiomeDefinition("gaiadimension:goldstone_lands").setGroundPalette(new PalettedBrush().add("gaiadimension:goldstone_lands_corrupted_grass")).setUnderGroundPalette(new PalettedBrush().add("gaiadimension:corrupted_soil")).setVegetationPalette(new PalettedBrush().add("gaiadimension:crystal_growth_black", 3).add("gaiadimension:corrupted_gaia_eye", 2)).setVegetationChance(0.06).setTrees(new TreePalette().add(corruptedTree)).setTreesPerChunk(1, 0.1, 1).setDepth(0.125).setScale(0.05));
