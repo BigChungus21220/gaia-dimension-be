@@ -6,7 +6,7 @@
     "watch": "node watch.js"
   },
   "dependencies": {
-    "@minecraft/server-ui": "^2.1.0-beta.1.26.30-preview.27",
+    "@minecraft/server-ui": "^2.0.0",
     "@minecraft/vanilla-data": "^1.26.13",
     "cannon-es": "^0.20.0",
     "fastnoise-lite": "^1.1.1",
@@ -14,7 +14,7 @@
     "prismarine-nbt": "^2.8.0"
   },
   "devDependencies": {
-    "@minecraft/server": "^2.9.0-beta.1.26.30-preview.21",
+    "@minecraft/server": "^2.8.0",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^25.5.0",
     "adm-zip": "^0.5.16",

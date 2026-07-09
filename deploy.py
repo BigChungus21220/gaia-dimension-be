@@ -12,7 +12,8 @@ BP_PATH = "data"
 RP_PATH = "resources"
 
 # Updated Mojang Folder Configuration
-MOJANG_DIR = r"C:\Users\ADMIN\AppData\Roaming\Minecraft Bedrock\Users\Shared\games\com.mojang"
+appdata = os.environ.get('APPDATA', r"C:\Users\ADMIN\AppData\Roaming")
+MOJANG_DIR = os.path.join(appdata, "Minecraft Bedrock", "Users", "Shared", "games", "com.mojang")
 
 DEV_BP_DIR = os.path.join(MOJANG_DIR, 'development_behavior_packs', 'GaiaDimensions_BP')
 DEV_RP_DIR = os.path.join(MOJANG_DIR, 'development_resource_packs', 'GaiaDimension_RP')
