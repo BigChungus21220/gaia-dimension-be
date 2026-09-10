@@ -24,6 +24,7 @@ export class EnchantmentManager {
     constructor() {
         this.registry = new Map();
         this.uiCooldowns = new Map();
+        this.playerActiveEnchants = new Map();
         this.namespace = null;
         this.limitChecker = null;
         this.limitIncrementer = null;
@@ -128,18 +129,26 @@ export class EnchantmentManager {
                 let reg = world.scoreboard.getObjective("ench_reg");
                 if (!reg) {
                     try {
-                        const dim = world.getDimension("overworld");
-                        dim?.runCommand?.("scoreboard objectives add ench_reg dummy");
-                        reg = world.scoreboard.getObjective("ench_reg");
+                        reg = world.scoreboard.addObjective("ench_reg", "Enchantment Registry");
                     } catch (e) {
-                        try { reg = world.scoreboard.addObjective("ench_reg", "Enchantment Registry"); } catch (e2) {}
+                        try {
+                            const dim = world.getDimension("overworld");
+                            dim?.runCommand?.("scoreboard objectives add ench_reg dummy");
+                            reg = world.scoreboard.getObjective("ench_reg");
+                        } catch (e2) {}
                     }
                 }
-                const costSample = typeof config.costPerLevel === "function" ? config.costPerLevel(1) : costMultiplier;
-                const typesStr = appliesTo.join(",");
-                const regKey = `#${clean}:${config.name}:${typesStr}:${maxLevel}:${costSample}`;
-                const dim = world.getDimension("overworld");
-                dim?.runCommand?.(`scoreboard players set "${regKey}" ench_reg 1`);
+                if (reg) {
+                    const costSample = typeof config.costPerLevel === "function" ? config.costPerLevel(1) : costMultiplier;
+                    const typesStr = appliesTo.join(",");
+                    const regKey = `#${clean}:${config.name}:${typesStr}:${maxLevel}:${costSample}`;
+                    try {
+                        reg.setScore(regKey, 1);
+                    } catch (e) {
+                        const dim = world.getDimension("overworld");
+                        dim?.runCommand?.(`scoreboard players set "${regKey}" ench_reg 1`);
+                    }
+                }
             } catch (err) {}
         });
     }
@@ -507,9 +516,119 @@ export class EnchantmentManager {
         }
     }
 
+    /**
+     * Mirrors active equipped custom enchantments onto player scoreboards (ench_<id>).
+     * Enables vanilla commands (/execute as @a[scores={ench_<id>=1..}]),
+     * animation controllers, and Molang queries to react to active enchantments.
+     * Executed on a 2-tick interval.
+     */
+    mirrorPlayerScoreboards() {
+        if (typeof world === "undefined" || !world.scoreboard || !world.getAllPlayers) return;
+
+        for (const player of world.getAllPlayers()) {
+            if (!player || !player.isValid) continue;
+
+            const equip = player.getComponent("minecraft:equippable");
+            if (!equip) continue;
+
+            const activeEnchants = new Map();
+            const slots = [
+                EquipmentSlot.Mainhand,
+                EquipmentSlot.Offhand,
+                EquipmentSlot.Head,
+                EquipmentSlot.Chest,
+                EquipmentSlot.Legs,
+                EquipmentSlot.Feet
+            ];
+
+            for (const slot of slots) {
+                const item = equip.getEquipment(slot);
+                if (!item) continue;
+
+                const enchants = this.getEnchantments(item);
+                for (const [id, level] of Object.entries(enchants)) {
+                    const clean = this.cleanId(id);
+                    const currentMax = activeEnchants.get(clean) || 0;
+                    if (level > currentMax) {
+                        activeEnchants.set(clean, level);
+                    }
+                }
+            }
+
+            let trackedSet = this.playerActiveEnchants.get(player.id);
+            if (!trackedSet) {
+                trackedSet = new Set();
+                this.playerActiveEnchants.set(player.id, trackedSet);
+            }
+
+            for (const [id, level] of activeEnchants) {
+                const objName = `ench_${id}`;
+                let obj = world.scoreboard.getObjective(objName);
+                if (!obj) {
+                    try {
+                        obj = world.scoreboard.addObjective(objName, `Ench: ${id}`);
+                    } catch (e1) {
+                        try {
+                            const dim = world.getDimension("overworld");
+                            dim?.runCommand?.(`scoreboard objectives add "${objName}" dummy`);
+                            obj = world.scoreboard.getObjective(objName);
+                        } catch (e2) {}
+                    }
+                }
+
+                if (obj) {
+                    try {
+                        const currentScore = obj.getScore(player);
+                        if (currentScore !== level) {
+                            obj.setScore(player, level);
+                        }
+                    } catch (e) {
+                        try {
+                            const dim = world.getDimension("overworld");
+                            dim?.runCommand?.(`scoreboard players set @a[name="${player.name}"] "${objName}" ${level}`);
+                        } catch (e2) {}
+                    }
+                }
+                trackedSet.add(id);
+            }
+
+            for (const oldId of trackedSet) {
+                if (!activeEnchants.has(oldId)) {
+                    const objName = `ench_${oldId}`;
+                    const obj = world.scoreboard.getObjective(objName);
+                    if (obj) {
+                        try {
+                            const score = obj.getScore(player);
+                            if (score !== 0 && typeof score === "number") {
+                                obj.setScore(player, 0);
+                            }
+                        } catch (e) {
+                            try {
+                                const dim = world.getDimension("overworld");
+                                dim?.runCommand?.(`scoreboard players set @a[name="${player.name}"] "${objName}" 0`);
+                            } catch (e2) {}
+                        }
+                    }
+                    trackedSet.delete(oldId);
+                }
+            }
+        }
+    }
+
     initEvents() {
         // Visual Management Loop (Cursor inventory suppression vs Equipment glint)
         system.runInterval?.(() => this.manageVisuals(), 5);
+
+        // Active Scoreboard Mirror Loop (player ench_<id> synchronization)
+        system.runInterval?.(() => this.mirrorPlayerScoreboards(), 2);
+
+        // Clean up per-player tracking on leave
+        world.afterEvents?.playerLeave?.subscribe?.((ev) => {
+            if (ev?.playerId) {
+                this.playerActiveEnchants.delete(ev.playerId);
+                this.uiCooldowns.delete(ev.playerId);
+            }
+        });
 
         // 1. Block Interact Trigger (Enchanting Table & Anvil)
         world.beforeEvents?.playerInteractWithBlock?.subscribe?.((ev) => {
@@ -520,18 +639,19 @@ export class EnchantmentManager {
             if (block.typeId === "minecraft:enchanting_table") {
                 ev.cancel = true;
 
-                if (!this.claimScoreboardMutex("#ui_lock", 20)) {
-                    return; // Another addon already claimed table UI in this window
-                }
-
-                const now = Date.now();
-                if (this.uiCooldowns.has(player.id) && now - this.uiCooldowns.get(player.id) < 500) return;
-                this.uiCooldowns.set(player.id, now);
-
+                // Move mutex acquisition into system.run so setScore runs in unrestricted mode!
                 system.run(() => {
-                    if (player.isValid) {
-                        this.openEnchantmentUI(player);
+                    if (!player.isValid) return;
+
+                    if (!this.claimScoreboardMutex("#ui_lock", 20)) {
+                        return; // Another addon already claimed table UI in this window
                     }
+
+                    const now = Date.now();
+                    if (this.uiCooldowns.has(player.id) && now - this.uiCooldowns.get(player.id) < 500) return;
+                    this.uiCooldowns.set(player.id, now);
+
+                    this.openEnchantmentUI(player);
                 });
             }
 
@@ -544,24 +664,25 @@ export class EnchantmentManager {
                 if (enchantId) {
                     ev.cancel = true;
 
-                    if (!this.claimScoreboardMutex("#anvil_lock", 20)) {
-                        return; // Another addon already claimed anvil UI in this window
-                    }
-
-                    const now = Date.now();
-                    if (this.uiCooldowns.has(player.id) && now - this.uiCooldowns.get(player.id) < 500) return;
-                    this.uiCooldowns.set(player.id, now);
-
+                    // Move mutex acquisition into system.run so setScore runs in unrestricted mode!
                     system.run(() => {
-                        if (player.isValid) {
-                            player.dimension.spawnParticle("minecraft:villager_happy", {
-                                x: block.location.x + 0.5,
-                                y: block.location.y + 1,
-                                z: block.location.z + 0.5
-                            });
-                            player.playSound("random.anvil_use");
-                            this.openAnvilBookApplyUI(player, itemStack, enchantId);
+                        if (!player.isValid) return;
+
+                        if (!this.claimScoreboardMutex("#anvil_lock", 20)) {
+                            return; // Another addon already claimed anvil UI in this window
                         }
+
+                        const now = Date.now();
+                        if (this.uiCooldowns.has(player.id) && now - this.uiCooldowns.get(player.id) < 500) return;
+                        this.uiCooldowns.set(player.id, now);
+
+                        player.dimension?.spawnParticle?.("minecraft:villager_happy", {
+                            x: block.location.x + 0.5,
+                            y: block.location.y + 1,
+                            z: block.location.z + 0.5
+                        });
+                        player.playSound?.("random.anvil_use");
+                        this.openAnvilBookApplyUI(player, itemStack, enchantId);
                     });
                 }
             }
