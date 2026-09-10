@@ -17104,6 +17104,148 @@ bm.addBiome(new BiomeDefinition("gaiadimension:mineral_river").setGroundPalette(
 // src/main/bedrock/ts/API/lib/EnchantmentLib.ts
 import { world as world35, system as system41, EquipmentSlot as EquipmentSlot7, GameMode as GameMode5 } from "@minecraft/server";
 import { CustomForm } from "@minecraft/server-ui";
+var ScoreboardBitPack = class {
+  static CATEGORY_BITS = {
+    sword: 1 << 0,
+    bow: 1 << 1,
+    crossbow: 1 << 2,
+    helmet: 1 << 3,
+    chestplate: 1 << 4,
+    leggings: 1 << 5,
+    boots: 1 << 6,
+    pickaxe: 1 << 7,
+    axe: 1 << 8,
+    shovel: 1 << 9,
+    hoe: 1 << 10,
+    mace: 1 << 11,
+    armor: 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6,
+    tools: 1 << 7 | 1 << 8 | 1 << 9 | 1 << 10,
+    weapons: 1 << 0 | 1 << 1 | 1 << 2 | 1 << 11,
+    all: 4095
+  };
+  static categoriesToMask(categories) {
+    if (!categories || !Array.isArray(categories) || categories.length === 0) return 4095;
+    let mask = 0;
+    for (const cat of categories) {
+      const clean = (cat || "").toLowerCase().trim();
+      if (clean === "armor") {
+        mask |= this.CATEGORY_BITS.armor;
+      } else if (clean === "tool" || clean === "tools") {
+        mask |= this.CATEGORY_BITS.tools;
+      } else if (clean === "weapon" || clean === "weapons") {
+        mask |= this.CATEGORY_BITS.weapons;
+      } else if (this.CATEGORY_BITS[clean] !== void 0) {
+        mask |= this.CATEGORY_BITS[clean];
+      } else if (clean.includes("head") || clean.includes("helmet")) {
+        mask |= this.CATEGORY_BITS.helmet;
+      } else if (clean.includes("chest")) {
+        mask |= this.CATEGORY_BITS.chestplate;
+      } else if (clean.includes("leg")) {
+        mask |= this.CATEGORY_BITS.leggings;
+      } else if (clean.includes("boot") || clean.includes("feet")) {
+        mask |= this.CATEGORY_BITS.boots;
+      } else {
+        mask |= this.CATEGORY_BITS.sword;
+      }
+    }
+    return mask || 4095;
+  }
+  static maskToCategories(mask) {
+    const result = [];
+    if ((mask & 4095) === 4095) return ["all"];
+    const bitMap = [
+      [1 << 0, "sword"],
+      [1 << 1, "bow"],
+      [1 << 2, "crossbow"],
+      [1 << 3, "helmet"],
+      [1 << 4, "chestplate"],
+      [1 << 5, "leggings"],
+      [1 << 6, "boots"],
+      [1 << 7, "pickaxe"],
+      [1 << 8, "axe"],
+      [1 << 9, "shovel"],
+      [1 << 10, "hoe"],
+      [1 << 11, "mace"]
+    ];
+    for (const [bit, name] of bitMap) {
+      if ((mask & bit) !== 0) result.push(name);
+    }
+    return result.length > 0 ? result : ["all"];
+  }
+  static packEnchant(maxLevel = 1, costMultiplier = 3, appliesTo = [], flags = 0) {
+    const clampedLvl = Math.max(1, Math.min(15, maxLevel || 1));
+    const clampedCost = Math.max(1, Math.min(63, costMultiplier || 3));
+    const catMask = this.categoriesToMask(appliesTo);
+    const clampedFlags = Math.max(0, Math.min(255, flags || 0));
+    return clampedLvl & 15 | (clampedCost & 63) << 4 | (catMask & 4095) << 10 | (clampedFlags & 255) << 22;
+  }
+  static unpackEnchant(score) {
+    if (typeof score !== "number" || isNaN(score)) {
+      return { maxLevel: 1, costMultiplier: 3, appliesTo: ["all"], flags: 0 };
+    }
+    const maxLevel = score & 15 || 1;
+    const costMultiplier = score >> 4 & 63 || 3;
+    const catMask = score >> 10 & 4095;
+    const flags = score >> 22 & 255;
+    const appliesTo = this.maskToCategories(catMask);
+    return { maxLevel, costMultiplier, appliesTo, flags };
+  }
+  static packChars(chars) {
+    let packed = 0;
+    for (let i = 0; i < Math.min(4, chars.length); i++) {
+      const code = chars.charCodeAt(i) & 127;
+      packed |= code << i * 7;
+    }
+    return packed;
+  }
+  static unpackChars(score) {
+    let result = "";
+    for (let i = 0; i < 4; i++) {
+      const code = score >> i * 7 & 127;
+      if (code > 0) result += String.fromCharCode(code);
+    }
+    return result;
+  }
+  static setScoreboardData(key, value, objective = "ench_data") {
+    const cleanKey = key.startsWith("#") ? key : `#${key}`;
+    try {
+      let obj = world35.scoreboard.getObjective(objective);
+      if (!obj) {
+        try {
+          obj = world35.scoreboard.addObjective(objective, objective);
+        } catch (e) {
+          try {
+            const dim2 = world35.getDimension("overworld");
+            dim2?.runCommand?.(`scoreboard objectives add ${objective} dummy`);
+            obj = world35.scoreboard.getObjective(objective);
+          } catch (e2) {
+          }
+        }
+      }
+      if (obj) {
+        try {
+          obj.setScore(cleanKey, value);
+        } catch (e) {
+        }
+      }
+      const dim = world35.getDimension("overworld");
+      dim?.runCommand?.(`scoreboard players set ${cleanKey} ${objective} ${value}`);
+    } catch (err) {
+    }
+  }
+  static getScoreboardData(key, objective = "ench_data") {
+    const cleanKey = key.startsWith("#") ? key : `#${key}`;
+    try {
+      const obj = world35.scoreboard.getObjective(objective);
+      if (obj) {
+        const score = obj.getScore(cleanKey);
+        if (typeof score === "number") return score;
+      }
+    } catch (err) {
+    }
+    return null;
+  }
+};
 var EnchantmentManager = class {
   constructor() {
     this.registry = /* @__PURE__ */ new Map();
@@ -17192,6 +17334,37 @@ var EnchantmentManager = class {
     }
     system41.run(() => {
       try {
+        const packedScore = ScoreboardBitPack.packEnchant(
+          maxLevel,
+          costMultiplier,
+          appliesTo,
+          0
+        );
+        const fakePlayer = `#${clean}`;
+        let metaObj = world35.scoreboard.getObjective("ench_meta");
+        if (!metaObj) {
+          try {
+            metaObj = world35.scoreboard.addObjective("ench_meta", "Enchantment Metadata");
+          } catch (e) {
+            try {
+              const dim = world35.getDimension("overworld");
+              dim?.runCommand?.("scoreboard objectives add ench_meta dummy");
+              metaObj = world35.scoreboard.getObjective("ench_meta");
+            } catch (e2) {
+            }
+          }
+        }
+        if (metaObj) {
+          try {
+            metaObj.setScore(fakePlayer, packedScore);
+          } catch (e) {
+          }
+        }
+        try {
+          const dim = world35.getDimension("overworld");
+          dim?.runCommand?.(`scoreboard players set ${fakePlayer} ench_meta ${packedScore}`);
+        } catch (e) {
+        }
         let reg = world35.scoreboard.getObjective("ench_reg");
         if (!reg) {
           try {
@@ -17244,6 +17417,32 @@ var EnchantmentManager = class {
       }
     }
     try {
+      const metaObj = world35.scoreboard.getObjective("ench_meta");
+      if (metaObj) {
+        for (const participant of metaObj.getParticipants()) {
+          const rawName = typeof participant === "string" ? participant : participant?.displayName;
+          if (!rawName || !rawName.startsWith("#")) continue;
+          const id = this.cleanId(rawName.substring(1));
+          if (!id || merged.has(id)) continue;
+          const score = metaObj.getScore(participant);
+          if (typeof score === "number") {
+            const unpacked = ScoreboardBitPack.unpackEnchant(score);
+            const prettyName = id.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+            merged.set(id, {
+              id,
+              rawId: id,
+              name: prettyName,
+              maxLevel: unpacked.maxLevel,
+              appliesTo: unpacked.appliesTo,
+              costPerLevel: (lvl) => lvl * unpacked.costMultiplier,
+              _costMultiplier: unpacked.costMultiplier
+            });
+          }
+        }
+      }
+    } catch (e) {
+    }
+    try {
       const reg = world35.scoreboard.getObjective("ench_reg");
       if (reg) {
         for (const participant of reg.getParticipants()) {
@@ -17258,7 +17457,12 @@ var EnchantmentManager = class {
             const name = parts[parts.length - 4];
             const rawId = parts.slice(0, parts.length - 4).join(":");
             const id = this.cleanId(rawId);
-            if (!merged.has(id)) {
+            if (merged.has(id)) {
+              const existing = merged.get(id);
+              if (name && (!existing.name || existing.name.toLowerCase() === id.replace(/_/g, " "))) {
+                existing.name = name;
+              }
+            } else {
               const maxLevel = parseInt(maxLvlStr, 10) || 1;
               const costMult = parseInt(costStr, 10) || 3;
               merged.set(id, {
@@ -17647,10 +17851,22 @@ var EnchantmentManager = class {
         this.uiCooldowns.delete(ev.playerId);
       }
     });
+    world35.afterEvents?.playerPlaceBlock?.subscribe?.((ev) => {
+      const { block, player } = ev;
+      if (!block || !player || !player.isValid) return;
+      if (block.typeId === "minecraft:enchanting_table") {
+        player.sendMessage?.("\xA7d[Enchantment] \xA7eSneak + Interact to access Custom Enchantments!");
+        player.onScreenDisplay?.setActionBar?.("\xA7dSneak + Interact to access Custom Enchantments!");
+      } else if (block.typeId.includes("anvil")) {
+        player.sendMessage?.("\xA7d[Anvil] \xA7eSneak + Interact with a Custom Book to combine!");
+        player.onScreenDisplay?.setActionBar?.("\xA7dSneak + Interact with a Custom Book to combine!");
+      }
+    });
     world35.beforeEvents?.playerInteractWithBlock?.subscribe?.((ev) => {
       const { block, player } = ev;
       if (!player || !player.isValid) return;
       if (block.typeId === "minecraft:enchanting_table") {
+        if (!player.isSneaking) return;
         ev.cancel = true;
         system41.run(() => {
           if (!player.isValid) return;
@@ -17762,21 +17978,22 @@ var EnchantmentManager = class {
         candidates.push({ slot: i, item });
       }
     }
-    if (candidates.length === 0) {
-      player.sendMessage("\xA7cNo enchantable items in your inventory.");
-      return;
-    }
     const chosen = await new Promise((resolve) => {
       const itemForm = new CustomForm(player, "\xA75\xA7lCustom Enchanting").header("\xA7d\xA7lSelect an Item to Enchant").spacer().label("\xA77Current Experience: \xA7e" + (player.level ?? 0) + " \xA77Levels").spacer().divider().spacer();
-      candidates.forEach((c) => {
-        const rawName = c.item.nameTag || c.item.typeId.replace("minecraft:", "").replace(/_/g, " ");
-        const capitalized = rawName.charAt(0).toUpperCase() + rawName.slice(1);
-        const countText = c.item.amount > 1 ? ` (${c.item.amount}x)` : "";
-        itemForm.button(capitalized + countText + " (Slot " + (c.slot + 1) + ")", () => {
-          itemForm.close();
-          resolve(c);
+      if (candidates.length === 0) {
+        itemForm.label("\xA7cNo enchantable items in your inventory.");
+        itemForm.label("\xA77Carry weapons, tools, or armor to apply custom enchantments.");
+      } else {
+        candidates.forEach((c) => {
+          const rawName = c.item.nameTag || c.item.typeId.replace("minecraft:", "").replace(/_/g, " ");
+          const capitalized = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+          const countText = c.item.amount > 1 ? ` (${c.item.amount}x)` : "";
+          itemForm.button(capitalized + countText + " (Slot " + (c.slot + 1) + ")", () => {
+            itemForm.close();
+            resolve(c);
+          });
         });
-      });
+      }
       itemForm.spacer();
       itemForm.closeButton();
       itemForm.show().then(() => resolve(null)).catch((e) => console.error(e));

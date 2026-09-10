@@ -17,8 +17,169 @@ import { CustomForm } from "@minecraft/server-ui";
  * 7. Multi-Cache Dynamic Property Fallback (mirage:, luminiae:, tme:, ench:)
  * 8. Stack Consumption Safety (preserves remainder when enchanting from a stack)
  * 9. Pluggable Economy & Craft Limit Hooks
+ * 10. World Scoreboard Bit-Packing Registry & Storage (ench_meta) via runCommand
  * ==============================================================================
  */
+
+/**
+ * Scoreboard Bit-Packing Utility for Cross-Addon Data Synchronization.
+ * Stores complex metadata in standard 32-bit Bedrock scoreboard scores.
+ * 
+ * Bit Layout (30-bit Positive Integer, 0 to 0x3FFFFFFF = 1,073,741,823):
+ * [Bits 0–3]   (4 bits, mask 0xF)   : maxLevel (1 to 15)
+ * [Bits 4–9]   (6 bits, mask 0x3F)  : costMultiplier (1 to 63)
+ * [Bits 10–21] (12 bits, mask 0xFFF): categoryMask (AppliesTo bitflags)
+ * [Bits 22–29] (8 bits, mask 0xFF)  : numericId / flags (0 to 255)
+ */
+export class ScoreboardBitPack {
+    static readonly CATEGORY_BITS: Record<string, number> = {
+        sword: 1 << 0,
+        bow: 1 << 1,
+        crossbow: 1 << 2,
+        helmet: 1 << 3,
+        chestplate: 1 << 4,
+        leggings: 1 << 5,
+        boots: 1 << 6,
+        pickaxe: 1 << 7,
+        axe: 1 << 8,
+        shovel: 1 << 9,
+        hoe: 1 << 10,
+        mace: 1 << 11,
+        armor: (1 << 3) | (1 << 4) | (1 << 5) | (1 << 6),
+        tools: (1 << 7) | (1 << 8) | (1 << 9) | (1 << 10),
+        weapons: (1 << 0) | (1 << 1) | (1 << 2) | (1 << 11),
+        all: 0xFFF
+    };
+
+    static categoriesToMask(categories: string[]): number {
+        if (!categories || !Array.isArray(categories) || categories.length === 0) return 0xFFF;
+        let mask = 0;
+        for (const cat of categories) {
+            const clean = (cat || "").toLowerCase().trim();
+            if (clean === "armor") {
+                mask |= this.CATEGORY_BITS.armor;
+            } else if (clean === "tool" || clean === "tools") {
+                mask |= this.CATEGORY_BITS.tools;
+            } else if (clean === "weapon" || clean === "weapons") {
+                mask |= this.CATEGORY_BITS.weapons;
+            } else if (this.CATEGORY_BITS[clean] !== undefined) {
+                mask |= this.CATEGORY_BITS[clean];
+            } else if (clean.includes("head") || clean.includes("helmet")) {
+                mask |= this.CATEGORY_BITS.helmet;
+            } else if (clean.includes("chest")) {
+                mask |= this.CATEGORY_BITS.chestplate;
+            } else if (clean.includes("leg")) {
+                mask |= this.CATEGORY_BITS.leggings;
+            } else if (clean.includes("boot") || clean.includes("feet")) {
+                mask |= this.CATEGORY_BITS.boots;
+            } else {
+                mask |= this.CATEGORY_BITS.sword;
+            }
+        }
+        return mask || 0xFFF;
+    }
+
+    static maskToCategories(mask: number): string[] {
+        const result: string[] = [];
+        if ((mask & 0xFFF) === 0xFFF) return ["all"];
+        const bitMap: [number, string][] = [
+            [1 << 0, "sword"],
+            [1 << 1, "bow"],
+            [1 << 2, "crossbow"],
+            [1 << 3, "helmet"],
+            [1 << 4, "chestplate"],
+            [1 << 5, "leggings"],
+            [1 << 6, "boots"],
+            [1 << 7, "pickaxe"],
+            [1 << 8, "axe"],
+            [1 << 9, "shovel"],
+            [1 << 10, "hoe"],
+            [1 << 11, "mace"]
+        ];
+        for (const [bit, name] of bitMap) {
+            if ((mask & bit) !== 0) result.push(name);
+        }
+        return result.length > 0 ? result : ["all"];
+    }
+
+    static packEnchant(maxLevel: number = 1, costMultiplier: number = 3, appliesTo: string[] = [], flags: number = 0): number {
+        const clampedLvl = Math.max(1, Math.min(15, maxLevel || 1));
+        const clampedCost = Math.max(1, Math.min(63, costMultiplier || 3));
+        const catMask = this.categoriesToMask(appliesTo);
+        const clampedFlags = Math.max(0, Math.min(255, flags || 0));
+
+        return (clampedLvl & 0xF) |
+               ((clampedCost & 0x3F) << 4) |
+               ((catMask & 0xFFF) << 10) |
+               ((clampedFlags & 0xFF) << 22);
+    }
+
+    static unpackEnchant(score: number): { maxLevel: number, costMultiplier: number, appliesTo: string[], flags: number } {
+        if (typeof score !== "number" || isNaN(score)) {
+            return { maxLevel: 1, costMultiplier: 3, appliesTo: ["all"], flags: 0 };
+        }
+        const maxLevel = (score & 0xF) || 1;
+        const costMultiplier = ((score >> 4) & 0x3F) || 3;
+        const catMask = (score >> 10) & 0xFFF;
+        const flags = (score >> 22) & 0xFF;
+        const appliesTo = this.maskToCategories(catMask);
+
+        return { maxLevel, costMultiplier, appliesTo, flags };
+    }
+
+    static packChars(chars: string): number {
+        let packed = 0;
+        for (let i = 0; i < Math.min(4, chars.length); i++) {
+            const code = chars.charCodeAt(i) & 0x7F;
+            packed |= (code << (i * 7));
+        }
+        return packed;
+    }
+
+    static unpackChars(score: number): string {
+        let result = "";
+        for (let i = 0; i < 4; i++) {
+            const code = (score >> (i * 7)) & 0x7F;
+            if (code > 0) result += String.fromCharCode(code);
+        }
+        return result;
+    }
+
+    static setScoreboardData(key: string, value: number, objective: string = "ench_data"): void {
+        const cleanKey = key.startsWith("#") ? key : `#${key}`;
+        try {
+            let obj = world.scoreboard.getObjective(objective);
+            if (!obj) {
+                try {
+                    obj = world.scoreboard.addObjective(objective, objective);
+                } catch (e) {
+                    try {
+                        const dim = world.getDimension("overworld");
+                        dim?.runCommand?.(`scoreboard objectives add ${objective} dummy`);
+                        obj = world.scoreboard.getObjective(objective);
+                    } catch (e2) {}
+                }
+            }
+            if (obj) {
+                try { obj.setScore(cleanKey, value); } catch (e) {}
+            }
+            const dim = world.getDimension("overworld");
+            dim?.runCommand?.(`scoreboard players set ${cleanKey} ${objective} ${value}`);
+        } catch (err) {}
+    }
+
+    static getScoreboardData(key: string, objective: string = "ench_data"): number | null {
+        const cleanKey = key.startsWith("#") ? key : `#${key}`;
+        try {
+            const obj = world.scoreboard.getObjective(objective);
+            if (obj) {
+                const score = obj.getScore(cleanKey);
+                if (typeof score === "number") return score;
+            }
+        } catch (err) {}
+        return null;
+    }
+}
 
 export class EnchantmentManager {
     constructor() {
@@ -123,9 +284,44 @@ export class EnchantmentManager {
             this.registry.set(id, entry);
         }
 
-        // Publish to Universal Scoreboard Registry (ench_reg)
+        // Publish to Universal Scoreboard Registry (ench_meta bit-packed + ench_reg legacy)
         system.run(() => {
             try {
+                // 1. Bit-Packed World Scoreboard (ench_meta) — 100% cross-addon visibility without permission sandboxing
+                const packedScore = ScoreboardBitPack.packEnchant(
+                    maxLevel,
+                    costMultiplier,
+                    appliesTo,
+                    0
+                );
+                const fakePlayer = `#${clean}`;
+
+                // Native API setScore
+                let metaObj = world.scoreboard.getObjective("ench_meta");
+                if (!metaObj) {
+                    try {
+                        metaObj = world.scoreboard.addObjective("ench_meta", "Enchantment Metadata");
+                    } catch (e) {
+                        try {
+                            const dim = world.getDimension("overworld");
+                            dim?.runCommand?.("scoreboard objectives add ench_meta dummy");
+                            metaObj = world.scoreboard.getObjective("ench_meta");
+                        } catch (e2) {}
+                    }
+                }
+                if (metaObj) {
+                    try {
+                        metaObj.setScore(fakePlayer, packedScore);
+                    } catch (e) {}
+                }
+
+                // Global runCommand publication — Guarantees cross-pack write across all sandboxes!
+                try {
+                    const dim = world.getDimension("overworld");
+                    dim?.runCommand?.(`scoreboard players set ${fakePlayer} ench_meta ${packedScore}`);
+                } catch (e) {}
+
+                // 2. Also publish to legacy ench_reg string format for backward compatibility
                 let reg = world.scoreboard.getObjective("ench_reg");
                 if (!reg) {
                     try {
@@ -180,7 +376,39 @@ export class EnchantmentManager {
             }
         }
 
-        // 2. Add external entries from universal scoreboard registry (ench_reg)
+        // 2. Add external entries from bit-packed universal scoreboard (ench_meta)
+        try {
+            const metaObj = world.scoreboard.getObjective("ench_meta");
+            if (metaObj) {
+                for (const participant of metaObj.getParticipants()) {
+                    const rawName = typeof participant === "string" ? participant : participant?.displayName;
+                    if (!rawName || !rawName.startsWith("#")) continue;
+
+                    const id = this.cleanId(rawName.substring(1));
+                    if (!id || merged.has(id)) continue;
+
+                    const score = metaObj.getScore(participant);
+                    if (typeof score === "number") {
+                        const unpacked = ScoreboardBitPack.unpackEnchant(score);
+                        const prettyName = id
+                            .replace(/_/g, " ")
+                            .replace(/\b\w/g, (c) => c.toUpperCase());
+
+                        merged.set(id, {
+                            id,
+                            rawId: id,
+                            name: prettyName,
+                            maxLevel: unpacked.maxLevel,
+                            appliesTo: unpacked.appliesTo,
+                            costPerLevel: (lvl) => lvl * unpacked.costMultiplier,
+                            _costMultiplier: unpacked.costMultiplier
+                        });
+                    }
+                }
+            }
+        } catch (e) {}
+
+        // 3. Add external entries from legacy universal scoreboard registry (ench_reg)
         try {
             const reg = world.scoreboard.getObjective("ench_reg");
             if (reg) {
@@ -198,7 +426,12 @@ export class EnchantmentManager {
                         const rawId = parts.slice(0, parts.length - 4).join(":");
                         const id = this.cleanId(rawId);
 
-                        if (!merged.has(id)) {
+                        if (merged.has(id)) {
+                            const existing = merged.get(id);
+                            if (name && (!existing.name || existing.name.toLowerCase() === id.replace(/_/g, " "))) {
+                                existing.name = name;
+                            }
+                        } else {
                             const maxLevel = parseInt(maxLvlStr, 10) || 1;
                             const costMult = parseInt(costStr, 10) || 3;
                             merged.set(id, {
@@ -630,13 +863,28 @@ export class EnchantmentManager {
             }
         });
 
+        // Inform players about custom interactions on block placement
+        world.afterEvents?.playerPlaceBlock?.subscribe?.((ev) => {
+            const { block, player } = ev;
+            if (!block || !player || !player.isValid) return;
+
+            if (block.typeId === "minecraft:enchanting_table") {
+                player.sendMessage?.("§d[Enchantment] §eSneak + Interact to access Custom Enchantments!");
+                player.onScreenDisplay?.setActionBar?.("§dSneak + Interact to access Custom Enchantments!");
+            } else if (block.typeId.includes("anvil")) {
+                player.sendMessage?.("§d[Anvil] §eSneak + Interact with a Custom Book to combine!");
+                player.onScreenDisplay?.setActionBar?.("§dSneak + Interact with a Custom Book to combine!");
+            }
+        });
+
         // 1. Block Interact Trigger (Enchanting Table & Anvil)
         world.beforeEvents?.playerInteractWithBlock?.subscribe?.((ev) => {
             const { block, player } = ev;
             if (!player || !player.isValid) return;
 
-            // A. Enchanting Table — Always intercepts to present unified Custom UI
+            // A. Enchanting Table — Sneak-interact intercepts for Custom UI; regular click allows native vanilla UI
             if (block.typeId === "minecraft:enchanting_table") {
+                if (!player.isSneaking) return;
                 ev.cancel = true;
 
                 // Move mutex acquisition into system.run so setScore runs in unrestricted mode!
@@ -784,12 +1032,7 @@ export class EnchantmentManager {
             }
         }
 
-        if (candidates.length === 0) {
-            player.sendMessage("§cNo enchantable items in your inventory.");
-            return;
-        }
-
-        // Form 1: Choose item to enchant
+        // Form 1: Choose item to enchant (Renders regardless of inventory state)
         const chosen = await new Promise((resolve) => {
             const itemForm = new CustomForm(player, "\u00A75\u00A7lCustom Enchanting")
                 .header("\u00A7d\u00A7lSelect an Item to Enchant")
@@ -799,15 +1042,20 @@ export class EnchantmentManager {
                 .divider()
                 .spacer();
 
-            candidates.forEach((c) => {
-                const rawName = c.item.nameTag || c.item.typeId.replace("minecraft:", "").replace(/_/g, " ");
-                const capitalized = rawName.charAt(0).toUpperCase() + rawName.slice(1);
-                const countText = c.item.amount > 1 ? ` (${c.item.amount}x)` : "";
-                itemForm.button(capitalized + countText + " (Slot " + (c.slot + 1) + ")", () => {
-                    itemForm.close();
-                    resolve(c);
+            if (candidates.length === 0) {
+                itemForm.label("\u00A7cNo enchantable items in your inventory.");
+                itemForm.label("\u00A77Carry weapons, tools, or armor to apply custom enchantments.");
+            } else {
+                candidates.forEach((c) => {
+                    const rawName = c.item.nameTag || c.item.typeId.replace("minecraft:", "").replace(/_/g, " ");
+                    const capitalized = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+                    const countText = c.item.amount > 1 ? ` (${c.item.amount}x)` : "";
+                    itemForm.button(capitalized + countText + " (Slot " + (c.slot + 1) + ")", () => {
+                        itemForm.close();
+                        resolve(c);
+                    });
                 });
-            });
+            }
 
             itemForm.spacer();
             itemForm.closeButton();
