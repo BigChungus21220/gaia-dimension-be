@@ -17103,475 +17103,712 @@ bm.addBiome(new BiomeDefinition("gaiadimension:mineral_river").setGroundPalette(
 
 // src/main/bedrock/ts/API/lib/EnchantmentLib.ts
 import { world as world35, system as system41, EquipmentSlot as EquipmentSlot7, GameMode as GameMode5 } from "@minecraft/server";
-import { ActionFormData as ActionFormData2 } from "@minecraft/server-ui";
+import { CustomForm } from "@minecraft/server-ui";
 var EnchantmentManager = class {
   constructor() {
     this.registry = /* @__PURE__ */ new Map();
     this.uiCooldowns = /* @__PURE__ */ new Map();
     this.namespace = null;
-    this.hitboxEntities = /* @__PURE__ */ new Map();
-    this.isLeader = false;
+    this.limitChecker = null;
+    this.limitIncrementer = null;
+    this.economyProvider = null;
     this.initEvents();
   }
   /**
+   * Strips namespace prefix from an identifier (e.g. 'decayed:wither_shot' -> 'wither_shot').
+   * @param {string} id
+   * @returns {string}
+   */
+  cleanId(id) {
+    if (!id || typeof id !== "string") return "";
+    return id.includes(":") ? id.split(":")[1] : id;
+  }
+  /**
+   * Optional hook to configure custom craft limit validation.
+   * @param {(enchantId: string, player: Player) => { blocked: boolean, reason?: string }} fn
+   */
+  setLimitChecker(fn) {
+    this.limitChecker = fn;
+  }
+  /**
+   * Optional hook to configure craft count increments upon table enchantment.
+   * @param {(enchantId: string, player: Player) => void} fn
+   */
+  setLimitIncrementer(fn) {
+    this.limitIncrementer = fn;
+  }
+  /**
+   * Optional hook to configure custom economy (XP, scoreboard, items).
+   * @param {(player: Player) => { type: string, objective?: string }} fn
+   */
+  setEconomyProvider(fn) {
+    this.economyProvider = fn;
+  }
+  /**
    * Registers a new custom enchantment.
-   * Auto-detects addon namespace from the first enchantment ID (e.g. 'decayed:wither_shot' -> 'decayed').
+   * Automatically strips namespace prefix and publishes to universal scoreboard registry.
+   * @param {string} id
+   * @param {Object} config
    */
   register(id, config) {
+    if (!id || typeof id !== "string") {
+      throw new Error("[EnchantmentLib] Cannot register enchantment with invalid ID");
+    }
+    if (!config || !config.name) {
+      throw new Error(`[EnchantmentLib] Cannot register enchantment '${id}' without a name`);
+    }
     if (!this.namespace && id.includes(":")) {
       this.namespace = id.split(":")[0];
     }
-    this.registry.set(id, {
-      id,
+    const clean = this.cleanId(id);
+    const maxLevel = typeof config.maxLevel === "number" && config.maxLevel > 0 ? config.maxLevel : 1;
+    const costMultiplier = typeof config.costMultiplier === "number" && config.costMultiplier > 0 ? config.costMultiplier : typeof config.costPerLevel === "function" ? config.costPerLevel(1) : 3;
+    const appliesTo = Array.isArray(config.appliesTo) ? config.appliesTo : [];
+    const costPerLevel = typeof config.costPerLevel === "function" ? config.costPerLevel : ((lvl) => lvl * costMultiplier);
+    const entry = {
+      id: clean,
+      rawId: id,
       name: config.name,
       bookId: config.bookId || `${id}_book`,
-      maxLevel: config.maxLevel || 1,
-      appliesTo: config.appliesTo || [],
+      cleanBookId: this.cleanId(config.bookId || `${id}_book`),
+      maxLevel,
+      appliesTo,
+      tier: typeof config.tier === "number" ? config.tier : 1,
       entityHitEntity: config.entityHitEntity,
       playerBreakBlock: config.playerBreakBlock,
       onHurt: config.onHurt,
       projectileHitBlock: config.projectileHitBlock,
+      projectileHitEntity: config.projectileHitEntity,
+      onHit: config.onHit,
+      onBreak: config.onBreak,
       onTick: config.onTick,
-      costPerLevel: config.costPerLevel || ((lvl) => lvl * 3),
-      _costMultiplier: config.costMultiplier || 3
+      costPerLevel,
+      _costMultiplier: costMultiplier
+    };
+    this.registry.set(clean, entry);
+    if (id !== clean) {
+      this.registry.set(id, entry);
+    }
+    system41.run(() => {
+      try {
+        let reg = world35.scoreboard.getObjective("ench_reg");
+        if (!reg) {
+          try {
+            const dim2 = world35.getDimension("overworld");
+            dim2?.runCommand?.("scoreboard objectives add ench_reg dummy");
+            reg = world35.scoreboard.getObjective("ench_reg");
+          } catch (e) {
+            try {
+              reg = world35.scoreboard.addObjective("ench_reg", "Enchantment Registry");
+            } catch (e2) {
+            }
+          }
+        }
+        const costSample = typeof config.costPerLevel === "function" ? config.costPerLevel(1) : costMultiplier;
+        const typesStr = appliesTo.join(",");
+        const regKey = `#${clean}:${config.name}:${typesStr}:${maxLevel}:${costSample}`;
+        const dim = world35.getDimension("overworld");
+        dim?.runCommand?.(`scoreboard players set "${regKey}" ench_reg 1`);
+      } catch (err) {
+      }
     });
   }
-  get dummyEntityType() {
-    return this.namespace ? `${this.namespace}:enchant_dummy` : null;
+  /**
+   * Retrieves an enchantment definition by either clean or namespaced ID.
+   * @param {string} id
+   * @returns {Object | null}
+   */
+  get(id) {
+    if (!id) return null;
+    const clean = this.cleanId(id);
+    return this.registry.get(clean) || this.registry.get(id) || this.getAllAvailableEnchantments().get(clean) || null;
   }
   /**
-   * Helper to find enchant ID from book item ID.
+   * Returns merged map of local enchantments and external enchantments discovered via scoreboard.
+   * All map keys and config.id values are guaranteed to be clean, unprefixed IDs.
+   * @returns {Map<string, Object>}
+   */
+  getAllAvailableEnchantments() {
+    const merged = /* @__PURE__ */ new Map();
+    for (const [id, config] of this.registry) {
+      const clean = this.cleanId(id);
+      if (!merged.has(clean)) {
+        merged.set(clean, { ...config, id: clean });
+      }
+    }
+    try {
+      const reg = world35.scoreboard.getObjective("ench_reg");
+      if (reg) {
+        for (const participant of reg.getParticipants()) {
+          const rawName = typeof participant === "string" ? participant : participant?.displayName;
+          if (!rawName || !rawName.startsWith("#") || !rawName.includes(":")) continue;
+          const clean = rawName.substring(1);
+          const parts = clean.split(":");
+          if (parts.length >= 5) {
+            const costStr = parts[parts.length - 1];
+            const maxLvlStr = parts[parts.length - 2];
+            const typesStr = parts[parts.length - 3];
+            const name = parts[parts.length - 4];
+            const rawId = parts.slice(0, parts.length - 4).join(":");
+            const id = this.cleanId(rawId);
+            if (!merged.has(id)) {
+              const maxLevel = parseInt(maxLvlStr, 10) || 1;
+              const costMult = parseInt(costStr, 10) || 3;
+              merged.set(id, {
+                id,
+                rawId,
+                name,
+                maxLevel,
+                appliesTo: typesStr ? typesStr.split(",") : [],
+                costPerLevel: (lvl) => lvl * costMult,
+                _costMultiplier: costMult
+              });
+            }
+          }
+        }
+      }
+    } catch (e) {
+    }
+    return merged;
+  }
+  /**
+   * Checks if a player is in Creative mode.
+   * @param {Player} player
+   * @returns {boolean}
+   */
+  isCreative(player) {
+    if (!player) return false;
+    try {
+      const mode = player.getGameMode ? player.getGameMode() : null;
+      if (typeof mode === "string") {
+        return mode.toLowerCase() === "creative";
+      }
+      if (typeof GameMode5 !== "undefined" && mode === GameMode5.creative) {
+        return true;
+      }
+    } catch (e) {
+    }
+    return false;
+  }
+  /**
+   * Semantic equipment compatibility matcher.
+   * Maps vanilla and custom modded weapons, armor, and tools to target equipment types.
+   * @param {ItemStack} item
+   * @param {string[]} appliesTo
+   * @returns {boolean}
+   */
+  isItemCompatible(item, appliesTo) {
+    if (!item || !appliesTo || appliesTo.length === 0) return false;
+    const rawType = (item.typeId || "").toLowerCase();
+    const cleanType = (rawType.includes(":") ? rawType.split(":")[1] : rawType).replace(/_/g, " ");
+    return appliesTo.some((type2) => {
+      const t = (type2 || "").toLowerCase().trim();
+      if (!t) return false;
+      if (cleanType.includes(t)) return true;
+      if (t === "sword") {
+        return cleanType.includes("blade") || cleanType.includes("dagger") || cleanType.includes("katana") || cleanType.includes("saber") || cleanType.includes("rapier") || cleanType.includes("broadsword");
+      }
+      if (t === "boots") {
+        return cleanType.includes("boot");
+      }
+      if (t === "leggings") {
+        return cleanType.includes("legging") || cleanType.includes("pants");
+      }
+      if (t === "chestplate") {
+        return cleanType.includes("chest") || cleanType.includes("tunic");
+      }
+      if (t === "helmet") {
+        return cleanType.includes("cap") || cleanType.includes("helm") || cleanType.includes("hood");
+      }
+      if (t === "bow") {
+        return cleanType.includes("bow") && !cleanType.includes("crossbow");
+      }
+      if (t === "crossbow") {
+        return cleanType.includes("crossbow");
+      }
+      if (t === "axe") {
+        return cleanType.includes("axe") && !cleanType.includes("pickaxe");
+      }
+      if (t === "pickaxe") {
+        return cleanType.includes("pickaxe") || cleanType.includes("pick");
+      }
+      if (t === "shovel") {
+        return cleanType.includes("shovel") || cleanType.includes("spade");
+      }
+      if (t === "hoe") {
+        return cleanType.includes("hoe") || cleanType.includes("scythe") || cleanType.includes("mattock");
+      }
+      if (t === "trident") {
+        return cleanType.includes("trident") || cleanType.includes("spear");
+      }
+      if (t === "mace") {
+        return cleanType.includes("mace") || cleanType.includes("hammer");
+      }
+      if (t === "elytra") {
+        return cleanType.includes("elytra") || cleanType.includes("wings");
+      }
+      if (t === "shield") {
+        return cleanType.includes("shield");
+      }
+      if (t === "fishing_rod") {
+        return cleanType.includes("fishing rod") || cleanType.includes("rod");
+      }
+      if (t === "shears") {
+        return cleanType.includes("shears");
+      }
+      if (t === "book") {
+        return cleanType.includes("book");
+      }
+      return false;
+    });
+  }
+  /**
+   * Helper to find clean enchant ID from a book item.
+   * Prioritizes authoritative lore, then item typeId patterns.
+   * @param {ItemStack} itemStack
+   * @returns {string | null}
    */
   getEnchantFromBook(itemStack) {
     if (!itemStack) return null;
-    for (const [id, config] of this.registry) {
-      if (config.bookId === itemStack.typeId) {
-        return id;
+    const enchants = this.getEnchantments(itemStack);
+    const keys = Object.keys(enchants);
+    if (keys.length > 0) {
+      return this.cleanId(keys[0]);
+    }
+    const rawType = (itemStack.typeId || "").toLowerCase();
+    const cleanType = this.cleanId(rawType);
+    const allAvailable = this.getAllAvailableEnchantments();
+    for (const [id, config] of allAvailable) {
+      if (config.bookId) {
+        const cleanBookId = this.cleanId(config.bookId).toLowerCase();
+        if (cleanType === cleanBookId || cleanType.startsWith(cleanBookId + "_")) {
+          return id;
+        }
       }
+    }
+    if (cleanType.includes("enchanted_book_")) {
+      const suffix = cleanType.replace("enchanted_book_", "");
+      const match = suffix.match(/^(.+)_(\d+)$/);
+      const rawEnchantId = match ? match[1] : suffix;
+      return this.cleanId(rawEnchantId);
     }
     return null;
   }
-  initEvents() {
-    system41.runInterval(() => this.manageVisuals(), 5);
-    system41.runInterval(() => this.manageDummies(), 10);
-    system41.runInterval(() => this.electLeader(), 20);
-    world35.afterEvents.playerInteractWithEntity.subscribe((ev) => {
-      if (!this.isLeader) return;
-      const { player, target } = ev;
-      if (!target.hasTag("mirage_enchant_dummy")) return;
-      const now = Date.now();
-      if (this.uiCooldowns.has(player.id) && now - this.uiCooldowns.get(player.id) < 1e3) {
-        return;
+  /**
+   * Returns true if the item can receive at least one registered custom enchantment.
+   * In Creative mode, returns true for any valid item.
+   * @param {ItemStack} item
+   * @param {Player} [player]
+   * @returns {boolean}
+   */
+  hasAnyApplicableEnchant(item, player) {
+    if (!item) return false;
+    if (this.isCreative(player)) return true;
+    const currentEnchants = this.getEnchantments(item);
+    for (const [id, config] of this.getAllAvailableEnchantments()) {
+      if (!this.isItemCompatible(item, config.appliesTo)) continue;
+      const currentLevel = currentEnchants[id] || 0;
+      if (currentLevel < config.maxLevel) {
+        return true;
       }
-      this.uiCooldowns.set(player.id, now);
-      world35.setDynamicProperty("mirage:shared_registry", JSON.stringify({}));
-      player.runCommand(`scriptevent mirage:broadcast_enchants`);
-      system41.runTimeout(() => {
-        this.openEnchantmentUI(player);
-      }, 3);
-    });
-    system41.afterEvents.scriptEventReceive.subscribe((ev) => {
-      if (ev.id === "mirage:broadcast_enchants") {
-        let shared = {};
+    }
+    return false;
+  }
+  /**
+   * Checks if an enchantment is blocked by craft limits or configuration.
+   * @param {string} enchantId
+   * @param {Player} player
+   * @returns {{ blocked: boolean, reason?: string }}
+   */
+  checkEnchantLimit(enchantId, player) {
+    if (this.isCreative(player)) return { blocked: false };
+    if (this.limitChecker) {
+      return this.limitChecker(enchantId, player);
+    }
+    if (typeof Database !== "undefined" && Database.getConfig && Database.getCraftCount) {
+      const limitMap = {
+        lifesteal: "craft_limit_lifesteal_book",
+        vampirism: "craft_limit_vampirism_book",
+        soulbound: "craft_limit_soulbound_book",
+        soul_tether: "craft_limit_soul_tether_book",
+        heart_shield: "craft_limit_heart_shield_book",
+        last_stand: "craft_limit_last_stand_book"
+      };
+      const recipeMap = {
+        lifesteal: "ks_lifesteal:enchanted_book_lifesteal_1",
+        vampirism: "ks_lifesteal:enchanted_book_vampirism_1",
+        soulbound: "ks_lifesteal:enchanted_book_soulbound_1",
+        soul_tether: "ks_lifesteal:enchanted_book_soul_tether_1",
+        heart_shield: "ks_lifesteal:enchanted_book_heart_shield_1",
+        last_stand: "ks_lifesteal:enchanted_book_last_stand_1"
+      };
+      const limitKey = limitMap[enchantId];
+      const recipeId = recipeMap[enchantId];
+      if (limitKey && recipeId) {
+        const playerLimit = Database.getConfig(`${limitKey}_per_player`);
+        const globalLimit = Database.getConfig(`${limitKey}_global`);
+        const playerCrafts = Database.getCraftCount(player, recipeId);
+        const globalCrafts = Database.getGlobalCraftCount(recipeId);
+        if (playerLimit > -1 && playerCrafts >= playerLimit) {
+          return { blocked: true, reason: `\xA7cPersonal limit reached (${playerCrafts}/${playerLimit})` };
+        }
+        if (globalLimit > -1 && globalCrafts >= globalLimit) {
+          return { blocked: true, reason: `\xA7cGlobal limit reached (${globalCrafts}/${globalLimit})` };
+        }
+      }
+    }
+    return { blocked: false };
+  }
+  /**
+   * Increments craft count for an enchantment applied via table or anvil.
+   * @param {string} enchantId
+   * @param {Player} player
+   */
+  incrementEnchantCount(enchantId, player) {
+    if (this.isCreative(player)) return;
+    if (this.limitIncrementer) {
+      this.limitIncrementer(enchantId, player);
+      return;
+    }
+    if (typeof Database !== "undefined" && Database.incrementCraftCount) {
+      const recipeMap = {
+        lifesteal: "ks_lifesteal:enchanted_book_lifesteal_1",
+        vampirism: "ks_lifesteal:enchanted_book_vampirism_1",
+        soulbound: "ks_lifesteal:enchanted_book_soulbound_1",
+        soul_tether: "ks_lifesteal:enchanted_book_soul_tether_1",
+        heart_shield: "ks_lifesteal:enchanted_book_heart_shield_1",
+        last_stand: "ks_lifesteal:enchanted_book_last_stand_1"
+      };
+      const recipeId = recipeMap[enchantId];
+      if (recipeId) {
+        Database.incrementCraftCount(player, recipeId);
+      }
+    }
+  }
+  /**
+   * Resolves the economy configuration for a player interaction.
+   * @param {Player} player
+   * @returns {{ type: 'xp' | 'scoreboard', objective: string }}
+   */
+  getEconomy(player) {
+    if (this.economyProvider) {
+      return this.economyProvider(player);
+    }
+    if (typeof Database !== "undefined" && Database.getConfig) {
+      return {
+        type: Database.getConfig("enchantment_economy_type") || "xp",
+        objective: Database.getConfig("enchantment_scoreboard_objective") || "money"
+      };
+    }
+    return { type: "xp", objective: "money" };
+  }
+  /**
+   * Checks and claims a synchronous scoreboard mutex lock for the specified action.
+   * @param {string} mutexKey e.g. '#ui_lock' or '#anvil_lock'
+   * @param {number} debounceTicks Debounce window (default 20 ticks = 1s)
+   * @returns {boolean} True if the lock was acquired, false if locked by another addon
+   */
+  claimScoreboardMutex(mutexKey = "#ui_lock", debounceTicks = 20) {
+    try {
+      let bus = world35.scoreboard.getObjective("ench_bus");
+      if (!bus) {
         try {
-          const data = world35.getDynamicProperty("mirage:shared_registry");
-          if (data) shared = JSON.parse(data);
+          const dim = world35.getDimension("overworld");
+          dim?.runCommand?.("scoreboard objectives add ench_bus dummy");
+          bus = world35.scoreboard.getObjective("ench_bus");
         } catch (e) {
-        }
-        for (const [id, config] of this.registry) {
-          shared[id] = {
-            id: config.id,
-            name: config.name,
-            maxLevel: config.maxLevel,
-            appliesTo: config.appliesTo,
-            _costMultiplier: config._costMultiplier
-          };
-        }
-        world35.setDynamicProperty("mirage:shared_registry", JSON.stringify(shared));
-      }
-      if (ev.id === "mirage:apply_enchant") {
-        try {
-          const data = JSON.parse(ev.message);
-          if (this.registry.has(data.enchantId)) {
-            const player = ev.sourceEntity;
-            if (!player) return;
-            const inventory = player.getComponent("minecraft:inventory").container;
-            const item = inventory.getItem(data.slot);
-            if (!item || item.typeId !== data.itemTypeId) return;
-            if (player.getGameMode() !== GameMode5.Creative) {
-              player.addLevels(-data.cost);
-            }
-            this.applyEnchantment(item, data.enchantId, data.level);
-            inventory.setItem(data.slot, item);
-            player.dimension.spawnParticle("minecraft:enchanting_table_particle", player.location);
-            player.playSound("random.levelup");
-            const enchantName = this.registry.get(data.enchantId).name;
-            player.sendMessage(`\xA7aSuccessfully enchanted with ${enchantName} ${data.level}!`);
+          try {
+            bus = world35.scoreboard.addObjective("ench_bus", "Enchantment Bus");
+          } catch (e2) {
           }
-        } catch (e) {
+        }
+      }
+      const currentTick = typeof system41?.currentTick === "number" ? system41.currentTick : Math.floor(Date.now() / 50);
+      const lastClaimedTick = bus?.getScore(mutexKey) ?? -999;
+      if (currentTick - lastClaimedTick < debounceTicks) {
+        return false;
+      }
+      try {
+        bus?.setScore(mutexKey, currentTick);
+      } catch (e) {
+        const dim = world35.getDimension("overworld");
+        dim?.runCommand?.(`scoreboard players set "${mutexKey}" ench_bus ${currentTick}`);
+      }
+      return true;
+    } catch (err) {
+      return true;
+    }
+  }
+  initEvents() {
+    system41.runInterval?.(() => this.manageVisuals(), 5);
+    world35.beforeEvents?.playerInteractWithBlock?.subscribe?.((ev) => {
+      const { block, player } = ev;
+      if (!player || !player.isValid) return;
+      if (block.typeId === "minecraft:enchanting_table") {
+        ev.cancel = true;
+        if (!this.claimScoreboardMutex("#ui_lock", 20)) {
+          return;
+        }
+        const now = Date.now();
+        if (this.uiCooldowns.has(player.id) && now - this.uiCooldowns.get(player.id) < 500) return;
+        this.uiCooldowns.set(player.id, now);
+        system41.run(() => {
+          if (player.isValid) {
+            this.openEnchantmentUI(player);
+          }
+        });
+      } else if (block.typeId.includes("anvil")) {
+        const equippable = player.getComponent("minecraft:equippable");
+        const itemStack = equippable?.getEquipment(EquipmentSlot7.Mainhand);
+        const enchantId = this.getEnchantFromBook(itemStack);
+        if (enchantId) {
+          ev.cancel = true;
+          if (!this.claimScoreboardMutex("#anvil_lock", 20)) {
+            return;
+          }
+          const now = Date.now();
+          if (this.uiCooldowns.has(player.id) && now - this.uiCooldowns.get(player.id) < 500) return;
+          this.uiCooldowns.set(player.id, now);
+          system41.run(() => {
+            if (player.isValid) {
+              player.dimension.spawnParticle("minecraft:villager_happy", {
+                x: block.location.x + 0.5,
+                y: block.location.y + 1,
+                z: block.location.z + 0.5
+              });
+              player.playSound("random.anvil_use");
+              this.openAnvilBookApplyUI(player, itemStack, enchantId);
+            }
+          });
         }
       }
     });
-    world35.afterEvents.playerInteractWithBlock.subscribe((ev) => {
-      if (!this.isLeader) return;
-      const { player, block } = ev;
-      if (!player.isSneaking) return;
-      if (this.registry.size === 0) return;
-      if (!block.typeId.includes("anvil")) return;
-      const now = Date.now();
-      if (this.uiCooldowns.has(player.id) && now - this.uiCooldowns.get(player.id) < 1e3) return;
-      const equippable = player.getComponent("minecraft:equippable");
-      const itemStack = equippable?.getEquipment(EquipmentSlot7.Mainhand);
-      const enchantId = this.getEnchantFromBook(itemStack);
-      if (enchantId) {
-        this.uiCooldowns.set(player.id, now);
-        player.dimension.spawnParticle("minecraft:villager_happy", {
-          x: block.location.x + 0.5,
-          y: block.location.y + 1,
-          z: block.location.z + 0.5
-        });
-        player.playSound("random.anvil_use");
-        this.openAnvilBookApplyUI(player, itemStack, enchantId);
-      }
-    });
-    world35.afterEvents.playerPlaceBlock.subscribe((ev) => {
-      const { block, player } = ev;
-      if (block.typeId === "minecraft:enchanting_table") {
-        player.sendMessage("\xA7d[Enchantment] \xA7eInteract with the table to access Custom Enchantments!");
-      } else if (block.typeId.includes("anvil")) {
-        player.sendMessage("\xA7d[Anvil] \xA7eSneak + Interact with a Custom Book to combine!");
-      }
-    });
-    world35.afterEvents.entityHitEntity.subscribe((ev) => {
-      const { damagingEntity, hitEntity } = ev;
-      if (!damagingEntity || !damagingEntity.isValid || !damagingEntity.getComponent("minecraft:equippable")) return;
+    world35.afterEvents?.entityHitEntity?.subscribe?.((ev) => {
+      const { damagingEntity } = ev;
+      if (!damagingEntity || !damagingEntity.isValid) return;
       const equippable = damagingEntity.getComponent("minecraft:equippable");
-      const mainHand = equippable.getEquipment("Mainhand");
+      const mainHand = equippable?.getEquipment(EquipmentSlot7.Mainhand);
       if (mainHand) {
         this.triggerEnchants(mainHand, "entityHitEntity", ev);
       }
     });
-    world35.afterEvents.playerBreakBlock.subscribe((ev) => {
-      const { player, itemStack } = ev;
+    world35.afterEvents?.playerBreakBlock?.subscribe?.((ev) => {
+      const { itemStack } = ev;
       if (itemStack) {
         this.triggerEnchants(itemStack, "playerBreakBlock", ev);
       }
     });
-    world35.afterEvents.entityHurt.subscribe((ev) => {
+    world35.afterEvents?.entityHurt?.subscribe?.((ev) => {
       const { hurtEntity } = ev;
-      if (!hurtEntity || !hurtEntity.isValid || !hurtEntity.getComponent("minecraft:equippable")) return;
+      if (!hurtEntity || !hurtEntity.isValid) return;
       const equippable = hurtEntity.getComponent("minecraft:equippable");
-      const armorSlots = ["Head", "Chest", "Legs", "Feet"];
+      if (!equippable) return;
+      const armorSlots = [EquipmentSlot7.Head, EquipmentSlot7.Chest, EquipmentSlot7.Legs, EquipmentSlot7.Feet];
       for (const slot of armorSlots) {
         const item = equippable.getEquipment(slot);
         if (item) this.triggerEnchants(item, "onHurt", ev);
       }
     });
-    world35.afterEvents.projectileHitBlock.subscribe((ev) => {
+    world35.afterEvents?.projectileHitBlock?.subscribe?.((ev) => {
       const { source } = ev;
-      if (!source || !source.isValid || !source.getComponent("minecraft:equippable")) return;
+      if (!source || !source.isValid) return;
       const equippable = source.getComponent("minecraft:equippable");
-      const mainHand = equippable.getEquipment("Mainhand");
+      const mainHand = equippable?.getEquipment(EquipmentSlot7.Mainhand);
       if (mainHand) this.triggerEnchants(mainHand, "projectileHitBlock", ev);
+    });
+    world35.afterEvents?.projectileHitEntity?.subscribe?.((ev) => {
+      const { source } = ev;
+      if (!source || !source.isValid) return;
+      const equippable = source.getComponent("minecraft:equippable");
+      const mainHand = equippable?.getEquipment(EquipmentSlot7.Mainhand);
+      if (mainHand) this.triggerEnchants(mainHand, "projectileHitEntity", ev);
     });
   }
   /**
-   * Triggers registered callbacks for an item's enchants.
+   * Executes registered callbacks for all custom enchantments present on an item.
+   * @param {ItemStack} itemStack
+   * @param {string} triggerType
+   * @param {Object} eventData
    */
   triggerEnchants(itemStack, triggerType, eventData) {
     const enchants = this.getEnchantments(itemStack);
     for (const [id, level] of Object.entries(enchants)) {
-      const config = this.registry.get(id);
-      if (config && config[triggerType]) {
+      const clean = this.cleanId(id);
+      const config = this.registry.get(clean) || this.registry.get(id);
+      if (!config) continue;
+      if (typeof config[triggerType] === "function") {
         config[triggerType](eventData, level);
+      } else if (triggerType === "entityHitEntity" && typeof config.onHit === "function") {
+        config.onHit(eventData, level);
+      } else if (triggerType === "playerBreakBlock" && typeof config.onBreak === "function") {
+        config.onBreak(eventData, level);
       }
-    }
-  }
-  /**
-   * Leader Election — only ONE instance across all addons handles UI & dummies.
-   * Each instance writes a heartbeat. The lowest alphabetical namespace wins.
-   * Non-leaders deactivate dummy management and UI handling.
-   */
-  electLeader() {
-    if (!this.namespace) return;
-    const now = Date.now();
-    try {
-      world35.setDynamicProperty(`mirage:enchant_hb_${this.namespace}`, now);
-    } catch (e) {
-    }
-    let instances = [];
-    try {
-      const data = world35.getDynamicProperty("mirage:enchant_instances");
-      if (data) instances = JSON.parse(data);
-    } catch (e) {
-    }
-    if (!instances.includes(this.namespace)) {
-      instances.push(this.namespace);
-      try {
-        world35.setDynamicProperty("mirage:enchant_instances", JSON.stringify(instances));
-      } catch (e) {
-      }
-    }
-    const alive = instances.filter((ns) => {
-      try {
-        const hb = world35.getDynamicProperty(`mirage:enchant_hb_${ns}`);
-        return hb && now - hb < 5e3;
-      } catch (e) {
-        return false;
-      }
-    });
-    if (alive.length !== instances.length) {
-      try {
-        world35.setDynamicProperty("mirage:enchant_instances", JSON.stringify(alive));
-      } catch (e) {
-      }
-    }
-    alive.sort();
-    const wasLeader = this.isLeader;
-    this.isLeader = alive.length > 0 && alive[0] === this.namespace;
-    if (this.isLeader && !wasLeader) {
-    }
-  }
-  // --- Dummy Entity Management ---
-  /**
-   * For each player, checks if they're near an enchanting table.
-   * Spawns/maintains a dummy entity on top of it for interaction.
-   * Only runs if this instance is the elected leader.
-   */
-  manageDummies() {
-    if (!this.namespace || this.registry.size === 0) return;
-    if (!this.isLeader) return;
-    const activePlayers = /* @__PURE__ */ new Set();
-    for (const player of world35.getAllPlayers()) {
-      if (!player.isValid) continue;
-      activePlayers.add(player.id);
-      this.updateHitboxDummy(player);
-    }
-    for (const [pid, entity] of this.hitboxEntities) {
-      if (!activePlayers.has(pid)) {
-        try {
-          if (entity?.isValid && entity.typeId === this.dummyEntityType) {
-            entity.remove();
-          }
-        } catch {
-        }
-        this.hitboxEntities.delete(pid);
-      }
-    }
-  }
-  updateHitboxDummy(player) {
-    const existing = this.hitboxEntities.get(player.id);
-    if (!player.isSneaking) {
-      if (existing?.isValid && existing.typeId === this.dummyEntityType) {
-        try {
-          existing.remove();
-        } catch {
-        }
-      }
-      this.hitboxEntities.delete(player.id);
-      return;
-    }
-    const loc = player.location;
-    const dim = player.dimension;
-    let bestTablePos = null;
-    let minDistanceSq = Infinity;
-    const R = 4;
-    for (let dx = -R; dx <= R; dx++) {
-      for (let dz = -R; dz <= R; dz++) {
-        for (let dy = -2; dy <= 2; dy++) {
-          try {
-            const block = dim.getBlock({
-              x: Math.floor(loc.x) + dx,
-              y: Math.floor(loc.y) + dy,
-              z: Math.floor(loc.z) + dz
-            });
-            if (block?.typeId === "minecraft:enchanting_table") {
-              const bLoc = block.location;
-              const distSq2 = Math.pow(bLoc.x + 0.5 - loc.x, 2) + Math.pow(bLoc.y - loc.y, 2) + Math.pow(bLoc.z + 0.5 - loc.z, 2);
-              if (distSq2 < minDistanceSq) {
-                minDistanceSq = distSq2;
-                bestTablePos = bLoc;
-              }
-            }
-          } catch {
-          }
-        }
-      }
-    }
-    if (bestTablePos) {
-      if (existing?.isValid) {
-        const ep = existing.location;
-        if (Math.abs(ep.x - (bestTablePos.x + 0.5)) > 0.5 || Math.abs(ep.z - (bestTablePos.z + 0.5)) > 0.5 || Math.abs(ep.y - bestTablePos.y) > 0.5) {
-          try {
-            existing.teleport({
-              x: bestTablePos.x + 0.5,
-              y: bestTablePos.y,
-              z: bestTablePos.z + 0.5
-            });
-          } catch {
-          }
-        }
-      } else {
-        const tableCenter = {
-          x: bestTablePos.x + 0.5,
-          y: bestTablePos.y,
-          z: bestTablePos.z + 0.5
-        };
-        try {
-          const existingDummies = dim.getEntities({
-            location: tableCenter,
-            maxDistance: 1.5,
-            tags: ["mirage_enchant_dummy"]
-          });
-          if (existingDummies.length > 0) {
-            this.hitboxEntities.set(player.id, existingDummies[0]);
-          } else {
-            const entity = dim.spawnEntity(this.dummyEntityType, tableCenter);
-            entity.addTag("mirage_enchant_dummy");
-            this.hitboxEntities.set(player.id, entity);
-          }
-        } catch (e) {
-        }
-      }
-    } else {
-      if (existing?.isValid && existing.typeId === this.dummyEntityType) {
-        try {
-          existing.remove();
-        } catch {
-        }
-      }
-      this.hitboxEntities.delete(player.id);
     }
   }
   // --- Enchanting Table UI ---
   async openEnchantmentUI(player) {
-    const inventory = player.getComponent("minecraft:inventory").container;
-    let sharedRegistry = /* @__PURE__ */ new Map();
-    try {
-      const data = world35.getDynamicProperty("mirage:shared_registry");
-      if (data) {
-        const parsed = JSON.parse(data);
-        for (const key in parsed) {
-          sharedRegistry.set(key, parsed[key]);
-        }
-      }
-    } catch (e) {
-    }
-    if (sharedRegistry.size === 0) {
-      sharedRegistry = this.registry;
-    }
+    const isCreative = this.isCreative(player);
+    const inventory = player.getComponent("minecraft:inventory")?.container;
+    if (!inventory) return;
     const candidates = [];
     for (let i = 0; i < inventory.size; i++) {
       const item = inventory.getItem(i);
       if (!item) continue;
-      if (this.hasAnyApplicableEnchant(item, player, sharedRegistry)) {
-        candidates.push({ slot: i, item, source: "inv" });
+      if (this.hasAnyApplicableEnchant(item, player)) {
+        candidates.push({ slot: i, item });
       }
     }
     if (candidates.length === 0) {
-      player.sendMessage("\xA7cNo enchantable items in your inventory. (" + sharedRegistry.size + " enchants registered)");
+      player.sendMessage("\xA7cNo enchantable items in your inventory.");
       return;
     }
-    const itemForm = new ActionFormData2().title("Custom Enchanting").body(`\xA77Select an item to enchant
-\xA77XP Level: ${player.level}`);
-    candidates.forEach((c) => {
-      const label = c.item.nameTag || c.item.typeId.split(":")[1];
-      itemForm.button(`${label}
-\xA78Slot ${c.slot}`);
-    });
-    system41.runTimeout(async () => {
-      try {
-        const itemResp = await itemForm.show(player);
-        if (itemResp.canceled) return;
-        const chosen = candidates[itemResp.selection];
-        const validEnchants = [];
-        const currentEnchants = this.getEnchantments(chosen.item);
-        for (const [id, config] of sharedRegistry) {
-          const isCompatible = config.appliesTo.some((type2) => chosen.item.typeId.includes(type2));
-          if (!isCompatible) continue;
-          const currentLevel = currentEnchants[id] || 0;
-          if (currentLevel >= config.maxLevel && player.getGameMode() !== GameMode5.Creative) continue;
-          const nextLevel = currentLevel + 1;
-          const cost = config._costMultiplier ? nextLevel * config._costMultiplier : typeof config.costPerLevel === "function" ? config.costPerLevel(nextLevel) : config.costPerLevel;
-          validEnchants.push({ config, nextLevel, cost });
-        }
-        if (validEnchants.length === 0) {
-          player.sendMessage("\xA7cNo available enchantments for this item (or maxed out).");
-          return;
-        }
-        const enchForm = new ActionFormData2().title("Select Enchantment").body(`\xA77Item: ${chosen.item.typeId.split(":")[1]}
-\xA77Available Enchants:`);
-        validEnchants.forEach(({ config, nextLevel, cost }) => {
-          enchForm.button(`\xA7d${config.name} ${nextLevel}
-\xA72Cost: ${cost} levels`);
+    const chosen = await new Promise((resolve) => {
+      const itemForm = new CustomForm(player, "\xA75\xA7lCustom Enchanting").header("\xA7d\xA7lSelect an Item to Enchant").spacer().label("\xA77Current Experience: \xA7e" + (player.level ?? 0) + " \xA77Levels").spacer().divider().spacer();
+      candidates.forEach((c) => {
+        const rawName = c.item.nameTag || c.item.typeId.replace("minecraft:", "").replace(/_/g, " ");
+        const capitalized = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+        const countText = c.item.amount > 1 ? ` (${c.item.amount}x)` : "";
+        itemForm.button(capitalized + countText + " (Slot " + (c.slot + 1) + ")", () => {
+          itemForm.close();
+          resolve(c);
         });
-        const enchResp = await enchForm.show(player);
-        if (enchResp.canceled) return;
-        const selected = validEnchants[enchResp.selection];
-        if (player.getGameMode() !== GameMode5.Creative && player.level < selected.cost) {
-          player.sendMessage("\xA7cNot enough experience levels!");
+      });
+      itemForm.spacer();
+      itemForm.closeButton();
+      itemForm.show().then(() => resolve(null)).catch((e) => console.error(e));
+    });
+    if (!chosen) return;
+    try {
+      const validEnchants = [];
+      const currentEnchants = this.getEnchantments(chosen.item);
+      for (const [id, config] of this.getAllAvailableEnchantments()) {
+        const isCompatible = this.isItemCompatible(chosen.item, config.appliesTo);
+        if (!isCreative && !isCompatible) continue;
+        const currentLevel = currentEnchants[id] || 0;
+        if (currentLevel >= config.maxLevel && !isCreative) continue;
+        if (!isCreative) {
+          const limitCheck = this.checkEnchantLimit(id, player);
+          if (limitCheck.blocked) continue;
+        }
+        const nextLevel = isCreative ? currentLevel >= config.maxLevel ? config.maxLevel : currentLevel + 1 : currentLevel + 1;
+        const cost = isCreative ? 0 : typeof config.costPerLevel === "function" ? config.costPerLevel(nextLevel) : config._costMultiplier ? nextLevel * config._costMultiplier : nextLevel * 3;
+        validEnchants.push({ config, nextLevel, cost, enchantId: id });
+      }
+      if (validEnchants.length === 0) {
+        player.sendMessage("\xA7cNo available enchantments for this item (maxed out or limit reached).");
+        return;
+      }
+      const chosenRawName = chosen.item.nameTag || chosen.item.typeId.replace("minecraft:", "").replace(/_/g, " ");
+      const chosenName = chosenRawName.charAt(0).toUpperCase() + chosenRawName.slice(1);
+      const selected = await new Promise((resolve) => {
+        const enchForm = new CustomForm(player, "\xA75\xA7lSelect Enchantment").header("\xA7d\xA7lItem: \xA7f" + chosenName).spacer().label("\xA77Current Experience: \xA7e" + (player.level ?? 0) + " \xA77Levels").spacer().divider().spacer();
+        const eco2 = this.getEconomy(player);
+        validEnchants.forEach((entry) => {
+          const { config, nextLevel, cost } = entry;
+          const costText = isCreative ? "Free" : eco2.type === "scoreboard" ? `${cost} ${eco2.objective}` : `${cost} Levels`;
+          enchForm.button(config.name + " " + this.toRoman(nextLevel) + " (" + costText + ")", () => {
+            enchForm.close();
+            resolve(entry);
+          });
+        });
+        enchForm.spacer();
+        enchForm.closeButton();
+        enchForm.show().then(() => resolve(null)).catch((e) => console.error(e));
+      });
+      if (!selected) return;
+      const currentInv = player.getComponent("minecraft:inventory")?.container;
+      if (!currentInv) return;
+      const targetItem = currentInv.getItem(chosen.slot);
+      if (!targetItem || targetItem.typeId !== chosen.item.typeId) {
+        player.sendMessage("\xA7cInventory changed. Transaction cancelled.");
+        return;
+      }
+      const eco = this.getEconomy(player);
+      let pScore = 0;
+      if (eco.type === "scoreboard" && !isCreative) {
+        try {
+          pScore = world35.scoreboard.getObjective(eco.objective)?.getScore(player) || 0;
+        } catch (e) {
+        }
+        if (pScore < selected.cost) {
+          player.sendMessage(`\xA7cNot enough ${eco.objective}! Need ${selected.cost}.`);
+          player.playSound("note.bass");
           return;
         }
-        const applyData = {
-          enchantId: selected.config.id,
-          level: selected.nextLevel,
-          cost: selected.cost,
-          slot: chosen.slot,
-          itemTypeId: chosen.item.typeId
-        };
-        player.runCommand(`scriptevent mirage:apply_enchant ${JSON.stringify(applyData)}`);
-      } catch (e) {
+      } else if (eco.type !== "scoreboard" && !isCreative) {
+        if ((player.level ?? 0) < selected.cost) {
+          player.sendMessage(`\xA7cNot enough XP! Need ${selected.cost} levels.`);
+          player.playSound("note.bass");
+          return;
+        }
       }
-    });
-  }
-  /**
-   * Returns true if the item can receive at least one registered enchant.
-   */
-  hasAnyApplicableEnchant(item, player, customRegistry = null) {
-    const currentEnchants = this.getEnchantments(item);
-    const reg = customRegistry || this.registry;
-    for (const [id, config] of reg) {
-      const isCompatible = config.appliesTo.some((type2) => item.typeId.includes(type2));
-      if (!isCompatible) continue;
-      const currentLevel = currentEnchants[id] || 0;
-      if (currentLevel < config.maxLevel || player?.getGameMode() === GameMode5.Creative) return true;
+      if (!isCreative) {
+        const finalCheck = this.checkEnchantLimit(selected.enchantId, player);
+        if (finalCheck.blocked) {
+          player.sendMessage(finalCheck.reason);
+          player.playSound("note.bass");
+          return;
+        }
+      }
+      let newItem;
+      if (targetItem.amount > 1) {
+        const singleItem = targetItem.clone();
+        singleItem.amount = 1;
+        newItem = this.applyEnchantment(singleItem, selected.config.id, selected.nextLevel);
+        targetItem.amount--;
+        currentInv.setItem(chosen.slot, targetItem);
+        const added = currentInv.addItem(newItem);
+        if (added) {
+          player.dimension.spawnItem(newItem, player.location);
+        }
+      } else {
+        newItem = this.applyEnchantment(targetItem, selected.config.id, selected.nextLevel);
+        currentInv.setItem(chosen.slot, newItem);
+        const equip = player.getComponent("minecraft:equippable");
+        const currentMainHand = equip?.getEquipment(EquipmentSlot7.Mainhand);
+        if (currentMainHand && currentMainHand.typeId === newItem.typeId) {
+          equip.setEquipment(EquipmentSlot7.Mainhand, newItem);
+        }
+      }
+      if (!isCreative) {
+        if (eco.type === "scoreboard") {
+          try {
+            world35.scoreboard.getObjective(eco.objective)?.addScore(player, -selected.cost);
+          } catch (e) {
+          }
+        } else {
+          player.addLevels(-selected.cost);
+        }
+        this.incrementEnchantCount(selected.enchantId, player);
+      }
+      player.dimension.spawnParticle("minecraft:enchanting_table_particle", player.location);
+      player.playSound("random.levelup");
+      player.sendMessage(`\xA7aSuccessfully enchanted with ${selected.config.name} ${this.toRoman(selected.nextLevel)}!`);
+    } catch (e) {
+      console.warn("[EnchantmentLib] Error in enchanting flow: " + e);
     }
-    return false;
-  }
-  applyEnchantmentTransaction(player, itemStack, selection) {
-    const { config, nextLevel, cost } = selection;
-    if (player.level < cost && player.getGameMode() !== GameMode5.Creative) {
-      player.sendMessage(`\xA7cNot enough XP! Need ${cost} levels.`);
-      player.playSound("note.bass");
-      return;
-    }
-    const newItem = this.applyEnchantment(itemStack, config.id, nextLevel);
-    const equippable = player.getComponent("minecraft:equippable");
-    equippable.setEquipment("Mainhand", newItem);
-    if (player.getGameMode() !== GameMode5.Creative) {
-      player.addLevels(-cost);
-    }
-    player.dimension.playSound("random.levelup", player.location);
-    player.sendMessage(`\xA7aEnchanted with ${config.name} ${this.toRoman(nextLevel)}!`);
   }
   // --- Anvil UI ---
   async openAnvilBookApplyUI(player, bookStack, enchantId) {
-    const config = this.registry.get(enchantId);
+    const isCreative = this.isCreative(player);
+    const cleanId = this.cleanId(enchantId);
+    const config = this.get(cleanId);
     if (!config) return;
-    const inventory = player.getComponent("minecraft:inventory").container;
+    const inventory = player.getComponent("minecraft:inventory")?.container;
+    if (!inventory) return;
     const validTargets = [];
     for (let i = 0; i < inventory.size; i++) {
       const item = inventory.getItem(i);
       if (!item) continue;
-      const isCompatible = config.appliesTo.some((type2) => item.typeId.includes(type2));
+      const isCompatible = this.isItemCompatible(item, config.appliesTo);
       const currentEnchants = this.getEnchantments(item);
-      const currentLevel = currentEnchants[enchantId] || 0;
-      if (isCompatible && (currentLevel < config.maxLevel || player.getGameMode() === GameMode5.Creative)) {
+      const currentLevel = currentEnchants[cleanId] || 0;
+      if (isCreative || isCompatible && currentLevel < config.maxLevel) {
         validTargets.push({
           slot: i,
           item,
-          nextLevel: currentLevel + 1,
-          cost: typeof config.costPerLevel === "function" ? config.costPerLevel(currentLevel + 1) : config.costPerLevel
+          nextLevel: isCreative ? currentLevel >= config.maxLevel ? config.maxLevel : currentLevel + 1 : currentLevel + 1,
+          cost: isCreative ? 0 : typeof config.costPerLevel === "function" ? config.costPerLevel(currentLevel + 1) : config._costMultiplier ? (currentLevel + 1) * config._costMultiplier : 3
         });
       }
     }
@@ -17579,74 +17816,128 @@ var EnchantmentManager = class {
       player.sendMessage(`\xA7cNo compatible items for ${config.name} found in your inventory.`);
       return;
     }
-    const form = new ActionFormData2().title(`Combine: ${config.name}`).body(`\xA77Select an item to apply the enchantment to:`);
-    validTargets.forEach((t) => {
-      const color = player.level >= t.cost ? "\xA72" : "\xA7c";
-      const itemName = t.item.nameTag || t.item.typeId.split(":")[1];
-      form.button(`${itemName} (Slot ${t.slot})
-${color}Cost: ${t.cost} Lvl`);
+    const eco = this.getEconomy(player);
+    const selection = await new Promise((resolve) => {
+      const form = new CustomForm(player, "\xA76\xA7lAnvil: \xA7f" + config.name).header("\xA7e\xA7lSelect Target Item").spacer().label("\xA77Select an item to combine with \xA7d" + config.name + "\xA77.\n\xA77Current Experience: \xA7e" + (player.level ?? 0) + " \xA77Levels").spacer().divider().spacer();
+      validTargets.forEach((t) => {
+        const rawName = t.item.nameTag || t.item.typeId.replace("minecraft:", "").replace(/_/g, " ");
+        const capitalized = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+        const costText = isCreative ? "Free" : eco.type === "scoreboard" ? `${t.cost} ${eco.objective}` : `${t.cost} Levels`;
+        form.button(capitalized + " (Slot " + (t.slot + 1) + ") - " + costText, () => {
+          form.close();
+          resolve(t);
+        });
+      });
+      form.spacer();
+      form.closeButton();
+      form.show().then(() => resolve(null)).catch((e) => console.error(e));
     });
-    const response = await form.show(player);
-    if (response.canceled) return;
-    const selection = validTargets[response.selection];
+    if (!selection) return;
     const currentInvItem = inventory.getItem(selection.slot);
-    const currentHandItem = player.getComponent("minecraft:equippable").getEquipment("Mainhand");
+    const equipComp = player.getComponent("minecraft:equippable");
+    const currentHandItem = equipComp?.getEquipment(EquipmentSlot7.Mainhand);
     if (!currentHandItem || currentHandItem.typeId !== bookStack.typeId || !currentInvItem || currentInvItem.typeId !== selection.item.typeId) {
       player.sendMessage("\xA7cInventory changed. Transaction cancelled.");
       return;
     }
-    if (player.level < selection.cost && player.getGameMode() !== GameMode5.Creative) {
-      player.sendMessage(`\xA7cNot enough XP! Need ${selection.cost} levels.`);
-      player.playSound("note.bass");
-      return;
+    let pScore = 0;
+    if (eco.type === "scoreboard" && !isCreative) {
+      try {
+        pScore = world35.scoreboard.getObjective(eco.objective)?.getScore(player) || 0;
+      } catch (e) {
+      }
+      if (pScore < selection.cost) {
+        player.sendMessage(`\xA7cNot enough ${eco.objective}! Need ${selection.cost}.`);
+        player.playSound("note.bass");
+        return;
+      }
+    } else if (eco.type !== "scoreboard" && !isCreative) {
+      if ((player.level ?? 0) < selection.cost) {
+        player.sendMessage(`\xA7cNot enough XP! Need ${selection.cost} levels.`);
+        player.playSound("note.bass");
+        return;
+      }
     }
     const newItem = this.applyEnchantment(currentInvItem, config.id, selection.nextLevel);
     inventory.setItem(selection.slot, newItem);
     if (currentHandItem.amount > 1) {
       currentHandItem.amount--;
-      player.getComponent("minecraft:equippable").setEquipment("Mainhand", currentHandItem);
+      equipComp.setEquipment(EquipmentSlot7.Mainhand, currentHandItem);
     } else {
-      player.getComponent("minecraft:equippable").setEquipment("Mainhand");
+      equipComp.setEquipment(EquipmentSlot7.Mainhand, void 0);
     }
-    if (player.getGameMode() !== GameMode5.Creative) {
-      player.addLevels(-selection.cost);
+    if (!isCreative) {
+      if (eco.type === "scoreboard") {
+        try {
+          world35.scoreboard.getObjective(eco.objective)?.addScore(player, -selection.cost);
+        } catch (e) {
+        }
+      } else {
+        player.addLevels(-selection.cost);
+      }
+      this.incrementEnchantCount(cleanId, player);
     }
     player.playSound("random.anvil_use");
     player.dimension.spawnParticle("minecraft:villager_happy", player.location);
     player.sendMessage(`\xA7aSuccessfully combined ${config.name} with your item!`);
   }
   // --- Helper Methods ---
-  applyEnchantment(itemStack, id, level) {
-    const config = this.registry.get(id);
-    if (!config) return itemStack;
+  /**
+   * Applies an enchantment to an item stack with indestructible lore and fake glint.
+   * @param {ItemStack} itemStack
+   * @param {string} id
+   * @param {number} level
+   * @param {Object} [customConfig]
+   * @returns {ItemStack}
+   */
+  applyEnchantment(itemStack, id, level = 1, customConfig = null) {
+    if (!itemStack) return itemStack;
+    const cleanId = this.cleanId(id);
+    const config = customConfig || this.get(cleanId) || { id: cleanId, name: cleanId, maxLevel: 5 };
     const enchants = this.getEnchantments(itemStack);
-    enchants[id] = level;
-    itemStack.setDynamicProperty("mirage:enchants", JSON.stringify(enchants));
-    const currentLore = itemStack.getLore() || [];
+    enchants[cleanId] = level;
+    try {
+      const serialized = JSON.stringify(enchants);
+      itemStack.setDynamicProperty("mirage:enchants", serialized);
+      itemStack.setDynamicProperty("luminiae:enchants", serialized);
+      itemStack.setDynamicProperty("tme:enchants", serialized);
+      itemStack.setDynamicProperty("ench:enchants", serialized);
+    } catch (e) {
+    }
+    const currentLore = itemStack.getLore ? itemStack.getLore() || [] : [];
     const newLoreLine = `\xA77${config.name} ${this.toRoman(level)}`;
-    const cleanLore = currentLore.filter((line) => !line.includes(`\xA77${config.name}`));
+    const cleanLore = currentLore.filter((line) => {
+      if (typeof line !== "string") return false;
+      const cleanText = line.replace(/§./g, "").trim().toLowerCase();
+      return !cleanText.startsWith(config.name.toLowerCase());
+    });
     cleanLore.unshift(newLoreLine);
-    itemStack.setLore(cleanLore);
-    this.updateGlint(itemStack);
+    if (itemStack.setLore) {
+      itemStack.setLore(cleanLore);
+    }
+    this.updateGlint(itemStack, true);
     return itemStack;
   }
   /**
-   * Toggles the dummy glint based on context.
+   * Toggles fake purple glint spoofing on an item.
+   * @param {ItemStack} itemStack
+   * @param {boolean} shouldHaveGlint
    */
   updateGlint(itemStack, shouldHaveGlint = true) {
+    if (!itemStack) return;
     const enchantable = itemStack.getComponent("minecraft:enchantable");
     if (!enchantable) return;
-    const hasDummy = itemStack.getDynamicProperty("mirage:dummy_glint");
+    const hasDummy = itemStack.getDynamicProperty("mirage:dummy_glint") || itemStack.getDynamicProperty("luminiae:dummy_glint") || itemStack.getDynamicProperty("tme:dummy_glint") || itemStack.getDynamicProperty("ench:dummy_glint");
     const currentVanillas = enchantable.getEnchantments();
     if (shouldHaveGlint) {
       if (currentVanillas.length === 0) {
         try {
           enchantable.addEnchantment({ type: "unbreaking", level: 0 });
-          itemStack.setDynamicProperty("mirage:dummy_glint", true);
+          this.setDummyGlintProperty(itemStack, true);
         } catch (e) {
           try {
             enchantable.addEnchantment({ type: "unbreaking", level: 1 });
-            itemStack.setDynamicProperty("mirage:dummy_glint", true);
+            this.setDummyGlintProperty(itemStack, true);
           } catch (e2) {
           }
         }
@@ -17656,32 +17947,49 @@ ${color}Cost: ${t.cost} Lvl`);
         const unbreaking = enchantable.getEnchantment("unbreaking");
         if (unbreaking && currentVanillas.length === 1) {
           enchantable.removeAllEnchantments();
-          itemStack.setDynamicProperty("mirage:dummy_glint", void 0);
+          this.setDummyGlintProperty(itemStack, void 0);
         }
       }
     }
   }
+  setDummyGlintProperty(itemStack, value) {
+    try {
+      itemStack.setDynamicProperty("mirage:dummy_glint", value);
+      itemStack.setDynamicProperty("luminiae:dummy_glint", value);
+      itemStack.setDynamicProperty("tme:dummy_glint", value);
+      itemStack.setDynamicProperty("ench:dummy_glint", value);
+    } catch (e) {
+    }
+  }
+  hasDummyGlint(itemStack) {
+    if (!itemStack || !itemStack.getDynamicProperty) return false;
+    try {
+      return !!(itemStack.getDynamicProperty("mirage:dummy_glint") || itemStack.getDynamicProperty("luminiae:dummy_glint") || itemStack.getDynamicProperty("tme:dummy_glint") || itemStack.getDynamicProperty("ench:dummy_glint"));
+    } catch (e) {
+      return false;
+    }
+  }
   /**
-   * Scans players to toggle glint state.
+   * Scans players every 5 ticks to suppress glint in cursor slots and maintain glint in inventory.
    */
   manageVisuals() {
     for (const player of world35.getAllPlayers()) {
+      if (!player.isValid) continue;
       const cursorComp = player.getComponent("minecraft:cursor_inventory");
-      if (cursorComp && cursorComp.item) {
-        const item = cursorComp.item;
-        if (this.hasCustomEnchants(item) && item.getDynamicProperty("mirage:dummy_glint")) {
-          this.updateGlint(item, false);
-          cursorComp.item = item;
+      if (cursorComp?.item && this.hasCustomEnchants(cursorComp.item)) {
+        if (this.hasDummyGlint(cursorComp.item)) {
+          this.updateGlint(cursorComp.item, false);
+          cursorComp.item = cursorComp.item;
         }
       }
       const invComp = player.getComponent("minecraft:inventory");
-      if (invComp && invComp.container) {
+      if (invComp?.container) {
         const container = invComp.container;
         for (let i = 0; i < container.size; i++) {
           const item = container.getItem(i);
-          if (item && this.hasCustomEnchants(item) && !item.getDynamicProperty("mirage:dummy_glint")) {
+          if (item && this.hasCustomEnchants(item) && !this.hasDummyGlint(item)) {
             this.updateGlint(item, true);
-            if (item.getDynamicProperty("mirage:dummy_glint")) {
+            if (this.hasDummyGlint(item)) {
               container.setItem(i, item);
             }
           }
@@ -17689,12 +17997,19 @@ ${color}Cost: ${t.cost} Lvl`);
       }
       const equipComp = player.getComponent("minecraft:equippable");
       if (equipComp) {
-        const slots = ["Mainhand", "Offhand", "Head", "Chest", "Legs", "Feet"];
+        const slots = [
+          EquipmentSlot7.Mainhand,
+          EquipmentSlot7.Offhand,
+          EquipmentSlot7.Head,
+          EquipmentSlot7.Chest,
+          EquipmentSlot7.Legs,
+          EquipmentSlot7.Feet
+        ];
         for (const slot of slots) {
           const item = equipComp.getEquipment(slot);
-          if (item && this.hasCustomEnchants(item) && !item.getDynamicProperty("mirage:dummy_glint")) {
+          if (item && this.hasCustomEnchants(item) && !this.hasDummyGlint(item)) {
             this.updateGlint(item, true);
-            if (item.getDynamicProperty("mirage:dummy_glint")) {
+            if (this.hasDummyGlint(item)) {
               equipComp.setEquipment(slot, item);
             }
           }
@@ -17702,28 +18017,165 @@ ${color}Cost: ${t.cost} Lvl`);
       }
     }
   }
+  /**
+   * Checks if an item stack has any custom enchantments.
+   * @param {ItemStack} item
+   * @returns {boolean}
+   */
   hasCustomEnchants(item) {
-    return !!item.getDynamicProperty("mirage:enchants");
+    if (!item) return false;
+    const lore = item.getLore ? item.getLore() : [];
+    if (lore && lore.length > 0) {
+      return lore.some((line) => typeof line === "string" && (line.startsWith("\xA77") || line.includes("\xA77")));
+    }
+    const type2 = (item.typeId || "").toLowerCase();
+    if (type2.includes("enchanted_book_")) return true;
+    try {
+      if (item.getDynamicProperty && (item.getDynamicProperty("mirage:enchants") || item.getDynamicProperty("luminiae:enchants") || item.getDynamicProperty("tme:enchants") || item.getDynamicProperty("ench:enchants"))) {
+        return true;
+      }
+    } catch (e) {
+    }
+    return false;
   }
+  /**
+   * Checks whether an item stack possesses a specific custom enchantment.
+   * @param {ItemStack} itemStack
+   * @param {string} id
+   * @returns {boolean}
+   */
+  hasEnchantment(itemStack, id) {
+    if (!itemStack || !id) return false;
+    const clean = this.cleanId(id);
+    const enchants = this.getEnchantments(itemStack);
+    return typeof enchants[clean] === "number" && enchants[clean] > 0;
+  }
+  /**
+   * Returns the level of a specific custom enchantment on an item stack (0 if absent).
+   * @param {ItemStack} itemStack
+   * @param {string} id
+   * @returns {number}
+   */
+  getEnchantLevel(itemStack, id) {
+    if (!itemStack || !id) return 0;
+    const clean = this.cleanId(id);
+    const enchants = this.getEnchantments(itemStack);
+    return enchants[clean] || 0;
+  }
+  /**
+   * Retrieves all custom enchantments on an item stack as a dictionary: { [cleanId]: level }.
+   * Prioritizes indestructible lore parsing with physical book and dynamic property fallbacks.
+   * @param {ItemStack} itemStack
+   * @returns {Object<string, number>}
+   */
   getEnchantments(itemStack) {
     if (!itemStack) return {};
-    const data = itemStack.getDynamicProperty("mirage:enchants");
-    if (!data) return {};
+    const lore = itemStack.getLore ? itemStack.getLore() : [];
+    if (lore && lore.length > 0) {
+      const result = {};
+      const allEnchants = this.getAllAvailableEnchantments();
+      const sortedAvailable = Array.from(allEnchants.entries()).sort(
+        (a, b) => (b[1]?.name?.length || 0) - (a[1]?.name?.length || 0)
+      );
+      for (const line of lore) {
+        if (typeof line !== "string") continue;
+        const clean = line.replace(/§./g, "").trim();
+        if (!clean) continue;
+        const lowerClean = clean.toLowerCase();
+        for (const [id, config] of sortedAvailable) {
+          const targetName = (config.name || "").toLowerCase();
+          if (targetName && lowerClean.startsWith(targetName)) {
+            const cleanId = this.cleanId(id);
+            const suffix = clean.substring(config.name.length).trim();
+            if (suffix !== "" && !/^[IVXLCDM]+$/i.test(suffix)) {
+              continue;
+            }
+            const level = suffix === "" ? 1 : this.fromRoman(suffix) || 1;
+            const candidates = [];
+            for (const [candId, candCfg] of allEnchants) {
+              if ((candCfg.name || "").toLowerCase() === targetName) {
+                candidates.push({ id: this.cleanId(candId), config: candCfg });
+              }
+            }
+            if (candidates.length > 1 && itemStack.typeId) {
+              const matched = candidates.find((c) => this.isItemCompatible(itemStack, c.config.appliesTo)) || candidates[0];
+              result[matched.id] = level;
+            } else {
+              result[cleanId] = level;
+            }
+            break;
+          }
+        }
+      }
+      if (Object.keys(result).length > 0) return result;
+    }
+    if (itemStack.typeId) {
+      const rawType = itemStack.typeId.toLowerCase();
+      const cleanType = this.cleanId(rawType);
+      if (cleanType.includes("enchanted_book_")) {
+        const bookSuffix = cleanType.replace("enchanted_book_", "");
+        const match = bookSuffix.match(/^(.+)_(\d+)$/);
+        if (match) {
+          const cleanId = this.cleanId(match[1]);
+          return { [cleanId]: parseInt(match[2], 10) || 1 };
+        } else {
+          const cleanId = this.cleanId(bookSuffix);
+          return { [cleanId]: 1 };
+        }
+      }
+    }
     try {
-      return JSON.parse(data);
+      if (itemStack.getDynamicProperty) {
+        const data = itemStack.getDynamicProperty("mirage:enchants") || itemStack.getDynamicProperty("luminiae:enchants") || itemStack.getDynamicProperty("tme:enchants") || itemStack.getDynamicProperty("ench:enchants");
+        if (data && typeof data === "string") {
+          const parsed = JSON.parse(data);
+          if (parsed && typeof parsed === "object") {
+            const cleanParsed = {};
+            for (const [k, v] of Object.entries(parsed)) {
+              cleanParsed[this.cleanId(k)] = v;
+            }
+            return cleanParsed;
+          }
+        }
+      }
     } catch (e) {
-      return {};
     }
+    return {};
   }
-  toRoman(num) {
-    const roman = { M: 1e3, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1 };
-    let str = "";
-    for (let i of Object.keys(roman)) {
-      let q = Math.floor(num / roman[i]);
-      num -= q * roman[i];
-      str += i.repeat(q);
+  /**
+   * Converts a Roman numeral string to an integer.
+   * @param {string} str
+   * @returns {number}
+   */
+  fromRoman(str) {
+    if (!str || typeof str !== "string") return 1;
+    const upper = str.toUpperCase().trim();
+    const map = { I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1e3 };
+    let result = 0;
+    for (let i = 0; i < upper.length; i++) {
+      const curr = map[upper[i]] || 0;
+      const next = map[upper[i + 1]] || 0;
+      result += curr < next ? -curr : curr;
     }
-    return str;
+    return result || 1;
+  }
+  /**
+   * Converts an integer to a Roman numeral string.
+   * @param {number} num
+   * @returns {string}
+   */
+  toRoman(num) {
+    const n = Math.floor(Number(num));
+    if (isNaN(n) || n <= 0) return "I";
+    const roman = { M: 1e3, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1 };
+    let remaining = n;
+    let str = "";
+    for (const [r, val] of Object.entries(roman)) {
+      const q = Math.floor(remaining / val);
+      remaining -= q * val;
+      str += r.repeat(q);
+    }
+    return str || "I";
   }
 };
 var enchantmentManager = new EnchantmentManager();
